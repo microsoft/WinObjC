@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_SERVICES_MAPS_LOCALSEARCH_EXPORT
-#define OBJCUWP_WINDOWS_SERVICES_MAPS_LOCALSEARCH_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_Services_Maps_LocalSearch.lib")
+#ifndef OBJCUWPWINDOWSSERVICESMAPSLOCALSEARCHEXPORT
+#define OBJCUWPWINDOWSSERVICESMAPSLOCALSEARCHEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsServicesMapsLocalSearch.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -54,7 +54,7 @@ typedef unsigned WSMLLocalLocationFinderStatus;
 #ifndef __WSMLLocalLocation_DEFINED__
 #define __WSMLLocalLocation_DEFINED__
 
-OBJCUWP_WINDOWS_SERVICES_MAPS_LOCALSEARCH_EXPORT
+OBJCUWPWINDOWSSERVICESMAPSLOCALSEARCHEXPORT
 @interface WSMLLocalLocation : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -77,7 +77,7 @@ OBJCUWP_WINDOWS_SERVICES_MAPS_LOCALSEARCH_EXPORT
 #ifndef __WSMLLocalLocationFinderResult_DEFINED__
 #define __WSMLLocalLocationFinderResult_DEFINED__
 
-OBJCUWP_WINDOWS_SERVICES_MAPS_LOCALSEARCH_EXPORT
+OBJCUWPWINDOWSSERVICESMAPSLOCALSEARCHEXPORT
 @interface WSMLLocalLocationFinderResult : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -92,7 +92,7 @@ OBJCUWP_WINDOWS_SERVICES_MAPS_LOCALSEARCH_EXPORT
 #ifndef __WSMLLocalLocationRatingInfo_DEFINED__
 #define __WSMLLocalLocationRatingInfo_DEFINED__
 
-OBJCUWP_WINDOWS_SERVICES_MAPS_LOCALSEARCH_EXPORT
+OBJCUWPWINDOWSSERVICESMAPSLOCALSEARCHEXPORT
 @interface WSMLLocalLocationRatingInfo : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -108,7 +108,7 @@ OBJCUWP_WINDOWS_SERVICES_MAPS_LOCALSEARCH_EXPORT
 #ifndef __WSMLLocalLocationHoursOfOperationItem_DEFINED__
 #define __WSMLLocalLocationHoursOfOperationItem_DEFINED__
 
-OBJCUWP_WINDOWS_SERVICES_MAPS_LOCALSEARCH_EXPORT
+OBJCUWPWINDOWSSERVICESMAPSLOCALSEARCHEXPORT
 @interface WSMLLocalLocationHoursOfOperationItem : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -124,7 +124,7 @@ OBJCUWP_WINDOWS_SERVICES_MAPS_LOCALSEARCH_EXPORT
 #ifndef __WSMLLocalLocationFinder_DEFINED__
 #define __WSMLLocalLocationFinder_DEFINED__
 
-OBJCUWP_WINDOWS_SERVICES_MAPS_LOCALSEARCH_EXPORT
+OBJCUWPWINDOWSSERVICESMAPSLOCALSEARCHEXPORT
 @interface WSMLLocalLocationFinder : RTObject
 + (void)findLocalLocationsAsync:(NSString *)searchTerm searchArea:(WDGGeocircle*)searchArea localCategory:(NSString *)localCategory maxResults:(unsigned int)maxResults success:(void (^)(WSMLLocalLocationFinderResult*))success failure:(void (^)(NSError*))failure;
 @end
@@ -135,7 +135,7 @@ OBJCUWP_WINDOWS_SERVICES_MAPS_LOCALSEARCH_EXPORT
 #ifndef __WSMLLocalCategories_DEFINED__
 #define __WSMLLocalCategories_DEFINED__
 
-OBJCUWP_WINDOWS_SERVICES_MAPS_LOCALSEARCH_EXPORT
+OBJCUWPWINDOWSSERVICESMAPSLOCALSEARCHEXPORT
 @interface WSMLLocalCategories : RTObject
 + (NSString *)all;
 + (NSString *)bankAndCreditUnions;

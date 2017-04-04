@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_MEDIA_DEVICES_CORE_EXPORT
-#define OBJCUWP_WINDOWS_MEDIA_DEVICES_CORE_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_Media_Devices_Core.lib")
+#ifndef OBJCUWPWINDOWSMEDIADEVICESCOREEXPORT
+#define OBJCUWPWINDOWSMEDIADEVICESCOREEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsMediaDevicesCore.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -49,7 +49,7 @@ typedef unsigned WMDCFrameFlashMode;
 #ifndef __WMDCCameraIntrinsics_DEFINED__
 #define __WMDCCameraIntrinsics_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_DEVICES_CORE_EXPORT
+OBJCUWPWINDOWSMEDIADEVICESCOREEXPORT
 @interface WMDCCameraIntrinsics : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -81,7 +81,7 @@ OBJCUWP_WINDOWS_MEDIA_DEVICES_CORE_EXPORT
 - (void)close;
 @end
 
-OBJCUWP_WINDOWS_MEDIA_DEVICES_CORE_EXPORT
+OBJCUWPWINDOWSMEDIADEVICESCOREEXPORT
 @interface WFIClosable : RTObject <WFIClosable>
 @end
 
@@ -91,7 +91,7 @@ OBJCUWP_WINDOWS_MEDIA_DEVICES_CORE_EXPORT
 #ifndef __WMDCDepthCorrelatedCoordinateMapper_DEFINED__
 #define __WMDCDepthCorrelatedCoordinateMapper_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_DEVICES_CORE_EXPORT
+OBJCUWPWINDOWSMEDIADEVICESCOREEXPORT
 @interface WMDCDepthCorrelatedCoordinateMapper : RTObject <WFIClosable>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -109,7 +109,7 @@ OBJCUWP_WINDOWS_MEDIA_DEVICES_CORE_EXPORT
 #ifndef __WMDCVariablePhotoSequenceController_DEFINED__
 #define __WMDCVariablePhotoSequenceController_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_DEVICES_CORE_EXPORT
+OBJCUWPWINDOWSMEDIADEVICESCOREEXPORT
 @interface WMDCVariablePhotoSequenceController : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -129,7 +129,7 @@ OBJCUWP_WINDOWS_MEDIA_DEVICES_CORE_EXPORT
 #ifndef __WMDCFrameExposureCapabilities_DEFINED__
 #define __WMDCFrameExposureCapabilities_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_DEVICES_CORE_EXPORT
+OBJCUWPWINDOWSMEDIADEVICESCOREEXPORT
 @interface WMDCFrameExposureCapabilities : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -146,7 +146,7 @@ OBJCUWP_WINDOWS_MEDIA_DEVICES_CORE_EXPORT
 #ifndef __WMDCFrameExposureCompensationCapabilities_DEFINED__
 #define __WMDCFrameExposureCompensationCapabilities_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_DEVICES_CORE_EXPORT
+OBJCUWPWINDOWSMEDIADEVICESCOREEXPORT
 @interface WMDCFrameExposureCompensationCapabilities : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -163,7 +163,7 @@ OBJCUWP_WINDOWS_MEDIA_DEVICES_CORE_EXPORT
 #ifndef __WMDCFrameIsoSpeedCapabilities_DEFINED__
 #define __WMDCFrameIsoSpeedCapabilities_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_DEVICES_CORE_EXPORT
+OBJCUWPWINDOWSMEDIADEVICESCOREEXPORT
 @interface WMDCFrameIsoSpeedCapabilities : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -180,7 +180,7 @@ OBJCUWP_WINDOWS_MEDIA_DEVICES_CORE_EXPORT
 #ifndef __WMDCFrameFocusCapabilities_DEFINED__
 #define __WMDCFrameFocusCapabilities_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_DEVICES_CORE_EXPORT
+OBJCUWPWINDOWSMEDIADEVICESCOREEXPORT
 @interface WMDCFrameFocusCapabilities : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -197,7 +197,7 @@ OBJCUWP_WINDOWS_MEDIA_DEVICES_CORE_EXPORT
 #ifndef __WMDCFrameFlashCapabilities_DEFINED__
 #define __WMDCFrameFlashCapabilities_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_DEVICES_CORE_EXPORT
+OBJCUWPWINDOWSMEDIADEVICESCOREEXPORT
 @interface WMDCFrameFlashCapabilities : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -213,7 +213,7 @@ OBJCUWP_WINDOWS_MEDIA_DEVICES_CORE_EXPORT
 #ifndef __WMDCFrameControlCapabilities_DEFINED__
 #define __WMDCFrameControlCapabilities_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_DEVICES_CORE_EXPORT
+OBJCUWPWINDOWSMEDIADEVICESCOREEXPORT
 @interface WMDCFrameControlCapabilities : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -232,7 +232,7 @@ OBJCUWP_WINDOWS_MEDIA_DEVICES_CORE_EXPORT
 #ifndef __WMDCFrameExposureControl_DEFINED__
 #define __WMDCFrameExposureControl_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_DEVICES_CORE_EXPORT
+OBJCUWPWINDOWSMEDIADEVICESCOREEXPORT
 @interface WMDCFrameExposureControl : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -247,7 +247,7 @@ OBJCUWP_WINDOWS_MEDIA_DEVICES_CORE_EXPORT
 #ifndef __WMDCFrameExposureCompensationControl_DEFINED__
 #define __WMDCFrameExposureCompensationControl_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_DEVICES_CORE_EXPORT
+OBJCUWPWINDOWSMEDIADEVICESCOREEXPORT
 @interface WMDCFrameExposureCompensationControl : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -261,7 +261,7 @@ OBJCUWP_WINDOWS_MEDIA_DEVICES_CORE_EXPORT
 #ifndef __WMDCFrameIsoSpeedControl_DEFINED__
 #define __WMDCFrameIsoSpeedControl_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_DEVICES_CORE_EXPORT
+OBJCUWPWINDOWSMEDIADEVICESCOREEXPORT
 @interface WMDCFrameIsoSpeedControl : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -276,7 +276,7 @@ OBJCUWP_WINDOWS_MEDIA_DEVICES_CORE_EXPORT
 #ifndef __WMDCFrameFocusControl_DEFINED__
 #define __WMDCFrameFocusControl_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_DEVICES_CORE_EXPORT
+OBJCUWPWINDOWSMEDIADEVICESCOREEXPORT
 @interface WMDCFrameFocusControl : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -290,7 +290,7 @@ OBJCUWP_WINDOWS_MEDIA_DEVICES_CORE_EXPORT
 #ifndef __WMDCFrameFlashControl_DEFINED__
 #define __WMDCFrameFlashControl_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_DEVICES_CORE_EXPORT
+OBJCUWPWINDOWSMEDIADEVICESCOREEXPORT
 @interface WMDCFrameFlashControl : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -307,7 +307,7 @@ OBJCUWP_WINDOWS_MEDIA_DEVICES_CORE_EXPORT
 #ifndef __WMDCFrameController_DEFINED__
 #define __WMDCFrameController_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_DEVICES_CORE_EXPORT
+OBJCUWPWINDOWSMEDIADEVICESCOREEXPORT
 @interface WMDCFrameController : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)

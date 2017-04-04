@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
-#define OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_UI_Composition.lib")
+#ifndef OBJCUWPWINDOWSUICOMPOSITIONEXPORT
+#define OBJCUWPWINDOWSUICOMPOSITIONEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsUIComposition.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -144,7 +144,7 @@ typedef unsigned WUCCompositionStretch;
 @protocol WUCICompositionAnimationBase
 @end
 
-OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
+OBJCUWPWINDOWSUICOMPOSITIONEXPORT
 @interface WUCICompositionAnimationBase : RTObject <WUCICompositionAnimationBase>
 @end
 
@@ -157,7 +157,7 @@ OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
 @protocol WUCICompositionSurface
 @end
 
-OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
+OBJCUWPWINDOWSUICOMPOSITIONEXPORT
 @interface WUCICompositionSurface : RTObject <WUCICompositionSurface>
 @end
 
@@ -171,7 +171,7 @@ OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
 - (void)close;
 @end
 
-OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
+OBJCUWPWINDOWSUICOMPOSITIONEXPORT
 @interface WFIClosable : RTObject <WFIClosable>
 @end
 
@@ -181,7 +181,7 @@ OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
 #ifndef __WUCCompositionObject_DEFINED__
 #define __WUCCompositionObject_DEFINED__
 
-OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
+OBJCUWPWINDOWSUICOMPOSITIONEXPORT
 @interface WUCCompositionObject : RTObject <WFIClosable>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -204,7 +204,7 @@ OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
 #ifndef __WUCCompositionAnimation_DEFINED__
 #define __WUCCompositionAnimation_DEFINED__
 
-OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
+OBJCUWPWINDOWSUICOMPOSITIONEXPORT
 @interface WUCCompositionAnimation : WUCCompositionObject <WUCICompositionAnimationBase>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -230,7 +230,7 @@ OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
 #ifndef __WUCCompositionBatchCompletedEventArgs_DEFINED__
 #define __WUCCompositionBatchCompletedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
+OBJCUWPWINDOWSUICOMPOSITIONEXPORT
 @interface WUCCompositionBatchCompletedEventArgs : WUCCompositionObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -243,7 +243,7 @@ OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
 #ifndef __WUCCompositionEasingFunction_DEFINED__
 #define __WUCCompositionEasingFunction_DEFINED__
 
-OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
+OBJCUWPWINDOWSUICOMPOSITIONEXPORT
 @interface WUCCompositionEasingFunction : WUCCompositionObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -256,7 +256,7 @@ OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
 #ifndef __WUCCompositionBrush_DEFINED__
 #define __WUCCompositionBrush_DEFINED__
 
-OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
+OBJCUWPWINDOWSUICOMPOSITIONEXPORT
 @interface WUCCompositionBrush : WUCCompositionObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -269,7 +269,7 @@ OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
 #ifndef __WUCCompositionEffectBrush_DEFINED__
 #define __WUCCompositionEffectBrush_DEFINED__
 
-OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
+OBJCUWPWINDOWSUICOMPOSITIONEXPORT
 @interface WUCCompositionEffectBrush : WUCCompositionBrush
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -287,7 +287,7 @@ OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
 @protocol WGEIGraphicsEffectSource
 @end
 
-OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
+OBJCUWPWINDOWSUICOMPOSITIONEXPORT
 @interface WGEIGraphicsEffectSource : RTObject <WGEIGraphicsEffectSource>
 @end
 
@@ -297,7 +297,7 @@ OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
 #ifndef __WUCCompositionEffectSourceParameter_DEFINED__
 #define __WUCCompositionEffectSourceParameter_DEFINED__
 
-OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
+OBJCUWPWINDOWSUICOMPOSITIONEXPORT
 @interface WUCCompositionEffectSourceParameter : RTObject <WGEIGraphicsEffectSource>
 + (WUCCompositionEffectSourceParameter*)make:(NSString *)name ACTIVATOR;
 #if defined(__cplusplus)
@@ -312,7 +312,7 @@ OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
 #ifndef __WUCCompositionGraphicsDevice_DEFINED__
 #define __WUCCompositionGraphicsDevice_DEFINED__
 
-OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
+OBJCUWPWINDOWSUICOMPOSITIONEXPORT
 @interface WUCCompositionGraphicsDevice : WUCCompositionObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -328,7 +328,7 @@ OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
 #ifndef __WUCCompositor_DEFINED__
 #define __WUCCompositor_DEFINED__
 
-OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
+OBJCUWPWINDOWSUICOMPOSITIONEXPORT
 @interface WUCCompositor : RTObject <WFIClosable>
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -380,7 +380,7 @@ OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
 #ifndef __WUCCompositionPropertySet_DEFINED__
 #define __WUCCompositionPropertySet_DEFINED__
 
-OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
+OBJCUWPWINDOWSUICOMPOSITIONEXPORT
 @interface WUCCompositionPropertySet : WUCCompositionObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -411,7 +411,7 @@ OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
 #ifndef __WUCCompositionDrawingSurface_DEFINED__
 #define __WUCCompositionDrawingSurface_DEFINED__
 
-OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
+OBJCUWPWINDOWSUICOMPOSITIONEXPORT
 @interface WUCCompositionDrawingSurface : WUCCompositionObject <WUCICompositionSurface>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -427,7 +427,7 @@ OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
 #ifndef __WUCCompositionColorBrush_DEFINED__
 #define __WUCCompositionColorBrush_DEFINED__
 
-OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
+OBJCUWPWINDOWSUICOMPOSITIONEXPORT
 @interface WUCCompositionColorBrush : WUCCompositionBrush
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -441,7 +441,7 @@ OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
 #ifndef __WUCCompositionEffectFactory_DEFINED__
 #define __WUCCompositionEffectFactory_DEFINED__
 
-OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
+OBJCUWPWINDOWSUICOMPOSITIONEXPORT
 @interface WUCCompositionEffectFactory : WUCCompositionObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -457,7 +457,7 @@ OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
 #ifndef __WUCCompositionScopedBatch_DEFINED__
 #define __WUCCompositionScopedBatch_DEFINED__
 
-OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
+OBJCUWPWINDOWSUICOMPOSITIONEXPORT
 @interface WUCCompositionScopedBatch : WUCCompositionObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -477,7 +477,7 @@ OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
 #ifndef __WUCCompositionSurfaceBrush_DEFINED__
 #define __WUCCompositionSurfaceBrush_DEFINED__
 
-OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
+OBJCUWPWINDOWSUICOMPOSITIONEXPORT
 @interface WUCCompositionSurfaceBrush : WUCCompositionBrush
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -502,7 +502,7 @@ OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
 #ifndef __WUCCompositionTarget_DEFINED__
 #define __WUCCompositionTarget_DEFINED__
 
-OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
+OBJCUWPWINDOWSUICOMPOSITIONEXPORT
 @interface WUCCompositionTarget : WUCCompositionObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -516,7 +516,7 @@ OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
 #ifndef __WUCCompositionCommitBatch_DEFINED__
 #define __WUCCompositionCommitBatch_DEFINED__
 
-OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
+OBJCUWPWINDOWSUICOMPOSITIONEXPORT
 @interface WUCCompositionCommitBatch : WUCCompositionObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -533,7 +533,7 @@ OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
 #ifndef __WUCCompositionAnimationGroup_DEFINED__
 #define __WUCCompositionAnimationGroup_DEFINED__
 
-OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
+OBJCUWPWINDOWSUICOMPOSITIONEXPORT
 @interface WUCCompositionAnimationGroup : WUCCompositionObject <WUCICompositionAnimationBase>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -550,7 +550,7 @@ OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
 #ifndef __WUCCompositionBackdropBrush_DEFINED__
 #define __WUCCompositionBackdropBrush_DEFINED__
 
-OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
+OBJCUWPWINDOWSUICOMPOSITIONEXPORT
 @interface WUCCompositionBackdropBrush : WUCCompositionBrush
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -563,7 +563,7 @@ OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
 #ifndef __WUCCompositionMaskBrush_DEFINED__
 #define __WUCCompositionMaskBrush_DEFINED__
 
-OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
+OBJCUWPWINDOWSUICOMPOSITIONEXPORT
 @interface WUCCompositionMaskBrush : WUCCompositionBrush
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -578,7 +578,7 @@ OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
 #ifndef __WUCCompositionNineGridBrush_DEFINED__
 #define __WUCCompositionNineGridBrush_DEFINED__
 
-OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
+OBJCUWPWINDOWSUICOMPOSITIONEXPORT
 @interface WUCCompositionNineGridBrush : WUCCompositionBrush
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -605,7 +605,7 @@ OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
 #ifndef __WUCCubicBezierEasingFunction_DEFINED__
 #define __WUCCubicBezierEasingFunction_DEFINED__
 
-OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
+OBJCUWPWINDOWSUICOMPOSITIONEXPORT
 @interface WUCCubicBezierEasingFunction : WUCCompositionEasingFunction
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -620,7 +620,7 @@ OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
 #ifndef __WUCExpressionAnimation_DEFINED__
 #define __WUCExpressionAnimation_DEFINED__
 
-OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
+OBJCUWPWINDOWSUICOMPOSITIONEXPORT
 @interface WUCExpressionAnimation : WUCCompositionAnimation
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -634,7 +634,7 @@ OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
 #ifndef __WUCImplicitAnimationCollection_DEFINED__
 #define __WUCImplicitAnimationCollection_DEFINED__
 
-OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
+OBJCUWPWINDOWSUICOMPOSITIONEXPORT
 @interface WUCImplicitAnimationCollection : WUCCompositionObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -663,7 +663,7 @@ OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
 #ifndef __WUCLinearEasingFunction_DEFINED__
 #define __WUCLinearEasingFunction_DEFINED__
 
-OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
+OBJCUWPWINDOWSUICOMPOSITIONEXPORT
 @interface WUCLinearEasingFunction : WUCCompositionEasingFunction
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -676,7 +676,7 @@ OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
 #ifndef __WUCRenderingDeviceReplacedEventArgs_DEFINED__
 #define __WUCRenderingDeviceReplacedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
+OBJCUWPWINDOWSUICOMPOSITIONEXPORT
 @interface WUCRenderingDeviceReplacedEventArgs : WUCCompositionObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -690,7 +690,7 @@ OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
 #ifndef __WUCCompositionShadow_DEFINED__
 #define __WUCCompositionShadow_DEFINED__
 
-OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
+OBJCUWPWINDOWSUICOMPOSITIONEXPORT
 @interface WUCCompositionShadow : WUCCompositionObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -703,7 +703,7 @@ OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
 #ifndef __WUCDropShadow_DEFINED__
 #define __WUCDropShadow_DEFINED__
 
-OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
+OBJCUWPWINDOWSUICOMPOSITIONEXPORT
 @interface WUCDropShadow : WUCCompositionShadow
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -721,7 +721,7 @@ OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
 #ifndef __WUCStepEasingFunction_DEFINED__
 #define __WUCStepEasingFunction_DEFINED__
 
-OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
+OBJCUWPWINDOWSUICOMPOSITIONEXPORT
 @interface WUCStepEasingFunction : WUCCompositionEasingFunction
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -739,7 +739,7 @@ OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
 #ifndef __WUCVisual_DEFINED__
 #define __WUCVisual_DEFINED__
 
-OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
+OBJCUWPWINDOWSUICOMPOSITIONEXPORT
 @interface WUCVisual : WUCCompositionObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -769,7 +769,7 @@ OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
 #ifndef __WUCContainerVisual_DEFINED__
 #define __WUCContainerVisual_DEFINED__
 
-OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
+OBJCUWPWINDOWSUICOMPOSITIONEXPORT
 @interface WUCContainerVisual : WUCVisual
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -783,7 +783,7 @@ OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
 #ifndef __WUCSpriteVisual_DEFINED__
 #define __WUCSpriteVisual_DEFINED__
 
-OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
+OBJCUWPWINDOWSUICOMPOSITIONEXPORT
 @interface WUCSpriteVisual : WUCContainerVisual
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -798,7 +798,7 @@ OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
 #ifndef __WUCLayerVisual_DEFINED__
 #define __WUCLayerVisual_DEFINED__
 
-OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
+OBJCUWPWINDOWSUICOMPOSITIONEXPORT
 @interface WUCLayerVisual : WUCContainerVisual
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -812,7 +812,7 @@ OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
 #ifndef __WUCCompositionClip_DEFINED__
 #define __WUCCompositionClip_DEFINED__
 
-OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
+OBJCUWPWINDOWSUICOMPOSITIONEXPORT
 @interface WUCCompositionClip : WUCCompositionObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -832,7 +832,7 @@ OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
 #ifndef __WUCInsetClip_DEFINED__
 #define __WUCInsetClip_DEFINED__
 
-OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
+OBJCUWPWINDOWSUICOMPOSITIONEXPORT
 @interface WUCInsetClip : WUCCompositionClip
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -849,7 +849,7 @@ OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
 #ifndef __WUCVisualCollection_DEFINED__
 #define __WUCVisualCollection_DEFINED__
 
-OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
+OBJCUWPWINDOWSUICOMPOSITIONEXPORT
 @interface WUCVisualCollection : WUCCompositionObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -869,7 +869,7 @@ OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
 #ifndef __WUCVisualUnorderedCollection_DEFINED__
 #define __WUCVisualUnorderedCollection_DEFINED__
 
-OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
+OBJCUWPWINDOWSUICOMPOSITIONEXPORT
 @interface WUCVisualUnorderedCollection : WUCCompositionObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -886,7 +886,7 @@ OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
 #ifndef __WUCCompositionLight_DEFINED__
 #define __WUCCompositionLight_DEFINED__
 
-OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
+OBJCUWPWINDOWSUICOMPOSITIONEXPORT
 @interface WUCCompositionLight : WUCCompositionObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -900,7 +900,7 @@ OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
 #ifndef __WUCAmbientLight_DEFINED__
 #define __WUCAmbientLight_DEFINED__
 
-OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
+OBJCUWPWINDOWSUICOMPOSITIONEXPORT
 @interface WUCAmbientLight : WUCCompositionLight
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -914,7 +914,7 @@ OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
 #ifndef __WUCDistantLight_DEFINED__
 #define __WUCDistantLight_DEFINED__
 
-OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
+OBJCUWPWINDOWSUICOMPOSITIONEXPORT
 @interface WUCDistantLight : WUCCompositionLight
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -930,7 +930,7 @@ OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
 #ifndef __WUCPointLight_DEFINED__
 #define __WUCPointLight_DEFINED__
 
-OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
+OBJCUWPWINDOWSUICOMPOSITIONEXPORT
 @interface WUCPointLight : WUCCompositionLight
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -949,7 +949,7 @@ OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
 #ifndef __WUCSpotLight_DEFINED__
 #define __WUCSpotLight_DEFINED__
 
-OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
+OBJCUWPWINDOWSUICOMPOSITIONEXPORT
 @interface WUCSpotLight : WUCCompositionLight
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -974,7 +974,7 @@ OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
 #ifndef __WUCKeyFrameAnimation_DEFINED__
 #define __WUCKeyFrameAnimation_DEFINED__
 
-OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
+OBJCUWPWINDOWSUICOMPOSITIONEXPORT
 @interface WUCKeyFrameAnimation : WUCCompositionAnimation
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -996,7 +996,7 @@ OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
 #ifndef __WUCColorKeyFrameAnimation_DEFINED__
 #define __WUCColorKeyFrameAnimation_DEFINED__
 
-OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
+OBJCUWPWINDOWSUICOMPOSITIONEXPORT
 @interface WUCColorKeyFrameAnimation : WUCKeyFrameAnimation
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -1012,7 +1012,7 @@ OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
 #ifndef __WUCQuaternionKeyFrameAnimation_DEFINED__
 #define __WUCQuaternionKeyFrameAnimation_DEFINED__
 
-OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
+OBJCUWPWINDOWSUICOMPOSITIONEXPORT
 @interface WUCQuaternionKeyFrameAnimation : WUCKeyFrameAnimation
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -1027,7 +1027,7 @@ OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
 #ifndef __WUCScalarKeyFrameAnimation_DEFINED__
 #define __WUCScalarKeyFrameAnimation_DEFINED__
 
-OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
+OBJCUWPWINDOWSUICOMPOSITIONEXPORT
 @interface WUCScalarKeyFrameAnimation : WUCKeyFrameAnimation
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -1042,7 +1042,7 @@ OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
 #ifndef __WUCVector2KeyFrameAnimation_DEFINED__
 #define __WUCVector2KeyFrameAnimation_DEFINED__
 
-OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
+OBJCUWPWINDOWSUICOMPOSITIONEXPORT
 @interface WUCVector2KeyFrameAnimation : WUCKeyFrameAnimation
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -1057,7 +1057,7 @@ OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
 #ifndef __WUCVector3KeyFrameAnimation_DEFINED__
 #define __WUCVector3KeyFrameAnimation_DEFINED__
 
-OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
+OBJCUWPWINDOWSUICOMPOSITIONEXPORT
 @interface WUCVector3KeyFrameAnimation : WUCKeyFrameAnimation
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -1072,7 +1072,7 @@ OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
 #ifndef __WUCVector4KeyFrameAnimation_DEFINED__
 #define __WUCVector4KeyFrameAnimation_DEFINED__
 
-OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
+OBJCUWPWINDOWSUICOMPOSITIONEXPORT
 @interface WUCVector4KeyFrameAnimation : WUCKeyFrameAnimation
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));

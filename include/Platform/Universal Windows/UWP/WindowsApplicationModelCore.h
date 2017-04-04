@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
-#define OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_RandomStuff.lib")
+#ifndef OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
+#define OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsConsolidatedNamespace.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -50,7 +50,7 @@
 - (void)uninitialize;
 @end
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WACIFrameworkView : RTObject <WACIFrameworkView>
 @end
 
@@ -64,7 +64,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 - (RTObject<WACIFrameworkView>*)createView;
 @end
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WACIFrameworkViewSource : RTObject <WACIFrameworkViewSource>
 @end
 
@@ -79,7 +79,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 - (void)removeUnhandledErrorDetectedEvent:(EventRegistrationToken)tok;
 @end
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WACICoreApplicationUnhandledError : RTObject <WACICoreApplicationUnhandledError>
 @end
 
@@ -89,7 +89,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WACAppListEntry_DEFINED__
 #define __WACAppListEntry_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WACAppListEntry : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -104,7 +104,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WACCoreApplication_DEFINED__
 #define __WACCoreApplication_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WACCoreApplication : RTObject
 + (void)exit;
 + (WACCoreApplicationView*)createNewView:(NSString *)runtimeType entryPoint:(NSString *)entryPoint;
@@ -142,7 +142,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WACCoreApplicationView_DEFINED__
 #define __WACCoreApplicationView_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WACCoreApplicationView : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -165,7 +165,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WACCoreApplicationViewTitleBar_DEFINED__
 #define __WACCoreApplicationViewTitleBar_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WACCoreApplicationViewTitleBar : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -187,7 +187,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WACUnhandledErrorDetectedEventArgs_DEFINED__
 #define __WACUnhandledErrorDetectedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WACUnhandledErrorDetectedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -201,7 +201,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WACHostedViewClosingEventArgs_DEFINED__
 #define __WACHostedViewClosingEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WACHostedViewClosingEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -215,7 +215,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WACUnhandledError_DEFINED__
 #define __WACUnhandledError_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WACUnhandledError : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));

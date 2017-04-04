@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_STORAGE_COMPRESSION_EXPORT
-#define OBJCUWP_WINDOWS_STORAGE_COMPRESSION_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_Storage_Compression.lib")
+#ifndef OBJCUWPWINDOWSSTORAGECOMPRESSIONEXPORT
+#define OBJCUWPWINDOWSSTORAGECOMPRESSIONEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsStorageCompression.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -54,7 +54,7 @@ typedef unsigned WSCCompressAlgorithm;
 - (void)close;
 @end
 
-OBJCUWP_WINDOWS_STORAGE_COMPRESSION_EXPORT
+OBJCUWPWINDOWSSTORAGECOMPRESSIONEXPORT
 @interface WFIClosable : RTObject <WFIClosable>
 @end
 
@@ -70,7 +70,7 @@ OBJCUWP_WINDOWS_STORAGE_COMPRESSION_EXPORT
 - (void)close;
 @end
 
-OBJCUWP_WINDOWS_STORAGE_COMPRESSION_EXPORT
+OBJCUWPWINDOWSSTORAGECOMPRESSIONEXPORT
 @interface WSSIOutputStream : RTObject <WSSIOutputStream>
 @end
 
@@ -80,7 +80,7 @@ OBJCUWP_WINDOWS_STORAGE_COMPRESSION_EXPORT
 #ifndef __WSCCompressor_DEFINED__
 #define __WSCCompressor_DEFINED__
 
-OBJCUWP_WINDOWS_STORAGE_COMPRESSION_EXPORT
+OBJCUWPWINDOWSSTORAGECOMPRESSIONEXPORT
 @interface WSCCompressor : RTObject <WSSIOutputStream, WFIClosable>
 + (WSCCompressor*)makeCompressor:(RTObject<WSSIOutputStream>*)underlyingStream ACTIVATOR;
 + (WSCCompressor*)makeCompressorEx:(RTObject<WSSIOutputStream>*)underlyingStream algorithm:(WSCCompressAlgorithm)algorithm blockSize:(unsigned int)blockSize ACTIVATOR;
@@ -105,7 +105,7 @@ OBJCUWP_WINDOWS_STORAGE_COMPRESSION_EXPORT
 - (void)close;
 @end
 
-OBJCUWP_WINDOWS_STORAGE_COMPRESSION_EXPORT
+OBJCUWPWINDOWSSTORAGECOMPRESSIONEXPORT
 @interface WSSIInputStream : RTObject <WSSIInputStream>
 @end
 
@@ -115,7 +115,7 @@ OBJCUWP_WINDOWS_STORAGE_COMPRESSION_EXPORT
 #ifndef __WSCDecompressor_DEFINED__
 #define __WSCDecompressor_DEFINED__
 
-OBJCUWP_WINDOWS_STORAGE_COMPRESSION_EXPORT
+OBJCUWPWINDOWSSTORAGECOMPRESSIONEXPORT
 @interface WSCDecompressor : RTObject <WSSIInputStream, WFIClosable>
 + (WSCDecompressor*)makeDecompressor:(RTObject<WSSIInputStream>*)underlyingStream ACTIVATOR;
 #if defined(__cplusplus)

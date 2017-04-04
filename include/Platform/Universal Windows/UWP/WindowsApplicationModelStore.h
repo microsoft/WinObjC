@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_APPLICATIONMODEL_STORE_EXPORT
-#define OBJCUWP_WINDOWS_APPLICATIONMODEL_STORE_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_ApplicationModel_Store.lib")
+#ifndef OBJCUWPWINDOWSAPPLICATIONMODELSTOREEXPORT
+#define OBJCUWPWINDOWSAPPLICATIONMODELSTOREEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsApplicationModelStore.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -78,7 +78,7 @@ typedef void(^WSLicenseChangedEventHandler)();
 #ifndef __WSLicenseInformation_DEFINED__
 #define __WSLicenseInformation_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_STORE_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELSTOREEXPORT
 @interface WSLicenseInformation : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -97,7 +97,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_STORE_EXPORT
 #ifndef __WSListingInformation_DEFINED__
 #define __WSListingInformation_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_STORE_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELSTOREEXPORT
 @interface WSListingInformation : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -120,7 +120,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_STORE_EXPORT
 #ifndef __WSPurchaseResults_DEFINED__
 #define __WSPurchaseResults_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_STORE_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELSTOREEXPORT
 @interface WSPurchaseResults : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -137,7 +137,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_STORE_EXPORT
 #ifndef __WSProductPurchaseDisplayProperties_DEFINED__
 #define __WSProductPurchaseDisplayProperties_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_STORE_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELSTOREEXPORT
 @interface WSProductPurchaseDisplayProperties : RTObject
 + (WSProductPurchaseDisplayProperties*)makeProductPurchaseDisplayProperties:(NSString *)name ACTIVATOR;
 + (instancetype)make __attribute__ ((ns_returns_retained));
@@ -155,7 +155,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_STORE_EXPORT
 #ifndef __WSUnfulfilledConsumable_DEFINED__
 #define __WSUnfulfilledConsumable_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_STORE_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELSTOREEXPORT
 @interface WSUnfulfilledConsumable : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -171,7 +171,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_STORE_EXPORT
 #ifndef __WSProductLicense_DEFINED__
 #define __WSProductLicense_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_STORE_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELSTOREEXPORT
 @interface WSProductLicense : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -188,7 +188,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_STORE_EXPORT
 #ifndef __WSProductListing_DEFINED__
 #define __WSProductListing_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_STORE_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELSTOREEXPORT
 @interface WSProductListing : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -213,7 +213,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_STORE_EXPORT
 #ifndef __WSCurrentApp_DEFINED__
 #define __WSCurrentApp_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_STORE_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELSTOREEXPORT
 @interface WSCurrentApp : RTObject
 + (void)getAppPurchaseCampaignIdAsyncWithSuccess:(void (^)(NSString *))success failure:(void (^)(NSError*))failure;
 + (void)getCustomerPurchaseIdAsync:(NSString *)serviceTicket publisherUserId:(NSString *)publisherUserId success:(void (^)(NSString *))success failure:(void (^)(NSError*))failure;
@@ -241,7 +241,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_STORE_EXPORT
 #ifndef __WSCurrentAppSimulator_DEFINED__
 #define __WSCurrentAppSimulator_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_STORE_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELSTOREEXPORT
 @interface WSCurrentAppSimulator : RTObject
 + (void)reportConsumableFulfillmentAsync:(NSString *)productId transactionId:(WFGUID*)transactionId success:(void (^)(WSFulfillmentResult))success failure:(void (^)(NSError*))failure;
 + (void)requestProductPurchaseWithResultsAsync:(NSString *)productId success:(void (^)(WSPurchaseResults*))success failure:(void (^)(NSError*))failure;

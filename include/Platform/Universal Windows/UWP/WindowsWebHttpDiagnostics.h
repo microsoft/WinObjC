@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_WEB_HTTP_DIAGNOSTICS_EXPORT
-#define OBJCUWP_WINDOWS_WEB_HTTP_DIAGNOSTICS_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_Web_Http_Diagnostics.lib")
+#ifndef OBJCUWPWINDOWSWEBHTTPDIAGNOSTICSEXPORT
+#define OBJCUWPWINDOWSWEBHTTPDIAGNOSTICSEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsWebHttpDiagnostics.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -58,7 +58,7 @@ typedef unsigned WWHDHttpDiagnosticRequestInitiator;
 #ifndef __WWHDHttpDiagnosticSourceLocation_DEFINED__
 #define __WWHDHttpDiagnosticSourceLocation_DEFINED__
 
-OBJCUWP_WINDOWS_WEB_HTTP_DIAGNOSTICS_EXPORT
+OBJCUWPWINDOWSWEBHTTPDIAGNOSTICSEXPORT
 @interface WWHDHttpDiagnosticSourceLocation : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -74,7 +74,7 @@ OBJCUWP_WINDOWS_WEB_HTTP_DIAGNOSTICS_EXPORT
 #ifndef __WWHDHttpDiagnosticProviderRequestSentEventArgs_DEFINED__
 #define __WWHDHttpDiagnosticProviderRequestSentEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_WEB_HTTP_DIAGNOSTICS_EXPORT
+OBJCUWPWINDOWSWEBHTTPDIAGNOSTICSEXPORT
 @interface WWHDHttpDiagnosticProviderRequestSentEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -94,7 +94,7 @@ OBJCUWP_WINDOWS_WEB_HTTP_DIAGNOSTICS_EXPORT
 #ifndef __WWHDHttpDiagnosticProviderResponseReceivedEventArgs_DEFINED__
 #define __WWHDHttpDiagnosticProviderResponseReceivedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_WEB_HTTP_DIAGNOSTICS_EXPORT
+OBJCUWPWINDOWSWEBHTTPDIAGNOSTICSEXPORT
 @interface WWHDHttpDiagnosticProviderResponseReceivedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -110,7 +110,7 @@ OBJCUWP_WINDOWS_WEB_HTTP_DIAGNOSTICS_EXPORT
 #ifndef __WWHDHttpDiagnosticProviderRequestResponseTimestamps_DEFINED__
 #define __WWHDHttpDiagnosticProviderRequestResponseTimestamps_DEFINED__
 
-OBJCUWP_WINDOWS_WEB_HTTP_DIAGNOSTICS_EXPORT
+OBJCUWPWINDOWSWEBHTTPDIAGNOSTICSEXPORT
 @interface WWHDHttpDiagnosticProviderRequestResponseTimestamps : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -132,7 +132,7 @@ OBJCUWP_WINDOWS_WEB_HTTP_DIAGNOSTICS_EXPORT
 #ifndef __WWHDHttpDiagnosticProviderRequestResponseCompletedEventArgs_DEFINED__
 #define __WWHDHttpDiagnosticProviderRequestResponseCompletedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_WEB_HTTP_DIAGNOSTICS_EXPORT
+OBJCUWPWINDOWSWEBHTTPDIAGNOSTICSEXPORT
 @interface WWHDHttpDiagnosticProviderRequestResponseCompletedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -152,7 +152,7 @@ OBJCUWP_WINDOWS_WEB_HTTP_DIAGNOSTICS_EXPORT
 #ifndef __WWHDHttpDiagnosticProvider_DEFINED__
 #define __WWHDHttpDiagnosticProvider_DEFINED__
 
-OBJCUWP_WINDOWS_WEB_HTTP_DIAGNOSTICS_EXPORT
+OBJCUWPWINDOWSWEBHTTPDIAGNOSTICSEXPORT
 @interface WWHDHttpDiagnosticProvider : RTObject
 + (WWHDHttpDiagnosticProvider*)createFromProcessDiagnosticInfo:(WSDProcessDiagnosticInfo*)processDiagnosticInfo;
 #if defined(__cplusplus)

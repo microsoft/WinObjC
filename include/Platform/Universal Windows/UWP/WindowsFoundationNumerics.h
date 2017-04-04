@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_FOUNDATION_NUMERICS_EXPORT
-#define OBJCUWP_WINDOWS_FOUNDATION_NUMERICS_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_Foundation_Numerics.lib")
+#ifndef OBJCUWPWINDOWSFOUNDATIONNUMERICSEXPORT
+#define OBJCUWPWINDOWSFOUNDATIONNUMERICSEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsFoundationNumerics.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -32,7 +32,7 @@
 #import <Foundation/Foundation.h>
 
 // [struct] Windows.Foundation.Numerics.Vector2
-OBJCUWP_WINDOWS_FOUNDATION_NUMERICS_EXPORT
+OBJCUWPWINDOWSFOUNDATIONNUMERICSEXPORT
 @interface WFNVector2 : NSObject
 + (instancetype)new;
 @property float x;
@@ -40,7 +40,7 @@ OBJCUWP_WINDOWS_FOUNDATION_NUMERICS_EXPORT
 @end
 
 // [struct] Windows.Foundation.Numerics.Vector3
-OBJCUWP_WINDOWS_FOUNDATION_NUMERICS_EXPORT
+OBJCUWPWINDOWSFOUNDATIONNUMERICSEXPORT
 @interface WFNVector3 : NSObject
 + (instancetype)new;
 @property float x;
@@ -49,7 +49,7 @@ OBJCUWP_WINDOWS_FOUNDATION_NUMERICS_EXPORT
 @end
 
 // [struct] Windows.Foundation.Numerics.Vector4
-OBJCUWP_WINDOWS_FOUNDATION_NUMERICS_EXPORT
+OBJCUWPWINDOWSFOUNDATIONNUMERICSEXPORT
 @interface WFNVector4 : NSObject
 + (instancetype)new;
 @property float x;
@@ -59,7 +59,7 @@ OBJCUWP_WINDOWS_FOUNDATION_NUMERICS_EXPORT
 @end
 
 // [struct] Windows.Foundation.Numerics.Matrix3x2
-OBJCUWP_WINDOWS_FOUNDATION_NUMERICS_EXPORT
+OBJCUWPWINDOWSFOUNDATIONNUMERICSEXPORT
 @interface WFNMatrix3x2 : NSObject
 + (instancetype)new;
 @property float m11;
@@ -71,7 +71,7 @@ OBJCUWP_WINDOWS_FOUNDATION_NUMERICS_EXPORT
 @end
 
 // [struct] Windows.Foundation.Numerics.Matrix4x4
-OBJCUWP_WINDOWS_FOUNDATION_NUMERICS_EXPORT
+OBJCUWPWINDOWSFOUNDATIONNUMERICSEXPORT
 @interface WFNMatrix4x4 : NSObject
 + (instancetype)new;
 @property float m11;
@@ -93,7 +93,7 @@ OBJCUWP_WINDOWS_FOUNDATION_NUMERICS_EXPORT
 @end
 
 // [struct] Windows.Foundation.Numerics.Plane
-OBJCUWP_WINDOWS_FOUNDATION_NUMERICS_EXPORT
+OBJCUWPWINDOWSFOUNDATIONNUMERICSEXPORT
 @interface WFNPlane : NSObject
 + (instancetype)new;
 @property (retain) WFNVector3* normal;
@@ -101,7 +101,7 @@ OBJCUWP_WINDOWS_FOUNDATION_NUMERICS_EXPORT
 @end
 
 // [struct] Windows.Foundation.Numerics.Quaternion
-OBJCUWP_WINDOWS_FOUNDATION_NUMERICS_EXPORT
+OBJCUWPWINDOWSFOUNDATIONNUMERICSEXPORT
 @interface WFNQuaternion : NSObject
 + (instancetype)new;
 @property float x;

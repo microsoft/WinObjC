@@ -22,6 +22,7 @@
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\art.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\ForceInclusion.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\NSAttributedString+UIKitAdditions.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\NSIndexPath+UITableView.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\NSString+UIKitAdditions.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\NSValue+UIKitAdditions.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\NSLayoutConstraint.mm" />
@@ -256,10 +257,10 @@
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIPercentDrivenInteractiveTransition.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIPopoverBackgroundView.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIPopoverController.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\WYPopoverController.m">
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\WYPopoverController.mm">
       <ObjectiveCARC>true</ObjectiveCARC>
     </ClangCompile>
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\WYStoryboardPopoverSegue.m">
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\WYStoryboardPopoverSegue.m">
       <ObjectiveCARC>true</ObjectiveCARC>
     </ClangCompile>
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIPress.mm" />

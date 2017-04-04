@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_PHONE_STARTSCREEN_EXPORT
-#define OBJCUWP_WINDOWS_PHONE_STARTSCREEN_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_Phone_StartScreen.lib")
+#ifndef OBJCUWPWINDOWSPHONESTARTSCREENEXPORT
+#define OBJCUWPWINDOWSPHONESTARTSCREENEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsPhoneStartScreen.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -42,7 +42,7 @@
 - (WUNToastNotifier*)createToastNotifierForSecondaryTile:(NSString *)tileId;
 @end
 
-OBJCUWP_WINDOWS_PHONE_STARTSCREEN_EXPORT
+OBJCUWPWINDOWSPHONESTARTSCREENEXPORT
 @interface WPSIToastNotificationManagerStatics3 : RTObject <WPSIToastNotificationManagerStatics3>
 @end
 
@@ -52,7 +52,7 @@ OBJCUWP_WINDOWS_PHONE_STARTSCREEN_EXPORT
 #ifndef __WPSDualSimTile_DEFINED__
 #define __WPSDualSimTile_DEFINED__
 
-OBJCUWP_WINDOWS_PHONE_STARTSCREEN_EXPORT
+OBJCUWPWINDOWSPHONESTARTSCREENEXPORT
 @interface WPSDualSimTile : RTObject
 + (WPSDualSimTile*)getTileForSim2;
 + (void)updateDisplayNameForSim1Async:(NSString *)name success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;

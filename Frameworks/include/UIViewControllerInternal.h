@@ -66,10 +66,8 @@ struct UIViewControllerPriv {
     UIModalPresentationStyle _presentationStyle;
     BOOL _hidesBottomBar;
     UIModalTransitionStyle _modalTransitionStyle;
+    StrongId<UIView> _modalOverlayView;
     BOOL _isRootView;
-    idretainp<void (^)(void)> _dismissCompletionBlock;
-    idretainp<void (^)(void)> _presentCompletionBlock;
-    idretaintype(UIViewController) _dismissController;
     CGSize _contentSizeForViewInPopover;
     unsigned _edgesForExtendedLayout;
     BOOL _modalInPopover;
@@ -101,6 +99,10 @@ struct UIViewControllerPriv {
 - (void)_notifyViewDidAppear:(BOOL)isAnimated;
 - (void)_notifyViewWillDisappear:(BOOL)isAnimated;
 - (void)_notifyViewDidDisappear:(BOOL)isAnimated;
+
+- (void)_setBeingPresented:(BOOL)beingPresented;
+- (void)_setBeingDismissed:(BOOL)beingDismissed;
+- (void)_unlinkPresentedController;
 
 - (void)_setResizeToScreen:(BOOL)resize;
 - (void)_doResizeToScreen;

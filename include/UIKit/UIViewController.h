@@ -138,8 +138,8 @@ UIKIT_EXPORT_CLASS
 - (BOOL)automaticallyForwardAppearanceAndRotationMethodsToChildViewControllers STUB_METHOD;
 - (BOOL)canPerformUnwindSegueAction:(SEL)action fromViewController:(UIViewController*)fromViewController withSender:(id)sender STUB_METHOD;
 - (BOOL)disablesAutomaticKeyboardDismissal STUB_METHOD;
-- (BOOL)isBeingDismissed STUB_METHOD;
-- (BOOL)isBeingPresented STUB_METHOD;
+@property (nonatomic, readonly, getter=isBeingPresented) BOOL beingPresented;
+@property (nonatomic, readonly, getter=isBeingDismissed) BOOL beingDismissed;
 - (BOOL)isMovingFromParentViewController STUB_METHOD;
 - (BOOL)isMovingToParentViewController STUB_METHOD;
 - (BOOL)isViewLoaded;
@@ -173,7 +173,7 @@ UIKIT_EXPORT_CLASS
 - (id<UIViewControllerPreviewing>)registerForPreviewingWithDelegate:(id<UIViewControllerPreviewingDelegate>)delegate
                                                          sourceView:(UIView*)sourceView STUB_METHOD;
 - (id<UIViewControllerTransitionCoordinator>)transitionCoordinator STUB_METHOD;
--(instancetype)initWithNibName:(NSString*)nibName bundle:(NSBundle*)nibBundle NS_DESIGNATED_INITIALIZER;
+- (instancetype)initWithNibName:(NSString*)nibName bundle:(NSBundle*)nibBundle NS_DESIGNATED_INITIALIZER;
 - (void)addChildViewController:(UIViewController*)childController;
 - (void)addKeyCommand:(UIKeyCommand*)keyCommand STUB_METHOD;
 - (void)applicationFinishedRestoringState STUB_METHOD;

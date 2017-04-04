@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_APPLICATIONMODEL_CALLS_PROVIDER_EXPORT
-#define OBJCUWP_WINDOWS_APPLICATIONMODEL_CALLS_PROVIDER_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_ApplicationModel_Calls_Provider.lib")
+#ifndef OBJCUWPWINDOWSAPPLICATIONMODELCALLSPROVIDEREXPORT
+#define OBJCUWPWINDOWSAPPLICATIONMODELCALLSPROVIDEREXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsApplicationModelCallsProvider.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -38,7 +38,7 @@
 #ifndef __WACPPhoneCallOrigin_DEFINED__
 #define __WACPPhoneCallOrigin_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_CALLS_PROVIDER_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELCALLSPROVIDEREXPORT
 @interface WACPPhoneCallOrigin : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -57,7 +57,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_CALLS_PROVIDER_EXPORT
 #ifndef __WACPPhoneCallOriginManager_DEFINED__
 #define __WACPPhoneCallOriginManager_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_CALLS_PROVIDER_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELCALLSPROVIDEREXPORT
 @interface WACPPhoneCallOriginManager : RTObject
 + (void)showPhoneCallOriginSettingsUI;
 + (void)setCallOrigin:(WFGUID*)requestId callOrigin:(WACPPhoneCallOrigin*)callOrigin;

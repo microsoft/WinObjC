@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
-#define OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_RandomStuff.lib")
+#ifndef OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
+#define OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsConsolidatedNamespace.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -223,7 +223,7 @@ typedef void(^WABBackgroundTaskCompletedEventHandler)(WABBackgroundTaskRegistrat
 - (WABBackgroundTaskDeferral*)getDeferral;
 @end
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WABIBackgroundTaskInstance : RTObject <WABIBackgroundTaskInstance>
 @end
 
@@ -238,7 +238,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 - (WABBackgroundTaskDeferral*)getDeferral;
 @end
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WABIBackgroundTaskInstance2 : RTObject <WABIBackgroundTaskInstance2>
 @end
 
@@ -253,7 +253,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 - (WABBackgroundTaskDeferral*)getDeferral;
 @end
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WABIBackgroundTaskInstance4 : RTObject <WABIBackgroundTaskInstance4>
 @end
 
@@ -267,7 +267,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 - (void)run:(RTObject<WABIBackgroundTaskInstance>*)taskInstance;
 @end
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WABIBackgroundTask : RTObject <WABIBackgroundTask>
 @end
 
@@ -287,7 +287,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 - (void)unregister:(BOOL)cancelTask;
 @end
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WABIBackgroundTaskRegistration : RTObject <WABIBackgroundTaskRegistration>
 @end
 
@@ -302,7 +302,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 - (void)unregister:(BOOL)cancelTask;
 @end
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WABIBackgroundTaskRegistration2 : RTObject <WABIBackgroundTaskRegistration2>
 @end
 
@@ -315,7 +315,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @protocol WABIBackgroundTrigger
 @end
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WABIBackgroundTrigger : RTObject <WABIBackgroundTrigger>
 @end
 
@@ -328,7 +328,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @protocol WABIBackgroundCondition
 @end
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WABIBackgroundCondition : RTObject <WABIBackgroundCondition>
 @end
 
@@ -338,7 +338,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WABAlarmApplicationManager_DEFINED__
 #define __WABAlarmApplicationManager_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WABAlarmApplicationManager : RTObject
 + (void)requestAccessAsyncWithSuccess:(void (^)(WABAlarmAccessStatus))success failure:(void (^)(NSError*))failure;
 + (WABAlarmAccessStatus)getAccessStatus;
@@ -350,7 +350,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WABPhoneTrigger_DEFINED__
 #define __WABPhoneTrigger_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WABPhoneTrigger : RTObject <WABIBackgroundTrigger>
 + (WABPhoneTrigger*)make:(WACBPhoneTriggerType)type oneShot:(BOOL)oneShot ACTIVATOR;
 #if defined(__cplusplus)
@@ -366,7 +366,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WABCommunicationBlockingAppSetAsActiveTrigger_DEFINED__
 #define __WABCommunicationBlockingAppSetAsActiveTrigger_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WABCommunicationBlockingAppSetAsActiveTrigger : RTObject <WABIBackgroundTrigger>
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -380,7 +380,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WABSmartCardTrigger_DEFINED__
 #define __WABSmartCardTrigger_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WABSmartCardTrigger : RTObject <WABIBackgroundTrigger>
 + (WABSmartCardTrigger*)make:(WDSSmartCardTriggerType)triggerType ACTIVATOR;
 #if defined(__cplusplus)
@@ -395,7 +395,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WABAppointmentStoreNotificationTrigger_DEFINED__
 #define __WABAppointmentStoreNotificationTrigger_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WABAppointmentStoreNotificationTrigger : RTObject <WABIBackgroundTrigger>
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -409,7 +409,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WABApplicationTrigger_DEFINED__
 #define __WABApplicationTrigger_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WABApplicationTrigger : RTObject <WABIBackgroundTrigger>
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -425,7 +425,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WABApplicationTriggerDetails_DEFINED__
 #define __WABApplicationTriggerDetails_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WABApplicationTriggerDetails : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -439,7 +439,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WABBackgroundExecutionManager_DEFINED__
 #define __WABBackgroundExecutionManager_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WABBackgroundExecutionManager : RTObject
 + (void)requestAccessAsyncWithSuccess:(void (^)(WABBackgroundAccessStatus))success failure:(void (^)(NSError*))failure;
 + (void)requestAccessForApplicationAsync:(NSString *)applicationId success:(void (^)(WABBackgroundAccessStatus))success failure:(void (^)(NSError*))failure;
@@ -455,7 +455,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WABMediaProcessingTrigger_DEFINED__
 #define __WABMediaProcessingTrigger_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WABMediaProcessingTrigger : RTObject <WABIBackgroundTrigger>
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -471,7 +471,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WABBackgroundTaskRegistration_DEFINED__
 #define __WABBackgroundTaskRegistration_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WABBackgroundTaskRegistration : RTObject <WABIBackgroundTaskRegistration, WABIBackgroundTaskRegistration2>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -493,7 +493,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WABBackgroundTaskDeferral_DEFINED__
 #define __WABBackgroundTaskDeferral_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WABBackgroundTaskDeferral : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -507,7 +507,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WABBackgroundTaskProgressEventArgs_DEFINED__
 #define __WABBackgroundTaskProgressEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WABBackgroundTaskProgressEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -522,7 +522,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WABBackgroundTaskCompletedEventArgs_DEFINED__
 #define __WABBackgroundTaskCompletedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WABBackgroundTaskCompletedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -537,7 +537,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WABBackgroundTaskBuilder_DEFINED__
 #define __WABBackgroundTaskBuilder_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WABBackgroundTaskBuilder : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -558,7 +558,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WABBackgroundWorkCost_DEFINED__
 #define __WABBackgroundWorkCost_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WABBackgroundWorkCost : RTObject
 + (WABBackgroundWorkCostValue)currentBackgroundWorkCost;
 @end
@@ -569,7 +569,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WABChatMessageNotificationTrigger_DEFINED__
 #define __WABChatMessageNotificationTrigger_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WABChatMessageNotificationTrigger : RTObject <WABIBackgroundTrigger>
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -583,7 +583,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WABChatMessageReceivedNotificationTrigger_DEFINED__
 #define __WABChatMessageReceivedNotificationTrigger_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WABChatMessageReceivedNotificationTrigger : RTObject <WABIBackgroundTrigger>
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -597,7 +597,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WABRcsEndUserMessageAvailableTrigger_DEFINED__
 #define __WABRcsEndUserMessageAvailableTrigger_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WABRcsEndUserMessageAvailableTrigger : RTObject <WABIBackgroundTrigger>
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -611,7 +611,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WABContactStoreNotificationTrigger_DEFINED__
 #define __WABContactStoreNotificationTrigger_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WABContactStoreNotificationTrigger : RTObject <WABIBackgroundTrigger>
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -625,7 +625,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WABContentPrefetchTrigger_DEFINED__
 #define __WABContentPrefetchTrigger_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WABContentPrefetchTrigger : RTObject <WABIBackgroundTrigger>
 + (WABContentPrefetchTrigger*)make:(WFTimeSpan*)waitInterval ACTIVATOR;
 + (instancetype)make __attribute__ ((ns_returns_retained));
@@ -641,7 +641,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WABEmailStoreNotificationTrigger_DEFINED__
 #define __WABEmailStoreNotificationTrigger_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WABEmailStoreNotificationTrigger : RTObject <WABIBackgroundTrigger>
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -655,7 +655,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WABMobileBroadbandRegistrationStateChangeTrigger_DEFINED__
 #define __WABMobileBroadbandRegistrationStateChangeTrigger_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WABMobileBroadbandRegistrationStateChangeTrigger : RTObject <WABIBackgroundTrigger>
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -669,7 +669,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WABMobileBroadbandRadioStateChangeTrigger_DEFINED__
 #define __WABMobileBroadbandRadioStateChangeTrigger_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WABMobileBroadbandRadioStateChangeTrigger : RTObject <WABIBackgroundTrigger>
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -683,7 +683,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WABMobileBroadbandPinLockStateChangeTrigger_DEFINED__
 #define __WABMobileBroadbandPinLockStateChangeTrigger_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WABMobileBroadbandPinLockStateChangeTrigger : RTObject <WABIBackgroundTrigger>
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -697,7 +697,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WABMobileBroadbandDeviceServiceNotificationTrigger_DEFINED__
 #define __WABMobileBroadbandDeviceServiceNotificationTrigger_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WABMobileBroadbandDeviceServiceNotificationTrigger : RTObject <WABIBackgroundTrigger>
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -711,7 +711,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WABSecondaryAuthenticationFactorAuthenticationTrigger_DEFINED__
 #define __WABSecondaryAuthenticationFactorAuthenticationTrigger_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WABSecondaryAuthenticationFactorAuthenticationTrigger : RTObject <WABIBackgroundTrigger>
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -725,7 +725,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WABSmsMessageReceivedTrigger_DEFINED__
 #define __WABSmsMessageReceivedTrigger_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WABSmsMessageReceivedTrigger : RTObject <WABIBackgroundTrigger>
 + (WABSmsMessageReceivedTrigger*)make:(WDSSmsFilterRules*)filterRules ACTIVATOR;
 #if defined(__cplusplus)
@@ -739,7 +739,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WABStorageLibraryContentChangedTrigger_DEFINED__
 #define __WABStorageLibraryContentChangedTrigger_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WABStorageLibraryContentChangedTrigger : RTObject <WABIBackgroundTrigger>
 + (WABStorageLibraryContentChangedTrigger*)create:(WSStorageLibrary*)storageLibrary;
 + (WABStorageLibraryContentChangedTrigger*)createFromLibraries:(id<NSFastEnumeration> /* WSStorageLibrary* */)storageLibraries;
@@ -754,7 +754,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WABSystemTrigger_DEFINED__
 #define __WABSystemTrigger_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WABSystemTrigger : RTObject <WABIBackgroundTrigger>
 + (WABSystemTrigger*)make:(WABSystemTriggerType)triggerType oneShot:(BOOL)oneShot ACTIVATOR;
 #if defined(__cplusplus)
@@ -770,7 +770,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WABSystemCondition_DEFINED__
 #define __WABSystemCondition_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WABSystemCondition : RTObject <WABIBackgroundCondition>
 + (WABSystemCondition*)make:(WABSystemConditionType)conditionType ACTIVATOR;
 #if defined(__cplusplus)
@@ -785,7 +785,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WABNetworkOperatorNotificationTrigger_DEFINED__
 #define __WABNetworkOperatorNotificationTrigger_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WABNetworkOperatorNotificationTrigger : RTObject <WABIBackgroundTrigger>
 + (WABNetworkOperatorNotificationTrigger*)make:(NSString *)networkAccountId ACTIVATOR;
 #if defined(__cplusplus)
@@ -800,7 +800,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WABDeviceManufacturerNotificationTrigger_DEFINED__
 #define __WABDeviceManufacturerNotificationTrigger_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WABDeviceManufacturerNotificationTrigger : RTObject <WABIBackgroundTrigger>
 + (WABDeviceManufacturerNotificationTrigger*)make:(NSString *)triggerQualifier oneShot:(BOOL)oneShot ACTIVATOR;
 #if defined(__cplusplus)
@@ -816,7 +816,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WABCachedFileUpdaterTriggerDetails_DEFINED__
 #define __WABCachedFileUpdaterTriggerDetails_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WABCachedFileUpdaterTriggerDetails : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -832,7 +832,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WABCachedFileUpdaterTrigger_DEFINED__
 #define __WABCachedFileUpdaterTrigger_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WABCachedFileUpdaterTrigger : RTObject <WABIBackgroundTrigger>
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -846,7 +846,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WABTimeTrigger_DEFINED__
 #define __WABTimeTrigger_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WABTimeTrigger : RTObject <WABIBackgroundTrigger>
 + (WABTimeTrigger*)make:(unsigned int)freshnessTime oneShot:(BOOL)oneShot ACTIVATOR;
 #if defined(__cplusplus)
@@ -862,7 +862,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WABMaintenanceTrigger_DEFINED__
 #define __WABMaintenanceTrigger_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WABMaintenanceTrigger : RTObject <WABIBackgroundTrigger>
 + (WABMaintenanceTrigger*)make:(unsigned int)freshnessTime oneShot:(BOOL)oneShot ACTIVATOR;
 #if defined(__cplusplus)
@@ -878,7 +878,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WABDeviceUseTrigger_DEFINED__
 #define __WABDeviceUseTrigger_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WABDeviceUseTrigger : RTObject <WABIBackgroundTrigger>
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -894,7 +894,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WABDeviceServicingTrigger_DEFINED__
 #define __WABDeviceServicingTrigger_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WABDeviceServicingTrigger : RTObject <WABIBackgroundTrigger>
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -910,7 +910,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WABRfcommConnectionTrigger_DEFINED__
 #define __WABRfcommConnectionTrigger_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WABRfcommConnectionTrigger : RTObject <WABIBackgroundTrigger>
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -929,7 +929,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WABDeviceConnectionChangeTrigger_DEFINED__
 #define __WABDeviceConnectionChangeTrigger_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WABDeviceConnectionChangeTrigger : RTObject <WABIBackgroundTrigger>
 + (void)fromIdAsync:(NSString *)deviceId success:(void (^)(WABDeviceConnectionChangeTrigger*))success failure:(void (^)(NSError*))failure;
 #if defined(__cplusplus)
@@ -946,7 +946,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WABGattCharacteristicNotificationTrigger_DEFINED__
 #define __WABGattCharacteristicNotificationTrigger_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WABGattCharacteristicNotificationTrigger : RTObject <WABIBackgroundTrigger>
 + (WABGattCharacteristicNotificationTrigger*)make:(WDBGGattCharacteristic*)characteristic ACTIVATOR;
 #if defined(__cplusplus)
@@ -961,7 +961,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WABBluetoothLEAdvertisementWatcherTrigger_DEFINED__
 #define __WABBluetoothLEAdvertisementWatcherTrigger_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WABBluetoothLEAdvertisementWatcherTrigger : RTObject <WABIBackgroundTrigger>
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -981,7 +981,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WABBluetoothLEAdvertisementPublisherTrigger_DEFINED__
 #define __WABBluetoothLEAdvertisementPublisherTrigger_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WABBluetoothLEAdvertisementPublisherTrigger : RTObject <WABIBackgroundTrigger>
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -996,7 +996,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WABDeviceWatcherTrigger_DEFINED__
 #define __WABDeviceWatcherTrigger_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WABDeviceWatcherTrigger : RTObject <WABIBackgroundTrigger>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -1009,7 +1009,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WABLocationTrigger_DEFINED__
 #define __WABLocationTrigger_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WABLocationTrigger : RTObject <WABIBackgroundTrigger>
 + (WABLocationTrigger*)make:(WABLocationTriggerType)triggerType ACTIVATOR;
 #if defined(__cplusplus)
@@ -1024,7 +1024,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WABActivitySensorTrigger_DEFINED__
 #define __WABActivitySensorTrigger_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WABActivitySensorTrigger : RTObject <WABIBackgroundTrigger>
 + (WABActivitySensorTrigger*)make:(unsigned int)reportIntervalInMilliseconds ACTIVATOR;
 #if defined(__cplusplus)
@@ -1042,7 +1042,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WABSensorDataThresholdTrigger_DEFINED__
 #define __WABSensorDataThresholdTrigger_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WABSensorDataThresholdTrigger : RTObject <WABIBackgroundTrigger>
 + (WABSensorDataThresholdTrigger*)make:(RTObject<WDSISensorDataThreshold>*)threshold ACTIVATOR;
 #if defined(__cplusplus)
@@ -1056,7 +1056,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WABNetworkOperatorHotspotAuthenticationTrigger_DEFINED__
 #define __WABNetworkOperatorHotspotAuthenticationTrigger_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WABNetworkOperatorHotspotAuthenticationTrigger : RTObject <WABIBackgroundTrigger>
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -1070,7 +1070,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WABSocketActivityTrigger_DEFINED__
 #define __WABSocketActivityTrigger_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WABSocketActivityTrigger : RTObject <WABIBackgroundTrigger>
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -1085,7 +1085,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WABPushNotificationTrigger_DEFINED__
 #define __WABPushNotificationTrigger_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WABPushNotificationTrigger : RTObject <WABIBackgroundTrigger>
 + (WABPushNotificationTrigger*)make:(NSString *)applicationId ACTIVATOR;
 + (instancetype)make __attribute__ ((ns_returns_retained));
@@ -1100,7 +1100,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WABToastNotificationHistoryChangedTrigger_DEFINED__
 #define __WABToastNotificationHistoryChangedTrigger_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WABToastNotificationHistoryChangedTrigger : RTObject <WABIBackgroundTrigger>
 + (instancetype)make __attribute__ ((ns_returns_retained));
 + (WABToastNotificationHistoryChangedTrigger*)make:(NSString *)applicationId ACTIVATOR;
@@ -1115,7 +1115,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WABToastNotificationActionTrigger_DEFINED__
 #define __WABToastNotificationActionTrigger_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WABToastNotificationActionTrigger : RTObject <WABIBackgroundTrigger>
 + (WABToastNotificationActionTrigger*)make:(NSString *)applicationId ACTIVATOR;
 + (instancetype)make __attribute__ ((ns_returns_retained));
@@ -1130,7 +1130,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WABUserNotificationChangedTrigger_DEFINED__
 #define __WABUserNotificationChangedTrigger_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WABUserNotificationChangedTrigger : RTObject <WABIBackgroundTrigger>
 + (WABUserNotificationChangedTrigger*)make:(WUNNotificationKinds)notificationKinds ACTIVATOR;
 #if defined(__cplusplus)

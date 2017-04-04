@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_UI_XAML_EXPORT
-#define OBJCUWP_WINDOWS_UI_XAML_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_UI_Xaml.lib")
+#ifndef OBJCUWPWINDOWSUIXAMLEXPORT
+#define OBJCUWPWINDOWSUIXAMLEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsUIXaml.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -95,7 +95,7 @@ typedef void(^WUXNNavigationStoppedEventHandler)(RTObject* sender, WUXNNavigatio
 #ifndef __WUXNNavigationEventArgs_DEFINED__
 #define __WUXNNavigationEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXNNavigationEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -114,7 +114,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXNNavigatingCancelEventArgs_DEFINED__
 #define __WUXNNavigatingCancelEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXNNavigatingCancelEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -132,7 +132,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXNNavigationFailedEventArgs_DEFINED__
 #define __WUXNNavigationFailedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXNNavigationFailedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -148,7 +148,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXDependencyObject_DEFINED__
 #define __WXDependencyObject_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXDependencyObject : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -169,7 +169,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXNPageStackEntry_DEFINED__
 #define __WUXNPageStackEntry_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXNPageStackEntry : WXDependencyObject
 + (WUXNPageStackEntry*)makeInstance:(WUXITypeName*)sourcePageType parameter:(RTObject*)parameter navigationTransitionInfo:(WUXMANavigationTransitionInfo*)navigationTransitionInfo ACTIVATOR;
 #if defined(__cplusplus)

@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_GLOBALIZATION_NUMBERFORMATTING_EXPORT
-#define OBJCUWP_WINDOWS_GLOBALIZATION_NUMBERFORMATTING_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_Globalization_NumberFormatting.lib")
+#ifndef OBJCUWPWINDOWSGLOBALIZATIONNUMBERFORMATTINGEXPORT
+#define OBJCUWPWINDOWSGLOBALIZATIONNUMBERFORMATTINGEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsGlobalizationNumberFormatting.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -68,7 +68,7 @@ typedef unsigned WGNCurrencyFormatterMode;
 - (double)roundDouble:(double)value;
 @end
 
-OBJCUWP_WINDOWS_GLOBALIZATION_NUMBERFORMATTING_EXPORT
+OBJCUWPWINDOWSGLOBALIZATIONNUMBERFORMATTINGEXPORT
 @interface WGNINumberRounder : RTObject <WGNINumberRounder>
 @end
 
@@ -84,7 +84,7 @@ OBJCUWP_WINDOWS_GLOBALIZATION_NUMBERFORMATTING_EXPORT
 - (NSString *)formatDouble:(double)value;
 @end
 
-OBJCUWP_WINDOWS_GLOBALIZATION_NUMBERFORMATTING_EXPORT
+OBJCUWPWINDOWSGLOBALIZATIONNUMBERFORMATTINGEXPORT
 @interface WGNINumberFormatter : RTObject <WGNINumberFormatter>
 @end
 
@@ -100,7 +100,7 @@ OBJCUWP_WINDOWS_GLOBALIZATION_NUMBERFORMATTING_EXPORT
 - (NSString *)formatDouble:(double)value;
 @end
 
-OBJCUWP_WINDOWS_GLOBALIZATION_NUMBERFORMATTING_EXPORT
+OBJCUWPWINDOWSGLOBALIZATIONNUMBERFORMATTINGEXPORT
 @interface WGNINumberFormatter2 : RTObject <WGNINumberFormatter2>
 @end
 
@@ -116,7 +116,7 @@ OBJCUWP_WINDOWS_GLOBALIZATION_NUMBERFORMATTING_EXPORT
 - (id /* double */)parseDouble:(NSString *)text;
 @end
 
-OBJCUWP_WINDOWS_GLOBALIZATION_NUMBERFORMATTING_EXPORT
+OBJCUWPWINDOWSGLOBALIZATIONNUMBERFORMATTINGEXPORT
 @interface WGNINumberParser : RTObject <WGNINumberParser>
 @end
 
@@ -138,7 +138,7 @@ OBJCUWP_WINDOWS_GLOBALIZATION_NUMBERFORMATTING_EXPORT
 @property (readonly) NSString * resolvedLanguage;
 @end
 
-OBJCUWP_WINDOWS_GLOBALIZATION_NUMBERFORMATTING_EXPORT
+OBJCUWPWINDOWSGLOBALIZATIONNUMBERFORMATTINGEXPORT
 @interface WGNINumberFormatterOptions : RTObject <WGNINumberFormatterOptions>
 @end
 
@@ -152,7 +152,7 @@ OBJCUWP_WINDOWS_GLOBALIZATION_NUMBERFORMATTING_EXPORT
 @property int significantDigits;
 @end
 
-OBJCUWP_WINDOWS_GLOBALIZATION_NUMBERFORMATTING_EXPORT
+OBJCUWPWINDOWSGLOBALIZATIONNUMBERFORMATTINGEXPORT
 @interface WGNISignificantDigitsOption : RTObject <WGNISignificantDigitsOption>
 @end
 
@@ -166,7 +166,7 @@ OBJCUWP_WINDOWS_GLOBALIZATION_NUMBERFORMATTING_EXPORT
 @property (retain) RTObject<WGNINumberRounder>* numberRounder;
 @end
 
-OBJCUWP_WINDOWS_GLOBALIZATION_NUMBERFORMATTING_EXPORT
+OBJCUWPWINDOWSGLOBALIZATIONNUMBERFORMATTINGEXPORT
 @interface WGNINumberRounderOption : RTObject <WGNINumberRounderOption>
 @end
 
@@ -180,7 +180,7 @@ OBJCUWP_WINDOWS_GLOBALIZATION_NUMBERFORMATTING_EXPORT
 @property BOOL isZeroSigned;
 @end
 
-OBJCUWP_WINDOWS_GLOBALIZATION_NUMBERFORMATTING_EXPORT
+OBJCUWPWINDOWSGLOBALIZATIONNUMBERFORMATTINGEXPORT
 @interface WGNISignedZeroOption : RTObject <WGNISignedZeroOption>
 @end
 
@@ -190,7 +190,7 @@ OBJCUWP_WINDOWS_GLOBALIZATION_NUMBERFORMATTING_EXPORT
 #ifndef __WGNSignificantDigitsNumberRounder_DEFINED__
 #define __WGNSignificantDigitsNumberRounder_DEFINED__
 
-OBJCUWP_WINDOWS_GLOBALIZATION_NUMBERFORMATTING_EXPORT
+OBJCUWPWINDOWSGLOBALIZATIONNUMBERFORMATTINGEXPORT
 @interface WGNSignificantDigitsNumberRounder : RTObject <WGNINumberRounder>
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -212,7 +212,7 @@ OBJCUWP_WINDOWS_GLOBALIZATION_NUMBERFORMATTING_EXPORT
 #ifndef __WGNIncrementNumberRounder_DEFINED__
 #define __WGNIncrementNumberRounder_DEFINED__
 
-OBJCUWP_WINDOWS_GLOBALIZATION_NUMBERFORMATTING_EXPORT
+OBJCUWPWINDOWSGLOBALIZATIONNUMBERFORMATTINGEXPORT
 @interface WGNIncrementNumberRounder : RTObject <WGNINumberRounder>
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -234,7 +234,7 @@ OBJCUWP_WINDOWS_GLOBALIZATION_NUMBERFORMATTING_EXPORT
 #ifndef __WGNDecimalFormatter_DEFINED__
 #define __WGNDecimalFormatter_DEFINED__
 
-OBJCUWP_WINDOWS_GLOBALIZATION_NUMBERFORMATTING_EXPORT
+OBJCUWPWINDOWSGLOBALIZATIONNUMBERFORMATTINGEXPORT
 @interface WGNDecimalFormatter : RTObject <WGNINumberFormatterOptions, WGNINumberFormatter, WGNINumberFormatter2, WGNINumberParser, WGNISignificantDigitsOption, WGNINumberRounderOption, WGNISignedZeroOption>
 + (instancetype)make __attribute__ ((ns_returns_retained));
 + (WGNDecimalFormatter*)makeDecimalFormatter:(id<NSFastEnumeration> /* NSString * */)languages geographicRegion:(NSString *)geographicRegion ACTIVATOR;
@@ -267,7 +267,7 @@ OBJCUWP_WINDOWS_GLOBALIZATION_NUMBERFORMATTING_EXPORT
 #ifndef __WGNPercentFormatter_DEFINED__
 #define __WGNPercentFormatter_DEFINED__
 
-OBJCUWP_WINDOWS_GLOBALIZATION_NUMBERFORMATTING_EXPORT
+OBJCUWPWINDOWSGLOBALIZATIONNUMBERFORMATTINGEXPORT
 @interface WGNPercentFormatter : RTObject <WGNINumberFormatterOptions, WGNINumberFormatter, WGNINumberFormatter2, WGNINumberParser, WGNISignificantDigitsOption, WGNINumberRounderOption, WGNISignedZeroOption>
 + (WGNPercentFormatter*)makePercentFormatter:(id<NSFastEnumeration> /* NSString * */)languages geographicRegion:(NSString *)geographicRegion ACTIVATOR;
 + (instancetype)make __attribute__ ((ns_returns_retained));
@@ -300,7 +300,7 @@ OBJCUWP_WINDOWS_GLOBALIZATION_NUMBERFORMATTING_EXPORT
 #ifndef __WGNPermilleFormatter_DEFINED__
 #define __WGNPermilleFormatter_DEFINED__
 
-OBJCUWP_WINDOWS_GLOBALIZATION_NUMBERFORMATTING_EXPORT
+OBJCUWPWINDOWSGLOBALIZATIONNUMBERFORMATTINGEXPORT
 @interface WGNPermilleFormatter : RTObject <WGNINumberFormatterOptions, WGNINumberFormatter, WGNINumberFormatter2, WGNINumberParser, WGNISignificantDigitsOption, WGNINumberRounderOption, WGNISignedZeroOption>
 + (WGNPermilleFormatter*)makePermilleFormatter:(id<NSFastEnumeration> /* NSString * */)languages geographicRegion:(NSString *)geographicRegion ACTIVATOR;
 + (instancetype)make __attribute__ ((ns_returns_retained));
@@ -333,7 +333,7 @@ OBJCUWP_WINDOWS_GLOBALIZATION_NUMBERFORMATTING_EXPORT
 #ifndef __WGNCurrencyFormatter_DEFINED__
 #define __WGNCurrencyFormatter_DEFINED__
 
-OBJCUWP_WINDOWS_GLOBALIZATION_NUMBERFORMATTING_EXPORT
+OBJCUWPWINDOWSGLOBALIZATIONNUMBERFORMATTINGEXPORT
 @interface WGNCurrencyFormatter : RTObject <WGNINumberParser, WGNINumberFormatter2, WGNINumberFormatter, WGNINumberFormatterOptions, WGNISignificantDigitsOption, WGNINumberRounderOption, WGNISignedZeroOption>
 + (WGNCurrencyFormatter*)makeCurrencyFormatterCode:(NSString *)currencyCode ACTIVATOR;
 + (WGNCurrencyFormatter*)makeCurrencyFormatterCodeContext:(NSString *)currencyCode languages:(id<NSFastEnumeration> /* NSString * */)languages geographicRegion:(NSString *)geographicRegion ACTIVATOR;
@@ -369,7 +369,7 @@ OBJCUWP_WINDOWS_GLOBALIZATION_NUMBERFORMATTING_EXPORT
 #ifndef __WGNNumeralSystemTranslator_DEFINED__
 #define __WGNNumeralSystemTranslator_DEFINED__
 
-OBJCUWP_WINDOWS_GLOBALIZATION_NUMBERFORMATTING_EXPORT
+OBJCUWPWINDOWSGLOBALIZATIONNUMBERFORMATTINGEXPORT
 @interface WGNNumeralSystemTranslator : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 + (WGNNumeralSystemTranslator*)make:(id<NSFastEnumeration> /* NSString * */)languages ACTIVATOR;

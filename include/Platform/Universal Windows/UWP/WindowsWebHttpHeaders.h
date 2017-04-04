@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
-#define OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_RandomStuff.lib")
+#ifndef OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
+#define OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsConsolidatedNamespace.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -46,7 +46,7 @@
 - (NSString *)toString;
 @end
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WFIStringable : RTObject <WFIStringable>
 @end
 
@@ -56,7 +56,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WWHHHttpContentHeaderCollection_DEFINED__
 #define __WWHHHttpContentHeaderCollection_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WWHHHttpContentHeaderCollection : RTObject <WFIStringable>
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -99,7 +99,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WWHHHttpRequestHeaderCollection_DEFINED__
 #define __WWHHHttpRequestHeaderCollection_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WWHHHttpRequestHeaderCollection : RTObject <WFIStringable>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -149,7 +149,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WWHHHttpResponseHeaderCollection_DEFINED__
 #define __WWHHHttpResponseHeaderCollection_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WWHHHttpResponseHeaderCollection : RTObject <WFIStringable>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -191,7 +191,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WWHHHttpContentDispositionHeaderValue_DEFINED__
 #define __WWHHHttpContentDispositionHeaderValue_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WWHHHttpContentDispositionHeaderValue : RTObject <WFIStringable>
 + (WWHHHttpContentDispositionHeaderValue*)parse:(NSString *)input;
 + (BOOL)tryParse:(NSString *)input contentDispositionHeaderValue:(WWHHHttpContentDispositionHeaderValue**)contentDispositionHeaderValue;
@@ -214,7 +214,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WWHHHttpContentCodingHeaderValueCollection_DEFINED__
 #define __WWHHHttpContentCodingHeaderValueCollection_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WWHHHttpContentCodingHeaderValueCollection : RTObject <WFIStringable>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -243,7 +243,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WWHHHttpLanguageHeaderValueCollection_DEFINED__
 #define __WWHHHttpLanguageHeaderValueCollection_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WWHHHttpLanguageHeaderValueCollection : RTObject <WFIStringable>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -272,7 +272,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WWHHHttpContentRangeHeaderValue_DEFINED__
 #define __WWHHHttpContentRangeHeaderValue_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WWHHHttpContentRangeHeaderValue : RTObject <WFIStringable>
 + (WWHHHttpContentRangeHeaderValue*)parse:(NSString *)input;
 + (BOOL)tryParse:(NSString *)input contentRangeHeaderValue:(WWHHHttpContentRangeHeaderValue**)contentRangeHeaderValue;
@@ -295,7 +295,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WWHHHttpMediaTypeHeaderValue_DEFINED__
 #define __WWHHHttpMediaTypeHeaderValue_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WWHHHttpMediaTypeHeaderValue : RTObject <WFIStringable>
 + (WWHHHttpMediaTypeHeaderValue*)parse:(NSString *)input;
 + (BOOL)tryParse:(NSString *)input mediaTypeHeaderValue:(WWHHHttpMediaTypeHeaderValue**)mediaTypeHeaderValue;
@@ -315,7 +315,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WWHHHttpMediaTypeWithQualityHeaderValueCollection_DEFINED__
 #define __WWHHHttpMediaTypeWithQualityHeaderValueCollection_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WWHHHttpMediaTypeWithQualityHeaderValueCollection : RTObject <WFIStringable>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -344,7 +344,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WWHHHttpContentCodingWithQualityHeaderValueCollection_DEFINED__
 #define __WWHHHttpContentCodingWithQualityHeaderValueCollection_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WWHHHttpContentCodingWithQualityHeaderValueCollection : RTObject <WFIStringable>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -373,7 +373,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WWHHHttpLanguageRangeWithQualityHeaderValueCollection_DEFINED__
 #define __WWHHHttpLanguageRangeWithQualityHeaderValueCollection_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WWHHHttpLanguageRangeWithQualityHeaderValueCollection : RTObject <WFIStringable>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -402,7 +402,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WWHHHttpCredentialsHeaderValue_DEFINED__
 #define __WWHHHttpCredentialsHeaderValue_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WWHHHttpCredentialsHeaderValue : RTObject <WFIStringable>
 + (WWHHHttpCredentialsHeaderValue*)parse:(NSString *)input;
 + (BOOL)tryParse:(NSString *)input credentialsHeaderValue:(WWHHHttpCredentialsHeaderValue**)credentialsHeaderValue;
@@ -423,7 +423,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WWHHHttpCacheDirectiveHeaderValueCollection_DEFINED__
 #define __WWHHHttpCacheDirectiveHeaderValueCollection_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WWHHHttpCacheDirectiveHeaderValueCollection : RTObject <WFIStringable>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -456,7 +456,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WWHHHttpConnectionOptionHeaderValueCollection_DEFINED__
 #define __WWHHHttpConnectionOptionHeaderValueCollection_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WWHHHttpConnectionOptionHeaderValueCollection : RTObject <WFIStringable>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -485,7 +485,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WWHHHttpCookiePairHeaderValueCollection_DEFINED__
 #define __WWHHHttpCookiePairHeaderValueCollection_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WWHHHttpCookiePairHeaderValueCollection : RTObject <WFIStringable>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -514,7 +514,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WWHHHttpExpectationHeaderValueCollection_DEFINED__
 #define __WWHHHttpExpectationHeaderValueCollection_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WWHHHttpExpectationHeaderValueCollection : RTObject <WFIStringable>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -543,7 +543,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WWHHHttpTransferCodingHeaderValueCollection_DEFINED__
 #define __WWHHHttpTransferCodingHeaderValueCollection_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WWHHHttpTransferCodingHeaderValueCollection : RTObject <WFIStringable>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -572,7 +572,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WWHHHttpProductInfoHeaderValueCollection_DEFINED__
 #define __WWHHHttpProductInfoHeaderValueCollection_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WWHHHttpProductInfoHeaderValueCollection : RTObject <WFIStringable>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -601,7 +601,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WWHHHttpMethodHeaderValueCollection_DEFINED__
 #define __WWHHHttpMethodHeaderValueCollection_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WWHHHttpMethodHeaderValueCollection : RTObject <WFIStringable>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -630,7 +630,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WWHHHttpChallengeHeaderValueCollection_DEFINED__
 #define __WWHHHttpChallengeHeaderValueCollection_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WWHHHttpChallengeHeaderValueCollection : RTObject <WFIStringable>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -659,7 +659,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WWHHHttpDateOrDeltaHeaderValue_DEFINED__
 #define __WWHHHttpDateOrDeltaHeaderValue_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WWHHHttpDateOrDeltaHeaderValue : RTObject <WFIStringable>
 + (WWHHHttpDateOrDeltaHeaderValue*)parse:(NSString *)input;
 + (BOOL)tryParse:(NSString *)input dateOrDeltaHeaderValue:(WWHHHttpDateOrDeltaHeaderValue**)dateOrDeltaHeaderValue;
@@ -677,7 +677,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WWHHHttpNameValueHeaderValue_DEFINED__
 #define __WWHHHttpNameValueHeaderValue_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WWHHHttpNameValueHeaderValue : RTObject <WFIStringable>
 + (WWHHHttpNameValueHeaderValue*)parse:(NSString *)input;
 + (BOOL)tryParse:(NSString *)input nameValueHeaderValue:(WWHHHttpNameValueHeaderValue**)nameValueHeaderValue;
@@ -697,7 +697,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WWHHHttpChallengeHeaderValue_DEFINED__
 #define __WWHHHttpChallengeHeaderValue_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WWHHHttpChallengeHeaderValue : RTObject <WFIStringable>
 + (WWHHHttpChallengeHeaderValue*)parse:(NSString *)input;
 + (BOOL)tryParse:(NSString *)input challengeHeaderValue:(WWHHHttpChallengeHeaderValue**)challengeHeaderValue;
@@ -718,7 +718,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WWHHHttpConnectionOptionHeaderValue_DEFINED__
 #define __WWHHHttpConnectionOptionHeaderValue_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WWHHHttpConnectionOptionHeaderValue : RTObject <WFIStringable>
 + (WWHHHttpConnectionOptionHeaderValue*)parse:(NSString *)input;
 + (BOOL)tryParse:(NSString *)input connectionOptionHeaderValue:(WWHHHttpConnectionOptionHeaderValue**)connectionOptionHeaderValue;
@@ -736,7 +736,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WWHHHttpContentCodingHeaderValue_DEFINED__
 #define __WWHHHttpContentCodingHeaderValue_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WWHHHttpContentCodingHeaderValue : RTObject <WFIStringable>
 + (WWHHHttpContentCodingHeaderValue*)parse:(NSString *)input;
 + (BOOL)tryParse:(NSString *)input contentCodingHeaderValue:(WWHHHttpContentCodingHeaderValue**)contentCodingHeaderValue;
@@ -754,7 +754,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WWHHHttpCookiePairHeaderValue_DEFINED__
 #define __WWHHHttpCookiePairHeaderValue_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WWHHHttpCookiePairHeaderValue : RTObject <WFIStringable>
 + (WWHHHttpCookiePairHeaderValue*)parse:(NSString *)input;
 + (BOOL)tryParse:(NSString *)input cookiePairHeaderValue:(WWHHHttpCookiePairHeaderValue**)cookiePairHeaderValue;
@@ -774,7 +774,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WWHHHttpExpectationHeaderValue_DEFINED__
 #define __WWHHHttpExpectationHeaderValue_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WWHHHttpExpectationHeaderValue : RTObject <WFIStringable>
 + (WWHHHttpExpectationHeaderValue*)parse:(NSString *)input;
 + (BOOL)tryParse:(NSString *)input expectationHeaderValue:(WWHHHttpExpectationHeaderValue**)expectationHeaderValue;
@@ -795,7 +795,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WWHHHttpLanguageRangeWithQualityHeaderValue_DEFINED__
 #define __WWHHHttpLanguageRangeWithQualityHeaderValue_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WWHHHttpLanguageRangeWithQualityHeaderValue : RTObject <WFIStringable>
 + (WWHHHttpLanguageRangeWithQualityHeaderValue*)parse:(NSString *)input;
 + (BOOL)tryParse:(NSString *)input languageRangeWithQualityHeaderValue:(WWHHHttpLanguageRangeWithQualityHeaderValue**)languageRangeWithQualityHeaderValue;
@@ -815,7 +815,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WWHHHttpMediaTypeWithQualityHeaderValue_DEFINED__
 #define __WWHHHttpMediaTypeWithQualityHeaderValue_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WWHHHttpMediaTypeWithQualityHeaderValue : RTObject <WFIStringable>
 + (WWHHHttpMediaTypeWithQualityHeaderValue*)parse:(NSString *)input;
 + (BOOL)tryParse:(NSString *)input mediaTypeWithQualityHeaderValue:(WWHHHttpMediaTypeWithQualityHeaderValue**)mediaTypeWithQualityHeaderValue;
@@ -837,7 +837,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WWHHHttpProductHeaderValue_DEFINED__
 #define __WWHHHttpProductHeaderValue_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WWHHHttpProductHeaderValue : RTObject <WFIStringable>
 + (WWHHHttpProductHeaderValue*)parse:(NSString *)input;
 + (BOOL)tryParse:(NSString *)input productHeaderValue:(WWHHHttpProductHeaderValue**)productHeaderValue;
@@ -857,7 +857,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WWHHHttpProductInfoHeaderValue_DEFINED__
 #define __WWHHHttpProductInfoHeaderValue_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WWHHHttpProductInfoHeaderValue : RTObject <WFIStringable>
 + (WWHHHttpProductInfoHeaderValue*)parse:(NSString *)input;
 + (BOOL)tryParse:(NSString *)input productInfoHeaderValue:(WWHHHttpProductInfoHeaderValue**)productInfoHeaderValue;
@@ -877,7 +877,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WWHHHttpContentCodingWithQualityHeaderValue_DEFINED__
 #define __WWHHHttpContentCodingWithQualityHeaderValue_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WWHHHttpContentCodingWithQualityHeaderValue : RTObject <WFIStringable>
 + (WWHHHttpContentCodingWithQualityHeaderValue*)parse:(NSString *)input;
 + (BOOL)tryParse:(NSString *)input contentCodingWithQualityHeaderValue:(WWHHHttpContentCodingWithQualityHeaderValue**)contentCodingWithQualityHeaderValue;
@@ -897,7 +897,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WWHHHttpTransferCodingHeaderValue_DEFINED__
 #define __WWHHHttpTransferCodingHeaderValue_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WWHHHttpTransferCodingHeaderValue : RTObject <WFIStringable>
 + (WWHHHttpTransferCodingHeaderValue*)parse:(NSString *)input;
 + (BOOL)tryParse:(NSString *)input transferCodingHeaderValue:(WWHHHttpTransferCodingHeaderValue**)transferCodingHeaderValue;

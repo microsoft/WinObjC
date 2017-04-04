@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_STORAGE_BULKACCESS_EXPORT
-#define OBJCUWP_WINDOWS_STORAGE_BULKACCESS_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_Storage_BulkAccess.lib")
+#ifndef OBJCUWPWINDOWSSTORAGEBULKACCESSEXPORT
+#define OBJCUWPWINDOWSSTORAGEBULKACCESSEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsStorageBulkAccess.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -55,7 +55,7 @@
 - (void)removeThumbnailUpdatedEvent:(EventRegistrationToken)tok;
 @end
 
-OBJCUWP_WINDOWS_STORAGE_BULKACCESS_EXPORT
+OBJCUWPWINDOWSSTORAGEBULKACCESSEXPORT
 @interface WSBIStorageItemInformation : RTObject <WSBIStorageItemInformation>
 @end
 
@@ -65,7 +65,7 @@ OBJCUWP_WINDOWS_STORAGE_BULKACCESS_EXPORT
 #ifndef __WSBFileInformationFactory_DEFINED__
 #define __WSBFileInformationFactory_DEFINED__
 
-OBJCUWP_WINDOWS_STORAGE_BULKACCESS_EXPORT
+OBJCUWPWINDOWSSTORAGEBULKACCESSEXPORT
 @interface WSBFileInformationFactory : RTObject
 + (WSBFileInformationFactory*)makeWithMode:(RTObject<WSSIStorageQueryResultBase>*)queryResult mode:(WSFThumbnailMode)mode ACTIVATOR;
 + (WSBFileInformationFactory*)makeWithModeAndSize:(RTObject<WSSIStorageQueryResultBase>*)queryResult mode:(WSFThumbnailMode)mode requestedThumbnailSize:(unsigned int)requestedThumbnailSize ACTIVATOR;
@@ -104,7 +104,7 @@ OBJCUWP_WINDOWS_STORAGE_BULKACCESS_EXPORT
 - (BOOL)isOfType:(WSStorageItemTypes)type;
 @end
 
-OBJCUWP_WINDOWS_STORAGE_BULKACCESS_EXPORT
+OBJCUWPWINDOWSSTORAGEBULKACCESSEXPORT
 @interface WSIStorageItem : RTObject <WSIStorageItem>
 @end
 
@@ -118,7 +118,7 @@ OBJCUWP_WINDOWS_STORAGE_BULKACCESS_EXPORT
 - (void)openReadAsyncWithSuccess:(void (^)(RTObject<WSSIRandomAccessStreamWithContentType>*))success failure:(void (^)(NSError*))failure;
 @end
 
-OBJCUWP_WINDOWS_STORAGE_BULKACCESS_EXPORT
+OBJCUWPWINDOWSSTORAGEBULKACCESSEXPORT
 @interface WSSIRandomAccessStreamReference : RTObject <WSSIRandomAccessStreamReference>
 @end
 
@@ -132,7 +132,7 @@ OBJCUWP_WINDOWS_STORAGE_BULKACCESS_EXPORT
 - (void)openSequentialReadAsyncWithSuccess:(void (^)(RTObject<WSSIInputStream>*))success failure:(void (^)(NSError*))failure;
 @end
 
-OBJCUWP_WINDOWS_STORAGE_BULKACCESS_EXPORT
+OBJCUWPWINDOWSSTORAGEBULKACCESSEXPORT
 @interface WSSIInputStreamReference : RTObject <WSSIInputStreamReference>
 @end
 
@@ -165,7 +165,7 @@ OBJCUWP_WINDOWS_STORAGE_BULKACCESS_EXPORT
 - (void)openSequentialReadAsyncWithSuccess:(void (^)(RTObject<WSSIInputStream>*))success failure:(void (^)(NSError*))failure;
 @end
 
-OBJCUWP_WINDOWS_STORAGE_BULKACCESS_EXPORT
+OBJCUWPWINDOWSSTORAGEBULKACCESSEXPORT
 @interface WSIStorageFile : RTObject <WSIStorageFile>
 @end
 
@@ -185,7 +185,7 @@ OBJCUWP_WINDOWS_STORAGE_BULKACCESS_EXPORT
 - (void)getThumbnailAsync:(WSFThumbnailMode)mode requestedSize:(unsigned int)requestedSize options:(WSFThumbnailOptions)options success:(void (^)(WSFStorageItemThumbnail*))success failure:(void (^)(NSError*))failure;
 @end
 
-OBJCUWP_WINDOWS_STORAGE_BULKACCESS_EXPORT
+OBJCUWPWINDOWSSTORAGEBULKACCESSEXPORT
 @interface WSIStorageItemProperties : RTObject <WSIStorageItemProperties>
 @end
 
@@ -206,7 +206,7 @@ OBJCUWP_WINDOWS_STORAGE_BULKACCESS_EXPORT
 - (BOOL)isOfType:(WSStorageItemTypes)type;
 @end
 
-OBJCUWP_WINDOWS_STORAGE_BULKACCESS_EXPORT
+OBJCUWPWINDOWSSTORAGEBULKACCESSEXPORT
 @interface WSIStorageItem2 : RTObject <WSIStorageItem2>
 @end
 
@@ -223,7 +223,7 @@ OBJCUWP_WINDOWS_STORAGE_BULKACCESS_EXPORT
 - (void)getThumbnailAsync:(WSFThumbnailMode)mode requestedSize:(unsigned int)requestedSize options:(WSFThumbnailOptions)options success:(void (^)(WSFStorageItemThumbnail*))success failure:(void (^)(NSError*))failure;
 @end
 
-OBJCUWP_WINDOWS_STORAGE_BULKACCESS_EXPORT
+OBJCUWPWINDOWSSTORAGEBULKACCESSEXPORT
 @interface WSIStorageItemPropertiesWithProvider : RTObject <WSIStorageItemPropertiesWithProvider>
 @end
 
@@ -237,7 +237,7 @@ OBJCUWP_WINDOWS_STORAGE_BULKACCESS_EXPORT
 @property (readonly) BOOL isAvailable;
 @end
 
-OBJCUWP_WINDOWS_STORAGE_BULKACCESS_EXPORT
+OBJCUWPWINDOWSSTORAGEBULKACCESSEXPORT
 @interface WSIStorageFilePropertiesWithAvailability : RTObject <WSIStorageFilePropertiesWithAvailability>
 @end
 
@@ -252,7 +252,7 @@ OBJCUWP_WINDOWS_STORAGE_BULKACCESS_EXPORT
 - (void)openTransactedWriteWithOptionsAsync:(WSStorageOpenOptions)options success:(void (^)(WSStorageStreamTransaction*))success failure:(void (^)(NSError*))failure;
 @end
 
-OBJCUWP_WINDOWS_STORAGE_BULKACCESS_EXPORT
+OBJCUWPWINDOWSSTORAGEBULKACCESSEXPORT
 @interface WSIStorageFile2 : RTObject <WSIStorageFile2>
 @end
 
@@ -262,7 +262,7 @@ OBJCUWP_WINDOWS_STORAGE_BULKACCESS_EXPORT
 #ifndef __WSBFileInformation_DEFINED__
 #define __WSBFileInformation_DEFINED__
 
-OBJCUWP_WINDOWS_STORAGE_BULKACCESS_EXPORT
+OBJCUWPWINDOWSSTORAGEBULKACCESSEXPORT
 @interface WSBFileInformation : RTObject <WSBIStorageItemInformation, WSIStorageFile, WSSIInputStreamReference, WSSIRandomAccessStreamReference, WSIStorageItem, WSIStorageItemProperties, WSIStorageItem2, WSIStorageItemPropertiesWithProvider, WSIStorageFilePropertiesWithAvailability, WSIStorageFile2>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -341,7 +341,7 @@ OBJCUWP_WINDOWS_STORAGE_BULKACCESS_EXPORT
 - (BOOL)isOfType:(WSStorageItemTypes)type;
 @end
 
-OBJCUWP_WINDOWS_STORAGE_BULKACCESS_EXPORT
+OBJCUWPWINDOWSSTORAGEBULKACCESSEXPORT
 @interface WSIStorageFolder : RTObject <WSIStorageFolder>
 @end
 
@@ -371,7 +371,7 @@ OBJCUWP_WINDOWS_STORAGE_BULKACCESS_EXPORT
 - (BOOL)isCommonFileQuerySupported:(WSSCommonFileQuery)query;
 @end
 
-OBJCUWP_WINDOWS_STORAGE_BULKACCESS_EXPORT
+OBJCUWPWINDOWSSTORAGEBULKACCESSEXPORT
 @interface WSSIStorageFolderQueryOperations : RTObject <WSSIStorageFolderQueryOperations>
 @end
 
@@ -385,7 +385,7 @@ OBJCUWP_WINDOWS_STORAGE_BULKACCESS_EXPORT
 - (void)tryGetItemAsync:(NSString *)name success:(void (^)(RTObject<WSIStorageItem>*))success failure:(void (^)(NSError*))failure;
 @end
 
-OBJCUWP_WINDOWS_STORAGE_BULKACCESS_EXPORT
+OBJCUWPWINDOWSSTORAGEBULKACCESSEXPORT
 @interface WSIStorageFolder2 : RTObject <WSIStorageFolder2>
 @end
 
@@ -395,7 +395,7 @@ OBJCUWP_WINDOWS_STORAGE_BULKACCESS_EXPORT
 #ifndef __WSBFolderInformation_DEFINED__
 #define __WSBFolderInformation_DEFINED__
 
-OBJCUWP_WINDOWS_STORAGE_BULKACCESS_EXPORT
+OBJCUWPWINDOWSSTORAGEBULKACCESSEXPORT
 @interface WSBFolderInformation : RTObject <WSBIStorageItemInformation, WSIStorageFolder, WSIStorageItem, WSIStorageItemProperties, WSSIStorageFolderQueryOperations, WSIStorageItem2, WSIStorageFolder2, WSIStorageItemPropertiesWithProvider>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));

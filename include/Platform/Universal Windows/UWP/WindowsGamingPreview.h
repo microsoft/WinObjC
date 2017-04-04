@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_GAMING_PREVIEW_EXPORT
-#define OBJCUWP_WINDOWS_GAMING_PREVIEW_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_Gaming_Preview.lib")
+#ifndef OBJCUWPWINDOWSGAMINGPREVIEWEXPORT
+#define OBJCUWPWINDOWSGAMINGPREVIEWEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsGamingPreview.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>

@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_DEVICES_PERCEPTION_PROVIDER_EXPORT
-#define OBJCUWP_WINDOWS_DEVICES_PERCEPTION_PROVIDER_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_Devices_Perception_Provider.lib")
+#ifndef OBJCUWPWINDOWSDEVICESPERCEPTIONPROVIDEREXPORT
+#define OBJCUWPWINDOWSDEVICESPERCEPTIONPROVIDEREXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsDevicesPerceptionProvider.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -71,7 +71,7 @@ typedef void(^WDPPPerceptionStopFaceAuthenticationHandler)(WDPPPerceptionFaceAut
 - (void)close;
 @end
 
-OBJCUWP_WINDOWS_DEVICES_PERCEPTION_PROVIDER_EXPORT
+OBJCUWPWINDOWSDEVICESPERCEPTIONPROVIDEREXPORT
 @interface WFIClosable : RTObject <WFIClosable>
 @end
 
@@ -86,7 +86,7 @@ OBJCUWP_WINDOWS_DEVICES_PERCEPTION_PROVIDER_EXPORT
 - (void)close;
 @end
 
-OBJCUWP_WINDOWS_DEVICES_PERCEPTION_PROVIDER_EXPORT
+OBJCUWPWINDOWSDEVICESPERCEPTIONPROVIDEREXPORT
 @interface WDPPIPerceptionFrameProviderManager : RTObject <WDPPIPerceptionFrameProviderManager>
 @end
 
@@ -106,7 +106,7 @@ OBJCUWP_WINDOWS_DEVICES_PERCEPTION_PROVIDER_EXPORT
 - (void)close;
 @end
 
-OBJCUWP_WINDOWS_DEVICES_PERCEPTION_PROVIDER_EXPORT
+OBJCUWPWINDOWSDEVICESPERCEPTIONPROVIDEREXPORT
 @interface WDPPIPerceptionFrameProvider : RTObject <WDPPIPerceptionFrameProvider>
 @end
 
@@ -116,7 +116,7 @@ OBJCUWP_WINDOWS_DEVICES_PERCEPTION_PROVIDER_EXPORT
 #ifndef __WDPPPerceptionFrameProviderInfo_DEFINED__
 #define __WDPPPerceptionFrameProviderInfo_DEFINED__
 
-OBJCUWP_WINDOWS_DEVICES_PERCEPTION_PROVIDER_EXPORT
+OBJCUWPWINDOWSDEVICESPERCEPTIONPROVIDEREXPORT
 @interface WDPPPerceptionFrameProviderInfo : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -135,7 +135,7 @@ OBJCUWP_WINDOWS_DEVICES_PERCEPTION_PROVIDER_EXPORT
 #ifndef __WDPPPerceptionPropertyChangeRequest_DEFINED__
 #define __WDPPPerceptionPropertyChangeRequest_DEFINED__
 
-OBJCUWP_WINDOWS_DEVICES_PERCEPTION_PROVIDER_EXPORT
+OBJCUWPWINDOWSDEVICESPERCEPTIONPROVIDEREXPORT
 @interface WDPPPerceptionPropertyChangeRequest : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -152,7 +152,7 @@ OBJCUWP_WINDOWS_DEVICES_PERCEPTION_PROVIDER_EXPORT
 #ifndef __WDPPPerceptionFaceAuthenticationGroup_DEFINED__
 #define __WDPPPerceptionFaceAuthenticationGroup_DEFINED__
 
-OBJCUWP_WINDOWS_DEVICES_PERCEPTION_PROVIDER_EXPORT
+OBJCUWPWINDOWSDEVICESPERCEPTIONPROVIDEREXPORT
 @interface WDPPPerceptionFaceAuthenticationGroup : RTObject
 + (WDPPPerceptionFaceAuthenticationGroup*)make:(id<NSFastEnumeration> /* NSString * */)ids startHandler:(WDPPPerceptionStartFaceAuthenticationHandler)startHandler stopHandler:(WDPPPerceptionStopFaceAuthenticationHandler)stopHandler ACTIVATOR;
 #if defined(__cplusplus)
@@ -167,7 +167,7 @@ OBJCUWP_WINDOWS_DEVICES_PERCEPTION_PROVIDER_EXPORT
 #ifndef __WDPPPerceptionControlGroup_DEFINED__
 #define __WDPPPerceptionControlGroup_DEFINED__
 
-OBJCUWP_WINDOWS_DEVICES_PERCEPTION_PROVIDER_EXPORT
+OBJCUWPWINDOWSDEVICESPERCEPTIONPROVIDEREXPORT
 @interface WDPPPerceptionControlGroup : RTObject
 + (WDPPPerceptionControlGroup*)make:(id<NSFastEnumeration> /* NSString * */)ids ACTIVATOR;
 #if defined(__cplusplus)
@@ -182,7 +182,7 @@ OBJCUWP_WINDOWS_DEVICES_PERCEPTION_PROVIDER_EXPORT
 #ifndef __WDPPPerceptionCorrelationGroup_DEFINED__
 #define __WDPPPerceptionCorrelationGroup_DEFINED__
 
-OBJCUWP_WINDOWS_DEVICES_PERCEPTION_PROVIDER_EXPORT
+OBJCUWPWINDOWSDEVICESPERCEPTIONPROVIDEREXPORT
 @interface WDPPPerceptionCorrelationGroup : RTObject
 + (WDPPPerceptionCorrelationGroup*)make:(id<NSFastEnumeration> /* WDPPPerceptionCorrelation* */)relativeLocations ACTIVATOR;
 #if defined(__cplusplus)
@@ -197,7 +197,7 @@ OBJCUWP_WINDOWS_DEVICES_PERCEPTION_PROVIDER_EXPORT
 #ifndef __WDPPPerceptionFrame_DEFINED__
 #define __WDPPPerceptionFrame_DEFINED__
 
-OBJCUWP_WINDOWS_DEVICES_PERCEPTION_PROVIDER_EXPORT
+OBJCUWPWINDOWSDEVICESPERCEPTIONPROVIDEREXPORT
 @interface WDPPPerceptionFrame : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -213,7 +213,7 @@ OBJCUWP_WINDOWS_DEVICES_PERCEPTION_PROVIDER_EXPORT
 #ifndef __WDPPPerceptionCorrelation_DEFINED__
 #define __WDPPPerceptionCorrelation_DEFINED__
 
-OBJCUWP_WINDOWS_DEVICES_PERCEPTION_PROVIDER_EXPORT
+OBJCUWPWINDOWSDEVICESPERCEPTIONPROVIDEREXPORT
 @interface WDPPPerceptionCorrelation : RTObject
 + (WDPPPerceptionCorrelation*)make:(NSString *)targetId position:(WFNVector3*)position orientation:(WFNQuaternion*)orientation ACTIVATOR;
 #if defined(__cplusplus)
@@ -230,7 +230,7 @@ OBJCUWP_WINDOWS_DEVICES_PERCEPTION_PROVIDER_EXPORT
 #ifndef __WDPPPerceptionVideoFrameAllocator_DEFINED__
 #define __WDPPPerceptionVideoFrameAllocator_DEFINED__
 
-OBJCUWP_WINDOWS_DEVICES_PERCEPTION_PROVIDER_EXPORT
+OBJCUWPWINDOWSDEVICESPERCEPTIONPROVIDEREXPORT
 @interface WDPPPerceptionVideoFrameAllocator : RTObject <WFIClosable>
 + (WDPPPerceptionVideoFrameAllocator*)make:(unsigned int)maxOutstandingFrameCountForWrite format:(WGIBitmapPixelFormat)format resolution:(WFSize*)resolution alpha:(WGIBitmapAlphaMode)alpha ACTIVATOR;
 #if defined(__cplusplus)
@@ -247,7 +247,7 @@ OBJCUWP_WINDOWS_DEVICES_PERCEPTION_PROVIDER_EXPORT
 #ifndef __WDPPPerceptionFrameProviderManagerService_DEFINED__
 #define __WDPPPerceptionFrameProviderManagerService_DEFINED__
 
-OBJCUWP_WINDOWS_DEVICES_PERCEPTION_PROVIDER_EXPORT
+OBJCUWPWINDOWSDEVICESPERCEPTIONPROVIDEREXPORT
 @interface WDPPPerceptionFrameProviderManagerService : RTObject
 + (void)registerFrameProviderInfo:(RTObject<WDPPIPerceptionFrameProviderManager>*)manager frameProviderInfo:(WDPPPerceptionFrameProviderInfo*)frameProviderInfo;
 + (void)unregisterFrameProviderInfo:(RTObject<WDPPIPerceptionFrameProviderManager>*)manager frameProviderInfo:(WDPPPerceptionFrameProviderInfo*)frameProviderInfo;
@@ -267,7 +267,7 @@ OBJCUWP_WINDOWS_DEVICES_PERCEPTION_PROVIDER_EXPORT
 #ifndef __WDPPKnownPerceptionFrameKind_DEFINED__
 #define __WDPPKnownPerceptionFrameKind_DEFINED__
 
-OBJCUWP_WINDOWS_DEVICES_PERCEPTION_PROVIDER_EXPORT
+OBJCUWPWINDOWSDEVICESPERCEPTIONPROVIDEREXPORT
 @interface WDPPKnownPerceptionFrameKind : RTObject
 + (NSString *)color;
 + (NSString *)depth;

@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_PHONE_PERSONALINFORMATION_EXPORT
-#define OBJCUWP_WINDOWS_PHONE_PERSONALINFORMATION_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_Phone_PersonalInformation.lib")
+#ifndef OBJCUWPWINDOWSPHONEPERSONALINFORMATIONEXPORT
+#define OBJCUWPWINDOWSPHONEPERSONALINFORMATIONEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsPhonePersonalInformation.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -90,7 +90,7 @@ typedef unsigned WPPVCardFormat;
 - (void)toVcardWithOptionsAsync:(WPPVCardFormat)format success:(void (^)(RTObject<WSSIRandomAccessStream>*))success failure:(void (^)(NSError*))failure;
 @end
 
-OBJCUWP_WINDOWS_PHONE_PERSONALINFORMATION_EXPORT
+OBJCUWPWINDOWSPHONEPERSONALINFORMATIONEXPORT
 @interface WPPIContactInformation : RTObject <WPPIContactInformation>
 @end
 
@@ -104,7 +104,7 @@ OBJCUWP_WINDOWS_PHONE_PERSONALINFORMATION_EXPORT
 @property (retain) WFDateTime* displayPictureDate;
 @end
 
-OBJCUWP_WINDOWS_PHONE_PERSONALINFORMATION_EXPORT
+OBJCUWPWINDOWSPHONEPERSONALINFORMATIONEXPORT
 @interface WPPIContactInformation2 : RTObject <WPPIContactInformation2>
 @end
 
@@ -114,7 +114,7 @@ OBJCUWP_WINDOWS_PHONE_PERSONALINFORMATION_EXPORT
 #ifndef __WPPContactAddress_DEFINED__
 #define __WPPContactAddress_DEFINED__
 
-OBJCUWP_WINDOWS_PHONE_PERSONALINFORMATION_EXPORT
+OBJCUWPWINDOWSPHONEPERSONALINFORMATIONEXPORT
 @interface WPPContactAddress : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -133,7 +133,7 @@ OBJCUWP_WINDOWS_PHONE_PERSONALINFORMATION_EXPORT
 #ifndef __WPPContactInformation_DEFINED__
 #define __WPPContactInformation_DEFINED__
 
-OBJCUWP_WINDOWS_PHONE_PERSONALINFORMATION_EXPORT
+OBJCUWPWINDOWSPHONEPERSONALINFORMATIONEXPORT
 @interface WPPContactInformation : RTObject <WPPIContactInformation>
 + (void)parseVcardAsync:(RTObject<WSSIInputStream>*)vcard success:(void (^)(WPPContactInformation*))success failure:(void (^)(NSError*))failure;
 + (instancetype)make __attribute__ ((ns_returns_retained));
@@ -159,7 +159,7 @@ OBJCUWP_WINDOWS_PHONE_PERSONALINFORMATION_EXPORT
 #ifndef __WPPContactStore_DEFINED__
 #define __WPPContactStore_DEFINED__
 
-OBJCUWP_WINDOWS_PHONE_PERSONALINFORMATION_EXPORT
+OBJCUWPWINDOWSPHONEPERSONALINFORMATIONEXPORT
 @interface WPPContactStore : RTObject
 + (void)createOrOpenAsyncWithSuccess:(void (^)(WPPContactStore*))success failure:(void (^)(NSError*))failure;
 + (void)createOrOpenWithOptionsAsync:(WPPContactStoreSystemAccessMode)access sharing:(WPPContactStoreApplicationAccessMode)sharing success:(void (^)(WPPContactStore*))success failure:(void (^)(NSError*))failure;
@@ -185,7 +185,7 @@ OBJCUWP_WINDOWS_PHONE_PERSONALINFORMATION_EXPORT
 #ifndef __WPPStoredContact_DEFINED__
 #define __WPPStoredContact_DEFINED__
 
-OBJCUWP_WINDOWS_PHONE_PERSONALINFORMATION_EXPORT
+OBJCUWPWINDOWSPHONEPERSONALINFORMATIONEXPORT
 @interface WPPStoredContact : RTObject <WPPIContactInformation, WPPIContactInformation2>
 + (WPPStoredContact*)makeStoredContact:(WPPContactStore*)store ACTIVATOR;
 + (WPPStoredContact*)makeStoredContactFromInformation:(WPPContactStore*)store contact:(WPPContactInformation*)contact ACTIVATOR;
@@ -218,7 +218,7 @@ OBJCUWP_WINDOWS_PHONE_PERSONALINFORMATION_EXPORT
 #ifndef __WPPKnownContactProperties_DEFINED__
 #define __WPPKnownContactProperties_DEFINED__
 
-OBJCUWP_WINDOWS_PHONE_PERSONALINFORMATION_EXPORT
+OBJCUWPWINDOWSPHONEPERSONALINFORMATIONEXPORT
 @interface WPPKnownContactProperties : RTObject
 + (NSString *)additionalName;
 + (NSString *)address;
@@ -263,7 +263,7 @@ OBJCUWP_WINDOWS_PHONE_PERSONALINFORMATION_EXPORT
 #ifndef __WPPContactQueryOptions_DEFINED__
 #define __WPPContactQueryOptions_DEFINED__
 
-OBJCUWP_WINDOWS_PHONE_PERSONALINFORMATION_EXPORT
+OBJCUWPWINDOWSPHONEPERSONALINFORMATIONEXPORT
 @interface WPPContactQueryOptions : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -279,7 +279,7 @@ OBJCUWP_WINDOWS_PHONE_PERSONALINFORMATION_EXPORT
 #ifndef __WPPContactQueryResult_DEFINED__
 #define __WPPContactQueryResult_DEFINED__
 
-OBJCUWP_WINDOWS_PHONE_PERSONALINFORMATION_EXPORT
+OBJCUWPWINDOWSPHONEPERSONALINFORMATIONEXPORT
 @interface WPPContactQueryResult : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -296,7 +296,7 @@ OBJCUWP_WINDOWS_PHONE_PERSONALINFORMATION_EXPORT
 #ifndef __WPPContactChangeRecord_DEFINED__
 #define __WPPContactChangeRecord_DEFINED__
 
-OBJCUWP_WINDOWS_PHONE_PERSONALINFORMATION_EXPORT
+OBJCUWPWINDOWSPHONEPERSONALINFORMATIONEXPORT
 @interface WPPContactChangeRecord : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));

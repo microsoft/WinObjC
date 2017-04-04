@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_SECURITY_AUTHENTICATION_ONLINEID_EXPORT
-#define OBJCUWP_WINDOWS_SECURITY_AUTHENTICATION_ONLINEID_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_Security_Authentication_OnlineId.lib")
+#ifndef OBJCUWPWINDOWSSECURITYAUTHENTICATIONONLINEIDEXPORT
+#define OBJCUWPWINDOWSSECURITYAUTHENTICATIONONLINEIDEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsSecurityAuthenticationOnlineId.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -52,7 +52,7 @@ typedef void(^WFAsyncActionCompletedHandler)(RTObject<WFIAsyncAction>* asyncInfo
 #ifndef __WSAOOnlineIdServiceTicketRequest_DEFINED__
 #define __WSAOOnlineIdServiceTicketRequest_DEFINED__
 
-OBJCUWP_WINDOWS_SECURITY_AUTHENTICATION_ONLINEID_EXPORT
+OBJCUWPWINDOWSSECURITYAUTHENTICATIONONLINEIDEXPORT
 @interface WSAOOnlineIdServiceTicketRequest : RTObject
 + (WSAOOnlineIdServiceTicketRequest*)makeOnlineIdServiceTicketRequest:(NSString *)service policy:(NSString *)policy ACTIVATOR;
 + (WSAOOnlineIdServiceTicketRequest*)makeOnlineIdServiceTicketRequestAdvanced:(NSString *)service ACTIVATOR;
@@ -69,7 +69,7 @@ OBJCUWP_WINDOWS_SECURITY_AUTHENTICATION_ONLINEID_EXPORT
 #ifndef __WSAOOnlineIdServiceTicket_DEFINED__
 #define __WSAOOnlineIdServiceTicket_DEFINED__
 
-OBJCUWP_WINDOWS_SECURITY_AUTHENTICATION_ONLINEID_EXPORT
+OBJCUWPWINDOWSSECURITYAUTHENTICATIONONLINEIDEXPORT
 @interface WSAOOnlineIdServiceTicket : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -93,7 +93,7 @@ OBJCUWP_WINDOWS_SECURITY_AUTHENTICATION_ONLINEID_EXPORT
 - (void)close;
 @end
 
-OBJCUWP_WINDOWS_SECURITY_AUTHENTICATION_ONLINEID_EXPORT
+OBJCUWPWINDOWSSECURITYAUTHENTICATIONONLINEIDEXPORT
 @interface WFIAsyncInfo : RTObject <WFIAsyncInfo>
 @end
 
@@ -103,7 +103,7 @@ OBJCUWP_WINDOWS_SECURITY_AUTHENTICATION_ONLINEID_EXPORT
 #ifndef __WSAOUserAuthenticationOperation_DEFINED__
 #define __WSAOUserAuthenticationOperation_DEFINED__
 
-OBJCUWP_WINDOWS_SECURITY_AUTHENTICATION_ONLINEID_EXPORT
+OBJCUWPWINDOWSSECURITYAUTHENTICATIONONLINEIDEXPORT
 @interface WSAOUserAuthenticationOperation : RTObject <WFIAsyncInfo>
  // Failed to get type for default interface: Can't marshal Windows.Foundation.IAsyncOperation`1<Windows.Security.Authentication.OnlineId.UserIdentity>
 @property (readonly) HRESULT errorCode;
@@ -128,7 +128,7 @@ OBJCUWP_WINDOWS_SECURITY_AUTHENTICATION_ONLINEID_EXPORT
 - (void)close;
 @end
 
-OBJCUWP_WINDOWS_SECURITY_AUTHENTICATION_ONLINEID_EXPORT
+OBJCUWPWINDOWSSECURITYAUTHENTICATIONONLINEIDEXPORT
 @interface WFIAsyncAction : RTObject <WFIAsyncAction>
 @end
 
@@ -138,7 +138,7 @@ OBJCUWP_WINDOWS_SECURITY_AUTHENTICATION_ONLINEID_EXPORT
 #ifndef __WSAOSignOutUserOperation_DEFINED__
 #define __WSAOSignOutUserOperation_DEFINED__
 
-OBJCUWP_WINDOWS_SECURITY_AUTHENTICATION_ONLINEID_EXPORT
+OBJCUWPWINDOWSSECURITYAUTHENTICATIONONLINEIDEXPORT
 @interface WSAOSignOutUserOperation : RTObject <WFIAsyncAction, WFIAsyncInfo>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -158,7 +158,7 @@ OBJCUWP_WINDOWS_SECURITY_AUTHENTICATION_ONLINEID_EXPORT
 #ifndef __WSAOUserIdentity_DEFINED__
 #define __WSAOUserIdentity_DEFINED__
 
-OBJCUWP_WINDOWS_SECURITY_AUTHENTICATION_ONLINEID_EXPORT
+OBJCUWPWINDOWSSECURITYAUTHENTICATIONONLINEIDEXPORT
 @interface WSAOUserIdentity : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -179,7 +179,7 @@ OBJCUWP_WINDOWS_SECURITY_AUTHENTICATION_ONLINEID_EXPORT
 #ifndef __WSAOOnlineIdAuthenticator_DEFINED__
 #define __WSAOOnlineIdAuthenticator_DEFINED__
 
-OBJCUWP_WINDOWS_SECURITY_AUTHENTICATION_ONLINEID_EXPORT
+OBJCUWPWINDOWSSECURITYAUTHENTICATIONONLINEIDEXPORT
 @interface WSAOOnlineIdAuthenticator : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)

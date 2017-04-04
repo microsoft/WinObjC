@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_DEVICES_SPI_EXPORT
-#define OBJCUWP_WINDOWS_DEVICES_SPI_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_Devices_Spi.lib")
+#ifndef OBJCUWPWINDOWSDEVICESSPIEXPORT
+#define OBJCUWPWINDOWSDEVICESSPIEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsDevicesSpi.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -62,7 +62,7 @@ typedef unsigned WDSSpiSharingMode;
 - (void)fromIdAsync:(NSString *)busId settings:(WDSSpiConnectionSettings*)settings success:(void (^)(WDSSpiDevice*))success failure:(void (^)(NSError*))failure;
 @end
 
-OBJCUWP_WINDOWS_DEVICES_SPI_EXPORT
+OBJCUWPWINDOWSDEVICESSPIEXPORT
 @interface WDSISpiDeviceStatics : RTObject <WDSISpiDeviceStatics>
 @end
 
@@ -72,7 +72,7 @@ OBJCUWP_WINDOWS_DEVICES_SPI_EXPORT
 #ifndef __WDSSpiConnectionSettings_DEFINED__
 #define __WDSSpiConnectionSettings_DEFINED__
 
-OBJCUWP_WINDOWS_DEVICES_SPI_EXPORT
+OBJCUWPWINDOWSDEVICESSPIEXPORT
 @interface WDSSpiConnectionSettings : RTObject
 + (WDSSpiConnectionSettings*)make:(int)chipSelectLine ACTIVATOR;
 #if defined(__cplusplus)
@@ -91,7 +91,7 @@ OBJCUWP_WINDOWS_DEVICES_SPI_EXPORT
 #ifndef __WDSSpiBusInfo_DEFINED__
 #define __WDSSpiBusInfo_DEFINED__
 
-OBJCUWP_WINDOWS_DEVICES_SPI_EXPORT
+OBJCUWPWINDOWSDEVICESSPIEXPORT
 @interface WDSSpiBusInfo : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -112,7 +112,7 @@ OBJCUWP_WINDOWS_DEVICES_SPI_EXPORT
 - (void)close;
 @end
 
-OBJCUWP_WINDOWS_DEVICES_SPI_EXPORT
+OBJCUWPWINDOWSDEVICESSPIEXPORT
 @interface WFIClosable : RTObject <WFIClosable>
 @end
 
@@ -122,7 +122,7 @@ OBJCUWP_WINDOWS_DEVICES_SPI_EXPORT
 #ifndef __WDSSpiDevice_DEFINED__
 #define __WDSSpiDevice_DEFINED__
 
-OBJCUWP_WINDOWS_DEVICES_SPI_EXPORT
+OBJCUWPWINDOWSDEVICESSPIEXPORT
 @interface WDSSpiDevice : RTObject <WFIClosable>
 + (NSString *)getDeviceSelector;
 + (NSString *)getDeviceSelectorFromFriendlyName:(NSString *)friendlyName;
@@ -146,7 +146,7 @@ OBJCUWP_WINDOWS_DEVICES_SPI_EXPORT
 #ifndef __WDSSpiController_DEFINED__
 #define __WDSSpiController_DEFINED__
 
-OBJCUWP_WINDOWS_DEVICES_SPI_EXPORT
+OBJCUWPWINDOWSDEVICESSPIEXPORT
 @interface WDSSpiController : RTObject
 + (void)getDefaultAsyncWithSuccess:(void (^)(WDSSpiController*))success failure:(void (^)(NSError*))failure;
 + (void)getControllersAsync:(RTObject<WDSPISpiProvider>*)provider success:(void (^)(NSArray* /* WDSSpiController* */))success failure:(void (^)(NSError*))failure;

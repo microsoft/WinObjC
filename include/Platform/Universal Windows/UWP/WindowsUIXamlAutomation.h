@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_UI_XAML_EXPORT
-#define OBJCUWP_WINDOWS_UI_XAML_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_UI_Xaml.lib")
+#ifndef OBJCUWPWINDOWSUIXAMLEXPORT
+#define OBJCUWPWINDOWSUIXAMLEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsUIXaml.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -287,7 +287,7 @@ typedef void(^WXDependencyPropertyChangedCallback)(WXDependencyObject* sender, W
 #ifndef __WUXAAutomationProperty_DEFINED__
 #define __WUXAAutomationProperty_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAAutomationProperty : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -300,7 +300,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXAAnnotationPatternIdentifiers_DEFINED__
 #define __WUXAAnnotationPatternIdentifiers_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAAnnotationPatternIdentifiers : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -318,7 +318,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXAAutomationElementIdentifiers_DEFINED__
 #define __WUXAAutomationElementIdentifiers_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAAutomationElementIdentifiers : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -367,7 +367,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXAAutomationProperties_DEFINED__
 #define __WUXAAutomationProperties_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAAutomationProperties : RTObject
 + (WUXAPAccessibilityView)getAccessibilityView:(WXDependencyObject*)element;
 + (void)setAccessibilityView:(WXDependencyObject*)element value:(WUXAPAccessibilityView)value;
@@ -450,7 +450,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXADockPatternIdentifiers_DEFINED__
 #define __WUXADockPatternIdentifiers_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXADockPatternIdentifiers : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -464,7 +464,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXADragPatternIdentifiers_DEFINED__
 #define __WUXADragPatternIdentifiers_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXADragPatternIdentifiers : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -481,7 +481,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXADropTargetPatternIdentifiers_DEFINED__
 #define __WUXADropTargetPatternIdentifiers_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXADropTargetPatternIdentifiers : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -496,7 +496,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXAExpandCollapsePatternIdentifiers_DEFINED__
 #define __WUXAExpandCollapsePatternIdentifiers_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAExpandCollapsePatternIdentifiers : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -510,7 +510,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXAGridItemPatternIdentifiers_DEFINED__
 #define __WUXAGridItemPatternIdentifiers_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAGridItemPatternIdentifiers : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -528,7 +528,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXAGridPatternIdentifiers_DEFINED__
 #define __WUXAGridPatternIdentifiers_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAGridPatternIdentifiers : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -543,7 +543,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXAMultipleViewPatternIdentifiers_DEFINED__
 #define __WUXAMultipleViewPatternIdentifiers_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAMultipleViewPatternIdentifiers : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -558,7 +558,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXARangeValuePatternIdentifiers_DEFINED__
 #define __WUXARangeValuePatternIdentifiers_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXARangeValuePatternIdentifiers : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -577,7 +577,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXAScrollPatternIdentifiers_DEFINED__
 #define __WUXAScrollPatternIdentifiers_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAScrollPatternIdentifiers : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -597,7 +597,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXASelectionItemPatternIdentifiers_DEFINED__
 #define __WUXASelectionItemPatternIdentifiers_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXASelectionItemPatternIdentifiers : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -612,7 +612,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXASelectionPatternIdentifiers_DEFINED__
 #define __WUXASelectionPatternIdentifiers_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXASelectionPatternIdentifiers : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -628,7 +628,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXASpreadsheetItemPatternIdentifiers_DEFINED__
 #define __WUXASpreadsheetItemPatternIdentifiers_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXASpreadsheetItemPatternIdentifiers : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -642,7 +642,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXAStylesPatternIdentifiers_DEFINED__
 #define __WUXAStylesPatternIdentifiers_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAStylesPatternIdentifiers : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -662,7 +662,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXATableItemPatternIdentifiers_DEFINED__
 #define __WUXATableItemPatternIdentifiers_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXATableItemPatternIdentifiers : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -677,7 +677,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXATablePatternIdentifiers_DEFINED__
 #define __WUXATablePatternIdentifiers_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXATablePatternIdentifiers : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -693,7 +693,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXATogglePatternIdentifiers_DEFINED__
 #define __WUXATogglePatternIdentifiers_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXATogglePatternIdentifiers : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -707,7 +707,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXATransformPattern2Identifiers_DEFINED__
 #define __WUXATransformPattern2Identifiers_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXATransformPattern2Identifiers : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -724,7 +724,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXATransformPatternIdentifiers_DEFINED__
 #define __WUXATransformPatternIdentifiers_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXATransformPatternIdentifiers : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -740,7 +740,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXAValuePatternIdentifiers_DEFINED__
 #define __WUXAValuePatternIdentifiers_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAValuePatternIdentifiers : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -755,7 +755,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXAWindowPatternIdentifiers_DEFINED__
 #define __WUXAWindowPatternIdentifiers_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAWindowPatternIdentifiers : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -774,7 +774,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXDependencyObject_DEFINED__
 #define __WXDependencyObject_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXDependencyObject : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -795,7 +795,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXAAutomationAnnotation_DEFINED__
 #define __WUXAAutomationAnnotation_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAAutomationAnnotation : WXDependencyObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 + (WUXAAutomationAnnotation*)makeInstance:(WUXAAnnotationType)type ACTIVATOR;

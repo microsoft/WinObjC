@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_GAMING_PREVIEW_GAMESENUMERATION_EXPORT
-#define OBJCUWP_WINDOWS_GAMING_PREVIEW_GAMESENUMERATION_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_Gaming_Preview_GamesEnumeration.lib")
+#ifndef OBJCUWPWINDOWSGAMINGPREVIEWGAMESENUMERATIONEXPORT
+#define OBJCUWPWINDOWSGAMINGPREVIEWGAMESENUMERATIONEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsGamingPreviewGamesEnumeration.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -79,7 +79,7 @@ typedef void(^WGPGGameListRemovedEventHandler)(NSString * identifier);
 - (RTObject<WFIAsyncAction>*)setCategoryAsync:(WGPGGameListCategory)value;
 @end
 
-OBJCUWP_WINDOWS_GAMING_PREVIEW_GAMESENUMERATION_EXPORT
+OBJCUWPWINDOWSGAMINGPREVIEWGAMESENUMERATIONEXPORT
 @interface WGPGIGameListEntry : RTObject <WGPGIGameListEntry>
 @end
 
@@ -89,7 +89,7 @@ OBJCUWP_WINDOWS_GAMING_PREVIEW_GAMESENUMERATION_EXPORT
 #ifndef __WGPGGameListEntry_DEFINED__
 #define __WGPGGameListEntry_DEFINED__
 
-OBJCUWP_WINDOWS_GAMING_PREVIEW_GAMESENUMERATION_EXPORT
+OBJCUWPWINDOWSGAMINGPREVIEWGAMESENUMERATIONEXPORT
 @interface WGPGGameListEntry : RTObject <WGPGIGameListEntry>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -107,7 +107,7 @@ OBJCUWP_WINDOWS_GAMING_PREVIEW_GAMESENUMERATION_EXPORT
 #ifndef __WGPGGameList_DEFINED__
 #define __WGPGGameList_DEFINED__
 
-OBJCUWP_WINDOWS_GAMING_PREVIEW_GAMESENUMERATION_EXPORT
+OBJCUWPWINDOWSGAMINGPREVIEWGAMESENUMERATIONEXPORT
 @interface WGPGGameList : RTObject
 + (void)findAllAsyncWithSuccess:(void (^)(NSArray* /* WGPGGameListEntry* */))success failure:(void (^)(NSError*))failure;
 + (void)findAllAsyncPackageFamilyName:(NSString *)packageFamilyName success:(void (^)(NSArray* /* WGPGGameListEntry* */))success failure:(void (^)(NSError*))failure;

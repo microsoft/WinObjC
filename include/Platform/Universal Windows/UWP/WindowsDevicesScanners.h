@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_DEVICES_SCANNERS_EXPORT
-#define OBJCUWP_WINDOWS_DEVICES_SCANNERS_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_Devices_Scanners.lib")
+#ifndef OBJCUWPWINDOWSDEVICESSCANNERSEXPORT
+#define OBJCUWPWINDOWSDEVICESSCANNERSEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsDevicesScanners.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -77,7 +77,7 @@ typedef unsigned WDSImageScannerScanSource;
 #import <Foundation/Foundation.h>
 
 // [struct] Windows.Devices.Scanners.ImageScannerResolution
-OBJCUWP_WINDOWS_DEVICES_SCANNERS_EXPORT
+OBJCUWPWINDOWSDEVICESSCANNERSEXPORT
 @interface WDSImageScannerResolution : NSObject
 + (instancetype)new;
 @property float dpiX;
@@ -94,7 +94,7 @@ OBJCUWP_WINDOWS_DEVICES_SCANNERS_EXPORT
 - (BOOL)isFormatSupported:(WDSImageScannerFormat)value;
 @end
 
-OBJCUWP_WINDOWS_DEVICES_SCANNERS_EXPORT
+OBJCUWPWINDOWSDEVICESSCANNERSEXPORT
 @interface WDSIImageScannerFormatConfiguration : RTObject <WDSIImageScannerFormatConfiguration>
 @end
 
@@ -131,7 +131,7 @@ OBJCUWP_WINDOWS_DEVICES_SCANNERS_EXPORT
 - (BOOL)isFormatSupported:(WDSImageScannerFormat)value;
 @end
 
-OBJCUWP_WINDOWS_DEVICES_SCANNERS_EXPORT
+OBJCUWPWINDOWSDEVICESSCANNERSEXPORT
 @interface WDSIImageScannerSourceConfiguration : RTObject <WDSIImageScannerSourceConfiguration>
 @end
 
@@ -141,7 +141,7 @@ OBJCUWP_WINDOWS_DEVICES_SCANNERS_EXPORT
 #ifndef __WDSImageScannerAutoConfiguration_DEFINED__
 #define __WDSImageScannerAutoConfiguration_DEFINED__
 
-OBJCUWP_WINDOWS_DEVICES_SCANNERS_EXPORT
+OBJCUWPWINDOWSDEVICESSCANNERSEXPORT
 @interface WDSImageScannerAutoConfiguration : RTObject <WDSIImageScannerFormatConfiguration>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -157,7 +157,7 @@ OBJCUWP_WINDOWS_DEVICES_SCANNERS_EXPORT
 #ifndef __WDSImageScannerFlatbedConfiguration_DEFINED__
 #define __WDSImageScannerFlatbedConfiguration_DEFINED__
 
-OBJCUWP_WINDOWS_DEVICES_SCANNERS_EXPORT
+OBJCUWPWINDOWSDEVICESSCANNERSEXPORT
 @interface WDSImageScannerFlatbedConfiguration : RTObject <WDSIImageScannerFormatConfiguration, WDSIImageScannerSourceConfiguration>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -196,7 +196,7 @@ OBJCUWP_WINDOWS_DEVICES_SCANNERS_EXPORT
 #ifndef __WDSImageScannerFeederConfiguration_DEFINED__
 #define __WDSImageScannerFeederConfiguration_DEFINED__
 
-OBJCUWP_WINDOWS_DEVICES_SCANNERS_EXPORT
+OBJCUWPWINDOWSDEVICESSCANNERSEXPORT
 @interface WDSImageScannerFeederConfiguration : RTObject <WDSIImageScannerFormatConfiguration, WDSIImageScannerSourceConfiguration>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -246,7 +246,7 @@ OBJCUWP_WINDOWS_DEVICES_SCANNERS_EXPORT
 #ifndef __WDSImageScannerScanResult_DEFINED__
 #define __WDSImageScannerScanResult_DEFINED__
 
-OBJCUWP_WINDOWS_DEVICES_SCANNERS_EXPORT
+OBJCUWPWINDOWSDEVICESSCANNERSEXPORT
 @interface WDSImageScannerScanResult : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -260,7 +260,7 @@ OBJCUWP_WINDOWS_DEVICES_SCANNERS_EXPORT
 #ifndef __WDSImageScannerPreviewResult_DEFINED__
 #define __WDSImageScannerPreviewResult_DEFINED__
 
-OBJCUWP_WINDOWS_DEVICES_SCANNERS_EXPORT
+OBJCUWPWINDOWSDEVICESSCANNERSEXPORT
 @interface WDSImageScannerPreviewResult : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -275,7 +275,7 @@ OBJCUWP_WINDOWS_DEVICES_SCANNERS_EXPORT
 #ifndef __WDSImageScanner_DEFINED__
 #define __WDSImageScanner_DEFINED__
 
-OBJCUWP_WINDOWS_DEVICES_SCANNERS_EXPORT
+OBJCUWPWINDOWSDEVICESSCANNERSEXPORT
 @interface WDSImageScanner : RTObject
 + (void)fromIdAsync:(NSString *)deviceId success:(void (^)(WDSImageScanner*))success failure:(void (^)(NSError*))failure;
 + (NSString *)getDeviceSelector;

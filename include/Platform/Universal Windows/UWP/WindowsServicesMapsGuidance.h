@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_SERVICES_MAPS_GUIDANCE_EXPORT
-#define OBJCUWP_WINDOWS_SERVICES_MAPS_GUIDANCE_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_Services_Maps_Guidance.lib")
+#ifndef OBJCUWPWINDOWSSERVICESMAPSGUIDANCEEXPORT
+#define OBJCUWPWINDOWSSERVICESMAPSGUIDANCEEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsServicesMapsGuidance.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -150,7 +150,7 @@ typedef unsigned WSMGGuidanceLaneMarkers;
 #ifndef __WSMGGuidanceRoadSignpost_DEFINED__
 #define __WSMGGuidanceRoadSignpost_DEFINED__
 
-OBJCUWP_WINDOWS_SERVICES_MAPS_GUIDANCE_EXPORT
+OBJCUWPWINDOWSSERVICESMAPSGUIDANCEEXPORT
 @interface WSMGGuidanceRoadSignpost : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -168,7 +168,7 @@ OBJCUWP_WINDOWS_SERVICES_MAPS_GUIDANCE_EXPORT
 #ifndef __WSMGGuidanceManeuver_DEFINED__
 #define __WSMGGuidanceManeuver_DEFINED__
 
-OBJCUWP_WINDOWS_SERVICES_MAPS_GUIDANCE_EXPORT
+OBJCUWPWINDOWSSERVICESMAPSGUIDANCEEXPORT
 @interface WSMGGuidanceManeuver : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -193,7 +193,7 @@ OBJCUWP_WINDOWS_SERVICES_MAPS_GUIDANCE_EXPORT
 #ifndef __WSMGGuidanceRoute_DEFINED__
 #define __WSMGGuidanceRoute_DEFINED__
 
-OBJCUWP_WINDOWS_SERVICES_MAPS_GUIDANCE_EXPORT
+OBJCUWPWINDOWSSERVICESMAPSGUIDANCEEXPORT
 @interface WSMGGuidanceRoute : RTObject
 + (BOOL)canCreateFromMapRoute:(WSMMapRoute*)mapRoute;
 + (WSMGGuidanceRoute*)tryCreateFromMapRoute:(WSMMapRoute*)mapRoute;
@@ -215,7 +215,7 @@ OBJCUWP_WINDOWS_SERVICES_MAPS_GUIDANCE_EXPORT
 #ifndef __WSMGGuidanceMapMatchedCoordinate_DEFINED__
 #define __WSMGGuidanceMapMatchedCoordinate_DEFINED__
 
-OBJCUWP_WINDOWS_SERVICES_MAPS_GUIDANCE_EXPORT
+OBJCUWPWINDOWSSERVICESMAPSGUIDANCEEXPORT
 @interface WSMGGuidanceMapMatchedCoordinate : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -233,7 +233,7 @@ OBJCUWP_WINDOWS_SERVICES_MAPS_GUIDANCE_EXPORT
 #ifndef __WSMGGuidanceLaneInfo_DEFINED__
 #define __WSMGGuidanceLaneInfo_DEFINED__
 
-OBJCUWP_WINDOWS_SERVICES_MAPS_GUIDANCE_EXPORT
+OBJCUWPWINDOWSSERVICESMAPSGUIDANCEEXPORT
 @interface WSMGGuidanceLaneInfo : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -248,7 +248,7 @@ OBJCUWP_WINDOWS_SERVICES_MAPS_GUIDANCE_EXPORT
 #ifndef __WSMGGuidanceUpdatedEventArgs_DEFINED__
 #define __WSMGGuidanceUpdatedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_SERVICES_MAPS_GUIDANCE_EXPORT
+OBJCUWPWINDOWSSERVICESMAPSGUIDANCEEXPORT
 @interface WSMGGuidanceUpdatedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -275,7 +275,7 @@ OBJCUWP_WINDOWS_SERVICES_MAPS_GUIDANCE_EXPORT
 #ifndef __WSMGGuidanceReroutedEventArgs_DEFINED__
 #define __WSMGGuidanceReroutedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_SERVICES_MAPS_GUIDANCE_EXPORT
+OBJCUWPWINDOWSSERVICESMAPSGUIDANCEEXPORT
 @interface WSMGGuidanceReroutedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -289,7 +289,7 @@ OBJCUWP_WINDOWS_SERVICES_MAPS_GUIDANCE_EXPORT
 #ifndef __WSMGGuidanceAudioNotificationRequestedEventArgs_DEFINED__
 #define __WSMGGuidanceAudioNotificationRequestedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_SERVICES_MAPS_GUIDANCE_EXPORT
+OBJCUWPWINDOWSSERVICESMAPSGUIDANCEEXPORT
 @interface WSMGGuidanceAudioNotificationRequestedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -305,7 +305,7 @@ OBJCUWP_WINDOWS_SERVICES_MAPS_GUIDANCE_EXPORT
 #ifndef __WSMGGuidanceNavigator_DEFINED__
 #define __WSMGGuidanceNavigator_DEFINED__
 
-OBJCUWP_WINDOWS_SERVICES_MAPS_GUIDANCE_EXPORT
+OBJCUWPWINDOWSSERVICESMAPSGUIDANCEEXPORT
 @interface WSMGGuidanceNavigator : RTObject
 + (WSMGGuidanceNavigator*)getCurrent;
 #if defined(__cplusplus)
@@ -349,7 +349,7 @@ OBJCUWP_WINDOWS_SERVICES_MAPS_GUIDANCE_EXPORT
 #ifndef __WSMGGuidanceRoadSegment_DEFINED__
 #define __WSMGGuidanceRoadSegment_DEFINED__
 
-OBJCUWP_WINDOWS_SERVICES_MAPS_GUIDANCE_EXPORT
+OBJCUWPWINDOWSSERVICESMAPSGUIDANCEEXPORT
 @interface WSMGGuidanceRoadSegment : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -371,7 +371,7 @@ OBJCUWP_WINDOWS_SERVICES_MAPS_GUIDANCE_EXPORT
 #ifndef __WSMGGuidanceTelemetryCollector_DEFINED__
 #define __WSMGGuidanceTelemetryCollector_DEFINED__
 
-OBJCUWP_WINDOWS_SERVICES_MAPS_GUIDANCE_EXPORT
+OBJCUWPWINDOWSSERVICESMAPSGUIDANCEEXPORT
 @interface WSMGGuidanceTelemetryCollector : RTObject
 + (WSMGGuidanceTelemetryCollector*)getCurrent;
 #if defined(__cplusplus)

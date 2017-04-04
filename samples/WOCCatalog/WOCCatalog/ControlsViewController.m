@@ -181,6 +181,14 @@ static const int MULTIPLEPRESENTDISMISS_ROW = 5;
                            animated:YES
                          completion:^{
                              assert(!([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad && self.view.hidden));
+#ifdef WINOBJC
+                             UITapGestureRecognizer* tapOutsideModal =
+                                 [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(dismissModal)];
+                             // Use WinObjC 'private' extension for dismiss on tap outside modal.
+                             // See http://stackoverflow.com/questions/9102497/dismiss-modal-view-form-sheet-controller-on-outside-tap
+                             // for private API approach acheiving this on the ref-platform.
+                             [[viewController performSelector:@selector(_modalOverlayView)] addGestureRecognizer:tapOutsideModal];
+#endif
                          }];
     } else if (indexPath.row == MULTIPLEPRESENTDISMISS_ROW) {
         UIViewController* viewController = [[PopoverViewController alloc] initWithImage:[UIImage imageNamed:@"photo1.jpg"]];
@@ -213,6 +221,10 @@ static const int MULTIPLEPRESENTDISMISS_ROW = 5;
 
 - (void)toggleResizeModal {
     self.resizeModal = !self.resizeModal;
+}
+
+- (void)dismissModal {
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (void)setUIActivityIndicatorView {

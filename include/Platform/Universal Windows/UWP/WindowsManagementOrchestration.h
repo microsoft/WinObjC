@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_MANAGEMENT_ORCHESTRATION_EXPORT
-#define OBJCUWP_WINDOWS_MANAGEMENT_ORCHESTRATION_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_Management_Orchestration.lib")
+#ifndef OBJCUWPWINDOWSMANAGEMENTORCHESTRATIONEXPORT
+#define OBJCUWPWINDOWSMANAGEMENTORCHESTRATIONEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsManagementOrchestration.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -38,7 +38,7 @@
 #ifndef __WMOCurrentAppOrchestration_DEFINED__
 #define __WMOCurrentAppOrchestration_DEFINED__
 
-OBJCUWP_WINDOWS_MANAGEMENT_ORCHESTRATION_EXPORT
+OBJCUWPWINDOWSMANAGEMENTORCHESTRATIONEXPORT
 @interface WMOCurrentAppOrchestration : RTObject
 + (WMOCurrentAppOrchestration*)getForCurrentView;
 #if defined(__cplusplus)
@@ -57,7 +57,7 @@ OBJCUWP_WINDOWS_MANAGEMENT_ORCHESTRATION_EXPORT
 - (void)close;
 @end
 
-OBJCUWP_WINDOWS_MANAGEMENT_ORCHESTRATION_EXPORT
+OBJCUWPWINDOWSMANAGEMENTORCHESTRATIONEXPORT
 @interface WFIClosable : RTObject <WFIClosable>
 @end
 
@@ -67,7 +67,7 @@ OBJCUWP_WINDOWS_MANAGEMENT_ORCHESTRATION_EXPORT
 #ifndef __WMOSingleAppModeContext_DEFINED__
 #define __WMOSingleAppModeContext_DEFINED__
 
-OBJCUWP_WINDOWS_MANAGEMENT_ORCHESTRATION_EXPORT
+OBJCUWPWINDOWSMANAGEMENTORCHESTRATIONEXPORT
 @interface WMOSingleAppModeContext : RTObject <WFIClosable>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));

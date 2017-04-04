@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
-#define OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_Media_Playback_Protection_Core_Capture_Devices.lib")
+#ifndef OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
+#define OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsMediaCaptureDevicesCorePlaybackProtection.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -86,7 +86,7 @@ typedef unsigned WMCFMediaFrameSourceKind;
 #ifndef __WMCFMediaFrameSourceGroup_DEFINED__
 #define __WMCFMediaFrameSourceGroup_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMCFMediaFrameSourceGroup : RTObject
 + (void)findAllAsyncWithSuccess:(void (^)(NSArray* /* WMCFMediaFrameSourceGroup* */))success failure:(void (^)(NSError*))failure;
 + (void)fromIdAsync:(NSString *)id success:(void (^)(WMCFMediaFrameSourceGroup*))success failure:(void (^)(NSError*))failure;
@@ -105,7 +105,7 @@ OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
 #ifndef __WMCFMediaFrameSource_DEFINED__
 #define __WMCFMediaFrameSource_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMCFMediaFrameSource : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -130,7 +130,7 @@ OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
 - (void)close;
 @end
 
-OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WFIClosable : RTObject <WFIClosable>
 @end
 
@@ -140,7 +140,7 @@ OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
 #ifndef __WMCFMediaFrameReader_DEFINED__
 #define __WMCFMediaFrameReader_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMCFMediaFrameReader : RTObject <WFIClosable>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -159,7 +159,7 @@ OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
 #ifndef __WMCFMediaFrameSourceInfo_DEFINED__
 #define __WMCFMediaFrameSourceInfo_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMCFMediaFrameSourceInfo : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -179,7 +179,7 @@ OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
 #ifndef __WMCFMediaFrameSourceController_DEFINED__
 #define __WMCFMediaFrameSourceController_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMCFMediaFrameSourceController : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -195,7 +195,7 @@ OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
 #ifndef __WMCFMediaFrameFormat_DEFINED__
 #define __WMCFMediaFrameFormat_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMCFMediaFrameFormat : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -213,7 +213,7 @@ OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
 #ifndef __WMCFMediaFrameArrivedEventArgs_DEFINED__
 #define __WMCFMediaFrameArrivedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMCFMediaFrameArrivedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -226,7 +226,7 @@ OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
 #ifndef __WMCFMediaFrameReference_DEFINED__
 #define __WMCFMediaFrameReference_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMCFMediaFrameReference : RTObject <WFIClosable>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -248,7 +248,7 @@ OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
 #ifndef __WMCFMediaFrameSourceGetPropertyResult_DEFINED__
 #define __WMCFMediaFrameSourceGetPropertyResult_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMCFMediaFrameSourceGetPropertyResult : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -263,7 +263,7 @@ OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
 #ifndef __WMCFVideoMediaFrameFormat_DEFINED__
 #define __WMCFVideoMediaFrameFormat_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMCFVideoMediaFrameFormat : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -280,7 +280,7 @@ OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
 #ifndef __WMCFDepthMediaFrameFormat_DEFINED__
 #define __WMCFDepthMediaFrameFormat_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMCFDepthMediaFrameFormat : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -295,7 +295,7 @@ OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
 #ifndef __WMCFBufferMediaFrame_DEFINED__
 #define __WMCFBufferMediaFrame_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMCFBufferMediaFrame : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -310,7 +310,7 @@ OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
 #ifndef __WMCFVideoMediaFrame_DEFINED__
 #define __WMCFVideoMediaFrame_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMCFVideoMediaFrame : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -331,7 +331,7 @@ OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
 #ifndef __WMCFInfraredMediaFrame_DEFINED__
 #define __WMCFInfraredMediaFrame_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMCFInfraredMediaFrame : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -347,7 +347,7 @@ OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
 #ifndef __WMCFDepthMediaFrame_DEFINED__
 #define __WMCFDepthMediaFrame_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMCFDepthMediaFrame : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));

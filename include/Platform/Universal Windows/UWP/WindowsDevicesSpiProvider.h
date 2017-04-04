@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_DEVICES_SPI_PROVIDER_EXPORT
-#define OBJCUWP_WINDOWS_DEVICES_SPI_PROVIDER_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_Devices_Spi_Provider.lib")
+#ifndef OBJCUWPWINDOWSDEVICESSPIPROVIDEREXPORT
+#define OBJCUWPWINDOWSDEVICESSPIPROVIDEREXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsDevicesSpiProvider.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -58,7 +58,7 @@ typedef unsigned WDSPProviderSpiSharingMode;
 - (RTObject<WDSPISpiDeviceProvider>*)getDeviceProvider:(WDSPProviderSpiConnectionSettings*)settings;
 @end
 
-OBJCUWP_WINDOWS_DEVICES_SPI_PROVIDER_EXPORT
+OBJCUWPWINDOWSDEVICESSPIPROVIDEREXPORT
 @interface WDSPISpiControllerProvider : RTObject <WDSPISpiControllerProvider>
 @end
 
@@ -72,7 +72,7 @@ OBJCUWP_WINDOWS_DEVICES_SPI_PROVIDER_EXPORT
 - (void)getControllersAsyncWithSuccess:(void (^)(NSArray* /* RTObject<WDSPISpiControllerProvider>* */))success failure:(void (^)(NSError*))failure;
 @end
 
-OBJCUWP_WINDOWS_DEVICES_SPI_PROVIDER_EXPORT
+OBJCUWPWINDOWSDEVICESSPIPROVIDEREXPORT
 @interface WDSPISpiProvider : RTObject <WDSPISpiProvider>
 @end
 
@@ -86,7 +86,7 @@ OBJCUWP_WINDOWS_DEVICES_SPI_PROVIDER_EXPORT
 - (void)close;
 @end
 
-OBJCUWP_WINDOWS_DEVICES_SPI_PROVIDER_EXPORT
+OBJCUWPWINDOWSDEVICESSPIPROVIDEREXPORT
 @interface WFIClosable : RTObject <WFIClosable>
 @end
 
@@ -106,7 +106,7 @@ OBJCUWP_WINDOWS_DEVICES_SPI_PROVIDER_EXPORT
 - (void)close;
 @end
 
-OBJCUWP_WINDOWS_DEVICES_SPI_PROVIDER_EXPORT
+OBJCUWPWINDOWSDEVICESSPIPROVIDEREXPORT
 @interface WDSPISpiDeviceProvider : RTObject <WDSPISpiDeviceProvider>
 @end
 
@@ -116,7 +116,7 @@ OBJCUWP_WINDOWS_DEVICES_SPI_PROVIDER_EXPORT
 #ifndef __WDSPProviderSpiConnectionSettings_DEFINED__
 #define __WDSPProviderSpiConnectionSettings_DEFINED__
 
-OBJCUWP_WINDOWS_DEVICES_SPI_PROVIDER_EXPORT
+OBJCUWPWINDOWSDEVICESSPIPROVIDEREXPORT
 @interface WDSPProviderSpiConnectionSettings : RTObject
 + (WDSPProviderSpiConnectionSettings*)make:(int)chipSelectLine ACTIVATOR;
 #if defined(__cplusplus)

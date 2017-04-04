@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_UI_APPLICATIONSETTINGS_EXPORT
-#define OBJCUWP_WINDOWS_UI_APPLICATIONSETTINGS_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_UI_ApplicationSettings.lib")
+#ifndef OBJCUWPWINDOWSUIAPPLICATIONSETTINGSEXPORT
+#define OBJCUWPWINDOWSUIAPPLICATIONSETTINGSEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsUIApplicationSettings.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -116,7 +116,7 @@ typedef void(^WUACredentialCommandCredentialDeletedHandler)(WUACredentialCommand
 @property (retain) NSString * label;
 @end
 
-OBJCUWP_WINDOWS_UI_APPLICATIONSETTINGS_EXPORT
+OBJCUWPWINDOWSUIAPPLICATIONSETTINGSEXPORT
 @interface WUPIUICommand : RTObject <WUPIUICommand>
 @end
 
@@ -126,7 +126,7 @@ OBJCUWP_WINDOWS_UI_APPLICATIONSETTINGS_EXPORT
 #ifndef __WUASettingsCommand_DEFINED__
 #define __WUASettingsCommand_DEFINED__
 
-OBJCUWP_WINDOWS_UI_APPLICATIONSETTINGS_EXPORT
+OBJCUWPWINDOWSUIAPPLICATIONSETTINGSEXPORT
 @interface WUASettingsCommand : RTObject <WUPIUICommand>
 + (WUASettingsCommand*)makeSettingsCommand:(RTObject*)settingsCommandId label:(NSString *)label handler:(WUPUICommandInvokedHandler)handler ACTIVATOR;
 #if defined(__cplusplus)
@@ -144,7 +144,7 @@ OBJCUWP_WINDOWS_UI_APPLICATIONSETTINGS_EXPORT
 #ifndef __WUAWebAccountProviderCommand_DEFINED__
 #define __WUAWebAccountProviderCommand_DEFINED__
 
-OBJCUWP_WINDOWS_UI_APPLICATIONSETTINGS_EXPORT
+OBJCUWPWINDOWSUIAPPLICATIONSETTINGSEXPORT
 @interface WUAWebAccountProviderCommand : RTObject
 + (WUAWebAccountProviderCommand*)makeWebAccountProviderCommand:(WSCWebAccountProvider*)webAccountProvider invoked:(WUAWebAccountProviderCommandInvokedHandler)invoked ACTIVATOR;
 #if defined(__cplusplus)
@@ -160,7 +160,7 @@ OBJCUWP_WINDOWS_UI_APPLICATIONSETTINGS_EXPORT
 #ifndef __WUAWebAccountCommand_DEFINED__
 #define __WUAWebAccountCommand_DEFINED__
 
-OBJCUWP_WINDOWS_UI_APPLICATIONSETTINGS_EXPORT
+OBJCUWPWINDOWSUIAPPLICATIONSETTINGSEXPORT
 @interface WUAWebAccountCommand : RTObject
 + (WUAWebAccountCommand*)makeWebAccountCommand:(WSCWebAccount*)webAccount invoked:(WUAWebAccountCommandInvokedHandler)invoked actions:(WUASupportedWebAccountActions)actions ACTIVATOR;
 #if defined(__cplusplus)
@@ -177,7 +177,7 @@ OBJCUWP_WINDOWS_UI_APPLICATIONSETTINGS_EXPORT
 #ifndef __WUAWebAccountInvokedArgs_DEFINED__
 #define __WUAWebAccountInvokedArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_APPLICATIONSETTINGS_EXPORT
+OBJCUWPWINDOWSUIAPPLICATIONSETTINGSEXPORT
 @interface WUAWebAccountInvokedArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -191,7 +191,7 @@ OBJCUWP_WINDOWS_UI_APPLICATIONSETTINGS_EXPORT
 #ifndef __WUACredentialCommand_DEFINED__
 #define __WUACredentialCommand_DEFINED__
 
-OBJCUWP_WINDOWS_UI_APPLICATIONSETTINGS_EXPORT
+OBJCUWPWINDOWSUIAPPLICATIONSETTINGSEXPORT
 @interface WUACredentialCommand : RTObject
 + (WUACredentialCommand*)makeCredentialCommand:(WSCPasswordCredential*)passwordCredential ACTIVATOR;
 + (WUACredentialCommand*)makeCredentialCommandWithHandler:(WSCPasswordCredential*)passwordCredential deleted:(WUACredentialCommandCredentialDeletedHandler)deleted ACTIVATOR;
@@ -208,7 +208,7 @@ OBJCUWP_WINDOWS_UI_APPLICATIONSETTINGS_EXPORT
 #ifndef __WUAAccountsSettingsPaneEventDeferral_DEFINED__
 #define __WUAAccountsSettingsPaneEventDeferral_DEFINED__
 
-OBJCUWP_WINDOWS_UI_APPLICATIONSETTINGS_EXPORT
+OBJCUWPWINDOWSUIAPPLICATIONSETTINGSEXPORT
 @interface WUAAccountsSettingsPaneEventDeferral : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -222,7 +222,7 @@ OBJCUWP_WINDOWS_UI_APPLICATIONSETTINGS_EXPORT
 #ifndef __WUAAccountsSettingsPaneCommandsRequestedEventArgs_DEFINED__
 #define __WUAAccountsSettingsPaneCommandsRequestedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_APPLICATIONSETTINGS_EXPORT
+OBJCUWPWINDOWSUIAPPLICATIONSETTINGSEXPORT
 @interface WUAAccountsSettingsPaneCommandsRequestedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -241,7 +241,7 @@ OBJCUWP_WINDOWS_UI_APPLICATIONSETTINGS_EXPORT
 #ifndef __WUAAccountsSettingsPane_DEFINED__
 #define __WUAAccountsSettingsPane_DEFINED__
 
-OBJCUWP_WINDOWS_UI_APPLICATIONSETTINGS_EXPORT
+OBJCUWPWINDOWSUIAPPLICATIONSETTINGSEXPORT
 @interface WUAAccountsSettingsPane : RTObject
 + (RTObject<WFIAsyncAction>*)showManageAccountsAsync;
 + (RTObject<WFIAsyncAction>*)showAddAccountAsync;
@@ -262,7 +262,7 @@ OBJCUWP_WINDOWS_UI_APPLICATIONSETTINGS_EXPORT
 #ifndef __WUASettingsPaneCommandsRequest_DEFINED__
 #define __WUASettingsPaneCommandsRequest_DEFINED__
 
-OBJCUWP_WINDOWS_UI_APPLICATIONSETTINGS_EXPORT
+OBJCUWPWINDOWSUIAPPLICATIONSETTINGSEXPORT
 @interface WUASettingsPaneCommandsRequest : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -276,7 +276,7 @@ OBJCUWP_WINDOWS_UI_APPLICATIONSETTINGS_EXPORT
 #ifndef __WUASettingsPaneCommandsRequestedEventArgs_DEFINED__
 #define __WUASettingsPaneCommandsRequestedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_APPLICATIONSETTINGS_EXPORT
+OBJCUWPWINDOWSUIAPPLICATIONSETTINGSEXPORT
 @interface WUASettingsPaneCommandsRequestedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -290,7 +290,7 @@ OBJCUWP_WINDOWS_UI_APPLICATIONSETTINGS_EXPORT
 #ifndef __WUASettingsPane_DEFINED__
 #define __WUASettingsPane_DEFINED__
 
-OBJCUWP_WINDOWS_UI_APPLICATIONSETTINGS_EXPORT
+OBJCUWPWINDOWSUIAPPLICATIONSETTINGSEXPORT
 @interface WUASettingsPane : RTObject
 + (WUASettingsPane*)getForCurrentView;
 + (void)show;

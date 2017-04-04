@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_UI_INPUT_PREVIEW_INJECTION_EXPORT
-#define OBJCUWP_WINDOWS_UI_INPUT_PREVIEW_INJECTION_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_UI_Input_Preview_Injection.lib")
+#ifndef OBJCUWPWINDOWSUIINPUTPREVIEWINJECTIONEXPORT
+#define OBJCUWPWINDOWSUIINPUTPREVIEWINJECTIONEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsUIInputPreviewInjection.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -142,7 +142,7 @@ typedef unsigned WUIPIInjectedInputVisualizationMode;
 #import <Foundation/Foundation.h>
 
 // [struct] Windows.UI.Input.Preview.Injection.InjectedInputRectangle
-OBJCUWP_WINDOWS_UI_INPUT_PREVIEW_INJECTION_EXPORT
+OBJCUWPWINDOWSUIINPUTPREVIEWINJECTIONEXPORT
 @interface WUIPIInjectedInputRectangle : NSObject
 + (instancetype)new;
 @property int left;
@@ -152,7 +152,7 @@ OBJCUWP_WINDOWS_UI_INPUT_PREVIEW_INJECTION_EXPORT
 @end
 
 // [struct] Windows.UI.Input.Preview.Injection.InjectedInputPoint
-OBJCUWP_WINDOWS_UI_INPUT_PREVIEW_INJECTION_EXPORT
+OBJCUWPWINDOWSUIINPUTPREVIEWINJECTIONEXPORT
 @interface WUIPIInjectedInputPoint : NSObject
 + (instancetype)new;
 @property int positionX;
@@ -160,7 +160,7 @@ OBJCUWP_WINDOWS_UI_INPUT_PREVIEW_INJECTION_EXPORT
 @end
 
 // [struct] Windows.UI.Input.Preview.Injection.InjectedInputPointerInfo
-OBJCUWP_WINDOWS_UI_INPUT_PREVIEW_INJECTION_EXPORT
+OBJCUWPWINDOWSUIINPUTPREVIEWINJECTIONEXPORT
 @interface WUIPIInjectedInputPointerInfo : NSObject
 + (instancetype)new;
 @property unsigned int pointerId;
@@ -174,7 +174,7 @@ OBJCUWP_WINDOWS_UI_INPUT_PREVIEW_INJECTION_EXPORT
 #ifndef __WUIPIInjectedInputKeyboardInfo_DEFINED__
 #define __WUIPIInjectedInputKeyboardInfo_DEFINED__
 
-OBJCUWP_WINDOWS_UI_INPUT_PREVIEW_INJECTION_EXPORT
+OBJCUWPWINDOWSUIINPUTPREVIEWINJECTIONEXPORT
 @interface WUIPIInjectedInputKeyboardInfo : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -191,7 +191,7 @@ OBJCUWP_WINDOWS_UI_INPUT_PREVIEW_INJECTION_EXPORT
 #ifndef __WUIPIInjectedInputMouseInfo_DEFINED__
 #define __WUIPIInjectedInputMouseInfo_DEFINED__
 
-OBJCUWP_WINDOWS_UI_INPUT_PREVIEW_INJECTION_EXPORT
+OBJCUWPWINDOWSUIINPUTPREVIEWINJECTIONEXPORT
 @interface WUIPIInjectedInputMouseInfo : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -210,7 +210,7 @@ OBJCUWP_WINDOWS_UI_INPUT_PREVIEW_INJECTION_EXPORT
 #ifndef __WUIPIInjectedInputTouchInfo_DEFINED__
 #define __WUIPIInjectedInputTouchInfo_DEFINED__
 
-OBJCUWP_WINDOWS_UI_INPUT_PREVIEW_INJECTION_EXPORT
+OBJCUWPWINDOWSUIINPUTPREVIEWINJECTIONEXPORT
 @interface WUIPIInjectedInputTouchInfo : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -229,7 +229,7 @@ OBJCUWP_WINDOWS_UI_INPUT_PREVIEW_INJECTION_EXPORT
 #ifndef __WUIPIInjectedInputPenInfo_DEFINED__
 #define __WUIPIInjectedInputPenInfo_DEFINED__
 
-OBJCUWP_WINDOWS_UI_INPUT_PREVIEW_INJECTION_EXPORT
+OBJCUWPWINDOWSUIINPUTPREVIEWINJECTIONEXPORT
 @interface WUIPIInjectedInputPenInfo : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -250,7 +250,7 @@ OBJCUWP_WINDOWS_UI_INPUT_PREVIEW_INJECTION_EXPORT
 #ifndef __WUIPIInputInjector_DEFINED__
 #define __WUIPIInputInjector_DEFINED__
 
-OBJCUWP_WINDOWS_UI_INPUT_PREVIEW_INJECTION_EXPORT
+OBJCUWPWINDOWSUIINPUTPREVIEWINJECTIONEXPORT
 @interface WUIPIInputInjector : RTObject
 + (WUIPIInputInjector*)tryCreate;
 #if defined(__cplusplus)

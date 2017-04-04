@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_SERVICES_MAPS_EXPORT
-#define OBJCUWP_WINDOWS_SERVICES_MAPS_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_Services_Maps.lib")
+#ifndef OBJCUWPWINDOWSSERVICESMAPSEXPORT
+#define OBJCUWPWINDOWSSERVICESMAPSEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsServicesMaps.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -131,7 +131,7 @@ typedef unsigned WSMMapLocationDesiredAccuracy;
 #ifndef __WSMMapAddress_DEFINED__
 #define __WSMMapAddress_DEFINED__
 
-OBJCUWP_WINDOWS_SERVICES_MAPS_EXPORT
+OBJCUWPWINDOWSSERVICESMAPSEXPORT
 @interface WSMMapAddress : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -160,7 +160,7 @@ OBJCUWP_WINDOWS_SERVICES_MAPS_EXPORT
 #ifndef __WSMMapLocation_DEFINED__
 #define __WSMMapLocation_DEFINED__
 
-OBJCUWP_WINDOWS_SERVICES_MAPS_EXPORT
+OBJCUWPWINDOWSSERVICESMAPSEXPORT
 @interface WSMMapLocation : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -177,7 +177,7 @@ OBJCUWP_WINDOWS_SERVICES_MAPS_EXPORT
 #ifndef __WSMMapRouteManeuver_DEFINED__
 #define __WSMMapRouteManeuver_DEFINED__
 
-OBJCUWP_WINDOWS_SERVICES_MAPS_EXPORT
+OBJCUWPWINDOWSSERVICESMAPSEXPORT
 @interface WSMMapRouteManeuver : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -199,7 +199,7 @@ OBJCUWP_WINDOWS_SERVICES_MAPS_EXPORT
 #ifndef __WSMMapRouteLeg_DEFINED__
 #define __WSMMapRouteLeg_DEFINED__
 
-OBJCUWP_WINDOWS_SERVICES_MAPS_EXPORT
+OBJCUWPWINDOWSSERVICESMAPSEXPORT
 @interface WSMMapRouteLeg : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -217,7 +217,7 @@ OBJCUWP_WINDOWS_SERVICES_MAPS_EXPORT
 #ifndef __WSMMapRoute_DEFINED__
 #define __WSMMapRoute_DEFINED__
 
-OBJCUWP_WINDOWS_SERVICES_MAPS_EXPORT
+OBJCUWPWINDOWSSERVICESMAPSEXPORT
 @interface WSMMapRoute : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -238,7 +238,7 @@ OBJCUWP_WINDOWS_SERVICES_MAPS_EXPORT
 #ifndef __WSMMapLocationFinderResult_DEFINED__
 #define __WSMMapLocationFinderResult_DEFINED__
 
-OBJCUWP_WINDOWS_SERVICES_MAPS_EXPORT
+OBJCUWPWINDOWSSERVICESMAPSEXPORT
 @interface WSMMapLocationFinderResult : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -253,7 +253,7 @@ OBJCUWP_WINDOWS_SERVICES_MAPS_EXPORT
 #ifndef __WSMMapRouteFinderResult_DEFINED__
 #define __WSMMapRouteFinderResult_DEFINED__
 
-OBJCUWP_WINDOWS_SERVICES_MAPS_EXPORT
+OBJCUWPWINDOWSSERVICESMAPSEXPORT
 @interface WSMMapRouteFinderResult : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -269,7 +269,7 @@ OBJCUWP_WINDOWS_SERVICES_MAPS_EXPORT
 #ifndef __WSMMapRouteDrivingOptions_DEFINED__
 #define __WSMMapRouteDrivingOptions_DEFINED__
 
-OBJCUWP_WINDOWS_SERVICES_MAPS_EXPORT
+OBJCUWPWINDOWSSERVICESMAPSEXPORT
 @interface WSMMapRouteDrivingOptions : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -287,7 +287,7 @@ OBJCUWP_WINDOWS_SERVICES_MAPS_EXPORT
 #ifndef __WSMMapLocationFinder_DEFINED__
 #define __WSMMapLocationFinder_DEFINED__
 
-OBJCUWP_WINDOWS_SERVICES_MAPS_EXPORT
+OBJCUWPWINDOWSSERVICESMAPSEXPORT
 @interface WSMMapLocationFinder : RTObject
 + (void)findLocationsAtWithAccuracyAsync:(WDGGeopoint*)queryPoint accuracy:(WSMMapLocationDesiredAccuracy)accuracy success:(void (^)(WSMMapLocationFinderResult*))success failure:(void (^)(NSError*))failure;
 + (void)findLocationsAtAsync:(WDGGeopoint*)queryPoint success:(void (^)(WSMMapLocationFinderResult*))success failure:(void (^)(NSError*))failure;
@@ -301,7 +301,7 @@ OBJCUWP_WINDOWS_SERVICES_MAPS_EXPORT
 #ifndef __WSMMapRouteFinder_DEFINED__
 #define __WSMMapRouteFinder_DEFINED__
 
-OBJCUWP_WINDOWS_SERVICES_MAPS_EXPORT
+OBJCUWPWINDOWSSERVICESMAPSEXPORT
 @interface WSMMapRouteFinder : RTObject
 + (void)getDrivingRouteWithOptionsAsync:(WDGGeopoint*)startPoint endPoint:(WDGGeopoint*)endPoint options:(WSMMapRouteDrivingOptions*)options success:(void (^)(WSMMapRouteFinderResult*))success failure:(void (^)(NSError*))failure;
 + (void)getDrivingRouteAsync:(WDGGeopoint*)startPoint endPoint:(WDGGeopoint*)endPoint success:(void (^)(WSMMapRouteFinderResult*))success failure:(void (^)(NSError*))failure;
@@ -322,7 +322,7 @@ OBJCUWP_WINDOWS_SERVICES_MAPS_EXPORT
 #ifndef __WSMMapService_DEFINED__
 #define __WSMMapService_DEFINED__
 
-OBJCUWP_WINDOWS_SERVICES_MAPS_EXPORT
+OBJCUWPWINDOWSSERVICESMAPSEXPORT
 @interface WSMMapService : RTObject
 + (NSString *)serviceToken;
 + (void)setServiceToken:(NSString *)value;
@@ -336,7 +336,7 @@ OBJCUWP_WINDOWS_SERVICES_MAPS_EXPORT
 #ifndef __WSMMapManager_DEFINED__
 #define __WSMMapManager_DEFINED__
 
-OBJCUWP_WINDOWS_SERVICES_MAPS_EXPORT
+OBJCUWPWINDOWSSERVICESMAPSEXPORT
 @interface WSMMapManager : RTObject
 + (void)showDownloadedMapsUI;
 + (void)showMapsUpdateUI;

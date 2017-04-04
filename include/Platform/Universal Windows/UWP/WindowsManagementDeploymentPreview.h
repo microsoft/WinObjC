@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_MANAGEMENT_DEPLOYMENT_PREVIEW_EXPORT
-#define OBJCUWP_WINDOWS_MANAGEMENT_DEPLOYMENT_PREVIEW_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_Management_Deployment_Preview.lib")
+#ifndef OBJCUWPWINDOWSMANAGEMENTDEPLOYMENTPREVIEWEXPORT
+#define OBJCUWPWINDOWSMANAGEMENTDEPLOYMENTPREVIEWEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsManagementDeploymentPreview.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -36,7 +36,7 @@
 #ifndef __WMDPInstalledClassicAppInfo_DEFINED__
 #define __WMDPInstalledClassicAppInfo_DEFINED__
 
-OBJCUWP_WINDOWS_MANAGEMENT_DEPLOYMENT_PREVIEW_EXPORT
+OBJCUWPWINDOWSMANAGEMENTDEPLOYMENTPREVIEWEXPORT
 @interface WMDPInstalledClassicAppInfo : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -51,7 +51,7 @@ OBJCUWP_WINDOWS_MANAGEMENT_DEPLOYMENT_PREVIEW_EXPORT
 #ifndef __WMDPClassicAppManager_DEFINED__
 #define __WMDPClassicAppManager_DEFINED__
 
-OBJCUWP_WINDOWS_MANAGEMENT_DEPLOYMENT_PREVIEW_EXPORT
+OBJCUWPWINDOWSMANAGEMENTDEPLOYMENTPREVIEWEXPORT
 @interface WMDPClassicAppManager : RTObject
 + (WMDPInstalledClassicAppInfo*)findInstalledApp:(NSString *)appUninstallKey;
 @end

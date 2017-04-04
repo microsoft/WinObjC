@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_APPLICATIONMODEL_USERDATAACCOUNTS_SYSTEMACCESS_EXPORT
-#define OBJCUWP_WINDOWS_APPLICATIONMODEL_USERDATAACCOUNTS_SYSTEMACCESS_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_ApplicationModel_UserDataAccounts_SystemAccess.lib")
+#ifndef OBJCUWPWINDOWSAPPLICATIONMODELUSERDATAACCOUNTSSYSTEMACCESSEXPORT
+#define OBJCUWPWINDOWSAPPLICATIONMODELUSERDATAACCOUNTSSYSTEMACCESSEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsApplicationModelUserDataAccountsSystemAccess.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -88,7 +88,7 @@ typedef unsigned WAUSDeviceAccountIconId;
 #ifndef __WAUSDeviceAccountConfiguration_DEFINED__
 #define __WAUSDeviceAccountConfiguration_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_USERDATAACCOUNTS_SYSTEMACCESS_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELUSERDATAACCOUNTSSYSTEMACCESSEXPORT
 @interface WAUSDeviceAccountConfiguration : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -147,7 +147,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_USERDATAACCOUNTS_SYSTEMACCESS_EXPORT
 #ifndef __WAUSUserDataAccountSystemAccessManager_DEFINED__
 #define __WAUSUserDataAccountSystemAccessManager_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_USERDATAACCOUNTS_SYSTEMACCESS_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELUSERDATAACCOUNTSSYSTEMACCESSEXPORT
 @interface WAUSUserDataAccountSystemAccessManager : RTObject
 + (RTObject<WFIAsyncAction>*)suppressLocalAccountWithAccountAsync:(NSString *)userDataAccountId;
 + (void)createDeviceAccountAsync:(WAUSDeviceAccountConfiguration*)account success:(void (^)(NSString *))success failure:(void (^)(NSError*))failure;

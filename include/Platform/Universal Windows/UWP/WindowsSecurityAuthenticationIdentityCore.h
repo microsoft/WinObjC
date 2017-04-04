@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_SECURITY_AUTHENTICATION_IDENTITY_CORE_EXPORT
-#define OBJCUWP_WINDOWS_SECURITY_AUTHENTICATION_IDENTITY_CORE_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_Security_Authentication_Identity_Core.lib")
+#ifndef OBJCUWPWINDOWSSECURITYAUTHENTICATIONIDENTITYCOREEXPORT
+#define OBJCUWPWINDOWSSECURITYAUTHENTICATIONIDENTITYCOREEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsSecurityAuthenticationIdentityCore.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -87,7 +87,7 @@ typedef unsigned WSAICMicrosoftAccountMultiFactorSessionApprovalStatus;
 #ifndef __WSAICMicrosoftAccountMultiFactorSessionInfo_DEFINED__
 #define __WSAICMicrosoftAccountMultiFactorSessionInfo_DEFINED__
 
-OBJCUWP_WINDOWS_SECURITY_AUTHENTICATION_IDENTITY_CORE_EXPORT
+OBJCUWPWINDOWSSECURITYAUTHENTICATIONIDENTITYCOREEXPORT
 @interface WSAICMicrosoftAccountMultiFactorSessionInfo : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -107,7 +107,7 @@ OBJCUWP_WINDOWS_SECURITY_AUTHENTICATION_IDENTITY_CORE_EXPORT
 #ifndef __WSAICMicrosoftAccountMultiFactorOneTimeCodedInfo_DEFINED__
 #define __WSAICMicrosoftAccountMultiFactorOneTimeCodedInfo_DEFINED__
 
-OBJCUWP_WINDOWS_SECURITY_AUTHENTICATION_IDENTITY_CORE_EXPORT
+OBJCUWPWINDOWSSECURITYAUTHENTICATIONIDENTITYCOREEXPORT
 @interface WSAICMicrosoftAccountMultiFactorOneTimeCodedInfo : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -124,7 +124,7 @@ OBJCUWP_WINDOWS_SECURITY_AUTHENTICATION_IDENTITY_CORE_EXPORT
 #ifndef __WSAICMicrosoftAccountMultiFactorGetSessionsResult_DEFINED__
 #define __WSAICMicrosoftAccountMultiFactorGetSessionsResult_DEFINED__
 
-OBJCUWP_WINDOWS_SECURITY_AUTHENTICATION_IDENTITY_CORE_EXPORT
+OBJCUWPWINDOWSSECURITYAUTHENTICATIONIDENTITYCOREEXPORT
 @interface WSAICMicrosoftAccountMultiFactorGetSessionsResult : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -139,7 +139,7 @@ OBJCUWP_WINDOWS_SECURITY_AUTHENTICATION_IDENTITY_CORE_EXPORT
 #ifndef __WSAICMicrosoftAccountMultiFactorUnregisteredAccountsAndSessionInfo_DEFINED__
 #define __WSAICMicrosoftAccountMultiFactorUnregisteredAccountsAndSessionInfo_DEFINED__
 
-OBJCUWP_WINDOWS_SECURITY_AUTHENTICATION_IDENTITY_CORE_EXPORT
+OBJCUWPWINDOWSSECURITYAUTHENTICATIONIDENTITYCOREEXPORT
 @interface WSAICMicrosoftAccountMultiFactorUnregisteredAccountsAndSessionInfo : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -155,7 +155,7 @@ OBJCUWP_WINDOWS_SECURITY_AUTHENTICATION_IDENTITY_CORE_EXPORT
 #ifndef __WSAICMicrosoftAccountMultiFactorAuthenticationManager_DEFINED__
 #define __WSAICMicrosoftAccountMultiFactorAuthenticationManager_DEFINED__
 
-OBJCUWP_WINDOWS_SECURITY_AUTHENTICATION_IDENTITY_CORE_EXPORT
+OBJCUWPWINDOWSSECURITYAUTHENTICATIONIDENTITYCOREEXPORT
 @interface WSAICMicrosoftAccountMultiFactorAuthenticationManager : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));

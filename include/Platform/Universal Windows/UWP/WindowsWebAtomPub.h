@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_WEB_ATOMPUB_EXPORT
-#define OBJCUWP_WINDOWS_WEB_ATOMPUB_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_Web_AtomPub.lib")
+#ifndef OBJCUWPWINDOWSWEBATOMPUBEXPORT
+#define OBJCUWPWINDOWSWEBATOMPUBEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsWebAtomPub.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -53,7 +53,7 @@
 - (WDXDXmlDocument*)getXmlDocument:(WWSSyndicationFormat)format;
 @end
 
-OBJCUWP_WINDOWS_WEB_ATOMPUB_EXPORT
+OBJCUWPWINDOWSWEBATOMPUBEXPORT
 @interface WWSISyndicationNode : RTObject <WWSISyndicationNode>
 @end
 
@@ -63,7 +63,7 @@ OBJCUWP_WINDOWS_WEB_ATOMPUB_EXPORT
 #ifndef __WWAResourceCollection_DEFINED__
 #define __WWAResourceCollection_DEFINED__
 
-OBJCUWP_WINDOWS_WEB_ATOMPUB_EXPORT
+OBJCUWPWINDOWSWEBATOMPUBEXPORT
 @interface WWAResourceCollection : RTObject <WWSISyndicationNode>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -88,7 +88,7 @@ OBJCUWP_WINDOWS_WEB_ATOMPUB_EXPORT
 #ifndef __WWAWorkspace_DEFINED__
 #define __WWAWorkspace_DEFINED__
 
-OBJCUWP_WINDOWS_WEB_ATOMPUB_EXPORT
+OBJCUWPWINDOWSWEBATOMPUBEXPORT
 @interface WWAWorkspace : RTObject <WWSISyndicationNode>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -111,7 +111,7 @@ OBJCUWP_WINDOWS_WEB_ATOMPUB_EXPORT
 #ifndef __WWAServiceDocument_DEFINED__
 #define __WWAServiceDocument_DEFINED__
 
-OBJCUWP_WINDOWS_WEB_ATOMPUB_EXPORT
+OBJCUWPWINDOWSWEBATOMPUBEXPORT
 @interface WWAServiceDocument : RTObject <WWSISyndicationNode>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -143,7 +143,7 @@ OBJCUWP_WINDOWS_WEB_ATOMPUB_EXPORT
 - (void)retrieveFeedAsync:(WFUri*)uri success:(void (^)(WWSSyndicationFeed*))success progress:(void (^)(WWSRetrievalProgress*))progress failure:(void (^)(NSError*))failure;
 @end
 
-OBJCUWP_WINDOWS_WEB_ATOMPUB_EXPORT
+OBJCUWPWINDOWSWEBATOMPUBEXPORT
 @interface WWSISyndicationClient : RTObject <WWSISyndicationClient>
 @end
 
@@ -153,7 +153,7 @@ OBJCUWP_WINDOWS_WEB_ATOMPUB_EXPORT
 #ifndef __WWAAtomPubClient_DEFINED__
 #define __WWAAtomPubClient_DEFINED__
 
-OBJCUWP_WINDOWS_WEB_ATOMPUB_EXPORT
+OBJCUWPWINDOWSWEBATOMPUBEXPORT
 @interface WWAAtomPubClient : RTObject <WWSISyndicationClient>
 + (instancetype)make __attribute__ ((ns_returns_retained));
 + (WWAAtomPubClient*)makeAtomPubClientWithCredentials:(WSCPasswordCredential*)serverCredential ACTIVATOR;

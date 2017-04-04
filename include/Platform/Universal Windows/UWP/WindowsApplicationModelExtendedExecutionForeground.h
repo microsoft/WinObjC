@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_APPLICATIONMODEL_EXTENDEDEXECUTION_FOREGROUND_EXPORT
-#define OBJCUWP_WINDOWS_APPLICATIONMODEL_EXTENDEDEXECUTION_FOREGROUND_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_ApplicationModel_ExtendedExecution_Foreground.lib")
+#ifndef OBJCUWPWINDOWSAPPLICATIONMODELEXTENDEDEXECUTIONFOREGROUNDEXPORT
+#define OBJCUWPWINDOWSAPPLICATIONMODELEXTENDEDEXECUTIONFOREGROUNDEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsApplicationModelExtendedExecutionForeground.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -61,7 +61,7 @@ typedef unsigned WAEFExtendedExecutionForegroundReason;
 #ifndef __WAEFExtendedExecutionForegroundRevokedEventArgs_DEFINED__
 #define __WAEFExtendedExecutionForegroundRevokedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_EXTENDEDEXECUTION_FOREGROUND_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELEXTENDEDEXECUTIONFOREGROUNDEXPORT
 @interface WAEFExtendedExecutionForegroundRevokedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -79,7 +79,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_EXTENDEDEXECUTION_FOREGROUND_EXPORT
 - (void)close;
 @end
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_EXTENDEDEXECUTION_FOREGROUND_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELEXTENDEDEXECUTIONFOREGROUNDEXPORT
 @interface WFIClosable : RTObject <WFIClosable>
 @end
 
@@ -89,7 +89,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_EXTENDEDEXECUTION_FOREGROUND_EXPORT
 #ifndef __WAEFExtendedExecutionForegroundSession_DEFINED__
 #define __WAEFExtendedExecutionForegroundSession_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_EXTENDEDEXECUTION_FOREGROUND_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELEXTENDEDEXECUTIONFOREGROUNDEXPORT
 @interface WAEFExtendedExecutionForegroundSession : RTObject <WFIClosable>
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)

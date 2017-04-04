@@ -18,7 +18,7 @@
 
 @interface UIPopoverPresentationController ()
 
-- (void)_presentAnimated:(BOOL)animated presentCompletion:(dispatch_block_t)presentCompletion dismissCompletion:(dispatch_block_t)dismissCompletion;
+- (void)_presentAnimated:(BOOL)animated presentCompletion:(dispatch_block_t)presentCompletion;
 - (void)_dismissAnimated:(BOOL)animated completion:(dispatch_block_t)dismissCompletion;
 
 @end

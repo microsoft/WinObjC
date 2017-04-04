@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_PHONE_PERSONALINFORMATION_PROVISIONING_EXPORT
-#define OBJCUWP_WINDOWS_PHONE_PERSONALINFORMATION_PROVISIONING_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_Phone_PersonalInformation_Provisioning.lib")
+#ifndef OBJCUWPWINDOWSPHONEPERSONALINFORMATIONPROVISIONINGEXPORT
+#define OBJCUWPWINDOWSPHONEPERSONALINFORMATIONPROVISIONINGEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsPhonePersonalInformationProvisioning.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -40,7 +40,7 @@
 #ifndef __WPPPContactPartnerProvisioningManager_DEFINED__
 #define __WPPPContactPartnerProvisioningManager_DEFINED__
 
-OBJCUWP_WINDOWS_PHONE_PERSONALINFORMATION_PROVISIONING_EXPORT
+OBJCUWPWINDOWSPHONEPERSONALINFORMATIONPROVISIONINGEXPORT
 @interface WPPPContactPartnerProvisioningManager : RTObject
 + (RTObject<WFIAsyncAction>*)associateSocialNetworkAccountAsync:(WPPContactStore*)store networkName:(NSString *)networkName networkAccountId:(NSString *)networkAccountId;
 + (RTObject<WFIAsyncAction>*)associateNetworkAccountAsync:(WPPContactStore*)store networkName:(NSString *)networkName networkAccountId:(NSString *)networkAccountId;
@@ -53,7 +53,7 @@ OBJCUWP_WINDOWS_PHONE_PERSONALINFORMATION_PROVISIONING_EXPORT
 #ifndef __WPPPMessagePartnerProvisioningManager_DEFINED__
 #define __WPPPMessagePartnerProvisioningManager_DEFINED__
 
-OBJCUWP_WINDOWS_PHONE_PERSONALINFORMATION_PROVISIONING_EXPORT
+OBJCUWPWINDOWSPHONEPERSONALINFORMATIONPROVISIONINGEXPORT
 @interface WPPPMessagePartnerProvisioningManager : RTObject
 + (RTObject<WFIAsyncAction>*)importSmsToSystemAsync:(BOOL)incoming read:(BOOL)read body:(NSString *)body sender:(NSString *)sender recipients:(NSArray* /* NSString * */)recipients deliveryTime:(WFDateTime*)deliveryTime;
 + (RTObject<WFIAsyncAction>*)importMmsToSystemAsync:(BOOL)incoming read:(BOOL)read subject:(NSString *)subject sender:(NSString *)sender recipients:(NSArray* /* NSString * */)recipients deliveryTime:(WFDateTime*)deliveryTime attachments:(NSArray* /* NSDictionary* < NSString *, RTObject* > */)attachments;

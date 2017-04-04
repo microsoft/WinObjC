@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_SECURITY_AUTHENTICATION_IDENTITY_PROVIDER_EXPORT
-#define OBJCUWP_WINDOWS_SECURITY_AUTHENTICATION_IDENTITY_PROVIDER_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_Security_Authentication_Identity_Provider.lib")
+#ifndef OBJCUWPWINDOWSSECURITYAUTHENTICATIONIDENTITYPROVIDEREXPORT
+#define OBJCUWPWINDOWSSECURITYAUTHENTICATIONIDENTITYPROVIDEREXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsSecurityAuthenticationIdentityProvider.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -131,7 +131,7 @@ typedef unsigned WSAIPSecondaryAuthenticationFactorAuthenticationMessage;
 #ifndef __WSAIPSecondaryAuthenticationFactorRegistration_DEFINED__
 #define __WSAIPSecondaryAuthenticationFactorRegistration_DEFINED__
 
-OBJCUWP_WINDOWS_SECURITY_AUTHENTICATION_IDENTITY_PROVIDER_EXPORT
+OBJCUWPWINDOWSSECURITYAUTHENTICATIONIDENTITYPROVIDEREXPORT
 @interface WSAIPSecondaryAuthenticationFactorRegistration : RTObject
 + (void)requestStartRegisteringDeviceAsync:(NSString *)deviceId capabilities:(WSAIPSecondaryAuthenticationFactorDeviceCapabilities)capabilities deviceFriendlyName:(NSString *)deviceFriendlyName deviceModelNumber:(NSString *)deviceModelNumber deviceKey:(RTObject<WSSIBuffer>*)deviceKey mutualAuthenticationKey:(RTObject<WSSIBuffer>*)mutualAuthenticationKey success:(void (^)(WSAIPSecondaryAuthenticationFactorRegistrationResult*))success failure:(void (^)(NSError*))failure;
 + (void)findAllRegisteredDeviceInfoAsync:(WSAIPSecondaryAuthenticationFactorDeviceFindScope)queryType success:(void (^)(NSArray* /* WSAIPSecondaryAuthenticationFactorInfo* */))success failure:(void (^)(NSError*))failure;
@@ -150,7 +150,7 @@ OBJCUWP_WINDOWS_SECURITY_AUTHENTICATION_IDENTITY_PROVIDER_EXPORT
 #ifndef __WSAIPSecondaryAuthenticationFactorRegistrationResult_DEFINED__
 #define __WSAIPSecondaryAuthenticationFactorRegistrationResult_DEFINED__
 
-OBJCUWP_WINDOWS_SECURITY_AUTHENTICATION_IDENTITY_PROVIDER_EXPORT
+OBJCUWPWINDOWSSECURITYAUTHENTICATIONIDENTITYPROVIDEREXPORT
 @interface WSAIPSecondaryAuthenticationFactorRegistrationResult : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -165,7 +165,7 @@ OBJCUWP_WINDOWS_SECURITY_AUTHENTICATION_IDENTITY_PROVIDER_EXPORT
 #ifndef __WSAIPSecondaryAuthenticationFactorAuthentication_DEFINED__
 #define __WSAIPSecondaryAuthenticationFactorAuthentication_DEFINED__
 
-OBJCUWP_WINDOWS_SECURITY_AUTHENTICATION_IDENTITY_PROVIDER_EXPORT
+OBJCUWPWINDOWSSECURITYAUTHENTICATIONIDENTITYPROVIDEREXPORT
 @interface WSAIPSecondaryAuthenticationFactorAuthentication : RTObject
 + (RTObject<WFIAsyncAction>*)showNotificationMessageAsync:(NSString *)deviceName message:(WSAIPSecondaryAuthenticationFactorAuthenticationMessage)message;
 + (void)startAuthenticationAsync:(NSString *)deviceId serviceAuthenticationNonce:(RTObject<WSSIBuffer>*)serviceAuthenticationNonce success:(void (^)(WSAIPSecondaryAuthenticationFactorAuthenticationResult*))success failure:(void (^)(NSError*))failure;
@@ -189,7 +189,7 @@ OBJCUWP_WINDOWS_SECURITY_AUTHENTICATION_IDENTITY_PROVIDER_EXPORT
 #ifndef __WSAIPSecondaryAuthenticationFactorAuthenticationResult_DEFINED__
 #define __WSAIPSecondaryAuthenticationFactorAuthenticationResult_DEFINED__
 
-OBJCUWP_WINDOWS_SECURITY_AUTHENTICATION_IDENTITY_PROVIDER_EXPORT
+OBJCUWPWINDOWSSECURITYAUTHENTICATIONIDENTITYPROVIDEREXPORT
 @interface WSAIPSecondaryAuthenticationFactorAuthenticationResult : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -204,7 +204,7 @@ OBJCUWP_WINDOWS_SECURITY_AUTHENTICATION_IDENTITY_PROVIDER_EXPORT
 #ifndef __WSAIPSecondaryAuthenticationFactorInfo_DEFINED__
 #define __WSAIPSecondaryAuthenticationFactorInfo_DEFINED__
 
-OBJCUWP_WINDOWS_SECURITY_AUTHENTICATION_IDENTITY_PROVIDER_EXPORT
+OBJCUWPWINDOWSSECURITYAUTHENTICATIONIDENTITYPROVIDEREXPORT
 @interface WSAIPSecondaryAuthenticationFactorInfo : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -221,7 +221,7 @@ OBJCUWP_WINDOWS_SECURITY_AUTHENTICATION_IDENTITY_PROVIDER_EXPORT
 #ifndef __WSAIPSecondaryAuthenticationFactorAuthenticationStageChangedEventArgs_DEFINED__
 #define __WSAIPSecondaryAuthenticationFactorAuthenticationStageChangedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_SECURITY_AUTHENTICATION_IDENTITY_PROVIDER_EXPORT
+OBJCUWPWINDOWSSECURITYAUTHENTICATIONIDENTITYPROVIDEREXPORT
 @interface WSAIPSecondaryAuthenticationFactorAuthenticationStageChangedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -235,7 +235,7 @@ OBJCUWP_WINDOWS_SECURITY_AUTHENTICATION_IDENTITY_PROVIDER_EXPORT
 #ifndef __WSAIPSecondaryAuthenticationFactorAuthenticationStageInfo_DEFINED__
 #define __WSAIPSecondaryAuthenticationFactorAuthenticationStageInfo_DEFINED__
 
-OBJCUWP_WINDOWS_SECURITY_AUTHENTICATION_IDENTITY_PROVIDER_EXPORT
+OBJCUWPWINDOWSSECURITYAUTHENTICATIONIDENTITYPROVIDEREXPORT
 @interface WSAIPSecondaryAuthenticationFactorAuthenticationStageInfo : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));

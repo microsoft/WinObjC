@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_STORAGE_PICKERS_PROVIDER_EXPORT
-#define OBJCUWP_WINDOWS_STORAGE_PICKERS_PROVIDER_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_Storage_Pickers_Provider.lib")
+#ifndef OBJCUWPWINDOWSSTORAGEPICKERSPROVIDEREXPORT
+#define OBJCUWPWINDOWSSTORAGEPICKERSPROVIDEREXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsStoragePickersProvider.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -63,7 +63,7 @@ typedef unsigned WSPPSetFileNameResult;
 #ifndef __WSPPFileRemovedEventArgs_DEFINED__
 #define __WSPPFileRemovedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_STORAGE_PICKERS_PROVIDER_EXPORT
+OBJCUWPWINDOWSSTORAGEPICKERSPROVIDEREXPORT
 @interface WSPPFileRemovedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -77,7 +77,7 @@ OBJCUWP_WINDOWS_STORAGE_PICKERS_PROVIDER_EXPORT
 #ifndef __WSPPFileOpenPickerUI_DEFINED__
 #define __WSPPFileOpenPickerUI_DEFINED__
 
-OBJCUWP_WINDOWS_STORAGE_PICKERS_PROVIDER_EXPORT
+OBJCUWPWINDOWSSTORAGEPICKERSPROVIDEREXPORT
 @interface WSPPFileOpenPickerUI : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -102,7 +102,7 @@ OBJCUWP_WINDOWS_STORAGE_PICKERS_PROVIDER_EXPORT
 #ifndef __WSPPPickerClosingEventArgs_DEFINED__
 #define __WSPPPickerClosingEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_STORAGE_PICKERS_PROVIDER_EXPORT
+OBJCUWPWINDOWSSTORAGEPICKERSPROVIDEREXPORT
 @interface WSPPPickerClosingEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -117,7 +117,7 @@ OBJCUWP_WINDOWS_STORAGE_PICKERS_PROVIDER_EXPORT
 #ifndef __WSPPPickerClosingOperation_DEFINED__
 #define __WSPPPickerClosingOperation_DEFINED__
 
-OBJCUWP_WINDOWS_STORAGE_PICKERS_PROVIDER_EXPORT
+OBJCUWPWINDOWSSTORAGEPICKERSPROVIDEREXPORT
 @interface WSPPPickerClosingOperation : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -132,7 +132,7 @@ OBJCUWP_WINDOWS_STORAGE_PICKERS_PROVIDER_EXPORT
 #ifndef __WSPPPickerClosingDeferral_DEFINED__
 #define __WSPPPickerClosingDeferral_DEFINED__
 
-OBJCUWP_WINDOWS_STORAGE_PICKERS_PROVIDER_EXPORT
+OBJCUWPWINDOWSSTORAGEPICKERSPROVIDEREXPORT
 @interface WSPPPickerClosingDeferral : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -146,7 +146,7 @@ OBJCUWP_WINDOWS_STORAGE_PICKERS_PROVIDER_EXPORT
 #ifndef __WSPPFileSavePickerUI_DEFINED__
 #define __WSPPFileSavePickerUI_DEFINED__
 
-OBJCUWP_WINDOWS_STORAGE_PICKERS_PROVIDER_EXPORT
+OBJCUWPWINDOWSSTORAGEPICKERSPROVIDEREXPORT
 @interface WSPPFileSavePickerUI : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -168,7 +168,7 @@ OBJCUWP_WINDOWS_STORAGE_PICKERS_PROVIDER_EXPORT
 #ifndef __WSPPTargetFileRequestedEventArgs_DEFINED__
 #define __WSPPTargetFileRequestedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_STORAGE_PICKERS_PROVIDER_EXPORT
+OBJCUWPWINDOWSSTORAGEPICKERSPROVIDEREXPORT
 @interface WSPPTargetFileRequestedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -182,7 +182,7 @@ OBJCUWP_WINDOWS_STORAGE_PICKERS_PROVIDER_EXPORT
 #ifndef __WSPPTargetFileRequest_DEFINED__
 #define __WSPPTargetFileRequest_DEFINED__
 
-OBJCUWP_WINDOWS_STORAGE_PICKERS_PROVIDER_EXPORT
+OBJCUWPWINDOWSSTORAGEPICKERSPROVIDEREXPORT
 @interface WSPPTargetFileRequest : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -197,7 +197,7 @@ OBJCUWP_WINDOWS_STORAGE_PICKERS_PROVIDER_EXPORT
 #ifndef __WSPPTargetFileRequestDeferral_DEFINED__
 #define __WSPPTargetFileRequestDeferral_DEFINED__
 
-OBJCUWP_WINDOWS_STORAGE_PICKERS_PROVIDER_EXPORT
+OBJCUWPWINDOWSSTORAGEPICKERSPROVIDEREXPORT
 @interface WSPPTargetFileRequestDeferral : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));

@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
-#define OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_RandomStuff.lib")
+#ifndef OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
+#define OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsConsolidatedNamespace.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -39,7 +39,7 @@
 #ifndef __WAAAAppointmentsProviderLaunchActionVerbs_DEFINED__
 #define __WAAAAppointmentsProviderLaunchActionVerbs_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WAAAAppointmentsProviderLaunchActionVerbs : RTObject
 + (NSString *)addAppointment;
 + (NSString *)removeAppointment;
@@ -54,7 +54,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WAAAAddAppointmentOperation_DEFINED__
 #define __WAAAAddAppointmentOperation_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WAAAAddAppointmentOperation : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -73,7 +73,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WAAAReplaceAppointmentOperation_DEFINED__
 #define __WAAAReplaceAppointmentOperation_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WAAAReplaceAppointmentOperation : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -94,7 +94,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WAAARemoveAppointmentOperation_DEFINED__
 #define __WAAARemoveAppointmentOperation_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WAAARemoveAppointmentOperation : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));

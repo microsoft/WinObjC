@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_APPLICATIONMODEL_EMAIL_DATAPROVIDER_EXPORT
-#define OBJCUWP_WINDOWS_APPLICATIONMODEL_EMAIL_DATAPROVIDER_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_ApplicationModel_Email_DataProvider.lib")
+#ifndef OBJCUWPWINDOWSAPPLICATIONMODELEMAILDATAPROVIDEREXPORT
+#define OBJCUWPWINDOWSAPPLICATIONMODELEMAILDATAPROVIDEREXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsApplicationModelEmailDataProvider.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -40,7 +40,7 @@
 #ifndef __WAEDEmailDataProviderConnection_DEFINED__
 #define __WAEDEmailDataProviderConnection_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_EMAIL_DATAPROVIDER_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELEMAILDATAPROVIDEREXPORT
 @interface WAEDEmailDataProviderConnection : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -84,7 +84,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_EMAIL_DATAPROVIDER_EXPORT
 #ifndef __WAEDEmailMailboxSyncManagerSyncRequestEventArgs_DEFINED__
 #define __WAEDEmailMailboxSyncManagerSyncRequestEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_EMAIL_DATAPROVIDER_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELEMAILDATAPROVIDEREXPORT
 @interface WAEDEmailMailboxSyncManagerSyncRequestEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -99,7 +99,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_EMAIL_DATAPROVIDER_EXPORT
 #ifndef __WAEDEmailMailboxDownloadMessageRequestEventArgs_DEFINED__
 #define __WAEDEmailMailboxDownloadMessageRequestEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_EMAIL_DATAPROVIDER_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELEMAILDATAPROVIDEREXPORT
 @interface WAEDEmailMailboxDownloadMessageRequestEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -114,7 +114,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_EMAIL_DATAPROVIDER_EXPORT
 #ifndef __WAEDEmailMailboxDownloadAttachmentRequestEventArgs_DEFINED__
 #define __WAEDEmailMailboxDownloadAttachmentRequestEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_EMAIL_DATAPROVIDER_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELEMAILDATAPROVIDEREXPORT
 @interface WAEDEmailMailboxDownloadAttachmentRequestEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -129,7 +129,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_EMAIL_DATAPROVIDER_EXPORT
 #ifndef __WAEDEmailMailboxCreateFolderRequestEventArgs_DEFINED__
 #define __WAEDEmailMailboxCreateFolderRequestEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_EMAIL_DATAPROVIDER_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELEMAILDATAPROVIDEREXPORT
 @interface WAEDEmailMailboxCreateFolderRequestEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -144,7 +144,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_EMAIL_DATAPROVIDER_EXPORT
 #ifndef __WAEDEmailMailboxDeleteFolderRequestEventArgs_DEFINED__
 #define __WAEDEmailMailboxDeleteFolderRequestEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_EMAIL_DATAPROVIDER_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELEMAILDATAPROVIDEREXPORT
 @interface WAEDEmailMailboxDeleteFolderRequestEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -159,7 +159,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_EMAIL_DATAPROVIDER_EXPORT
 #ifndef __WAEDEmailMailboxEmptyFolderRequestEventArgs_DEFINED__
 #define __WAEDEmailMailboxEmptyFolderRequestEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_EMAIL_DATAPROVIDER_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELEMAILDATAPROVIDEREXPORT
 @interface WAEDEmailMailboxEmptyFolderRequestEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -174,7 +174,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_EMAIL_DATAPROVIDER_EXPORT
 #ifndef __WAEDEmailMailboxMoveFolderRequestEventArgs_DEFINED__
 #define __WAEDEmailMailboxMoveFolderRequestEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_EMAIL_DATAPROVIDER_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELEMAILDATAPROVIDEREXPORT
 @interface WAEDEmailMailboxMoveFolderRequestEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -189,7 +189,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_EMAIL_DATAPROVIDER_EXPORT
 #ifndef __WAEDEmailMailboxUpdateMeetingResponseRequestEventArgs_DEFINED__
 #define __WAEDEmailMailboxUpdateMeetingResponseRequestEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_EMAIL_DATAPROVIDER_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELEMAILDATAPROVIDEREXPORT
 @interface WAEDEmailMailboxUpdateMeetingResponseRequestEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -204,7 +204,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_EMAIL_DATAPROVIDER_EXPORT
 #ifndef __WAEDEmailMailboxForwardMeetingRequestEventArgs_DEFINED__
 #define __WAEDEmailMailboxForwardMeetingRequestEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_EMAIL_DATAPROVIDER_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELEMAILDATAPROVIDEREXPORT
 @interface WAEDEmailMailboxForwardMeetingRequestEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -219,7 +219,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_EMAIL_DATAPROVIDER_EXPORT
 #ifndef __WAEDEmailMailboxProposeNewTimeForMeetingRequestEventArgs_DEFINED__
 #define __WAEDEmailMailboxProposeNewTimeForMeetingRequestEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_EMAIL_DATAPROVIDER_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELEMAILDATAPROVIDEREXPORT
 @interface WAEDEmailMailboxProposeNewTimeForMeetingRequestEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -234,7 +234,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_EMAIL_DATAPROVIDER_EXPORT
 #ifndef __WAEDEmailMailboxSetAutoReplySettingsRequestEventArgs_DEFINED__
 #define __WAEDEmailMailboxSetAutoReplySettingsRequestEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_EMAIL_DATAPROVIDER_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELEMAILDATAPROVIDEREXPORT
 @interface WAEDEmailMailboxSetAutoReplySettingsRequestEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -249,7 +249,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_EMAIL_DATAPROVIDER_EXPORT
 #ifndef __WAEDEmailMailboxGetAutoReplySettingsRequestEventArgs_DEFINED__
 #define __WAEDEmailMailboxGetAutoReplySettingsRequestEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_EMAIL_DATAPROVIDER_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELEMAILDATAPROVIDEREXPORT
 @interface WAEDEmailMailboxGetAutoReplySettingsRequestEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -264,7 +264,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_EMAIL_DATAPROVIDER_EXPORT
 #ifndef __WAEDEmailMailboxResolveRecipientsRequestEventArgs_DEFINED__
 #define __WAEDEmailMailboxResolveRecipientsRequestEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_EMAIL_DATAPROVIDER_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELEMAILDATAPROVIDEREXPORT
 @interface WAEDEmailMailboxResolveRecipientsRequestEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -279,7 +279,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_EMAIL_DATAPROVIDER_EXPORT
 #ifndef __WAEDEmailMailboxValidateCertificatesRequestEventArgs_DEFINED__
 #define __WAEDEmailMailboxValidateCertificatesRequestEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_EMAIL_DATAPROVIDER_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELEMAILDATAPROVIDEREXPORT
 @interface WAEDEmailMailboxValidateCertificatesRequestEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -294,7 +294,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_EMAIL_DATAPROVIDER_EXPORT
 #ifndef __WAEDEmailMailboxServerSearchReadBatchRequestEventArgs_DEFINED__
 #define __WAEDEmailMailboxServerSearchReadBatchRequestEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_EMAIL_DATAPROVIDER_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELEMAILDATAPROVIDEREXPORT
 @interface WAEDEmailMailboxServerSearchReadBatchRequestEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -309,7 +309,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_EMAIL_DATAPROVIDER_EXPORT
 #ifndef __WAEDEmailDataProviderTriggerDetails_DEFINED__
 #define __WAEDEmailDataProviderTriggerDetails_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_EMAIL_DATAPROVIDER_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELEMAILDATAPROVIDEREXPORT
 @interface WAEDEmailDataProviderTriggerDetails : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -323,7 +323,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_EMAIL_DATAPROVIDER_EXPORT
 #ifndef __WAEDEmailMailboxSyncManagerSyncRequest_DEFINED__
 #define __WAEDEmailMailboxSyncManagerSyncRequest_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_EMAIL_DATAPROVIDER_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELEMAILDATAPROVIDEREXPORT
 @interface WAEDEmailMailboxSyncManagerSyncRequest : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -339,7 +339,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_EMAIL_DATAPROVIDER_EXPORT
 #ifndef __WAEDEmailMailboxDownloadMessageRequest_DEFINED__
 #define __WAEDEmailMailboxDownloadMessageRequest_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_EMAIL_DATAPROVIDER_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELEMAILDATAPROVIDEREXPORT
 @interface WAEDEmailMailboxDownloadMessageRequest : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -356,7 +356,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_EMAIL_DATAPROVIDER_EXPORT
 #ifndef __WAEDEmailMailboxDownloadAttachmentRequest_DEFINED__
 #define __WAEDEmailMailboxDownloadAttachmentRequest_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_EMAIL_DATAPROVIDER_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELEMAILDATAPROVIDEREXPORT
 @interface WAEDEmailMailboxDownloadAttachmentRequest : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -374,7 +374,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_EMAIL_DATAPROVIDER_EXPORT
 #ifndef __WAEDEmailMailboxCreateFolderRequest_DEFINED__
 #define __WAEDEmailMailboxCreateFolderRequest_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_EMAIL_DATAPROVIDER_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELEMAILDATAPROVIDEREXPORT
 @interface WAEDEmailMailboxCreateFolderRequest : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -392,7 +392,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_EMAIL_DATAPROVIDER_EXPORT
 #ifndef __WAEDEmailMailboxDeleteFolderRequest_DEFINED__
 #define __WAEDEmailMailboxDeleteFolderRequest_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_EMAIL_DATAPROVIDER_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELEMAILDATAPROVIDEREXPORT
 @interface WAEDEmailMailboxDeleteFolderRequest : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -409,7 +409,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_EMAIL_DATAPROVIDER_EXPORT
 #ifndef __WAEDEmailMailboxEmptyFolderRequest_DEFINED__
 #define __WAEDEmailMailboxEmptyFolderRequest_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_EMAIL_DATAPROVIDER_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELEMAILDATAPROVIDEREXPORT
 @interface WAEDEmailMailboxEmptyFolderRequest : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -426,7 +426,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_EMAIL_DATAPROVIDER_EXPORT
 #ifndef __WAEDEmailMailboxMoveFolderRequest_DEFINED__
 #define __WAEDEmailMailboxMoveFolderRequest_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_EMAIL_DATAPROVIDER_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELEMAILDATAPROVIDEREXPORT
 @interface WAEDEmailMailboxMoveFolderRequest : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -445,7 +445,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_EMAIL_DATAPROVIDER_EXPORT
 #ifndef __WAEDEmailMailboxUpdateMeetingResponseRequest_DEFINED__
 #define __WAEDEmailMailboxUpdateMeetingResponseRequest_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_EMAIL_DATAPROVIDER_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELEMAILDATAPROVIDEREXPORT
 @interface WAEDEmailMailboxUpdateMeetingResponseRequest : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -466,7 +466,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_EMAIL_DATAPROVIDER_EXPORT
 #ifndef __WAEDEmailMailboxForwardMeetingRequest_DEFINED__
 #define __WAEDEmailMailboxForwardMeetingRequest_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_EMAIL_DATAPROVIDER_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELEMAILDATAPROVIDEREXPORT
 @interface WAEDEmailMailboxForwardMeetingRequest : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -488,7 +488,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_EMAIL_DATAPROVIDER_EXPORT
 #ifndef __WAEDEmailMailboxProposeNewTimeForMeetingRequest_DEFINED__
 #define __WAEDEmailMailboxProposeNewTimeForMeetingRequest_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_EMAIL_DATAPROVIDER_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELEMAILDATAPROVIDEREXPORT
 @interface WAEDEmailMailboxProposeNewTimeForMeetingRequest : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -509,7 +509,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_EMAIL_DATAPROVIDER_EXPORT
 #ifndef __WAEDEmailMailboxSetAutoReplySettingsRequest_DEFINED__
 #define __WAEDEmailMailboxSetAutoReplySettingsRequest_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_EMAIL_DATAPROVIDER_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELEMAILDATAPROVIDEREXPORT
 @interface WAEDEmailMailboxSetAutoReplySettingsRequest : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -526,7 +526,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_EMAIL_DATAPROVIDER_EXPORT
 #ifndef __WAEDEmailMailboxGetAutoReplySettingsRequest_DEFINED__
 #define __WAEDEmailMailboxGetAutoReplySettingsRequest_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_EMAIL_DATAPROVIDER_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELEMAILDATAPROVIDEREXPORT
 @interface WAEDEmailMailboxGetAutoReplySettingsRequest : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -543,7 +543,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_EMAIL_DATAPROVIDER_EXPORT
 #ifndef __WAEDEmailMailboxResolveRecipientsRequest_DEFINED__
 #define __WAEDEmailMailboxResolveRecipientsRequest_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_EMAIL_DATAPROVIDER_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELEMAILDATAPROVIDEREXPORT
 @interface WAEDEmailMailboxResolveRecipientsRequest : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -560,7 +560,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_EMAIL_DATAPROVIDER_EXPORT
 #ifndef __WAEDEmailMailboxValidateCertificatesRequest_DEFINED__
 #define __WAEDEmailMailboxValidateCertificatesRequest_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_EMAIL_DATAPROVIDER_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELEMAILDATAPROVIDEREXPORT
 @interface WAEDEmailMailboxValidateCertificatesRequest : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -577,7 +577,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_EMAIL_DATAPROVIDER_EXPORT
 #ifndef __WAEDEmailMailboxServerSearchReadBatchRequest_DEFINED__
 #define __WAEDEmailMailboxServerSearchReadBatchRequest_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_EMAIL_DATAPROVIDER_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELEMAILDATAPROVIDEREXPORT
 @interface WAEDEmailMailboxServerSearchReadBatchRequest : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));

@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_UI_POPUPS_EXPORT
-#define OBJCUWP_WINDOWS_UI_POPUPS_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_UI_Popups.lib")
+#ifndef OBJCUWPWINDOWSUIPOPUPSEXPORT
+#define OBJCUWPWINDOWSUIPOPUPSEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsUIPopups.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -73,7 +73,7 @@ typedef void(^WUPUICommandInvokedHandler)(RTObject<WUPIUICommand>* command);
 @property (retain) NSString * label;
 @end
 
-OBJCUWP_WINDOWS_UI_POPUPS_EXPORT
+OBJCUWPWINDOWSUIPOPUPSEXPORT
 @interface WUPIUICommand : RTObject <WUPIUICommand>
 @end
 
@@ -83,7 +83,7 @@ OBJCUWP_WINDOWS_UI_POPUPS_EXPORT
 #ifndef __WUPMessageDialog_DEFINED__
 #define __WUPMessageDialog_DEFINED__
 
-OBJCUWP_WINDOWS_UI_POPUPS_EXPORT
+OBJCUWPWINDOWSUIPOPUPSEXPORT
 @interface WUPMessageDialog : RTObject
 + (WUPMessageDialog*)make:(NSString *)content ACTIVATOR;
 + (WUPMessageDialog*)makeWithTitle:(NSString *)content title:(NSString *)title ACTIVATOR;
@@ -105,7 +105,7 @@ OBJCUWP_WINDOWS_UI_POPUPS_EXPORT
 #ifndef __WUPUICommand_DEFINED__
 #define __WUPUICommand_DEFINED__
 
-OBJCUWP_WINDOWS_UI_POPUPS_EXPORT
+OBJCUWPWINDOWSUIPOPUPSEXPORT
 @interface WUPUICommand : RTObject <WUPIUICommand>
 + (instancetype)make __attribute__ ((ns_returns_retained));
 + (WUPUICommand*)make:(NSString *)label ACTIVATOR;
@@ -125,7 +125,7 @@ OBJCUWP_WINDOWS_UI_POPUPS_EXPORT
 #ifndef __WUPUICommandSeparator_DEFINED__
 #define __WUPUICommandSeparator_DEFINED__
 
-OBJCUWP_WINDOWS_UI_POPUPS_EXPORT
+OBJCUWPWINDOWSUIPOPUPSEXPORT
 @interface WUPUICommandSeparator : RTObject <WUPIUICommand>
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -142,7 +142,7 @@ OBJCUWP_WINDOWS_UI_POPUPS_EXPORT
 #ifndef __WUPPopupMenu_DEFINED__
 #define __WUPPopupMenu_DEFINED__
 
-OBJCUWP_WINDOWS_UI_POPUPS_EXPORT
+OBJCUWPWINDOWSUIPOPUPSEXPORT
 @interface WUPPopupMenu : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)

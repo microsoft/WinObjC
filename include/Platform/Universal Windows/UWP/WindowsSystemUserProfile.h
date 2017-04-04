@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_SYSTEM_USERPROFILE_EXPORT
-#define OBJCUWP_WINDOWS_SYSTEM_USERPROFILE_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_System_UserProfile.lib")
+#ifndef OBJCUWPWINDOWSSYSTEMUSERPROFILEEXPORT
+#define OBJCUWPWINDOWSSYSTEMUSERPROFILEEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsSystemUserProfile.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -69,7 +69,7 @@ typedef unsigned WSUSetImageFeedResult;
 #ifndef __WSUAdvertisingManagerForUser_DEFINED__
 #define __WSUAdvertisingManagerForUser_DEFINED__
 
-OBJCUWP_WINDOWS_SYSTEM_USERPROFILE_EXPORT
+OBJCUWPWINDOWSSYSTEMUSERPROFILEEXPORT
 @interface WSUAdvertisingManagerForUser : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -84,7 +84,7 @@ OBJCUWP_WINDOWS_SYSTEM_USERPROFILE_EXPORT
 #ifndef __WSUAdvertisingManager_DEFINED__
 #define __WSUAdvertisingManager_DEFINED__
 
-OBJCUWP_WINDOWS_SYSTEM_USERPROFILE_EXPORT
+OBJCUWPWINDOWSSYSTEMUSERPROFILEEXPORT
 @interface WSUAdvertisingManager : RTObject
 + (WSUAdvertisingManagerForUser*)getForUser:(WSUser*)user;
 + (NSString *)advertisingId;
@@ -96,7 +96,7 @@ OBJCUWP_WINDOWS_SYSTEM_USERPROFILE_EXPORT
 #ifndef __WSUUserProfilePersonalizationSettings_DEFINED__
 #define __WSUUserProfilePersonalizationSettings_DEFINED__
 
-OBJCUWP_WINDOWS_SYSTEM_USERPROFILE_EXPORT
+OBJCUWPWINDOWSSYSTEMUSERPROFILEEXPORT
 @interface WSUUserProfilePersonalizationSettings : RTObject
 + (BOOL)isSupported;
 #if defined(__cplusplus)
@@ -113,7 +113,7 @@ OBJCUWP_WINDOWS_SYSTEM_USERPROFILE_EXPORT
 #ifndef __WSUGlobalizationPreferences_DEFINED__
 #define __WSUGlobalizationPreferences_DEFINED__
 
-OBJCUWP_WINDOWS_SYSTEM_USERPROFILE_EXPORT
+OBJCUWPWINDOWSSYSTEMUSERPROFILEEXPORT
 @interface WSUGlobalizationPreferences : RTObject
 + (NSArray* /* NSString * */)calendars;
 + (NSArray* /* NSString * */)clocks;
@@ -129,7 +129,7 @@ OBJCUWP_WINDOWS_SYSTEM_USERPROFILE_EXPORT
 #ifndef __WSUFirstSignInSettings_DEFINED__
 #define __WSUFirstSignInSettings_DEFINED__
 
-OBJCUWP_WINDOWS_SYSTEM_USERPROFILE_EXPORT
+OBJCUWPWINDOWSSYSTEMUSERPROFILEEXPORT
 @interface WSUFirstSignInSettings : RTObject
 + (WSUFirstSignInSettings*)getDefault;
 #if defined(__cplusplus)
@@ -151,7 +151,7 @@ OBJCUWP_WINDOWS_SYSTEM_USERPROFILE_EXPORT
 #ifndef __WSUUserInformation_DEFINED__
 #define __WSUUserInformation_DEFINED__
 
-OBJCUWP_WINDOWS_SYSTEM_USERPROFILE_EXPORT
+OBJCUWPWINDOWSSYSTEMUSERPROFILEEXPORT
 @interface WSUUserInformation : RTObject
 + (RTObject<WSIStorageFile>*)getAccountPicture:(WSUAccountPictureKind)kind;
 + (void)setAccountPictureAsync:(RTObject<WSIStorageFile>*)image success:(void (^)(WSUSetAccountPictureResult))success failure:(void (^)(NSError*))failure;
@@ -176,7 +176,7 @@ OBJCUWP_WINDOWS_SYSTEM_USERPROFILE_EXPORT
 #ifndef __WSULockScreen_DEFINED__
 #define __WSULockScreen_DEFINED__
 
-OBJCUWP_WINDOWS_SYSTEM_USERPROFILE_EXPORT
+OBJCUWPWINDOWSSYSTEMUSERPROFILEEXPORT
 @interface WSULockScreen : RTObject
 + (RTObject<WSSIRandomAccessStream>*)getImageStream;
 + (RTObject<WFIAsyncAction>*)setImageFileAsync:(RTObject<WSIStorageFile>*)value;

@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_MANAGEMENT_DEPLOYMENT_EXPORT
-#define OBJCUWP_WINDOWS_MANAGEMENT_DEPLOYMENT_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_Management_Deployment.lib")
+#ifndef OBJCUWPWINDOWSMANAGEMENTDEPLOYMENTEXPORT
+#define OBJCUWPWINDOWSMANAGEMENTDEPLOYMENTEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsManagementDeployment.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -101,7 +101,7 @@ typedef unsigned WMDPackageStatus;
 #import <Foundation/Foundation.h>
 
 // [struct] Windows.Management.Deployment.DeploymentProgress
-OBJCUWP_WINDOWS_MANAGEMENT_DEPLOYMENT_EXPORT
+OBJCUWPWINDOWSMANAGEMENTDEPLOYMENTEXPORT
 @interface WMDDeploymentProgress : NSObject
 + (instancetype)new;
 @property WMDDeploymentProgressState state;
@@ -112,7 +112,7 @@ OBJCUWP_WINDOWS_MANAGEMENT_DEPLOYMENT_EXPORT
 #ifndef __WMDDeploymentResult_DEFINED__
 #define __WMDDeploymentResult_DEFINED__
 
-OBJCUWP_WINDOWS_MANAGEMENT_DEPLOYMENT_EXPORT
+OBJCUWPWINDOWSMANAGEMENTDEPLOYMENTEXPORT
 @interface WMDDeploymentResult : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -128,7 +128,7 @@ OBJCUWP_WINDOWS_MANAGEMENT_DEPLOYMENT_EXPORT
 #ifndef __WMDPackageUserInformation_DEFINED__
 #define __WMDPackageUserInformation_DEFINED__
 
-OBJCUWP_WINDOWS_MANAGEMENT_DEPLOYMENT_EXPORT
+OBJCUWPWINDOWSMANAGEMENTDEPLOYMENTEXPORT
 @interface WMDPackageUserInformation : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -143,7 +143,7 @@ OBJCUWP_WINDOWS_MANAGEMENT_DEPLOYMENT_EXPORT
 #ifndef __WMDPackageVolume_DEFINED__
 #define __WMDPackageVolume_DEFINED__
 
-OBJCUWP_WINDOWS_MANAGEMENT_DEPLOYMENT_EXPORT
+OBJCUWPWINDOWSMANAGEMENTDEPLOYMENTEXPORT
 @interface WMDPackageVolume : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -179,7 +179,7 @@ OBJCUWP_WINDOWS_MANAGEMENT_DEPLOYMENT_EXPORT
 #ifndef __WMDPackageManager_DEFINED__
 #define __WMDPackageManager_DEFINED__
 
-OBJCUWP_WINDOWS_MANAGEMENT_DEPLOYMENT_EXPORT
+OBJCUWPWINDOWSMANAGEMENTDEPLOYMENTEXPORT
 @interface WMDPackageManager : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)

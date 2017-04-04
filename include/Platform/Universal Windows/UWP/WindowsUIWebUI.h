@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
-#define OBJCUWP_WINDOWS_UI_WEBUI_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_UI_WebUI.lib")
+#ifndef OBJCUWPWINDOWSUIWEBUIEXPORT
+#define OBJCUWPWINDOWSUIWEBUIEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsUIWebUI.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -152,7 +152,7 @@ typedef void(^WUWNavigatedEventHandler)(RTObject* sender, RTObject<WUWIWebUINavi
 @property (readonly) WUWActivatedOperation* activatedOperation;
 @end
 
-OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+OBJCUWPWINDOWSUIWEBUIEXPORT
 @interface WUWIActivatedEventArgsDeferral : RTObject <WUWIActivatedEventArgsDeferral>
 @end
 
@@ -166,7 +166,7 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 @property (readonly) WUWWebUINavigatedOperation* navigatedOperation;
 @end
 
-OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+OBJCUWPWINDOWSUIWEBUIEXPORT
 @interface WUWIWebUINavigatedEventArgs : RTObject <WUWIWebUINavigatedEventArgs>
 @end
 
@@ -180,7 +180,7 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 @property BOOL succeeded;
 @end
 
-OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+OBJCUWPWINDOWSUIWEBUIEXPORT
 @interface WUWIWebUIBackgroundTaskInstance : RTObject <WUWIWebUIBackgroundTaskInstance>
 @end
 
@@ -196,7 +196,7 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 @property (readonly) WAASplashScreen* splashScreen;
 @end
 
-OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+OBJCUWPWINDOWSUIWEBUIEXPORT
 @interface WAAIActivatedEventArgs : RTObject <WAAIActivatedEventArgs>
 @end
 
@@ -210,7 +210,7 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 @property (readonly) WDPEPrintTaskConfiguration* configuration;
 @end
 
-OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+OBJCUWPWINDOWSUIWEBUIEXPORT
 @interface WAAIPrintTaskSettingsActivatedEventArgs : RTObject <WAAIPrintTaskSettingsActivatedEventArgs>
 @end
 
@@ -220,7 +220,7 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 #ifndef __WUWWebUIPrintTaskSettingsActivatedEventArgs_DEFINED__
 #define __WUWWebUIPrintTaskSettingsActivatedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+OBJCUWPWINDOWSUIWEBUIEXPORT
 @interface WUWWebUIPrintTaskSettingsActivatedEventArgs : RTObject <WAAIPrintTaskSettingsActivatedEventArgs, WAAIActivatedEventArgs, WUWIActivatedEventArgsDeferral>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -242,7 +242,7 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 @property (readonly) WDPEPrint3DWorkflow* workflow;
 @end
 
-OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+OBJCUWPWINDOWSUIWEBUIEXPORT
 @interface WAAIPrint3DWorkflowActivatedEventArgs : RTObject <WAAIPrint3DWorkflowActivatedEventArgs>
 @end
 
@@ -252,7 +252,7 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 #ifndef __WUWWebUIPrint3DWorkflowActivatedEventArgs_DEFINED__
 #define __WUWWebUIPrint3DWorkflowActivatedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+OBJCUWPWINDOWSUIWEBUIEXPORT
 @interface WUWWebUIPrint3DWorkflowActivatedEventArgs : RTObject <WAAIPrint3DWorkflowActivatedEventArgs, WAAIActivatedEventArgs, WUWIActivatedEventArgsDeferral>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -275,7 +275,7 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 @property (readonly) NSString * tileId;
 @end
 
-OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+OBJCUWPWINDOWSUIWEBUIEXPORT
 @interface WAAILaunchActivatedEventArgs : RTObject <WAAILaunchActivatedEventArgs>
 @end
 
@@ -289,7 +289,7 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 @property (readonly) WACLockScreenCallUI* callUI;
 @end
 
-OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+OBJCUWPWINDOWSUIWEBUIEXPORT
 @interface WAAILockScreenCallActivatedEventArgs : RTObject <WAAILockScreenCallActivatedEventArgs>
 @end
 
@@ -303,7 +303,7 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 @property (readonly) int currentlyShownApplicationViewId;
 @end
 
-OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+OBJCUWPWINDOWSUIWEBUIEXPORT
 @interface WAAIApplicationViewActivatedEventArgs : RTObject <WAAIApplicationViewActivatedEventArgs>
 @end
 
@@ -313,7 +313,7 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 #ifndef __WUWWebUILockScreenCallActivatedEventArgs_DEFINED__
 #define __WUWWebUILockScreenCallActivatedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+OBJCUWPWINDOWSUIWEBUIEXPORT
 @interface WUWWebUILockScreenCallActivatedEventArgs : RTObject <WAAILockScreenCallActivatedEventArgs, WAAILaunchActivatedEventArgs, WAAIActivatedEventArgs, WAAIApplicationViewActivatedEventArgs, WUWIActivatedEventArgsDeferral>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -339,7 +339,7 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 @property (readonly) RTObject* videoDeviceExtension;
 @end
 
-OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+OBJCUWPWINDOWSUIWEBUIEXPORT
 @interface WAAICameraSettingsActivatedEventArgs : RTObject <WAAICameraSettingsActivatedEventArgs>
 @end
 
@@ -349,7 +349,7 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 #ifndef __WUWWebUICameraSettingsActivatedEventArgs_DEFINED__
 #define __WUWWebUICameraSettingsActivatedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+OBJCUWPWINDOWSUIWEBUIEXPORT
 @interface WUWWebUICameraSettingsActivatedEventArgs : RTObject <WAAICameraSettingsActivatedEventArgs, WAAIActivatedEventArgs, WUWIActivatedEventArgsDeferral>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -372,7 +372,7 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 @property (readonly) WACPContactPickerUI* contactPickerUI;
 @end
 
-OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+OBJCUWPWINDOWSUIWEBUIEXPORT
 @interface WAAIContactPickerActivatedEventArgs : RTObject <WAAIContactPickerActivatedEventArgs>
 @end
 
@@ -382,7 +382,7 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 #ifndef __WUWWebUIContactPickerActivatedEventArgs_DEFINED__
 #define __WUWWebUIContactPickerActivatedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+OBJCUWPWINDOWSUIWEBUIEXPORT
 @interface WUWWebUIContactPickerActivatedEventArgs : RTObject <WAAIContactPickerActivatedEventArgs, WAAIActivatedEventArgs, WUWIActivatedEventArgsDeferral>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -404,7 +404,7 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 @property (readonly) NSString * verb;
 @end
 
-OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+OBJCUWPWINDOWSUIWEBUIEXPORT
 @interface WAAIContactActivatedEventArgs : RTObject <WAAIContactActivatedEventArgs>
 @end
 
@@ -420,7 +420,7 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 @property (readonly) NSString * serviceUserId;
 @end
 
-OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+OBJCUWPWINDOWSUIWEBUIEXPORT
 @interface WAAIContactCallActivatedEventArgs : RTObject <WAAIContactCallActivatedEventArgs>
 @end
 
@@ -430,7 +430,7 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 #ifndef __WUWWebUIContactCallActivatedEventArgs_DEFINED__
 #define __WUWWebUIContactCallActivatedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+OBJCUWPWINDOWSUIWEBUIEXPORT
 @interface WUWWebUIContactCallActivatedEventArgs : RTObject <WAAIContactCallActivatedEventArgs, WAAIContactActivatedEventArgs, WAAIActivatedEventArgs, WUWIActivatedEventArgsDeferral>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -457,7 +457,7 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 @property (readonly) NSString * serviceUserId;
 @end
 
-OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+OBJCUWPWINDOWSUIWEBUIEXPORT
 @interface WAAIContactMessageActivatedEventArgs : RTObject <WAAIContactMessageActivatedEventArgs>
 @end
 
@@ -467,7 +467,7 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 #ifndef __WUWWebUIContactMessageActivatedEventArgs_DEFINED__
 #define __WUWWebUIContactMessageActivatedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+OBJCUWPWINDOWSUIWEBUIEXPORT
 @interface WUWWebUIContactMessageActivatedEventArgs : RTObject <WAAIContactMessageActivatedEventArgs, WAAIContactActivatedEventArgs, WAAIActivatedEventArgs, WUWIActivatedEventArgsDeferral>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -493,7 +493,7 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 @property (readonly) WACContact* contact;
 @end
 
-OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+OBJCUWPWINDOWSUIWEBUIEXPORT
 @interface WAAIContactMapActivatedEventArgs : RTObject <WAAIContactMapActivatedEventArgs>
 @end
 
@@ -503,7 +503,7 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 #ifndef __WUWWebUIContactMapActivatedEventArgs_DEFINED__
 #define __WUWWebUIContactMapActivatedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+OBJCUWPWINDOWSUIWEBUIEXPORT
 @interface WUWWebUIContactMapActivatedEventArgs : RTObject <WAAIContactMapActivatedEventArgs, WAAIContactActivatedEventArgs, WAAIActivatedEventArgs, WUWIActivatedEventArgsDeferral>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -529,7 +529,7 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 @property (readonly) NSString * serviceUserId;
 @end
 
-OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+OBJCUWPWINDOWSUIWEBUIEXPORT
 @interface WAAIContactPostActivatedEventArgs : RTObject <WAAIContactPostActivatedEventArgs>
 @end
 
@@ -539,7 +539,7 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 #ifndef __WUWWebUIContactPostActivatedEventArgs_DEFINED__
 #define __WUWWebUIContactPostActivatedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+OBJCUWPWINDOWSUIWEBUIEXPORT
 @interface WUWWebUIContactPostActivatedEventArgs : RTObject <WAAIContactPostActivatedEventArgs, WAAIContactActivatedEventArgs, WAAIActivatedEventArgs, WUWIActivatedEventArgsDeferral>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -566,7 +566,7 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 @property (readonly) NSString * serviceUserId;
 @end
 
-OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+OBJCUWPWINDOWSUIWEBUIEXPORT
 @interface WAAIContactVideoCallActivatedEventArgs : RTObject <WAAIContactVideoCallActivatedEventArgs>
 @end
 
@@ -576,7 +576,7 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 #ifndef __WUWWebUIContactVideoCallActivatedEventArgs_DEFINED__
 #define __WUWWebUIContactVideoCallActivatedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+OBJCUWPWINDOWSUIWEBUIEXPORT
 @interface WUWWebUIContactVideoCallActivatedEventArgs : RTObject <WAAIContactVideoCallActivatedEventArgs, WAAIContactActivatedEventArgs, WAAIActivatedEventArgs, WUWIActivatedEventArgsDeferral>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -602,7 +602,7 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 @property (readonly) NSString * queryText;
 @end
 
-OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+OBJCUWPWINDOWSUIWEBUIEXPORT
 @interface WAAISearchActivatedEventArgs : RTObject <WAAISearchActivatedEventArgs>
 @end
 
@@ -616,7 +616,7 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 @property (readonly) WASSearchPaneQueryLinguisticDetails* linguisticDetails;
 @end
 
-OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+OBJCUWPWINDOWSUIWEBUIEXPORT
 @interface WAAISearchActivatedEventArgsWithLinguisticDetails : RTObject <WAAISearchActivatedEventArgsWithLinguisticDetails>
 @end
 
@@ -626,7 +626,7 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 #ifndef __WUWWebUISearchActivatedEventArgs_DEFINED__
 #define __WUWWebUISearchActivatedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+OBJCUWPWINDOWSUIWEBUIEXPORT
 @interface WUWWebUISearchActivatedEventArgs : RTObject <WAAISearchActivatedEventArgs, WAAIActivatedEventArgs, WAAISearchActivatedEventArgsWithLinguisticDetails, WAAIApplicationViewActivatedEventArgs, WUWIActivatedEventArgsDeferral>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -653,7 +653,7 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 @property (readonly) NSString * itemId;
 @end
 
-OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+OBJCUWPWINDOWSUIWEBUIEXPORT
 @interface WAAIWalletActionActivatedEventArgs : RTObject <WAAIWalletActionActivatedEventArgs>
 @end
 
@@ -663,7 +663,7 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 #ifndef __WUWWebUIWalletActionActivatedEventArgs_DEFINED__
 #define __WUWWebUIWalletActionActivatedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+OBJCUWPWINDOWSUIWEBUIEXPORT
 @interface WUWWebUIWalletActionActivatedEventArgs : RTObject <WAAIWalletActionActivatedEventArgs, WAAIActivatedEventArgs, WUWIActivatedEventArgsDeferral>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -687,7 +687,7 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 @property (readonly) NSString * verb;
 @end
 
-OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+OBJCUWPWINDOWSUIWEBUIEXPORT
 @interface WAAIAppointmentsProviderActivatedEventArgs : RTObject <WAAIAppointmentsProviderActivatedEventArgs>
 @end
 
@@ -701,7 +701,7 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 @property (readonly) WAAAAddAppointmentOperation* addAppointmentOperation;
 @end
 
-OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+OBJCUWPWINDOWSUIWEBUIEXPORT
 @interface WAAIAppointmentsProviderAddAppointmentActivatedEventArgs : RTObject <WAAIAppointmentsProviderAddAppointmentActivatedEventArgs>
 @end
 
@@ -715,7 +715,7 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 @property (readonly) WSUser* user;
 @end
 
-OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+OBJCUWPWINDOWSUIWEBUIEXPORT
 @interface WAAIActivatedEventArgsWithUser : RTObject <WAAIActivatedEventArgsWithUser>
 @end
 
@@ -725,7 +725,7 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 #ifndef __WUWWebUIAppointmentsProviderAddAppointmentActivatedEventArgs_DEFINED__
 #define __WUWWebUIAppointmentsProviderAddAppointmentActivatedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+OBJCUWPWINDOWSUIWEBUIEXPORT
 @interface WUWWebUIAppointmentsProviderAddAppointmentActivatedEventArgs : RTObject <WAAIAppointmentsProviderAddAppointmentActivatedEventArgs, WAAIAppointmentsProviderActivatedEventArgs, WAAIActivatedEventArgs, WUWIActivatedEventArgsDeferral, WAAIActivatedEventArgsWithUser>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -749,7 +749,7 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 @property (readonly) WAAAReplaceAppointmentOperation* replaceAppointmentOperation;
 @end
 
-OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+OBJCUWPWINDOWSUIWEBUIEXPORT
 @interface WAAIAppointmentsProviderReplaceAppointmentActivatedEventArgs : RTObject <WAAIAppointmentsProviderReplaceAppointmentActivatedEventArgs>
 @end
 
@@ -759,7 +759,7 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 #ifndef __WUWWebUIAppointmentsProviderReplaceAppointmentActivatedEventArgs_DEFINED__
 #define __WUWWebUIAppointmentsProviderReplaceAppointmentActivatedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+OBJCUWPWINDOWSUIWEBUIEXPORT
 @interface WUWWebUIAppointmentsProviderReplaceAppointmentActivatedEventArgs : RTObject <WAAIAppointmentsProviderReplaceAppointmentActivatedEventArgs, WAAIAppointmentsProviderActivatedEventArgs, WAAIActivatedEventArgs, WUWIActivatedEventArgsDeferral, WAAIActivatedEventArgsWithUser>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -783,7 +783,7 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 @property (readonly) WAAARemoveAppointmentOperation* removeAppointmentOperation;
 @end
 
-OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+OBJCUWPWINDOWSUIWEBUIEXPORT
 @interface WAAIAppointmentsProviderRemoveAppointmentActivatedEventArgs : RTObject <WAAIAppointmentsProviderRemoveAppointmentActivatedEventArgs>
 @end
 
@@ -793,7 +793,7 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 #ifndef __WUWWebUIAppointmentsProviderRemoveAppointmentActivatedEventArgs_DEFINED__
 #define __WUWWebUIAppointmentsProviderRemoveAppointmentActivatedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+OBJCUWPWINDOWSUIWEBUIEXPORT
 @interface WUWWebUIAppointmentsProviderRemoveAppointmentActivatedEventArgs : RTObject <WAAIAppointmentsProviderRemoveAppointmentActivatedEventArgs, WAAIAppointmentsProviderActivatedEventArgs, WAAIActivatedEventArgs, WUWIActivatedEventArgsDeferral, WAAIActivatedEventArgsWithUser>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -819,7 +819,7 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 @property (readonly) NSString * roamingId;
 @end
 
-OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+OBJCUWPWINDOWSUIWEBUIEXPORT
 @interface WAAIAppointmentsProviderShowAppointmentDetailsActivatedEventArgs : RTObject <WAAIAppointmentsProviderShowAppointmentDetailsActivatedEventArgs>
 @end
 
@@ -829,7 +829,7 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 #ifndef __WUWWebUIAppointmentsProviderShowAppointmentDetailsActivatedEventArgs_DEFINED__
 #define __WUWWebUIAppointmentsProviderShowAppointmentDetailsActivatedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+OBJCUWPWINDOWSUIWEBUIEXPORT
 @interface WUWWebUIAppointmentsProviderShowAppointmentDetailsActivatedEventArgs : RTObject <WAAIAppointmentsProviderShowAppointmentDetailsActivatedEventArgs, WAAIAppointmentsProviderActivatedEventArgs, WAAIActivatedEventArgs, WUWIActivatedEventArgsDeferral, WAAIActivatedEventArgsWithUser>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -856,7 +856,7 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 @property (readonly) WFDateTime* timeToShow;
 @end
 
-OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+OBJCUWPWINDOWSUIWEBUIEXPORT
 @interface WAAIAppointmentsProviderShowTimeFrameActivatedEventArgs : RTObject <WAAIAppointmentsProviderShowTimeFrameActivatedEventArgs>
 @end
 
@@ -866,7 +866,7 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 #ifndef __WUWWebUIAppointmentsProviderShowTimeFrameActivatedEventArgs_DEFINED__
 #define __WUWWebUIAppointmentsProviderShowTimeFrameActivatedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+OBJCUWPWINDOWSUIWEBUIEXPORT
 @interface WUWWebUIAppointmentsProviderShowTimeFrameActivatedEventArgs : RTObject <WAAIAppointmentsProviderShowTimeFrameActivatedEventArgs, WAAIAppointmentsProviderActivatedEventArgs, WAAIActivatedEventArgs, WUWIActivatedEventArgsDeferral, WAAIActivatedEventArgsWithUser>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -891,7 +891,7 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 @property (readonly) RTObject<WAUPIUserDataAccountProviderOperation>* operation;
 @end
 
-OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+OBJCUWPWINDOWSUIWEBUIEXPORT
 @interface WAAIUserDataAccountProviderActivatedEventArgs : RTObject <WAAIUserDataAccountProviderActivatedEventArgs>
 @end
 
@@ -901,7 +901,7 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 #ifndef __WUWWebUIUserDataAccountProviderActivatedEventArgs_DEFINED__
 #define __WUWWebUIUserDataAccountProviderActivatedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+OBJCUWPWINDOWSUIWEBUIEXPORT
 @interface WUWWebUIUserDataAccountProviderActivatedEventArgs : RTObject <WAAIUserDataAccountProviderActivatedEventArgs, WAAIActivatedEventArgs, WUWIActivatedEventArgsDeferral>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -923,7 +923,7 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 @property (readonly) WDEDeviceInformation* deviceInformation;
 @end
 
-OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+OBJCUWPWINDOWSUIWEBUIEXPORT
 @interface WAAIDevicePairingActivatedEventArgs : RTObject <WAAIDevicePairingActivatedEventArgs>
 @end
 
@@ -933,7 +933,7 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 #ifndef __WUWWebUIDevicePairingActivatedEventArgs_DEFINED__
 #define __WUWWebUIDevicePairingActivatedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+OBJCUWPWINDOWSUIWEBUIEXPORT
 @interface WUWWebUIDevicePairingActivatedEventArgs : RTObject <WAAIDevicePairingActivatedEventArgs, WAAIActivatedEventArgs, WUWIActivatedEventArgsDeferral, WAAIActivatedEventArgsWithUser>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -956,7 +956,7 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 @property (readonly) WMSSpeechRecognitionResult* result;
 @end
 
-OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+OBJCUWPWINDOWSUIWEBUIEXPORT
 @interface WAAIVoiceCommandActivatedEventArgs : RTObject <WAAIVoiceCommandActivatedEventArgs>
 @end
 
@@ -966,7 +966,7 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 #ifndef __WUWWebUIVoiceCommandActivatedEventArgs_DEFINED__
 #define __WUWWebUIVoiceCommandActivatedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+OBJCUWPWINDOWSUIWEBUIEXPORT
 @interface WUWWebUIVoiceCommandActivatedEventArgs : RTObject <WAAIVoiceCommandActivatedEventArgs, WAAIActivatedEventArgs, WUWIActivatedEventArgsDeferral, WAAIActivatedEventArgsWithUser>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -985,7 +985,7 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 #ifndef __WUWActivatedDeferral_DEFINED__
 #define __WUWActivatedDeferral_DEFINED__
 
-OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+OBJCUWPWINDOWSUIWEBUIEXPORT
 @interface WUWActivatedDeferral : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -999,7 +999,7 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 #ifndef __WUWActivatedOperation_DEFINED__
 #define __WUWActivatedOperation_DEFINED__
 
-OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+OBJCUWPWINDOWSUIWEBUIEXPORT
 @interface WUWActivatedOperation : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -1017,7 +1017,7 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 @property (readonly) BOOL prelaunchActivated;
 @end
 
-OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+OBJCUWPWINDOWSUIWEBUIEXPORT
 @interface WAAIPrelaunchActivatedEventArgs : RTObject <WAAIPrelaunchActivatedEventArgs>
 @end
 
@@ -1027,7 +1027,7 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 #ifndef __WUWWebUILaunchActivatedEventArgs_DEFINED__
 #define __WUWWebUILaunchActivatedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+OBJCUWPWINDOWSUIWEBUIEXPORT
 @interface WUWWebUILaunchActivatedEventArgs : RTObject <WAAILaunchActivatedEventArgs, WAAIActivatedEventArgs, WAAIPrelaunchActivatedEventArgs, WAAIApplicationViewActivatedEventArgs, WUWIActivatedEventArgsDeferral, WAAIActivatedEventArgsWithUser>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -1053,7 +1053,7 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 @property (readonly) WADSShareOperation* shareOperation;
 @end
 
-OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+OBJCUWPWINDOWSUIWEBUIEXPORT
 @interface WAAIShareTargetActivatedEventArgs : RTObject <WAAIShareTargetActivatedEventArgs>
 @end
 
@@ -1063,7 +1063,7 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 #ifndef __WUWWebUIShareTargetActivatedEventArgs_DEFINED__
 #define __WUWWebUIShareTargetActivatedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+OBJCUWPWINDOWSUIWEBUIEXPORT
 @interface WUWWebUIShareTargetActivatedEventArgs : RTObject <WAAIShareTargetActivatedEventArgs, WAAIActivatedEventArgs, WUWIActivatedEventArgsDeferral, WAAIActivatedEventArgsWithUser>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -1087,7 +1087,7 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 @property (readonly) NSString * verb;
 @end
 
-OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+OBJCUWPWINDOWSUIWEBUIEXPORT
 @interface WAAIFileActivatedEventArgs : RTObject <WAAIFileActivatedEventArgs>
 @end
 
@@ -1101,7 +1101,7 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 @property (readonly) WSSStorageFileQueryResult* neighboringFilesQuery;
 @end
 
-OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+OBJCUWPWINDOWSUIWEBUIEXPORT
 @interface WAAIFileActivatedEventArgsWithNeighboringFiles : RTObject <WAAIFileActivatedEventArgsWithNeighboringFiles>
 @end
 
@@ -1111,7 +1111,7 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 #ifndef __WUWWebUIFileActivatedEventArgs_DEFINED__
 #define __WUWWebUIFileActivatedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+OBJCUWPWINDOWSUIWEBUIEXPORT
 @interface WUWWebUIFileActivatedEventArgs : RTObject <WAAIFileActivatedEventArgs, WAAIActivatedEventArgs, WAAIApplicationViewActivatedEventArgs, WUWIActivatedEventArgsDeferral, WAAIFileActivatedEventArgsWithNeighboringFiles, WAAIActivatedEventArgsWithUser>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -1137,7 +1137,7 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 @property (readonly) WFUri* uri;
 @end
 
-OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+OBJCUWPWINDOWSUIWEBUIEXPORT
 @interface WAAIProtocolActivatedEventArgs : RTObject <WAAIProtocolActivatedEventArgs>
 @end
 
@@ -1152,7 +1152,7 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 @property (readonly) WFCValueSet* data;
 @end
 
-OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+OBJCUWPWINDOWSUIWEBUIEXPORT
 @interface WAAIProtocolActivatedEventArgsWithCallerPackageFamilyNameAndData : RTObject <WAAIProtocolActivatedEventArgsWithCallerPackageFamilyNameAndData>
 @end
 
@@ -1162,7 +1162,7 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 #ifndef __WUWWebUIProtocolActivatedEventArgs_DEFINED__
 #define __WUWWebUIProtocolActivatedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+OBJCUWPWINDOWSUIWEBUIEXPORT
 @interface WUWWebUIProtocolActivatedEventArgs : RTObject <WAAIProtocolActivatedEventArgs, WAAIActivatedEventArgs, WAAIProtocolActivatedEventArgsWithCallerPackageFamilyNameAndData, WAAIApplicationViewActivatedEventArgs, WUWIActivatedEventArgsDeferral, WAAIActivatedEventArgsWithUser>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -1188,7 +1188,7 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 @property (readonly) WSProtocolForResultsOperation* protocolForResultsOperation;
 @end
 
-OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+OBJCUWPWINDOWSUIWEBUIEXPORT
 @interface WAAIProtocolForResultsActivatedEventArgs : RTObject <WAAIProtocolForResultsActivatedEventArgs>
 @end
 
@@ -1198,7 +1198,7 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 #ifndef __WUWWebUIProtocolForResultsActivatedEventArgs_DEFINED__
 #define __WUWWebUIProtocolForResultsActivatedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+OBJCUWPWINDOWSUIWEBUIEXPORT
 @interface WUWWebUIProtocolForResultsActivatedEventArgs : RTObject <WAAIProtocolForResultsActivatedEventArgs, WAAIActivatedEventArgs, WAAIProtocolActivatedEventArgs, WAAIProtocolActivatedEventArgsWithCallerPackageFamilyNameAndData, WAAIApplicationViewActivatedEventArgs, WUWIActivatedEventArgsDeferral, WAAIActivatedEventArgsWithUser>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -1225,7 +1225,7 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 @property (readonly) WSPPFileOpenPickerUI* fileOpenPickerUI;
 @end
 
-OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+OBJCUWPWINDOWSUIWEBUIEXPORT
 @interface WAAIFileOpenPickerActivatedEventArgs : RTObject <WAAIFileOpenPickerActivatedEventArgs>
 @end
 
@@ -1239,7 +1239,7 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 @property (readonly) NSString * callerPackageFamilyName;
 @end
 
-OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+OBJCUWPWINDOWSUIWEBUIEXPORT
 @interface WAAIFileOpenPickerActivatedEventArgs2 : RTObject <WAAIFileOpenPickerActivatedEventArgs2>
 @end
 
@@ -1249,7 +1249,7 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 #ifndef __WUWWebUIFileOpenPickerActivatedEventArgs_DEFINED__
 #define __WUWWebUIFileOpenPickerActivatedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+OBJCUWPWINDOWSUIWEBUIEXPORT
 @interface WUWWebUIFileOpenPickerActivatedEventArgs : RTObject <WAAIFileOpenPickerActivatedEventArgs, WAAIActivatedEventArgs, WAAIFileOpenPickerActivatedEventArgs2, WUWIActivatedEventArgsDeferral, WAAIActivatedEventArgsWithUser>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -1273,7 +1273,7 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 @property (readonly) WSPPFileSavePickerUI* fileSavePickerUI;
 @end
 
-OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+OBJCUWPWINDOWSUIWEBUIEXPORT
 @interface WAAIFileSavePickerActivatedEventArgs : RTObject <WAAIFileSavePickerActivatedEventArgs>
 @end
 
@@ -1288,7 +1288,7 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 @property (readonly) NSString * enterpriseId;
 @end
 
-OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+OBJCUWPWINDOWSUIWEBUIEXPORT
 @interface WAAIFileSavePickerActivatedEventArgs2 : RTObject <WAAIFileSavePickerActivatedEventArgs2>
 @end
 
@@ -1298,7 +1298,7 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 #ifndef __WUWWebUIFileSavePickerActivatedEventArgs_DEFINED__
 #define __WUWWebUIFileSavePickerActivatedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+OBJCUWPWINDOWSUIWEBUIEXPORT
 @interface WUWWebUIFileSavePickerActivatedEventArgs : RTObject <WAAIFileSavePickerActivatedEventArgs, WAAIActivatedEventArgs, WAAIFileSavePickerActivatedEventArgs2, WUWIActivatedEventArgsDeferral, WAAIActivatedEventArgsWithUser>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -1323,7 +1323,7 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 @property (readonly) WSPCachedFileUpdaterUI* cachedFileUpdaterUI;
 @end
 
-OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+OBJCUWPWINDOWSUIWEBUIEXPORT
 @interface WAAICachedFileUpdaterActivatedEventArgs : RTObject <WAAICachedFileUpdaterActivatedEventArgs>
 @end
 
@@ -1333,7 +1333,7 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 #ifndef __WUWWebUICachedFileUpdaterActivatedEventArgs_DEFINED__
 #define __WUWWebUICachedFileUpdaterActivatedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+OBJCUWPWINDOWSUIWEBUIEXPORT
 @interface WUWWebUICachedFileUpdaterActivatedEventArgs : RTObject <WAAICachedFileUpdaterActivatedEventArgs, WAAIActivatedEventArgs, WUWIActivatedEventArgsDeferral, WAAIActivatedEventArgsWithUser>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -1357,7 +1357,7 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 @property (readonly) NSString * verb;
 @end
 
-OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+OBJCUWPWINDOWSUIWEBUIEXPORT
 @interface WAAIDeviceActivatedEventArgs : RTObject <WAAIDeviceActivatedEventArgs>
 @end
 
@@ -1367,7 +1367,7 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 #ifndef __WUWWebUIDeviceActivatedEventArgs_DEFINED__
 #define __WUWWebUIDeviceActivatedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+OBJCUWPWINDOWSUIWEBUIEXPORT
 @interface WUWWebUIDeviceActivatedEventArgs : RTObject <WAAIDeviceActivatedEventArgs, WAAIActivatedEventArgs, WAAIApplicationViewActivatedEventArgs, WUWIActivatedEventArgsDeferral, WAAIActivatedEventArgsWithUser>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -1392,7 +1392,7 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 @property (readonly) RTObject* info;
 @end
 
-OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+OBJCUWPWINDOWSUIWEBUIEXPORT
 @interface WAAILockScreenActivatedEventArgs : RTObject <WAAILockScreenActivatedEventArgs>
 @end
 
@@ -1402,7 +1402,7 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 #ifndef __WUWWebUILockScreenActivatedEventArgs_DEFINED__
 #define __WUWWebUILockScreenActivatedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+OBJCUWPWINDOWSUIWEBUIEXPORT
 @interface WUWWebUILockScreenActivatedEventArgs : RTObject <WAAILockScreenActivatedEventArgs, WAAIActivatedEventArgs, WAAIApplicationViewActivatedEventArgs, WUWIActivatedEventArgsDeferral, WAAIActivatedEventArgsWithUser>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -1426,7 +1426,7 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 @property (readonly) RTObject* sharedContext;
 @end
 
-OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+OBJCUWPWINDOWSUIWEBUIEXPORT
 @interface WAAIRestrictedLaunchActivatedEventArgs : RTObject <WAAIRestrictedLaunchActivatedEventArgs>
 @end
 
@@ -1436,7 +1436,7 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 #ifndef __WUWWebUIRestrictedLaunchActivatedEventArgs_DEFINED__
 #define __WUWWebUIRestrictedLaunchActivatedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+OBJCUWPWINDOWSUIWEBUIEXPORT
 @interface WUWWebUIRestrictedLaunchActivatedEventArgs : RTObject <WAAIRestrictedLaunchActivatedEventArgs, WAAIActivatedEventArgs, WUWIActivatedEventArgsDeferral, WAAIActivatedEventArgsWithUser>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -1459,7 +1459,7 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 @property (readonly) WFCValueSet* continuationData;
 @end
 
-OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+OBJCUWPWINDOWSUIWEBUIEXPORT
 @interface WAAIContinuationActivatedEventArgs : RTObject <WAAIContinuationActivatedEventArgs>
 @end
 
@@ -1473,7 +1473,7 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 @property (readonly) NSArray* /* WSStorageFile* */ files;
 @end
 
-OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+OBJCUWPWINDOWSUIWEBUIEXPORT
 @interface WAAIFileOpenPickerContinuationEventArgs : RTObject <WAAIFileOpenPickerContinuationEventArgs>
 @end
 
@@ -1483,7 +1483,7 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 #ifndef __WUWWebUIFileOpenPickerContinuationEventArgs_DEFINED__
 #define __WUWWebUIFileOpenPickerContinuationEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+OBJCUWPWINDOWSUIWEBUIEXPORT
 @interface WUWWebUIFileOpenPickerContinuationEventArgs : RTObject <WAAIFileOpenPickerContinuationEventArgs, WAAIContinuationActivatedEventArgs, WAAIActivatedEventArgs, WUWIActivatedEventArgsDeferral, WAAIActivatedEventArgsWithUser>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -1507,7 +1507,7 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 @property (readonly) WSStorageFile* file;
 @end
 
-OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+OBJCUWPWINDOWSUIWEBUIEXPORT
 @interface WAAIFileSavePickerContinuationEventArgs : RTObject <WAAIFileSavePickerContinuationEventArgs>
 @end
 
@@ -1517,7 +1517,7 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 #ifndef __WUWWebUIFileSavePickerContinuationEventArgs_DEFINED__
 #define __WUWWebUIFileSavePickerContinuationEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+OBJCUWPWINDOWSUIWEBUIEXPORT
 @interface WUWWebUIFileSavePickerContinuationEventArgs : RTObject <WAAIFileSavePickerContinuationEventArgs, WAAIContinuationActivatedEventArgs, WAAIActivatedEventArgs, WUWIActivatedEventArgsDeferral, WAAIActivatedEventArgsWithUser>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -1541,7 +1541,7 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 @property (readonly) WSStorageFolder* folder;
 @end
 
-OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+OBJCUWPWINDOWSUIWEBUIEXPORT
 @interface WAAIFolderPickerContinuationEventArgs : RTObject <WAAIFolderPickerContinuationEventArgs>
 @end
 
@@ -1551,7 +1551,7 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 #ifndef __WUWWebUIFolderPickerContinuationEventArgs_DEFINED__
 #define __WUWWebUIFolderPickerContinuationEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+OBJCUWPWINDOWSUIWEBUIEXPORT
 @interface WUWWebUIFolderPickerContinuationEventArgs : RTObject <WAAIFolderPickerContinuationEventArgs, WAAIContinuationActivatedEventArgs, WAAIActivatedEventArgs, WUWIActivatedEventArgsDeferral, WAAIActivatedEventArgsWithUser>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -1575,7 +1575,7 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 @property (readonly) WSAWWebAuthenticationResult* webAuthenticationResult;
 @end
 
-OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+OBJCUWPWINDOWSUIWEBUIEXPORT
 @interface WAAIWebAuthenticationBrokerContinuationEventArgs : RTObject <WAAIWebAuthenticationBrokerContinuationEventArgs>
 @end
 
@@ -1585,7 +1585,7 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 #ifndef __WUWWebUIWebAuthenticationBrokerContinuationEventArgs_DEFINED__
 #define __WUWWebUIWebAuthenticationBrokerContinuationEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+OBJCUWPWINDOWSUIWEBUIEXPORT
 @interface WUWWebUIWebAuthenticationBrokerContinuationEventArgs : RTObject <WAAIWebAuthenticationBrokerContinuationEventArgs, WAAIContinuationActivatedEventArgs, WAAIActivatedEventArgs, WUWIActivatedEventArgsDeferral>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -1608,7 +1608,7 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 @property (readonly) RTObject<WSAWPIWebAccountProviderOperation>* operation;
 @end
 
-OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+OBJCUWPWINDOWSUIWEBUIEXPORT
 @interface WAAIWebAccountProviderActivatedEventArgs : RTObject <WAAIWebAccountProviderActivatedEventArgs>
 @end
 
@@ -1618,7 +1618,7 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 #ifndef __WUWWebUIWebAccountProviderActivatedEventArgs_DEFINED__
 #define __WUWWebUIWebAccountProviderActivatedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+OBJCUWPWINDOWSUIWEBUIEXPORT
 @interface WUWWebUIWebAccountProviderActivatedEventArgs : RTObject <WAAIWebAccountProviderActivatedEventArgs, WAAIActivatedEventArgs, WUWIActivatedEventArgsDeferral, WAAIActivatedEventArgsWithUser>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -1641,7 +1641,7 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 @property (readonly) NSString * appName;
 @end
 
-OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+OBJCUWPWINDOWSUIWEBUIEXPORT
 @interface WAAIDialReceiverActivatedEventArgs : RTObject <WAAIDialReceiverActivatedEventArgs>
 @end
 
@@ -1651,7 +1651,7 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 #ifndef __WUWWebUIDialReceiverActivatedEventArgs_DEFINED__
 #define __WUWWebUIDialReceiverActivatedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+OBJCUWPWINDOWSUIWEBUIEXPORT
 @interface WUWWebUIDialReceiverActivatedEventArgs : RTObject <WAAIDialReceiverActivatedEventArgs, WAAILaunchActivatedEventArgs, WAAIActivatedEventArgs, WAAIApplicationViewActivatedEventArgs, WUWIActivatedEventArgsDeferral, WAAIActivatedEventArgsWithUser>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -1678,7 +1678,7 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 @property (readonly) WFCValueSet* userInput;
 @end
 
-OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+OBJCUWPWINDOWSUIWEBUIEXPORT
 @interface WAAIToastNotificationActivatedEventArgs : RTObject <WAAIToastNotificationActivatedEventArgs>
 @end
 
@@ -1688,7 +1688,7 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 #ifndef __WUWWebUIToastNotificationActivatedEventArgs_DEFINED__
 #define __WUWWebUIToastNotificationActivatedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+OBJCUWPWINDOWSUIWEBUIEXPORT
 @interface WUWWebUIToastNotificationActivatedEventArgs : RTObject <WAAIToastNotificationActivatedEventArgs, WAAIActivatedEventArgs, WUWIActivatedEventArgsDeferral, WAAIActivatedEventArgsWithUser>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -1708,7 +1708,7 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 #ifndef __WUWWebUINavigatedOperation_DEFINED__
 #define __WUWWebUINavigatedOperation_DEFINED__
 
-OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+OBJCUWPWINDOWSUIWEBUIEXPORT
 @interface WUWWebUINavigatedOperation : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -1726,7 +1726,7 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 - (void)complete;
 @end
 
-OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+OBJCUWPWINDOWSUIWEBUIEXPORT
 @interface WAISuspendingDeferral : RTObject <WAISuspendingDeferral>
 @end
 
@@ -1736,7 +1736,7 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 #ifndef __WUWSuspendingDeferral_DEFINED__
 #define __WUWSuspendingDeferral_DEFINED__
 
-OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+OBJCUWPWINDOWSUIWEBUIEXPORT
 @interface WUWSuspendingDeferral : RTObject <WAISuspendingDeferral>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -1755,7 +1755,7 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 - (WASuspendingDeferral*)getDeferral;
 @end
 
-OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+OBJCUWPWINDOWSUIWEBUIEXPORT
 @interface WAISuspendingOperation : RTObject <WAISuspendingOperation>
 @end
 
@@ -1765,7 +1765,7 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 #ifndef __WUWSuspendingOperation_DEFINED__
 #define __WUWSuspendingOperation_DEFINED__
 
-OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+OBJCUWPWINDOWSUIWEBUIEXPORT
 @interface WUWSuspendingOperation : RTObject <WAISuspendingOperation>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -1784,7 +1784,7 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 @property (readonly) WASuspendingOperation* suspendingOperation;
 @end
 
-OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+OBJCUWPWINDOWSUIWEBUIEXPORT
 @interface WAISuspendingEventArgs : RTObject <WAISuspendingEventArgs>
 @end
 
@@ -1794,7 +1794,7 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 #ifndef __WUWSuspendingEventArgs_DEFINED__
 #define __WUWSuspendingEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+OBJCUWPWINDOWSUIWEBUIEXPORT
 @interface WUWSuspendingEventArgs : RTObject <WAISuspendingEventArgs>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -1812,7 +1812,7 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 - (WFDeferral*)getDeferral;
 @end
 
-OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+OBJCUWPWINDOWSUIWEBUIEXPORT
 @interface WAILeavingBackgroundEventArgs : RTObject <WAILeavingBackgroundEventArgs>
 @end
 
@@ -1822,7 +1822,7 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 #ifndef __WUWLeavingBackgroundEventArgs_DEFINED__
 #define __WUWLeavingBackgroundEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+OBJCUWPWINDOWSUIWEBUIEXPORT
 @interface WUWLeavingBackgroundEventArgs : RTObject <WAILeavingBackgroundEventArgs>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -1840,7 +1840,7 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 - (WFDeferral*)getDeferral;
 @end
 
-OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+OBJCUWPWINDOWSUIWEBUIEXPORT
 @interface WAIEnteredBackgroundEventArgs : RTObject <WAIEnteredBackgroundEventArgs>
 @end
 
@@ -1850,7 +1850,7 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 #ifndef __WUWEnteredBackgroundEventArgs_DEFINED__
 #define __WUWEnteredBackgroundEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+OBJCUWPWINDOWSUIWEBUIEXPORT
 @interface WUWEnteredBackgroundEventArgs : RTObject <WAIEnteredBackgroundEventArgs>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -1875,7 +1875,7 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 - (WABBackgroundTaskDeferral*)getDeferral;
 @end
 
-OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+OBJCUWPWINDOWSUIWEBUIEXPORT
 @interface WABIBackgroundTaskInstance : RTObject <WABIBackgroundTaskInstance>
 @end
 
@@ -1885,7 +1885,7 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 #ifndef __WUWWebUIBackgroundTaskInstanceRuntimeClass_DEFINED__
 #define __WUWWebUIBackgroundTaskInstanceRuntimeClass_DEFINED__
 
-OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+OBJCUWPWINDOWSUIWEBUIEXPORT
 @interface WUWWebUIBackgroundTaskInstanceRuntimeClass : RTObject <WUWIWebUIBackgroundTaskInstance, WABIBackgroundTaskInstance>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -1907,7 +1907,7 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 #ifndef __WUWWebUIBackgroundTaskInstance_DEFINED__
 #define __WUWWebUIBackgroundTaskInstance_DEFINED__
 
-OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+OBJCUWPWINDOWSUIWEBUIEXPORT
 @interface WUWWebUIBackgroundTaskInstance : RTObject
 + (RTObject<WUWIWebUIBackgroundTaskInstance>*)current;
 @end
@@ -1918,7 +1918,7 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 #ifndef __WUWWebUINavigatedDeferral_DEFINED__
 #define __WUWWebUINavigatedDeferral_DEFINED__
 
-OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+OBJCUWPWINDOWSUIWEBUIEXPORT
 @interface WUWWebUINavigatedDeferral : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -1932,7 +1932,7 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 #ifndef __WUWWebUINavigatedEventArgs_DEFINED__
 #define __WUWWebUINavigatedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+OBJCUWPWINDOWSUIWEBUIEXPORT
 @interface WUWWebUINavigatedEventArgs : RTObject <WUWIWebUINavigatedEventArgs>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -1946,7 +1946,7 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 #ifndef __WUWWebUIApplication_DEFINED__
 #define __WUWWebUIApplication_DEFINED__
 
-OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+OBJCUWPWINDOWSUIWEBUIEXPORT
 @interface WUWWebUIApplication : RTObject
 + (void)enablePrelaunch:(BOOL)value;
 + (EventRegistrationToken)addEnteredBackgroundEvent:(WUWEnteredBackgroundEventHandler)del;
@@ -1972,7 +1972,7 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 @protocol WGPIPrintDocumentSource
 @end
 
-OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+OBJCUWPWINDOWSUIWEBUIEXPORT
 @interface WGPIPrintDocumentSource : RTObject <WGPIPrintDocumentSource>
 @end
 
@@ -1986,7 +1986,7 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 - (void)close;
 @end
 
-OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+OBJCUWPWINDOWSUIWEBUIEXPORT
 @interface WFIClosable : RTObject <WFIClosable>
 @end
 
@@ -1996,7 +1996,7 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 #ifndef __WUWHtmlPrintDocumentSource_DEFINED__
 #define __WUWHtmlPrintDocumentSource_DEFINED__
 
-OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+OBJCUWPWINDOWSUIWEBUIEXPORT
 @interface WUWHtmlPrintDocumentSource : RTObject <WGPIPrintDocumentSource, WFIClosable>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));

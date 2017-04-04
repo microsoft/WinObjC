@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_UI_COMPOSITION_INTERACTIONS_EXPORT
-#define OBJCUWP_WINDOWS_UI_COMPOSITION_INTERACTIONS_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_UI_Composition_Interactions.lib")
+#ifndef OBJCUWPWINDOWSUICOMPOSITIONINTERACTIONSEXPORT
+#define OBJCUWPWINDOWSUICOMPOSITIONINTERACTIONSEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsUICompositionInteractions.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -68,7 +68,7 @@ typedef unsigned WUCIVisualInteractionSourceRedirectionMode;
 @protocol WUCIICompositionInteractionSource
 @end
 
-OBJCUWP_WINDOWS_UI_COMPOSITION_INTERACTIONS_EXPORT
+OBJCUWPWINDOWSUICOMPOSITIONINTERACTIONSEXPORT
 @interface WUCIICompositionInteractionSource : RTObject <WUCIICompositionInteractionSource>
 @end
 
@@ -87,7 +87,7 @@ OBJCUWP_WINDOWS_UI_COMPOSITION_INTERACTIONS_EXPORT
 - (void)valuesChanged:(WUCIInteractionTracker*)sender args:(WUCIInteractionTrackerValuesChangedArgs*)args;
 @end
 
-OBJCUWP_WINDOWS_UI_COMPOSITION_INTERACTIONS_EXPORT
+OBJCUWPWINDOWSUICOMPOSITIONINTERACTIONSEXPORT
 @interface WUCIIInteractionTrackerOwner : RTObject <WUCIIInteractionTrackerOwner>
 @end
 
@@ -97,7 +97,7 @@ OBJCUWP_WINDOWS_UI_COMPOSITION_INTERACTIONS_EXPORT
 #ifndef __WUCIInteractionTrackerCustomAnimationStateEnteredArgs_DEFINED__
 #define __WUCIInteractionTrackerCustomAnimationStateEnteredArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_COMPOSITION_INTERACTIONS_EXPORT
+OBJCUWPWINDOWSUICOMPOSITIONINTERACTIONSEXPORT
 @interface WUCIInteractionTrackerCustomAnimationStateEnteredArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -111,7 +111,7 @@ OBJCUWP_WINDOWS_UI_COMPOSITION_INTERACTIONS_EXPORT
 #ifndef __WUCIInteractionTrackerIdleStateEnteredArgs_DEFINED__
 #define __WUCIInteractionTrackerIdleStateEnteredArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_COMPOSITION_INTERACTIONS_EXPORT
+OBJCUWPWINDOWSUICOMPOSITIONINTERACTIONSEXPORT
 @interface WUCIInteractionTrackerIdleStateEnteredArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -125,7 +125,7 @@ OBJCUWP_WINDOWS_UI_COMPOSITION_INTERACTIONS_EXPORT
 #ifndef __WUCIInteractionTrackerInertiaStateEnteredArgs_DEFINED__
 #define __WUCIInteractionTrackerInertiaStateEnteredArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_COMPOSITION_INTERACTIONS_EXPORT
+OBJCUWPWINDOWSUICOMPOSITIONINTERACTIONSEXPORT
 @interface WUCIInteractionTrackerInertiaStateEnteredArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -145,7 +145,7 @@ OBJCUWP_WINDOWS_UI_COMPOSITION_INTERACTIONS_EXPORT
 #ifndef __WUCIInteractionTrackerInteractingStateEnteredArgs_DEFINED__
 #define __WUCIInteractionTrackerInteractingStateEnteredArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_COMPOSITION_INTERACTIONS_EXPORT
+OBJCUWPWINDOWSUICOMPOSITIONINTERACTIONSEXPORT
 @interface WUCIInteractionTrackerInteractingStateEnteredArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -159,7 +159,7 @@ OBJCUWP_WINDOWS_UI_COMPOSITION_INTERACTIONS_EXPORT
 #ifndef __WUCIInteractionTrackerRequestIgnoredArgs_DEFINED__
 #define __WUCIInteractionTrackerRequestIgnoredArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_COMPOSITION_INTERACTIONS_EXPORT
+OBJCUWPWINDOWSUICOMPOSITIONINTERACTIONSEXPORT
 @interface WUCIInteractionTrackerRequestIgnoredArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -173,7 +173,7 @@ OBJCUWP_WINDOWS_UI_COMPOSITION_INTERACTIONS_EXPORT
 #ifndef __WUCIInteractionTrackerValuesChangedArgs_DEFINED__
 #define __WUCIInteractionTrackerValuesChangedArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_COMPOSITION_INTERACTIONS_EXPORT
+OBJCUWPWINDOWSUICOMPOSITIONINTERACTIONSEXPORT
 @interface WUCIInteractionTrackerValuesChangedArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -193,7 +193,7 @@ OBJCUWP_WINDOWS_UI_COMPOSITION_INTERACTIONS_EXPORT
 - (void)close;
 @end
 
-OBJCUWP_WINDOWS_UI_COMPOSITION_INTERACTIONS_EXPORT
+OBJCUWPWINDOWSUICOMPOSITIONINTERACTIONSEXPORT
 @interface WFIClosable : RTObject <WFIClosable>
 @end
 
@@ -203,7 +203,7 @@ OBJCUWP_WINDOWS_UI_COMPOSITION_INTERACTIONS_EXPORT
 #ifndef __WUCCompositionObject_DEFINED__
 #define __WUCCompositionObject_DEFINED__
 
-OBJCUWP_WINDOWS_UI_COMPOSITION_INTERACTIONS_EXPORT
+OBJCUWPWINDOWSUICOMPOSITIONINTERACTIONSEXPORT
 @interface WUCCompositionObject : RTObject <WFIClosable>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -226,7 +226,7 @@ OBJCUWP_WINDOWS_UI_COMPOSITION_INTERACTIONS_EXPORT
 #ifndef __WUCIInteractionTracker_DEFINED__
 #define __WUCIInteractionTracker_DEFINED__
 
-OBJCUWP_WINDOWS_UI_COMPOSITION_INTERACTIONS_EXPORT
+OBJCUWPWINDOWSUICOMPOSITIONINTERACTIONSEXPORT
 @interface WUCIInteractionTracker : WUCCompositionObject
 + (WUCIInteractionTracker*)create:(WUCCompositor*)compositor;
 + (WUCIInteractionTracker*)createWithOwner:(WUCCompositor*)compositor owner:(RTObject<WUCIIInteractionTrackerOwner>*)owner;
@@ -268,7 +268,7 @@ OBJCUWP_WINDOWS_UI_COMPOSITION_INTERACTIONS_EXPORT
 #ifndef __WUCICompositionInteractionSourceCollection_DEFINED__
 #define __WUCICompositionInteractionSourceCollection_DEFINED__
 
-OBJCUWP_WINDOWS_UI_COMPOSITION_INTERACTIONS_EXPORT
+OBJCUWPWINDOWSUICOMPOSITIONINTERACTIONSEXPORT
 @interface WUCICompositionInteractionSourceCollection : WUCCompositionObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -285,7 +285,7 @@ OBJCUWP_WINDOWS_UI_COMPOSITION_INTERACTIONS_EXPORT
 #ifndef __WUCIInteractionTrackerInertiaModifier_DEFINED__
 #define __WUCIInteractionTrackerInertiaModifier_DEFINED__
 
-OBJCUWP_WINDOWS_UI_COMPOSITION_INTERACTIONS_EXPORT
+OBJCUWPWINDOWSUICOMPOSITIONINTERACTIONSEXPORT
 @interface WUCIInteractionTrackerInertiaModifier : WUCCompositionObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -298,7 +298,7 @@ OBJCUWP_WINDOWS_UI_COMPOSITION_INTERACTIONS_EXPORT
 #ifndef __WUCIInteractionTrackerInertiaRestingValue_DEFINED__
 #define __WUCIInteractionTrackerInertiaRestingValue_DEFINED__
 
-OBJCUWP_WINDOWS_UI_COMPOSITION_INTERACTIONS_EXPORT
+OBJCUWPWINDOWSUICOMPOSITIONINTERACTIONSEXPORT
 @interface WUCIInteractionTrackerInertiaRestingValue : WUCIInteractionTrackerInertiaModifier
 + (WUCIInteractionTrackerInertiaRestingValue*)create:(WUCCompositor*)compositor;
 #if defined(__cplusplus)
@@ -314,7 +314,7 @@ OBJCUWP_WINDOWS_UI_COMPOSITION_INTERACTIONS_EXPORT
 #ifndef __WUCIInteractionTrackerInertiaMotion_DEFINED__
 #define __WUCIInteractionTrackerInertiaMotion_DEFINED__
 
-OBJCUWP_WINDOWS_UI_COMPOSITION_INTERACTIONS_EXPORT
+OBJCUWPWINDOWSUICOMPOSITIONINTERACTIONSEXPORT
 @interface WUCIInteractionTrackerInertiaMotion : WUCIInteractionTrackerInertiaModifier
 + (WUCIInteractionTrackerInertiaMotion*)create:(WUCCompositor*)compositor;
 #if defined(__cplusplus)
@@ -330,7 +330,7 @@ OBJCUWP_WINDOWS_UI_COMPOSITION_INTERACTIONS_EXPORT
 #ifndef __WUCIVisualInteractionSource_DEFINED__
 #define __WUCIVisualInteractionSource_DEFINED__
 
-OBJCUWP_WINDOWS_UI_COMPOSITION_INTERACTIONS_EXPORT
+OBJCUWPWINDOWSUICOMPOSITIONINTERACTIONSEXPORT
 @interface WUCIVisualInteractionSource : WUCCompositionObject <WUCIICompositionInteractionSource>
 + (WUCIVisualInteractionSource*)create:(WUCVisual*)source;
 #if defined(__cplusplus)

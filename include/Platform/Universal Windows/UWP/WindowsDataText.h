@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_DATA_TEXT_EXPORT
-#define OBJCUWP_WINDOWS_DATA_TEXT_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_Data_Text.lib")
+#ifndef OBJCUWPWINDOWSDATATEXTEXPORT
+#define OBJCUWPWINDOWSDATATEXTEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsDataText.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -101,7 +101,7 @@ typedef void(^WDTWordSegmentsTokenizingHandler)(id<NSFastEnumeration> /* WDTWord
 #import <Foundation/Foundation.h>
 
 // [struct] Windows.Data.Text.TextSegment
-OBJCUWP_WINDOWS_DATA_TEXT_EXPORT
+OBJCUWPWINDOWSDATATEXTEXPORT
 @interface WDTTextSegment : NSObject
 + (instancetype)new;
 @property unsigned int startPosition;
@@ -124,7 +124,7 @@ typedef void(^WDTSelectableWordSegmentsTokenizingHandler)(id<NSFastEnumeration> 
 #ifndef __WDTSemanticTextQuery_DEFINED__
 #define __WDTSemanticTextQuery_DEFINED__
 
-OBJCUWP_WINDOWS_DATA_TEXT_EXPORT
+OBJCUWPWINDOWSDATATEXTEXPORT
 @interface WDTSemanticTextQuery : RTObject
 + (WDTSemanticTextQuery*)make:(NSString *)aqsFilter ACTIVATOR;
 + (WDTSemanticTextQuery*)makeWithLanguage:(NSString *)aqsFilter filterLanguage:(NSString *)filterLanguage ACTIVATOR;
@@ -141,7 +141,7 @@ OBJCUWP_WINDOWS_DATA_TEXT_EXPORT
 #ifndef __WDTUnicodeCharacters_DEFINED__
 #define __WDTUnicodeCharacters_DEFINED__
 
-OBJCUWP_WINDOWS_DATA_TEXT_EXPORT
+OBJCUWPWINDOWSDATATEXTEXPORT
 @interface WDTUnicodeCharacters : RTObject
 + (unsigned int)getCodepointFromSurrogatePair:(unsigned int)highSurrogate lowSurrogate:(unsigned int)lowSurrogate;
 + (void)getSurrogatePairFromCodepoint:(unsigned int)codepoint highSurrogate:(wchar_t*)highSurrogate lowSurrogate:(wchar_t*)lowSurrogate;
@@ -168,7 +168,7 @@ OBJCUWP_WINDOWS_DATA_TEXT_EXPORT
 #ifndef __WDTAlternateWordForm_DEFINED__
 #define __WDTAlternateWordForm_DEFINED__
 
-OBJCUWP_WINDOWS_DATA_TEXT_EXPORT
+OBJCUWPWINDOWSDATATEXTEXPORT
 @interface WDTAlternateWordForm : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -184,7 +184,7 @@ OBJCUWP_WINDOWS_DATA_TEXT_EXPORT
 #ifndef __WDTWordSegment_DEFINED__
 #define __WDTWordSegment_DEFINED__
 
-OBJCUWP_WINDOWS_DATA_TEXT_EXPORT
+OBJCUWPWINDOWSDATATEXTEXPORT
 @interface WDTWordSegment : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -200,7 +200,7 @@ OBJCUWP_WINDOWS_DATA_TEXT_EXPORT
 #ifndef __WDTWordsSegmenter_DEFINED__
 #define __WDTWordsSegmenter_DEFINED__
 
-OBJCUWP_WINDOWS_DATA_TEXT_EXPORT
+OBJCUWPWINDOWSDATATEXTEXPORT
 @interface WDTWordsSegmenter : RTObject
 + (WDTWordsSegmenter*)makeWithLanguage:(NSString *)language ACTIVATOR;
 #if defined(__cplusplus)
@@ -218,7 +218,7 @@ OBJCUWP_WINDOWS_DATA_TEXT_EXPORT
 #ifndef __WDTSelectableWordSegment_DEFINED__
 #define __WDTSelectableWordSegment_DEFINED__
 
-OBJCUWP_WINDOWS_DATA_TEXT_EXPORT
+OBJCUWPWINDOWSDATATEXTEXPORT
 @interface WDTSelectableWordSegment : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -233,7 +233,7 @@ OBJCUWP_WINDOWS_DATA_TEXT_EXPORT
 #ifndef __WDTSelectableWordsSegmenter_DEFINED__
 #define __WDTSelectableWordsSegmenter_DEFINED__
 
-OBJCUWP_WINDOWS_DATA_TEXT_EXPORT
+OBJCUWPWINDOWSDATATEXTEXPORT
 @interface WDTSelectableWordsSegmenter : RTObject
 + (WDTSelectableWordsSegmenter*)makeWithLanguage:(NSString *)language ACTIVATOR;
 #if defined(__cplusplus)
@@ -251,7 +251,7 @@ OBJCUWP_WINDOWS_DATA_TEXT_EXPORT
 #ifndef __WDTTextPredictionGenerator_DEFINED__
 #define __WDTTextPredictionGenerator_DEFINED__
 
-OBJCUWP_WINDOWS_DATA_TEXT_EXPORT
+OBJCUWPWINDOWSDATATEXTEXPORT
 @interface WDTTextPredictionGenerator : RTObject
 + (WDTTextPredictionGenerator*)make:(NSString *)languageTag ACTIVATOR;
 #if defined(__cplusplus)
@@ -269,7 +269,7 @@ OBJCUWP_WINDOWS_DATA_TEXT_EXPORT
 #ifndef __WDTTextConversionGenerator_DEFINED__
 #define __WDTTextConversionGenerator_DEFINED__
 
-OBJCUWP_WINDOWS_DATA_TEXT_EXPORT
+OBJCUWPWINDOWSDATATEXTEXPORT
 @interface WDTTextConversionGenerator : RTObject
 + (WDTTextConversionGenerator*)make:(NSString *)languageTag ACTIVATOR;
 #if defined(__cplusplus)
@@ -287,7 +287,7 @@ OBJCUWP_WINDOWS_DATA_TEXT_EXPORT
 #ifndef __WDTTextReverseConversionGenerator_DEFINED__
 #define __WDTTextReverseConversionGenerator_DEFINED__
 
-OBJCUWP_WINDOWS_DATA_TEXT_EXPORT
+OBJCUWPWINDOWSDATATEXTEXPORT
 @interface WDTTextReverseConversionGenerator : RTObject
 + (WDTTextReverseConversionGenerator*)make:(NSString *)languageTag ACTIVATOR;
 #if defined(__cplusplus)
@@ -305,7 +305,7 @@ OBJCUWP_WINDOWS_DATA_TEXT_EXPORT
 #ifndef __WDTTextPhoneme_DEFINED__
 #define __WDTTextPhoneme_DEFINED__
 
-OBJCUWP_WINDOWS_DATA_TEXT_EXPORT
+OBJCUWPWINDOWSDATATEXTEXPORT
 @interface WDTTextPhoneme : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));

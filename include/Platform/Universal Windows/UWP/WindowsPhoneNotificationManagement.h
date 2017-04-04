@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_PHONE_NOTIFICATION_MANAGEMENT_EXPORT
-#define OBJCUWP_WINDOWS_PHONE_NOTIFICATION_MANAGEMENT_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_Phone_Notification_Management.lib")
+#ifndef OBJCUWPWINDOWSPHONENOTIFICATIONMANAGEMENTEXPORT
+#define OBJCUWPWINDOWSPHONENOTIFICATIONMANAGEMENTEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsPhoneNotificationManagement.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -197,7 +197,7 @@ typedef unsigned WPNMVibrateState;
 @property (readonly) WFDateTime* timeCreated;
 @end
 
-OBJCUWP_WINDOWS_PHONE_NOTIFICATION_MANAGEMENT_EXPORT
+OBJCUWPWINDOWSPHONENOTIFICATIONMANAGEMENTEXPORT
 @interface WPNMIAccessoryNotificationTriggerDetails : RTObject <WPNMIAccessoryNotificationTriggerDetails>
 @end
 
@@ -207,7 +207,7 @@ OBJCUWP_WINDOWS_PHONE_NOTIFICATION_MANAGEMENT_EXPORT
 #ifndef __WPNMTextResponse_DEFINED__
 #define __WPNMTextResponse_DEFINED__
 
-OBJCUWP_WINDOWS_PHONE_NOTIFICATION_MANAGEMENT_EXPORT
+OBJCUWPWINDOWSPHONENOTIFICATIONMANAGEMENTEXPORT
 @interface WPNMTextResponse : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -222,7 +222,7 @@ OBJCUWP_WINDOWS_PHONE_NOTIFICATION_MANAGEMENT_EXPORT
 #ifndef __WPNMAppNotificationInfo_DEFINED__
 #define __WPNMAppNotificationInfo_DEFINED__
 
-OBJCUWP_WINDOWS_PHONE_NOTIFICATION_MANAGEMENT_EXPORT
+OBJCUWPWINDOWSPHONENOTIFICATIONMANAGEMENTEXPORT
 @interface WPNMAppNotificationInfo : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -237,7 +237,7 @@ OBJCUWP_WINDOWS_PHONE_NOTIFICATION_MANAGEMENT_EXPORT
 #ifndef __WPNMEmailAccountInfo_DEFINED__
 #define __WPNMEmailAccountInfo_DEFINED__
 
-OBJCUWP_WINDOWS_PHONE_NOTIFICATION_MANAGEMENT_EXPORT
+OBJCUWPWINDOWSPHONENOTIFICATIONMANAGEMENTEXPORT
 @interface WPNMEmailAccountInfo : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -252,7 +252,7 @@ OBJCUWP_WINDOWS_PHONE_NOTIFICATION_MANAGEMENT_EXPORT
 #ifndef __WPNMEmailFolderInfo_DEFINED__
 #define __WPNMEmailFolderInfo_DEFINED__
 
-OBJCUWP_WINDOWS_PHONE_NOTIFICATION_MANAGEMENT_EXPORT
+OBJCUWPWINDOWSPHONENOTIFICATIONMANAGEMENTEXPORT
 @interface WPNMEmailFolderInfo : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -267,7 +267,7 @@ OBJCUWP_WINDOWS_PHONE_NOTIFICATION_MANAGEMENT_EXPORT
 #ifndef __WPNMBinaryId_DEFINED__
 #define __WPNMBinaryId_DEFINED__
 
-OBJCUWP_WINDOWS_PHONE_NOTIFICATION_MANAGEMENT_EXPORT
+OBJCUWPWINDOWSPHONENOTIFICATIONMANAGEMENTEXPORT
 @interface WPNMBinaryId : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -282,7 +282,7 @@ OBJCUWP_WINDOWS_PHONE_NOTIFICATION_MANAGEMENT_EXPORT
 #ifndef __WPNMAlarmNotificationTriggerDetails_DEFINED__
 #define __WPNMAlarmNotificationTriggerDetails_DEFINED__
 
-OBJCUWP_WINDOWS_PHONE_NOTIFICATION_MANAGEMENT_EXPORT
+OBJCUWPWINDOWSPHONENOTIFICATIONMANAGEMENTEXPORT
 @interface WPNMAlarmNotificationTriggerDetails : RTObject <WPNMIAccessoryNotificationTriggerDetails>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -305,7 +305,7 @@ OBJCUWP_WINDOWS_PHONE_NOTIFICATION_MANAGEMENT_EXPORT
 #ifndef __WPNMEmailReadNotificationTriggerDetails_DEFINED__
 #define __WPNMEmailReadNotificationTriggerDetails_DEFINED__
 
-OBJCUWP_WINDOWS_PHONE_NOTIFICATION_MANAGEMENT_EXPORT
+OBJCUWPWINDOWSPHONENOTIFICATIONMANAGEMENTEXPORT
 @interface WPNMEmailReadNotificationTriggerDetails : RTObject <WPNMIAccessoryNotificationTriggerDetails>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -327,7 +327,7 @@ OBJCUWP_WINDOWS_PHONE_NOTIFICATION_MANAGEMENT_EXPORT
 #ifndef __WPNMEmailNotificationTriggerDetails_DEFINED__
 #define __WPNMEmailNotificationTriggerDetails_DEFINED__
 
-OBJCUWP_WINDOWS_PHONE_NOTIFICATION_MANAGEMENT_EXPORT
+OBJCUWPWINDOWSPHONENOTIFICATIONMANAGEMENTEXPORT
 @interface WPNMEmailNotificationTriggerDetails : RTObject <WPNMIAccessoryNotificationTriggerDetails>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -352,7 +352,7 @@ OBJCUWP_WINDOWS_PHONE_NOTIFICATION_MANAGEMENT_EXPORT
 #ifndef __WPNMPhoneLineDetails_DEFINED__
 #define __WPNMPhoneLineDetails_DEFINED__
 
-OBJCUWP_WINDOWS_PHONE_NOTIFICATION_MANAGEMENT_EXPORT
+OBJCUWPWINDOWSPHONENOTIFICATIONMANAGEMENTEXPORT
 @interface WPNMPhoneLineDetails : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -372,7 +372,7 @@ OBJCUWP_WINDOWS_PHONE_NOTIFICATION_MANAGEMENT_EXPORT
 #ifndef __WPNMPhoneCallDetails_DEFINED__
 #define __WPNMPhoneCallDetails_DEFINED__
 
-OBJCUWP_WINDOWS_PHONE_NOTIFICATION_MANAGEMENT_EXPORT
+OBJCUWPWINDOWSPHONENOTIFICATIONMANAGEMENTEXPORT
 @interface WPNMPhoneCallDetails : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -397,7 +397,7 @@ OBJCUWP_WINDOWS_PHONE_NOTIFICATION_MANAGEMENT_EXPORT
 #ifndef __WPNMPhoneNotificationTriggerDetails_DEFINED__
 #define __WPNMPhoneNotificationTriggerDetails_DEFINED__
 
-OBJCUWP_WINDOWS_PHONE_NOTIFICATION_MANAGEMENT_EXPORT
+OBJCUWPWINDOWSPHONENOTIFICATIONMANAGEMENTEXPORT
 @interface WPNMPhoneNotificationTriggerDetails : RTObject <WPNMIAccessoryNotificationTriggerDetails>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -418,7 +418,7 @@ OBJCUWP_WINDOWS_PHONE_NOTIFICATION_MANAGEMENT_EXPORT
 #ifndef __WPNMSpeedDialEntry_DEFINED__
 #define __WPNMSpeedDialEntry_DEFINED__
 
-OBJCUWP_WINDOWS_PHONE_NOTIFICATION_MANAGEMENT_EXPORT
+OBJCUWPWINDOWSPHONENOTIFICATIONMANAGEMENTEXPORT
 @interface WPNMSpeedDialEntry : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -434,7 +434,7 @@ OBJCUWP_WINDOWS_PHONE_NOTIFICATION_MANAGEMENT_EXPORT
 #ifndef __WPNMReminderNotificationTriggerDetails_DEFINED__
 #define __WPNMReminderNotificationTriggerDetails_DEFINED__
 
-OBJCUWP_WINDOWS_PHONE_NOTIFICATION_MANAGEMENT_EXPORT
+OBJCUWPWINDOWSPHONENOTIFICATIONMANAGEMENTEXPORT
 @interface WPNMReminderNotificationTriggerDetails : RTObject <WPNMIAccessoryNotificationTriggerDetails>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -460,7 +460,7 @@ OBJCUWP_WINDOWS_PHONE_NOTIFICATION_MANAGEMENT_EXPORT
 #ifndef __WPNMCalendarChangedNotificationTriggerDetails_DEFINED__
 #define __WPNMCalendarChangedNotificationTriggerDetails_DEFINED__
 
-OBJCUWP_WINDOWS_PHONE_NOTIFICATION_MANAGEMENT_EXPORT
+OBJCUWPWINDOWSPHONENOTIFICATIONMANAGEMENTEXPORT
 @interface WPNMCalendarChangedNotificationTriggerDetails : RTObject <WPNMIAccessoryNotificationTriggerDetails>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -480,7 +480,7 @@ OBJCUWP_WINDOWS_PHONE_NOTIFICATION_MANAGEMENT_EXPORT
 #ifndef __WPNMToastNotificationTriggerDetails_DEFINED__
 #define __WPNMToastNotificationTriggerDetails_DEFINED__
 
-OBJCUWP_WINDOWS_PHONE_NOTIFICATION_MANAGEMENT_EXPORT
+OBJCUWPWINDOWSPHONENOTIFICATIONMANAGEMENTEXPORT
 @interface WPNMToastNotificationTriggerDetails : RTObject <WPNMIAccessoryNotificationTriggerDetails>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -504,7 +504,7 @@ OBJCUWP_WINDOWS_PHONE_NOTIFICATION_MANAGEMENT_EXPORT
 #ifndef __WPNMCortanaTileNotificationTriggerDetails_DEFINED__
 #define __WPNMCortanaTileNotificationTriggerDetails_DEFINED__
 
-OBJCUWP_WINDOWS_PHONE_NOTIFICATION_MANAGEMENT_EXPORT
+OBJCUWPWINDOWSPHONENOTIFICATIONMANAGEMENTEXPORT
 @interface WPNMCortanaTileNotificationTriggerDetails : RTObject <WPNMIAccessoryNotificationTriggerDetails>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -532,7 +532,7 @@ OBJCUWP_WINDOWS_PHONE_NOTIFICATION_MANAGEMENT_EXPORT
 #ifndef __WPNMMediaMetadata_DEFINED__
 #define __WPNMMediaMetadata_DEFINED__
 
-OBJCUWP_WINDOWS_PHONE_NOTIFICATION_MANAGEMENT_EXPORT
+OBJCUWPWINDOWSPHONENOTIFICATIONMANAGEMENTEXPORT
 @interface WPNMMediaMetadata : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -552,7 +552,7 @@ OBJCUWP_WINDOWS_PHONE_NOTIFICATION_MANAGEMENT_EXPORT
 #ifndef __WPNMMediaControlsTriggerDetails_DEFINED__
 #define __WPNMMediaControlsTriggerDetails_DEFINED__
 
-OBJCUWP_WINDOWS_PHONE_NOTIFICATION_MANAGEMENT_EXPORT
+OBJCUWPWINDOWSPHONENOTIFICATIONMANAGEMENTEXPORT
 @interface WPNMMediaControlsTriggerDetails : RTObject <WPNMIAccessoryNotificationTriggerDetails>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -572,7 +572,7 @@ OBJCUWP_WINDOWS_PHONE_NOTIFICATION_MANAGEMENT_EXPORT
 #ifndef __WPNMVolumeInfo_DEFINED__
 #define __WPNMVolumeInfo_DEFINED__
 
-OBJCUWP_WINDOWS_PHONE_NOTIFICATION_MANAGEMENT_EXPORT
+OBJCUWPWINDOWSPHONENOTIFICATIONMANAGEMENTEXPORT
 @interface WPNMVolumeInfo : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -590,7 +590,7 @@ OBJCUWP_WINDOWS_PHONE_NOTIFICATION_MANAGEMENT_EXPORT
 #ifndef __WPNMAccessoryManager_DEFINED__
 #define __WPNMAccessoryManager_DEFINED__
 
-OBJCUWP_WINDOWS_PHONE_NOTIFICATION_MANAGEMENT_EXPORT
+OBJCUWPWINDOWSPHONENOTIFICATIONMANAGEMENTEXPORT
 @interface WPNMAccessoryManager : RTObject
 + (void)ringDevice;
 + (void)clearToast:(NSString *)instanceId;

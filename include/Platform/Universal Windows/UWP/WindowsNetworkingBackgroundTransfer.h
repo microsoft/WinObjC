@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_NETWORKING_BACKGROUNDTRANSFER_EXPORT
-#define OBJCUWP_WINDOWS_NETWORKING_BACKGROUNDTRANSFER_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_Networking_BackgroundTransfer.lib")
+#ifndef OBJCUWPWINDOWSNETWORKINGBACKGROUNDTRANSFEREXPORT
+#define OBJCUWPWINDOWSNETWORKINGBACKGROUNDTRANSFEREXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsNetworkingBackgroundTransfer.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -78,7 +78,7 @@ typedef unsigned WNBBackgroundTransferBehavior;
 #import <Foundation/Foundation.h>
 
 // [struct] Windows.Networking.BackgroundTransfer.BackgroundDownloadProgress
-OBJCUWP_WINDOWS_NETWORKING_BACKGROUNDTRANSFER_EXPORT
+OBJCUWPWINDOWSNETWORKINGBACKGROUNDTRANSFEREXPORT
 @interface WNBBackgroundDownloadProgress : NSObject
 + (instancetype)new;
 @property uint64_t bytesReceived;
@@ -89,7 +89,7 @@ OBJCUWP_WINDOWS_NETWORKING_BACKGROUNDTRANSFER_EXPORT
 @end
 
 // [struct] Windows.Networking.BackgroundTransfer.BackgroundUploadProgress
-OBJCUWP_WINDOWS_NETWORKING_BACKGROUNDTRANSFER_EXPORT
+OBJCUWPWINDOWSNETWORKINGBACKGROUNDTRANSFEREXPORT
 @interface WNBBackgroundUploadProgress : NSObject
 + (instancetype)new;
 @property uint64_t bytesReceived;
@@ -114,7 +114,7 @@ OBJCUWP_WINDOWS_NETWORKING_BACKGROUNDTRANSFER_EXPORT
 - (void)setRequestHeader:(NSString *)headerName headerValue:(NSString *)headerValue;
 @end
 
-OBJCUWP_WINDOWS_NETWORKING_BACKGROUNDTRANSFER_EXPORT
+OBJCUWPWINDOWSNETWORKINGBACKGROUNDTRANSFEREXPORT
 @interface WNBIBackgroundTransferBase : RTObject <WNBIBackgroundTransferBase>
 @end
 
@@ -134,7 +134,7 @@ OBJCUWP_WINDOWS_NETWORKING_BACKGROUNDTRANSFER_EXPORT
 - (WNBResponseInformation*)getResponseInformation;
 @end
 
-OBJCUWP_WINDOWS_NETWORKING_BACKGROUNDTRANSFER_EXPORT
+OBJCUWPWINDOWSNETWORKINGBACKGROUNDTRANSFEREXPORT
 @interface WNBIBackgroundTransferOperation : RTObject <WNBIBackgroundTransferOperation>
 @end
 
@@ -148,7 +148,7 @@ OBJCUWP_WINDOWS_NETWORKING_BACKGROUNDTRANSFER_EXPORT
 @property WNBBackgroundTransferPriority priority;
 @end
 
-OBJCUWP_WINDOWS_NETWORKING_BACKGROUNDTRANSFER_EXPORT
+OBJCUWPWINDOWSNETWORKINGBACKGROUNDTRANSFEREXPORT
 @interface WNBIBackgroundTransferOperationPriority : RTObject <WNBIBackgroundTransferOperationPriority>
 @end
 
@@ -163,7 +163,7 @@ OBJCUWP_WINDOWS_NETWORKING_BACKGROUNDTRANSFER_EXPORT
 - (WNBBackgroundTransferContentPart*)createWithNameAndFileName:(NSString *)name fileName:(NSString *)fileName;
 @end
 
-OBJCUWP_WINDOWS_NETWORKING_BACKGROUNDTRANSFER_EXPORT
+OBJCUWPWINDOWSNETWORKINGBACKGROUNDTRANSFEREXPORT
 @interface WNBIBackgroundTransferContentPartFactory : RTObject <WNBIBackgroundTransferContentPartFactory>
 @end
 
@@ -173,7 +173,7 @@ OBJCUWP_WINDOWS_NETWORKING_BACKGROUNDTRANSFER_EXPORT
 #ifndef __WNBDownloadOperation_DEFINED__
 #define __WNBDownloadOperation_DEFINED__
 
-OBJCUWP_WINDOWS_NETWORKING_BACKGROUNDTRANSFER_EXPORT
+OBJCUWPWINDOWSNETWORKINGBACKGROUNDTRANSFEREXPORT
 @interface WNBDownloadOperation : RTObject <WNBIBackgroundTransferOperation, WNBIBackgroundTransferOperationPriority>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -201,7 +201,7 @@ OBJCUWP_WINDOWS_NETWORKING_BACKGROUNDTRANSFER_EXPORT
 #ifndef __WNBUnconstrainedTransferRequestResult_DEFINED__
 #define __WNBUnconstrainedTransferRequestResult_DEFINED__
 
-OBJCUWP_WINDOWS_NETWORKING_BACKGROUNDTRANSFER_EXPORT
+OBJCUWPWINDOWSNETWORKINGBACKGROUNDTRANSFEREXPORT
 @interface WNBUnconstrainedTransferRequestResult : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -215,7 +215,7 @@ OBJCUWP_WINDOWS_NETWORKING_BACKGROUNDTRANSFER_EXPORT
 #ifndef __WNBUploadOperation_DEFINED__
 #define __WNBUploadOperation_DEFINED__
 
-OBJCUWP_WINDOWS_NETWORKING_BACKGROUNDTRANSFER_EXPORT
+OBJCUWPWINDOWSNETWORKINGBACKGROUNDTRANSFEREXPORT
 @interface WNBUploadOperation : RTObject <WNBIBackgroundTransferOperation, WNBIBackgroundTransferOperationPriority>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -241,7 +241,7 @@ OBJCUWP_WINDOWS_NETWORKING_BACKGROUNDTRANSFER_EXPORT
 #ifndef __WNBBackgroundTransferGroup_DEFINED__
 #define __WNBBackgroundTransferGroup_DEFINED__
 
-OBJCUWP_WINDOWS_NETWORKING_BACKGROUNDTRANSFER_EXPORT
+OBJCUWPWINDOWSNETWORKINGBACKGROUNDTRANSFEREXPORT
 @interface WNBBackgroundTransferGroup : RTObject
 + (WNBBackgroundTransferGroup*)createGroup:(NSString *)name;
 #if defined(__cplusplus)
@@ -257,7 +257,7 @@ OBJCUWP_WINDOWS_NETWORKING_BACKGROUNDTRANSFER_EXPORT
 #ifndef __WNBBackgroundTransferCompletionGroup_DEFINED__
 #define __WNBBackgroundTransferCompletionGroup_DEFINED__
 
-OBJCUWP_WINDOWS_NETWORKING_BACKGROUNDTRANSFER_EXPORT
+OBJCUWPWINDOWSNETWORKINGBACKGROUNDTRANSFEREXPORT
 @interface WNBBackgroundTransferCompletionGroup : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -274,7 +274,7 @@ OBJCUWP_WINDOWS_NETWORKING_BACKGROUNDTRANSFER_EXPORT
 #ifndef __WNBBackgroundTransferContentPart_DEFINED__
 #define __WNBBackgroundTransferContentPart_DEFINED__
 
-OBJCUWP_WINDOWS_NETWORKING_BACKGROUNDTRANSFER_EXPORT
+OBJCUWPWINDOWSNETWORKINGBACKGROUNDTRANSFEREXPORT
 @interface WNBBackgroundTransferContentPart : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 + (WNBBackgroundTransferContentPart*)makeWithName:(NSString *)name ACTIVATOR;
@@ -293,7 +293,7 @@ OBJCUWP_WINDOWS_NETWORKING_BACKGROUNDTRANSFER_EXPORT
 #ifndef __WNBResponseInformation_DEFINED__
 #define __WNBResponseInformation_DEFINED__
 
-OBJCUWP_WINDOWS_NETWORKING_BACKGROUNDTRANSFER_EXPORT
+OBJCUWPWINDOWSNETWORKINGBACKGROUNDTRANSFEREXPORT
 @interface WNBResponseInformation : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -310,7 +310,7 @@ OBJCUWP_WINDOWS_NETWORKING_BACKGROUNDTRANSFER_EXPORT
 #ifndef __WNBBackgroundDownloader_DEFINED__
 #define __WNBBackgroundDownloader_DEFINED__
 
-OBJCUWP_WINDOWS_NETWORKING_BACKGROUNDTRANSFER_EXPORT
+OBJCUWPWINDOWSNETWORKINGBACKGROUNDTRANSFEREXPORT
 @interface WNBBackgroundDownloader : RTObject <WNBIBackgroundTransferBase>
 + (void)requestUnconstrainedDownloadsAsync:(id<NSFastEnumeration> /* WNBDownloadOperation* */)operations success:(void (^)(WNBUnconstrainedTransferRequestResult*))success failure:(void (^)(NSError*))failure;
 + (void)getCurrentDownloadsAsyncWithSuccess:(void (^)(NSArray* /* WNBDownloadOperation* */))success failure:(void (^)(NSError*))failure;
@@ -344,7 +344,7 @@ OBJCUWP_WINDOWS_NETWORKING_BACKGROUNDTRANSFER_EXPORT
 #ifndef __WNBBackgroundUploader_DEFINED__
 #define __WNBBackgroundUploader_DEFINED__
 
-OBJCUWP_WINDOWS_NETWORKING_BACKGROUNDTRANSFER_EXPORT
+OBJCUWPWINDOWSNETWORKINGBACKGROUNDTRANSFEREXPORT
 @interface WNBBackgroundUploader : RTObject <WNBIBackgroundTransferBase>
 + (void)getCurrentUploadsForTransferGroupAsync:(WNBBackgroundTransferGroup*)group success:(void (^)(NSArray* /* WNBUploadOperation* */))success failure:(void (^)(NSError*))failure;
 + (void)getCurrentUploadsAsyncWithSuccess:(void (^)(NSArray* /* WNBUploadOperation* */))success failure:(void (^)(NSError*))failure;
@@ -380,7 +380,7 @@ OBJCUWP_WINDOWS_NETWORKING_BACKGROUNDTRANSFER_EXPORT
 #ifndef __WNBBackgroundTransferError_DEFINED__
 #define __WNBBackgroundTransferError_DEFINED__
 
-OBJCUWP_WINDOWS_NETWORKING_BACKGROUNDTRANSFER_EXPORT
+OBJCUWPWINDOWSNETWORKINGBACKGROUNDTRANSFEREXPORT
 @interface WNBBackgroundTransferError : RTObject
 + (WWWebErrorStatus)getStatus:(int)hresult;
 @end
@@ -391,7 +391,7 @@ OBJCUWP_WINDOWS_NETWORKING_BACKGROUNDTRANSFER_EXPORT
 #ifndef __WNBContentPrefetcher_DEFINED__
 #define __WNBContentPrefetcher_DEFINED__
 
-OBJCUWP_WINDOWS_NETWORKING_BACKGROUNDTRANSFER_EXPORT
+OBJCUWPWINDOWSNETWORKINGBACKGROUNDTRANSFEREXPORT
 @interface WNBContentPrefetcher : RTObject
 + (WFUri*)indirectContentUri;
 + (void)setIndirectContentUri:(WFUri*)value;
@@ -405,7 +405,7 @@ OBJCUWP_WINDOWS_NETWORKING_BACKGROUNDTRANSFER_EXPORT
 #ifndef __WNBBackgroundTransferCompletionGroupTriggerDetails_DEFINED__
 #define __WNBBackgroundTransferCompletionGroupTriggerDetails_DEFINED__
 
-OBJCUWP_WINDOWS_NETWORKING_BACKGROUNDTRANSFER_EXPORT
+OBJCUWPWINDOWSNETWORKINGBACKGROUNDTRANSFEREXPORT
 @interface WNBBackgroundTransferCompletionGroupTriggerDetails : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));

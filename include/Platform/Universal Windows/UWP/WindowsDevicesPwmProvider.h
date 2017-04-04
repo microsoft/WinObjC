@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_DEVICES_PWM_PROVIDER_EXPORT
-#define OBJCUWP_WINDOWS_DEVICES_PWM_PROVIDER_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_Devices_Pwm_Provider.lib")
+#ifndef OBJCUWPWINDOWSDEVICESPWMPROVIDEREXPORT
+#define OBJCUWPWINDOWSDEVICESPWMPROVIDEREXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsDevicesPwmProvider.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -48,7 +48,7 @@
 - (void)setPulseParameters:(int)pin dutyCycle:(double)dutyCycle invertPolarity:(BOOL)invertPolarity;
 @end
 
-OBJCUWP_WINDOWS_DEVICES_PWM_PROVIDER_EXPORT
+OBJCUWPWINDOWSDEVICESPWMPROVIDEREXPORT
 @interface WDPPIPwmControllerProvider : RTObject <WDPPIPwmControllerProvider>
 @end
 
@@ -62,7 +62,7 @@ OBJCUWP_WINDOWS_DEVICES_PWM_PROVIDER_EXPORT
 - (NSArray* /* RTObject<WDPPIPwmControllerProvider>* */)getControllers;
 @end
 
-OBJCUWP_WINDOWS_DEVICES_PWM_PROVIDER_EXPORT
+OBJCUWPWINDOWSDEVICESPWMPROVIDEREXPORT
 @interface WDPPIPwmProvider : RTObject <WDPPIPwmProvider>
 @end
 

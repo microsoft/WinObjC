@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_GRAPHICS_PRINTING3D_EXPORT
-#define OBJCUWP_WINDOWS_GRAPHICS_PRINTING3D_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_Graphics_Printing3D.lib")
+#ifndef OBJCUWPWINDOWSGRAPHICSPRINTING3DEXPORT
+#define OBJCUWPWINDOWSGRAPHICSPRINTING3DEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsGraphicsPrinting3D.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -115,7 +115,7 @@ typedef void(^WGPPrint3DTaskSourceRequestedHandler)(WGPPrint3DTaskSourceRequeste
 #import <Foundation/Foundation.h>
 
 // [struct] Windows.Graphics.Printing3D.Printing3DBufferDescription
-OBJCUWP_WINDOWS_GRAPHICS_PRINTING3D_EXPORT
+OBJCUWPWINDOWSGRAPHICSPRINTING3DEXPORT
 @interface WGPPrinting3DBufferDescription : NSObject
 + (instancetype)new;
 @property WGPPrinting3DBufferFormat format;
@@ -132,7 +132,7 @@ typedef void(^WGPPrint3DTaskSourceRequestedHandler)(WGPPrint3DTaskSourceRequeste
 #ifndef __WGPPrint3DTaskCompletedEventArgs_DEFINED__
 #define __WGPPrint3DTaskCompletedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_GRAPHICS_PRINTING3D_EXPORT
+OBJCUWPWINDOWSGRAPHICSPRINTING3DEXPORT
 @interface WGPPrint3DTaskCompletedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -147,7 +147,7 @@ OBJCUWP_WINDOWS_GRAPHICS_PRINTING3D_EXPORT
 #ifndef __WGPPrint3DTaskSourceChangedEventArgs_DEFINED__
 #define __WGPPrint3DTaskSourceChangedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_GRAPHICS_PRINTING3D_EXPORT
+OBJCUWPWINDOWSGRAPHICSPRINTING3DEXPORT
 @interface WGPPrint3DTaskSourceChangedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -161,7 +161,7 @@ OBJCUWP_WINDOWS_GRAPHICS_PRINTING3D_EXPORT
 #ifndef __WGPPrint3DTask_DEFINED__
 #define __WGPPrint3DTask_DEFINED__
 
-OBJCUWP_WINDOWS_GRAPHICS_PRINTING3D_EXPORT
+OBJCUWPWINDOWSGRAPHICSPRINTING3DEXPORT
 @interface WGPPrint3DTask : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -181,7 +181,7 @@ OBJCUWP_WINDOWS_GRAPHICS_PRINTING3D_EXPORT
 #ifndef __WGPPrint3DTaskSourceRequestedArgs_DEFINED__
 #define __WGPPrint3DTaskSourceRequestedArgs_DEFINED__
 
-OBJCUWP_WINDOWS_GRAPHICS_PRINTING3D_EXPORT
+OBJCUWPWINDOWSGRAPHICSPRINTING3DEXPORT
 @interface WGPPrint3DTaskSourceRequestedArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -195,7 +195,7 @@ OBJCUWP_WINDOWS_GRAPHICS_PRINTING3D_EXPORT
 #ifndef __WGPPrint3DTaskRequest_DEFINED__
 #define __WGPPrint3DTaskRequest_DEFINED__
 
-OBJCUWP_WINDOWS_GRAPHICS_PRINTING3D_EXPORT
+OBJCUWPWINDOWSGRAPHICSPRINTING3DEXPORT
 @interface WGPPrint3DTaskRequest : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -209,7 +209,7 @@ OBJCUWP_WINDOWS_GRAPHICS_PRINTING3D_EXPORT
 #ifndef __WGPPrint3DTaskRequestedEventArgs_DEFINED__
 #define __WGPPrint3DTaskRequestedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_GRAPHICS_PRINTING3D_EXPORT
+OBJCUWPWINDOWSGRAPHICSPRINTING3DEXPORT
 @interface WGPPrint3DTaskRequestedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -223,7 +223,7 @@ OBJCUWP_WINDOWS_GRAPHICS_PRINTING3D_EXPORT
 #ifndef __WGPPrint3DManager_DEFINED__
 #define __WGPPrint3DManager_DEFINED__
 
-OBJCUWP_WINDOWS_GRAPHICS_PRINTING3D_EXPORT
+OBJCUWPWINDOWSGRAPHICSPRINTING3DEXPORT
 @interface WGPPrint3DManager : RTObject
 + (WGPPrint3DManager*)getForCurrentView;
 + (void)showPrintUIAsyncWithSuccess:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
@@ -240,7 +240,7 @@ OBJCUWP_WINDOWS_GRAPHICS_PRINTING3D_EXPORT
 #ifndef __WGPPrinting3DMeshVerificationResult_DEFINED__
 #define __WGPPrinting3DMeshVerificationResult_DEFINED__
 
-OBJCUWP_WINDOWS_GRAPHICS_PRINTING3D_EXPORT
+OBJCUWPWINDOWSGRAPHICSPRINTING3DEXPORT
 @interface WGPPrinting3DMeshVerificationResult : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -256,7 +256,7 @@ OBJCUWP_WINDOWS_GRAPHICS_PRINTING3D_EXPORT
 #ifndef __WGPPrinting3DTextureResource_DEFINED__
 #define __WGPPrinting3DTextureResource_DEFINED__
 
-OBJCUWP_WINDOWS_GRAPHICS_PRINTING3D_EXPORT
+OBJCUWPWINDOWSGRAPHICSPRINTING3DEXPORT
 @interface WGPPrinting3DTextureResource : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -272,7 +272,7 @@ OBJCUWP_WINDOWS_GRAPHICS_PRINTING3D_EXPORT
 #ifndef __WGPPrinting3DComponent_DEFINED__
 #define __WGPPrinting3DComponent_DEFINED__
 
-OBJCUWP_WINDOWS_GRAPHICS_PRINTING3D_EXPORT
+OBJCUWPWINDOWSGRAPHICSPRINTING3DEXPORT
 @interface WGPPrinting3DComponent : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -292,7 +292,7 @@ OBJCUWP_WINDOWS_GRAPHICS_PRINTING3D_EXPORT
 #ifndef __WGPPrinting3DMesh_DEFINED__
 #define __WGPPrinting3DMesh_DEFINED__
 
-OBJCUWP_WINDOWS_GRAPHICS_PRINTING3D_EXPORT
+OBJCUWPWINDOWSGRAPHICSPRINTING3DEXPORT
 @interface WGPPrinting3DMesh : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -323,7 +323,7 @@ OBJCUWP_WINDOWS_GRAPHICS_PRINTING3D_EXPORT
 #ifndef __WGPPrinting3DComponentWithMatrix_DEFINED__
 #define __WGPPrinting3DComponentWithMatrix_DEFINED__
 
-OBJCUWP_WINDOWS_GRAPHICS_PRINTING3D_EXPORT
+OBJCUWPWINDOWSGRAPHICSPRINTING3DEXPORT
 @interface WGPPrinting3DComponentWithMatrix : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -339,7 +339,7 @@ OBJCUWP_WINDOWS_GRAPHICS_PRINTING3D_EXPORT
 #ifndef __WGPPrinting3DColorMaterial_DEFINED__
 #define __WGPPrinting3DColorMaterial_DEFINED__
 
-OBJCUWP_WINDOWS_GRAPHICS_PRINTING3D_EXPORT
+OBJCUWPWINDOWSGRAPHICSPRINTING3DEXPORT
 @interface WGPPrinting3DColorMaterial : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -355,7 +355,7 @@ OBJCUWP_WINDOWS_GRAPHICS_PRINTING3D_EXPORT
 #ifndef __WGPPrinting3DModelTexture_DEFINED__
 #define __WGPPrinting3DModelTexture_DEFINED__
 
-OBJCUWP_WINDOWS_GRAPHICS_PRINTING3D_EXPORT
+OBJCUWPWINDOWSGRAPHICSPRINTING3DEXPORT
 @interface WGPPrinting3DModelTexture : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -372,7 +372,7 @@ OBJCUWP_WINDOWS_GRAPHICS_PRINTING3D_EXPORT
 #ifndef __WGPPrinting3DBaseMaterialGroup_DEFINED__
 #define __WGPPrinting3DBaseMaterialGroup_DEFINED__
 
-OBJCUWP_WINDOWS_GRAPHICS_PRINTING3D_EXPORT
+OBJCUWPWINDOWSGRAPHICSPRINTING3DEXPORT
 @interface WGPPrinting3DBaseMaterialGroup : RTObject
 + (WGPPrinting3DBaseMaterialGroup*)make:(unsigned int)MaterialGroupId ACTIVATOR;
 #if defined(__cplusplus)
@@ -388,7 +388,7 @@ OBJCUWP_WINDOWS_GRAPHICS_PRINTING3D_EXPORT
 #ifndef __WGPPrinting3DBaseMaterial_DEFINED__
 #define __WGPPrinting3DBaseMaterial_DEFINED__
 
-OBJCUWP_WINDOWS_GRAPHICS_PRINTING3D_EXPORT
+OBJCUWPWINDOWSGRAPHICSPRINTING3DEXPORT
 @interface WGPPrinting3DBaseMaterial : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -406,7 +406,7 @@ OBJCUWP_WINDOWS_GRAPHICS_PRINTING3D_EXPORT
 #ifndef __WGPPrinting3DColorMaterialGroup_DEFINED__
 #define __WGPPrinting3DColorMaterialGroup_DEFINED__
 
-OBJCUWP_WINDOWS_GRAPHICS_PRINTING3D_EXPORT
+OBJCUWPWINDOWSGRAPHICSPRINTING3DEXPORT
 @interface WGPPrinting3DColorMaterialGroup : RTObject
 + (WGPPrinting3DColorMaterialGroup*)make:(unsigned int)MaterialGroupId ACTIVATOR;
 #if defined(__cplusplus)
@@ -422,7 +422,7 @@ OBJCUWP_WINDOWS_GRAPHICS_PRINTING3D_EXPORT
 #ifndef __WGPPrinting3DTexture2CoordMaterialGroup_DEFINED__
 #define __WGPPrinting3DTexture2CoordMaterialGroup_DEFINED__
 
-OBJCUWP_WINDOWS_GRAPHICS_PRINTING3D_EXPORT
+OBJCUWPWINDOWSGRAPHICSPRINTING3DEXPORT
 @interface WGPPrinting3DTexture2CoordMaterialGroup : RTObject
 + (WGPPrinting3DTexture2CoordMaterialGroup*)make:(unsigned int)MaterialGroupId ACTIVATOR;
 #if defined(__cplusplus)
@@ -439,7 +439,7 @@ OBJCUWP_WINDOWS_GRAPHICS_PRINTING3D_EXPORT
 #ifndef __WGPPrinting3DTexture2CoordMaterial_DEFINED__
 #define __WGPPrinting3DTexture2CoordMaterial_DEFINED__
 
-OBJCUWP_WINDOWS_GRAPHICS_PRINTING3D_EXPORT
+OBJCUWPWINDOWSGRAPHICSPRINTING3DEXPORT
 @interface WGPPrinting3DTexture2CoordMaterial : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -456,7 +456,7 @@ OBJCUWP_WINDOWS_GRAPHICS_PRINTING3D_EXPORT
 #ifndef __WGPPrinting3DCompositeMaterialGroup_DEFINED__
 #define __WGPPrinting3DCompositeMaterialGroup_DEFINED__
 
-OBJCUWP_WINDOWS_GRAPHICS_PRINTING3D_EXPORT
+OBJCUWPWINDOWSGRAPHICSPRINTING3DEXPORT
 @interface WGPPrinting3DCompositeMaterialGroup : RTObject
 + (WGPPrinting3DCompositeMaterialGroup*)make:(unsigned int)MaterialGroupId ACTIVATOR;
 #if defined(__cplusplus)
@@ -474,7 +474,7 @@ OBJCUWP_WINDOWS_GRAPHICS_PRINTING3D_EXPORT
 #ifndef __WGPPrinting3DCompositeMaterial_DEFINED__
 #define __WGPPrinting3DCompositeMaterial_DEFINED__
 
-OBJCUWP_WINDOWS_GRAPHICS_PRINTING3D_EXPORT
+OBJCUWPWINDOWSGRAPHICSPRINTING3DEXPORT
 @interface WGPPrinting3DCompositeMaterial : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -489,7 +489,7 @@ OBJCUWP_WINDOWS_GRAPHICS_PRINTING3D_EXPORT
 #ifndef __WGPPrinting3DMultiplePropertyMaterialGroup_DEFINED__
 #define __WGPPrinting3DMultiplePropertyMaterialGroup_DEFINED__
 
-OBJCUWP_WINDOWS_GRAPHICS_PRINTING3D_EXPORT
+OBJCUWPWINDOWSGRAPHICSPRINTING3DEXPORT
 @interface WGPPrinting3DMultiplePropertyMaterialGroup : RTObject
 + (WGPPrinting3DMultiplePropertyMaterialGroup*)make:(unsigned int)MaterialGroupId ACTIVATOR;
 #if defined(__cplusplus)
@@ -506,7 +506,7 @@ OBJCUWP_WINDOWS_GRAPHICS_PRINTING3D_EXPORT
 #ifndef __WGPPrinting3DMultiplePropertyMaterial_DEFINED__
 #define __WGPPrinting3DMultiplePropertyMaterial_DEFINED__
 
-OBJCUWP_WINDOWS_GRAPHICS_PRINTING3D_EXPORT
+OBJCUWPWINDOWSGRAPHICSPRINTING3DEXPORT
 @interface WGPPrinting3DMultiplePropertyMaterial : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -521,7 +521,7 @@ OBJCUWP_WINDOWS_GRAPHICS_PRINTING3D_EXPORT
 #ifndef __WGPPrinting3DMaterial_DEFINED__
 #define __WGPPrinting3DMaterial_DEFINED__
 
-OBJCUWP_WINDOWS_GRAPHICS_PRINTING3D_EXPORT
+OBJCUWPWINDOWSGRAPHICSPRINTING3DEXPORT
 @interface WGPPrinting3DMaterial : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -540,7 +540,7 @@ OBJCUWP_WINDOWS_GRAPHICS_PRINTING3D_EXPORT
 #ifndef __WGPPrinting3DModel_DEFINED__
 #define __WGPPrinting3DModel_DEFINED__
 
-OBJCUWP_WINDOWS_GRAPHICS_PRINTING3D_EXPORT
+OBJCUWPWINDOWSGRAPHICSPRINTING3DEXPORT
 @interface WGPPrinting3DModel : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -571,7 +571,7 @@ OBJCUWP_WINDOWS_GRAPHICS_PRINTING3D_EXPORT
 #ifndef __WGPPrinting3DFaceReductionOptions_DEFINED__
 #define __WGPPrinting3DFaceReductionOptions_DEFINED__
 
-OBJCUWP_WINDOWS_GRAPHICS_PRINTING3D_EXPORT
+OBJCUWPWINDOWSGRAPHICSPRINTING3DEXPORT
 @interface WGPPrinting3DFaceReductionOptions : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -588,7 +588,7 @@ OBJCUWP_WINDOWS_GRAPHICS_PRINTING3D_EXPORT
 #ifndef __WGPPrinting3D3MFPackage_DEFINED__
 #define __WGPPrinting3D3MFPackage_DEFINED__
 
-OBJCUWP_WINDOWS_GRAPHICS_PRINTING3D_EXPORT
+OBJCUWPWINDOWSGRAPHICSPRINTING3DEXPORT
 @interface WGPPrinting3D3MFPackage : RTObject
 + (void)loadAsync:(RTObject<WSSIRandomAccessStream>*)value success:(void (^)(WGPPrinting3D3MFPackage*))success failure:(void (^)(NSError*))failure;
 + (instancetype)make __attribute__ ((ns_returns_retained));

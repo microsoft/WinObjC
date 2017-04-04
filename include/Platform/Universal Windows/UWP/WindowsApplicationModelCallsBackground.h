@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_APPLICATIONMODEL_CALLS_BACKGROUND_EXPORT
-#define OBJCUWP_WINDOWS_APPLICATIONMODEL_CALLS_BACKGROUND_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_ApplicationModel_Calls_Background.lib")
+#ifndef OBJCUWPWINDOWSAPPLICATIONMODELCALLSBACKGROUNDEXPORT
+#define OBJCUWPWINDOWSAPPLICATIONMODELCALLSBACKGROUNDEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsApplicationModelCallsBackground.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -78,7 +78,7 @@ typedef unsigned WACBPhoneLineProperties;
 #ifndef __WACBPhoneCallBlockedTriggerDetails_DEFINED__
 #define __WACBPhoneCallBlockedTriggerDetails_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_CALLS_BACKGROUND_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELCALLSBACKGROUNDEXPORT
 @interface WACBPhoneCallBlockedTriggerDetails : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -94,7 +94,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_CALLS_BACKGROUND_EXPORT
 #ifndef __WACBPhoneCallOriginDataRequestTriggerDetails_DEFINED__
 #define __WACBPhoneCallOriginDataRequestTriggerDetails_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_CALLS_BACKGROUND_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELCALLSBACKGROUNDEXPORT
 @interface WACBPhoneCallOriginDataRequestTriggerDetails : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -109,7 +109,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_CALLS_BACKGROUND_EXPORT
 #ifndef __WACBPhoneNewVoicemailMessageTriggerDetails_DEFINED__
 #define __WACBPhoneNewVoicemailMessageTriggerDetails_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_CALLS_BACKGROUND_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELCALLSBACKGROUNDEXPORT
 @interface WACBPhoneNewVoicemailMessageTriggerDetails : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -125,7 +125,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_CALLS_BACKGROUND_EXPORT
 #ifndef __WACBPhoneLineChangedTriggerDetails_DEFINED__
 #define __WACBPhoneLineChangedTriggerDetails_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_CALLS_BACKGROUND_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELCALLSBACKGROUNDEXPORT
 @interface WACBPhoneLineChangedTriggerDetails : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));

@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
-#define OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_RandomStuff.lib")
+#ifndef OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
+#define OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsConsolidatedNamespace.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -143,7 +143,7 @@ typedef unsigned WWHHttpResponseMessageSource;
 #import <Foundation/Foundation.h>
 
 // [struct] Windows.Web.Http.HttpProgress
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WWHHttpProgress : NSObject
 + (instancetype)new;
 @property WWHHttpProgressStage stage;
@@ -162,7 +162,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 - (void)close;
 @end
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WFIClosable : RTObject <WFIClosable>
 @end
 
@@ -183,7 +183,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 - (void)close;
 @end
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WWHIHttpContent : RTObject <WWHIHttpContent>
 @end
 
@@ -197,7 +197,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 - (NSString *)toString;
 @end
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WFIStringable : RTObject <WFIStringable>
 @end
 
@@ -207,7 +207,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WWHHttpRequestMessage_DEFINED__
 #define __WWHHttpRequestMessage_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WWHHttpRequestMessage : RTObject <WFIClosable, WFIStringable>
 + (WWHHttpRequestMessage*)make:(WWHHttpMethod*)method uri:(WFUri*)uri ACTIVATOR;
 + (instancetype)make __attribute__ ((ns_returns_retained));
@@ -230,7 +230,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WWHHttpResponseMessage_DEFINED__
 #define __WWHHttpResponseMessage_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WWHHttpResponseMessage : RTObject <WFIClosable, WFIStringable>
 + (instancetype)make __attribute__ ((ns_returns_retained));
 + (WWHHttpResponseMessage*)make:(WWHHttpStatusCode)statusCode ACTIVATOR;
@@ -256,7 +256,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WWHHttpClient_DEFINED__
 #define __WWHHttpClient_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WWHHttpClient : RTObject <WFIClosable, WFIStringable>
 + (instancetype)make __attribute__ ((ns_returns_retained));
 + (WWHHttpClient*)make:(RTObject<WWHFIHttpFilter>*)filter ACTIVATOR;
@@ -284,7 +284,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WWHHttpCookie_DEFINED__
 #define __WWHHttpCookie_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WWHHttpCookie : RTObject <WFIStringable>
 + (WWHHttpCookie*)make:(NSString *)name domain:(NSString *)domain path:(NSString *)path ACTIVATOR;
 #if defined(__cplusplus)
@@ -306,7 +306,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WWHHttpCookieCollection_DEFINED__
 #define __WWHHttpCookieCollection_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WWHHttpCookieCollection : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -326,7 +326,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WWHHttpMethod_DEFINED__
 #define __WWHHttpMethod_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WWHHttpMethod : RTObject <WFIStringable>
 + (WWHHttpMethod*)make:(NSString *)method ACTIVATOR;
 #if defined(__cplusplus)
@@ -349,7 +349,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WWHHttpTransportInformation_DEFINED__
 #define __WWHHttpTransportInformation_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WWHHttpTransportInformation : RTObject <WFIStringable>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -367,7 +367,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WWHHttpStringContent_DEFINED__
 #define __WWHHttpStringContent_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WWHHttpStringContent : RTObject <WWHIHttpContent, WFIClosable, WFIStringable>
 + (WWHHttpStringContent*)makeFromString:(NSString *)content ACTIVATOR;
 + (WWHHttpStringContent*)makeFromStringWithEncoding:(NSString *)content encoding:(WSSUnicodeEncoding)encoding ACTIVATOR;
@@ -392,7 +392,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WWHHttpBufferContent_DEFINED__
 #define __WWHHttpBufferContent_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WWHHttpBufferContent : RTObject <WWHIHttpContent, WFIClosable, WFIStringable>
 + (WWHHttpBufferContent*)makeFromBuffer:(RTObject<WSSIBuffer>*)content ACTIVATOR;
 + (WWHHttpBufferContent*)makeFromBufferWithOffset:(RTObject<WSSIBuffer>*)content offset:(unsigned int)offset count:(unsigned int)count ACTIVATOR;
@@ -416,7 +416,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WWHHttpStreamContent_DEFINED__
 #define __WWHHttpStreamContent_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WWHHttpStreamContent : RTObject <WWHIHttpContent, WFIClosable, WFIStringable>
 + (WWHHttpStreamContent*)makeFromInputStream:(RTObject<WSSIInputStream>*)content ACTIVATOR;
 #if defined(__cplusplus)
@@ -439,7 +439,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WWHHttpFormUrlEncodedContent_DEFINED__
 #define __WWHHttpFormUrlEncodedContent_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WWHHttpFormUrlEncodedContent : RTObject <WWHIHttpContent, WFIClosable, WFIStringable>
 + (WWHHttpFormUrlEncodedContent*)make:(id<NSFastEnumeration> /* RTKeyValuePair* < NSString *, NSString * > */)content ACTIVATOR;
 #if defined(__cplusplus)
@@ -462,7 +462,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WWHHttpMultipartContent_DEFINED__
 #define __WWHHttpMultipartContent_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WWHHttpMultipartContent : RTObject <WWHIHttpContent, WFIClosable, WFIStringable>
 + (WWHHttpMultipartContent*)makeWithSubtype:(NSString *)subtype ACTIVATOR;
 + (WWHHttpMultipartContent*)makeWithSubtypeAndBoundary:(NSString *)subtype boundary:(NSString *)boundary ACTIVATOR;
@@ -488,7 +488,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WWHHttpMultipartFormDataContent_DEFINED__
 #define __WWHHttpMultipartFormDataContent_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WWHHttpMultipartFormDataContent : RTObject <WWHIHttpContent, WFIClosable, WFIStringable>
 + (instancetype)make __attribute__ ((ns_returns_retained));
 + (WWHHttpMultipartFormDataContent*)makeWithBoundary:(NSString *)boundary ACTIVATOR;
@@ -515,7 +515,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WWHHttpCookieManager_DEFINED__
 #define __WWHHttpCookieManager_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WWHHttpCookieManager : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));

@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_MEDIA_SPEECHRECOGNITION_EXPORT
-#define OBJCUWP_WINDOWS_MEDIA_SPEECHRECOGNITION_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_Media_SpeechRecognition.lib")
+#ifndef OBJCUWPWINDOWSMEDIASPEECHRECOGNITIONEXPORT
+#define OBJCUWPWINDOWSMEDIASPEECHRECOGNITIONEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsMediaSpeechRecognition.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -128,7 +128,7 @@ typedef unsigned WMSSpeechContinuousRecognitionMode;
 @property (readonly) WMSSpeechRecognitionConstraintType type;
 @end
 
-OBJCUWP_WINDOWS_MEDIA_SPEECHRECOGNITION_EXPORT
+OBJCUWPWINDOWSMEDIASPEECHRECOGNITIONEXPORT
 @interface WMSISpeechRecognitionConstraint : RTObject <WMSISpeechRecognitionConstraint>
 @end
 
@@ -138,7 +138,7 @@ OBJCUWP_WINDOWS_MEDIA_SPEECHRECOGNITION_EXPORT
 #ifndef __WMSSpeechRecognitionSemanticInterpretation_DEFINED__
 #define __WMSSpeechRecognitionSemanticInterpretation_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_SPEECHRECOGNITION_EXPORT
+OBJCUWPWINDOWSMEDIASPEECHRECOGNITIONEXPORT
 @interface WMSSpeechRecognitionSemanticInterpretation : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -152,7 +152,7 @@ OBJCUWP_WINDOWS_MEDIA_SPEECHRECOGNITION_EXPORT
 #ifndef __WMSSpeechRecognitionResult_DEFINED__
 #define __WMSSpeechRecognitionResult_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_SPEECHRECOGNITION_EXPORT
+OBJCUWPWINDOWSMEDIASPEECHRECOGNITIONEXPORT
 @interface WMSSpeechRecognitionResult : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -175,7 +175,7 @@ OBJCUWP_WINDOWS_MEDIA_SPEECHRECOGNITION_EXPORT
 #ifndef __WMSSpeechRecognitionTopicConstraint_DEFINED__
 #define __WMSSpeechRecognitionTopicConstraint_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_SPEECHRECOGNITION_EXPORT
+OBJCUWPWINDOWSMEDIASPEECHRECOGNITIONEXPORT
 @interface WMSSpeechRecognitionTopicConstraint : RTObject <WMSISpeechRecognitionConstraint>
 + (WMSSpeechRecognitionTopicConstraint*)make:(WMSSpeechRecognitionScenario)scenario topicHint:(NSString *)topicHint ACTIVATOR;
 + (WMSSpeechRecognitionTopicConstraint*)makeWithTag:(WMSSpeechRecognitionScenario)scenario topicHint:(NSString *)topicHint tag:(NSString *)tag ACTIVATOR;
@@ -196,7 +196,7 @@ OBJCUWP_WINDOWS_MEDIA_SPEECHRECOGNITION_EXPORT
 #ifndef __WMSSpeechRecognitionListConstraint_DEFINED__
 #define __WMSSpeechRecognitionListConstraint_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_SPEECHRECOGNITION_EXPORT
+OBJCUWPWINDOWSMEDIASPEECHRECOGNITIONEXPORT
 @interface WMSSpeechRecognitionListConstraint : RTObject <WMSISpeechRecognitionConstraint>
 + (WMSSpeechRecognitionListConstraint*)make:(id<NSFastEnumeration> /* NSString * */)commands ACTIVATOR;
 + (WMSSpeechRecognitionListConstraint*)makeWithTag:(id<NSFastEnumeration> /* NSString * */)commands tag:(NSString *)tag ACTIVATOR;
@@ -216,7 +216,7 @@ OBJCUWP_WINDOWS_MEDIA_SPEECHRECOGNITION_EXPORT
 #ifndef __WMSSpeechRecognitionGrammarFileConstraint_DEFINED__
 #define __WMSSpeechRecognitionGrammarFileConstraint_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_SPEECHRECOGNITION_EXPORT
+OBJCUWPWINDOWSMEDIASPEECHRECOGNITIONEXPORT
 @interface WMSSpeechRecognitionGrammarFileConstraint : RTObject <WMSISpeechRecognitionConstraint>
 + (WMSSpeechRecognitionGrammarFileConstraint*)make:(WSStorageFile*)file ACTIVATOR;
 + (WMSSpeechRecognitionGrammarFileConstraint*)makeWithTag:(WSStorageFile*)file tag:(NSString *)tag ACTIVATOR;
@@ -236,7 +236,7 @@ OBJCUWP_WINDOWS_MEDIA_SPEECHRECOGNITION_EXPORT
 #ifndef __WMSSpeechRecognizerTimeouts_DEFINED__
 #define __WMSSpeechRecognizerTimeouts_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_SPEECHRECOGNITION_EXPORT
+OBJCUWPWINDOWSMEDIASPEECHRECOGNITIONEXPORT
 @interface WMSSpeechRecognizerTimeouts : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -252,7 +252,7 @@ OBJCUWP_WINDOWS_MEDIA_SPEECHRECOGNITION_EXPORT
 #ifndef __WMSSpeechRecognizerUIOptions_DEFINED__
 #define __WMSSpeechRecognizerUIOptions_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_SPEECHRECOGNITION_EXPORT
+OBJCUWPWINDOWSMEDIASPEECHRECOGNITIONEXPORT
 @interface WMSSpeechRecognizerUIOptions : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -269,7 +269,7 @@ OBJCUWP_WINDOWS_MEDIA_SPEECHRECOGNITION_EXPORT
 #ifndef __WMSSpeechRecognitionCompilationResult_DEFINED__
 #define __WMSSpeechRecognitionCompilationResult_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_SPEECHRECOGNITION_EXPORT
+OBJCUWPWINDOWSMEDIASPEECHRECOGNITIONEXPORT
 @interface WMSSpeechRecognitionCompilationResult : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -287,7 +287,7 @@ OBJCUWP_WINDOWS_MEDIA_SPEECHRECOGNITION_EXPORT
 - (void)close;
 @end
 
-OBJCUWP_WINDOWS_MEDIA_SPEECHRECOGNITION_EXPORT
+OBJCUWPWINDOWSMEDIASPEECHRECOGNITIONEXPORT
 @interface WFIClosable : RTObject <WFIClosable>
 @end
 
@@ -297,7 +297,7 @@ OBJCUWP_WINDOWS_MEDIA_SPEECHRECOGNITION_EXPORT
 #ifndef __WMSSpeechRecognizer_DEFINED__
 #define __WMSSpeechRecognizer_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_SPEECHRECOGNITION_EXPORT
+OBJCUWPWINDOWSMEDIASPEECHRECOGNITIONEXPORT
 @interface WMSSpeechRecognizer : RTObject <WFIClosable>
 + (WMSSpeechRecognizer*)make:(WGLanguage*)language ACTIVATOR;
 + (instancetype)make __attribute__ ((ns_returns_retained));
@@ -332,7 +332,7 @@ OBJCUWP_WINDOWS_MEDIA_SPEECHRECOGNITION_EXPORT
 #ifndef __WMSSpeechRecognitionQualityDegradingEventArgs_DEFINED__
 #define __WMSSpeechRecognitionQualityDegradingEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_SPEECHRECOGNITION_EXPORT
+OBJCUWPWINDOWSMEDIASPEECHRECOGNITIONEXPORT
 @interface WMSSpeechRecognitionQualityDegradingEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -346,7 +346,7 @@ OBJCUWP_WINDOWS_MEDIA_SPEECHRECOGNITION_EXPORT
 #ifndef __WMSSpeechRecognizerStateChangedEventArgs_DEFINED__
 #define __WMSSpeechRecognizerStateChangedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_SPEECHRECOGNITION_EXPORT
+OBJCUWPWINDOWSMEDIASPEECHRECOGNITIONEXPORT
 @interface WMSSpeechRecognizerStateChangedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -360,7 +360,7 @@ OBJCUWP_WINDOWS_MEDIA_SPEECHRECOGNITION_EXPORT
 #ifndef __WMSSpeechRecognitionVoiceCommandDefinitionConstraint_DEFINED__
 #define __WMSSpeechRecognitionVoiceCommandDefinitionConstraint_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_SPEECHRECOGNITION_EXPORT
+OBJCUWPWINDOWSMEDIASPEECHRECOGNITIONEXPORT
 @interface WMSSpeechRecognitionVoiceCommandDefinitionConstraint : RTObject <WMSISpeechRecognitionConstraint>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -377,7 +377,7 @@ OBJCUWP_WINDOWS_MEDIA_SPEECHRECOGNITION_EXPORT
 #ifndef __WMSSpeechContinuousRecognitionSession_DEFINED__
 #define __WMSSpeechContinuousRecognitionSession_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_SPEECHRECOGNITION_EXPORT
+OBJCUWPWINDOWSMEDIASPEECHRECOGNITIONEXPORT
 @interface WMSSpeechContinuousRecognitionSession : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -401,7 +401,7 @@ OBJCUWP_WINDOWS_MEDIA_SPEECHRECOGNITION_EXPORT
 #ifndef __WMSSpeechRecognitionHypothesisGeneratedEventArgs_DEFINED__
 #define __WMSSpeechRecognitionHypothesisGeneratedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_SPEECHRECOGNITION_EXPORT
+OBJCUWPWINDOWSMEDIASPEECHRECOGNITIONEXPORT
 @interface WMSSpeechRecognitionHypothesisGeneratedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -415,7 +415,7 @@ OBJCUWP_WINDOWS_MEDIA_SPEECHRECOGNITION_EXPORT
 #ifndef __WMSSpeechRecognitionHypothesis_DEFINED__
 #define __WMSSpeechRecognitionHypothesis_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_SPEECHRECOGNITION_EXPORT
+OBJCUWPWINDOWSMEDIASPEECHRECOGNITIONEXPORT
 @interface WMSSpeechRecognitionHypothesis : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -429,7 +429,7 @@ OBJCUWP_WINDOWS_MEDIA_SPEECHRECOGNITION_EXPORT
 #ifndef __WMSSpeechContinuousRecognitionCompletedEventArgs_DEFINED__
 #define __WMSSpeechContinuousRecognitionCompletedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_SPEECHRECOGNITION_EXPORT
+OBJCUWPWINDOWSMEDIASPEECHRECOGNITIONEXPORT
 @interface WMSSpeechContinuousRecognitionCompletedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -443,7 +443,7 @@ OBJCUWP_WINDOWS_MEDIA_SPEECHRECOGNITION_EXPORT
 #ifndef __WMSSpeechContinuousRecognitionResultGeneratedEventArgs_DEFINED__
 #define __WMSSpeechContinuousRecognitionResultGeneratedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_SPEECHRECOGNITION_EXPORT
+OBJCUWPWINDOWSMEDIASPEECHRECOGNITIONEXPORT
 @interface WMSSpeechContinuousRecognitionResultGeneratedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -457,7 +457,7 @@ OBJCUWP_WINDOWS_MEDIA_SPEECHRECOGNITION_EXPORT
 #ifndef __WMSVoiceCommandManager_DEFINED__
 #define __WMSVoiceCommandManager_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_SPEECHRECOGNITION_EXPORT
+OBJCUWPWINDOWSMEDIASPEECHRECOGNITIONEXPORT
 @interface WMSVoiceCommandManager : RTObject
 + (RTObject<WFIAsyncAction>*)installCommandSetsFromStorageFileAsync:(WSStorageFile*)file;
 + (NSDictionary* /* NSString *, WMSVoiceCommandSet* */)installedCommandSets;
@@ -469,7 +469,7 @@ OBJCUWP_WINDOWS_MEDIA_SPEECHRECOGNITION_EXPORT
 #ifndef __WMSVoiceCommandSet_DEFINED__
 #define __WMSVoiceCommandSet_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_SPEECHRECOGNITION_EXPORT
+OBJCUWPWINDOWSMEDIASPEECHRECOGNITIONEXPORT
 @interface WMSVoiceCommandSet : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));

@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_DEVICES_PWM_EXPORT
-#define OBJCUWP_WINDOWS_DEVICES_PWM_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_Devices_Pwm.lib")
+#ifndef OBJCUWPWINDOWSDEVICESPWMEXPORT
+#define OBJCUWPWINDOWSDEVICESPWMEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsDevicesPwm.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -50,7 +50,7 @@ typedef unsigned WDPPwmPulsePolarity;
 - (void)close;
 @end
 
-OBJCUWP_WINDOWS_DEVICES_PWM_EXPORT
+OBJCUWPWINDOWSDEVICESPWMEXPORT
 @interface WFIClosable : RTObject <WFIClosable>
 @end
 
@@ -60,7 +60,7 @@ OBJCUWP_WINDOWS_DEVICES_PWM_EXPORT
 #ifndef __WDPPwmPin_DEFINED__
 #define __WDPPwmPin_DEFINED__
 
-OBJCUWP_WINDOWS_DEVICES_PWM_EXPORT
+OBJCUWPWINDOWSDEVICESPWMEXPORT
 @interface WDPPwmPin : RTObject <WFIClosable>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -81,7 +81,7 @@ OBJCUWP_WINDOWS_DEVICES_PWM_EXPORT
 #ifndef __WDPPwmController_DEFINED__
 #define __WDPPwmController_DEFINED__
 
-OBJCUWP_WINDOWS_DEVICES_PWM_EXPORT
+OBJCUWPWINDOWSDEVICESPWMEXPORT
 @interface WDPPwmController : RTObject
 + (void)getDefaultAsyncWithSuccess:(void (^)(WDPPwmController*))success failure:(void (^)(NSError*))failure;
 + (void)getControllersAsync:(RTObject<WDPPIPwmProvider>*)provider success:(void (^)(NSArray* /* WDPPwmController* */))success failure:(void (^)(NSError*))failure;

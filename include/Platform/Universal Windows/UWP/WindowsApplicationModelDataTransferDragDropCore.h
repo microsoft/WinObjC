@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_APPLICATIONMODEL_DATATRANSFER_DRAGDROP_CORE_EXPORT
-#define OBJCUWP_WINDOWS_APPLICATIONMODEL_DATATRANSFER_DRAGDROP_CORE_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_ApplicationModel_DataTransfer_DragDrop_Core.lib")
+#ifndef OBJCUWPWINDOWSAPPLICATIONMODELDATATRANSFERDRAGDROPCOREEXPORT
+#define OBJCUWPWINDOWSAPPLICATIONMODELDATATRANSFERDRAGDROPCOREEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsApplicationModelDataTransferDragDropCore.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -55,7 +55,7 @@ typedef unsigned WADDCCoreDragUIContentMode;
 - (void)dropAsync:(WADDCCoreDragInfo*)dragInfo success:(void (^)(WADDataPackageOperation))success failure:(void (^)(NSError*))failure;
 @end
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_DATATRANSFER_DRAGDROP_CORE_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELDATATRANSFERDRAGDROPCOREEXPORT
 @interface WADDCICoreDropOperationTarget : RTObject <WADDCICoreDropOperationTarget>
 @end
 
@@ -65,7 +65,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_DATATRANSFER_DRAGDROP_CORE_EXPORT
 #ifndef __WADDCCoreDragInfo_DEFINED__
 #define __WADDCCoreDragInfo_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_DATATRANSFER_DRAGDROP_CORE_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELDATATRANSFERDRAGDROPCOREEXPORT
 @interface WADDCCoreDragInfo : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -82,7 +82,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_DATATRANSFER_DRAGDROP_CORE_EXPORT
 #ifndef __WADDCCoreDragUIOverride_DEFINED__
 #define __WADDCCoreDragUIOverride_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_DATATRANSFER_DRAGDROP_CORE_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELDATATRANSFERDRAGDROPCOREEXPORT
 @interface WADDCCoreDragUIOverride : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -102,7 +102,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_DATATRANSFER_DRAGDROP_CORE_EXPORT
 #ifndef __WADDCCoreDragDropManager_DEFINED__
 #define __WADDCCoreDragDropManager_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_DATATRANSFER_DRAGDROP_CORE_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELDATATRANSFERDRAGDROPCOREEXPORT
 @interface WADDCCoreDragDropManager : RTObject
 + (WADDCCoreDragDropManager*)getForCurrentView;
 #if defined(__cplusplus)
@@ -119,7 +119,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_DATATRANSFER_DRAGDROP_CORE_EXPORT
 #ifndef __WADDCCoreDropOperationTargetRequestedEventArgs_DEFINED__
 #define __WADDCCoreDropOperationTargetRequestedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_DATATRANSFER_DRAGDROP_CORE_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELDATATRANSFERDRAGDROPCOREEXPORT
 @interface WADDCCoreDropOperationTargetRequestedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -133,7 +133,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_DATATRANSFER_DRAGDROP_CORE_EXPORT
 #ifndef __WADDCCoreDragOperation_DEFINED__
 #define __WADDCCoreDragOperation_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_DATATRANSFER_DRAGDROP_CORE_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELDATATRANSFERDRAGDROPCOREEXPORT
 @interface WADDCCoreDragOperation : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)

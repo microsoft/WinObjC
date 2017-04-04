@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_MEDIA_STREAMING_ADAPTIVE_EXPORT
-#define OBJCUWP_WINDOWS_MEDIA_STREAMING_ADAPTIVE_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_Media_Streaming_Adaptive.lib")
+#ifndef OBJCUWPWINDOWSMEDIASTREAMINGADAPTIVEEXPORT
+#define OBJCUWPWINDOWSMEDIASTREAMINGADAPTIVEEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsMediaStreamingAdaptive.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -66,7 +66,7 @@ typedef unsigned WMSAAdaptiveMediaSourceResourceType;
 @protocol WMCIMediaSource
 @end
 
-OBJCUWP_WINDOWS_MEDIA_STREAMING_ADAPTIVE_EXPORT
+OBJCUWPWINDOWSMEDIASTREAMINGADAPTIVEEXPORT
 @interface WMCIMediaSource : RTObject <WMCIMediaSource>
 @end
 
@@ -76,7 +76,7 @@ OBJCUWP_WINDOWS_MEDIA_STREAMING_ADAPTIVE_EXPORT
 #ifndef __WMSAAdaptiveMediaSource_DEFINED__
 #define __WMSAAdaptiveMediaSource_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_STREAMING_ADAPTIVE_EXPORT
+OBJCUWPWINDOWSMEDIASTREAMINGADAPTIVEEXPORT
 @interface WMSAAdaptiveMediaSource : RTObject <WMCIMediaSource>
 + (BOOL)isContentTypeSupported:(NSString *)contentType;
 + (void)createFromUriAsync:(WFUri*)uri success:(void (^)(WMSAAdaptiveMediaSourceCreationResult*))success failure:(void (^)(NSError*))failure;
@@ -116,7 +116,7 @@ OBJCUWP_WINDOWS_MEDIA_STREAMING_ADAPTIVE_EXPORT
 #ifndef __WMSAAdaptiveMediaSourceCreationResult_DEFINED__
 #define __WMSAAdaptiveMediaSourceCreationResult_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_STREAMING_ADAPTIVE_EXPORT
+OBJCUWPWINDOWSMEDIASTREAMINGADAPTIVEEXPORT
 @interface WMSAAdaptiveMediaSourceCreationResult : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -132,7 +132,7 @@ OBJCUWP_WINDOWS_MEDIA_STREAMING_ADAPTIVE_EXPORT
 #ifndef __WMSAAdaptiveMediaSourceDownloadBitrateChangedEventArgs_DEFINED__
 #define __WMSAAdaptiveMediaSourceDownloadBitrateChangedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_STREAMING_ADAPTIVE_EXPORT
+OBJCUWPWINDOWSMEDIASTREAMINGADAPTIVEEXPORT
 @interface WMSAAdaptiveMediaSourceDownloadBitrateChangedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -147,7 +147,7 @@ OBJCUWP_WINDOWS_MEDIA_STREAMING_ADAPTIVE_EXPORT
 #ifndef __WMSAAdaptiveMediaSourcePlaybackBitrateChangedEventArgs_DEFINED__
 #define __WMSAAdaptiveMediaSourcePlaybackBitrateChangedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_STREAMING_ADAPTIVE_EXPORT
+OBJCUWPWINDOWSMEDIASTREAMINGADAPTIVEEXPORT
 @interface WMSAAdaptiveMediaSourcePlaybackBitrateChangedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -163,7 +163,7 @@ OBJCUWP_WINDOWS_MEDIA_STREAMING_ADAPTIVE_EXPORT
 #ifndef __WMSAAdaptiveMediaSourceDownloadRequestedEventArgs_DEFINED__
 #define __WMSAAdaptiveMediaSourceDownloadRequestedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_STREAMING_ADAPTIVE_EXPORT
+OBJCUWPWINDOWSMEDIASTREAMINGADAPTIVEEXPORT
 @interface WMSAAdaptiveMediaSourceDownloadRequestedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -182,7 +182,7 @@ OBJCUWP_WINDOWS_MEDIA_STREAMING_ADAPTIVE_EXPORT
 #ifndef __WMSAAdaptiveMediaSourceDownloadCompletedEventArgs_DEFINED__
 #define __WMSAAdaptiveMediaSourceDownloadCompletedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_STREAMING_ADAPTIVE_EXPORT
+OBJCUWPWINDOWSMEDIASTREAMINGADAPTIVEEXPORT
 @interface WMSAAdaptiveMediaSourceDownloadCompletedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -200,7 +200,7 @@ OBJCUWP_WINDOWS_MEDIA_STREAMING_ADAPTIVE_EXPORT
 #ifndef __WMSAAdaptiveMediaSourceDownloadFailedEventArgs_DEFINED__
 #define __WMSAAdaptiveMediaSourceDownloadFailedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_STREAMING_ADAPTIVE_EXPORT
+OBJCUWPWINDOWSMEDIASTREAMINGADAPTIVEEXPORT
 @interface WMSAAdaptiveMediaSourceDownloadFailedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -218,7 +218,7 @@ OBJCUWP_WINDOWS_MEDIA_STREAMING_ADAPTIVE_EXPORT
 #ifndef __WMSAAdaptiveMediaSourceAdvancedSettings_DEFINED__
 #define __WMSAAdaptiveMediaSourceAdvancedSettings_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_STREAMING_ADAPTIVE_EXPORT
+OBJCUWPWINDOWSMEDIASTREAMINGADAPTIVEEXPORT
 @interface WMSAAdaptiveMediaSourceAdvancedSettings : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -234,7 +234,7 @@ OBJCUWP_WINDOWS_MEDIA_STREAMING_ADAPTIVE_EXPORT
 #ifndef __WMSAAdaptiveMediaSourceDownloadResult_DEFINED__
 #define __WMSAAdaptiveMediaSourceDownloadResult_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_STREAMING_ADAPTIVE_EXPORT
+OBJCUWPWINDOWSMEDIASTREAMINGADAPTIVEEXPORT
 @interface WMSAAdaptiveMediaSourceDownloadResult : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -254,7 +254,7 @@ OBJCUWP_WINDOWS_MEDIA_STREAMING_ADAPTIVE_EXPORT
 #ifndef __WMSAAdaptiveMediaSourceDownloadRequestedDeferral_DEFINED__
 #define __WMSAAdaptiveMediaSourceDownloadRequestedDeferral_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_STREAMING_ADAPTIVE_EXPORT
+OBJCUWPWINDOWSMEDIASTREAMINGADAPTIVEEXPORT
 @interface WMSAAdaptiveMediaSourceDownloadRequestedDeferral : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));

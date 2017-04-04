@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
-#define OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_Media_Playback_Protection_Core_Capture_Devices.lib")
+#ifndef OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
+#define OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsMediaCaptureDevicesCorePlaybackProtection.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -147,7 +147,7 @@ typedef void(^WMPComponentLoadFailedEventHandler)(WMPMediaProtectionManager* sen
 @property (readonly) WFGUID* type;
 @end
 
-OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMPIMediaProtectionServiceRequest : RTObject <WMPIMediaProtectionServiceRequest>
 @end
 
@@ -157,7 +157,7 @@ OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
 #ifndef __WMPMediaProtectionManager_DEFINED__
 #define __WMPMediaProtectionManager_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMPMediaProtectionManager : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -178,7 +178,7 @@ OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
 #ifndef __WMPServiceRequestedEventArgs_DEFINED__
 #define __WMPServiceRequestedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMPServiceRequestedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -194,7 +194,7 @@ OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
 #ifndef __WMPComponentLoadFailedEventArgs_DEFINED__
 #define __WMPComponentLoadFailedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMPComponentLoadFailedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -209,7 +209,7 @@ OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
 #ifndef __WMPMediaProtectionServiceCompletion_DEFINED__
 #define __WMPMediaProtectionServiceCompletion_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMPMediaProtectionServiceCompletion : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -223,7 +223,7 @@ OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
 #ifndef __WMPRevocationAndRenewalInformation_DEFINED__
 #define __WMPRevocationAndRenewalInformation_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMPRevocationAndRenewalInformation : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -237,7 +237,7 @@ OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
 #ifndef __WMPRevocationAndRenewalItem_DEFINED__
 #define __WMPRevocationAndRenewalItem_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMPRevocationAndRenewalItem : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -255,7 +255,7 @@ OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
 #ifndef __WMPMediaProtectionPMPServer_DEFINED__
 #define __WMPMediaProtectionPMPServer_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMPMediaProtectionPMPServer : RTObject
 + (WMPMediaProtectionPMPServer*)makePMPServer:(RTObject<WFCIPropertySet>*)pProperties ACTIVATOR;
 #if defined(__cplusplus)
@@ -270,7 +270,7 @@ OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
 #ifndef __WMPProtectionCapabilities_DEFINED__
 #define __WMPProtectionCapabilities_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMPProtectionCapabilities : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -289,7 +289,7 @@ OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
 - (void)close;
 @end
 
-OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WFIClosable : RTObject <WFIClosable>
 @end
 
@@ -299,7 +299,7 @@ OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
 #ifndef __WMPHdcpSession_DEFINED__
 #define __WMPHdcpSession_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMPHdcpSession : RTObject <WFIClosable>
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -319,7 +319,7 @@ OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
 #ifndef __WMPComponentRenewal_DEFINED__
 #define __WMPComponentRenewal_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMPComponentRenewal : RTObject
 + (void)renewSystemComponentsAsync:(WMPRevocationAndRenewalInformation*)information success:(void (^)(WMPRenewalStatus))success progress:(void (^)(unsigned int))progress failure:(void (^)(NSError*))failure;
 @end

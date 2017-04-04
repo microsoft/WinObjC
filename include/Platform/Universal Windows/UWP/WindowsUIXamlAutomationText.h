@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_UI_XAML_AUTOMATION_TEXT_EXPORT
-#define OBJCUWP_WINDOWS_UI_XAML_AUTOMATION_TEXT_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_UI_Xaml_Automation_Text.lib")
+#ifndef OBJCUWPWINDOWSUIXAMLAUTOMATIONTEXTEXPORT
+#define OBJCUWPWINDOWSUIXAMLAUTOMATIONTEXTEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsUIXamlAutomationText.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>

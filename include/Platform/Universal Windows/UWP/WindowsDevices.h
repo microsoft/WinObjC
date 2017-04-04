@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_DEVICES_EXPORT
-#define OBJCUWP_WINDOWS_DEVICES_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_Devices.lib")
+#ifndef OBJCUWPWINDOWSDEVICESEXPORT
+#define OBJCUWPWINDOWSDEVICESEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsDevices.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -50,7 +50,7 @@
 @property (readonly) RTObject<WDSPISpiControllerProvider>* spiControllerProvider;
 @end
 
-OBJCUWP_WINDOWS_DEVICES_EXPORT
+OBJCUWPWINDOWSDEVICESEXPORT
 @interface WDILowLevelDevicesAggregateProvider : RTObject <WDILowLevelDevicesAggregateProvider>
 @end
 
@@ -60,7 +60,7 @@ OBJCUWP_WINDOWS_DEVICES_EXPORT
 #ifndef __WDLowLevelDevicesAggregateProvider_DEFINED__
 #define __WDLowLevelDevicesAggregateProvider_DEFINED__
 
-OBJCUWP_WINDOWS_DEVICES_EXPORT
+OBJCUWPWINDOWSDEVICESEXPORT
 @interface WDLowLevelDevicesAggregateProvider : RTObject <WDILowLevelDevicesAggregateProvider>
 + (WDLowLevelDevicesAggregateProvider*)make:(RTObject<WDAPIAdcControllerProvider>*)adc pwm:(RTObject<WDPPIPwmControllerProvider>*)pwm gpio:(RTObject<WDGPIGpioControllerProvider>*)gpio i2c:(RTObject<WDIPII2cControllerProvider>*)i2c spi:(RTObject<WDSPISpiControllerProvider>*)spi ACTIVATOR;
 #if defined(__cplusplus)
@@ -79,7 +79,7 @@ OBJCUWP_WINDOWS_DEVICES_EXPORT
 #ifndef __WDLowLevelDevicesController_DEFINED__
 #define __WDLowLevelDevicesController_DEFINED__
 
-OBJCUWP_WINDOWS_DEVICES_EXPORT
+OBJCUWPWINDOWSDEVICESEXPORT
 @interface WDLowLevelDevicesController : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));

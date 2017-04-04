@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_MEDIA_EFFECTS_EDITING_EXPORT
-#define OBJCUWP_WINDOWS_MEDIA_EFFECTS_EDITING_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_Media_Effects_Editing.lib")
+#ifndef OBJCUWPWINDOWSMEDIAEDITINGEFFECTSEXPORT
+#define OBJCUWPWINDOWSMEDIAEDITINGEFFECTSEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsMediaEditingEffects.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -61,7 +61,7 @@ typedef unsigned WMEMediaTrimmingPreference;
 #ifndef __WMEMediaOverlay_DEFINED__
 #define __WMEMediaOverlay_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_EFFECTS_EDITING_EXPORT
+OBJCUWPWINDOWSMEDIAEDITINGEFFECTSEXPORT
 @interface WMEMediaOverlay : RTObject
 + (WMEMediaOverlay*)make:(WMEMediaClip*)clip ACTIVATOR;
 + (WMEMediaOverlay*)makeWithPositionAndOpacity:(WMEMediaClip*)clip position:(WFRect*)position opacity:(double)opacity ACTIVATOR;
@@ -82,7 +82,7 @@ OBJCUWP_WINDOWS_MEDIA_EFFECTS_EDITING_EXPORT
 #ifndef __WMEMediaClip_DEFINED__
 #define __WMEMediaClip_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_EFFECTS_EDITING_EXPORT
+OBJCUWPWINDOWSMEDIAEDITINGEFFECTSEXPORT
 @interface WMEMediaClip : RTObject
 + (WMEMediaClip*)createFromColor:(WUColor*)color originalDuration:(WFTimeSpan*)originalDuration;
 + (void)createFromFileAsync:(RTObject<WSIStorageFile>*)file success:(void (^)(WMEMediaClip*))success failure:(void (^)(NSError*))failure;
@@ -113,7 +113,7 @@ OBJCUWP_WINDOWS_MEDIA_EFFECTS_EDITING_EXPORT
 #ifndef __WMEEmbeddedAudioTrack_DEFINED__
 #define __WMEEmbeddedAudioTrack_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_EFFECTS_EDITING_EXPORT
+OBJCUWPWINDOWSMEDIAEDITINGEFFECTSEXPORT
 @interface WMEEmbeddedAudioTrack : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -127,7 +127,7 @@ OBJCUWP_WINDOWS_MEDIA_EFFECTS_EDITING_EXPORT
 #ifndef __WMEBackgroundAudioTrack_DEFINED__
 #define __WMEBackgroundAudioTrack_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_EFFECTS_EDITING_EXPORT
+OBJCUWPWINDOWSMEDIAEDITINGEFFECTSEXPORT
 @interface WMEBackgroundAudioTrack : RTObject
 + (WMEBackgroundAudioTrack*)createFromEmbeddedAudioTrack:(WMEEmbeddedAudioTrack*)embeddedAudioTrack;
 + (void)createFromFileAsync:(RTObject<WSIStorageFile>*)file success:(void (^)(WMEBackgroundAudioTrack*))success failure:(void (^)(NSError*))failure;
@@ -152,7 +152,7 @@ OBJCUWP_WINDOWS_MEDIA_EFFECTS_EDITING_EXPORT
 #ifndef __WMEMediaComposition_DEFINED__
 #define __WMEMediaComposition_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_EFFECTS_EDITING_EXPORT
+OBJCUWPWINDOWSMEDIAEDITINGEFFECTSEXPORT
 @interface WMEMediaComposition : RTObject
 + (void)loadAsync:(WSStorageFile*)file success:(void (^)(WMEMediaComposition*))success failure:(void (^)(NSError*))failure;
 + (instancetype)make __attribute__ ((ns_returns_retained));
@@ -183,7 +183,7 @@ OBJCUWP_WINDOWS_MEDIA_EFFECTS_EDITING_EXPORT
 #ifndef __WMEMediaOverlayLayer_DEFINED__
 #define __WMEMediaOverlayLayer_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_EFFECTS_EDITING_EXPORT
+OBJCUWPWINDOWSMEDIAEDITINGEFFECTSEXPORT
 @interface WMEMediaOverlayLayer : RTObject
 + (WMEMediaOverlayLayer*)makeWithCompositorDefinition:(RTObject<WMEIVideoCompositorDefinition>*)compositorDefinition ACTIVATOR;
 + (instancetype)make __attribute__ ((ns_returns_retained));

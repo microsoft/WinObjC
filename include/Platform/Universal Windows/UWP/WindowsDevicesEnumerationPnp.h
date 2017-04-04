@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_DEVICES_ENUMERATION_PNP_EXPORT
-#define OBJCUWP_WINDOWS_DEVICES_ENUMERATION_PNP_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_Devices_Enumeration_Pnp.lib")
+#ifndef OBJCUWPWINDOWSDEVICESENUMERATIONPNPEXPORT
+#define OBJCUWPWINDOWSDEVICESENUMERATIONPNPEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsDevicesEnumerationPnp.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -52,7 +52,7 @@ typedef unsigned WDEPPnpObjectType;
 #ifndef __WDEPPnpObjectUpdate_DEFINED__
 #define __WDEPPnpObjectUpdate_DEFINED__
 
-OBJCUWP_WINDOWS_DEVICES_ENUMERATION_PNP_EXPORT
+OBJCUWPWINDOWSDEVICESENUMERATIONPNPEXPORT
 @interface WDEPPnpObjectUpdate : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -68,7 +68,7 @@ OBJCUWP_WINDOWS_DEVICES_ENUMERATION_PNP_EXPORT
 #ifndef __WDEPPnpObjectCollection_DEFINED__
 #define __WDEPPnpObjectCollection_DEFINED__
 
-OBJCUWP_WINDOWS_DEVICES_ENUMERATION_PNP_EXPORT
+OBJCUWPWINDOWSDEVICESENUMERATIONPNPEXPORT
 @interface WDEPPnpObjectCollection : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -88,7 +88,7 @@ OBJCUWP_WINDOWS_DEVICES_ENUMERATION_PNP_EXPORT
 #ifndef __WDEPPnpObjectWatcher_DEFINED__
 #define __WDEPPnpObjectWatcher_DEFINED__
 
-OBJCUWP_WINDOWS_DEVICES_ENUMERATION_PNP_EXPORT
+OBJCUWPWINDOWSDEVICESENUMERATIONPNPEXPORT
 @interface WDEPPnpObjectWatcher : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -114,7 +114,7 @@ OBJCUWP_WINDOWS_DEVICES_ENUMERATION_PNP_EXPORT
 #ifndef __WDEPPnpObject_DEFINED__
 #define __WDEPPnpObject_DEFINED__
 
-OBJCUWP_WINDOWS_DEVICES_ENUMERATION_PNP_EXPORT
+OBJCUWPWINDOWSDEVICESENUMERATIONPNPEXPORT
 @interface WDEPPnpObject : RTObject
 + (void)createFromIdAsync:(WDEPPnpObjectType)type id:(NSString *)id requestedProperties:(id<NSFastEnumeration> /* NSString * */)requestedProperties success:(void (^)(WDEPPnpObject*))success failure:(void (^)(NSError*))failure;
 + (void)findAllAsync:(WDEPPnpObjectType)type requestedProperties:(id<NSFastEnumeration> /* NSString * */)requestedProperties success:(void (^)(WDEPPnpObjectCollection*))success failure:(void (^)(NSError*))failure;

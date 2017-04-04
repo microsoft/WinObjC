@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_MICROSOFT_ADVERTISING_EXPORT
-#define OBJCUWP_MICROSOFT_ADVERTISING_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Microsoft_Advertising.lib")
+#ifndef OBJCUWPMICROSOFTADVERTISINGEXPORT
+#define OBJCUWPMICROSOFTADVERTISINGEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_MSAds_BUILD
+#pragma comment(lib, "ObjCUWPMicrosoftAdvertising.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -85,22 +85,22 @@ enum _MAWUVastErrorCode {
 };
 typedef unsigned MAWUVastErrorCode;
 
-#include "WindowsFoundation.h"
 #include "MicrosoftAdvertising.h"
-#include "WindowsUIXaml.h"
-#include "WindowsUIXamlControls.h"
-#include "WindowsUIXamlMediaAnimation.h"
-#include "WindowsApplicationModelDataTransfer.h"
-#include "WindowsUIXamlMedia.h"
-#include "WindowsUIXamlMarkup.h"
-#include "WindowsUIXamlControlsPrimitives.h"
-#include "WindowsUIXamlData.h"
-#include "WindowsUIXamlInput.h"
-#include "WindowsUIInput.h"
-#include "WindowsUIXamlAutomationPeers.h"
-#include "WindowsUIXamlMediaMedia3D.h"
-#include "WindowsUICore.h"
-#include "WindowsUIText.h"
+#include "UWP/WindowsUIXamlInput.h"
+#include "UWP/WindowsUIXaml.h"
+#include "UWP/WindowsFoundation.h"
+#include "UWP/WindowsUIXamlControls.h"
+#include "UWP/WindowsUIXamlMediaAnimation.h"
+#include "UWP/WindowsApplicationModelDataTransfer.h"
+#include "UWP/WindowsUIXamlMedia.h"
+#include "UWP/WindowsUIInput.h"
+#include "UWP/WindowsUIXamlAutomationPeers.h"
+#include "UWP/WindowsUIXamlMarkup.h"
+#include "UWP/WindowsUIXamlControlsPrimitives.h"
+#include "UWP/WindowsUIXamlData.h"
+#include "UWP/WindowsUIXamlMediaMedia3D.h"
+#include "UWP/WindowsUICore.h"
+#include "UWP/WindowsUIText.h"
 // Windows.UI.Xaml.DependencyPropertyChangedCallback
 #ifndef __WXDependencyPropertyChangedCallback__DEFINED
 #define __WXDependencyPropertyChangedCallback__DEFINED
@@ -222,7 +222,7 @@ typedef void(^MAWUExpandedCloseDelegate)();
 - (void)closeExpandedView;
 @end
 
-OBJCUWP_MICROSOFT_ADVERTISING_EXPORT
+OBJCUWPMICROSOFTADVERTISINGEXPORT
 @interface MAWUIAdvertisingWebBrowser : RTObject <MAWUIAdvertisingWebBrowser>
 @end
 
@@ -232,7 +232,7 @@ OBJCUWP_MICROSOFT_ADVERTISING_EXPORT
 #ifndef __MAWUAdErrorEventArgs_DEFINED__
 #define __MAWUAdErrorEventArgs_DEFINED__
 
-OBJCUWP_MICROSOFT_ADVERTISING_EXPORT
+OBJCUWPMICROSOFTADVERTISINGEXPORT
 @interface MAWUAdErrorEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -247,7 +247,7 @@ OBJCUWP_MICROSOFT_ADVERTISING_EXPORT
 #ifndef __MAWUManipulationStateChangedEventArgs_DEFINED__
 #define __MAWUManipulationStateChangedEventArgs_DEFINED__
 
-OBJCUWP_MICROSOFT_ADVERTISING_EXPORT
+OBJCUWPMICROSOFTADVERTISINGEXPORT
 @interface MAWUManipulationStateChangedEventArgs : RTObject
 + (MAWUManipulationStateChangedEventArgs*)makeInstance1:(int)current last:(int)last ACTIVATOR;
 #if defined(__cplusplus)
@@ -263,7 +263,7 @@ OBJCUWP_MICROSOFT_ADVERTISING_EXPORT
 #ifndef __MAWUPointerMoveEventArgs_DEFINED__
 #define __MAWUPointerMoveEventArgs_DEFINED__
 
-OBJCUWP_MICROSOFT_ADVERTISING_EXPORT
+OBJCUWPMICROSOFTADVERTISINGEXPORT
 @interface MAWUPointerMoveEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -277,7 +277,7 @@ OBJCUWP_MICROSOFT_ADVERTISING_EXPORT
 #ifndef __MAWUMouseWheelEventArgs_DEFINED__
 #define __MAWUMouseWheelEventArgs_DEFINED__
 
-OBJCUWP_MICROSOFT_ADVERTISING_EXPORT
+OBJCUWPMICROSOFTADVERTISINGEXPORT
 @interface MAWUMouseWheelEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -293,7 +293,7 @@ OBJCUWP_MICROSOFT_ADVERTISING_EXPORT
 #ifndef __MAWUPointerDownEventArgs_DEFINED__
 #define __MAWUPointerDownEventArgs_DEFINED__
 
-OBJCUWP_MICROSOFT_ADVERTISING_EXPORT
+OBJCUWPMICROSOFTADVERTISINGEXPORT
 @interface MAWUPointerDownEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -313,7 +313,7 @@ OBJCUWP_MICROSOFT_ADVERTISING_EXPORT
 - (void)close;
 @end
 
-OBJCUWP_MICROSOFT_ADVERTISING_EXPORT
+OBJCUWPMICROSOFTADVERTISINGEXPORT
 @interface WFIClosable : RTObject <WFIClosable>
 @end
 
@@ -334,7 +334,7 @@ OBJCUWP_MICROSOFT_ADVERTISING_EXPORT
 - (float)getRegularSnapPoints:(WXCOrientation)orientation alignment:(WUXCPSnapPointsAlignment)alignment offset:(float*)offset;
 @end
 
-OBJCUWP_MICROSOFT_ADVERTISING_EXPORT
+OBJCUWPMICROSOFTADVERTISINGEXPORT
 @interface WUXCPIScrollSnapPointsInfo : RTObject <WUXCPIScrollSnapPointsInfo>
 @end
 
@@ -348,7 +348,7 @@ OBJCUWP_MICROSOFT_ADVERTISING_EXPORT
 - (void)getInsertionIndexes:(WFPoint*)position first:(int*)first second:(int*)second;
 @end
 
-OBJCUWP_MICROSOFT_ADVERTISING_EXPORT
+OBJCUWPMICROSOFTADVERTISINGEXPORT
 @interface WXCIInsertionPanel : RTObject <WXCIInsertionPanel>
 @end
 
@@ -364,7 +364,7 @@ OBJCUWP_MICROSOFT_ADVERTISING_EXPORT
 - (void)onApplyTemplate;
 @end
 
-OBJCUWP_MICROSOFT_ADVERTISING_EXPORT
+OBJCUWPMICROSOFTADVERTISINGEXPORT
 @interface WXIFrameworkElementOverrides : RTObject <WXIFrameworkElementOverrides>
 @end
 
@@ -378,7 +378,7 @@ OBJCUWP_MICROSOFT_ADVERTISING_EXPORT
 - (BOOL)goToElementStateCore:(NSString *)stateName useTransitions:(BOOL)useTransitions;
 @end
 
-OBJCUWP_MICROSOFT_ADVERTISING_EXPORT
+OBJCUWPMICROSOFTADVERTISINGEXPORT
 @interface WXIFrameworkElementOverrides2 : RTObject <WXIFrameworkElementOverrides2>
 @end
 
@@ -394,7 +394,7 @@ OBJCUWP_MICROSOFT_ADVERTISING_EXPORT
 - (id<NSFastEnumeration> /* id<NSFastEnumeration> < WFPoint* > */)findSubElementsForTouchTargeting:(WFPoint*)point boundingRect:(WFRect*)boundingRect;
 @end
 
-OBJCUWP_MICROSOFT_ADVERTISING_EXPORT
+OBJCUWPMICROSOFTADVERTISINGEXPORT
 @interface WXIUIElementOverrides : RTObject <WXIUIElementOverrides>
 @end
 
@@ -404,7 +404,7 @@ OBJCUWP_MICROSOFT_ADVERTISING_EXPORT
 #ifndef __WXDependencyObject_DEFINED__
 #define __WXDependencyObject_DEFINED__
 
-OBJCUWP_MICROSOFT_ADVERTISING_EXPORT
+OBJCUWPMICROSOFTADVERTISINGEXPORT
 @interface WXDependencyObject : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -425,7 +425,7 @@ OBJCUWP_MICROSOFT_ADVERTISING_EXPORT
 #ifndef __WXUIElement_DEFINED__
 #define __WXUIElement_DEFINED__
 
-OBJCUWP_MICROSOFT_ADVERTISING_EXPORT
+OBJCUWPMICROSOFTADVERTISINGEXPORT
 @interface WXUIElement : WXDependencyObject
 + (BOOL)tryStartDirectManipulation:(WUXIPointer*)value;
 #if defined(__cplusplus)
@@ -594,7 +594,7 @@ OBJCUWP_MICROSOFT_ADVERTISING_EXPORT
 #ifndef __WXFrameworkElement_DEFINED__
 #define __WXFrameworkElement_DEFINED__
 
-OBJCUWP_MICROSOFT_ADVERTISING_EXPORT
+OBJCUWPMICROSOFTADVERTISINGEXPORT
 @interface WXFrameworkElement : WXUIElement
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -680,7 +680,7 @@ OBJCUWP_MICROSOFT_ADVERTISING_EXPORT
 #ifndef __WXCPanel_DEFINED__
 #define __WXCPanel_DEFINED__
 
-OBJCUWP_MICROSOFT_ADVERTISING_EXPORT
+OBJCUWPMICROSOFTADVERTISINGEXPORT
 @interface WXCPanel : WXFrameworkElement
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -700,7 +700,7 @@ OBJCUWP_MICROSOFT_ADVERTISING_EXPORT
 #ifndef __WXCStackPanel_DEFINED__
 #define __WXCStackPanel_DEFINED__
 
-OBJCUWP_MICROSOFT_ADVERTISING_EXPORT
+OBJCUWPMICROSOFTADVERTISINGEXPORT
 @interface WXCStackPanel : WXCPanel <WUXCPIScrollSnapPointsInfo, WXCIInsertionPanel>
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -735,7 +735,7 @@ OBJCUWP_MICROSOFT_ADVERTISING_EXPORT
 #ifndef __MAWUAdControl_DEFINED__
 #define __MAWUAdControl_DEFINED__
 
-OBJCUWP_MICROSOFT_ADVERTISING_EXPORT
+OBJCUWPMICROSOFTADVERTISINGEXPORT
 @interface MAWUAdControl : WXCStackPanel <WFIClosable>
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -781,7 +781,7 @@ OBJCUWP_MICROSOFT_ADVERTISING_EXPORT
 #ifndef __MAWUExpandProperties_DEFINED__
 #define __MAWUExpandProperties_DEFINED__
 
-OBJCUWP_MICROSOFT_ADVERTISING_EXPORT
+OBJCUWPMICROSOFTADVERTISINGEXPORT
 @interface MAWUExpandProperties : RTObject
 + (MAWUExpandProperties*)getDefault;
 + (MAWUExpandProperties*)makeInstance1:(int)width height:(int)height useCustomClose:(BOOL)useCustomClose lockOrientation:(BOOL)lockOrientation ACTIVATOR;
@@ -805,7 +805,7 @@ OBJCUWP_MICROSOFT_ADVERTISING_EXPORT
 - (void)connect:(int)connectionId target:(RTObject*)target;
 @end
 
-OBJCUWP_MICROSOFT_ADVERTISING_EXPORT
+OBJCUWPMICROSOFTADVERTISINGEXPORT
 @interface WUXMIComponentConnector : RTObject <WUXMIComponentConnector>
 @end
 
@@ -819,7 +819,7 @@ OBJCUWP_MICROSOFT_ADVERTISING_EXPORT
 - (RTObject<WUXMIComponentConnector>*)getBindingConnector:(int)connectionId target:(RTObject*)target;
 @end
 
-OBJCUWP_MICROSOFT_ADVERTISING_EXPORT
+OBJCUWPMICROSOFTADVERTISINGEXPORT
 @interface WUXMIComponentConnector2 : RTObject <WUXMIComponentConnector2>
 @end
 
@@ -857,7 +857,7 @@ OBJCUWP_MICROSOFT_ADVERTISING_EXPORT
 - (void)onDrop:(WXDragEventArgs*)e;
 @end
 
-OBJCUWP_MICROSOFT_ADVERTISING_EXPORT
+OBJCUWPMICROSOFTADVERTISINGEXPORT
 @interface WXCIControlOverrides : RTObject <WXCIControlOverrides>
 @end
 
@@ -867,7 +867,7 @@ OBJCUWP_MICROSOFT_ADVERTISING_EXPORT
 #ifndef __WXCControl_DEFINED__
 #define __WXCControl_DEFINED__
 
-OBJCUWP_MICROSOFT_ADVERTISING_EXPORT
+OBJCUWPMICROSOFTADVERTISINGEXPORT
 @interface WXCControl : WXFrameworkElement
 + (BOOL)getIsTemplateFocusTarget:(WXFrameworkElement*)element;
 + (void)setIsTemplateFocusTarget:(WXFrameworkElement*)element value:(BOOL)value;
@@ -977,7 +977,7 @@ OBJCUWP_MICROSOFT_ADVERTISING_EXPORT
 #ifndef __WXCUserControl_DEFINED__
 #define __WXCUserControl_DEFINED__
 
-OBJCUWP_MICROSOFT_ADVERTISING_EXPORT
+OBJCUWPMICROSOFTADVERTISINGEXPORT
 @interface WXCUserControl : WXCControl
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -993,7 +993,7 @@ OBJCUWP_MICROSOFT_ADVERTISING_EXPORT
 #ifndef __MAWUblank_DEFINED__
 #define __MAWUblank_DEFINED__
 
-OBJCUWP_MICROSOFT_ADVERTISING_EXPORT
+OBJCUWPMICROSOFTADVERTISINGEXPORT
 @interface MAWUblank : WXCUserControl <WUXMIComponentConnector, WUXMIComponentConnector2>
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -1010,7 +1010,7 @@ OBJCUWP_MICROSOFT_ADVERTISING_EXPORT
 #ifndef __MAWUInterstitialAd_DEFINED__
 #define __MAWUInterstitialAd_DEFINED__
 
-OBJCUWP_MICROSOFT_ADVERTISING_EXPORT
+OBJCUWPMICROSOFTADVERTISINGEXPORT
 @interface MAWUInterstitialAd : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -1042,7 +1042,7 @@ OBJCUWP_MICROSOFT_ADVERTISING_EXPORT
 #ifndef __MAWUVpaidEventArgs_DEFINED__
 #define __MAWUVpaidEventArgs_DEFINED__
 
-OBJCUWP_MICROSOFT_ADVERTISING_EXPORT
+OBJCUWPMICROSOFTADVERTISINGEXPORT
 @interface MAWUVpaidEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));

@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
-#define OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_RandomStuff.lib")
+#ifndef OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
+#define OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsConsolidatedNamespace.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -93,7 +93,7 @@ typedef unsigned WSCKeyCredentialCreationOption;
 @property (readonly) WSCWebAccountProvider* webAccountProvider;
 @end
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WSCIWebAccount : RTObject <WSCIWebAccount>
 @end
 
@@ -103,7 +103,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WSCWebAccountProvider_DEFINED__
 #define __WSCWebAccountProvider_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WSCWebAccountProvider : RTObject
 + (WSCWebAccountProvider*)makeWebAccountProvider:(NSString *)id displayName:(NSString *)displayName iconUri:(WFUri*)iconUri ACTIVATOR;
 #if defined(__cplusplus)
@@ -123,7 +123,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WSCWebAccount_DEFINED__
 #define __WSCWebAccount_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WSCWebAccount : RTObject <WSCIWebAccount>
 + (WSCWebAccount*)makeWebAccount:(WSCWebAccountProvider*)webAccountProvider userName:(NSString *)userName state:(WSCWebAccountState)state ACTIVATOR;
 #if defined(__cplusplus)
@@ -145,7 +145,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WSCKeyCredentialRetrievalResult_DEFINED__
 #define __WSCKeyCredentialRetrievalResult_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WSCKeyCredentialRetrievalResult : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -160,7 +160,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WSCKeyCredentialOperationResult_DEFINED__
 #define __WSCKeyCredentialOperationResult_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WSCKeyCredentialOperationResult : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -175,7 +175,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WSCKeyCredentialAttestationResult_DEFINED__
 #define __WSCKeyCredentialAttestationResult_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WSCKeyCredentialAttestationResult : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -191,7 +191,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WSCKeyCredential_DEFINED__
 #define __WSCKeyCredential_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WSCKeyCredential : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -209,7 +209,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WSCKeyCredentialManager_DEFINED__
 #define __WSCKeyCredentialManager_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WSCKeyCredentialManager : RTObject
 + (void)isSupportedAsyncWithSuccess:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 + (RTObject<WFIAsyncAction>*)renewAttestationAsync;
@@ -224,7 +224,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WSCPasswordCredential_DEFINED__
 #define __WSCPasswordCredential_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WSCPasswordCredential : RTObject
 + (WSCPasswordCredential*)makePasswordCredential:(NSString *)resource userName:(NSString *)userName password:(NSString *)password ACTIVATOR;
 + (instancetype)make __attribute__ ((ns_returns_retained));
@@ -244,7 +244,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WSCPasswordVault_DEFINED__
 #define __WSCPasswordVault_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WSCPasswordVault : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -284,7 +284,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 -(void)removeObserver: (EventRegistrationToken)receiverToken;
 @end
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WFCIPropertySet : RTObject <WFCIPropertySet>
 @end
 
@@ -294,7 +294,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WSCPasswordCredentialPropertyStore_DEFINED__
 #define __WSCPasswordCredentialPropertyStore_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WSCPasswordCredentialPropertyStore : RTObject <WFCIPropertySet>
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)

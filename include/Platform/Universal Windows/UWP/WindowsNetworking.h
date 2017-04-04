@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_NETWORKING_EXPORT
-#define OBJCUWP_WINDOWS_NETWORKING_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_Networking.lib")
+#ifndef OBJCUWPWINDOWSNETWORKINGEXPORT
+#define OBJCUWPWINDOWSNETWORKINGEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsNetworking.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -66,7 +66,7 @@ typedef unsigned WNDomainNameType;
 - (NSString *)toString;
 @end
 
-OBJCUWP_WINDOWS_NETWORKING_EXPORT
+OBJCUWPWINDOWSNETWORKINGEXPORT
 @interface WFIStringable : RTObject <WFIStringable>
 @end
 
@@ -76,7 +76,7 @@ OBJCUWP_WINDOWS_NETWORKING_EXPORT
 #ifndef __WNHostName_DEFINED__
 #define __WNHostName_DEFINED__
 
-OBJCUWP_WINDOWS_NETWORKING_EXPORT
+OBJCUWPWINDOWSNETWORKINGEXPORT
 @interface WNHostName : RTObject <WFIStringable>
 + (int)compare:(NSString *)value1 value2:(NSString *)value2;
 + (WNHostName*)makeHostName:(NSString *)hostName ACTIVATOR;
@@ -98,7 +98,7 @@ OBJCUWP_WINDOWS_NETWORKING_EXPORT
 #ifndef __WNEndpointPair_DEFINED__
 #define __WNEndpointPair_DEFINED__
 
-OBJCUWP_WINDOWS_NETWORKING_EXPORT
+OBJCUWPWINDOWSNETWORKINGEXPORT
 @interface WNEndpointPair : RTObject
 + (WNEndpointPair*)makeEndpointPair:(WNHostName*)localHostName localServiceName:(NSString *)localServiceName remoteHostName:(WNHostName*)remoteHostName remoteServiceName:(NSString *)remoteServiceName ACTIVATOR;
 #if defined(__cplusplus)

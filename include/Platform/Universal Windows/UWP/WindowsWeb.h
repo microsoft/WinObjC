@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_WEB_EXPORT
-#define OBJCUWP_WINDOWS_WEB_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_Web.lib")
+#ifndef OBJCUWPWINDOWSWEBEXPORT
+#define OBJCUWPWINDOWSWEBEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsWeb.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -101,7 +101,7 @@ typedef unsigned WWWebErrorStatus;
 - (void)uriToStreamAsync:(WFUri*)uri success:(void (^)(RTObject<WSSIInputStream>*))success failure:(void (^)(NSError*))failure;
 @end
 
-OBJCUWP_WINDOWS_WEB_EXPORT
+OBJCUWPWINDOWSWEBEXPORT
 @interface WWIUriToStreamResolver : RTObject <WWIUriToStreamResolver>
 @end
 
@@ -111,7 +111,7 @@ OBJCUWP_WINDOWS_WEB_EXPORT
 #ifndef __WWWebError_DEFINED__
 #define __WWWebError_DEFINED__
 
-OBJCUWP_WINDOWS_WEB_EXPORT
+OBJCUWPWINDOWSWEBEXPORT
 @interface WWWebError : RTObject
 + (WWWebErrorStatus)getStatus:(int)hresult;
 @end

@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_UI_XAML_MARKUP_EXPORT
-#define OBJCUWP_WINDOWS_UI_XAML_MARKUP_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_UI_Xaml_Markup.lib")
+#ifndef OBJCUWPWINDOWSUIXAMLMARKUPEXPORT
+#define OBJCUWPWINDOWSUIXAMLMARKUPEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsUIXamlMarkup.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -39,7 +39,7 @@
 #import <Foundation/Foundation.h>
 
 // [struct] Windows.UI.Xaml.Markup.XamlBinaryWriterErrorInformation
-OBJCUWP_WINDOWS_UI_XAML_MARKUP_EXPORT
+OBJCUWPWINDOWSUIXAMLMARKUPEXPORT
 @interface WUXMXamlBinaryWriterErrorInformation : NSObject
 + (instancetype)new;
 @property unsigned int inputStreamIndex;
@@ -48,7 +48,7 @@ OBJCUWP_WINDOWS_UI_XAML_MARKUP_EXPORT
 @end
 
 // [struct] Windows.UI.Xaml.Markup.XmlnsDefinition
-OBJCUWP_WINDOWS_UI_XAML_MARKUP_EXPORT
+OBJCUWPWINDOWSUIXAMLMARKUPEXPORT
 @interface WUXMXmlnsDefinition : NSObject
 + (instancetype)new;
 @property (retain) NSString * xmlNamespace;
@@ -63,7 +63,7 @@ OBJCUWP_WINDOWS_UI_XAML_MARKUP_EXPORT
 - (void)connect:(int)connectionId target:(RTObject*)target;
 @end
 
-OBJCUWP_WINDOWS_UI_XAML_MARKUP_EXPORT
+OBJCUWPWINDOWSUIXAMLMARKUPEXPORT
 @interface WUXMIComponentConnector : RTObject <WUXMIComponentConnector>
 @end
 
@@ -77,7 +77,7 @@ OBJCUWP_WINDOWS_UI_XAML_MARKUP_EXPORT
 - (RTObject<WUXMIComponentConnector>*)getBindingConnector:(int)connectionId target:(RTObject*)target;
 @end
 
-OBJCUWP_WINDOWS_UI_XAML_MARKUP_EXPORT
+OBJCUWPWINDOWSUIXAMLMARKUPEXPORT
 @interface WUXMIComponentConnector2 : RTObject <WUXMIComponentConnector2>
 @end
 
@@ -98,7 +98,7 @@ OBJCUWP_WINDOWS_UI_XAML_MARKUP_EXPORT
 - (void)setValue:(RTObject*)instance value:(RTObject*)value;
 @end
 
-OBJCUWP_WINDOWS_UI_XAML_MARKUP_EXPORT
+OBJCUWPWINDOWSUIXAMLMARKUPEXPORT
 @interface WUXMIXamlMember : RTObject <WUXMIXamlMember>
 @end
 
@@ -129,7 +129,7 @@ OBJCUWP_WINDOWS_UI_XAML_MARKUP_EXPORT
 - (void)runInitializer;
 @end
 
-OBJCUWP_WINDOWS_UI_XAML_MARKUP_EXPORT
+OBJCUWPWINDOWSUIXAMLMARKUPEXPORT
 @interface WUXMIXamlType : RTObject <WUXMIXamlType>
 @end
 
@@ -145,7 +145,7 @@ OBJCUWP_WINDOWS_UI_XAML_MARKUP_EXPORT
 - (NSArray* /* WUXMXmlnsDefinition* */)getXmlnsDefinitions;
 @end
 
-OBJCUWP_WINDOWS_UI_XAML_MARKUP_EXPORT
+OBJCUWPWINDOWSUIXAMLMARKUPEXPORT
 @interface WUXMIXamlMetadataProvider : RTObject <WUXMIXamlMetadataProvider>
 @end
 
@@ -160,7 +160,7 @@ OBJCUWP_WINDOWS_UI_XAML_MARKUP_EXPORT
 - (void)processBindings:(RTObject*)item itemIndex:(int)itemIndex phase:(int)phase nextPhase:(int*)nextPhase;
 @end
 
-OBJCUWP_WINDOWS_UI_XAML_MARKUP_EXPORT
+OBJCUWPWINDOWSUIXAMLMARKUPEXPORT
 @interface WUXMIDataTemplateComponent : RTObject <WUXMIDataTemplateComponent>
 @end
 
@@ -170,7 +170,7 @@ OBJCUWP_WINDOWS_UI_XAML_MARKUP_EXPORT
 #ifndef __WUXMXamlBinaryWriter_DEFINED__
 #define __WUXMXamlBinaryWriter_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_MARKUP_EXPORT
+OBJCUWPWINDOWSUIXAMLMARKUPEXPORT
 @interface WUXMXamlBinaryWriter : RTObject
 + (WUXMXamlBinaryWriterErrorInformation*)write:(NSMutableArray* /* RTObject<WSSIRandomAccessStream>* */)inputStreams outputStreams:(NSMutableArray* /* RTObject<WSSIRandomAccessStream>* */)outputStreams xamlMetadataProvider:(RTObject<WUXMIXamlMetadataProvider>*)xamlMetadataProvider;
 #if defined(__cplusplus)
@@ -184,7 +184,7 @@ OBJCUWP_WINDOWS_UI_XAML_MARKUP_EXPORT
 #ifndef __WUXMXamlReader_DEFINED__
 #define __WUXMXamlReader_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_MARKUP_EXPORT
+OBJCUWPWINDOWSUIXAMLMARKUPEXPORT
 @interface WUXMXamlReader : RTObject
 + (RTObject*)Load:(NSString *)xaml;
 + (RTObject*)loadWithInitialTemplateValidation:(NSString *)xaml;
@@ -199,7 +199,7 @@ OBJCUWP_WINDOWS_UI_XAML_MARKUP_EXPORT
 #ifndef __WUXMXamlBindingHelper_DEFINED__
 #define __WUXMXamlBindingHelper_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_MARKUP_EXPORT
+OBJCUWPWINDOWSUIXAMLMARKUPEXPORT
 @interface WUXMXamlBindingHelper : RTObject
 + (RTObject<WUXMIDataTemplateComponent>*)getDataTemplateComponent:(WXDependencyObject*)element;
 + (void)setDataTemplateComponent:(WXDependencyObject*)element value:(RTObject<WUXMIDataTemplateComponent>*)value;

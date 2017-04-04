@@ -792,3 +792,33 @@ TEST(NSString, LocalizedStandardContainsString) {
     EXPECT_TRUE([@"TÉST" localizedStandardContainsString:@"test"]);
     EXPECT_TRUE([@"TÉST" localizedStandardContainsString:@"tést"]);
 }
+
+TEST(NSString, ComparingDifferentTypes) {
+    NSString* stringOne = @"Hello";
+    const unsigned char stringOneUTF8[] = { 'H', 'e', 'l', 'l', 'o', 0 };
+    const unsigned char stringOneUTF16[] = { 'H', 0, 'e', 0, 'l', 0, 'l', 0, 'o', 0, 0, 0 };
+    NSString* stringOneUTF8String = [NSMutableString stringWithUTF8String:reinterpret_cast<const char*>(stringOneUTF8)];
+    NSString* stringOneUTF16String = [NSMutableString stringWithCharacters:reinterpret_cast<const unichar*>(stringOneUTF16) length:5];
+
+    EXPECT_OBJCEQ(stringOne, stringOneUTF8String);
+    EXPECT_OBJCEQ(stringOne, stringOneUTF16String);
+    EXPECT_OBJCEQ(stringOneUTF8String, stringOneUTF16String);
+
+    EXPECT_EQ(stringOne.hash, stringOneUTF8String.hash);
+    EXPECT_EQ(stringOne.hash, stringOneUTF16String.hash);
+    EXPECT_EQ(stringOneUTF8String.hash, stringOneUTF16String.hash);
+
+    NSString* stringTwo = @"\u0CA0_\u0CA0";
+    const unsigned char stringTwoUTF8[] = { 0xE0, 0xB2, 0xA0, '_', 0xE0, 0xB2, 0xA0, 0 };
+    const unsigned char stringTwoUTF16[] = { 0xA0, 0x0C, '_', 0, 0xA0, 0x0C, 0, 0 };
+    NSString* stringTwoUTF8String = [NSMutableString stringWithUTF8String:reinterpret_cast<const char*>(stringTwoUTF8)];
+    NSString* stringTwoUTF16String = [NSMutableString stringWithCharacters:reinterpret_cast<const unichar*>(stringTwoUTF16) length:3];
+
+    EXPECT_OBJCEQ(stringTwo, stringTwoUTF8String);
+    EXPECT_OBJCEQ(stringTwo, stringTwoUTF16String);
+    EXPECT_OBJCEQ(stringTwoUTF8String, stringTwoUTF16String);
+
+    EXPECT_EQ(stringTwo.hash, stringTwoUTF8String.hash);
+    EXPECT_EQ(stringTwo.hash, stringTwoUTF16String.hash);
+    EXPECT_EQ(stringTwoUTF8String.hash, stringTwoUTF16String.hash);
+}

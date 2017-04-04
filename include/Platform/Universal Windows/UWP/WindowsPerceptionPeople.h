@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_PERCEPTION_PEOPLE_EXPORT
-#define OBJCUWP_WINDOWS_PERCEPTION_PEOPLE_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_Perception_People.lib")
+#ifndef OBJCUWPWINDOWSPERCEPTIONPEOPLEEXPORT
+#define OBJCUWPWINDOWSPERCEPTIONPEOPLEEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsPerceptionPeople.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -38,7 +38,7 @@
 #ifndef __WPPHeadPose_DEFINED__
 #define __WPPHeadPose_DEFINED__
 
-OBJCUWP_WINDOWS_PERCEPTION_PEOPLE_EXPORT
+OBJCUWPWINDOWSPERCEPTIONPEOPLEEXPORT
 @interface WPPHeadPose : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));

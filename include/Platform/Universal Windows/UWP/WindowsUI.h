@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_UI_EXPORT
-#define OBJCUWP_WINDOWS_UI_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_UI.lib")
+#ifndef OBJCUWPWINDOWSUIEXPORT
+#define OBJCUWPWINDOWSUIEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsUI.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -34,7 +34,7 @@
 #import <Foundation/Foundation.h>
 
 // [struct] Windows.UI.Color
-OBJCUWP_WINDOWS_UI_EXPORT
+OBJCUWPWINDOWSUIEXPORT
 @interface WUColor : NSObject
 + (instancetype)new;
 @property uint8_t a;
@@ -47,7 +47,7 @@ OBJCUWP_WINDOWS_UI_EXPORT
 #ifndef __WUColorHelper_DEFINED__
 #define __WUColorHelper_DEFINED__
 
-OBJCUWP_WINDOWS_UI_EXPORT
+OBJCUWPWINDOWSUIEXPORT
 @interface WUColorHelper : RTObject
 + (WUColor*)fromArgb:(uint8_t)a r:(uint8_t)r g:(uint8_t)g b:(uint8_t)b;
 #if defined(__cplusplus)
@@ -61,7 +61,7 @@ OBJCUWP_WINDOWS_UI_EXPORT
 #ifndef __WUColors_DEFINED__
 #define __WUColors_DEFINED__
 
-OBJCUWP_WINDOWS_UI_EXPORT
+OBJCUWPWINDOWSUIEXPORT
 @interface WUColors : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
