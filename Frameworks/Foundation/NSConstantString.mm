@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -14,6 +14,7 @@
 //
 //******************************************************************************
 #import "Starboard.h"
+#import "CFFoundationInternal.h"
 #import "ForFoundationOnly.h"
 #import "NSConstantString.h"
 #import "BridgeHelpers.h"
@@ -47,7 +48,7 @@
 
 // Override [NSString hash] and [NSString isEqualToString:] for faster perf
 - (NSUInteger)hash {
-    return CFStringHashCString(reinterpret_cast<uint8_t*>(c_string), len);
+    return _CFStringHash(__CFStringMakeConstantString(c_string));
 }
 
 - (BOOL)isEqualToString:(NSString*)str {

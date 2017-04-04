@@ -1192,6 +1192,11 @@ CFHashCode __CFStringHash(CFTypeRef cf) {
     }
 }
 
+// WINOBJC: _CFStringHash is for Foundation's benefit. It should not be consumed by anyone else.
+CF_PRIVATE CF_EXPORT CFHashCode _CFStringHash(CFStringRef str) {
+    return __CFStringHash(str);
+}
+
 
 static CFStringRef __CFStringCopyDescription(CFTypeRef cf) {
     return CFStringCreateWithFormat(kCFAllocatorSystemDefault, NULL, CFSTR("<CFString %p [%p]>{contents = \"%@\"}"), cf, __CFGetAllocator(cf), cf);
