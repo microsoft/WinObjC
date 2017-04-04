@@ -1,6 +1,5 @@
 ﻿{
   "dependencies": {
-    "GitVersionTask": "4.0.0-beta0011",
     "NuGet.Build.Packaging": "0.1.186"
   },
   "frameworks": {

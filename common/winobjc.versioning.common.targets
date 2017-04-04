@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <PropertyGroup>
+    <CalculatePackageVersionDependsOn>GetVersion;$(CalculatePackageVersionDependsOn)</CalculatePackageVersionDependsOn>
+    <UpdateAssemblyInfo>false</UpdateAssemblyInfo>
+  </PropertyGroup>
+
+  <Target Name="CalculatePackageVersion" DependsOnTargets="$(CalculatePackageVersionDependsOn)" >
+    <PropertyGroup>
+        <PackageVersion></PackageVersion>
+    </PropertyGroup>
+
+    <PropertyGroup>
+      <PackageVersion_PreReleaseFormat Condition="'$(PackageVersion_PreReleaseFormat)' == ''">{PackageVersion_PreReleaseLabel}-{PackageVersion_Timestamp}</PackageVersion_PreReleaseFormat>
+    </PropertyGroup>
+
+    <Error Condition="'$(GitVersion_BranchName)' == ''"
+           Text="Cannot determine git branch. Please make sure GitVersionTask is listed as a nuget dependency for this project and that git.exe is part of the PATH environment variable." />
+
+    <Warning Condition="'$(SolutionPath)' == ''"
+           Text="Cannot determine solution build time. Package version dependencies may be inconsistent as a result. Please make sure to build using .sln file." />
+
+    <PropertyGroup Condition="'$(PackageVersionOverride)' == ''">
+      <PackageTimestamp Condition="'$(PackageTimestamp)' == '' And Exists('$(SolutionDir)$(SolutionName).timestamp')">$([System.IO.File]::GetLastWriteTime($(SolutionDir)$(SolutionName).timestamp).ToUniversalTime().ToString(yyyyMMddHHmmss))</PackageTimestamp>      
+      <PackageTimestamp Condition="'$(PackageTimestamp)' == ''">$([System.DateTime]::Now.ToUniversalTime().ToString(yyyyMMddHHmmss))</PackageTimestamp>
+      
+      <PackageVersion_Major>$(GitVersion_Major)</PackageVersion_Major>
+      <PackageVersion_Minor>$(GitVersion_Minor)</PackageVersion_Minor>
+      
+      <PackageVersion_Patch Condition="'$(PackageVersion_Patch)' == '' And '$(GitVersion_PreReleaseLabel)' == ''">$([System.DateTime]::Now.ToUniversalTime()ToString(yyMMdd))</PackageVersion_Patch>
+      <PackageVersion_Patch Condition="'$(PackageVersion_Patch)' == '' And '$(GitVersion_PreReleaseLabel)' != ''">$(GitVersion_Patch)</PackageVersion_Patch>
+
+      <PackageVersion_PreReleaseLabel>$(GitVersion_PreReleaseLabel)</PackageVersion_PreReleaseLabel>
+      <PackageVersion_Timestamp>$(PackageTimestamp)</PackageVersion_Timestamp>
+
+      <!-- Replace PreReleaseFormat msbuild property names with positional String.Format args.
+
+           NOTE: If additional property replacements are needed, they must show up here. 
+           An extra cool improvement would be to figure out how to delay property expansion until this point to pass the format directly.  -->
+      <PackageVersion_PreReleaseFormat>$(PackageVersion_PreReleaseFormat.Replace('PackageVersion_Timestamp', '0'))</PackageVersion_PreReleaseFormat>
+      <PackageVersion_PreReleaseFormat>$(PackageVersion_PreReleaseFormat.Replace('PackageVersion_PreReleaseLabel', '1'))</PackageVersion_PreReleaseFormat>
+
+      <PackageVersion_PreRelease Condition="'$(PackageVersion_PreRelease)' == '' And '$(PackageVersion_PreReleaseLabel)' != ''">-$([System.String]::Format('$(PackageVersion_PreReleaseFormat)', $(PackageVersion_Timestamp), $(PackageVersion_PreReleaseLabel)))</PackageVersion_PreRelease>
+
+      <PackageVersion>$(PackageVersion_Major).$(PackageVersion_Minor).$(PackageVersion_Patch)$(PackageVersion_PreRelease)</PackageVersion>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(PackageVersionOverride)' != ''">
+
+      <!-- 
+      Regex for package version override string in escaped .NET syntax:
+      ^v?(?<MAJOR>\d+)\.(?<MINOR>\d+)\.(?<PATCH>\d+)(\-(?<LABEL&>[\dA-Za-z\-\.]+))?$
+       -->
+      <_PackageVersionRegex>^v?(?&lt;MAJOR&gt;\d+)\.(?&lt;MINOR&gt;\d+)\.(?&lt;PATCH&gt;\d+)(\-(?&lt;LABEL&gt;[\dA-Za-z\-\.]+))?$</_PackageVersionRegex>
+
+      <!-- normalize version string -->
+      <PackageVersionOverride Condition="$(PackageVersionOverride.StartsWith('v'))">$(PackageVersionOverride.TrimStart('v'))</PackageVersionOverride>
+
+      <PackageVersion>$(PackageVersionOverride)</PackageVersion>
+
+      <!-- Pull out components for other targets to use -->
+      <PackageVersion_Major>$([System.Text.RegularExpressions.Regex]::Match($(PackageVersionOverride), $(_PackageVersionRegex)).Groups['MAJOR'].Value)</PackageVersion_Major>
+      <PackageVersion_Minor>$([System.Text.RegularExpressions.Regex]::Match($(PackageVersionOverride), $(_PackageVersionRegex)).Groups['MINOR'].Value)</PackageVersion_Minor>
+      <PackageVersion_Patch>$([System.Text.RegularExpressions.Regex]::Match($(PackageVersionOverride), $(_PackageVersionRegex)).Groups['PATCH'].Value)</PackageVersion_Patch>
+      <PackageVersion_PreReleaseLabel>$([System.Text.RegularExpressions.Regex]::Match($(PackageVersionOverride), $(_PackageVersionRegex)).Groups['LABEL'].Value)</PackageVersion_PreReleaseLabel>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="$(PackageVersion_Patch.Length) &gt; 5">
+      <PackageResourceVersion_Build>$(PackageVersion_Patch.Substring(0,4))</PackageResourceVersion_Build>
+      <PackageResourceVersion_Revision>$(PackageVersion_Patch.Substring(4))</PackageResourceVersion_Revision>
+    </PropertyGroup>
+
+    <PropertyGroup>
+      <PackageResourceVersion_Build Condition="'$(PackageResourceVersion_Build)' == ''">$(PackageVersion_Patch)</PackageResourceVersion_Build>
+      <PackageResourceVersion_Revision Condition="'$(PackageResourceVersion_Revision)' == ''">0</PackageResourceVersion_Revision>
+
+      <PackageResourceVersion>$(PackageVersion_Major).$(PackageVersion_Minor).$(PackageResourceVersion_Build).$(PackageResourceVersion_Revision)</PackageResourceVersion>
+    </PropertyGroup>
+  </Target>
+
+  <Target Name="AddCommonRCFile" 
+          BeforeTargets="BeforeResourceCompile" 
+          DependsOnTargets="CalculatePackageVersion" 
+          Condition="'$(ProjectExt)' == '.vcxproj' And '$(ConfigurationType)' != 'StaticLibrary'">
+
+    <PropertyGroup>
+      <PackageResourceVersion_Alt>$(PackageVersion_Major),$(PackageVersion_Minor),$(PackageResourceVersion_Build),$(PackageResourceVersion_Revision)</PackageResourceVersion_Alt>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ResourceCompile Include="$(MSBuildThisFileDirectory)\common.rc">
+        <PreprocessorDefinitions>%(PreprocessorDefinitions);GIT_VERSION_ALT=$(PackageResourceVersion_Alt);GIT_VERSION=$(PackageResourceVersion);TARGET_NAME=$(TargetFileName);PACKAGE_VERSION=$(PackageVersion)</PreprocessorDefinitions>
+        <ResourceOutputFileName>$(TargetDir)$(TargetName).res</ResourceOutputFileName>
+      </ResourceCompile>
+    </ItemGroup>
+  </Target>
+
+  <PropertyGroup>
+    <GetVsixDeploymentPathDependsOn>$(GetVsixDeploymentPathDependsOn);FixUpIntermediateVSIXManifest</GetVsixDeploymentPathDependsOn>
+    <CopyVsixManifestFileDependsOn>$(CopyVsixManifestFileDependsOn);FixUpIntermediateVSIXManifest</CopyVsixManifestFileDependsOn>
+    <GetVsixSourceItemsDependsOn>$(GetVsixSourceItemsDependsOn);FixUpIntermediateVSIXManifest</GetVsixSourceItemsDependsOn>
+  </PropertyGroup>
+
+  <Target Name="FixUpIntermediateVSIXManifest"
+          BeforeTargets="CreateVsixContainer"
+          DependsOnTargets="CalculatePackageVersion;DetokenizeVsixManifestFile"
+          Condition="'$(CreateVsixContainer)' == 'true'">
+
+    <XmlPoke XmlInputPath="$(IntermediateVsixManifest)"
+             Namespaces="&lt;Namespace Prefix='vsix' Uri='http://schemas.microsoft.com/developer/vsx-schema/2011' /&gt;"
+             Query="/vsix:PackageManifest/vsix:Metadata/vsix:Identity/@Version"
+             Value="$(PackageResourceVersion)"/>
+  </Target>
+
+  <UsingTask  
+    TaskName="WriteAssemblyInfoFile"
+    TaskFactory="CodeTaskFactory"  
+    AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.v12.0.dll" >
+    <ParameterGroup>
+      <AssemblyInfoFileFullPath  ParameterType="System.String" Required="true" />
+      <AssemblyVersion ParameterType="System.String" Required="true" />
+      <AssemblyFileVersion ParameterType="System.String" Required="true" />
+      <AssemblyInformationalVersion ParameterType="System.String" Required="true" />
+      <AssemblyTitle ParameterType="System.String" Required="true" />
+      <AssemblyDescription ParameterType="System.String" Required="true" />
+      <AssemblyCompany ParameterType="System.String" Required="true" />
+      <AssemblyCopyright ParameterType="System.String" Required="true" />
+      <AssemblyProduct ParameterType="System.String" Required="true" />
+    </ParameterGroup>
+    <Task>
+      <Reference Include="System" />
+      <Reference Include="System.IO" />
+      <Using Namespace="System" />
+      <Using Namespace="System.IO" />
+      <Code Type="Fragment" Language="cs">
+        <![CDATA[
+          var tempAssemblyInfo = string.Format(@"
+              //-------------------------------------------------------------
+              // <auto-generated>
+              //     This code was generated by MSBuild.
+              // </auto-generated>
+              //---------------------------------------------------------------
+              using System;
+              using System.Reflection;
+              [assembly: AssemblyVersion(""{0}"")]
+              [assembly: AssemblyFileVersion(""{1}"")]
+              [assembly: AssemblyInformationalVersion(""{2}"")]
+              [assembly: AssemblyTitle(""{3}"")]
+              [assembly: AssemblyDescription(""{4}"")]
+              [assembly: AssemblyCompany(""{5}"")]
+              [assembly: AssemblyCopyright(""{6}"")]
+              [assembly: AssemblyProduct(""{7}"")]",
+                      AssemblyVersion,
+                      AssemblyFileVersion,
+                      AssemblyInformationalVersion,
+                      AssemblyTitle,
+                      AssemblyDescription,
+                      AssemblyCompany,
+                      AssemblyCopyright,
+                      AssemblyProduct);
+            try
+            {
+
+                if (!File.Exists(AssemblyInfoFileFullPath) || 
+                    !tempAssemblyInfo.Equals(File.ReadAllText(AssemblyInfoFileFullPath).Trim()))
+                {
+                  File.WriteAllText(AssemblyInfoFileFullPath, tempAssemblyInfo);
+                }
+            }
+            catch (Exception)
+            {
+            }
+        ]]>
+      </Code>
+    </Task>
+  </UsingTask>
+
+  <Target Name="AddAssemblyInfo"
+          BeforeTargets="CoreCompile"
+          DependsOnTargets="CalculatePackageVersion"
+          Condition="'$(ProjectExt)' == '.csproj'">
+    <PropertyGroup>
+      <TempAssemblyInfoFileFullPath>$(IntermediateOutputPath)\$(TargetName).GeneratedAssemblyInfo.g.cs</TempAssemblyInfoFileFullPath>
+    </PropertyGroup>
+
+    <WriteAssemblyInfoFile 
+      AssemblyInfoFileFullPath="$(TempAssemblyInfoFileFullPath)"
+      AssemblyVersion="$(PackageResourceVersion)"
+      AssemblyFileVersion="$(PackageResourceVersion)"
+      AssemblyInformationalVersion="$(PackageVersion)+$(GitVersion_FullBuildMetaData)"
+      AssemblyTitle="$(TargetFileName)"
+      AssemblyDescription="https://github.com/Microsoft/WinObjC"
+      AssemblyCompany="Microsoft"
+      AssemblyCopyright="Copyright (C) Microsoft Corporation. All rights reserved."
+      AssemblyProduct="Objective-C for Windows v$(PackageVersion)"/>
+
+    <ItemGroup>
+      <Compile Include="$(TempAssemblyInfoFileFullPath)" Condition="Exists('$(TempAssemblyInfoFileFullPath)')"/>
+    </ItemGroup>
+  </Target>
+
+  <!-- Manually import this checked in NuGet instead of relying on the package itself since it is being used
+       to adjust the Restore process. If it were a normal NuGet dependency, it also would need restored which means it
+       couldn't adjust the restore process itself as it would already be too late. -->
+  <Import Project="$(MSBuildThisFileDirectory)\gitversiontask\4.0.0-beta0011\build\GitVersionTask.targets" Condition="'$(GitVersion_Task_targets_Imported)' == ''"/>
+
+</Project>

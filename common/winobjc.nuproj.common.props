@@ -7,7 +7,6 @@
     <IncludeFrameworkReferencesInPackage>false</IncludeFrameworkReferencesInPackage>
     <InferLegacyPackageReferences>false</InferLegacyPackageReferences>
     <NoPackageAnalysis>true</NoPackageAnalysis>
-    <UpdateAssemblyInfo>false</UpdateAssemblyInfo>
     <WriteVersionInfoToBuildLog>false</WriteVersionInfoToBuildLog>
     <GetPackageContentsDependsOn>ResolveReferences;$(GetPackageContentsDependsOn)</GetPackageContentsDependsOn>
   </PropertyGroup>

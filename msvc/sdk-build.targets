@@ -83,4 +83,6 @@
     </ItemGroup>    
   </Target>
 
+  <Import Project="$(MSBuildThisFileDirectory)\..\common\winobjc.versioning.common.targets"/>
+
 </Project>
