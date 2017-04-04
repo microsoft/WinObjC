@@ -172,9 +172,11 @@ static std::vector<String> getCacheFolders(const String& entitlementsPath) {
     }
 
     if (pDict) {
+        // Successfully read the entitlements file, now check for application-groups which holds folder names
         auto applicationGroups = pDict->find("com.apple.security.application-groups");
         if (applicationGroups != pDict->end()) {
             Plist::array_type* folders = boost::any_cast<Plist::array_type>(&applicationGroups->second);
+            // Read the list of folder names if they exist
             if (folders) {
                 std::vector<std::string> ret;
                 for (auto& folder : *folders) {

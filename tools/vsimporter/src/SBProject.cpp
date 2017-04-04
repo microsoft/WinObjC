@@ -16,7 +16,6 @@
 
 #include <iostream>
 #include <iterator>
-#include <memory>
 #include "types.h"
 #include "utils.h"
 #include "sbassert.h"
