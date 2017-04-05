@@ -30,7 +30,7 @@
 #include "VCProjectConfiguration.h"
 #include "..\WBITelemetry\WBITelemetry.h"
 
-std::map<String, String, SBFrameworksBuildPhase::CaseInsensitiveComparator> SBFrameworksBuildPhase::s_blockedLibraries;
+StringSet SBFrameworksBuildPhase::s_WinObjCLibraries;
 
 SBBuildPhase* SBFrameworksBuildPhase::create(const PBXBuildPhase* phase, SBTarget& parentTarget) {
     const PBXFrameworksBuildPhase* linkPhase = dynamic_cast<const PBXFrameworksBuildPhase*>(phase);
@@ -49,13 +49,13 @@ SBFrameworksBuildPhase::SBFrameworksBuildPhase(const PBXFrameworksBuildPhase* ph
         m_buildFileTargets.push_back(parentTarget.getPossibleTarget(buildFile));
     }
 
-    // Load our blocked libraries and their replacements from file if not already loaded.
-    if (s_blockedLibraries.empty()) {
-        loadFrameworkBlockListFromFile("framework-blocklist.txt");
+    // Load list of frameworks from file if not already loaded.
+    if (s_WinObjCLibraries.empty()) {
+        loadFrameworksListFromFile("frameworks.txt");
     }
 }
 
-void SBFrameworksBuildPhase::loadFrameworkBlockListFromFile(const String& fileName) {
+void SBFrameworksBuildPhase::loadFrameworksListFromFile(const String& fileName) {
     // Get the path to the file which has the block list.
     const BuildSettings bs(NULL);
     String templateDir = bs.getValue("VSIMPORTER_TEMPLATES_DIR");
@@ -63,42 +63,15 @@ void SBFrameworksBuildPhase::loadFrameworkBlockListFromFile(const String& fileNa
     // If we have reached this far the folder is guaranteed to exist as we must have already called checkWinObjCSDK().
     assert(!sb_realpath(templateDir).empty());
 
-    String blockListFilePath = joinPaths(templateDir, fileName);
-    ifstream file(blockListFilePath);
+    String frameworksListFilePath = joinPaths(templateDir, fileName);
+    ifstream file(frameworksListFilePath);
     if (file.is_open()) {
-        String line;
-        while (getline(file, line)) {
-            StringVec tokens;
-            tokenize(line, tokens, "-> ");
-            if (tokens.size() == 0) {
-                // empty line
+        String framework;
+        while (getline(file, framework)) {
+            if (strBeginsWith(framework, "#")) {
                 continue;
             }
-
-            // We do not expect more than 2 tokens per line.
-            // First is the blocked library name and possibly a second token which is the replacement library name.
-            sbValidateWithTelemetry(
-                tokens.size() <= 2,
-                "Invalid Block List. Only one blocked library and an optional replacement library separated by '->' are allowed per line");
-
-            String blockedLibrary = tokens[0];
-
-            // We may or may not have the replacement library specified.
-            String replaceWithLibrary = "";
-            if (tokens.size() > 1) {
-                replaceWithLibrary = tokens[1];
-
-                // Check if the library replacements form a cycle.
-                auto it = s_blockedLibraries.find(replaceWithLibrary);
-                while (it != s_blockedLibraries.end()) {
-                    replaceWithLibrary = it->second;
-                    sbValidateWithTelemetry(blockedLibrary != replaceWithLibrary,
-                                            blockedLibrary + " is trying to cyclically replace itself with another blocked library.");
-                    it = s_blockedLibraries.find(replaceWithLibrary);
-                }
-            }
-
-            s_blockedLibraries.insert(pair<String, String>(blockedLibrary, replaceWithLibrary));
+            s_WinObjCLibraries.insert(framework);
         }
         file.close();
     }
@@ -145,19 +118,16 @@ void SBFrameworksBuildPhase::writeVCProjectFiles(VCProject& proj) const {
         StringSet linkedLibs;
         linkedLibs.insert("%(AdditionalDependencies)");
         for (auto filePath : buildFilePaths) {
-            if (productType == TargetStaticLib && !strEndsWith(filePath, ".a"))
+            if (productType == TargetStaticLib && !strEndsWith(filePath, ".a")) {
                 continue;
+            }
 
             String winLibName = sb_fname(sb_basename(filePath)) + ".lib";
 
-            // If the library is blocked then add the replacement library to our additional dependencies
-            auto it = s_blockedLibraries.find(winLibName);
-            while (it != s_blockedLibraries.end()) {
-                // get the replacement library.
-                winLibName = it->second;
-
-                // follow any transitive replacement.
-                it = s_blockedLibraries.find(winLibName);
+            // Skip libraries from WinObjC.Frameworks and WinObjC.Frameworks.Core packages
+            // because they are already linked in the consumption targets for each package
+            if (s_WinObjCLibraries.find(winLibName) != s_WinObjCLibraries.end()) {
+                continue;
             }
 
             if (!winLibName.empty()) {
@@ -166,8 +136,8 @@ void SBFrameworksBuildPhase::writeVCProjectFiles(VCProject& proj) const {
         }
 
         // AdditionalDependencies
-        String additionalDeps = joinStrings(linkedLibs, ";");
-        if (!additionalDeps.empty()) {
+        if (linkedLibs.size() > 1) {
+            String additionalDeps = joinStrings(linkedLibs, ";");
             config->setItemDefinition(linkTarget, "AdditionalDependencies", additionalDeps);
         }
     }
