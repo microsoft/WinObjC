@@ -149,3 +149,97 @@ TEST(NSMutableSet, ShouldThrowWhenTryingToInsertNil) {
     EXPECT_ANY_THROW([set addObject:nil]);
     EXPECT_EQ(0, [set count]);
 }
+
+// Cannot be certain of order of elements so cannot compare directly with reference platform
+// The reference platform also has some unexpected behaviours when nesting collections, so we have opted for consistency
+OSX_DISABLED_TEST(NSSet, Description) {
+    NSSet* emptySet = [NSSet set];
+    EXPECT_OBJCEQ(@"{(\n)}", emptySet.description);
+    NSSet* nestedSet = [NSSet setWithObjects:[NSSet setWithObjects:@1, @[ @2, @"3", [NSSet setWithObject:@4] ], @5, nil], @"6", nil];
+    NSString* expected = @"{(\n"
+                          "        {(\n"
+                          "                (\n"
+                          "            2,\n"
+                          "            3,\n"
+                          "                        {(\n"
+                          "                4\n"
+                          "            )}\n"
+                          "        ),\n"
+                          "        1,\n"
+                          "        5\n"
+                          "    )},\n"
+                          "    6\n"
+                          ")}";
+    EXPECT_OBJCEQ(expected, nestedSet.description);
+}
+
+TEST(NSSet, MakeObjectsPerformSelector) {
+    NSSet* set = [NSSet setWithObjects:@[ @1, @2, @3 ], [NSSet setWithObjects:@4, @5, nil], @[ @6 ], nil];
+    __block NSMutableSet* otherSet = [NSMutableSet set];
+    [set makeObjectsPerformSelector:@selector(enumerateObjectsUsingBlock:)
+                         withObject:^(id obj, BOOL* stop) {
+                             [otherSet addObject:obj];
+                         }];
+
+    EXPECT_EQ(6, otherSet.count);
+    EXPECT_TRUE([otherSet containsObject:@1]);
+    EXPECT_TRUE([otherSet containsObject:@2]);
+    EXPECT_TRUE([otherSet containsObject:@3]);
+    EXPECT_TRUE([otherSet containsObject:@4]);
+    EXPECT_TRUE([otherSet containsObject:@5]);
+    EXPECT_TRUE([otherSet containsObject:@6]);
+}
+
+TEST(NSSet, ObjectsWithOptionsPassingTest) {
+    NSSet* set = [NSSet setWithObjects:@1, @2, @3, @4, @5, nil];
+
+    // Verify that the NSEnumerationConcurrent option executes the blocks concurrently
+    __block NSCondition* condition = [[NSCondition new] autorelease];
+    __block unsigned waitingCount = 0;
+    NSSet* matchingForward = [set objectsWithOptions:NSEnumerationConcurrent
+                                         passingTest:^BOOL(id obj, BOOL* stop) {
+                                             [condition lock];
+                                             waitingCount++;
+                                             if (waitingCount == 5) {
+                                                 waitingCount--;
+                                                 [condition signal];
+                                                 [condition unlock];
+                                                 return [obj unsignedIntegerValue] % 2 == 0 ? YES : NO;
+                                             }
+
+                                             [condition wait];
+                                             waitingCount--;
+                                             [condition signal];
+                                             [condition unlock];
+                                             return [obj unsignedIntegerValue] % 2 == 0 ? YES : NO;
+                                         }];
+
+    ASSERT_EQ(0, waitingCount);
+
+    NSSet* matchingReverse = [set objectsWithOptions:(NSEnumerationConcurrent | NSEnumerationReverse)
+                                         passingTest:^BOOL(id obj, BOOL* stop) {
+                                             [condition lock];
+                                             waitingCount++;
+                                             if (waitingCount == 5) {
+                                                 waitingCount--;
+                                                 [condition signal];
+                                                 [condition unlock];
+                                                 return [obj unsignedIntegerValue] % 2 == 0 ? YES : NO;
+                                             }
+
+                                             [condition wait];
+                                             waitingCount--;
+                                             [condition signal];
+                                             [condition unlock];
+                                             return [obj unsignedIntegerValue] % 2 == 0 ? YES : NO;
+                                         }];
+
+    ASSERT_EQ(0, waitingCount);
+
+    EXPECT_EQ(2, matchingForward.count);
+    EXPECT_TRUE([matchingForward containsObject:@2]);
+    EXPECT_TRUE([matchingForward containsObject:@4]);
+
+    // Effect of NSEnumerationReverse is undefined, so simply verify that the correct values are added to the set
+    EXPECT_OBJCEQ(matchingForward, matchingReverse);
+}
