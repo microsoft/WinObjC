@@ -29,12 +29,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <GetPackageContentsDependsOn>$(GetPackageContentsDependsOn);$(ComputeLinkInputsTargets)</GetPackageContentsDependsOn>
     <GetPackageContentsDependsOn Condition="'$(ConfigurationType)' == 'StaticLibrary'">$(GetPackageContentsDependsOn);FindPublicHeaders</GetPackageContentsDependsOn>
-  </PropertyGroup>
-  
-  <PropertyGroup Condition="'$(AppContainerApplication)' == 'true'">
-      <GetPackageContentsDependsOn>$(GetPackageContentsDependsOn);_GenerateProjectPriFileCore</GetPackageContentsDependsOn>
   </PropertyGroup>
 
   <!-- Add MSBuild outputs into the package -->

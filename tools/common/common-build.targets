@@ -10,10 +10,6 @@
     <PackageContentBasePath Condition="'$(ShouldAssignPackageContentBasePath)' == 'true' and '$(HasConfigurationSpecificPackageContents)' == 'true'">$(PackageContentBasePath)\$(Configuration)</PackageContentBasePath>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(ConfigurationType)' == 'DynamicLibrary' or '$(ConfigurationType)' == 'Application'">
-      <GetPackageContentsDependsOn>$(GetPackageContentsDependsOn);$(ComputeLinkInputsTargets)</GetPackageContentsDependsOn>
-  </PropertyGroup>
-
   <Target Name="AddBuiltOutput" BeforeTargets="GetPackageContents"  DependsOnTargets="$(GetPackageContentsDependsOn)" Condition="'$(ConfigurationType)' == 'DynamicLibrary' or '$(ConfigurationType)' == 'Application'">
     <ItemGroup>
       <_ImportLibraryFileNames Include="@(Link -> '%(ImportLibrary)')">

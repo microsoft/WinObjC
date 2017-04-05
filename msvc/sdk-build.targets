@@ -34,14 +34,6 @@
     <PackageContentBasePath Condition="'$(ShouldAssignPackageContentBasePath)' == 'true' and '$(HasConfigurationSpecificPackageContents)' == 'true'">$(PackageContentBasePath)\$(Configuration)</PackageContentBasePath>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(ConfigurationType)' == 'DynamicLibrary' or '$(ConfigurationType)' == 'Application'">
-      <GetPackageContentsDependsOn>$(GetPackageContentsDependsOn);$(ComputeLinkInputsTargets)</GetPackageContentsDependsOn>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(AppContainerApplication)' == 'true'">
-      <GetPackageContentsDependsOn>$(GetPackageContentsDependsOn);_GenerateProjectPriFileCore</GetPackageContentsDependsOn>
-  </PropertyGroup>
-
   <Target Name="AddBuiltOutput" BeforeTargets="GetPackageContents" DependsOnTargets="$(GetPackageContentsDependsOn)" Condition="'$(ConfigurationType)' == 'DynamicLibrary' or '$(ConfigurationType)' == 'Application'">
     <ItemGroup>
       <!-- Public include folder for project  -->
