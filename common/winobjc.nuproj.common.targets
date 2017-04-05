@@ -37,7 +37,9 @@
   </Target>
 
   <!-- 
-    In the above AddSingleConfigBuildOutput target, several properties are injected into this project so that this project knows if its being multiplexed or not. Don't pass on this extra information to project references as it can issues with MSBuild knowing if a project is already built.
+    In the above AddSingleConfigBuildOutput target, several properties are injected into this project so that this project knows 
+    if its being multiplexed or not. Don't pass on this extra information to project references as it can cause issues with MSBuild 
+    knowing if a project is already built.
   -->
   <Target Name="RemoveGlobalPropertiesFromMultiplexing" BeforeTargets="BeforeResolveReferences">
     <PropertyGroup>
@@ -46,7 +48,7 @@
     </PropertyGroup>
     <ItemGroup>
       <ProjectReference>
-        <GlobalPropertiesToRemove>%(ProjectReference.GlobalPropertiesToRemove);$(_GlobalPropertiesToRemove);;</GlobalPropertiesToRemove>
+        <GlobalPropertiesToRemove>%(ProjectReference.GlobalPropertiesToRemove);$(_GlobalPropertiesToRemove);</GlobalPropertiesToRemove>
       </ProjectReference>
     </ItemGroup>
   </Target>
