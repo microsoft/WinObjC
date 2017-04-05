@@ -35,6 +35,16 @@ Controls::Button CreateButton() {
     return objcwinrt::from_insp<Controls::Button>(inspectable);
 }
 
+FrameworkElement GetButtonLabel(const Controls::Button& button) {
+    Microsoft::WRL::ComPtr<IInspectable> inspectable(XamlGetButtonLabel(objcwinrt::to_insp(button)));
+    return objcwinrt::from_insp<FrameworkElement>(inspectable);
+}
+
+Controls::Image GetButtonImage(const Controls::Button& button) {
+    Microsoft::WRL::ComPtr<IInspectable> inspectable(XamlGetButtonImage(objcwinrt::to_insp(button)));
+    return objcwinrt::from_insp<Controls::Image>(inspectable);
+}
+
 void HookButtonPointerEvents(const Controls::Button& button,
                              const Input::PointerEventHandler& pointerPressedHook,
                              const Input::PointerEventHandler& pointerMovedHook,

@@ -204,8 +204,8 @@ static UIEdgeInsets _decodeUIEdgeInsets(NSCoder* coder, NSString* key) {
     _xamlButton.UpdateLayout();
 
     // Create our child UILabel; its frame will be updated in layoutSubviews
-    WXFrameworkElement* buttonLabel = XamlControls::GetButtonLabel(_xamlButton);
-    _titleLabel = [[UILabel alloc] initWithFrame:CGRectZero xamlElement:buttonLabel];
+    FrameworkElement buttonLabel = XamlControls::GetButtonLabel(_xamlButton);
+    _titleLabel = [[UILabel alloc] initWithFrame:CGRectZero xamlElement:objcwinrt::to_rtobj(buttonLabel)];
     _titleLabel.userInteractionEnabled = NO;
 
     // Create our child UIImageView; its frame will be updated in layoutSubviews

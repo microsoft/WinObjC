@@ -71,8 +71,8 @@ public:
 // Button
 ////////////////////////////////////////////////////////////////////////////////////
 winrt::Windows::UI::Xaml::Controls::Button CreateButton();
-WXFrameworkElement* GetButtonLabel(WXCButton* button);
-WXCImage* GetButtonImage(WXCButton* button);
+winrt::Windows::UI::Xaml::FrameworkElement GetButtonLabel(const winrt::Windows::UI::Xaml::Controls::Button& button);
+winrt::Windows::UI::Xaml::Controls::Image GetButtonImage(const winrt::Windows::UI::Xaml::Controls::Button& button);
 
 void HookButtonPointerEvents(const winrt::Windows::UI::Xaml::Controls::Button& button,
                              const winrt::Windows::UI::Xaml::Input::PointerEventHandler& pointerPressedHook,
