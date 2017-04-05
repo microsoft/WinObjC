@@ -82,7 +82,7 @@
     </MSBuild>
   </Target>
 
-    <!-- 
+  <!-- 
     In the above BuildForSinglePlatform target, several properties are injected into this project so that this project knows if its being multiplexed or not. Don't pass on this extra information to project references as it can issues with MSBuild knowing if a project is already built.
   -->
   <Target Name="RemoveGlobalPropertiesFromMultiplexing" BeforeTargets="BeforeResolveReferences" Condition="'$(ShouldCauseTestsToBuild)' == 'true'">
