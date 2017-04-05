@@ -42,12 +42,20 @@
 
   <!-- 
     In the above AddSingleConfigBuildOutput target, several properties are injected into this project so that this project knows if its being multiplexed or not. Don't pass on this extra information to project references as it can issues with MSBuild knowing if a project is already built.
+
+    Additionally, remove any .nuproj to .nuproj project references when going around the second time. This is because GetPackageContents will pass
+    through a BuildingPackage global property. This property will trigger a rebuild of the dependent nuproj's dependencies because of GetPackageContents
+    depending on ResolveReferences. This is all very confusing.
   -->
   <Target Name="RemoveGlobalPropertiesFromMultiplexing" BeforeTargets="BeforeResolveReferences" Condition="'$(SkipGetPackageContentsForOtherPlatforms)' == 'true'">
     <ItemGroup>
       <ProjectReference>
         <GlobalPropertiesToRemove>%(ProjectReference.GlobalPropertiesToRemove);SkipGetPackageContentsForOtherPlatforms;IsPackable;</GlobalPropertiesToRemove>
       </ProjectReference>
+
+      <!-- Don't evaluate nuproj to nuproj project references again in the multiplex'ed case. They were already evaluated before and nuprojs dependencies 
+           don't need multiplexed since its just ends up as a nuget dep. -->
+      <ProjectReference Remove="*.nuproj" />
     </ItemGroup>
   </Target>
 
