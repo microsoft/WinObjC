@@ -19,6 +19,7 @@
 #import <Foundation/Foundation.h>
 #import "StringHelpers.h"
 #import <utility>
+#import <type_traits>
 
 // TODO: Make RTHelpers.h includable from Objective-C++ without these gymnastics
 #ifdef __OBJC__
@@ -164,6 +165,7 @@ namespace impl {
     class callback {
     public:
         callback(const TCallable& c) : _callback(c) { }
+        callback(TCallable&& c) : _callback(std::forward<TCallable>(c)) { }
         callback(callback&& other) : _callback(std::move(other._callback)) { }
 
         // Make sure all callback operations are wrapped in an autorelease pool
@@ -175,13 +177,13 @@ namespace impl {
         }
 
     private:
-        const TCallable& _callback;
+        TCallable _callback;
     };
 }
 
 template <typename TCallable>
-impl::callback<TCallable> callback(const TCallable& c) {
-    return impl::callback<TCallable>(c);
+impl::callback<std::remove_reference_t<TCallable>> callback(TCallable&& c) {
+    return impl::callback<std::remove_reference_t<TCallable>>(std::forward<TCallable>(c));
 }
 
 }
