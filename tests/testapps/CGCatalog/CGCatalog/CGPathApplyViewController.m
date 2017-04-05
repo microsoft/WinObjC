@@ -62,7 +62,7 @@
 
         UIGraphicsBeginImageContext(comparisonImage.size);
         CGContextDrawImage(currentContext,
-                           CGRectMake(50, -300, comparisonImage.size.width, comparisonImage.size.height),
+                           CGRectMake(50, -400, comparisonImage.size.width, comparisonImage.size.height),
                            comparisonImage.CGImage);
     }];
 

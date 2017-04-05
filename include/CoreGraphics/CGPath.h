@@ -43,8 +43,8 @@ typedef CF_ENUM(CFIndex, CGLineCap) {
 };
 
 typedef CF_ENUM(CFIndex, CGLineJoin) {
-    kCGLineJoinMiter = 0, // Default
-    kCGLineJoinBevel = 3, // D2D: Miter or Bevel
+    kCGLineJoinMiter = 3, // Default = MiterOrBevel
+    kCGLineJoinBevel = 1, // D2D: Bevel
     kCGLineJoinRound = 2, // D2D: Round
 };
 
@@ -65,12 +65,8 @@ COREGRAPHICS_EXPORT CGPathRef CGPathCreateCopyByTransformingPath(CGPathRef path,
 
 COREGRAPHICS_EXPORT CGPathRef CGPathCreateCopyByDashingPath(
     CGPathRef path, const CGAffineTransform* transform, CGFloat phase, const CGFloat* lengths, size_t count) STUB_METHOD;
-COREGRAPHICS_EXPORT CGPathRef CGPathCreateCopyByStrokingPath(CGPathRef path,
-                                                             const CGAffineTransform* transform,
-                                                             CGFloat lineWidth,
-                                                             CGLineCap lineCap,
-                                                             CGLineJoin lineJoin,
-                                                             CGFloat miterLimit) STUB_METHOD;
+COREGRAPHICS_EXPORT CGPathRef CGPathCreateCopyByStrokingPath(
+    CGPathRef path, const CGAffineTransform* transform, CGFloat lineWidth, CGLineCap lineCap, CGLineJoin lineJoin, CGFloat miterLimit);
 
 COREGRAPHICS_EXPORT CGMutablePathRef CGPathCreateMutableCopy(CGPathRef path);
 

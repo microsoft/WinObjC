@@ -86,7 +86,7 @@ struct __CGContextDrawingState {
         D2D1_CAP_STYLE_FLAT,
         D2D1_CAP_STYLE_FLAT,
         D2D1_CAP_STYLE_FLAT,
-        D2D1_LINE_JOIN_MITER,
+        D2D1_LINE_JOIN_MITER_OR_BEVEL,
         10.f, // Default from Reference Docs
         D2D1_DASH_STYLE_SOLID,
         0.f,
@@ -1049,7 +1049,7 @@ void CGContextAddPath(CGContextRef context, CGPathRef path) {
     CGAffineTransform userToDeviceTransform = CGContextGetUserSpaceToDeviceSpaceTransform(context);
 
     if (!context->HasPath()) {
-        // If we don't curerntly have a path, take this one in as our own.
+        // If we don't currently have a path, take this one in as our own.
         woc::unique_cf<CGMutablePathRef> copiedPath{ CGPathCreateMutableCopyByTransformingPath(path, &userToDeviceTransform) };
         context->SetPath(copiedPath.get());
         return;
@@ -1070,10 +1070,6 @@ void CGContextReplacePathWithStrokedPath(CGContextRef context) {
 
     auto& state = context->CurrentGState();
 
-// TODO GH#xxxx When CGPathCreateCopyByStrokingPath is no longer stubbed, remove the diagnostic suppression.
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-
     woc::unique_cf<CGPathRef> newPath{
         CGPathCreateCopyByStrokingPath(context->Path(),
                                        nullptr, // The points in the path are already transformed; do not transform again!
@@ -1082,8 +1078,6 @@ void CGContextReplacePathWithStrokedPath(CGContextRef context) {
                                        (CGLineJoin)state.strokeProperties.lineJoin,
                                        state.strokeProperties.miterLimit)
     };
-
-#pragma clang diagnostic pop
 
     woc::unique_cf<CGMutablePathRef> newMutablePath{ CGPathCreateMutableCopy(newPath.get()) };
     context->SetPath(newMutablePath.get());

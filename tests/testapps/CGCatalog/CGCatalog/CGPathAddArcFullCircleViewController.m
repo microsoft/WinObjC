@@ -49,7 +49,7 @@
 
         CGPathRelease(thepath);
 
-        [super drawComparisonCGImageFromImageName:@"AddArc" intoContext:currentContext];
+        [super drawComparisonCGImageFromImageName:@"FullCircles" intoContext:currentContext];
     }];
 
     [self.view addSubview:drawView];

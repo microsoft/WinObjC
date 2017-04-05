@@ -344,11 +344,11 @@ static void _drawTest(CGContextRef context,
 
 DRAW_TEST_F(CGPath, ArcCircles_MoveToStart, UIKitMimicTest<>) {
     CGContextRef context = GetDrawingContext();
-    applyBounds = GetDrawingBounds();
-    CGFloat width = applyBounds.size.width;
-    CGFloat height = applyBounds.size.height;
-    CGFloat xstart = applyBounds.origin.x;
-    CGFloat ystart = applyBounds.origin.y;
+    CGRect drawingBounds = GetDrawingBounds();
+    CGFloat width = drawingBounds.size.width;
+    CGFloat height = drawingBounds.size.height;
+    CGFloat xstart = drawingBounds.origin.x;
+    CGFloat ystart = drawingBounds.origin.y;
 
     CGContextSetRGBFillColor(context, 0, 0, 1, 1);
     CGContextSetRGBStrokeColor(context, 1, 0, 0, 1);
@@ -368,11 +368,11 @@ DRAW_TEST_F(CGPath, ArcCircles_MoveToStart, UIKitMimicTest<>) {
 
 DRAW_TEST_F(CGPath, ArcCircles_MoveToSidePoint, UIKitMimicTest<>) {
     CGContextRef context = GetDrawingContext();
-    applyBounds = GetDrawingBounds();
-    CGFloat width = applyBounds.size.width;
-    CGFloat height = applyBounds.size.height;
-    CGFloat xstart = applyBounds.origin.x;
-    CGFloat ystart = applyBounds.origin.y;
+    CGRect drawingBounds = GetDrawingBounds();
+    CGFloat width = drawingBounds.size.width;
+    CGFloat height = drawingBounds.size.height;
+    CGFloat xstart = drawingBounds.origin.x;
+    CGFloat ystart = drawingBounds.origin.y;
 
     CGContextSetRGBFillColor(context, 0, 0, 1, 1);
     CGContextSetRGBStrokeColor(context, 1, 0, 0, 1);
@@ -392,11 +392,11 @@ DRAW_TEST_F(CGPath, ArcCircles_MoveToSidePoint, UIKitMimicTest<>) {
 
 DRAW_TEST_F(CGPath, ArcCircles_NoMove, UIKitMimicTest<>) {
     CGContextRef context = GetDrawingContext();
-    applyBounds = GetDrawingBounds();
-    CGFloat width = applyBounds.size.width;
-    CGFloat height = applyBounds.size.height;
-    CGFloat xstart = applyBounds.origin.x;
-    CGFloat ystart = applyBounds.origin.y;
+    CGRect drawingBounds = GetDrawingBounds();
+    CGFloat width = drawingBounds.size.width;
+    CGFloat height = drawingBounds.size.height;
+    CGFloat xstart = drawingBounds.origin.x;
+    CGFloat ystart = drawingBounds.origin.y;
 
     CGContextSetRGBFillColor(context, 0, 0, 1, 1);
     CGContextSetRGBStrokeColor(context, 1, 0, 0, 1);
@@ -416,11 +416,11 @@ DRAW_TEST_F(CGPath, ArcCircles_NoMove, UIKitMimicTest<>) {
 
 DRAW_TEST_F(CGPath, ArcCircles_HalfCircle, UIKitMimicTest<>) {
     CGContextRef context = GetDrawingContext();
-    applyBounds = GetDrawingBounds();
-    CGFloat width = applyBounds.size.width;
-    CGFloat height = applyBounds.size.height;
-    CGFloat xstart = applyBounds.origin.x;
-    CGFloat ystart = applyBounds.origin.y;
+    CGRect drawingBounds = GetDrawingBounds();
+    CGFloat width = drawingBounds.size.width;
+    CGFloat height = drawingBounds.size.height;
+    CGFloat xstart = drawingBounds.origin.x;
+    CGFloat ystart = drawingBounds.origin.y;
 
     CGContextSetRGBFillColor(context, 0, 0, 1, 1);
     CGContextSetRGBStrokeColor(context, 1, 0, 0, 1);
@@ -685,11 +685,11 @@ DRAW_TEST_F(CGPath, FillArcsComplex, UIKitMimicTest<>) {
 
 DRAW_TEST_F(CGPath, FillStraightLines, UIKitMimicTest<>) {
     CGContextRef context = GetDrawingContext();
-    applyBounds = GetDrawingBounds();
-    CGFloat width = applyBounds.size.width;
-    CGFloat height = applyBounds.size.height;
-    CGFloat xstart = applyBounds.origin.x;
-    CGFloat ystart = applyBounds.origin.y;
+    CGRect drawingBounds = GetDrawingBounds();
+    CGFloat width = drawingBounds.size.width;
+    CGFloat height = drawingBounds.size.height;
+    CGFloat xstart = drawingBounds.origin.x;
+    CGFloat ystart = drawingBounds.origin.y;
 
     CGMutablePathRef thepath = CGPathCreateMutable();
     CGPathMoveToPoint(thepath, NULL, xstart + .5 * width, ystart + .1 * height);
@@ -714,11 +714,11 @@ DRAW_TEST_F(CGPath, FillStraightLines, UIKitMimicTest<>) {
 
 DRAW_TEST_F(CGPath, AddLinesWithoutMove, UIKitMimicTest<>) {
     CGContextRef context = GetDrawingContext();
-    applyBounds = GetDrawingBounds();
-    CGFloat width = applyBounds.size.width;
-    CGFloat height = applyBounds.size.height;
-    CGFloat xstart = applyBounds.origin.x;
-    CGFloat ystart = applyBounds.origin.y;
+    CGRect drawingBounds = GetDrawingBounds();
+    CGFloat width = drawingBounds.size.width;
+    CGFloat height = drawingBounds.size.height;
+    CGFloat xstart = drawingBounds.origin.x;
+    CGFloat ystart = drawingBounds.origin.y;
 
     CGMutablePathRef thepath = CGPathCreateMutable();
     CGPoint points[20];

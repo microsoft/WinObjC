@@ -178,6 +178,20 @@
     </AppxManifest>
     <Xml Include="default.rd.xml" />
     <None Include="CGCatalog_TemporaryKey.pfx" />
+    <SBResourceCopy Include="..\..\CGCatalog\Resources\AddArc.png" />
+    <SBResourceCopy Include="..\..\CGCatalog\Resources\AddArcToPoint.png" />
+    <SBResourceCopy Include="..\..\CGCatalog\Resources\AddCurveToPoint.png" />
+    <SBResourceCopy Include="..\..\CGCatalog\Resources\AddElipseToRect.png" />
+    <SBResourceCopy Include="..\..\CGCatalog\Resources\AddLineToPoint.png" />
+    <SBResourceCopy Include="..\..\CGCatalog\Resources\AddPath.png" />
+    <SBResourceCopy Include="..\..\CGCatalog\Resources\AddQuadCurveToPoint.png" />
+    <SBResourceCopy Include="..\..\CGCatalog\Resources\CloseSubPath.png" />
+    <SBResourceCopy Include="..\..\CGCatalog\Resources\GetBoundingBox.png" />
+    <SBResourceCopy Include="..\..\CGCatalog\Resources\LogoAutodesk.png" />
+    <SBResourceCopy Include="..\..\CGCatalog\Resources\PathAddRect.png" />
+    <SBResourceCopy Include="..\..\CGCatalog\Resources\PathApply.png" />
+    <SBResourceCopy Include="..\..\CGCatalog\Resources\RoundedRect.png" />
+    <SBResourceCopy Include="..\..\CGCatalog\Resources\FullCircles.png" />
     <Image Include="Assets\LockScreenLogo.scale-200.png" />
     <Image Include="Assets\SplashScreen.scale-200.png" />
     <Image Include="Assets\Square150x150Logo.scale-200.png" />

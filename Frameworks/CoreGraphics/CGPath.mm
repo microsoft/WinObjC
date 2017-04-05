@@ -37,16 +37,20 @@ static const wchar_t* TAG = L"CGPath";
 
 using namespace Microsoft::WRL;
 
-class _CGPathCustomSink : public RuntimeClass<RuntimeClassFlags<RuntimeClassType::WinRtClassicComMix>, ID2D1SimplifiedGeometrySink> {
+class _CGPathCustomSink : public RuntimeClass<RuntimeClassFlags<RuntimeClassType::WinRtClassicComMix>, ID2D1GeometrySink> {
 protected:
     InspectableClass(L"Windows.Bridge.Direct2D._CGPathCustomSink", TrustLevel::BaseTrust);
 
 public:
-    ID2D1GeometrySink* GetBackingSink() {
-        return m_geometrySink.Get();
-    }
-
-    _CGPathCustomSink(_In_ ID2D1GeometrySink* sink) : m_geometrySink(sink), m_lastPoint{ 0, 0 }, m_isFigureOpen(false) {
+    _CGPathCustomSink(_In_ ID2D1GeometrySink* sink)
+        : m_geometrySink(sink),
+          m_lastPoint{ 0, 0 },
+          m_isFigureOpen(false),
+          m_allowsFigureCalls(false),
+          m_hasGeometryStarted(false),
+          m_lastClose(D2D1_FIGURE_END_CLOSED),
+          m_allowsFigureEndExceptFinal(false),
+          m_delayedEndFigure(false) {
     }
 
     STDMETHOD_(void, SetFillMode)(D2D1_FILL_MODE fillMode) {
@@ -58,25 +62,62 @@ public:
     }
 
     STDMETHOD_(void, AddLines)(_In_reads_(pointsCount) CONST D2D1_POINT_2F* points, UINT32 pointsCount) {
+        _delayedEndFigureCall();
         m_geometrySink->AddLines(points, pointsCount);
         m_lastPoint = points[pointsCount - 1];
     }
 
     STDMETHOD_(void, AddBeziers)(_In_reads_(beziersCount) CONST D2D1_BEZIER_SEGMENT* beziers, UINT32 beziersCount) {
+        _delayedEndFigureCall();
         m_geometrySink->AddBeziers(beziers, beziersCount);
         m_lastPoint = beziers[beziersCount - 1].point3;
     }
 
-    STDMETHOD_(void, BeginFigure)(D2D1_POINT_2F startPoint, D2D1_FIGURE_BEGIN figureBegin) {
-        if (m_isFigureOpen) {
-            if (startPoint.x != m_lastPoint.x || startPoint.y != m_lastPoint.y) {
-                _EndFigure(D2D1_FIGURE_END_OPEN);
-                m_geometrySink->BeginFigure(startPoint, figureBegin);
-            }
-        } else {
-            m_geometrySink->BeginFigure(startPoint, figureBegin);
-        }
+    STDMETHOD_(void, AddLine)(D2D1_POINT_2F point) {
+        _delayedEndFigureCall();
+        m_geometrySink->AddLine(point);
+        m_lastPoint = point;
+    }
+
+    STDMETHOD_(void, AddBezier)(_In_ CONST D2D1_BEZIER_SEGMENT* bezier) {
+        _delayedEndFigureCall();
+        m_geometrySink->AddBezier(bezier);
+        m_lastPoint = bezier->point3;
+    }
+
+    STDMETHOD_(void, AddQuadraticBezier)(_In_ CONST D2D1_QUADRATIC_BEZIER_SEGMENT* bezier) {
+        _delayedEndFigureCall();
+        m_geometrySink->AddQuadraticBezier(bezier);
+        m_lastPoint = bezier->point2;
+    }
+
+    STDMETHOD_(void, AddQuadraticBeziers)(_In_reads_(beziersCount) CONST D2D1_QUADRATIC_BEZIER_SEGMENT* beziers, UINT32 beziersCount) {
+        _delayedEndFigureCall();
+        m_geometrySink->AddQuadraticBeziers(beziers, beziersCount);
+        m_lastPoint = beziers[beziersCount - 1].point2;
+    }
+
+    STDMETHOD_(void, AddArc)(_In_ CONST D2D1_ARC_SEGMENT* arc) {
+        _delayedEndFigureCall();
+        m_geometrySink->AddArc(arc);
+        m_lastPoint = arc->point;
+    }
+
+    STDMETHOD_(void, _BeginFigure)(D2D1_POINT_2F startPoint, D2D1_FIGURE_BEGIN figureBegin) {
+        _delayedEndFigureCall();
+        _EndFigure(D2D1_FIGURE_END_OPEN);
+        m_geometrySink->BeginFigure(startPoint, figureBegin);
+        m_startPoint = startPoint;
+        m_lastPoint = startPoint;
+
         m_isFigureOpen = true;
+        m_hasGeometryStarted = true;
+    }
+
+    STDMETHOD_(void, BeginFigure)(D2D1_POINT_2F startPoint, D2D1_FIGURE_BEGIN figureBegin) {
+        if (m_allowsFigureCalls) {
+            _BeginFigure(startPoint, figureBegin);
+        }
     }
 
     // We are using an internal end figure call to force any simplify call to leave the figure open. Otherwise
@@ -84,16 +125,28 @@ public:
     STDMETHOD_(void, _EndFigure)(D2D1_FIGURE_END figureEnd) {
         if (m_isFigureOpen) {
             m_geometrySink->EndFigure(figureEnd);
+            m_lastClose = figureEnd;
             m_isFigureOpen = false;
+            if (figureEnd == D2D1_FIGURE_END_CLOSED) {
+                m_lastPoint = m_startPoint;
+            }
         }
     }
 
-    // EndFigure is left blank to allow any Simplify call to leave the figure open. See _EndFigure
+    // Only end the figure if we're requesting to actually close a figure, or if we have allowed the backing sink to dictate figure calls.
     STDMETHOD_(void, EndFigure)(D2D1_FIGURE_END figureEnd) {
+        if (m_allowsFigureEndExceptFinal && figureEnd != D2D1_FIGURE_END_CLOSED) {
+            m_delayedEndFigure = true;
+            m_delayedEndFigureClosure = figureEnd;
+        } else if (figureEnd == D2D1_FIGURE_END_CLOSED || m_allowsFigureCalls) {
+            _EndFigure(figureEnd);
+        }
     }
 
     STDMETHOD(_Close)() {
-        return m_geometrySink->Close();
+        HRESULT hr = m_geometrySink->Close();
+        m_geometrySink = nullptr;
+        return hr;
     }
 
     // Close is left blank to prevent any Simplify call from closing and forcing us to re-open the current path.
@@ -101,14 +154,83 @@ public:
         return S_OK;
     };
 
-    STDMETHOD_(bool, IsFigureOpen)() {
+    ID2D1GeometrySink* GetBackingSink() {
+        return m_geometrySink.Get();
+    }
+
+    void SetAllowsFigureCalls(bool allows) {
+        m_allowsFigureCalls = allows;
+    }
+
+    bool IsFigureEndClosed() {
+        return m_lastClose == D2D1_FIGURE_END_CLOSED;
+    }
+
+    bool IsSinkAvailable() {
+        return m_geometrySink != nullptr;
+    }
+
+    bool IsFigureOpen() {
         return m_isFigureOpen;
     }
 
+    bool IsGeometryStarted() {
+        return m_hasGeometryStarted;
+    }
+
+    D2D1_POINT_2F GetCurrentPoint() {
+        return m_lastPoint;
+    }
+
+    void SetCurrentPoint(D2D1_POINT_2F currentPoint) {
+        m_lastPoint = currentPoint;
+    }
+
+    D2D1_POINT_2F GetStartingPoint() {
+        return m_startPoint;
+    }
+
+    void SetStartingPoint(D2D1_POINT_2F startPoint) {
+        m_startPoint = startPoint;
+    }
+
+    void SetBackingSink(ID2D1GeometrySink* sink) {
+        m_geometrySink = sink;
+    }
+
+    void AllowAllExceptFinalEndFigure(bool allow) {
+        m_allowsFigureEndExceptFinal = allow;
+        m_delayedEndFigure = false;
+    }
+
 private:
+    void _delayedEndFigureCall() {
+        if (m_delayedEndFigure) {
+            _EndFigure(m_delayedEndFigureClosure);
+            m_delayedEndFigure = false;
+        }
+    }
+
     ComPtr<ID2D1GeometrySink> m_geometrySink;
+    // The last point this geometry has moved to.
     D2D1_POINT_2F m_lastPoint;
+    // The starting point this geometry will move to if it is closed.
+    D2D1_POINT_2F m_startPoint;
+    // Whether or not the figure is open and ready to recieve new path information
     bool m_isFigureOpen;
+    // Whether or not any geometry has been started. This can be inferred from other APIs, but those would require the geometry to be
+    // closed.
+    bool m_hasGeometryStarted;
+    // True if this geometry can end its own figures.
+    bool m_allowsFigureCalls;
+    // True if this geometry will leave it's last EndFigure call ignored.
+    bool m_allowsFigureEndExceptFinal;
+    // True when the next figure created should end the previous figure first.
+    bool m_delayedEndFigure;
+    // The figure closure type to end the last figure with.
+    D2D1_FIGURE_END m_delayedEndFigureClosure;
+    // The last figure closure type used.
+    D2D1_FIGURE_END m_lastClose;
 };
 
 static inline CGPoint __CreateCGPointWithTransform(CGFloat x, CGFloat y, const CGAffineTransform* transform) {
@@ -127,8 +249,6 @@ struct __CGPath : CoreFoundation::CppBase<__CGPath> {
     ComPtr<ID2D1PathGeometry> pathGeometry;
     ComPtr<_CGPathCustomSink> geometrySink;
 
-    CGPoint currentPoint{ 0, 0 };
-    CGPoint startingPoint{ 0, 0 };
     CGAffineTransform lastTransform;
 
     __CGPath() : lastTransform(CGAffineTransformIdentity) {
@@ -139,23 +259,36 @@ struct __CGPath : CoreFoundation::CppBase<__CGPath> {
     }
 
     ID2D1GeometrySink* GetGeometrySink() const {
-        return geometrySink->GetBackingSink();
+        return geometrySink.Get();
+    }
+
+    bool IsLastFigureEndClosed() {
+        return geometrySink->IsFigureEndClosed();
+    }
+
+    bool IsGeometryStarted() {
+        return geometrySink && geometrySink->IsGeometryStarted();
+    }
+
+    void SetAllowsFigureCalls(bool allows) {
+        geometrySink->SetAllowsFigureCalls(allows);
     }
 
     CGPoint GetCurrentPoint() const {
-        return currentPoint;
+        return _D2DPointToCGPoint(geometrySink->GetCurrentPoint());
+    }
+
+    // Only to be used by CGPathMoveToPoint to avoid copying a potentially closed geometry just to update the current point.
+    void SetCurrentPoint(CGPoint point) {
+        geometrySink->SetCurrentPoint(_CGPointToD2D_F(point));
     }
 
     CGPoint GetStartingPoint() const {
-        return startingPoint;
+        return _D2DPointToCGPoint(geometrySink->GetStartingPoint());
     }
 
-    void SetCurrentPoint(CGPoint newPoint) {
-        currentPoint = newPoint;
-    }
-
-    void SetStartingPoint(CGPoint newPoint) {
-        startingPoint = newPoint;
+    void SetStartingPoint(CGPoint point) {
+        geometrySink->SetStartingPoint(_CGPointToD2D_F(point));
     }
 
     void SetLastTransform(const CGAffineTransform* transform) {
@@ -170,6 +303,11 @@ struct __CGPath : CoreFoundation::CppBase<__CGPath> {
         return &lastTransform;
     }
 
+    void AllowAllExceptFinalEndFigure(bool allow) {
+        SetAllowsFigureCalls(allow);
+        geometrySink->AllowAllExceptFinalEndFigure(allow);
+    }
+
     // A private helper function for re-opening a path geometry. CGPath does not
     // have a concept of an open and a closed path but D2D relies on it. A
     // path/sink cannot be read from while the path is open thus it must be
@@ -177,7 +315,10 @@ struct __CGPath : CoreFoundation::CppBase<__CGPath> {
     // we must open the path again. This cannot be done normally, so we must
     // create a new path with the old path information to edit.
     HRESULT PreparePathForEditing() {
-        if (!geometrySink) {
+        if (!IsGeometryStarted() && IsSinkAvailable() && !IsLastFigureEndClosed()) {
+            RETURN_IF_FAILED(ClosePath());
+        }
+        if (!IsSinkAvailable()) {
             // Re-open this geometry.
             ComPtr<ID2D1Factory> factory;
             RETURN_IF_FAILED(_CGGetD2DFactory(&factory));
@@ -191,42 +332,27 @@ struct __CGPath : CoreFoundation::CppBase<__CGPath> {
             // reason so this will force it to do otherwise.
             RETURN_IF_FAILED(factory->CreatePathGeometry(&newPath));
             RETURN_IF_FAILED(newPath->Open(&newBackingSink));
-            RETURN_IF_FAILED(pathGeometry->Stream(newBackingSink.Get()));
-            newBackingSink->SetFillMode(D2D1_FILL_MODE_WINDING);
+
+            geometrySink->SetBackingSink(newBackingSink.Get());
+            // Allow all calls except final endfigure
+            AllowAllExceptFinalEndFigure(true);
+            RETURN_IF_FAILED(pathGeometry->Stream(geometrySink.Get()));
+            AllowAllExceptFinalEndFigure(false);
+            geometrySink->SetFillMode(D2D1_FILL_MODE_WINDING);
 
             pathGeometry = newPath;
-            geometrySink = Make<_CGPathCustomSink>(newBackingSink.Get());
         }
         return S_OK;
     }
 
+    bool IsSinkAvailable() {
+        return geometrySink && geometrySink->IsSinkAvailable();
+    }
+
     HRESULT ClosePath() {
-        if (geometrySink) {
+        if (IsSinkAvailable()) {
             EndFigure(D2D1_FIGURE_END_OPEN);
             RETURN_IF_FAILED(geometrySink->_Close());
-
-            // Walk the path to ensure proper figure tracking.
-            ComPtr<ID2D1PathGeometry> newPath;
-            ComPtr<ID2D1GeometrySink> newBackingSink;
-
-            ComPtr<ID2D1Factory> factory;
-            RETURN_IF_FAILED(_CGGetD2DFactory(&factory));
-
-            RETURN_IF_FAILED(factory->CreatePathGeometry(&newPath));
-            RETURN_IF_FAILED(newPath->Open(&newBackingSink));
-            newBackingSink->SetFillMode(D2D1_FILL_MODE_WINDING);
-
-            ComPtr<_CGPathCustomSink> customGeometrySink = Make<_CGPathCustomSink>(newBackingSink.Get());
-
-            D2D1_MATRIX_3X2_F transformation = D2D1::IdentityMatrix();
-            RETURN_IF_FAILED(
-                pathGeometry->Simplify(D2D1_GEOMETRY_SIMPLIFICATION_OPTION_CUBICS_AND_LINES, &transformation, customGeometrySink.Get()));
-
-            customGeometrySink->_EndFigure(D2D1_FIGURE_END_OPEN);
-            RETURN_IF_FAILED(customGeometrySink->_Close());
-
-            pathGeometry = newPath;
-            geometrySink = nullptr;
         }
         return S_OK;
     }
@@ -236,13 +362,13 @@ struct __CGPath : CoreFoundation::CppBase<__CGPath> {
     }
 
     void BeginFigure() {
-        if (geometrySink && !geometrySink->IsFigureOpen()) {
-            geometrySink->BeginFigure(_CGPointToD2D_F(currentPoint), D2D1_FIGURE_BEGIN_FILLED);
+        if (IsSinkAvailable() && !geometrySink->IsFigureOpen()) {
+            geometrySink->_BeginFigure(_CGPointToD2D_F(GetStartingPoint()), D2D1_FIGURE_BEGIN_FILLED);
         }
     }
 
     void EndFigure(D2D1_FIGURE_END figureStatus) {
-        if (geometrySink != nullptr && geometrySink->IsFigureOpen()) {
+        if (IsSinkAvailable() && geometrySink->IsFigureOpen()) {
             geometrySink->_EndFigure(figureStatus);
         }
     }
@@ -271,6 +397,45 @@ struct __CGPath : CoreFoundation::CppBase<__CGPath> {
         RETURN_IF_FAILED(geometry->Simplify(D2D1_GEOMETRY_SIMPLIFICATION_OPTION_CUBICS_AND_LINES, &transformation, geometrySink.Get()));
 
         SetLastTransform(transform);
+        return S_OK;
+    }
+
+    HRESULT WidenByStroking(
+        CGPathRef path, CGFloat lineWidth, CGLineCap lineCap, CGLineJoin lineJoin, CGFloat miterLimit, const CGAffineTransform* transform) {
+        RETURN_IF_FAILED(path->ClosePath());
+        ComPtr<ID2D1StrokeStyle> newStrokeStyle = NULL;
+
+        ComPtr<ID2D1Factory> factory;
+        pathGeometry->GetFactory(&factory);
+
+        ComPtr<ID2D1PathGeometry> newPath;
+        ComPtr<ID2D1GeometrySink> newBackingSink;
+        RETURN_IF_FAILED(factory->CreatePathGeometry(&newPath));
+        RETURN_IF_FAILED(newPath->Open(&newBackingSink));
+        geometrySink = Make<_CGPathCustomSink>(newBackingSink.Get());
+
+        RETURN_IF_FAILED(factory->CreateStrokeStyle(D2D1::StrokeStyleProperties((D2D1_CAP_STYLE)lineCap,
+                                                                                (D2D1_CAP_STYLE)lineCap,
+                                                                                (D2D1_CAP_STYLE)lineCap,
+                                                                                (D2D1_LINE_JOIN)lineJoin,
+                                                                                lineJoin == kCGLineJoinMiter ? miterLimit : 0,
+                                                                                D2D1_DASH_STYLE_SOLID,
+                                                                                0),
+                                                    nullptr,
+                                                    0,
+                                                    &newStrokeStyle));
+
+        D2D1_MATRIX_3X2_F d2dTransform = D2D1::IdentityMatrix();
+        if (transform) {
+            d2dTransform = __CGAffineTransformToD2D_F(*transform);
+        }
+
+        AllowAllExceptFinalEndFigure(true);
+        RETURN_IF_FAILED(path->GetPathGeometry()->Widen(lineWidth, newStrokeStyle.Get(), d2dTransform, geometrySink.Get()));
+        AllowAllExceptFinalEndFigure(false);
+
+        pathGeometry = newPath;
+
         return S_OK;
     }
 };
@@ -432,10 +597,11 @@ CGMutablePathRef CGPathCreateMutableCopy(CGPathRef path) {
     // Otherwise the D2D calls will return that a bad state has been entered.
     FAIL_FAST_IF_FAILED(path->ClosePath());
 
+    mutableRet->AllowAllExceptFinalEndFigure(true);
     FAIL_FAST_IF_FAILED(path->GetPathGeometry()->Stream(mutableRet->GetGeometrySink()));
+    mutableRet->AllowAllExceptFinalEndFigure(false);
 
     mutableRet->SetCurrentPoint(path->GetCurrentPoint());
-    mutableRet->SetStartingPoint(path->GetStartingPoint());
     mutableRet->SetLastTransform(path->GetLastTransform());
 
     return mutableRet;
@@ -445,7 +611,7 @@ CGMutablePathRef CGPathCreateMutableCopy(CGPathRef path) {
  @Status Interoperable
 */
 void CGPathAddLineToPoint(CGMutablePathRef path, const CGAffineTransform* transform, CGFloat x, CGFloat y) {
-    RETURN_IF(!path);
+    RETURN_IF(!path || !path->IsGeometryStarted());
 
     FAIL_FAST_IF_FAILED(path->PreparePathForEditing());
 
@@ -454,8 +620,6 @@ void CGPathAddLineToPoint(CGMutablePathRef path, const CGAffineTransform* transf
     path->BeginFigure();
     path->GetGeometrySink()->AddLine(_CGPointToD2D_F(pt));
     path->SetLastTransform(transform);
-
-    path->SetCurrentPoint(pt);
 }
 
 static inline CGPoint _getInvertedCurrentPointOfPath(CGPathRef path) {
@@ -505,7 +669,7 @@ static CGFloat __normalizeAngle(CGFloat originalAngle) {
 */
 void CGPathAddArcToPoint(
     CGMutablePathRef path, const CGAffineTransform* transform, CGFloat x1, CGFloat y1, CGFloat x2, CGFloat y2, CGFloat radius) {
-    RETURN_IF(!path);
+    RETURN_IF(!path || !path->IsGeometryStarted());
 
     CGPoint invertedPoint = _getInvertedCurrentPointOfPath(path);
 
@@ -561,7 +725,6 @@ void CGPathAddArcToPoint(
     if (transform) {
         endPoint = CGPointApplyAffineTransform(endPoint, *transform);
     }
-    path->SetCurrentPoint(endPoint);
 }
 
 static inline CGPoint _createCGPointOnAngle(CGFloat angle, CGFloat radius, int xOrigin, int yOrigin) {
@@ -651,7 +814,6 @@ void CGPathAddArc(CGMutablePathRef path,
     if (transform) {
         endPoint = CGPointApplyAffineTransform(endPoint, *transform);
     }
-    path->SetCurrentPoint(endPoint);
 }
 
 /**
@@ -708,16 +870,11 @@ void CGPathAddPath(CGMutablePathRef path, const CGAffineTransform* transform, CG
 
     // Close the path being added.
     FAIL_FAST_IF_FAILED(toAdd->ClosePath());
+    CGPoint newStart = toAdd->GetStartingPoint();
+    //    CGPathMoveToPoint(path, transform, newStart.x, newStart.y);
+    path->AllowAllExceptFinalEndFigure(true);
     FAIL_FAST_IF_FAILED(path->AddGeometryToPathWithTransformation(toAdd->GetPathGeometry(), transform));
-
-    CGPoint currentPoint = toAdd->GetCurrentPoint();
-    CGPoint startingPoint = toAdd->GetStartingPoint();
-    if (transform) {
-        currentPoint = CGPointApplyAffineTransform(currentPoint, *transform);
-        startingPoint = CGPointApplyAffineTransform(startingPoint, *transform);
-    }
-    path->SetStartingPoint(startingPoint);
-    path->SetCurrentPoint(currentPoint);
+    path->AllowAllExceptFinalEndFigure(false);
 }
 
 /**
@@ -737,7 +894,9 @@ void CGPathAddEllipseInRect(CGMutablePathRef path, const CGAffineTransform* tran
 
     FAIL_FAST_IF_FAILED(factory->CreateEllipseGeometry(&ellipse, &ellipseGeometry));
 
+    path->SetAllowsFigureCalls(true);
     FAIL_FAST_IF_FAILED(path->AddGeometryToPathWithTransformation(ellipseGeometry.Get(), transform));
+    path->SetAllowsFigureCalls(false);
 }
 
 /**
@@ -745,15 +904,8 @@ void CGPathAddEllipseInRect(CGMutablePathRef path, const CGAffineTransform* tran
 */
 void CGPathCloseSubpath(CGMutablePathRef path) {
     RETURN_IF(!path);
-
-    // Move the current point to the starting point since the line is closed.
-    if (!CGPointEqualToPoint(path->GetStartingPoint(), path->GetCurrentPoint())) {
-        CGPathAddLineToPoint(path, nullptr, path->GetStartingPoint().x, path->GetStartingPoint().y);
-    }
-
-    // Due to issues with streaming one geometry into another, the starting point of the D2D figure gets lost.
-    // Thus we draw our own closing line and declare the figure has ended.
-    path->EndFigure(D2D1_FIGURE_END_OPEN);
+    path->PreparePathForEditing();
+    path->EndFigure(D2D1_FIGURE_END_CLOSED);
 }
 
 namespace {
@@ -848,7 +1000,7 @@ CGPathRef CGPathRetain(CGPathRef path) {
  @Status Interoperable
 */
 void CGPathAddQuadCurveToPoint(CGMutablePathRef path, const CGAffineTransform* transform, CGFloat cpx, CGFloat cpy, CGFloat x, CGFloat y) {
-    RETURN_IF(!path);
+    RETURN_IF(!path || !path->IsGeometryStarted());
 
     CGPoint endPoint = CGPointMake(x, y);
     CGPoint controlPoint = CGPointMake(cpx, cpy);
@@ -866,7 +1018,6 @@ void CGPathAddQuadCurveToPoint(CGMutablePathRef path, const CGAffineTransform* t
     if (transform) {
         endPoint = CGPointApplyAffineTransform(endPoint, *transform);
     }
-    path->SetCurrentPoint(endPoint);
 }
 
 /**
@@ -880,7 +1031,7 @@ void CGPathAddCurveToPoint(CGMutablePathRef path,
                            CGFloat cp2y,
                            CGFloat x,
                            CGFloat y) {
-    RETURN_IF(!path);
+    RETURN_IF(!path || !path->IsGeometryStarted());
 
     CGPoint endPoint = CGPointMake(x, y);
     CGPoint controlPoint1 = CGPointMake(cp1x, cp1y);
@@ -899,7 +1050,6 @@ void CGPathAddCurveToPoint(CGMutablePathRef path,
     if (transform) {
         endPoint = CGPointApplyAffineTransform(endPoint, *transform);
     }
-    path->SetCurrentPoint(endPoint);
 }
 
 /**
@@ -978,7 +1128,9 @@ void CGPathAddRoundedRect(
 
     FAIL_FAST_IF_FAILED(factory->CreateRoundedRectangleGeometry(&roundedRectangle, &rectangleGeometry));
 
+    path->SetAllowsFigureCalls(true);
     FAIL_FAST_IF_FAILED(path->AddGeometryToPathWithTransformation(rectangleGeometry.Get(), transform));
+    path->SetAllowsFigureCalls(false);
 }
 
 /**
@@ -1022,13 +1174,23 @@ CGPathRef CGPathCreateCopyByDashingPath(
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Caveat
+ @Notes Creates a mutable copy. This API will approximate curves using straight line segments. This is simply a consequence
+        of using the Widen API.
 */
 CGPathRef CGPathCreateCopyByStrokingPath(
     CGPathRef path, const CGAffineTransform* transform, CGFloat lineWidth, CGLineCap lineCap, CGLineJoin lineJoin, CGFloat miterLimit) {
-    UNIMPLEMENTED();
-    return StubReturn();
+    RETURN_NULL_IF(!path);
+
+    // Widenening with a width of 0 removes the path entirely, thus we need to return a regular copy here.
+    if (lineWidth == 0) {
+        return CGPathCreateCopy(path);
+    }
+    CGPathRef newPath = CGPathCreateMutable();
+    FAIL_FAST_IF_FAILED(newPath->WidenByStroking(path, lineWidth, lineCap, lineJoin, miterLimit, transform));
+    newPath->SetLastTransform(path->GetLastTransform());
+
+    return newPath;
 }
 
 /**
@@ -1049,12 +1211,12 @@ CGMutablePathRef CGPathCreateMutableCopyByTransformingPath(CGPathRef path, const
         CGMutablePathRef transformedPath = CGPathCreateMutable();
         FAIL_FAST_IF_FAILED(path->ClosePath());
 
-        transformedPath->SetStartingPoint(CGPointApplyAffineTransform(path->GetStartingPoint(), *transform));
-
-        transformedPath->BeginFigure();
+        transformedPath->AllowAllExceptFinalEndFigure(true);
         FAIL_FAST_IF_FAILED(transformedPath->AddGeometryToPathWithTransformation(path->GetPathGeometry(), transform));
+        transformedPath->AllowAllExceptFinalEndFigure(false);
 
-        transformedPath->SetCurrentPoint(CGPointApplyAffineTransform(path->GetCurrentPoint(), *transform));
+        transformedPath->SetStartingPoint(path->GetStartingPoint());
+        transformedPath->SetCurrentPoint(path->GetCurrentPoint());
         transformedPath->SetLastTransform(transform);
         return transformedPath;
     }

@@ -51,7 +51,7 @@
     CGContextConcatCTM(context, shift);
 
     UIGraphicsBeginImageContext(comparisonImage.size);
-    CGContextDrawImage(context, CGRectMake(50, -300, comparisonImage.size.width, comparisonImage.size.height), comparisonImage.CGImage);
+    CGContextDrawImage(context, CGRectMake(50, -400, comparisonImage.size.width, comparisonImage.size.height), comparisonImage.CGImage);
 }
 
 - (void)loadView {
@@ -65,7 +65,7 @@
 }
 
 - (void)addComparisonLabel {
-    UILabel* comparisonText = [[UILabel alloc] initWithFrame:CGRectMake(50, 250, 200, 50)];
+    UILabel* comparisonText = [[UILabel alloc] initWithFrame:CGRectMake(50, 350, 200, 50)];
     [comparisonText setBackgroundColor:[UIColor whiteColor]];
     [comparisonText setText:@"Comparison Image"];
     [self.view addSubview:comparisonText];

@@ -248,42 +248,21 @@
     </ClangCompile>
     <SBInfoPlistCopy Include="..\..\CGCatalog\Info.plist" />
     <SBResourceCopy Include="..\..\CGCatalog\Resources\AddArc.png">
+	<SBResourceCopy Include="..\..\CGCatalog\Resources\AddArcToPoint.png">
+	<SBResourceCopy Include="..\..\CGCatalog\Resources\AddCurveToPoint.png">
+	<SBResourceCopy Include="..\..\CGCatalog\Resources\AddElipseToRect.png">
+	<SBResourceCopy Include="..\..\CGCatalog\Resources\AddLineToPoint.png">
+	<SBResourceCopy Include="..\..\CGCatalog\Resources\AddPath.png">
+	<SBResourceCopy Include="..\..\CGCatalog\Resources\AddQuadCurveToPoint.png">
+	<SBResourceCopy Include="..\..\CGCatalog\Resources\CloseSubPath.png">
+	<SBResourceCopy Include="..\..\CGCatalog\Resources\GetBoundingBox.png">
+	<SBResourceCopy Include="..\..\CGCatalog\Resources\LogoAutodesk.png">
+	<SBResourceCopy Include="..\..\CGCatalog\Resources\PathAddRect.png">
+	<SBResourceCopy Include="..\..\CGCatalog\Resources\PathApply.png">
+	<SBResourceCopy Include="..\..\CGCatalog\Resources\RoundedRect.png">
       <Filter>CGCatalog\Resources</Filter>
     </SBResourceCopy>
-    <SBResourceCopy Include="..\..\CGCatalog\Resources\AddArcToPoint.png">
-      <Filter>CGCatalog\Resources</Filter>
-    </SBResourceCopy>
-    <SBResourceCopy Include="..\..\CGCatalog\Resources\AddCurveToPoint.png">
-      <Filter>CGCatalog\Resources</Filter>
-    </SBResourceCopy>
-    <SBResourceCopy Include="..\..\CGCatalog\Resources\AddElipseToRect.png">
-      <Filter>CGCatalog\Resources</Filter>
-    </SBResourceCopy>
-    <SBResourceCopy Include="..\..\CGCatalog\Resources\AddLineToPoint.png">
-      <Filter>CGCatalog\Resources</Filter>
-    </SBResourceCopy>
-    <SBResourceCopy Include="..\..\CGCatalog\Resources\AddPath.png">
-      <Filter>CGCatalog\Resources</Filter>
-    </SBResourceCopy>
-    <SBResourceCopy Include="..\..\CGCatalog\Resources\AddQuadCurveToPoint.png">
-      <Filter>CGCatalog\Resources</Filter>
-    </SBResourceCopy>
-    <SBResourceCopy Include="..\..\CGCatalog\Resources\CloseSubPath.png">
-      <Filter>CGCatalog\Resources</Filter>
-    </SBResourceCopy>
-    <SBResourceCopy Include="..\..\CGCatalog\Resources\GetBoundingBox.png">
-      <Filter>CGCatalog\Resources</Filter>
-    </SBResourceCopy>
-    <SBResourceCopy Include="..\..\CGCatalog\Resources\LogoAutodesk.png">
-      <Filter>CGCatalog\Resources</Filter>
-    </SBResourceCopy>
-    <SBResourceCopy Include="..\..\CGCatalog\Resources\PathAddRect.png">
-      <Filter>CGCatalog\Resources</Filter>
-    </SBResourceCopy>
-    <SBResourceCopy Include="..\..\CGCatalog\Resources\PathApply.png">
-      <Filter>CGCatalog\Resources</Filter>
-    </SBResourceCopy>
-    <SBResourceCopy Include="..\..\CGCatalog\Resources\RoundedRect.png">
+    <SBResourceCopy Include="..\..\CGCatalog\Resources\FullCircles.png">
       <Filter>CGCatalog\Resources</Filter>
     </SBResourceCopy>
     <StoryboardCompile Include="..\..\CGCatalog\Resources\Launch Screen.storyboard">
