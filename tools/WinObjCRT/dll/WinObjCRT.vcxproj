@@ -58,7 +58,7 @@
     <None Include="Project.json" />
   </ItemGroup>
 
-    <Target Name="AddSingleConfigBuildOutput"  Returns="@(_PackageContentsForPlat)"> 
+    <Target Name="AddSingleConfigBuildOutput"  Returns="@(_PackageContentsForConfig)"> 
       <MSBuild Projects="$(SolutionPath)"
          Targets="GetSolutionConfigurationContents"
          Properties="Configuration=$(Configuration);Platform=$(PlatformTarget)">
@@ -70,7 +70,7 @@
       <MSBuild Projects="$(MSBuildProjectFile)"
          Targets="GetPackageContents"
          Properties="SkipGetPackageContentsForOtherConfigs=true;BuildingInsideVisualStudio=false;BuildProjectReferences=true;Configuration=$(Configuration);Platform=$(Platform);CurrentSolutionConfigurationContents=%(_SolutionConfigurationContents.Identity);GetPackageContentsDependsOn=Build;$(GetPackageContentsDependsOn);">
-        <Output TaskParameter="TargetOutputs" ItemName="_PackageContentsForPlat" />
+        <Output TaskParameter="TargetOutputs" ItemName="_PackageContentsForConfig" />
       </MSBuild>
     </Target>
 

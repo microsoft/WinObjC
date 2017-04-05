@@ -34,19 +34,16 @@
     <PackageContentBasePath Condition="'$(ShouldAssignPackageContentBasePath)' == 'true' and '$(HasConfigurationSpecificPackageContents)' == 'true'">$(PackageContentBasePath)\$(Configuration)</PackageContentBasePath>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(ConfigurationType)' == 'DynamicLibrary' or '$(ConfigurationType)' == 'Application'">
-      <GetPackageContentsDependsOn>$(GetPackageContentsDependsOn);$(ComputeLinkInputsTargets)</GetPackageContentsDependsOn>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(AppContainerApplication)' == 'true'">
-      <GetPackageContentsDependsOn>$(GetPackageContentsDependsOn);_GenerateProjectPriFileCore</GetPackageContentsDependsOn>
-  </PropertyGroup>
-
   <Target Name="AddBuiltOutput" BeforeTargets="GetPackageContents" DependsOnTargets="$(GetPackageContentsDependsOn)" Condition="'$(ConfigurationType)' == 'DynamicLibrary' or '$(ConfigurationType)' == 'Application'">
     <ItemGroup>
       <!-- Public include folder for project  -->
       <_IncludeFiles Include="$(MSBuildThisFileDirectory)..\include\$(ProjectName)\**\*.*"/>
 
+      <!-- Since GetPackageContents runs in a second pass outside of the normal build, add a tmp Link item -->
+      <Link Include="tmp" Condition="'@(Link)'==''">
+       <DeleteSoon>true</DeleteSoon>
+      </Link>
+      
       <_ImportLibraryFileNames Include="@(Link -> '%(ImportLibrary)')">
       </_ImportLibraryFileNames>
 
@@ -69,6 +66,7 @@
         <PackagePath>$(PackageContentBasePath)\%(Filename)%(Extension)</PackagePath>
       </PackageFile>
 
+      <Link Remove="@(Link)" Condition="'%(Link.DeleteSoon)'=='true'" />
     </ItemGroup>
     
     <PropertyGroup>

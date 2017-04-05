@@ -29,12 +29,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <GetPackageContentsDependsOn>$(GetPackageContentsDependsOn);$(ComputeLinkInputsTargets)</GetPackageContentsDependsOn>
     <GetPackageContentsDependsOn Condition="'$(ConfigurationType)' == 'StaticLibrary'">$(GetPackageContentsDependsOn);FindPublicHeaders</GetPackageContentsDependsOn>
-  </PropertyGroup>
-  
-  <PropertyGroup Condition="'$(AppContainerApplication)' == 'true'">
-      <GetPackageContentsDependsOn>$(GetPackageContentsDependsOn);_GenerateProjectPriFileCore</GetPackageContentsDependsOn>
   </PropertyGroup>
 
   <!-- Add MSBuild outputs into the package -->
@@ -59,8 +54,18 @@
 
     <!-- WinRT Projects -->
     <ItemGroup Condition="'$(ConfigurationType)' == 'DynamicLibrary'">
+      <!-- Since GetPackageContents runs in a second pass outside of the normal build, add a tmp Link item -->
+      <Link Include="tmp" Condition="'@(Link)'==''">
+       <DeleteSoon>true</DeleteSoon>
+      </Link>
+
       <!-- .dll -->
-      <_BuiltProjectOutputImportLib Include="@(BuiltProjectOutputGroupKeyOutput -> '%(FinalOutputPath)')" />
+      <_BuiltProjectOutputDynamicLib Include="@(BuiltProjectOutputGroupKeyOutput -> '%(FinalOutputPath)')" />
+      <PackageFile Include="@(_BuiltProjectOutputDynamicLib->Distinct())" Condition="Exists('%(FullPath)')">
+        <PackagePath>$(PackageContentBasePath)\%(Filename)%(Extension)</PackagePath>
+      </PackageFile>
+      <!-- .dll import lib -->
+      <_BuiltProjectOutputImportLib Include="@(Link -> '%(ImportLibrary)')" />
       <PackageFile Include="@(_BuiltProjectOutputImportLib->Distinct())" Condition="Exists('%(FullPath)')">
         <PackagePath>$(PackageContentBasePath)\%(Filename)%(Extension)</PackagePath>
       </PackageFile>
@@ -76,6 +81,8 @@
       <PackageFile Include="$(ProjectPriFullPath)" Condition="Exists('$(ProjectPriFullPath)') and Exists('@(WinMDFullPath)')">
         <PackagePath>$(PackageContentBasePath)\%(Filename)%(Extension)</PackagePath>
       </PackageFile>
+
+      <Link Remove="@(Link)" Condition="'%(Link.DeleteSoon)'=='true'" />
     </ItemGroup>
 
     <!-- Bundle Projects -->
