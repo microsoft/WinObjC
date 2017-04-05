@@ -9,6 +9,7 @@
     <NoPackageAnalysis>true</NoPackageAnalysis>
     <UpdateAssemblyInfo>false</UpdateAssemblyInfo>
     <WriteVersionInfoToBuildLog>false</WriteVersionInfoToBuildLog>
+    <GetPackageContentsDependsOn>ResolveReferences;$(GetPackageContentsDependsOn)</GetPackageContentsDependsOn>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -16,8 +17,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <_CoreCompileOverrideDependsOn Condition="'$(SkipGetPackageContentsForOtherPlatforms)' != 'true'">Pack</_CoreCompileOverrideDependsOn>
-    <IsPackable Condition="'$(SkipGetPackageContentsForOtherPlatforms)' != 'true'">true</IsPackable>
+    <IsPackable Condition="'$(SkipGetPackageContentsForOtherPlatforms)' == 'true'">false</IsPackable>
   </PropertyGroup>
 
 </Project>

@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
-  <Target Name="CoreCompile" DependsOnTargets="$(_CoreCompileOverrideDependsOn)" />
-
   <Target Name="AddSingleConfigBuildOutput"  Returns="@(_PackageContentsForPlat)"> 
     <MSBuild Projects="$(SolutionPath)"
        Targets="GetSolutionConfigurationContents"
@@ -14,7 +12,7 @@
 
     <MSBuild Projects="$(MSBuildProjectFile)"
        Targets="GetPackageContents"
-       Properties="SkipGetPackageContentsForOtherPlatforms=true;BuildingInsideVisualStudio=false;BuildProjectReferences=true;Configuration=$(Configuration);Platform=$(Platform);CurrentSolutionConfigurationContents=%(_SolutionConfigurationContents.Identity);GetPackageContentsDependsOn=Build;$(GetPackageContentsDependsOn)">
+       Properties="SkipGetPackageContentsForOtherPlatforms=true;BuildingInsideVisualStudio=false;BuildProjectReferences=true;Configuration=$(Configuration);Platform=$(Platform);CurrentSolutionConfigurationContents=%(_SolutionConfigurationContents.Identity);">
       <Output TaskParameter="TargetOutputs" ItemName="_PackageContentsForPlat" />
     </MSBuild>
   </Target>
@@ -38,41 +36,22 @@
 
   </Target>
 
-  <!-- Inline task to check for timestamp file existence and creation-->  
-  <UsingTask  
-    TaskName="CreateTimestampFileIfNeeded"  
-    TaskFactory="CodeTaskFactory"  
-    AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.v12.0.dll" >  
-    <ParameterGroup>
-      <TimestampFile ParameterType="System.String" Required="true" />
-      <Timestamp ParameterType="System.String" Output="true" />  
-    </ParameterGroup>
-    <Task>
-      <Reference Include="System" />
-      <Reference Include="System.IO" />
-      <Reference Include="System.Threading" />
-      <Using Namespace="System" />
-      <Using Namespace="System.IO" />
-      <Using Namespace="System.Threading" />
-      <Code Type="Fragment" Language="cs">
-        <![CDATA[
-          var mutex = new Mutex(false, TimestampFile.Replace("\\", "."));
-          try
-          {
-            mutex.WaitOne();
-          } catch (AbandonedMutexException e)
-          {
-          }
-          if (!File.Exists(TimestampFile)) {
-              File.Create(TimestampFile);
-          }  
-
-          Timestamp = File.GetCreationTimeUtc(TimestampFile).ToString("yyyyMMddHHmmss");
-          mutex.ReleaseMutex();
-        ]]>
-      </Code>
-    </Task>
-  </UsingTask>
+  <!-- 
+    In the above AddSingleConfigBuildOutput target, several properties are injected into this project so that this project knows 
+    if its being multiplexed or not. Don't pass on this extra information to project references as it can cause issues with MSBuild 
+    knowing if a project is already built.
+  -->
+  <Target Name="RemoveGlobalPropertiesFromMultiplexing" BeforeTargets="BeforeResolveReferences">
+    <PropertyGroup>
+      <_GlobalPropertiesToRemove>BuildingPackage;</_GlobalPropertiesToRemove>
+      <_GlobalPropertiesToRemove Condition="'$(SkipGetPackageContentsForOtherPlatforms)' == 'true'">$(_GlobalPropertiesToRemove);SkipGetPackageContentsForOtherPlatforms;</_GlobalPropertiesToRemove>
+    </PropertyGroup>
+    <ItemGroup>
+      <ProjectReference>
+        <GlobalPropertiesToRemove>%(ProjectReference.GlobalPropertiesToRemove);$(_GlobalPropertiesToRemove);</GlobalPropertiesToRemove>
+      </ProjectReference>
+    </ItemGroup>
+  </Target>
 
   <PropertyGroup>
     <GetPackageVersionDependsOn>SetPackageVersion;$(GetPackageVersionDependsOn);</GetPackageVersionDependsOn>
