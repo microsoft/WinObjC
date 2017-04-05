@@ -4938,7 +4938,6 @@ struct err_exception_policy {
 #import <Foundation/NSString.h>
 #import <Foundation/NSException.h>
 #import <Foundation/NSDictionary.h>
-#import "FoundationErrorHandling.h"
 
 namespace {
 static NSString* const g_winobjcDomain = @"WinObjCErrorDomain";

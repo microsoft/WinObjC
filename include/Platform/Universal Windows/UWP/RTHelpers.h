@@ -47,7 +47,8 @@
 #import <Foundation/NSArray.h>
 #import <Foundation/NSNumber.h>
 
-#include "Starboard.h"
+#include "ErrorHandling.h"
+#include "Starboard/SmartTypes.h"
 #include <UWP/interopBase.h>
 
 #if __has_feature(objc_arc)
