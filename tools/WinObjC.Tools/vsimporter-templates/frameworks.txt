@@ -51,11 +51,9 @@ StoreKit.lib
 SystemConfiguration.lib
 Twitter.lib
 UIKit.lib
-UIKit.Xaml.lib
 WebKit.lib
 # WinObjC.Frameworks.Core
 CFNetwork.lib
 CoreFoundation.lib
 Foundation.lib
 MobileCoreServices.lib
-Starboard.lib
