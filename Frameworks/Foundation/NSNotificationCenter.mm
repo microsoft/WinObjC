@@ -181,7 +181,7 @@ static const wchar_t* TAG = L"NSNotificationCenter";
             StrongId<NSMutableSet<_NSNotificationReceiver*>> nameReceivers = [_observers objectForKey:key];
             [nameReceivers minusSet:receivers];
             if ([nameReceivers count] == 0) {
-                [_observers removeObjectForKey:name];
+                [_observers removeObjectForKey:key];
             }
         }
         [copiedAllKeys release];
@@ -209,10 +209,17 @@ static const wchar_t* TAG = L"NSNotificationCenter";
  @Status Interoperable
 */
 - (void)postNotification:(NSNotification*)notification {
+    if (!notification) {
+        [NSException raise:NSInvalidArgumentException format:@"%hs: Notification cannot be nil", __PRETTY_FUNCTION__];
+        return;
+    }
+
     NSString* name = [notification name];
 
     // This method does not use _receiversForName:(...) above as it treats a nil _notification_ sender as a wildcard.
     // We want to treat a nil _receiver_ sender as a wildcard.
+    // We'd like to avoid using autoreleased objects here: since a notification can be dispatched against a deallocating
+    // object, tight control over its lifetime is required.
     std::vector<StrongId<_NSNotificationReceiver>> validReceivers{ 0 };
     @synchronized(self) {
         NSMutableSet<_NSNotificationReceiver*>* receivers = [self _receiverSetForNotificationName:name createIfMissing:NO];
@@ -220,11 +227,13 @@ static const wchar_t* TAG = L"NSNotificationCenter";
             return;
         }
 
-        NSObject* sender = [notification object];
-        validReceivers.reserve([receivers count]);
-        for (_NSNotificationReceiver* receiver in receivers) {
-            if (receiver->sender == nil || receiver->sender == sender) {
-                validReceivers.emplace_back(receiver);
+        @autoreleasepool { // If the NSNotification subclass's object getter autoreleases object, catch it in this pool.
+            NSObject* sender = [notification object];
+            validReceivers.reserve([receivers count]);
+            for (_NSNotificationReceiver* receiver in receivers) {
+                if (receiver->sender == nil || receiver->sender == sender) {
+                    validReceivers.emplace_back(receiver);
+                }
             }
         }
     }
@@ -240,12 +249,15 @@ static const wchar_t* TAG = L"NSNotificationCenter";
 
 - (void)_addObserver:(id)observer selector:(SEL)selector name:(NSString*)name object:(id)object withOwningReference:(BOOL)owningReference {
     if (!name || !observer || !selector) {
+        if (owningReference) {
+            [observer release];
+        }
         return;
     }
 
     _NSNotificationReceiver* newReceiver = [_NSNotificationReceiver new];
 
-    newReceiver->observer = observer; // If owningReference, observer bears a +1 internal retain count.
+    newReceiver->observer = observer; // If owningReference, observer already bears a +1 internal retain count.
     newReceiver->ownsObserver = owningReference;
     newReceiver->selector = selector;
     newReceiver->sender = object;
@@ -272,11 +284,17 @@ static const wchar_t* TAG = L"NSNotificationCenter";
                             object:(id)object
                              queue:(NSOperationQueue*)queue
                         usingBlock:(void (^)(NSNotification*))block {
+    if (!block) {
+        [NSException raise:NSInvalidArgumentException format:@"%hs: Block cannot be nil", __PRETTY_FUNCTION__];
+        return nil;
+    }
+
     // The documentation states that this method returns an opaque object that acts as the observer, and
     // the returned observer should be able to be removed with `removeObserver:`.
     // To make that work, we must register this observer object just like a normal observer.
-    _NSNotificationBlockObserver* blockObserver = [[_NSNotificationBlockObserver alloc] initWithBlock:block queue:queue];
-    [self _addObserver:blockObserver selector:@selector(invokeWithNotification:) name:name object:object withOwningReference:YES];
+    _NSNotificationBlockObserver* blockObserver = [[[_NSNotificationBlockObserver alloc] initWithBlock:block queue:queue] autorelease];
+    // blockObserver's new +1 reference is consumed by the notification receiver, indicated by withOwningReference:YES.
+    [self _addObserver:[blockObserver retain] selector:@selector(invokeWithNotification:) name:name object:object withOwningReference:YES];
     return blockObserver;
 }
 

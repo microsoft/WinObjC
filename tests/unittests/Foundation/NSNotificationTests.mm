@@ -393,6 +393,8 @@ TEST(NSNotificationCenter, ContentiousDelivery) {
 
     dispatch_group_wait(group, DISPATCH_TIME_FOREVER); // Wait for completion.
 
+    // Between 0 and 10000 notifications should have fired; this stress test simply proves that we can manipulate the three states
+    // simultaneously.
     EXPECT_LT(0, observer.totalHits);
     ASSERT_GE(100 * 100, observer.totalHits);
 }
@@ -475,4 +477,16 @@ TEST(NSNotificationCenter, ManuallyCreatedNotification) {
 
     [notificationCenter postNotification:notification];
     ASSERT_EQ(1, counter);
+}
+
+TEST(NSNotificationCenter, InvalidStates) {
+    static NSString* s_TestNotificationName = @(GetTestFullName().c_str());
+    NSNotificationCenter* notificationCenter = [[NSNotificationCenter new] autorelease];
+
+    EXPECT_NO_THROW([notificationCenter postNotificationName:nil object:nil]);
+    // It looks like adding an observer for a nil notification _does_ return an observation token.
+    EXPECT_OBJCNE(nil, [notificationCenter addObserverForName:nil object:nil queue:nil usingBlock:^(id){}]);
+    EXPECT_ANY_THROW([notificationCenter addObserverForName:nil object:nil queue:nil usingBlock:nil]);
+    EXPECT_ANY_THROW([notificationCenter addObserverForName:s_TestNotificationName object:nil queue:nil usingBlock:nil]);
+    EXPECT_ANY_THROW([notificationCenter postNotification:nil]);
 }
