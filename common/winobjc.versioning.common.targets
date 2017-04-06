@@ -81,15 +81,19 @@
     </PropertyGroup>
 
     <PropertyGroup Condition="$([System.UInt64]::Parse($(PackageVersion_Patch))) &gt; $([MSBuild]::Subtract($([System.UInt16]::MaxValue), '1'))">
-      <PackageResourceVersion_Build>$(PackageVersion_Patch.Substring(0,4))</PackageResourceVersion_Build>
-      <PackageResourceVersion_Revision>$(PackageVersion_Patch.Substring(4))</PackageResourceVersion_Revision>
+      <PackageAssemblyVersion_Build>$(PackageVersion_Patch.Substring(0,4))</PackageAssemblyVersion_Build>
+      <PackageAssemblyVersion_Revision>$(PackageVersion_Patch.Substring(4))</PackageAssemblyVersion_Revision>
     </PropertyGroup>
 
     <PropertyGroup>
-      <PackageResourceVersion_Build Condition="'$(PackageResourceVersion_Build)' == ''">$(PackageVersion_Patch)</PackageResourceVersion_Build>
-      <PackageResourceVersion_Revision Condition="'$(PackageResourceVersion_Revision)' == ''">0</PackageResourceVersion_Revision>
+      <PackageAssemblyVersion_Build Condition="'$(PackageAssemblyVersion_Build)' == ''">$(PackageVersion_Patch)</PackageAssemblyVersion_Build>
+      <PackageAssemblyVersion_Revision Condition="'$(PackageAssemblyVersion_Revision)' == ''">0</PackageAssemblyVersion_Revision>
 
-      <PackageResourceVersion>$(PackageVersion_Major).$(PackageVersion_Minor).$(PackageResourceVersion_Build).$(PackageResourceVersion_Revision)</PackageResourceVersion>
+      <PackageAssemblyVersion>$(PackageVersion_Major).$(PackageVersion_Minor).$(PackageAssemblyVersion_Build).$(PackageAssemblyVersion_Revision)</PackageAssemblyVersion>
+      <PackageAssemblyDescription>https://github.com/Microsoft/WinObjC</PackageAssemblyDescription>
+      <PackageAssemblyCompany>Microsoft</PackageAssemblyCompany>
+      <PackageAssemblyCopyright>Copyright (C) Microsoft. All rights reserved</PackageAssemblyCopyright>
+      <PackageAssemblyProduct>Objective-C for Windows v$(PackageVersion)</PackageAssemblyProduct>
     </PropertyGroup>
   </Target>
 
@@ -105,12 +109,12 @@
           Condition="'$(ProjectExt)' == '.vcxproj' And '$(ConfigurationType)' != 'StaticLibrary'">
 
     <PropertyGroup>
-      <PackageResourceVersion_Alt>$(PackageVersion_Major),$(PackageVersion_Minor),$(PackageResourceVersion_Build),$(PackageResourceVersion_Revision)</PackageResourceVersion_Alt>
+      <PackageAssemblyVersion_Alt>$(PackageVersion_Major),$(PackageVersion_Minor),$(PackageAssemblyVersion_Build),$(PackageAssemblyVersion_Revision)</PackageAssemblyVersion_Alt>
     </PropertyGroup>
 
     <ItemGroup>
       <ResourceCompile Include="$(MSBuildThisFileDirectory)\common.rc">
-        <PreprocessorDefinitions>%(PreprocessorDefinitions);GIT_VERSION_ALT=$(PackageResourceVersion_Alt);GIT_VERSION=$(PackageResourceVersion);TARGET_NAME=$(TargetFileName);PACKAGE_VERSION=$(PackageVersion)</PreprocessorDefinitions>
+        <PreprocessorDefinitions>%(PreprocessorDefinitions);GIT_VERSION_ALT=$(PackageAssemblyVersion_Alt);GIT_VERSION=$(PackageAssemblyVersion);TARGET_NAME=$(TargetFileName);ASSEMBLY_COMPANY=$(PackageAssemblyCompany);ASSEMBLY_COPYRIGHT=$(PackageAssemblyCopyright);ASSEMBLY_PRODUCT=$(PackageAssemblyProduct);ASSEMBLY_DESCRIPTION=$(PackageAssemblyDescription)</PreprocessorDefinitions>
         <ResourceOutputFileName>$(TargetDir)$(TargetName).res</ResourceOutputFileName>
       </ResourceCompile>
     </ItemGroup>
@@ -139,7 +143,7 @@
     <XmlPoke XmlInputPath="$(IntermediateVsixManifest)"
              Namespaces="&lt;Namespace Prefix='vsix' Uri='http://schemas.microsoft.com/developer/vsx-schema/2011' /&gt;"
              Query="/vsix:PackageManifest/vsix:Metadata/vsix:Identity/@Version"
-             Value="$(PackageResourceVersion)"/>
+             Value="$(PackageAssemblyVersion)"/>
   </Target>
 
 
@@ -223,14 +227,14 @@
 
     <WriteAssemblyInfoFile 
       AssemblyInfoFileFullPath="$(TempAssemblyInfoFileFullPath)"
-      AssemblyVersion="$(PackageResourceVersion)"
-      AssemblyFileVersion="$(PackageResourceVersion)"
+      AssemblyVersion="$(PackageAssemblyVersion)"
+      AssemblyFileVersion="$(PackageAssemblyVersion)"
       AssemblyInformationalVersion="$(PackageVersion)+$(GitVersion_FullBuildMetaData)"
       AssemblyTitle="$(TargetFileName)"
-      AssemblyDescription="https://github.com/Microsoft/WinObjC"
-      AssemblyCompany="Microsoft"
-      AssemblyCopyright="Copyright (C) Microsoft Corporation. All rights reserved."
-      AssemblyProduct="Objective-C for Windows v$(PackageVersion)"/>
+      AssemblyDescription="$(PackageAssemblyDescription)"
+      AssemblyCompany="$(PackageAssemblyCompany)"
+      AssemblyCopyright="$(PackageAssemblyCopyright)"
+      AssemblyProduct="$(PackageAssemblyProduct)"/>
 
     <ItemGroup>
       <Compile Include="$(TempAssemblyInfoFileFullPath)" Condition="Exists('$(TempAssemblyInfoFileFullPath)')"/>
