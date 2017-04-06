@@ -11,7 +11,6 @@
     <!-- NuGet specific properties -->
     <IncludeOutputsInPackage>false</IncludeOutputsInPackage>
     <IncludeContentInPackage>false</IncludeContentInPackage>
-    <IncludeFrameworkReferencesInPackage>false</IncludeFrameworkReferencesInPackage>
 
     <!-- Packaging defaults from WinObjC.Packaging -->
     <IncludeDefaultPackageContents Condition="'$(IncludeDefaultPackageContents)' == ''">true</IncludeDefaultPackageContents>

@@ -16,7 +16,5 @@
 
     <!-- WinObjC.Packaging specific properties -->
     <PresetPackageContents Condition="'$(PresetPackageContents)' == ''">true</PresetPackageContents>
-
-    <GetPackageContentsDependsOn>ResolveReferences;$(GetPackageContentsDependsOn)</GetPackageContentsDependsOn>
   </PropertyGroup>
 </Project>

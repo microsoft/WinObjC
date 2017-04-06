@@ -48,7 +48,7 @@
 
   <!-- This is where the fun starts. Any custom generic msbuild project goop goes here. -->
   <ItemGroup>
-    <!-- Add the nuprojs as project reference under AnyCPU so there isn't parallel contention to build the same project. 
+    <!-- Add the nuprojs as project reference under AnyCPU so there isn't parallel contention to build thge same project. 
          Since this project and the .nuprojs do build multiplexing internally, separate processes could wind up building
          frameworks at the same time. This is avoided by causing the nuprojs to be built first and getting that multiplexing out of the way. -->
     <ProjectReference Condition="'$(Platform)' == 'AnyCPU'" Include="$(SolutionDir)\**\*.nuproj" />
@@ -81,18 +81,4 @@
          Properties="Platform=%(_PlatformToBuild.Identity)">
     </MSBuild>
   </Target>
-
-  <!-- 
-    In the above BuildForSinglePlatform target, several properties are injected into this project so that this project knows 
-    if its being multiplexed or not. Don't pass on this extra information to project references as it can cause issues with MSBuild 
-    knowing if a project is already built.
-  -->
-  <Target Name="RemoveGlobalPropertiesFromMultiplexing" BeforeTargets="BeforeResolveReferences" Condition="'$(ShouldCauseTestsToBuild)' == 'true'">
-    <ItemGroup>
-      <ProjectReference>
-        <GlobalPropertiesToRemove>%(ProjectReference.GlobalPropertiesToRemove);ShouldCauseTestsToBuild;</GlobalPropertiesToRemove>
-      </ProjectReference>
-    </ItemGroup>
-  </Target>
-
 </Project>

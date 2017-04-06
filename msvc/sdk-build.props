@@ -35,7 +35,6 @@
     <WindowsTargetPlatformMinVersion Condition="'$(WindowsTargetPlatformMinVersion)'==''">10.0.10586.0</WindowsTargetPlatformMinVersion>
     <EnableDotNetNativeCompatibleProfile Condition="'$(EnableDotNetNativeCompatibleProfile)'==''">true</EnableDotNetNativeCompatibleProfile>
     <IncludeOutputsInPackage>false</IncludeOutputsInPackage>
-    <IncludeFrameworkReferencesInPackage>false</IncludeFrameworkReferencesInPackage>
     <TargetOsAndVersion Condition="'$(TargetOsAndVersion)' == ''">Universal Windows</TargetOsAndVersion>
     <TargetFramework>uap10.0</TargetFramework>
   </PropertyGroup>
