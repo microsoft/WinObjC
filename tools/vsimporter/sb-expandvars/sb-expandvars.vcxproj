@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildThisFileDirectory)\..\..\common\tools-build.props"/>
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
@@ -129,11 +130,5 @@
       </PackageFile>
     </ItemGroup>
   </Target>
-  <ItemDefinitionGroup>
-    <!-- Design Time is annoying and uses a different output item group to return this. Also adjust nugetizer metadata injection here. -->
-    <_MainProjectOutput>
-      <IsPackable>$(IsPackable)</IsPackable>
-      <IsNuGetized>$(IsNuGetized)</IsNuGetized>
-    </_MainProjectOutput>
-  </ItemDefinitionGroup>
+  <Import Project="$(MSBuildThisFileDirectory)\..\..\common\tools-build.targets"/>
 </Project>
