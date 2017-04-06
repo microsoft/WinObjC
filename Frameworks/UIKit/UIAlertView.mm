@@ -440,8 +440,9 @@ static void hideAlert(UIAlertView* self, int index, BOOL animated) {
         curHeight += 10.0f;
     }
 
-    UIView* popupWindow = [[UIApplication sharedApplication] _popupLayer];
-    [[popupWindow superview] bringSubviewToFront:popupWindow];
+    // Grab the _popupWindow
+    // TODO: Switch this over to a Xaml ContentDialog so we don't need the extra _popupWindow
+    UIView* popupWindow = (UIView*)[[UIApplication sharedApplication] _popupWindow];
 
     CGRect fullScreen;
     fullScreen = [popupWindow bounds];

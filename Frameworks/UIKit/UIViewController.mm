@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -1437,25 +1437,8 @@ NSMutableDictionary* _pageMappings;
     UIWindow* parentWindow = [parentView window];
 
     if (parentWindow == nil) {
-        /*
-            This is a workaround for VSO 5794762.
-            Right now, every application has a popup window at level 100000. If we
-            naively try to present into it, we'll bifurcate the application UI across
-            two different stacked windows and break touch event handling.
-
-            Mitigate that by avoiding the application's popup window when looking for the
-            topmost window.
-        */
-        UIWindow* applicationPopupWindow = [[UIApplication sharedApplication] _popupWindow];
-        NSArray* windows = [[UIApplication sharedApplication] windows];
-        NSUInteger index = [windows count] - 1;
-        UIWindow* window = nil;
-        do {
-            window = [windows objectAtIndex:index];
-            index--;
-        } while (window == applicationPopupWindow);
-
-        parentWindow = window;
+        TraceWarning(TAG, L"[parentView window] unexpectedly returned nil!  Defaulting to the application's keyWindow.");
+        parentWindow = [[UIApplication sharedApplication] keyWindow];
     }
 
     g_presentingAnimated = animated;

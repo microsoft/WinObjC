@@ -24,8 +24,6 @@
 #import "UITabPane.h"
 #import "UIViewControllerInternal.h"
 
-extern float statusBarHeight;
-
 @implementation UITabPane : UIView
 
 - (instancetype)initWithFrame:(CGRect)frame {
@@ -73,13 +71,7 @@ extern float statusBarHeight;
 
     CGRect bounds;
     bounds = [self bounds];
-
-    if (![[UIApplication sharedApplication] isStatusBarHidden] && ![_curController wantsFullScreenLayout]) {
-        bounds.origin.y = statusBarHeight;
-        bounds.size.height -= statusBarHeight;
-    } else {
-        bounds.origin.y = 0;
-    }
+    bounds.origin.y = 0;
 
     _curControllerView = [_curController view];
 

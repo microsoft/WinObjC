@@ -16,6 +16,7 @@
 
 #import "Starboard.h"
 #import <StubReturn.h>
+#import "AssertARCEnabled.h"
 
 #include "Platform/EbrPlatform.h"
 
@@ -50,49 +51,26 @@
 #include "UIKit/UIGestureRecognizerSubclass.h"
 #include "UIGestureRecognizerInternal.h"
 #include "UIWindowInternal.h"
-#include "UILocalNotificationInternal.h"
 #include "CALayerInternal.h"
 #include "CATransactionInternal.h"
 #include "UIResponderInternal.h"
 #include "UITouchInternal.h"
 #include "UIEventInternal.h"
+#include "UWP/WindowsGraphicsDisplay.h"
+#include "UWP/WindowsSystemDisplay.h"
 #include "UrlLauncher.h"
-#include "StringHelpers.h"
-
-#include "UIEmptyView.h"
 
 #include "UIInterface.h"
 
-#include "COMIncludes.h"
-#import "winrt/Windows.System.Display.h"
-#include "COMIncludes_End.h"
+#include "UWP/WindowsUICore.h"
+#include "UWP/WindowsUINotifications.h"
 
 #include "LoggingNative.h"
 #include "UIApplicationMainInternal.h"
 #import "StarboardXaml/DisplayProperties.h"
 #import "StarboardXaml/UWPBackgroundTask.h"
 
-using winrt::Windows::System::Display::DisplayRequest;
-using winrt::Windows::Media::SpeechRecognition::SpeechRecognitionResult;
-using winrt::Windows::ApplicationModel::Activation::FileActivatedEventArgs;
-using winrt::Windows::Foundation::Uri;
-
 static const wchar_t* TAG = L"UIApplication";
-
-@interface UIKeyboardRotationView : UIView
-@end
-
-@implementation UIKeyboardRotationView
-- (UIView*)hitTest:(CGPoint)point withEvent:(UIEvent*)event {
-    UIView* ret = [super hitTest:point withEvent:event];
-
-    if (ret == self) {
-        return nil;
-    }
-
-    return ret;
-}
-@end
 
 const NSTimeInterval UIMinimumKeepAliveTimeout = StubConstant();
 const UIBackgroundTaskIdentifier UIBackgroundTaskInvalid = NSUIntegerMax;
@@ -173,38 +151,18 @@ NSString* const UIContentSizeCategoryDidChangeNotification = @"UIContentSizeCate
 const NSTimeInterval UIApplicationBackgroundFetchIntervalMinimum = StubConstant();
 const NSTimeInterval UIApplicationBackgroundFetchIntervalNever = StubConstant();
 
-float statusBarHeight = 20.0f;
-static UIInterfaceOrientation _curOrientation = UIInterfaceOrientationPortrait;
-static UIInterfaceOrientation _internalOrientation = UIInterfaceOrientationPortrait;
-extern int requestDeviceOrientation;
 extern UIWindow* _curKeyWindow;
-
 NSArray<UIWindow*>* g_windows;
-UIWindow* popupWindow;
+
+// TODO: #2443 Remove _popupWindow (and all references to it) when we move UIAlertView over to Xaml
+UIWindow* g_popupWindow;
+
 UIApplication* sharedApplication;
-int showKeyboard, forceHideKeyboard;
-static int curKeyboardType, showKeyboardType;
-bool keyboardVisible;
-CGRect keyboardRect;
-UIView* _blankView;
-static bool blankViewUp = false;
-static float curBlankViewHeight = 0.0f;
-static bool doEvaluateKeyboard = false;
-
-// Right now it's expected that the user sets this when they want otherwise:
-float keyboardBaseHeight = 200, keyboardPhysicalHeight = 0;
-
-static UIEdgeInsets _statusBarInsets;
 
 BOOL refreshPending = FALSE;
 NSRunLoopSource* shutdownEvent;
-UIImageView* statusBar;
-UIView* statusBarRotationLayer;
-UIView* popupRotationLayer;
-BOOL statusBarHidden = FALSE;
+
 unsigned ignoringInteractionEvents = 0;
-BOOL idleDisabled = FALSE;
-extern BOOL _doShutdown;
 EbrEvent g_shutdownEvent;
 extern id _curFirstResponder;
 
@@ -213,11 +171,8 @@ UIApplicationState _applicationState = UIApplicationStateInactive;
 // Used to query for Url scheme handlers or launch an app with a Url
 UrlLauncher* _launcher;
 
-static UIView *_curKeyboardAccessory, *_curKeyboardInputView;
-
-static idretaintype(NSMutableArray) _curNotifications;
-
-static DisplayRequest _screenActive(nullptr);
+static idretaintype(WSDDisplayRequest) _screenActive;
+BOOL idleDisabled = FALSE;
 
 @implementation UIApplication {
     id _delegate;
@@ -242,7 +197,7 @@ static DisplayRequest _screenActive(nullptr);
     [[NSRunLoop mainRunLoop] _addInputSource:shutdownEvent forMode:@"kCFRunLoopDefaultMode"];
     [[NSRunLoop mainRunLoop] _addObserver:sharedApplication forMode:@"kCFRunLoopDefaultMode"];
 
-    // TODO: This will be revisited when we sort out our WinRT navigation integration model
+    // TODO: #2442 This will be revisited when we sort out our WinRT navigation integration model
     // Subscribe to back button events
     // Note: This method may be called from UnitTests, so make sure we don't fall over if we're not running from within a UWP.
     if ([WUCCoreWindow getForCurrentThread]) {
@@ -255,8 +210,7 @@ static DisplayRequest _screenActive(nullptr);
 }
 
 - (void)_destroy {
-    [popupWindow _destroy];
-    popupWindow = nil;
+    g_popupWindow = nil;
     sharedApplication = nil;
 
     [[NSRunLoop mainRunLoop] _removeObserver:sharedApplication forMode:@"kCFRunLoopDefaultMode"];
@@ -266,27 +220,14 @@ static DisplayRequest _screenActive(nullptr);
     if ([NSThread currentThread] != [NSThread mainThread]) {
         return;
     }
+
     if (_applicationState == UIApplicationStateBackground) {
         return;
     }
 
     if (activity & kCFRunLoopBeforeTimers) {
-        //  Always evaluate keyboard if it's diplayed - properties can change
-        if (doEvaluateKeyboard || blankViewUp) {
-            doEvaluateKeyboard = false;
-            evaluateKeyboard(self);
-        }
         if (refreshPending) {
             refreshPending = FALSE;
-
-            if (curKeyboardType != showKeyboardType) {
-                curKeyboardType = showKeyboardType;
-            }
-            if (forceHideKeyboard == 0 && showKeyboard > 0 && keyboardVisible == false) {
-                keyboardVisible = true;
-            } else if ((forceHideKeyboard > 0 || showKeyboard == 0) && keyboardVisible == true) {
-                keyboardVisible = false;
-            }
 
             for (UIWindow* window in g_windows) {
                 [[window layer] _displayChanged];
@@ -309,34 +250,9 @@ static id findTopActionButtons(NSMutableArray* arr, NSArray* windows, UIView* ro
     for (int i = count - 1; i >= 0; i--) {
         UIView* curView = [subviews objectAtIndex:i];
         findTopActionButtons(arr, windows, curView);
-        if ([curView isHidden]) {
-            continue;
-        }
 
-        if (curView->_backButtonDelegate != nil) {
-            CGRect bounds;
-            bounds = [curView bounds];
-
-            CGPoint middle;
-            int windowCount = [windows count];
-
-            for (int j = windowCount - 1; j >= 0; j--) {
-                UIWindow* curWindow = [windows objectAtIndex:j];
-
-                middle.x = bounds.origin.x + bounds.size.width / 2.0f;
-                middle.y = bounds.origin.y + bounds.size.height / 2.0f;
-                middle = [curView convertPoint:middle toView:nil];
-                middle = [curWindow convertPoint:middle fromView:nil toView:curWindow];
-
-                id pointView = [curWindow hitTest:middle withEvent:nil];
-
-                if (pointView == curView || [pointView isDescendantOfView:curView]) {
-                    [arr addObject:curView];
-                    break;
-                } else if (pointView != nil && pointView != curWindow) {
-                    break;
-                }
-            }
+        if (![curView isHidden] && (curView->_backButtonDelegate != nil)) {
+           [arr addObject:curView];
         }
     }
 
@@ -368,11 +284,9 @@ static int __EbrSortViewPriorities(id val1, id val2, void* context) {
 
     bool wasHandled = false;
 
-    id allActionButtons = [NSMutableArray new];
-
+    NSMutableArray* allActionButtons = [NSMutableArray new];
     for (int i = count - 1; i >= 0 && !wasHandled; i--) {
         id window = [windows objectAtIndex:i];
-
         findTopActionButtons(allActionButtons, windows, window);
     }
     [allActionButtons sortUsingFunction:__EbrSortViewPriorities context:0];
@@ -391,16 +305,6 @@ static int __EbrSortViewPriorities(id val1, id val2, void* context) {
         if (buttonHandled || !curView->_backButtonReturnsSuccess) {
             wasHandled = true;
             break;
-        }
-    }
-
-    [allActionButtons release];
-
-    if (!wasHandled) {
-        // Not handled by any of the windows, try sending a message about it:
-        id appDelegate = [[self sharedApplication] delegate];
-        if ([appDelegate respondsToSelector:@selector(applicationBackButtonPressed:)]) {
-            [appDelegate performSelector:@selector(applicationBackButtonPressed:) withObject:nil];
         }
     }
 
@@ -428,63 +332,73 @@ static int __EbrSortViewPriorities(id val1, id val2, void* context) {
 }
 
 /**
- @Status Stub
+ @Status NotInPlan
 */
 - (void)scheduleLocalNotification:(UILocalNotification*)n {
     UNIMPLEMENTED();
-    [n _setReceiver:self];
-    int idx = [_curNotifications indexOfObject:n];
-    if (idx == NSNotFound) {
-        [_curNotifications addObject:n];
-    }
-}
-
-- (void)_receiveAlarm:(id)localNotification {
-    int idx = [_curNotifications indexOfObject:localNotification];
-    if (idx == NSNotFound) {
-        return; // probably deleted.
-    }
-
-    UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"Alert"
-                                                    message:[localNotification alertBody]
-                                                   delegate:nil
-                                          cancelButtonTitle:[localNotification alertAction]
-                                          otherButtonTitles:nil];
-
-    [alert show];
-    [alert release];
-
-    [_curNotifications removeObjectAtIndex:(unsigned long)idx];
-    [localNotification release];
 }
 
 /**
- @Status Interoperable
+ @Status NotInPlan
+ @Notes UWP status bar can be directly accessed via WinRT APIs, and will eventually be supported via UIViewController APIs.
 */
 - (void)setStatusBarHidden:(BOOL)hide {
-    [self setStatusBarHidden:hide animated:0];
+    UNIMPLEMENTED_WITH_MSG("UWP status bar can be directly accessed via WinRT APIs, and will eventually be supported via UIViewController APIs.");
 }
 
 /**
- @Status Caveat
- @Notes animation parameter not supported
+ @Status NotInPlan
+ @Notes UWP status bar can be directly accessed via WinRT APIs, and will eventually be supported via UIViewController APIs.
+*/
+- (BOOL)isStatusBarHidden {
+    UNIMPLEMENTED_WITH_MSG("UWP status bar can be directly accessed via WinRT APIs, and will eventually be supported via UIViewController APIs.");
+    return StubReturn();
+}
+
+/**
+ @Status NotInPlan
+ @Notes UWP status bar can be directly accessed via WinRT APIs, and will eventually be supported via UIViewController APIs.
+*/
+- (CGRect)statusBarFrame {
+    UNIMPLEMENTED_WITH_MSG("UWP status bar can be directly accessed via WinRT APIs, and will eventually be supported via UIViewController APIs.");
+    return StubReturn();
+}
+
+
+/**
+ @Status NotInPlan
+ @Notes UWP status bar can be directly accessed via WinRT APIs, and will eventually be supported via UIViewController APIs.
+*/
+- (void)setStatusBarHidden:(BOOL)hidden animated:(BOOL)animated {
+    UNIMPLEMENTED_WITH_MSG("UWP status bar can be directly accessed via WinRT APIs, and will eventually be supported via UIViewController APIs.");
+}
+
+/**
+ @Status NotInPlan
+ @Notes UWP status bar can be directly accessed via WinRT APIs, and will eventually be supported via UIViewController APIs.
 */
 - (void)setStatusBarHidden:(BOOL)hide withAnimation:(UIStatusBarAnimation)anim {
-    [self setStatusBarHidden:hide animated:anim];
-}
-
-- (void)setProximitySensingEnabled:(BOOL)enabled {
+    UNIMPLEMENTED_WITH_MSG("UWP status bar can be directly accessed via WinRT APIs, and will eventually be supported via UIViewController APIs.");
 }
 
 /**
- @Status Interoperable
+ @Status NotInPlan
+ @Notes UWP status bar can be directly accessed via WinRT APIs, and will eventually be supported via UIViewController APIs.
 */
 - (void)setStatusBarOrientation:(UIInterfaceOrientation)orientation {
-    [self setStatusBarOrientation:orientation animated:FALSE];
+    UNIMPLEMENTED_WITH_MSG("UWP status bar can be directly accessed via WinRT APIs, and will eventually be supported via UIViewController APIs.");
 }
 
 /**
- @Status Stub
+ @Status NotInPlan
+ @Notes UWP status bar can be directly accessed via WinRT APIs, and will eventually be supported via UIViewController APIs.
+*/
+- (void)setStatusBarOrientation:(UIInterfaceOrientation)orientation animated:(BOOL)animated {
+    UNIMPLEMENTED_WITH_MSG("UWP status bar can be directly accessed via WinRT APIs, and will eventually be supported via UIViewController APIs.");
+}
+
+/**
+ @Status NotInPlan
 */
 - (UIUserInterfaceLayoutDirection)userInterfaceLayoutDirection {
     UNIMPLEMENTED();
@@ -492,156 +406,12 @@ static int __EbrSortViewPriorities(id val1, id val2, void* context) {
 }
 
 /**
- @Status Interoperable
-*/
-- (void)setStatusBarOrientation:(UIInterfaceOrientation)orientation animated:(BOOL)animated {
-    CGRect rect, appFrame;
-
-    appFrame.origin.x = 0;
-    appFrame.origin.y = 0;
-    appFrame.size.width = DisplayProperties::ScreenWidth();
-    appFrame.size.height = DisplayProperties::ScreenHeight();
-
-    _curOrientation = orientation;
-    CGAffineTransform trans;
-
-    int changeHostOrientation = 0;
-
-    switch (_curOrientation) {
-        case UIInterfaceOrientationLandscapeRight:
-            rect.origin.x = appFrame.origin.y;
-            rect.origin.y = appFrame.origin.x;
-            rect.size.width = appFrame.size.height;
-            rect.size.height = appFrame.size.width;
-
-            [statusBarRotationLayer
-                setCenter:CGPointMake(appFrame.origin.x + appFrame.size.width / 2.0f, appFrame.origin.y + appFrame.size.height / 2.0f)];
-            [popupRotationLayer
-                setCenter:CGPointMake(appFrame.origin.x + appFrame.size.width / 2.0f, appFrame.origin.y + appFrame.size.height / 2.0f)];
-            rect.origin.x = 0.0f;
-            rect.origin.y = 0.0f;
-            [statusBarRotationLayer setBounds:rect];
-            [popupRotationLayer setBounds:rect];
-
-            trans = CGAffineTransformMakeRotation(kPi / 2);
-            [statusBarRotationLayer setTransform:trans];
-            [popupRotationLayer setTransform:trans];
-
-            _statusBarInsets.left = statusBarHeight;
-            _statusBarInsets.right = 0.0f;
-            _statusBarInsets.top = 0.0f;
-            _statusBarInsets.bottom = 0.0f;
-
-            changeHostOrientation = 3;
-            break;
-
-        case UIInterfaceOrientationPortrait:
-            rect.origin.x = appFrame.origin.x;
-            rect.origin.y = appFrame.origin.y;
-            rect.size.width = appFrame.size.width;
-            rect.size.height = appFrame.size.height;
-
-            [statusBarRotationLayer
-                setCenter:CGPointMake(appFrame.origin.x + appFrame.size.width / 2.0f, appFrame.origin.y + appFrame.size.height / 2.0f)];
-            [popupRotationLayer
-                setCenter:CGPointMake(appFrame.origin.x + appFrame.size.width / 2.0f, appFrame.origin.y + appFrame.size.height / 2.0f)];
-            rect.origin.x = 0.0f;
-            rect.origin.y = 0.0f;
-            [statusBarRotationLayer setBounds:rect];
-            [popupRotationLayer setBounds:rect];
-
-            trans = CGAffineTransformMakeTranslation(0.0f, 0.0f);
-            [statusBarRotationLayer setTransform:trans];
-            [popupRotationLayer setTransform:trans];
-
-            _statusBarInsets.left = 0.0f;
-            _statusBarInsets.right = 0.0f;
-            _statusBarInsets.top = statusBarHeight;
-            _statusBarInsets.bottom = 0.0f;
-            changeHostOrientation = 0;
-            break;
-
-        case UIInterfaceOrientationLandscapeLeft:
-            rect.origin.x = appFrame.origin.y;
-            rect.origin.y = appFrame.origin.x;
-            rect.size.width = appFrame.size.height;
-            rect.size.height = appFrame.size.width;
-
-            [statusBarRotationLayer
-                setCenter:CGPointMake(appFrame.origin.x + appFrame.size.width / 2.0f, appFrame.origin.y + appFrame.size.height / 2.0f)];
-            [popupRotationLayer
-                setCenter:CGPointMake(appFrame.origin.x + appFrame.size.width / 2.0f, appFrame.origin.y + appFrame.size.height / 2.0f)];
-            rect.origin.x = 0.0f;
-            rect.origin.y = 0.0f;
-            [statusBarRotationLayer setBounds:rect];
-            [popupRotationLayer setBounds:rect];
-
-            trans = CGAffineTransformMakeRotation(270.0f / 180.0f * kPi);
-            [statusBarRotationLayer setTransform:trans];
-            [popupRotationLayer setTransform:trans];
-
-            _statusBarInsets.left = statusBarHeight;
-            _statusBarInsets.right = 0.0f;
-            _statusBarInsets.top = 0.0f;
-            _statusBarInsets.bottom = 0.0f;
-            changeHostOrientation = 1;
-            break;
-
-        case UIInterfaceOrientationPortraitUpsideDown:
-            rect.origin.x = appFrame.origin.x;
-            rect.origin.y = appFrame.origin.y;
-            rect.size.width = appFrame.size.width;
-            rect.size.height = appFrame.size.height;
-
-            [statusBarRotationLayer
-                setCenter:CGPointMake(appFrame.origin.x + appFrame.size.width / 2.0f, appFrame.origin.y + appFrame.size.height / 2.0f)];
-            [popupRotationLayer
-                setCenter:CGPointMake(appFrame.origin.x + appFrame.size.width / 2.0f, appFrame.origin.y + appFrame.size.height / 2.0f)];
-            rect.origin.x = 0.0f;
-            rect.origin.y = 0.0f;
-            [statusBarRotationLayer setBounds:rect];
-            [popupRotationLayer setBounds:rect];
-
-            trans = CGAffineTransformMakeRotation(kPi);
-            [statusBarRotationLayer setTransform:trans];
-            [popupRotationLayer setTransform:trans];
-
-            _statusBarInsets.left = 0.0f;
-            _statusBarInsets.right = 0.0f;
-            _statusBarInsets.top = 0.0f;
-            _statusBarInsets.bottom = statusBarHeight;
-            changeHostOrientation = 2;
-            break;
-
-        default:
-            TraceVerbose(TAG, L"Unknown orientation %d", _curOrientation);
-            assert(0);
-            break;
-    }
-}
-
-- (void)_setInternalOrientation:(UIInterfaceOrientation)orientation {
-    _internalOrientation = orientation;
-}
-
-/**
- @Status Interoperable
+ @Status NotInPlan
+ @Notes UWP status bar can be directly accessed via WinRT APIs, and will eventually be supported via UIViewController APIs.
 */
 - (UIInterfaceOrientation)statusBarOrientation {
-    return _curOrientation;
-}
-
-- (UIInterfaceOrientation)_internalOrientation {
-    return _internalOrientation;
-}
-
-- (void)setStatusBarMode:(unsigned)mode
-             orientation:(UIInterfaceOrientation)orientation
-                duration:(unsigned)duration
-                 fenceID:(unsigned)fenceID {
-}
-
-- (void)setStatusBarMode:(unsigned)mode duration:(unsigned)duration {
+    UNIMPLEMENTED_WITH_MSG("UWP status bar can be directly accessed via WinRT APIs, and will eventually be supported via UIViewController APIs.");
+    return StubReturn();
 }
 
 /**
@@ -659,16 +429,47 @@ static int __EbrSortViewPriorities(id val1, id val2, void* context) {
 }
 
 /**
+ @Status NotInPlan
+*/
+- (NSArray*)scheduledLocalNotifications {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status NotInPlan
+*/
+- (void)setScheduledLocalNotifications:(NSArray*)notifications {
+    UNIMPLEMENTED();
+}
+
+
+/**
+ @Status NotInPlan
+*/
+- (NSArray*)shortcutItems {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status NotInPlan
+*/
+- (void)setShortcutItems:(NSArray*)items {
+    UNIMPLEMENTED();
+}
+
+/**
  @Status Interoperable
 */
 - (void)setIdleTimerDisabled:(BOOL)disable {
     idleDisabled = disable;
-    // New DisplayRequest is required to guarantee the screenActive request is honored.
+    // New WSDDisplayRequest are required to gurantee the screenActive request is honored.
     if (disable) {
-        _screenActive = DisplayRequest();
-        _screenActive.RequestActive();
-    } else if (_screenActive) {
-        _screenActive.RequestRelease();
+        _screenActive = [WSDDisplayRequest make];
+        [_screenActive requestActive];
+    } else if (_screenActive != nil) {
+        [_screenActive requestRelease];
     }
 }
 
@@ -680,13 +481,63 @@ static int __EbrSortViewPriorities(id val1, id val2, void* context) {
 }
 
 /**
- @Status Interoperable
+ @Status NotInPlan
 */
-- (void)setStatusBarHidden:(BOOL)hidden animated:(BOOL)animated {
-    if (statusBarHidden != hidden) {
-        statusBarHidden = hidden;
-        [statusBar setHidden:hidden];
-    }
+- (void)setNetworkActivityIndicatorVisible:(BOOL)visible {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status NotInPlan
+*/
+- (BOOL)isNetworkActivityIndicatorVisible {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status NotInPlan
+*/
+-(void)setProximitySensingEnabled:(BOOL)enabled {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status NotInPlan
+*/
+-(BOOL)isProximitySensingEnabled {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status NotInPlan
+*/
+- (void)setApplicationSupportsShakeToEdit:(BOOL)supports {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status NotInPlan
+*/
+- (BOOL)applicationSupportsShakeToEdit {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status NotInPlan
+*/
+- (void)setPreferredContentSizeCategory:(NSString*)category {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status NotInPlan
+*/
+- (NSString*)preferredContentSizeCategory {
+    UNIMPLEMENTED();
+    return StubReturn();
 }
 
 /**
@@ -723,17 +574,17 @@ static int __EbrSortViewPriorities(id val1, id val2, void* context) {
 }
 
 + (void)_shutdownEvent {
-    _doShutdown = TRUE;
     [[NSRunLoop mainRunLoop] _stop];
     [[NSRunLoop mainRunLoop] _shutdown];
     _UIApplicationShutdown();
 }
 
 /**
- @Status Stub
+ @Status NotInPlan
+ @Notes Application-level events are not delivered in this manner on Windows.
 */
 - (void)sendEvent:(UIEvent*)event {
-    UNIMPLEMENTED();
+    UNIMPLEMENTED_WITH_MSG("Application-level events are not delivered in this manner on Windows.");
 }
 
 /**
@@ -752,36 +603,21 @@ static int __EbrSortViewPriorities(id val1, id val2, void* context) {
 }
 
 /**
- @Status Stub
-*/
-- (void)setNetworkActivityIndicatorVisible:(BOOL)visible {
-    UNIMPLEMENTED();
-}
-
-/**
- @Status Stub
-*/
-- (void)setApplicationSupportsShakeToEdit:(BOOL)supports {
-    UNIMPLEMENTED();
-}
-
-/**
- @Status Stub
+ @Status NotInPlan
 */
 - (void)registerForRemoteNotificationTypes:(UIRemoteNotificationType)types {
     UNIMPLEMENTED();
-    [self registerForRemoteNotificationTypes:types withId:@"309806373466"];
 }
 
 /**
- @Status Stub
+ @Status NotInPlan
 */
 - (void)registerForRemoteNotificationTypes:(UIRemoteNotificationType)types withId:(id)identifier {
     UNIMPLEMENTED();
 }
 
 /**
- @Status Stub
+ @Status NotInPlan
 */
 - (void)registerUserNotificationSettings:(UIUserNotificationSettings*)notificationSettings {
     UNIMPLEMENTED();
@@ -800,9 +636,13 @@ static int __EbrSortViewPriorities(id val1, id val2, void* context) {
     // Walk the target's responder chain looking for a responder for this action
     while (curTarget != nil) {
         if ([curTarget respondsToSelector:action]) {
+            // Perhaps we should make this ARC-compliant, and return the result of the action.
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
             // We found a target; invoke the selector.
             [curTarget performSelector:action withObject:sender withObject:forEvent];
             return TRUE;
+#pragma clang diagnostic pop
         }
         curTarget = [curTarget nextResponder];
     }
@@ -810,13 +650,11 @@ static int __EbrSortViewPriorities(id val1, id val2, void* context) {
     return FALSE;
 }
 
+// NOTE: This method is here merely due to the fact that Xib2Nib writes it to the Nib file.
+// If this method is removed, we crash when instantiating storyboards.
+// TODO: <FILE BUG> To remove this or hook it up properly.
 - (void)setSceneViewController:(UIViewController*)controller {
-    static bool set = false;
-
-    if (!set) {
-        set = true;
-        [self performSelector:@selector(_showScene:) withObject:controller afterDelay:0.0];
-    }
+    UNIMPLEMENTED();
 }
 
 /**
@@ -869,10 +707,6 @@ static int __EbrSortViewPriorities(id val1, id val2, void* context) {
 #endif
 }
 
-- (void)_showScene:(UIViewController*)controller {
-    //[[self _popupWindow] setRootViewController:controller];
-}
-
 /**
  @Status Interoperable
 */
@@ -893,29 +727,6 @@ static int __EbrSortViewPriorities(id val1, id val2, void* context) {
 - (instancetype)init {
     g_windows = [[NSMutableArray alloc] init];
 
-    if (statusBar == nil) {
-        CGRect frame;
-        frame.origin.x = 0.0f;
-        frame.origin.y = 0.0f;
-        frame.size.width = DisplayProperties::ScreenWidth();
-        frame.size.height = statusBarHeight;
-        statusBar = [[UIImageView alloc] initWithFrame:frame];
-        [statusBar setImage:[UIImage imageNamed:@"/img/StatusBar.png"]];
-        [statusBar setAutoresizingMask:UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin];
-
-        frame.size.height = DisplayProperties::ScreenHeight();
-        statusBarRotationLayer = [[UIView alloc] initWithFrame:frame];
-        [statusBarRotationLayer addSubview:statusBar];
-        popupRotationLayer = [[UIKeyboardRotationView alloc] initWithFrame:frame];
-
-        CALayer* layer = [statusBarRotationLayer layer];
-        [layer _layerProxy]->SetTopMost();
-        [CATransaction _addSublayerToTop:layer];
-        [[popupRotationLayer layer] _layerProxy]->SetTopMost();
-        [[statusBarRotationLayer layer] _layerProxy]->SetTopMost();
-    }
-
-    _curNotifications = [NSMutableArray new];
     _launcher = [[UrlLauncher alloc] initWithLauncher:[WSLauncher class]];
 
     return self;
@@ -925,17 +736,6 @@ static int __EbrSortViewPriorities(id val1, id val2, void* context) {
 - (instancetype)_initForTestingWithLauncher:(Class)launcher {
     _launcher = [[UrlLauncher alloc] initWithLauncher:launcher];
     return self;
-}
-
-- (UIView*)_statusBarInternal {
-    return statusBar;
-}
-
-/**
- @Status Interoperable
-*/
-- (BOOL)isStatusBarHidden {
-    return statusBarHidden;
 }
 
 /**
@@ -951,14 +751,14 @@ static int __EbrSortViewPriorities(id val1, id val2, void* context) {
 }
 
 /**
- @Status Stub
+ @Status NotInPlan
 */
 - (void)beginReceivingRemoteControlEvents {
     UNIMPLEMENTED();
 }
 
 /**
- @Status Stub
+ @Status NotInPlan
 */
 - (void)endReceivingRemoteControlEvents {
     UNIMPLEMENTED();
@@ -986,80 +786,29 @@ static int __EbrSortViewPriorities(id val1, id val2, void* context) {
 }
 
 /**
- @Status Stub
+ @Status NotInPlan
+ @Notes UWP status bar can be directly accessed via WinRT APIs, and will eventually be supported via UIViewController APIs.
 */
 - (double)statusBarOrientationAnimationDuration {
-    UNIMPLEMENTED();
-    return 0.4;
+    UNIMPLEMENTED_WITH_MSG("UWP status bar can be directly accessed via WinRT APIs, and will eventually be supported via UIViewController APIs.");
+    return StubReturn();
 }
 
-/**
- @Status Interoperable
-*/
-- (CGRect)statusBarFrame {
-    CGRect ret;
-
-    memset(&ret, 0, sizeof(CGRect));
-
-    switch (_curOrientation) {
-        case UIInterfaceOrientationLandscapeRight:
-            ret.origin.x = DisplayProperties::ScreenWidth() - statusBarHeight;
-            ret.origin.y = 0.0f;
-            ret.size.width = statusBarHeight;
-            ret.size.height = DisplayProperties::ScreenHeight();
-            break;
-
-        case UIInterfaceOrientationPortrait:
-            ret.origin.x = 0.0f;
-            ret.origin.y = 0.0f;
-            ret.size.width = DisplayProperties::ScreenWidth();
-            ret.size.height = statusBarHeight;
-            break;
-
-        case UIInterfaceOrientationLandscapeLeft:
-            ret.origin.x = 0.0f;
-            ret.origin.y = 0.0f;
-            ret.size.width = statusBarHeight;
-            ret.size.height = DisplayProperties::ScreenHeight();
-            break;
-
-        case UIInterfaceOrientationPortraitUpsideDown:
-            ret.origin.x = 0.0f;
-            ret.origin.y = DisplayProperties::ScreenHeight() - statusBarHeight;
-            ret.size.width = DisplayProperties::ScreenWidth();
-            ret.size.height = statusBarHeight;
-            break;
-    }
-
-    return ret;
-}
-
-/**
- @Status Interoperable
-*/
+// TODO: #2443 Remove _popupWindow (and all references to it) when we move UIAlertView over to Xaml
 - (UIWindow*)_popupWindow {
-    static BOOL building = false;
-    if (popupWindow == nil && building == FALSE) {
-        building = TRUE;
-
+    if (!g_popupWindow) {
         CGRect popupRect;
-
         popupRect.origin.x = 0;
         popupRect.origin.y = 0;
         popupRect.size.width = DisplayProperties::ScreenWidth();
         popupRect.size.height = DisplayProperties::ScreenHeight();
 
-        popupWindow = [[UIWindow alloc] _initWithContentRect:popupRect];
-        [popupWindow setWindowLevel:100000.0f];
-        [popupWindow addSubview:popupRotationLayer];
-        building = false;
+        // Allocate a top-level, yet hidden UIWindow for displaying our popups
+        g_popupWindow = [[UIWindow alloc] initWithFrame:popupRect];
+        [g_popupWindow setWindowLevel:100000.0f];
     }
 
-    return popupWindow;
-}
-
-- (UIView*)_popupLayer {
-    return popupRotationLayer;
+    return g_popupWindow;
 }
 
 /**
@@ -1070,15 +819,7 @@ static int __EbrSortViewPriorities(id val1, id val2, void* context) {
 }
 
 /**
- @Status Stub
-*/
-- (NSArray*)scheduledLocalNotifications {
-    UNIMPLEMENTED();
-    return _curNotifications;
-}
-
-/**
- @Status Stub
+ @Status NotInPlan
  This will return UIRemoteNotificationTypeNone until we interop with our Notification system.
 */
 - (UIRemoteNotificationType)enabledRemoteNotificationTypes {
@@ -1086,33 +827,21 @@ static int __EbrSortViewPriorities(id val1, id val2, void* context) {
 }
 
 /**
- @Status Stub
+ @Status NotInPlan
 */
 - (void)cancelAllLocalNotifications {
     UNIMPLEMENTED();
-    int count = [_curNotifications count];
-    while (count > 0) {
-        UILocalNotification* object = [_curNotifications objectAtIndex:count - 1];
-        [object _cancelAlarm];
-        [_curNotifications removeLastObject];
-        --count;
-    }
 }
 
 /**
- @Status Stub
+ @Status NotInPlan
 */
 - (void)cancelLocalNotification:(UILocalNotification*)notification {
     UNIMPLEMENTED();
-    [notification _cancelAlarm];
-    int idx = [_curNotifications indexOfObject:notification];
-    if (idx != NSNotFound) {
-        [_curNotifications removeObjectAtIndex:idx];
-    }
 }
 
 /**
- @Status Stub
+ @Status NotInPlan
 */
 - (void)presentLocalNotificationNow:(UILocalNotification*)notification {
     UNIMPLEMENTED();
@@ -1263,301 +992,6 @@ static void _sendMemoryWarningToViewControllers(UIView* subview) {
     }
 }
 
-static void layoutBlankView(UIView* inputView, UIView* accessoryView, float totalHeight) {
-    if (totalHeight > 0) {
-        CGRect statusRect;
-        statusRect = [popupRotationLayer bounds];
-
-        CGRect accessorySize = { 0 };
-        if (_curKeyboardAccessory != accessoryView) {
-            [_curKeyboardAccessory removeFromSuperview];
-            _curKeyboardAccessory = accessoryView;
-            if (_curKeyboardAccessory != nil) {
-                [_blankView addSubview:_curKeyboardAccessory];
-            }
-        }
-
-        if (_curKeyboardAccessory != nil) {
-            accessorySize = [_curKeyboardAccessory bounds];
-            accessorySize.origin.x = 0;
-            accessorySize.origin.y = 0;
-            accessorySize.size.width = statusRect.size.width;
-            [_curKeyboardAccessory setFrame:accessorySize];
-        }
-
-        if (_curKeyboardInputView != inputView) {
-            [_curKeyboardInputView removeFromSuperview];
-            _curKeyboardInputView = inputView;
-            if (_curKeyboardInputView != nil) {
-                [_blankView addSubview:_curKeyboardInputView];
-            }
-        }
-
-        if (_curKeyboardInputView != nil) {
-            CGRect keyboardRect = { 0, accessorySize.size.height, statusRect.size.width, totalHeight - accessorySize.size.height };
-            [_curKeyboardInputView setFrame:keyboardRect];
-        }
-    } else {
-        [_curKeyboardAccessory removeFromSuperview];
-        _curKeyboardAccessory = nil;
-        [_curKeyboardInputView removeFromSuperview];
-        _curKeyboardInputView = nil;
-    }
-}
-
-//  Brings up the blank keyboard view to the specified height
-//  and fires off any events associated with it - including
-//  keyboard hide events
-static void animateKeyboardResize(id self, float newHeight, bool forceKeyboardAppearance) {
-    CGRect statusRect;
-    statusRect = [popupRotationLayer bounds];
-
-    CGRect startRect, endRect;
-
-    if (newHeight > 0) {
-        if (!blankViewUp) {
-            //  Blank view is not onscreen
-            startRect.origin.x = 0.0f;
-            startRect.origin.y = statusRect.size.height;
-            startRect.size.width = statusRect.size.width;
-            startRect.size.height = newHeight;
-
-            endRect.origin.x = 0.0f;
-            endRect.origin.y = statusRect.size.height - newHeight;
-            endRect.size.width = statusRect.size.width;
-            endRect.size.height = newHeight;
-        } else {
-            //  Blank view is already on screen but is being resized
-            startRect.origin.x = 0.0f;
-            startRect.origin.y = statusRect.size.height - curBlankViewHeight;
-            startRect.size.width = statusRect.size.width;
-            startRect.size.height = curBlankViewHeight;
-
-            endRect.origin.x = 0.0f;
-            endRect.origin.y = statusRect.size.height - newHeight;
-            endRect.size.width = statusRect.size.width;
-            endRect.size.height = newHeight;
-        }
-    } else {
-        //  Keyboard is being hidden
-        if (!blankViewUp) {
-            //  Blank view is not onscreen
-            return;
-        } else {
-            //  Blank view is on screen
-            startRect.origin.x = 0.0f;
-            startRect.origin.y = statusRect.size.height - curBlankViewHeight;
-            startRect.size.width = statusRect.size.width;
-            startRect.size.height = curBlankViewHeight;
-
-            endRect.origin.x = 0.0f;
-            endRect.origin.y = statusRect.size.height;
-            endRect.size.width = statusRect.size.width;
-            endRect.size.height = curBlankViewHeight;
-        }
-    }
-
-    CGRect mappedStart, mappedEnd;
-    mappedStart = [[self _popupWindow] convertRect:startRect fromView:popupRotationLayer];
-    mappedEnd = [[self _popupWindow] convertRect:endRect fromView:popupRotationLayer];
-
-    [_blankView setFrame:startRect];
-    [popupRotationLayer addSubview:_blankView];
-
-    [UIView beginAnimations:@"ResizeAnimation" context:nil];
-
-    if (newHeight <= 0) {
-        //  Keyboard is being hidden
-        [UIView setAnimationDelegate:self];
-        [UIView setAnimationDidStopSelector:@selector(_keyboardDismissed)];
-    }
-    [_blankView setFrame:endRect];
-    [UIView commitAnimations];
-
-    [popupWindow bringSubviewToFront:popupRotationLayer];
-
-    CGRect keyboardBounds;
-    keyboardBounds.origin.x = 0.0f;
-    keyboardBounds.origin.y = 0.0f;
-    keyboardBounds.size = endRect.size;
-
-    CGPoint centerBegin, centerEnd;
-
-    centerBegin.x = mappedStart.origin.x + mappedStart.size.width / 2.0f;
-    centerBegin.y = mappedStart.origin.y + mappedStart.size.height / 2.0f;
-
-    centerEnd.x = mappedEnd.origin.x + mappedEnd.size.width / 2.0f;
-    centerEnd.y = mappedEnd.origin.y + mappedEnd.size.height / 2.0f;
-
-    // Fire the notification:
-    id keys[7] =
-    { @"UIKeyboardFrameEndUserInfoKey",
-      @"UIKeyboardFrameBeginUserInfoKey",
-      @"UIKeyboardAnimationDurationUserInfoKey",
-      @"UIKeyboardAnimationCurveUserInfoKey",
-      @"UIKeyboardBoundsUserInfoKey",
-      @"UIKeyboardCenterBeginUserInfoKey",
-      @"UIKeyboardCenterEndUserInfoKey",
-    };
-    id values[7] = {
-        [NSValue valueWithCGRect:mappedEnd],  [NSValue valueWithCGRect:mappedStart],    [NSNumber numberWithDouble:0.25],
-        [NSNumber numberWithInt:0],           [NSValue valueWithCGRect:keyboardBounds], [NSValue valueWithCGPoint:centerBegin],
-        [NSValue valueWithCGPoint:centerEnd],
-    };
-
-    id dict = [NSDictionary dictionaryWithObjects:values forKeys:keys count:7];
-
-    static float oldHeight = 0;
-
-    if (newHeight > 0) {
-        if (!blankViewUp || forceKeyboardAppearance) {
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"UIKeyboardWillShowNotification" object:nil userInfo:dict];
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"UIKeyboardDidShowNotification" object:nil userInfo:dict];
-        }
-        if (!blankViewUp) {
-        } else {
-            if (oldHeight != newHeight) {
-                [[NSNotificationCenter defaultCenter] postNotificationName:@"UIKeyboardWillChangeFrameNotification"
-                                                                    object:nil
-                                                                  userInfo:dict];
-                [[NSNotificationCenter defaultCenter] postNotificationName:@"UIKeyboardDidChangeFrameNotification"
-                                                                    object:nil
-                                                                  userInfo:dict];
-            }
-        }
-    } else {
-        //  Keyboard is being hidden
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"UIKeyboardWillHideNotification" object:nil userInfo:dict];
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"UIKeyboardDidHideNotification" object:nil userInfo:dict];
-    }
-    oldHeight = newHeight;
-
-    if (newHeight > 0) {
-        blankViewUp = true;
-    } else {
-        blankViewUp = false;
-    }
-    curBlankViewHeight = newHeight;
-}
-
-// The textfield the keyboard is for has changed state and we need to figure out what to do:
-- (id)_keyboardChanged {
-    doEvaluateKeyboard = true;
-    [[NSRunLoop mainRunLoop] _wakeUp];
-    return self;
-}
-
-// The textfield the keyboard is for has changed state and we need to figure out what to do:
-- (id)_evaluateKeyboard {
-    evaluateKeyboard(self);
-    return self;
-}
-
-static void evaluateKeyboard(id self) {
-    [self _popupWindow];
-
-    if (_blankView == nil) {
-        CGRect frame = { 0 };
-        _blankView = [[UIEmptyView alloc] initWithFrame:frame];
-        [_blankView setBackgroundColor:[UIColor blackColor]];
-        [_blankView setAutoresizesSubviews:FALSE];
-    }
-
-    // Figure out what's going on with our first responder:
-    UIView* keyboardAccessory = nil;
-    UIView* inputView = nil;
-    id curResponder = _curFirstResponder;
-    showKeyboardType = 0;
-
-    while (curResponder != nil) {
-        if ([curResponder respondsToSelector:@selector(keyboardType)]) {
-            showKeyboardType = [curResponder keyboardType];
-        }
-
-        //  Special case: keyboard accessory is first responder
-        if (curResponder == _curKeyboardAccessory) {
-            keyboardAccessory = curResponder;
-            break;
-        }
-
-        inputView = [curResponder inputView];
-        keyboardAccessory = [curResponder inputAccessoryView];
-        if (inputView != nil || keyboardAccessory != nil) {
-            break;
-        }
-
-        curResponder = [curResponder nextResponder];
-    }
-
-    float totalBlankViewHeight = 0.0f;
-
-    if (inputView) {
-        //  We have an overridden keyboard view - force the
-        //  physical keyboard to be hidden
-        forceHideKeyboard = 1;
-        keyboardBaseHeight = 200;
-
-        if ([inputView autoresizingMask] & UIViewAutoresizingFlexibleHeight) {
-            totalBlankViewHeight += keyboardBaseHeight;
-        } else {
-            CGRect bounds;
-            bounds = [inputView bounds];
-            keyboardBaseHeight = bounds.size.height;
-            totalBlankViewHeight += keyboardBaseHeight;
-        }
-    } else {
-        //  The physical keyboard might be displayed
-        forceHideKeyboard = 0;
-        if (showKeyboard > 0) {
-            totalBlankViewHeight += keyboardPhysicalHeight;
-        }
-
-        if (showKeyboard > 0 && keyboardVisible == false) {
-            //  We don't want to display the keyboard accessory if
-            //  the hardware keyboard hasn't actually popped up
-            //  yet - we want both the accessory and the physical
-            //  keyboard to be shown at once, so lets return, allow
-            //  the keyboard to come up, which will call us again
-            //  with the actual height of the keyboard
-            return;
-        }
-    }
-
-    CGRect accessorySize;
-    if (keyboardAccessory != nil) {
-        if (totalBlankViewHeight > 0) {
-            accessorySize = [keyboardAccessory bounds];
-            totalBlankViewHeight += accessorySize.size.height;
-        }
-    }
-
-    //  Special case: send
-    static id lastAccessory = nil;
-
-    animateKeyboardResize(self, totalBlankViewHeight, lastAccessory != keyboardAccessory);
-    lastAccessory = keyboardAccessory;
-    layoutBlankView(inputView, keyboardAccessory, totalBlankViewHeight);
-}
-
-- (void)_keyboardDismissed {
-    [_blankView removeFromSuperview];
-}
-
-- (void)_newEditText:(NSString*)text {
-    int len = [text length];
-    WORD* chars = (WORD*)IwCalloc(2, len);
-    [text getCharacters:chars range:NSMakeRange(0, len)];
-
-    for (int i = 0; i < len; i++) {
-        [UIResponder _keyPressed:chars[i]];
-    }
-    IwFree(chars);
-}
-
-- (void)_editTextDelete:(NSNumber*)numBefore {
-    [UIResponder _deleteRange:numBefore];
-}
-
 - (void)_didRegisterForRemoteNotification:(NSData*)tokenData {
 #ifndef SUPPORT_REMOTE_NOTIFICATIONS
     return;
@@ -1631,7 +1065,7 @@ static void evaluateKeyboard(id self) {
 }
 
 /**
- @Status Stub
+ @Status NotInPlan
 */
 - (BOOL)isRegisteredForRemoteNotifications {
     UNIMPLEMENTED();
@@ -1639,14 +1073,14 @@ static void evaluateKeyboard(id self) {
 }
 
 /**
- @Status Stub
+ @Status NotInPlan
 */
 - (void)registerForRemoteNotifications {
     UNIMPLEMENTED();
 }
 
 /**
- @Status Stub
+ @Status NotInPlan
 */
 - (BOOL)setKeepAliveTimeout:(NSTimeInterval)timeout handler:(void (^)(void))keepAliveHandler {
     UNIMPLEMENTED();
@@ -1654,7 +1088,7 @@ static void evaluateKeyboard(id self) {
 }
 
 /**
- @Status Stub
+ @Status NotInPlan
 */
 - (UIInterfaceOrientationMask)supportedInterfaceOrientationsForWindow:(UIWindow*)window {
     UNIMPLEMENTED();
@@ -1670,63 +1104,64 @@ static void evaluateKeyboard(id self) {
 }
 
 /**
- @Status Stub
+ @Status NotInPlan
 */
 - (void)clearKeepAliveTimeout {
     UNIMPLEMENTED();
 }
 
 /**
- @Status Stub
+ @Status NotInPlan
 */
 - (void)completeStateRestoration {
     UNIMPLEMENTED();
 }
 
 /**
- @Status Stub
+ @Status NotInPlan
 */
 - (void)extendStateRestoration {
     UNIMPLEMENTED();
 }
 
 /**
- @Status Stub
+ @Status NotInPlan
 */
 - (void)ignoreSnapshotOnNextApplicationLaunch {
     UNIMPLEMENTED();
 }
 
 /**
- @Status Stub
+ @Status NotInPlan
 */
 - (void)setMinimumBackgroundFetchInterval:(NSTimeInterval)minimumBackgroundFetchInterval {
     UNIMPLEMENTED();
 }
 
 /**
- @Status Stub
+ @Status NotInPlan
 */
 - (void)setNewsstandIconImage:(UIImage*)image {
     UNIMPLEMENTED();
 }
 
 /**
- @Status Stub
+ @Status NotInPlan
+ @Notes UWP status bar can be directly accessed via WinRT APIs, and will eventually be supported via UIViewController APIs.
 */
 - (void)setStatusBarStyle:(UIStatusBarStyle)statusBarStyle animated:(BOOL)animated {
-    UNIMPLEMENTED();
+    UNIMPLEMENTED_WITH_MSG("UWP status bar can be directly accessed via WinRT APIs, and will eventually be supported via UIViewController APIs.");
 }
 
 /**
- @Status Stub
+ @Status NotInPlan
 */
 - (void)unregisterForRemoteNotifications {
     UNIMPLEMENTED();
 }
 
 /**
- @Status Stub
+ @Status NotInPlan
 */
 + (void)registerObjectForStateRestoration:(id<UIStateRestoring>)object restorationIdentifier:(NSString*)restorationIdentifier {
     UNIMPLEMENTED();
@@ -1918,11 +1353,6 @@ void UIShutdown() {
             [current setFrame:curBounds];
             isFrameSet = true;
         }
-    }
-
-    if (_sizeUIWindowToFit) {
-        [popupRotationLayer setFrame:curBounds];
-        isFrameSet = true;
     }
 
     if (isFrameSet) {

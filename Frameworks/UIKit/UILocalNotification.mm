@@ -44,12 +44,6 @@ NSString* const UILocalNotificationDefaultSoundName = @"UILocalNotificationDefau
     NSInteger _applicationIconBadgeNumber;
 }
 
-- (void)_setReceiver:(id)receiver {
-}
-
-- (void)_cancelAlarm {
-}
-
 /**
    @Status Stub
 */

@@ -20,7 +20,9 @@
 @class UIViewController;
 
 @interface UIWindow ()
-- (UIWindow*)_initWithContentRect:(CGRect)pos;
+// TODO: #2441 Remove this seemingly-unnecessary private method (why not call the public setRootViewController?)
 - (void)_setRootViewController:(UIViewController*)controller;
-- (void)_destroy;
+
+// TODO: #2440 Remove this unnecessary method in favor of properly implementing UIView point/rect conversion
+- (CGPoint)_convertPoint:(CGPoint)point fromView:(UIView*)fromView toView:(UIView*)toView;
 @end

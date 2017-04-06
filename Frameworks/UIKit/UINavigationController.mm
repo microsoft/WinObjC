@@ -36,7 +36,6 @@ static const wchar_t* TAG = L"UINavigationController";
 const CGFloat UINavigationControllerHideShowBarDuration = .25f;
 const CGFloat UINavigationBarHeight = 45.0f;
 
-extern float statusBarHeight;
 bool isSupportedControllerOrientation(UIViewController* controller, UIInterfaceOrientation orientation);
 
 class AnimationNotificationParams {
@@ -744,13 +743,7 @@ static void rotateViewController(UINavigationController* self) {
         CGRect containerWindowFrame = bounds;
         containerWindowFrame = [_mainView convertRect:containerWindowFrame toView:nil];
 
-        if (![[UIApplication sharedApplication] isStatusBarHidden] && ![_curController wantsFullScreenLayout] &&
-            floorf(fabs(containerWindowFrame.origin.y)) == 0.0f) {
-            bounds.origin.y = statusBarHeight;
-            bounds.size.height -= statusBarHeight;
-        } else {
-            bounds.origin.y = 0;
-        }
+        bounds.origin.y = 0;
         containerRect = bounds;
 
         if (_navigationBar != nil) {

@@ -20,6 +20,7 @@
 #import <UIKit/UIDevice.h>
 #import <UIKit/UIFont.h>
 #import <UIKit/UINib.h>
+#import <UIKit/UIScreen.h>
 #import <UIKit/UIStoryboard.h>
 #import <UIKit/UIViewController.h>
 
@@ -67,10 +68,10 @@ using namespace Microsoft::WRL;
 
 void UIBecomeInactive() {
     UIApplication* app = [UIApplication sharedApplication];
-    id<UIApplicationDelegate> curDelegate = [app delegate];
+    id<UIApplicationDelegate> appDelegate = [app delegate];
 
-    if ([curDelegate respondsToSelector:@selector(applicationWillResignActive:)]) {
-        [curDelegate applicationWillResignActive:app];
+    if ([appDelegate respondsToSelector:@selector(applicationWillResignActive:)]) {
+        [appDelegate applicationWillResignActive:app];
     }
 
     // Drain global dispatch queue before ceding control.
@@ -120,9 +121,6 @@ UIInterfaceOrientation UIOrientationFromString(UIInterfaceOrientation curOrienta
 }
 
 UIDeviceOrientation newDeviceOrientation = UIDeviceOrientationUnknown;
-
-BOOL _doShutdown = FALSE;
-volatile bool g_uiMainRunning = false;
 static NSAutoreleasePoolWarn* outerPool;
 
 /**
@@ -164,33 +162,33 @@ int UIApplicationMainInit(NSString* principalClassName,
         }
     }
 
-    if (principalClassName == nil) {
+    // If a principalClassName was specified, allocate the specified UIApplication class
+    if (!principalClassName) {
         principalClassName = [infoDict objectForKey:@"NSPrincipalClass"];
     }
 
-    if (principalClassName != nil) {
+    if (principalClassName) {
         char* pClassName = (char*)[principalClassName UTF8String];
         uiApplication = [objc_getClass(pClassName) new];
     } else {
         uiApplication = [UIApplication new];
     }
 
-    id<UIApplicationDelegate> delegateApp;
-
-    if (delegateClassName != nil) {
+    // If a delegateClassName was specified, allocate the specified UIApplicationDelegate and set it on the UIApplication instance.
+    id<UIApplicationDelegate> appDelegate;
+    if (delegateClassName) {
         char* pClassName = (char*)[delegateClassName UTF8String];
-        delegateApp = [objc_getClass(pClassName) new];
+        appDelegate = [objc_getClass(pClassName) new];
+        [uiApplication setDelegate:appDelegate];
     } else {
-        delegateApp = [uiApplication delegate];
+        appDelegate = [uiApplication delegate];
     }
 
-    [uiApplication setDelegate:delegateApp];
-    idretain rootController(nil);
-
+    // Load nib/storyboard info
+    StrongId<UIViewController> rootController;
     if (infoDict) {
         if (defaultOrientation != UIInterfaceOrientationUnknown) {
             [uiApplication setStatusBarOrientation:defaultOrientation];
-            [uiApplication _setInternalOrientation:defaultOrientation];
         }
 
         NSNumber* statusBarHidden = [infoDict objectForKey:@"UIStatusBarHidden"];
@@ -203,7 +201,6 @@ int UIApplicationMainInit(NSString* principalClassName,
         [uiApplication setStatusBarHidden:hideStatusBar];
 
         NSString* mainNibFile;
-
         if (DisplayProperties::IsTablet()) {
             mainNibFile = [infoDict objectForKey:@"NSMainNibFile~ipad"];
             if (mainNibFile == nil) {
@@ -250,11 +247,7 @@ int UIApplicationMainInit(NSString* principalClassName,
         }
     }
 
-    id<UIApplicationDelegate> curDelegate = [uiApplication delegate];
-    if (curDelegate == nil) {
-        [uiApplication setDelegate:static_cast<id<UIApplicationDelegate>>(uiApplication)];
-    }
-
+    // Populate launch options
     NSMutableDictionary* launchOption = [NSMutableDictionary dictionary];
     switch (activationType) {
         case ActivationTypeToast:
@@ -273,36 +266,44 @@ int UIApplicationMainInit(NSString* principalClassName,
             break;
     }
 
-    if ([curDelegate respondsToSelector:@selector(application:willFinishLaunchingWithOptions:)]) {
-        [curDelegate application:uiApplication willFinishLaunchingWithOptions:launchOption];
+    // If the xib/storyboard specified a root ViewController, set it here
+    if (rootController) {
+        // Give the app delegate UIWindow if it doesn't provide its own
+        UIWindow* window = appDelegate.window;
+        if (!window) {
+            [appDelegate setWindow:[[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]]];
+        }
+
+        // Set the window's root ViewController
+        [appDelegate.window setRootViewController:rootController];
     }
 
-    if ([curDelegate respondsToSelector:@selector(application:didFinishLaunchingWithOptions:)]) {
-        [curDelegate application:uiApplication didFinishLaunchingWithOptions:launchOption];
-    } else if ([curDelegate respondsToSelector:@selector(applicationDidFinishLaunching:)]) {
-        [curDelegate applicationDidFinishLaunching:uiApplication];
+    // Fire the launch events
+    if ([appDelegate respondsToSelector:@selector(application:willFinishLaunchingWithOptions:)]) {
+        [appDelegate application:uiApplication willFinishLaunchingWithOptions:launchOption];
+    }
+
+    if ([appDelegate respondsToSelector:@selector(application:didFinishLaunchingWithOptions:)]) {
+        [appDelegate application:uiApplication didFinishLaunchingWithOptions:launchOption];
+    } else if ([appDelegate respondsToSelector:@selector(applicationDidFinishLaunching:)]) {
+        [appDelegate applicationDidFinishLaunching:uiApplication];
     }
     [[NSNotificationCenter defaultCenter] postNotificationName:@"UIApplicationDidFinishLaunchingNotification"
                                                         object:uiApplication
                                                       userInfo:launchOption];
 
-    if (rootController != nil) {
-        [[uiApplication _popupWindow] setRootViewController:rootController];
-        [rootController _doResizeToScreen];
-        rootController = nil;
-    }
-
+    // Initialize orientation
+    // TODO: #2438 Sort out orientation; map more closely to WinRT/Xaml orientation constructs
     [[UIDevice currentDevice] performSelectorOnMainThread:@selector(_setOrientation:) withObject:0 waitUntilDone:FALSE];
     [[UIDevice currentDevice] performSelectorOnMainThread:@selector(_setInitialOrientation) withObject:0 waitUntilDone:FALSE];
-    g_uiMainRunning = true;
 
     if (newDeviceOrientation != 0) {
         [[UIDevice currentDevice] performSelectorOnMainThread:@selector(submitRotation) withObject:nil waitUntilDone:FALSE];
     }
 
-    //  Make windows visible
+    // Make all windows visible
+    // Note: It's unclear whether or not this matches reference platform behavior.
     NSArray* windows = [[UIApplication sharedApplication] windows];
-
     int windowCount = [windows count];
     for (int i = 0; i < windowCount; i++) {
         UIWindow* curWindow = [windows objectAtIndex:i];

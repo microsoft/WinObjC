@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -28,8 +28,6 @@
 
 #import "StubReturn.h"
 #import "StarboardXaml/DisplayProperties.h"
-
-extern float statusBarHeight;
 
 static UIScreen* mainScreen;
 static UIScreenMode* _curMode;
@@ -125,13 +123,7 @@ NSString* const UIScreenBrightnessDidChangeNotification = @"UIScreenBrightnessDi
  @Status Interoperable
 */
 - (CGRect)bounds {
-    CGRect ret;
-    ret.origin.x = 0.0f;
-    ret.origin.y = 0.0f;
-    ret.size.width = DisplayProperties::ScreenWidth();
-    ret.size.height = DisplayProperties::ScreenHeight();
-
-    return ret;
+    return CGRectMake(0.0, 0.0, DisplayProperties::ScreenWidth(), DisplayProperties::ScreenHeight());
 }
 
 /**
@@ -151,46 +143,8 @@ NSString* const UIScreenBrightnessDidChangeNotification = @"UIScreenBrightnessDi
  @Status Interoperable
 */
 - (CGRect)applicationFrame {
-    BOOL isHidden = [[UIApplication sharedApplication] isStatusBarHidden];
-    UIInterfaceOrientation statusBarOrientation = (UIInterfaceOrientation)[[UIApplication sharedApplication] statusBarOrientation];
-    CGRect ret;
-    ret.origin.x = 0.0f;
-    ret.origin.y = 0.0f;
-    ret.size.width = DisplayProperties::ScreenWidth();
-    ret.size.height = DisplayProperties::ScreenHeight();
-
-    if (!isHidden) {
-        switch (statusBarOrientation) {
-            case UIInterfaceOrientationLandscapeLeft:
-                ret.origin.x += statusBarHeight;
-                ret.size.width -= statusBarHeight;
-                break;
-
-            case UIInterfaceOrientationLandscapeRight:
-                ret.size.width -= statusBarHeight;
-                break;
-
-            case UIInterfaceOrientationPortrait:
-                ret.origin.y += statusBarHeight;
-                ret.size.height -= statusBarHeight;
-                break;
-
-            case UIInterfaceOrientationPortraitUpsideDown:
-                ret.size.height -= statusBarHeight;
-                break;
-
-            case 0:
-                ret.origin.y += statusBarHeight;
-                ret.size.height -= statusBarHeight;
-                break;
-
-            default:
-                assert(0);
-                break;
-        }
-    }
-
-    return ret;
+    // TODO: #2439 Should this account for the UWP status bar occlusion rect?
+    return CGRectMake(0.0, 0.0, DisplayProperties::ScreenWidth(), DisplayProperties::ScreenHeight());
 }
 
 /**
