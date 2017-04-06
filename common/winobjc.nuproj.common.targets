@@ -53,9 +53,12 @@
     </ItemGroup>
   </Target>
 
+  <!--
+    Add in ResovleReferences for NUPROJ version calculation. This is because the .nuproj files depend on the NuprojInitializer
+    to create the solution wide timestamp file used for uniform versioning of packages. 
+  -->
   <PropertyGroup>
     <CalculatePackageVersionDependsOn>ResolveReferences;$(CalculatePackageVersionDependsOn)</CalculatePackageVersionDependsOn>
-    <GetPackageVersionDependsOn>CalculatePackageVersion;$(GetPackageVersionDependsOn);</GetPackageVersionDependsOn>
   </PropertyGroup>
 
   <Import Project="$(MSBuildThisFileDirectory)\winobjc.versioning.common.targets"/>
