@@ -319,6 +319,15 @@ bool VCProject::writeTemplate(const std::string& filePath, const LabelHandlerFnM
     pugi::xml_node projRoot = projDoc.first_child();
 
     for (pugi::xml_node child = projRoot.first_child(); child; child = child.next_sibling()) {
+        // Delete empty (no children) vsimporter-only groups on previous node
+        if (child.previous_sibling()) {
+            pugi::xml_attribute preLabelAttr = child.previous_sibling().attribute("Label");
+            pugi::xml_attribute preVSImporterAttr = child.previous_sibling().attribute("VSImporterLabel");
+            if (preLabelAttr.empty() && preVSImporterAttr.empty() && !child.previous_sibling().first_child()) {
+                projRoot.remove_child(child.previous_sibling());
+            }
+        }
+
         // Check each child for a VSImporterLabel attribute
         pugi::xml_attribute sblabelAttr = child.attribute("VSImporterLabel");
         std::string sblabelValue = sblabelAttr.value();
