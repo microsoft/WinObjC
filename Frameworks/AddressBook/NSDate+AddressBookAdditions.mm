@@ -14,6 +14,7 @@
 //
 //******************************************************************************
 
+#import <Foundation/Foundation.h>
 #import "NSDate+AddressBookAdditions.h"
 
 using namespace winrt::Windows::ApplicationModel::Contacts;

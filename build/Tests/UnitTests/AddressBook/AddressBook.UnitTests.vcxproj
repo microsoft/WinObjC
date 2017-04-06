@@ -216,7 +216,6 @@
     <ClCompile Include="$(StarboardBasePath)\tests\unittests\EntryPoint.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\AddressBook\AuthorizationTests.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\AddressBook\BasicQueryTests.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\AddressBook\MultiValueTests.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\AddressBook\MutableMultiValueTests.mm" />
@@ -224,5 +223,5 @@
     <ClangCompile Include="$(StarboardBasePath)\Frameworks\AddressBook\NSDate+AddressBookAdditions.mm" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
-  <Import Project="$(StarboardBasePath)\common\winobjc.packagereference.override.targets" Condition="Exists('$(StarboardBasePath)\common\winobjc.packagereference.override.targets')"/>
+  <Import Project="$(StarboardBasePath)\common\winobjc.packagereference.override.targets" Condition="Exists('$(StarboardBasePath)\common\winobjc.packagereference.override.targets')" />
 </Project>

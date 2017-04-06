@@ -19,40 +19,40 @@
 #import <CoreFoundation/CoreFoundation.h>
 #import <Foundation/Foundation.h>
 
-#import "UWP/WindowsApplicationModelContacts.h"
 #import <AddressBook/ABAddressBook.h>
 #import <AddressBook/ABRecord.h>
 #import <AddressBook/ABPerson.h>
 #import "ABContactInternal.h"
+#import "CppWinRTHelpers.h"
+
+using namespace winrt::Windows::ApplicationModel::Contacts;
 
 class AddressBookQueryTest : public ::testing::TestWithParam<::testing::tuple<ABPropertyID, NSString*>> {
 protected:
     virtual void SetUp() {
-        WACContact* contact = [WACContact make];
-        contact.notes = @"Test Note!";
-        contact.nickname = @"Mikey";
-        contact.yomiGivenName = @"Mic";
-        contact.honorificNameSuffix = @"Jr.";
-        contact.yomiFamilyName = @"Saw-ft";
-        contact.middleName = @"Roe";
-        contact.lastName = @"Soft";
-        contact.honorificNamePrefix = @"Mr.";
-        contact.firstName = @"Mike";
+        Contact contact;
+        contact.Notes(L"Test Note!");
+        contact.Nickname(L"Mikey");
+        contact.YomiGivenName(L"Mic");
+        contact.HonorificNameSuffix(L"Jr.");
+        contact.YomiFamilyName(L"Saw-ft");
+        contact.MiddleName(L"Roe");
+        contact.LastName(L"Soft");
+        contact.HonorificNamePrefix(L"Mr.");
+        contact.FirstName(L"Mike");
 
-        WACContactJobInfo* job = [WACContactJobInfo make];
-        job.title = @"SDE";
-        job.office = @"Redmond";
-        job.manager = @"Satya";
-        job.Description = @"I develop good code.";
-        job.department = @"WDG";
-        job.companyYomiName = @"Mike Roe Soft";
-        job.companyName = @"Microsoft";
-        job.companyAddress = @"Redmond, WA";
+        ContactJobInfo job;
+        job.Title(L"SDE");
+        job.Office(L"Redmond");
+        job.Manager(L"Satya");
+        job.Description(L"I develop good code.");
+        job.Department(L"WDG");
+        job.CompanyYomiName(L"Mike Roe Soft");
+        job.CompanyName(L"Microsoft");
+        job.CompanyAddress(L"Redmond, WA");
 
-        [contact.jobInfo addObject:job];
-        [job release];
+        contact.JobInfo().Append(job);
         _record = (__bridge_retained ABRecordRef)[[_ABContact alloc] initWithContact:contact andType:kAddressBookNewContact];
-        [contact release];
     }
 
     virtual void TearDown() {
@@ -86,14 +86,14 @@ INSTANTIATE_TEST_CASE_P(AddressBook,
                                           ::testing::make_tuple(-1, nil)));
 
 TEST(AddressBook, QueryContactBirthday) {
-    WACContact* contact = [WACContact make];
-    WACContactDate* birthday = [WACContactDate make];
-    birthday.year = @1975;
-    birthday.month = @4;
-    birthday.day = @4;
-    birthday.kind = WACContactDateKindBirthday;
+    Contact contact;
+    ContactDate birthday;
+    birthday.Year(objcwinrt::optional(1975));
+    birthday.Month(objcwinrt::optional(4u));
+    birthday.Day(objcwinrt::optional(4u));
+    birthday.Kind(ContactDateKind::Birthday);
 
-    [contact.importantDates addObject:birthday];
+    contact.ImportantDates().Append(birthday);
     ABRecordRef record = (__bridge_retained ABRecordRef)[[_ABContact alloc] initWithContact:contact andType:kAddressBookNewContact];
 
     NSCalendar* calendar = [NSCalendar currentCalendar];
@@ -108,14 +108,12 @@ TEST(AddressBook, QueryContactBirthday) {
     CFRelease(record);
     CFRelease(contactBirthday);
     [dateComponents release];
-    [contact release];
-    [birthday release];
 }
 
 TEST(AddressBook, GetRecordTypeAndID) {
     ASSERT_EQ_MSG(kABRecordInvalidID, ABRecordGetRecordID(nullptr), "FAILED: null record should have an invalid ID!\n");
     ABRecordRef record =
-        (__bridge_retained ABRecordRef)[[_ABContact alloc] initWithContact:[WACContact make] andType:kAddressBookNewContact];
+        (__bridge_retained ABRecordRef)[[_ABContact alloc] initWithContact:Contact() andType:kAddressBookNewContact];
     ASSERT_EQ_MSG(kABPersonType, ABRecordGetRecordType(record), "FAILED: Person record should have a person type!\n");
     CFRelease(record);
 }
