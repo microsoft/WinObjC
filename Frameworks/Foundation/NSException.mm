@@ -41,30 +41,29 @@ NSString* const NSMallocException = @"NSMallocException";
 NSString* const WinObjCException = @"WinObjC Exception"; // not exported
 
 // The uncaught exception handler is not thread-specific.
+// Loads and stores of a single pointer's width are guaranteed to be atomic.
 static NSUncaughtExceptionHandler* s_uncaughtExceptionHandler = nullptr;
 
 // Entry point used by NSException_Win32.cpp after C++ ThrowInfo unboxing.
 void _NSExceptionCallUnhandledExceptionHandler(void* untypedException) {
-    auto handler = NSGetUncaughtExceptionHandler();
-    if (handler) {
+    if (s_uncaughtExceptionHandler) {
         // The machinery that calls this function only calls it for exceptions whose type descriptors
         // contain NSException* and objc_object*, making this cast safe.
-        handler(reinterpret_cast<NSException*>(untypedException));
+        s_uncaughtExceptionHandler(reinterpret_cast<NSException*>(untypedException));
     }
 }
 /**
  @Status Interoperable
 */
 void NSSetUncaughtExceptionHandler(NSUncaughtExceptionHandler* handler) {
-    InterlockedExchangePointer(reinterpret_cast<void**>(&s_uncaughtExceptionHandler), reinterpret_cast<void*>(handler));
+    s_uncaughtExceptionHandler = handler;
 }
 
 /**
  @Status Interoperable
 */
 NSUncaughtExceptionHandler* NSGetUncaughtExceptionHandler() {
-    return reinterpret_cast<NSUncaughtExceptionHandler*>(
-        InterlockedCompareExchangePointer(reinterpret_cast<void**>(&s_uncaughtExceptionHandler), nullptr, nullptr));
+    return s_uncaughtExceptionHandler;
 }
 
 @implementation NSException

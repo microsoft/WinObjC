@@ -6,21 +6,23 @@
 #define EH_EXCEPTION_NUMBER ('msc' | 0xE0000000)
 #define EH_MAGIC_NUMBER1 0x19930520
 
+// rebase_and_cast adds a constant offset to a U value, converting it into a T
 template <typename T, typename U>
-static std::add_const_t<std::decay_t<T>> rebase_and_cast(uintptr_t base, U value) {
+static std::add_const_t<std::decay_t<T>> rebase_and_cast(std::ptrdiff_t base, U value) {
+    // U value -> const T* (base+value)
     return reinterpret_cast<std::add_const_t<std::decay_t<T>>>(base + (uintptr_t)(value));
 }
 
 // _ThrowInfo, _CatchableTypeArray, _CatchableType and _TypeDescriptor (nee std::type_info) are defined by CL at compile time.
-extern "C" LONG WINAPI _NSWindowsUnhandledExceptionFilter(struct _EXCEPTION_POINTERS* ExceptionInfo) {
-    const EXCEPTION_RECORD* ex = ExceptionInfo->ExceptionRecord;
+extern "C" LONG WINAPI _NSWindowsUnhandledExceptionFilter(struct _EXCEPTION_POINTERS* exceptionInfo) {
+    const EXCEPTION_RECORD* ex = exceptionInfo->ExceptionRecord;
 
     // An exception thrown by libobjc2 goes through _CxxThrowException, which populates the EXCEPTION_RECORD with the magic C++
     // exception number (0xE0000000 ORed with the bytes 'msc' (in platform endianness)) and the exception parameters with
     // a _ThrowInfo*, another magic number, and the object being thrown.
     if (ex->ExceptionCode == EH_EXCEPTION_NUMBER && ex->ExceptionInformation[0] == EH_MAGIC_NUMBER1 && ex->NumberParameters >= 3) {
         // On some platforms, thrown exception catch data are relative virtual addresses off the module base.
-        uintptr_t moduleBase = ex->NumberParameters >= 4 ? ex->ExceptionInformation[3] : 0;
+        std::ptrdiff_t moduleBase = ex->NumberParameters >= 4 ? (std::ptrdiff_t)(ex->ExceptionInformation[3]) : 0;
 
         auto throwInfo = reinterpret_cast<_ThrowInfo*>(ex->ExceptionInformation[2]);
         if (throwInfo && throwInfo->pCatchableTypeArray) {
