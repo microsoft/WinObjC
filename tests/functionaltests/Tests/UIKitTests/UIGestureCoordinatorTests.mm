@@ -145,7 +145,7 @@ static TestableUITouch* createTestableUITuch(BOOL activeGestureCanPrevent,
     return touch;
 }
 
-TEST(_UIGestureCoordinator, ActiveGestureAllowPossibleGesture) {
+DISABLED_TEST(_UIGestureCoordinator, ActiveGestureAllowPossibleGesture) {
     // conifg activeGesture can NOT prevent other, and possible gesture can NOT be prevented, adding activeGesture first
     TestableUITouch* touch = createTestableUITuch(NO, NO, YES);
     _UIGestureCoordinator* cooridnator = [[[_UIGestureCoordinator alloc] init] autorelease];
@@ -162,7 +162,7 @@ TEST(_UIGestureCoordinator, ActiveGestureAllowPossibleGesture) {
     ASSERT_TRUE([possibleGesture count] == 1);
 }
 
-TEST(_UIGestureCoordinator, ActiveGesturePreventPossibleGestureHasNotReceivedTouch) {
+DISABLED_TEST(_UIGestureCoordinator, ActiveGesturePreventPossibleGestureHasNotReceivedTouch) {
     // conifg activeGesture can prevent other, and possible gesture can be prevented, adding possibleGesture first
     TestableUITouch* touch = createTestableUITuch(YES, YES);
     _UIGestureCoordinator* cooridnator = [[[_UIGestureCoordinator alloc] init] autorelease];
@@ -183,7 +183,7 @@ TEST(_UIGestureCoordinator, ActiveGesturePreventPossibleGestureHasNotReceivedTou
     ASSERT_TRUE([possibleGesture count] == 0);
 }
 
-TEST(_UIGestureCoordinator, ActiveGesturePreventPossibleGestureHasReceivedTouch) {
+DISABLED_TEST(_UIGestureCoordinator, ActiveGesturePreventPossibleGestureHasReceivedTouch) {
     TestableUITouch* touch = createTestableUITuch(YES, YES, NO);
     _UIGestureCoordinator* cooridnator = [[[_UIGestureCoordinator alloc] init] autorelease];
     [cooridnator processGesturesForTouch:touch event:nil touchEventName:@selector(touchesBegan:withEvent:)];
@@ -203,7 +203,7 @@ TEST(_UIGestureCoordinator, ActiveGesturePreventPossibleGestureHasReceivedTouch)
     ASSERT_TRUE([possibleGesture count] == 0);
 }
 
-TEST(_UIGestureCoordinator, DelegateAllowConcurrentGestures) {
+DISABLED_TEST(_UIGestureCoordinator, DelegateAllowConcurrentGestures) {
     TestableGestureDelegate* delegateForPossibleGesture = [[[TestableGestureDelegate alloc] initWithReply:YES] autorelease];
     TestableUITouch* touch = createTestableUITuch(YES, YES, YES, nil, delegateForPossibleGesture);
     _UIGestureCoordinator* cooridnator = [[[_UIGestureCoordinator alloc] init] autorelease];
@@ -240,7 +240,7 @@ TEST(_UIGestureCoordinator, DelegateAllowConcurrentGestures) {
     ASSERT_TRUE([possibleGesture count] == 0);
 }
 
-TEST(_UIGestureCoordinator, DelegatesForbidConcurrentGestures) {
+DISABLED_TEST(_UIGestureCoordinator, DelegatesForbidConcurrentGestures) {
     TestableGestureDelegate* delegateForPossibleGesture = [[[TestableGestureDelegate alloc] initWithReply:NO] autorelease];
     TestableGestureDelegate* delegateForActiveGesture = [[[TestableGestureDelegate alloc] initWithReply:NO] autorelease];
     TestableUITouch* touch = createTestableUITuch(YES, YES, YES, delegateForActiveGesture, delegateForPossibleGesture);
@@ -293,7 +293,7 @@ TEST(_UIGestureCoordinator, DelegatesForbidConcurrentGestures) {
 }
 @end
 
-TEST(_UIGestureCoordinator, TapGestureMiscFunctions) {
+DISABLED_TEST(_UIGestureCoordinator, TapGestureMiscFunctions) {
     TestableUITouch* touch = [[[TestableUITouch alloc] init] autorelease];
     touch.phase = UITouchPhaseMoved;
 
