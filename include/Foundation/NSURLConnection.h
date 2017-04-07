@@ -34,7 +34,7 @@ FOUNDATION_EXPORT_CLASS
 @interface NSURLConnection : NSObject <NSURLProtocolClient>
 + (BOOL)canHandleRequest:(NSURLRequest*)request;
 @property (readonly, copy) NSURLRequest* originalRequest;
-@property (readonly, copy) NSURLRequest* currentRequest STUB_PROPERTY;
+@property (readonly, copy) NSURLRequest* currentRequest;
 + (NSData*)sendSynchronousRequest:(NSURLRequest*)request
                 returningResponse:(NSURLResponse* _Nullable*)response
                             error:(NSError* _Nullable*)error;
