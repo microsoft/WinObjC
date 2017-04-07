@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 // Copyright (c) 2006-2007 Christopher J. W. Lloyd
 //
 // This code is licensed under the MIT License (MIT).
@@ -18,6 +18,7 @@
 
 #import <Foundation/FoundationExport.h>
 #import <Foundation/NSObject.h>
+#import <Foundation/NSRunLoop.h>
 #import <Foundation/NSURLProtocol.h>
 
 @class NSURLRequest;
@@ -25,25 +26,15 @@
 @class NSURLResponse;
 @class NSError;
 @class NSOperationQueue;
-@class NSRunLoop;
-@class NSString;
 @class NSInputStream;
 @class NSURLProtectionSpace;
 @class NSURL;
 
 FOUNDATION_EXPORT_CLASS
-@interface NSURLConnection : NSObject <NSURLProtocolClient> {
-    id _request;
-    id _protocol;
-    id _delegate;
-    id _response;
-    unsigned _storagePolicy;
-    BOOL _didRetain, _didRelease, _scheduled;
-}
-
+@interface NSURLConnection : NSObject <NSURLProtocolClient>
 + (BOOL)canHandleRequest:(NSURLRequest*)request;
 @property (readonly, copy) NSURLRequest* originalRequest;
-@property (readonly, copy) NSURLRequest* currentRequest;
+@property (readonly, copy) NSURLRequest* currentRequest STUB_PROPERTY;
 + (NSData*)sendSynchronousRequest:(NSURLRequest*)request
                 returningResponse:(NSURLResponse* _Nullable*)response
                             error:(NSError* _Nullable*)error;
@@ -55,9 +46,9 @@ FOUNDATION_EXPORT_CLASS
               completionHandler:(void (^)(NSURLResponse*, NSData*, NSError*))handler;
 - (void)start;
 - (void)cancel;
-- (void)scheduleInRunLoop:(NSRunLoop*)aRunLoop forMode:(NSString*)mode;
-- (void)setDelegateQueue:(NSOperationQueue*)queue STUB_METHOD;
-- (void)unscheduleFromRunLoop:(NSRunLoop*)aRunLoop forMode:(NSString*)mode;
+- (void)scheduleInRunLoop:(NSRunLoop*)aRunLoop forMode:(NSRunLoopMode)mode;
+- (void)setDelegateQueue:(NSOperationQueue*)queue;
+- (void)unscheduleFromRunLoop:(NSRunLoop*)aRunLoop forMode:(NSRunLoopMode)mode;
 @end
 
 @protocol NSURLConnectionDelegate <NSObject>
@@ -89,9 +80,9 @@ FOUNDATION_EXPORT_CLASS
 @protocol NSURLConnectionDownloadDelegate <NSURLConnectionDelegate>
 @optional
 - (void)connection:(NSURLConnection*)connection
-      didWriteData:(long long)bytesWritten
- totalBytesWritten:(long long)totalBytesWritten
-expectedTotalBytes:(long long)expectedTotalBytes;
+          didWriteData:(long long)bytesWritten
+     totalBytesWritten:(long long)totalBytesWritten
+    expectedTotalBytes:(long long)expectedTotalBytes;
 - (void)connectionDidResumeDownloading:(NSURLConnection*)connection
                      totalBytesWritten:(long long)totalBytesWritten
                     expectedTotalBytes:(long long)expectedTotalBytes;

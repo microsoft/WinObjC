@@ -18,13 +18,7 @@
 
 #import "Starboard/SmartTypes.h"
 
-@interface NSURLProtocol () {
-@public
-    StrongId<NSURLRequest> _request;
-    StrongId<NSCachedURLResponse> _cachedResponse;
-    StrongId<id<NSURLProtocolClient>> _client;
-}
-
-+(id)_URLProtocolClassForRequest:(id)request;
+@interface NSURLProtocol ()
++ (id)_URLProtocolClassForRequest:(id)request;
 
 @end

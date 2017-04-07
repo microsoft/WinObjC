@@ -251,7 +251,7 @@ static std::function<R(Args...)> bindObjC(id instance, SEL _cmd) {
 
         NSError* error = nil;
         try {
-            auto httpRequestMessage = _requestMessageForNS(_request);
+            auto httpRequestMessage = _requestMessageForNS(self.request);
             THROW_IF_FAILED(_httpClient->SendRequestWithOptionAsync(httpRequestMessage.Get(),
                                                                     HttpCompletionOption::HttpCompletionOption_ResponseHeadersRead,
                                                                     &_httpRequestOperation));
@@ -322,7 +322,7 @@ static std::function<R(Args...)> bindObjC(id instance, SEL _cmd) {
             ComPtr<IMap<HSTRING, HSTRING>> headerMap;
             THROW_IF_FAILED(headerCollection.As(&headerMap));
 
-            if ([_request HTTPShouldHandleCookies]) {
+            if ([self.request HTTPShouldHandleCookies]) {
                 NSHTTPCookieStorage* cookieStorage = [NSHTTPCookieStorage sharedHTTPCookieStorage];
                 NSMutableDictionary* collectedCookies = [NSMutableDictionary dictionary];
                 int index = 0;
@@ -350,8 +350,8 @@ static std::function<R(Args...)> bindObjC(id instance, SEL _cmd) {
                                         });
                 THROW_IF_FAILED(hr);
 
-                NSArray* cookies = [NSHTTPCookie cookiesWithResponseHeaderFields:collectedCookies forURL:[_request URL]];
-                [cookieStorage setCookies:cookies forURL:[_request URL] mainDocumentURL:nil];
+                NSArray* cookies = [NSHTTPCookie cookiesWithResponseHeaderFields:collectedCookies forURL:[self.request URL]];
+                [cookieStorage setCookies:cookies forURL:[self.request URL] mainDocumentURL:nil];
             }
 
             NSMutableDictionary* nsHeaders = [NSMutableDictionary dictionary];
@@ -393,7 +393,7 @@ static std::function<R(Args...)> bindObjC(id instance, SEL _cmd) {
                 default:
                     httpVersionStr = nil;
             }
-            NSHTTPURLResponse* nsResponse = [[[NSHTTPURLResponse alloc] initWithURL:[_request URL]
+            NSHTTPURLResponse* nsResponse = [[[NSHTTPURLResponse alloc] initWithURL:[self.request URL]
                                                                          statusCode:statusCode
                                                                         HTTPVersion:httpVersionStr
                                                                        headerFields:nsHeaders] autorelease];
@@ -409,13 +409,13 @@ static std::function<R(Args...)> bindObjC(id instance, SEL _cmd) {
                 THROW_IF_FAILED(uri->get_AbsoluteUri(uriString.GetAddressOf()));
 
                 // The location header can specify a relative or absolute URL: attempt to join it with the request URL.
-                NSURL* targetUrl = [NSURL URLWithString:Strings::WideToNSString(uriString.Get()) relativeToURL:[_request URL]];
+                NSURL* targetUrl = [NSURL URLWithString:Strings::WideToNSString(uriString.Get()) relativeToURL:[self.request URL]];
                 NSURLRequest* req = [NSURLRequest requestWithURL:targetUrl];
-                [_client URLProtocol:self wasRedirectedToRequest:req redirectResponse:nsResponse];
+                [self.client URLProtocol:self wasRedirectedToRequest:req redirectResponse:nsResponse];
                 // After a redirect, NSURLProtocol ceases to exist: we could redirect to a completely different one.
                 return S_OK;
             } else {
-                [_client URLProtocol:self didReceiveResponse:nsResponse cacheStoragePolicy:NSURLCacheStorageNotAllowed];
+                [self.client URLProtocol:self didReceiveResponse:nsResponse cacheStoragePolicy:NSURLCacheStorageNotAllowed];
             }
 
             if (content) {
@@ -439,11 +439,11 @@ static std::function<R(Args...)> bindObjC(id instance, SEL _cmd) {
 }
 
 - (void)_propagateErrorToClient:(NSError*)error {
-    [_client URLProtocol:self didFailWithError:error];
+    [self.client URLProtocol:self didFailWithError:error];
 }
 
 - (void)_didFinishLoading {
-    [_client URLProtocolDidFinishLoading:self];
+    [self.client URLProtocolDidFinishLoading:self];
 }
 
 - (void)_consumeDataStreamForIHttpContent:(IHttpContent*)pHttpContent {
@@ -493,7 +493,7 @@ static std::function<R(Args...)> bindObjC(id instance, SEL _cmd) {
             // We're opting to take a copy of the buffer here, as NSURLProtocol's consumer can legally expect the data
             // to remain valid long after the connection is gone. Eventually, it would be very nice to have an IBuffer-backed
             // NSData.
-            [_client URLProtocol:strongSelf didLoadData:[NSData dataWithBytes:pOutputBuffer length:length]];
+            [self.client URLProtocol:strongSelf didLoadData:[NSData dataWithBytes:pOutputBuffer length:length]];
         }
 
         [strongSelf _didFinishLoading];
