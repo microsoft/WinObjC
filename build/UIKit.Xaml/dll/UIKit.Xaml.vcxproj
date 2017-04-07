@@ -226,10 +226,13 @@
     <Import Project="$(StarboardBasePath)\msvc\sdk-build.targets" />
   </ImportGroup>
   <ItemGroup>
-    <ReferenceCopyLocalPaths Include="$(MSBuildThisFileDirectory)$(XamlGeneratedOutputPath)\**\*.xaml">
-      <DestinationSubDirectory>$(OutputName)\%(RecursiveDir)</DestinationSubDirectory>
-    </ReferenceCopyLocalPaths>
-  </ItemGroup>
+  <Target Name="CopyXamlFilesToOutput" BeforeTargets="_CopyFilesMarkedCopyLocal" DependsOnTargets="$(AfterBuildCompileTargets)">
+    <ItemGroup>
+      <ReferenceCopyLocalPaths Include="$(MSBuildThisFileDirectory)$(XamlGeneratedOutputPath)\**\*.xaml">
+        <DestinationSubDirectory>$(OutputName)\%(RecursiveDir)</DestinationSubDirectory>
+      </ReferenceCopyLocalPaths>
+    </ItemGroup>
+  </Target>
   <Target Name="AddExtraPackageItems" BeforeTargets="GetPackageContents">
     <ItemGroup>
       <!-- Include Extra Deps for this project -->
