@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <WriteVersionInfoToBuildLog>false</WriteVersionInfoToBuildLog>
+  </PropertyGroup>
+
   <ItemGroup>
     <WinObjCPackageOverridePath Include="$(MSBuildThisFileDirectory)..\build\OutputPackages"/>
     <WinObjCPackageOverridePath Include="$(MSBuildThisFileDirectory)..\tools\OutputPackages"/>
@@ -92,7 +96,7 @@
 
     <!-- Only set a pre-release version to use if it is a pre-release build itself. Stable builds should depend on stable packages. -->
     <PropertyGroup>
-      <PrereleaseVersion Condition="'$(GitVersion_PreReleaseLabel)' != ''">$(GitVersion_Major).$(GitVersion_Minor).$([MSBuild]::Add('$(GitVersion_Patch)', '1'))-*</PrereleaseVersion>
+      <PrereleaseVersion Condition="'$(GitVersion_PreReleaseLabel)' != ''">$(GitVersion_Major).$(GitVersion_Minor).$(GitVersion_Patch)-*</PrereleaseVersion>
     </PropertyGroup>
 
 
@@ -115,7 +119,7 @@
   <!-- Manually import this checked in NuGet instead of relying on the package itself since it is being used
        to adjust the Restore process. If it were a normal NuGet dependency, it also would need restored which means it
        couldn't adjust the restore process itself as it would already be too late. -->
-  <Import Project="$(MSBuildThisFileDirectory)\gitversiontask\4.0.0-beta0011\build\GitVersionTask.targets" />
+  <Import Project="$(MSBuildThisFileDirectory)\gitversiontask\4.0.0-beta0011\build\GitVersionTask.targets" Condition="'$(GitVersion_Task_targets_Imported)' == ''"/>
 
   <!-- Inline tasks (and targets) to make sure GitVersion only runs one at a time. This is an improvement that should 
          probably be contributed back (see https://github.com/GitTools/GitVersion/issues/1031) -->

@@ -12,7 +12,7 @@ branches:
     is-mainline: true
   develop:
     regex: develop
-    increment: None
+    increment: Patch
     tag: 'dev'
     track-merge-target: true
     tracks-release-branches: true
@@ -28,7 +28,7 @@ branches:
   .*:
     regex: .*
     tag: 'pr'
-    increment: None
+    increment: Patch
     track-merge-target: false
     tracks-release-branches: true
     is-release-branch: false

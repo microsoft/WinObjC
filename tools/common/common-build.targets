@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
-<Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets"/>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets"/>
 
   <PropertyGroup>
     <HasConfigurationSpecificPackageContents Condition="'$(HasConfigurationSpecificPackageContents)' == '' ">false</HasConfigurationSpecificPackageContents>
@@ -37,4 +37,5 @@
     </ItemGroup>
   </Target>
 
+  <Import Project="$(MSBuildThisFileDirectory)\..\..\common\winobjc.versioning.common.targets"/>
 </Project>
