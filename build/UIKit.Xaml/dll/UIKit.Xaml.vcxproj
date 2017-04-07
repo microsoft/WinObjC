@@ -225,7 +225,6 @@
   <ImportGroup Label="ExtensionTargets">
     <Import Project="$(StarboardBasePath)\msvc\sdk-build.targets" />
   </ImportGroup>
-  <ItemGroup>
   <Target Name="CopyXamlFilesToOutput" BeforeTargets="_CopyFilesMarkedCopyLocal" DependsOnTargets="$(AfterBuildCompileTargets)">
     <ItemGroup>
       <ReferenceCopyLocalPaths Include="$(MSBuildThisFileDirectory)$(XamlGeneratedOutputPath)\**\*.xaml">
