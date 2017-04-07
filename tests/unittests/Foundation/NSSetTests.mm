@@ -201,40 +201,28 @@ TEST(NSSet, ObjectsWithOptionsPassingTest) {
     // so all blocks should be run concurrently, otherwise waitingCount will not return to 0
     __block NSCondition* condition = [[NSCondition new] autorelease];
     __block unsigned waitingCount = 0;
-    NSSet* matchingForward = [set objectsWithOptions:NSEnumerationConcurrent
-                                         passingTest:^BOOL(id obj, BOOL* stop) {
-                                             [condition lock];
-                                             if (++waitingCount < 5) {
-                                                 [condition wait];
-                                             }
+    NSSet* matching = [set objectsWithOptions:NSEnumerationConcurrent
+                                  passingTest:^BOOL(id obj, BOOL* stop) {
+                                      [condition lock];
+                                      if (++waitingCount < 5) {
+                                          [condition wait];
+                                      }
 
-                                             --waitingCount;
-                                             [condition signal];
-                                             [condition unlock];
-                                             return [obj unsignedIntegerValue] % 2 == 0 ? YES : NO;
-                                         }];
-
-    ASSERT_EQ(0, waitingCount);
-
-    NSSet* matchingReverse = [set objectsWithOptions:(NSEnumerationConcurrent | NSEnumerationReverse)
-                                         passingTest:^BOOL(id obj, BOOL* stop) {
-                                             [condition lock];
-                                             if (++waitingCount < 5) {
-                                                 [condition wait];
-                                             }
-
-                                             --waitingCount;
-                                             [condition signal];
-                                             [condition unlock];
-                                             return [obj unsignedIntegerValue] % 2 == 0 ? YES : NO;
-                                         }];
+                                      --waitingCount;
+                                      [condition signal];
+                                      [condition unlock];
+                                      return [obj unsignedIntegerValue] % 2 == 0 ? YES : NO;
+                                  }];
 
     ASSERT_EQ(0, waitingCount);
 
-    EXPECT_EQ(2, matchingForward.count);
-    EXPECT_TRUE([matchingForward containsObject:@2]);
-    EXPECT_TRUE([matchingForward containsObject:@4]);
+    NSSet* defaultMatching = [set objectsWithOptions:0
+                                         passingTest:^BOOL(id obj, BOOL* stop) {
+                                             return [obj unsignedIntegerValue] % 2 == 0 ? YES : NO;
+                                         }];
 
-    // Ordering of using NSEnumerationReverse is undefined, so simply verify that the correct values are added to the set
-    EXPECT_OBJCEQ(matchingForward, matchingReverse);
+    EXPECT_EQ(2, matching.count);
+    EXPECT_TRUE([matching containsObject:@2]);
+    EXPECT_TRUE([matching containsObject:@4]);
+    EXPECT_OBJCEQ(matching, defaultMatching);
 }
