@@ -36,10 +36,6 @@
 using namespace winrt::Windows::UI::Xaml;
 
 static const wchar_t* TAG = L"UILabel";
-=======
-using namespace winrt::Windows::UI::Xaml;
-
-static const wchar_t* TAG = L"UILabel";
 
 @implementation UILabel {
     idretaintype(NSString) _text;

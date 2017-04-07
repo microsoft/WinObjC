@@ -503,9 +503,6 @@ static CGRect calculateContentRect(UIButton* self, CGSize size, CGRect contentRe
 - (void)setEnabled:(BOOL)enabled {
     _xamlButton.IsEnabled(enabled);
     [super setEnabled:enabled];
-=======
-    _xamlButton.IsEnabled(enabled);
-    [super setEnabled:enabled];
 }
 
 /**

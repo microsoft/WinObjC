@@ -39,5 +39,14 @@
     <ReferenceCopyLocalPaths Include="$(MSBuildThisFileDirectory)\..\..\..\Frameworks\CoreFoundation\CharacterSets\*" />
     <ReferenceCopyLocalPaths Include="$(MSBuildThisFileDirectory)\..\..\..\tests\ContainerCRTDeps\$(ProcessorArchitecture)\*.dll" />
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\include\CppUtils.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\tests\unittests\Tests.Shared\ByteUtils.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\include\CppUtils.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\include\MockClass.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\tests\unittests\Tests.Shared\ByteUtils.h" />
+  </ItemGroup>
   <Target Name="_GenerateRestoreGraphProjectEntry" />
 </Project>

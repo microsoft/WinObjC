@@ -35,6 +35,30 @@ DEFINE_GUID(_ABAddressBookContactsGUID, 0x7D7E8402, 0x7C54, 0x4821, 0xA3, 0x4E, 
 
 const CFStringRef ABAddressBookErrorDomain = static_cast<const CFStringRef>(@"ABAddressBookErrorDomain");
 
+// Wrapper around WDE::DeviceAccessInformation, whose implementation can be
+// replaced in test scenarios
+@interface _ABAddressBookDevice : NSObject
+- (instancetype)initWithDeviceClassId:(GUID)classId;
+- (DeviceAccessStatus)currentStatus;
+@end
+
+@implementation _ABAddressBookDevice {
+    TrivialDefaultConstructor<DeviceAccessInformation> _deviceInfo;
+}
+
+- (instancetype)initWithDeviceClassId:(GUID)classId {
+    if (self = [super init]) {
+        _deviceInfo = DeviceAccessInformation::CreateFromDeviceClassId(classId);
+    }
+
+    return self;
+}
+
+- (DeviceAccessStatus)currentStatus {
+    return _deviceInfo.CurrentStatus();
+}
+@end
+
 /**
  @Status Interoperable
  @Notes
@@ -68,10 +92,9 @@ ABAddressBookRef ABAddressBookCreateWithOptions(CFDictionaryRef options, CFError
  @Notes
 */
 ABAuthorizationStatus ABAddressBookGetAuthorizationStatus() {
-    DeviceAccessInformation deviceAccessInformation = DeviceAccessInformation::CreateFromDeviceClassId(_ABAddressBookContactsGUID);
-    DeviceAccessStatus currentStatus = deviceAccessInformation.CurrentStatus();
+    _ABAddressBookDevice* deviceInfo = [[_ABAddressBookDevice alloc] initWithDeviceClassId:_ABAddressBookContactsGUID];
 
-    switch (currentStatus) {
+    switch ([deviceInfo currentStatus]) {
         case DeviceAccessStatus::Allowed:
             return kABAuthorizationStatusAuthorized;
         case DeviceAccessStatus::DeniedBySystem:
