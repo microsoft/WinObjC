@@ -519,7 +519,7 @@ BASE_CLASS_REQUIRED_IMPLS(NSSet, NSSetPrototype, CFSetGetTypeID);
  @Status Interoperable
 */
 - (NSSet*)objectsWithOptions:(NSEnumerationOptions)opts passingTest:(BOOL (^)(id, BOOL*))predicate {
-    __block NSMutableSet* ret = [NSMutableSet setWithCapacity:0];
+    __block NSMutableSet* ret = [NSMutableSet setWithCapacity:[self count]];
 
     [self enumerateObjectsWithOptions:opts
                            usingBlock:^void(id obj, BOOL* stop) {
@@ -589,7 +589,7 @@ BASE_CLASS_REQUIRED_IMPLS(NSSet, NSSetPrototype, CFSetGetTypeID);
 - (NSString*)descriptionWithLocale:(id)locale indent:(NSUInteger)level {
     NSMutableString* s = [NSMutableString string];
     NSString* indentStr = @"    ";
-    for (unsigned int i = 0; i < level; ++i) {
+    for (NSUInteger i = 0; i < level; ++i) {
         [s appendString:indentStr];
     }
 

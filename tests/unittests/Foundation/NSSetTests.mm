@@ -156,21 +156,23 @@ OSX_DISABLED_TEST(NSSet, Description) {
     NSSet* emptySet = [NSSet set];
     EXPECT_OBJCEQ(@"{(\n)}", emptySet.description);
     NSSet* nestedSet = [NSSet setWithObjects:[NSSet setWithObjects:@1, @[ @2, @"3", [NSSet setWithObject:@4] ], @5, nil], @"6", nil];
-    NSString* expected = @"{(\n"
-                          "        {(\n"
-                          "                (\n"
-                          "            2,\n"
-                          "            3,\n"
-                          "                        {(\n"
-                          "                4\n"
-                          "            )}\n"
-                          "        ),\n"
-                          "        1,\n"
-                          "        5\n"
-                          "    )},\n"
-                          "    6\n"
-                          ")}";
-    EXPECT_OBJCEQ(expected, nestedSet.description);
+
+    NSString* description = nestedSet.description;
+
+    // We can be certain what the description will begin and end with
+    EXPECT_TRUE([description hasPrefix:@"{(\n    "]);
+    EXPECT_TRUE([description hasSuffix:@"\n)}"]);
+
+    // But we cannot be sure the order of elements, so just check that they exist with the correct indentation
+    EXPECT_TRUE([description containsString:@"        {(\n        "]);
+    EXPECT_TRUE([description containsString:@"        1"]);
+    EXPECT_TRUE([description containsString:@"                (\n            "]);
+    EXPECT_TRUE([description containsString:@"            2"]);
+    EXPECT_TRUE([description containsString:@"            3"]);
+    EXPECT_TRUE([description containsString:@"                        {(\n                4\n            )}"]);
+    EXPECT_TRUE([description containsString:@"        5"]);
+    EXPECT_TRUE([description containsString:@"    )}"]);
+    EXPECT_TRUE([description containsString:@"    6"]);
 }
 
 TEST(NSSet, MakeObjectsPerformSelector) {
@@ -194,21 +196,19 @@ TEST(NSSet, ObjectsWithOptionsPassingTest) {
     NSSet* set = [NSSet setWithObjects:@1, @2, @3, @4, @5, nil];
 
     // Verify that the NSEnumerationConcurrent option executes the blocks concurrently
+    // The blocks will increment waitingCount and wait for the signal unless it is the last element,
+    // in which case it will signal the other blocks to continue and they all decrement waitingCount
+    // so all blocks should be run concurrently, otherwise waitingCount will not return to 0
     __block NSCondition* condition = [[NSCondition new] autorelease];
     __block unsigned waitingCount = 0;
     NSSet* matchingForward = [set objectsWithOptions:NSEnumerationConcurrent
                                          passingTest:^BOOL(id obj, BOOL* stop) {
                                              [condition lock];
-                                             waitingCount++;
-                                             if (waitingCount == 5) {
-                                                 waitingCount--;
-                                                 [condition signal];
-                                                 [condition unlock];
-                                                 return [obj unsignedIntegerValue] % 2 == 0 ? YES : NO;
+                                             if (++waitingCount < 5) {
+                                                 [condition wait];
                                              }
 
-                                             [condition wait];
-                                             waitingCount--;
+                                             --waitingCount;
                                              [condition signal];
                                              [condition unlock];
                                              return [obj unsignedIntegerValue] % 2 == 0 ? YES : NO;
@@ -219,16 +219,11 @@ TEST(NSSet, ObjectsWithOptionsPassingTest) {
     NSSet* matchingReverse = [set objectsWithOptions:(NSEnumerationConcurrent | NSEnumerationReverse)
                                          passingTest:^BOOL(id obj, BOOL* stop) {
                                              [condition lock];
-                                             waitingCount++;
-                                             if (waitingCount == 5) {
-                                                 waitingCount--;
-                                                 [condition signal];
-                                                 [condition unlock];
-                                                 return [obj unsignedIntegerValue] % 2 == 0 ? YES : NO;
+                                             if (++waitingCount < 5) {
+                                                 [condition wait];
                                              }
 
-                                             [condition wait];
-                                             waitingCount--;
+                                             --waitingCount;
                                              [condition signal];
                                              [condition unlock];
                                              return [obj unsignedIntegerValue] % 2 == 0 ? YES : NO;
@@ -240,6 +235,6 @@ TEST(NSSet, ObjectsWithOptionsPassingTest) {
     EXPECT_TRUE([matchingForward containsObject:@2]);
     EXPECT_TRUE([matchingForward containsObject:@4]);
 
-    // Effect of NSEnumerationReverse is undefined, so simply verify that the correct values are added to the set
+    // Ordering of using NSEnumerationReverse is undefined, so simply verify that the correct values are added to the set
     EXPECT_OBJCEQ(matchingForward, matchingReverse);
 }
