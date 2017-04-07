@@ -14,16 +14,18 @@
 //
 //******************************************************************************
 
-#include "Starboard.h"
-#include "StubReturn.h"
-#import "Foundation/NSException.h"
-#import "NSLogging.h"
-#include <winstring.h>
+#import <Starboard.h>
+#import <StubReturn.h>
+#import <Foundation/NSException.h>
+#import <NSLogging.h>
+#import <winstring.h>
 
 #include <COMIncludes.h>
-#include <roerrorapi.h>
-#include "wrl\wrappers\corewrappers.h"
+#import <roerrorapi.h>
+#import <wrl/wrappers/corewrappers.h>
 #include <COMIncludes_End.h>
+
+#import "NSExceptionInternal.h"
 
 static const wchar_t* TAG = L"NSException";
 NSString* const NSRangeException = @"NSRangeExcepton";
@@ -38,20 +40,30 @@ NSString* const NSObjectInaccessibleException = @"NSObjectInaccessibleException"
 NSString* const NSMallocException = @"NSMallocException";
 NSString* const WinObjCException = @"WinObjC Exception"; // not exported
 
+// The uncaught exception handler is not thread-specific.
+// Loads and stores of a single pointer's width are guaranteed to be atomic.
+static NSUncaughtExceptionHandler* s_uncaughtExceptionHandler = nullptr;
+
+// Entry point used by NSException_Win32.cpp after C++ ThrowInfo unboxing.
+void _NSExceptionCallUnhandledExceptionHandler(void* untypedException) {
+    if (s_uncaughtExceptionHandler) {
+        // The machinery that calls this function only calls it for exceptions whose type descriptors
+        // contain NSException* and objc_object*, making this cast safe.
+        s_uncaughtExceptionHandler(reinterpret_cast<NSException*>(untypedException));
+    }
+}
 /**
- @Status Stub
+ @Status Interoperable
 */
-void NSSetUncaughtExceptionHandler(NSUncaughtExceptionHandler*) {
-    UNIMPLEMENTED();
+void NSSetUncaughtExceptionHandler(NSUncaughtExceptionHandler* handler) {
+    s_uncaughtExceptionHandler = handler;
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 NSUncaughtExceptionHandler* NSGetUncaughtExceptionHandler() {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return s_uncaughtExceptionHandler;
 }
 
 @implementation NSException
@@ -261,3 +273,7 @@ NSUncaughtExceptionHandler* NSGetUncaughtExceptionHandler() {
     }
 }
 @end
+
+static __attribute__((constructor)) void _initExceptionHandling() {
+    SetUnhandledExceptionFilter(&_NSWindowsUnhandledExceptionFilter);
+}
