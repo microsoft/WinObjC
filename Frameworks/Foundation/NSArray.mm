@@ -1042,7 +1042,7 @@ static CFComparisonResult _CFComparatorFunctionFromComparator(const void* val1, 
 - (BOOL)writeToURL:(NSURL*)aURL atomically:(BOOL)flag {
     CFPropertyListRef plist = static_cast<CFPropertyListRef>(self);
     if (CFPropertyListIsValid(plist, sc_plistFormat)) {
-        auto data = woc::AutoCF<CFDataRef>(CFPropertyListCreateData(nullptr, plist, sc_plistFormat, 0, nullptr));
+        auto data = woc::MakeStrongCF<CFDataRef>(CFPropertyListCreateData(nullptr, plist, sc_plistFormat, 0, nullptr));
         if (data) {
             return [static_cast<NSData*>(data.get()) writeToURL:aURL atomically:flag];
         }

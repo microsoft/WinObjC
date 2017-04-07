@@ -304,6 +304,9 @@ bool operator!=(const Any& other, const AutoId<TObj, TLifetimeTraits>& val) {
 
 #ifdef CF_EXPORT // Quick way to detect CoreFoundation.
 namespace woc {
+struct TakeOwnershipT {};
+constexpr TakeOwnershipT TakeOwnership{};
+
 // Unsafe - a direct non-refcounting store of a refcountable object.
 struct CFLifetimeUnsafe {
     inline static CFTypeRef store(CFTypeRef* destination, CFTypeRef value) {
@@ -380,8 +383,7 @@ public:
         TLifetimeTraits::store(_addressof(), static_cast<CFTypeRef>(val));
     }
 
-    explicit AutoCF(T&& val): _val(val) {
-        val = nullptr;
+    explicit AutoCF(TakeOwnershipT, const T& val): _val(val) {
     }
 
     template <typename TOtherLifetime>
@@ -524,7 +526,7 @@ public:
     // The default unary T constructor for unique_ptr/cf takes full ownership of the passed-in value,
     // but the same constructor on AutoCF takes shared ownership. AutoCF's move constructor, however,
     // takes full ownership.
-    unique_cf(T val): AutoCF<T, CFLifetimeRetain>(std::move(val)) {
+    unique_cf(T val): AutoCF<T, CFLifetimeRetain>(TakeOwnership, val) {
     }
 
     unique_cf(unique_cf<T>&& other): AutoCF<T, CFLifetimeRetain>(std::move(other)) {
@@ -554,13 +556,13 @@ template <typename T = CFTypeRef>
 using UnsafeCF = AutoCF<T, CFLifetimeUnsafe>;
 
 template <typename T, typename TLifetimeTraits = CFLifetimeRetain>
-AutoCF<T, TLifetimeTraits> MakeAutoCF(T val) {
-    return AutoCF<T, TLifetimeTraits>(std::move(val));
+inline AutoCF<T, TLifetimeTraits> MakeAutoCF(T val) {
+    return AutoCF<T, TLifetimeTraits>(TakeOwnership, val);
 }
 
 template <typename T>
-StrongCF<T> MakeStrongCF(T val) {
-    return StrongCF<T>(std::move(val));
+inline StrongCF<T> MakeStrongCF(T val) {
+    return MakeAutoCF<T, CFLifetimeRetain>(val);
 }
 }
 #endif

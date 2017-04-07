@@ -86,8 +86,8 @@ CFTypeID CGColorSpaceGetTypeID() {
  @Status Interoperable
 */
 CGColorSpaceRef CGColorSpaceCreateDeviceRGB() {
-    static const woc::StrongCF<CGColorSpaceRef> sc_rgbColorSpace{ __CGColorSpace::CreateInstance(kCFAllocatorDefault,
-                                                                                                 kCGColorSpaceModelRGB) };
+    static const auto sc_rgbColorSpace =
+        woc::MakeStrongCF<CGColorSpaceRef>(__CGColorSpace::CreateInstance(kCFAllocatorDefault, kCGColorSpaceModelRGB));
 
     return CGColorSpaceRetain(sc_rgbColorSpace);
 }
@@ -96,8 +96,8 @@ CGColorSpaceRef CGColorSpaceCreateDeviceRGB() {
  @Status Interoperable
 */
 CGColorSpaceRef CGColorSpaceCreateDeviceGray() {
-    static const woc::StrongCF<CGColorSpaceRef> sc_grayColorSpace{ __CGColorSpace::CreateInstance(kCFAllocatorDefault,
-                                                                                                  kCGColorSpaceModelMonochrome) };
+    static const auto sc_grayColorSpace =
+        woc::MakeStrongCF<CGColorSpaceRef>(__CGColorSpace::CreateInstance(kCFAllocatorDefault, kCGColorSpaceModelMonochrome));
 
     return CGColorSpaceRetain(sc_grayColorSpace);
 }
