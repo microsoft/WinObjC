@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -15,25 +15,35 @@
 //******************************************************************************
 
 #import <StubReturn.h>
-#import <Social/SLComposeViewController.h>
+#import <Social/Social.h>
+#import "NSLogging.h"
+#import "_SLFBComposeViewController.h"
+
+static const wchar_t* TAG = L"SLComposeViewController";
 
 @implementation SLComposeViewController
 /**
- @Status Stub
- @Notes
+ @Status Caveat
+ @Notes Only the Facebook service is supported, and even that is incomplete
 */
 + (SLComposeViewController*)composeViewControllerForServiceType:(NSString*)serviceType {
-    UNIMPLEMENTED();
-    return StubReturn();
+    SLComposeViewController* vc = nil;
+
+    if ([serviceType isEqualToString:SLServiceTypeFacebook]) {
+        vc = [[[_SLFBComposeViewController alloc] init] autorelease];
+    } else {
+        NSTraceError(TAG, @"Unsupported service type: %@", serviceType);
+    }
+
+    return vc;
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
 + (BOOL)isAvailableForServiceType:(NSString*)serviceType {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return [serviceType isEqualToString:SLServiceTypeFacebook];
 }
 
 /**
@@ -168,7 +178,7 @@
  @Status Stub
  @Notes
 */
-- (instancetype)initWithCoder:(NSCoder *)decoder {
+- (instancetype)initWithCoder:(NSCoder*)decoder {
     UNIMPLEMENTED();
     return StubReturn();
 }
@@ -177,7 +187,7 @@
  @Status Stub
  @Notes
 */
-- (void)encodeWithCoder:(NSCoder *)encoder {
+- (void)encodeWithCoder:(NSCoder*)encoder {
     UNIMPLEMENTED();
 }
 

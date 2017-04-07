@@ -22,6 +22,7 @@
     <ClangCompile Include="..\..\..\Frameworks\Social\SLComposeServiceViewController.mm" />
     <ClangCompile Include="..\..\..\Frameworks\Social\SLComposeSheetConfigurationItem.mm" />
     <ClangCompile Include="..\..\..\Frameworks\Social\SLComposeViewController.mm" />
+    <ClangCompile Include="..\..\..\Frameworks\Social\_SLFBComposeViewController.mm" />
     <ClangCompile Include="..\..\..\Frameworks\Social\SLRequest.mm" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
@@ -79,5 +80,5 @@
   <ImportGroup Label="ExtensionTargets">
     <Import Project="$(StarboardBasePath)\msvc\sdk-build.targets" />
   </ImportGroup>
-  <Import Project="$(StarboardBasePath)\common\winobjc.packagereference.override.targets" Condition="Exists('$(StarboardBasePath)\common\winobjc.packagereference.override.targets')"/>
+  <Import Project="$(StarboardBasePath)\common\winobjc.packagereference.override.targets" Condition="Exists('$(StarboardBasePath)\common\winobjc.packagereference.override.targets')" />
 </Project>
