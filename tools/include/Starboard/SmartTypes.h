@@ -28,6 +28,16 @@
 #include <memory>
 #include <type_traits>
 
+// TakeOwnershipT is an empty struct tag type used to disambiguate between different constructors for
+// AutoId<T> and AutoCF<T>.
+//
+// The constructor overloads that use TakeOwnershipT will _consume_ a +1 reference (and not lifetime-store
+// the provided object.)
+namespace woc {
+struct TakeOwnershipT {};
+constexpr TakeOwnershipT TakeOwnership{};
+}
+
 #if defined(__OBJC__)
 
 extern "C" id objc_storeStrong(id* object, id value); // Forward decl for non-objc.h users.
@@ -78,25 +88,35 @@ public:
         TLifetimeTraits::store(&_val, val);
     }
 
-    // Constructor for id only when TCapturedObjPtr!=id, to break ambiguity with the following constructor.
+    explicit AutoId(woc::TakeOwnershipT, const TObjPointer& val) : _val(val) {
+    }
+
+    // Constructor for id only when TCapturedObjPtr!=id, to break ambiguity with the Any constructor.
     template <typename TCapturedObjPtr = TObjPointer,
               typename = typename std::enable_if<!std::is_same<TCapturedObjPtr, id>::value, id>::type>
-    explicit AutoId(id val)
-        : _val(nil) {
+    explicit AutoId(id val) : _val(nil) {
+        TLifetimeTraits::store(&_val, val);
+    }
+
+    // Constructor for ownership+id only when TCapturedObjPtr!=id, to break ambiguity with the Any constructor.
+    template <typename TCapturedObjPtr = TObjPointer,
+              typename = typename std::enable_if<!std::is_same<TCapturedObjPtr, id>::value, id>::type>
+    explicit AutoId(woc::TakeOwnershipT, id val) : _val(val) {
+    }
+
+    template <typename Any, typename = typename std::enable_if<TCanConvertFrom<Any>::value>::type>
+    AutoId(const Any& val) : _val(nil) {
         TLifetimeTraits::store(&_val, val);
     }
 
     template <typename Any, typename = typename std::enable_if<TCanConvertFrom<Any>::value>::type>
-    AutoId(const Any& val)
-        : _val(nil) {
-        TLifetimeTraits::store(&_val, val);
+    AutoId(woc::TakeOwnershipT, const Any& val) : _val(val) {
     }
 
     // Cross-lifetime copy initialization is okay iff the object types are convertible: the type of
     // other must be convertable to our type.
     template <typename TOtherObj, typename TOtherLifetime, typename = typename std::enable_if<TCanConvertFrom<TOtherObj>::value>::type>
-    AutoId(const AutoId<TOtherObj, TOtherLifetime>& other)
-        : _val(nil) {
+    AutoId(const AutoId<TOtherObj, TOtherLifetime>& other) : _val(nil) {
         TLifetimeTraits::store(&_val, other._val);
     }
 
@@ -304,9 +324,6 @@ bool operator!=(const Any& other, const AutoId<TObj, TLifetimeTraits>& val) {
 
 #ifdef CF_EXPORT // Quick way to detect CoreFoundation.
 namespace woc {
-struct TakeOwnershipT {};
-constexpr TakeOwnershipT TakeOwnership{};
-
 // Unsafe - a direct non-refcounting store of a refcountable object.
 struct CFLifetimeUnsafe {
     inline static CFTypeRef store(CFTypeRef* destination, CFTypeRef value) {

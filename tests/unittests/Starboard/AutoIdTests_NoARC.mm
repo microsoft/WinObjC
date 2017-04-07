@@ -73,3 +73,35 @@ TEST(Starboard, AutoIdMoving_NoARC) {
 
     [lifeCounter destroy];
 }
+
+__if_exists(woc::TakeOwnership) {
+TEST(Starboard, AutoIdTakeOwnershipT_NoARC) {
+    __unsafe_unretained LifetimeCounting* lifeCounter = [[LifetimeCounting alloc] init];
+    unsigned int releaseCount = 0;
+    unsigned int retainCount = 0;
+
+    retainCount = [lifeCounter arcSafeRetainCount];
+    releaseCount = [lifeCounter arcSafeReleaseCount];
+
+    { // Test that Assign.attach does not take another refcount.
+        AutoId<LifetimeCounting, LifetimeUnsafe> auto1{woc::TakeOwnership, lifeCounter};
+        EXPECT_EQ(0, [auto1 arcSafeRetainCount] - retainCount);
+    }
+
+    // Test that ~AutoId<..., Assign> does not release a refcount.
+    EXPECT_EQ(releaseCount, [lifeCounter arcSafeReleaseCount]);
+
+    retainCount = [lifeCounter arcSafeRetainCount];
+    releaseCount = [lifeCounter arcSafeReleaseCount];
+
+    { // Test that Retain.assign does not take a refcount.
+        AutoId<LifetimeCounting, LifetimeRetain> auto1{woc::TakeOwnership, lifeCounter};
+        EXPECT_EQ(0, [auto1 arcSafeRetainCount] - retainCount);
+    }
+
+    // Test that ~AutoId<..., Retain> releases a refcount even if it didn't take one.
+    EXPECT_EQ(1, [lifeCounter arcSafeReleaseCount] - releaseCount);
+
+    [lifeCounter destroy];
+}
+}
