@@ -323,7 +323,7 @@ bool VCProject::writeTemplate(const std::string& filePath, const LabelHandlerFnM
         if (child.previous_sibling()) {
             pugi::xml_attribute preLabelAttr = child.previous_sibling().attribute("Label");
             pugi::xml_attribute preVSImporterAttr = child.previous_sibling().attribute("VSImporterLabel");
-            if (preLabelAttr.empty() && preVSImporterAttr.empty() && !child.previous_sibling().first_child()) {
+            if (preLabelAttr.empty() && !preVSImporterAttr.empty() && !child.previous_sibling().first_child()) {
                 projRoot.remove_child(child.previous_sibling());
             }
         }
