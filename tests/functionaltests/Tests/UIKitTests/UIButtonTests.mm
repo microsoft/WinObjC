@@ -956,9 +956,6 @@ public:
         auto uxEvent = UXEvent::CreateAuto();
         auto xamlSubscriber = std::make_shared<XamlEventSubscription>();
         __block NSString* expectedBackgroundImage;
-        EventRegistrationToken ert{};
-        EventRegistrationToken* const ertAddr = &ert;
-
         __block winrt::event_token ert;
         winrt::event_token* const ertAddr = &ert;
 
