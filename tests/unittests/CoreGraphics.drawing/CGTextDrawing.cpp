@@ -32,7 +32,7 @@ static void __SetFontForContext(CGContextRef context) {
     CGContextSetFontSize(context, 144);
 }
 
-TEXT_DRAW_TEST_F(CGContext, ShowGlyphs, WhiteBackgroundTest<PixelByPixelImageComparator<PixelComparisonModeMask<>>>) {
+TEXT_DRAW_TEST_F(CGContext, ShowGlyphs, WhiteBackgroundTest<>) {
     CGContextRef context = GetDrawingContext();
     std::vector<CGGlyph> glyphs{ __CreateGlyphs() };
     __SetFontForContext(context);
@@ -40,14 +40,14 @@ TEXT_DRAW_TEST_F(CGContext, ShowGlyphs, WhiteBackgroundTest<PixelByPixelImageCom
     CGContextShowGlyphs(context, glyphs.data(), glyphs.size());
 }
 
-TEXT_DRAW_TEST_F(CGContext, ShowGlyphsAtPoint, WhiteBackgroundTest<PixelByPixelImageComparator<PixelComparisonModeMask<>>>) {
+TEXT_DRAW_TEST_F(CGContext, ShowGlyphsAtPoint, WhiteBackgroundTest<>) {
     CGContextRef context = GetDrawingContext();
     std::vector<CGGlyph> glyphs{ __CreateGlyphs() };
     __SetFontForContext(context);
     CGContextShowGlyphsAtPoint(context, 25, 50, glyphs.data(), glyphs.size());
 }
 
-TEXT_DRAW_TEST_F(CGContext, DrawWithRotatedTextMatrix, WhiteBackgroundTest<PixelByPixelImageComparator<PixelComparisonModeMask<>>>) {
+TEXT_DRAW_TEST_F(CGContext, DrawWithRotatedTextMatrix, WhiteBackgroundTest<>) {
     CGContextRef context = GetDrawingContext();
     std::vector<CGGlyph> glyphs{ __CreateGlyphs() };
     __SetFontForContext(context);
@@ -109,7 +109,7 @@ INSTANTIATE_TEST_CASE_P(TestDrawingTextWithTransformedMatrices,
 // On reference platform, CGContextShowText* can only be used with CGContextSelectFont
 // Which we do not currently support.
 #ifdef WINOBJC
-TEXT_DRAW_TEST_F(CGContext, ShowTextAtPoint, WhiteBackgroundTest<PixelByPixelImageComparator<PixelComparisonModeMask<>>>) {
+TEXT_DRAW_TEST_F(CGContext, ShowTextAtPoint, WhiteBackgroundTest<>) {
     CGContextRef context = GetDrawingContext();
     __SetFontForContext(context);
     CGContextShowTextAtPoint(context, 25, 50, "TEST", 4);
