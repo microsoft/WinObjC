@@ -35,11 +35,14 @@
 
 #import "XamlUtilities.h"
 #include "XamlControls.h"
+#import "CppWinRTHelpers.h"
 #include "../UIKit.Xaml/ObjCXamlControls.h"
 
 #include <map>
 
 using namespace Microsoft::WRL;
+using namespace winrt::Windows::UI::Xaml;
+namespace WF = winrt::Windows::Foundation;
 
 static const wchar_t* TAG = L"UIButton";
 
@@ -60,7 +63,7 @@ struct ButtonState {
 };
 
 @implementation UIButton {
-    StrongId<WXCButton> _xamlButton;
+    TrivialDefaultConstructor<Controls::Button> _xamlButton;
 
     // UIControlState is a bitmask, _states is a map that maps a UIControlState to a set of values for that state.
     std::map<UIControlState, ButtonState> _states;
@@ -78,7 +81,7 @@ struct ButtonState {
     long long _isPressedChangedRegistration;
 
     // Click handling
-    EventRegistrationToken _clickEventRegistration;
+    winrt::event_token _clickEventRegistration;
 
     UIButtonType _buttonType;
 
@@ -187,10 +190,7 @@ static UIEdgeInsets _decodeUIEdgeInsets(NSCoder* coder, NSString* key) {
 
 - (void)_initUIButton {
     // Store a strongly-typed backing button
-    _xamlButton = rt_dynamic_cast<WXCButton>([self xamlElement]);
-    if (!_xamlButton) {
-        FAIL_FAST();
-    }
+    _xamlButton = [self _winrtXamlElement].as<Controls::Button>();
 
     // Default to a custom button type
     _buttonType = UIButtonTypeCustom;
@@ -199,14 +199,20 @@ static UIEdgeInsets _decodeUIEdgeInsets(NSCoder* coder, NSString* key) {
     self.adjustsImageWhenDisabled = YES;
     self.adjustsImageWhenHighlighted = YES;
 
+    // Force-load the template, and get the TextBlock and Image for use in our proxies.
+    _xamlButton.ApplyTemplate();
+    _xamlButton.UpdateLayout();
+
     // Create our child UILabel; its frame will be updated in layoutSubviews
-    WXFrameworkElement* buttonLabel = XamlControls::GetButtonLabel(_xamlButton);
-    _titleLabel = [[UILabel alloc] initWithFrame:CGRectZero xamlElement:buttonLabel];
+    FrameworkElement buttonLabel = XamlControls::GetButtonLabel(_xamlButton);
+    _titleLabel = [[UILabel alloc] initWithFrame:CGRectZero xamlElement:objcwinrt::to_rtobj(buttonLabel)];
     _titleLabel.userInteractionEnabled = NO;
 
     // Create our child UIImageView; its frame will be updated in layoutSubviews
-    WXCImage* buttonImage = XamlControls::GetButtonImage(_xamlButton);
-    _proxyImageView = [[_UIImageView_Proxy alloc] initWithXamlElement:buttonImage];
+    auto control = _xamlButton.as<Controls::IControlProtected>();
+    auto templateImage = control.GetTemplateChild(L"buttonImage").as<Controls::Image>();
+
+    _proxyImageView = [[_UIImageView_Proxy alloc] initWithXamlElement:templateImage];
 
     _contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
     _contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
@@ -214,7 +220,7 @@ static UIEdgeInsets _decodeUIEdgeInsets(NSCoder* coder, NSString* key) {
     // Register for cooperative pointer events
     __weak UIButton* weakSelf = self;
     XamlControls::HookButtonPointerEvents(_xamlButton,
-                                          ^(RTObject* sender, WUXIPointerRoutedEventArgs* e) {
+                                          objcwinrt::callback([weakSelf] (const WF::IInspectable& sender, const Input::PointerRoutedEventArgs& e) {
                                               // We mark the event as handled here. The method _processPointerPressedCallback
                                               // generates a call to touchesBegan:withEvent method,
                                               // and we mark it unhandled there, and then OnPointerPressed
@@ -223,43 +229,44 @@ static UIEdgeInsets _decodeUIEdgeInsets(NSCoder* coder, NSString* key) {
                                               // touchesBegan:withEvent method and does not call touchesBegan:withEvent method
                                               // on the super view, then event remains marked as handled
                                               // and OnPointerPressed is not called on the backing XAML Button.
-                                              e.handled = YES;
+                                              e.Handled(true);
                                               [weakSelf _processPointerEvent:e forTouchPhase:UITouchPhaseBegan];
-                                          },
-                                          ^(RTObject* sender, WUXIPointerRoutedEventArgs* e) {
-                                              e.handled = YES;
+                                          }),
+                                          objcwinrt::callback([weakSelf] (const WF::IInspectable& sender, const Input::PointerRoutedEventArgs& e) {
+                                              e.Handled(true);
                                               [weakSelf _processPointerEvent:e forTouchPhase:UITouchPhaseMoved];
-                                          },
-                                          ^(RTObject* sender, WUXIPointerRoutedEventArgs* e) {
-                                              e.handled = YES;
+                                          }),
+                                          objcwinrt::callback([weakSelf] (const WF::IInspectable& sender, const Input::PointerRoutedEventArgs& e) {
+                                              e.Handled(true);
                                               [weakSelf _processPointerEvent:e forTouchPhase:UITouchPhaseEnded];
-                                          },
-                                          ^(RTObject* sender, WUXIPointerRoutedEventArgs* e) {
-                                              e.handled = YES;
+                                          }),
+                                          objcwinrt::callback([weakSelf] (const WF::IInspectable& sender, const Input::PointerRoutedEventArgs& e) {
+                                              e.Handled(true);
                                               [weakSelf _processPointerEvent:e forTouchPhase:UITouchPhaseCancelled];
-                                          },
-                                          ^(RTObject* sender, WUXIPointerRoutedEventArgs* e) {
-                                              e.handled = YES;
+                                          }),
+                                          objcwinrt::callback([weakSelf] (const WF::IInspectable& sender, const Input::PointerRoutedEventArgs& e) {
+                                              e.Handled(true);
                                               [weakSelf _processPointerEvent:e forTouchPhase:UITouchPhaseCancelled];
-                                          });
+                                          }));
 
     // Initialize press/click management
     _isInTouchSequence = false;
 
     // Register for IsPressed-changed events to map to UIButton highlighted states
     _isPressedChangedRegistration =
-        [_xamlButton registerPropertyChangedCallback:[WUXCPButtonBase isPressedProperty]
-                                            callback:^(WXDependencyObject* sender, WXDependencyProperty* dp) {
+        _xamlButton.RegisterPropertyChangedCallback(Controls::Primitives::ButtonBase::IsPressedProperty(),
+                                            objcwinrt::callback([weakSelf] (const DependencyObject& sender, const DependencyProperty& p) {
                                                 // Update our highlighted state accordingly
-                                                [weakSelf setHighlighted:rt_dynamic_cast<WXCButton>(sender).isPressed];
-                                            }];
+                                                auto button = sender.as<Controls::Primitives::ButtonBase>();
+                                                [weakSelf setHighlighted:button.IsPressed()];
+                                            }));
 
     // Register for 'Click' events, to handle keybard and accessibility clicks
-    _clickEventRegistration = [_xamlButton addClickEvent:^(RTObject* sender, WXRoutedEventArgs* e) {
+    _clickEventRegistration = _xamlButton.Click(objcwinrt::callback([weakSelf] (const WF::IInspectable&, const RoutedEventArgs&) {
         // Simulate a button 'click' for non-pointer-triggered clicks
         [weakSelf sendActionsForControlEvents:UIControlEventTouchDown];
         [weakSelf sendActionsForControlEvents:UIControlEventTouchUpInside];
-    }];
+    }));
 }
 
 /**
@@ -277,7 +284,7 @@ static UIEdgeInsets _decodeUIEdgeInsets(NSCoder* coder, NSString* key) {
 /**
 Microsoft Extension
 */
-- (instancetype)initWithFrame:(CGRect)frame xamlElement:(WXFrameworkElement*)xamlElement {
+- (instancetype)initWithFrame:(CGRect)frame xamlElement:(RTObject*)xamlElement {
     if (self = [super initWithFrame:frame xamlElement:xamlElement]) {
         [self _initUIButton];
         self.font = [UIFont buttonFont];
@@ -289,9 +296,8 @@ Microsoft Extension
 /**
  Microsoft Extension
 */
-+ (WXFrameworkElement*)createXamlElement {
-    // No autorelease needed because CreateButton is autoreleased
-    return XamlControls::CreateButton();
++ (RTObject*)createXamlElement {
+    return objcwinrt::to_rtobj(XamlControls::CreateButton());
 }
 
 /**
@@ -319,7 +325,7 @@ Microsoft Extension
     }
 
     // Update our image and border background brush (which we use for applying 'adjustImageWhen' treatment)
-    XamlButtonApplyVisuals([_xamlButton comObj], currentImage, currentBorderBackgroundBrush);
+    XamlButtonApplyVisuals(objcwinrt::to_insp(_xamlButton), currentImage, currentBorderBackgroundBrush);
 
     // Update our title label
     self.titleLabel.text = currentTitle;
@@ -495,7 +501,7 @@ static CGRect calculateContentRect(UIButton* self, CGSize size, CGRect contentRe
  @Status Interoperable
 */
 - (void)setEnabled:(BOOL)enabled {
-    _xamlButton.isEnabled = enabled;
+    _xamlButton.IsEnabled(enabled);
     [super setEnabled:enabled];
 }
 
@@ -503,7 +509,7 @@ static CGRect calculateContentRect(UIButton* self, CGSize size, CGRect contentRe
  @Status Interoperable
 */
 - (BOOL)isEnabled {
-    return _xamlButton.isEnabled;
+    return static_cast<BOOL>(_xamlButton.IsEnabled());
 }
 
 /**
@@ -516,9 +522,9 @@ static CGRect calculateContentRect(UIButton* self, CGSize size, CGRect contentRe
     // ConvertUIImageToWUXMImageBrush:nil creates a valid imageBrush with null comObj
     // which isn't what we want
     if (image) {
-        WUXMImageBrush* imageBrush = XamlUtilities::ConvertUIImageToWUXMImageBrush(image);
+        Media::ImageBrush imageBrush = XamlUtilities::ConvertUIImageToWUXMImageBrush(image);
         if (imageBrush) {
-            _states[state].inspectableImage = [imageBrush comObj];
+            _states[state].inspectableImage = objcwinrt::to_insp(imageBrush);
         }
     } else {
         // this enforces the fallback of using Image of normalState
@@ -527,7 +533,7 @@ static CGRect calculateContentRect(UIButton* self, CGSize size, CGRect contentRe
     }
 
     // Update the Xaml elements immediately, so the image proxy reflects reality
-    XamlButtonApplyVisuals([_xamlButton comObj], _currentInspectableImage(self), _currentInspectableBorderBackgroundBrush(self));
+    XamlButtonApplyVisuals(objcwinrt::to_insp(_xamlButton), _currentInspectableImage(self), _currentInspectableBorderBackgroundBrush(self));
 
     [self invalidateIntrinsicContentSize];
     [self setNeedsLayout];
@@ -600,7 +606,6 @@ static CGRect calculateContentRect(UIButton* self, CGSize size, CGRect contentRe
 
     // Update our title label immediately
     self.titleLabel.text = self.currentTitle;
-
     [self invalidateIntrinsicContentSize];
     [self setNeedsLayout];
 }
@@ -636,7 +641,6 @@ static CGRect calculateContentRect(UIButton* self, CGSize size, CGRect contentRe
 
     // Update our title label color
     self.titleLabel.textColor = self.currentTitleColor;
-
     [self invalidateIntrinsicContentSize];
     [self setNeedsLayout];
 }
@@ -707,8 +711,8 @@ static CGRect calculateContentRect(UIButton* self, CGSize size, CGRect contentRe
     // If the derived UIButton overrides this method and does not call this super implementation, then the
     // event remains *handled*, which results in the Button.Xaml not calling into its super for further processing.
     // Else, we mark the event as *not handled*, so Button.Xaml calls into its super for further event processing.
-    WUXIPointerRoutedEventArgs* routedEvent = [event _touchEvent]->_routedEventArgs;
-    [routedEvent setHandled:NO];
+    Input::PointerRoutedEventArgs routedEvent = [event _touchEvent]->_routedEventArgs;
+    routedEvent.Handled(false);
 
     [super touchesMoved:touchSet withEvent:event];
 }
@@ -720,8 +724,8 @@ static CGRect calculateContentRect(UIButton* self, CGSize size, CGRect contentRe
     // If the derived UIButton overrides this method and does not call this super implementation, then the
     // event remains *handled*, which results in the Button.Xaml not calling into its super for further processing.
     // Else, we mark the event as *not handled*, so Button.Xaml calls into its super for further event processing.
-    WUXIPointerRoutedEventArgs* routedEvent = [event _touchEvent]->_routedEventArgs;
-    [routedEvent setHandled:NO];
+    Input::PointerRoutedEventArgs routedEvent = [event _touchEvent]->_routedEventArgs;
+    routedEvent.Handled(false);
 
     if (![self isEnabled]) {
         return;
@@ -740,8 +744,8 @@ static CGRect calculateContentRect(UIButton* self, CGSize size, CGRect contentRe
     // If the derived UIButton overrides this method and does not call this super implementation, then the
     // event remains *handled*, which results in the Button.Xaml not calling into its super for further processing.
     // Else, we mark the event as *not handled*, so Button.Xaml calls into its super for further event processing.
-    WUXIPointerRoutedEventArgs* routedEvent = [event _touchEvent]->_routedEventArgs;
-    [routedEvent setHandled:NO];
+    Input::PointerRoutedEventArgs routedEvent = [event _touchEvent]->_routedEventArgs;
+    routedEvent.Handled(false);
 
     if (!_isInTouchSequence) {
         return;
@@ -755,7 +759,7 @@ static CGRect calculateContentRect(UIButton* self, CGSize size, CGRect contentRe
     // Release the pointer capture so Xaml knows we're no longer in a pressed state, which
     // also prevents the button from firing a 'click' event since we already fire one via UIControl's
     // touch handling.
-    [_xamlButton releasePointerCapture:routedEvent.pointer];
+    _xamlButton.ReleasePointerCapture(routedEvent.Pointer());
 }
 
 /**
@@ -772,8 +776,8 @@ static CGRect calculateContentRect(UIButton* self, CGSize size, CGRect contentRe
     [super touchesCancelled:touchSet withEvent:event];
 
     // Release the pointer capture so Xaml knows we're no longer in a pressed state
-    WUXIPointerRoutedEventArgs* routedEvent = [event _touchEvent]->_routedEventArgs;
-    [_xamlButton releasePointerCapture:routedEvent.pointer];
+    Input::PointerRoutedEventArgs routedEvent = [event _touchEvent]->_routedEventArgs;
+    _xamlButton.ReleasePointerCapture(routedEvent.Pointer());
 }
 
 static bool _isStateCustomizationSet(UIButton* self, UIControlState state) {
@@ -810,8 +814,8 @@ static ComPtr<IInspectable> _currentInspectableBorderBackgroundBrush(UIButton* s
 - (void)setAdjustsImageWhenDisabled:(BOOL)shouldAdjust {
     if (shouldAdjust && !_inspectableAdjustsWhenDisabledBrush) {
         // Semi-transparent white overlay
-        WUXMSolidColorBrush* colorBrush = [WUXMSolidColorBrush makeInstanceWithColor:[WUColorHelper fromArgb:150 r:255 g:255 b:255]];
-        _inspectableAdjustsWhenDisabledBrush = [colorBrush comObj];
+        Media::SolidColorBrush colorBrush = winrt::Windows::UI::ColorHelper::FromArgb(150, 255, 255, 255);
+        _inspectableAdjustsWhenDisabledBrush = objcwinrt::to_insp(colorBrush);
         [self setNeedsLayout];
     } else if (!shouldAdjust && _inspectableAdjustsWhenDisabledBrush) {
         _inspectableAdjustsWhenDisabledBrush = nullptr;
@@ -835,8 +839,8 @@ static ComPtr<IInspectable> _currentInspectableBorderBackgroundBrush(UIButton* s
 - (void)setAdjustsImageWhenHighlighted:(BOOL)shouldAdjust {
     if (shouldAdjust && !_inspectableAdjustsWhenHighlightedBrush) {
         // Mostly transparent black overlay
-        WUXMSolidColorBrush* colorBrush = [WUXMSolidColorBrush makeInstanceWithColor:[WUColorHelper fromArgb:65 r:0 g:0 b:0]];
-        _inspectableAdjustsWhenHighlightedBrush = [colorBrush comObj];
+        Media::SolidColorBrush colorBrush = winrt::Windows::UI::ColorHelper::FromArgb(65, 0, 0, 0);
+        _inspectableAdjustsWhenHighlightedBrush = objcwinrt::to_insp(colorBrush);
         [self setNeedsLayout];
     } else if (!shouldAdjust && _inspectableAdjustsWhenHighlightedBrush) {
         _inspectableAdjustsWhenHighlightedBrush = nullptr;
@@ -941,9 +945,9 @@ static ComPtr<IInspectable> _currentInspectableBorderBackgroundBrush(UIButton* s
  @Status Interoperable
 */
 - (void)dealloc {
-    XamlRemovePointerEvents([_xamlButton comObj]);
-    [_xamlButton unregisterPropertyChangedCallback:[WUXCPButtonBase isPressedProperty] token:_isPressedChangedRegistration];
-    [_xamlButton removeClickEvent:_clickEventRegistration];
+    XamlRemovePointerEvents(objcwinrt::to_insp(_xamlButton));
+    _xamlButton.UnregisterPropertyChangedCallback(Controls::Primitives::ButtonBase::IsPressedProperty(), _isPressedChangedRegistration);
+    _xamlButton.Click(_clickEventRegistration);
 }
 
 /**

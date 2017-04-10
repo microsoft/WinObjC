@@ -15,6 +15,7 @@
 //******************************************************************************
 #include <TestFramework.h>
 #import <UIKit/UIActivityIndicatorView.h>
+#import "UIViewInternal.h"
 
 #include <COMIncludes.h>
 #import <WRLHelpers.h>
@@ -25,10 +26,13 @@
 #import <wrl/async.h>
 #import <wrl/wrappers/corewrappers.h>
 #import <windows.foundation.h>
+#import <winrt/Windows.UI.Xaml.h>
+#import <winrt/Windows.UI.Xaml.Controls.h>
 #include <COMIncludes_end.h>
 
 #include "ObjCXamlControls.h"
-#import "UWP/WindowsUIXamlControls.h"
+
+using namespace winrt::Windows::UI::Xaml;
 
 class UIKitActivityIndicatorTests {
 public:
@@ -55,11 +59,8 @@ public:
     TEST_METHOD(GetXamlElement) {
         FrameworkHelper::RunOnUIThread([]() {
             UIView* view = [[[UIActivityIndicatorView alloc] init] autorelease];
-            WXFrameworkElement* backingElement = [view xamlElement];
+            FrameworkElement backingElement = [view _winrtXamlElement];
             ASSERT_TRUE(backingElement);
-
-            // TODO: Fix up when UIActivityIndicator moves fully to XAML
-            ASSERT_TRUE([backingElement isKindOfClass:[WXFrameworkElement class]]);
         });
     }
 };

@@ -56,21 +56,26 @@
 #include "UIResponderInternal.h"
 #include "UITouchInternal.h"
 #include "UIEventInternal.h"
-#include "UWP/WindowsGraphicsDisplay.h"
-#include "UWP/WindowsSystemDisplay.h"
 #include "UrlLauncher.h"
+#include "StringHelpers.h"
 
 #include "UIEmptyView.h"
 
 #include "UIInterface.h"
 
-#include "UWP/WindowsUICore.h"
-#include "UWP/WindowsUINotifications.h"
+#include "COMIncludes.h"
+#import "winrt/Windows.System.Display.h"
+#include "COMIncludes_End.h"
 
 #include "LoggingNative.h"
 #include "UIApplicationMainInternal.h"
 #import "StarboardXaml/DisplayProperties.h"
 #import "StarboardXaml/UWPBackgroundTask.h"
+
+using winrt::Windows::System::Display::DisplayRequest;
+using winrt::Windows::Media::SpeechRecognition::SpeechRecognitionResult;
+using winrt::Windows::ApplicationModel::Activation::FileActivatedEventArgs;
+using winrt::Windows::Foundation::Uri;
 
 static const wchar_t* TAG = L"UIApplication";
 
@@ -212,7 +217,7 @@ static UIView *_curKeyboardAccessory, *_curKeyboardInputView;
 
 static idretaintype(NSMutableArray) _curNotifications;
 
-static idretaintype(WSDDisplayRequest) _screenActive;
+static DisplayRequest _screenActive(nullptr);
 
 @implementation UIApplication {
     id _delegate;
@@ -658,12 +663,12 @@ static int __EbrSortViewPriorities(id val1, id val2, void* context) {
 */
 - (void)setIdleTimerDisabled:(BOOL)disable {
     idleDisabled = disable;
-    // New WSDDisplayRequest are required to gurantee the screenActive request is honored.
+    // New DisplayRequest is required to guarantee the screenActive request is honored.
     if (disable) {
-        _screenActive = [WSDDisplayRequest make];
-        [_screenActive requestActive];
-    } else if (_screenActive != nil) {
-        [_screenActive requestRelease];
+        _screenActive = DisplayRequest();
+        _screenActive.RequestActive();
+    } else if (_screenActive) {
+        _screenActive.RequestRelease();
     }
 }
 

@@ -379,11 +379,17 @@ UIKIT_EXPORT_CLASS
 @end
 
 // WinObjC Xaml Extensions
-@class WXFrameworkElement;
 @interface UIView (UIKitXamlExtensions)
-+ (WXFrameworkElement*)createXamlElement;
-@property (nonatomic, readonly, strong) WXFrameworkElement* xamlElement;
-- (instancetype)initWithFrame:(CGRect)frame xamlElement:(WXFrameworkElement*)xamlElement;
++ (RTObject*)createXamlElement;
+- (instancetype)initWithFrame:(CGRect)frame xamlElement:(RTObject*)xamlElement;
+
+// To use this object, it must be cast to the appropriate type using rt_dynamic_cast,
+// like so:
+//   RTObject* rtobj = [myUITextField xamlElement];
+//   WXCTextBox* xamlTextBox = rt_dynamic_cast<WXCTextBox*>(rtobj);
+//   NSLog(@"The text is %@", xamlTextBox.text);
+@property (nonatomic, readonly, strong) RTObject* xamlElement;
+
 @end
 
 @interface UIView (StarboardActions)

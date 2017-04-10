@@ -30,13 +30,19 @@
 #import "UIApplicationInternal.h"
 #import "UIBarButtonItem+Internals.h"
 
-#import <UWP/WindowsFoundation.h>
-#import <UWP/WindowsUIXamlControls.h>
+#include "COMIncludes.h"
+#import <winrt/Windows.Foundation.h>
+#import <winrt/Windows.UI.Xaml.Controls.h>
+#include "COMIncludes_End.h"
 
 #import "XamlUtilities.h"
 #import "XamlControls.h"
+#import "CppWinRTHelpers.h"
 
 #import "LoggingNative.h"
+
+using namespace winrt::Windows::UI::Xaml;
+namespace WF = winrt::Windows::Foundation;
 
 static const wchar_t* TAG = L"UIActionSheet";
 
@@ -46,12 +52,12 @@ static const int s_InvalidButtonIndex = -1;
     id<UIActionSheetDelegate> _delegate;
 
     // XAML ContentDialog
-    StrongId<WXCContentDialog> _contentDialog;
+    TrivialDefaultConstructor<Controls::ContentDialog> _contentDialog;
 
     // Track these events on ContentDialog
-    EventRegistrationToken _contentDialogOpenedEventToken;
-    EventRegistrationToken _contentDialogClosingEventToken;
-    EventRegistrationToken _contentDialogClosedEventToken;
+    winrt::event_token _contentDialogOpenedEventToken;
+    winrt::event_token _contentDialogClosingEventToken;
+    winrt::event_token _contentDialogClosedEventToken;
 
     // Boolean to indicate whether ContentDialog is displayed or hidden
     BOOL _isContentDialogVisible;
@@ -83,7 +89,7 @@ static const int s_InvalidButtonIndex = -1;
     }
 
     // This might be a no-op if the dialog has been dismissed already
-    [_contentDialog hide];
+    _contentDialog.Hide();
 
     // Technically the content dialog is only dismissed when the XAML thread get its chance because of its async nature
     if ([_delegate respondsToSelector:@selector(actionSheet:didDismissWithButtonIndex:)]) {
@@ -91,43 +97,46 @@ static const int s_InvalidButtonIndex = -1;
     }
 }
 
-- (void)_UIActionSheet_initInternal:(WXFrameworkElement*)xamlElement {
+- (void)_UIActionSheet_initInternal:(const FrameworkElement&)xamlElement {
     if (xamlElement) {
-        _contentDialog = static_cast<WXCContentDialog*>(xamlElement);
+        _contentDialog = xamlElement.as<Controls::ContentDialog>();
     } else {
         _contentDialog = XamlControls::CreateContentDialog();
     }
 
     // Only used to update _isContentDialogVisible - if we move to XAML Popup, we might be able to leverage isOpen property instead
     __weak UIActionSheet* weakSelf = self;
-    _contentDialogOpenedEventToken = [_contentDialog addOpenedEvent:^void(WXCContentDialog* sender, WXCContentDialogOpenedEventArgs* e) {
-        __strong UIActionSheet* strongSelf = weakSelf;
+    _contentDialogOpenedEventToken = _contentDialog.Opened(
+        objcwinrt::callback([weakSelf] (const Controls::ContentDialog&, const Controls::ContentDialogOpenedEventArgs&) {
+            __strong UIActionSheet* strongSelf = weakSelf;
 
-        strongSelf->_isContentDialogVisible = YES;
+            strongSelf->_isContentDialogVisible = YES;
 
-        if ([strongSelf->_delegate respondsToSelector:@selector(didPresentActionSheet:)]) {
-            [strongSelf->_delegate didPresentActionSheet:strongSelf];
-        }
-    }];
+            if ([strongSelf->_delegate respondsToSelector:@selector(didPresentActionSheet:)]) {
+                [strongSelf->_delegate didPresentActionSheet:strongSelf];
+            }
+        }));
 
     // Block the closing of the dialog via ESC if _cancelButtonIndex is invalid
-    _contentDialogClosingEventToken = [_contentDialog addClosingEvent:^void(WXCContentDialog* sender, WXCContentDialogClosingEventArgs* e) {
-        __strong UIActionSheet* strongSelf = weakSelf;
+    _contentDialogClosingEventToken = _contentDialog.Closing(
+        objcwinrt::callback([weakSelf] (const Controls::ContentDialog&, const Controls::ContentDialogClosingEventArgs& e) {
+            __strong UIActionSheet* strongSelf = weakSelf;
 
-        // Verify whether a button was pressed or if we dismissed the dialog via ESC
-        int pressedIndex = XamlControls::XamlContentDialogPressedIndex(strongSelf->_contentDialog);
-        if (pressedIndex == s_InvalidButtonIndex && strongSelf->_cancelButtonIndex == s_InvalidButtonIndex) {
-            // Cancel closing the dialog if ESC was pressed and cancelButtonIndex is invalid
-            e.cancel = YES;
-        }
-    }];
+            // Verify whether a button was pressed or if we dismissed the dialog via ESC
+            int pressedIndex = XamlControls::XamlContentDialogPressedIndex(strongSelf->_contentDialog);
+            if (pressedIndex == s_InvalidButtonIndex && strongSelf->_cancelButtonIndex == s_InvalidButtonIndex) {
+                // Cancel closing the dialog if ESC was pressed and cancelButtonIndex is invalid
+                e.Cancel(true);
+            }
+        }));
 
     // Only used to update _isContentDialogVisible - if we move to XAML Popup, we might be able to leverage isOpen property instead
-    _contentDialogClosedEventToken = [_contentDialog addClosedEvent:^void(WXCContentDialog* sender, WXCContentDialogClosedEventArgs* e) {
-        __strong UIActionSheet* strongSelf = weakSelf;
+    _contentDialogClosedEventToken = _contentDialog.Closed(
+        objcwinrt::callback([weakSelf] (const Controls::ContentDialog&, const Controls::ContentDialogClosedEventArgs&) {
+            __strong UIActionSheet* strongSelf = weakSelf;
 
-        strongSelf->_isContentDialogVisible = NO;
-    }];
+            strongSelf->_isContentDialogVisible = NO;
+        }));
 }
 
 /**
@@ -142,7 +151,7 @@ static const int s_InvalidButtonIndex = -1;
         _firstOtherButtonIndex = s_InvalidButtonIndex;
 
         // Create XAML-backing control
-        [self _UIActionSheet_initInternal:nil];
+        [self _UIActionSheet_initInternal:nullptr];
     }
 
     return self;
@@ -194,12 +203,12 @@ static const int s_InvalidButtonIndex = -1;
 - (void)dealloc {
     _delegate = nil;
 
-    [_contentDialog removeOpenedEvent:_contentDialogOpenedEventToken];
-    [_contentDialog removeClosedEvent:_contentDialogClosingEventToken];
-    [_contentDialog removeClosedEvent:_contentDialogClosedEventToken];
+    _contentDialog.Opened(_contentDialogOpenedEventToken);
+    _contentDialog.Closing(_contentDialogClosingEventToken);
+    _contentDialog.Closed(_contentDialogClosedEventToken);
 
-    [_contentDialog hide];
-    _contentDialog = nil;
+    _contentDialog.Hide();
+    _contentDialog = nullptr;
 }
 
 /**
@@ -237,23 +246,24 @@ static const int s_InvalidButtonIndex = -1;
 
     // Display the ContentDialog and ultimately capture its dismissal events in either the success or failure blocks
     __weak UIActionSheet* weakSelf = self;
-    [_contentDialog showAsyncWithSuccess:^void(WXCContentDialogResult result) {
+    WF::IAsyncOperation<Controls::ContentDialogResult> async = _contentDialog.ShowAsync();
+
+    async.Completed(objcwinrt::callback([weakSelf] (const WF::IAsyncOperation<Controls::ContentDialogResult>& operation, WF::AsyncStatus status) {
         __strong UIActionSheet* strongSelf = weakSelf;
 
-        int pressedIndex = XamlControls::XamlContentDialogPressedIndex(strongSelf->_contentDialog);
-        if (pressedIndex != s_InvalidButtonIndex) {
-            [strongSelf _buttonClicked:pressedIndex];
+        if (status == WF::AsyncStatus::Completed) {
+            int pressedIndex = XamlControls::XamlContentDialogPressedIndex(strongSelf->_contentDialog);
+            if (pressedIndex != s_InvalidButtonIndex) {
+                [strongSelf _buttonClicked:pressedIndex];
+            } else {
+                // Dismissed the dialog via ESC which imitates the cancel button being pressed
+                [strongSelf _buttonClicked:strongSelf->_cancelButtonIndex];
+            }
         } else {
-            // Dismissed the dialog via ESC which imitates the cancel button being pressed
-            [strongSelf _buttonClicked:_cancelButtonIndex];
-        }
-    }
-        failure:^void(NSError* error) {
-            __strong UIActionSheet* strongSelf = weakSelf;
-
-            TraceVerbose(TAG, L"Failed with error: %@", [error description]);
+            TraceVerbose(TAG, L"Failed with error code %u", (unsigned)status);
             strongSelf->_isContentDialogVisible = NO;
-        }];
+        }
+    }));
 }
 
 /**
@@ -294,7 +304,7 @@ static const int s_InvalidButtonIndex = -1;
  @Status Interoperable
 */
 - (NSString*)title {
-    return XamlUtilities::NSStringFromPropertyValue(_contentDialog.title);
+    return XamlUtilities::NSStringFromPropertyValue(_contentDialog.Title());
 }
 
 /**
@@ -302,8 +312,8 @@ static const int s_InvalidButtonIndex = -1;
 */
 - (void)setTitle:(NSString*)title {
     // Strings are passed via PropertyValues to C++/CX
-    RTObject* propVal = [WFPropertyValue createString:title];
-    _contentDialog.title = propVal;
+    auto propVal = WF::PropertyValue::CreateString(objcwinrt::string(title));
+    _contentDialog.Title(propVal);
 }
 
 /**

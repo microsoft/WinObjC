@@ -16,7 +16,11 @@
 
 #pragma once
 
-@class UIFont, WXFrameworkElement;
+#include "COMIncludes.h"
+#import <winrt/Windows.UI.Xaml.h>
+#include "COMIncludes_End.h"
+
+@class UIFont;
 
 // Provides basic mocking support
 @interface _MockObjectBase : NSObject
@@ -29,9 +33,8 @@
 // Provides basic UIView pass-throughs
 @interface _UIView_Proxy : _MockObjectBase
 
-- (instancetype)initWithXamlElement:(WXFrameworkElement*)xamlElement;
-
-@property (nonatomic, readonly, retain) WXFrameworkElement* xamlElement;
+- (instancetype)initWithXamlElement:(const winrt::Windows::UI::Xaml::FrameworkElement&)xamlElement;
+- (winrt::Windows::UI::Xaml::FrameworkElement)_winrtXamlElement;
 
 @end
 

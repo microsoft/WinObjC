@@ -20,6 +20,7 @@
 #import "ApplicationMain.h"
 #import <windows.foundation.h>
 #import <windows.applicationmodel.activation.h>
+#import <winrt/Windows.UI.Xaml.h>
 #include <COMIncludes_End.h>
 
 #import <assert.h>
@@ -41,10 +42,10 @@
 #import <UIApplicationInternal.h>
 #import <MainDispatcher.h>
 #import <_UIPopupViewController.h>
-#import <UWP/WindowsApplicationModelActivation.h>
-#import <UWP/WindowsUIXamlControlsPrimitives.h>
 
 using namespace Microsoft::WRL;
+using namespace winrt::Windows::UI::Xaml;
+namespace WF = winrt::Windows::Foundation;
 
 static CACompositorClientInterface* _compositorClient = NULL;
 
@@ -161,8 +162,8 @@ int ApplicationMainStart(const char* principalName,
         // Create a top-level UIWindow with popup view controller, which will not normally be visible.
         // If some other view controller tries to present to it, the popup view controller will make
         // the desired UI visible inside a XAML Popup.
-        WFRect* appFrame = [[WXWindow current] bounds];
-        CGRect windowFrame = CGRectMake(0, 0, appFrame.width, appFrame.height);
+        WF::Rect appFrame = Window::Current().Bounds();
+        CGRect windowFrame = CGRectMake(0, 0, appFrame.Width, appFrame.Height);
 
         UIWindow* keyWindow = [[UIWindow alloc] initWithFrame:windowFrame];
         keyWindow.rootViewController = [[_UIPopupViewController alloc] init];

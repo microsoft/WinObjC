@@ -56,6 +56,8 @@
 #import "UITouchInternal.h"
 #import "_UIDirectManipulationRecognizer.h"
 #import "_UIGestureCoordinator.h"
+#import "StringHelpers.h"
+#import "CppWinRTHelpers.h"
 
 #import <QuartzCore/CABasicAnimation.h>
 #import <QuartzCore/CALayer.h>
@@ -63,8 +65,16 @@
 #import <QuartzCore/CATransition.h>
 #import <QuartzCore/CoreAnimationFunctions.h>
 
+#include "COMIncludes.h"
+#import <winrt/Windows.UI.Xaml.Automation.h>
+#include "COMIncludes_End.h"
+
 #import <math.h>
 #import <string>
+
+using namespace winrt::Windows::UI::Xaml;
+using namespace winrt::Windows::UI::Input;
+namespace WF = winrt::Windows::Foundation;
 
 @class UIAppearanceSetter;
 
@@ -187,7 +197,7 @@ static std::string _printViewhierarchy(UIView* leafView) {
                                           object_getClassName(current),
                                           current,
                                           [current _isHitTestable] ? "true" : "false",
-                                          [current.layer._xamlElement isHitTestVisible] ? "true" : "false");
+                                          current.layer._xamlElement.IsHitTestVisible() ? "true" : "false");
         buffer[charactersWritten] = '\0';
         logString += buffer;
     }
@@ -234,7 +244,7 @@ static std::string _printViewhierarchy(UIView* leafView) {
     return self;
 }
 
-- (UITouchPhase)_processPointerEvent:(WUXIPointerRoutedEventArgs*)pointerEventArgs forTouchPhase:(UITouchPhase)touchPhase {
+- (UITouchPhase)_processPointerEvent:(const Input::PointerRoutedEventArgs&)pointerEventArgs forTouchPhase:(UITouchPhase)touchPhase {
     // The collection of active touches reused for the duration of this app
     static StrongId<NSMutableSet<UITouch*>> s_allTouches = [NSMutableSet<UITouch*> set];
 
@@ -257,10 +267,15 @@ static std::string _printViewhierarchy(UIView* leafView) {
     }
 
     // Get the point value in this view's parent UIWindow's coordinates
-    WUIPointerPoint* pointerPoint = [pointerEventArgs getCurrentPoint:(owningWindow ? owningWindow.layer._xamlElement : nil)];
+    UIElement owningWindowElement = nullptr;
+    if (owningWindow != nil) {
+        owningWindowElement = owningWindow.layer._xamlElement;
+    }
+
+    PointerPoint pointerPoint = pointerEventArgs.GetCurrentPoint(owningWindowElement);
 
     // Locate the static TouchPoint object for this pointerId
-    TouchPoint& touchPoint = _touchPointFromPointerId([pointerPoint pointerId]);
+    TouchPoint& touchPoint = _touchPointFromPointerId(pointerPoint.PointerId());
 
     // Ignore move events if the pointer isn't pressed
     if ((touchPhase != UITouchPhaseBegan) && !touchPoint.isPressed) {
@@ -452,7 +467,7 @@ static std::string _printViewhierarchy(UIView* leafView) {
     }
 
     // Clear out the stored _pointerPoint on the touch for this event since we shouldn't hold onto them
-    touchPoint.touch->_pointerPoint = nil;
+    touchPoint.touch->_pointerPoint = nullptr;
 
     // Return the coerced UITouchPhase to the caller
     return touchPoint.touch->_phase;
@@ -493,7 +508,7 @@ static std::string _printViewhierarchy(UIView* leafView) {
     BOOL isHitTestable = [self _isHitTestable];
 
     if (DEBUG_HIT_TESTING) {
-        if ([self.layer._xamlElement isHitTestVisible] != isHitTestable) {
+        if (self.layer._xamlElement.IsHitTestVisible() != isHitTestable) {
             TraceVerbose(TAG,
                          L"Changing the XAML element for %hs(0x%p) to hit-testable=%hs.",
                          object_getClassName(self),
@@ -509,10 +524,10 @@ static std::string _printViewhierarchy(UIView* leafView) {
     }
 
     // Update our _xamlElement as needed
-    [self.layer._xamlElement setIsHitTestVisible:isHitTestable];
+    self.layer._xamlElement.IsHitTestVisible(isHitTestable);
 }
 
-- (void)_initPrivWithFrame:(CGRect)frame xamlElement:(WXFrameworkElement*)xamlElement {
+- (void)_initPrivWithFrame:(CGRect)frame xamlElement:(RTObject*)xamlElement {
     // Nothing to do if we're already initialized
     if (self->priv) {
         return;
@@ -540,7 +555,8 @@ static std::string _printViewhierarchy(UIView* leafView) {
         self->layer.attach([[[[self class] layerClass] alloc] init]);
     } else {
         // A Xaml element was specified, so we must initialize the layer with this backing xaml element
-        self->layer.attach([[[[self class] layerClass] alloc] _initWithXamlElement:xamlElement]);
+        FrameworkElement element = objcwinrt::from_rtobj<FrameworkElement>(xamlElement);
+        self->layer.attach([[[[self class] layerClass] alloc] _initWithXamlElement:element]);
     }
 
     [self->layer setDelegate:self];
@@ -553,54 +569,54 @@ static std::string _printViewhierarchy(UIView* leafView) {
     [self autoLayoutAlloc];
 
     // Set the XAML element's name so it's easily found in the VS live tree viewer
-    [self.layer._xamlElement setName:[NSString stringWithUTF8String:object_getClassName(self)]];
+    auto elementName = Strings::NarrowToWide<HSTRING>(object_getClassName(self));
+    self.layer._xamlElement.Name(winrt::hstring_view(elementName.Get()));
 
     // Subscribe to the XAML node's input events
-    __block UIView* weakSelf = self;
     self->priv->_pointerPressedEventRegistration =
-        [self.layer._xamlElement addPointerPressedEvent:^(RTObject* sender, WUXIPointerRoutedEventArgs* e) {
+        self.layer._xamlElement.PointerPressed(objcwinrt::callback([self] (const WF::IInspectable& sender, const Input::PointerRoutedEventArgs& e) {
             // Capture the pointer within this xaml element
-            if (![weakSelf.layer._xamlElement capturePointer:e.pointer]) {
+            if (!self.layer._xamlElement.CapturePointer(e.Pointer())) {
                 TraceWarning(TAG, L"Failed to capture pointer...");
             }
 
             // Set the event to handled, then process it as a UITouch
-            e.handled = YES;
-            [weakSelf _processPointerEvent:e forTouchPhase:UITouchPhaseBegan];
-        }];
+            e.Handled(true);
+            [self _processPointerEvent:e forTouchPhase:UITouchPhaseBegan];
+        }));
 
     self->priv->_pointerMovedEventRegistration =
-        [self.layer._xamlElement addPointerMovedEvent:^(RTObject* sender, WUXIPointerRoutedEventArgs* e) {
+        self.layer._xamlElement.PointerMoved(objcwinrt::callback([self] (const WF::IInspectable& sender, const Input::PointerRoutedEventArgs& e) {
             // Set the event to handled, then process it as a UITouch
-            e.handled = YES;
-            [weakSelf _processPointerEvent:e forTouchPhase:UITouchPhaseMoved];
-        }];
+            e.Handled(true);
+            [self _processPointerEvent:e forTouchPhase:UITouchPhaseMoved];
+        }));
 
     self->priv->_pointerReleasedEventRegistration =
-        [self.layer._xamlElement addPointerReleasedEvent:^(RTObject* sender, WUXIPointerRoutedEventArgs* e) {
+        self.layer._xamlElement.PointerReleased(objcwinrt::callback([self] (const WF::IInspectable& sender, const Input::PointerRoutedEventArgs& e) {
             // Set the event to handled, then process it as a UITouch
-            e.handled = YES;
-            [weakSelf _processPointerEvent:e forTouchPhase:UITouchPhaseEnded];
+            e.Handled(true);
+            [self _processPointerEvent:e forTouchPhase:UITouchPhaseEnded];
 
             // release the pointer capture
-            [weakSelf.layer._xamlElement releasePointerCapture:e.pointer];
-        }];
+            self.layer._xamlElement.ReleasePointerCapture(e.Pointer());
+        }));
 
     self->priv->_pointerCanceledEventRegistration =
-        [self.layer._xamlElement addPointerCanceledEvent:^(RTObject* sender, WUXIPointerRoutedEventArgs* e) {
+        self.layer._xamlElement.PointerCanceled(objcwinrt::callback([self] (const WF::IInspectable& sender, const Input::PointerRoutedEventArgs& e) {
             // Set the event to handled, then process it as a UITouch
-            e.handled = YES;
+            e.Handled(true);
             // Uncommon event; we'll use the same handling as pointer capture lost (below)
-            [weakSelf _processPointerEvent:e forTouchPhase:UITouchPhaseCancelled];
-        }];
+            [self _processPointerEvent:e forTouchPhase:UITouchPhaseCancelled];
+        }));
 
     self->priv->_pointerCaptureLostEventRegistration =
-        [self.layer._xamlElement addPointerCaptureLostEvent:^(RTObject* sender, WUXIPointerRoutedEventArgs* e) {
+        self.layer._xamlElement.PointerCaptureLost(objcwinrt::callback([self] (const WF::IInspectable& sender, const Input::PointerRoutedEventArgs& e) {
             // Set the event to handled, then process it as a UITouch
-            e.handled = YES;
+            e.Handled(true);
             // Treat capture lost just like a pointer canceled (which is actually quite uncommon)
-            [weakSelf _processPointerEvent:e forTouchPhase:UITouchPhaseCancelled];
-        }];
+            [self _processPointerEvent:e forTouchPhase:UITouchPhaseCancelled];
+        }));
 }
 
 /**
@@ -641,7 +657,7 @@ static std::string _printViewhierarchy(UIView* leafView) {
 /**
  Microsoft extension
 */
-- (instancetype)initWithFrame:(CGRect)frame xamlElement:(WXFrameworkElement*)xamlElement {
+- (instancetype)initWithFrame:(CGRect)frame xamlElement:(RTObject*)xamlElement {
     // Run on the main thread because the underlying XAML objects can only be
     // called from the UI thread
     RunSynchronouslyOnMainThread(^{
@@ -3209,11 +3225,11 @@ static void adjustSubviews(UIView* self, CGSize parentSize, CGSize delta) {
     TraceInfo(TAG, L"%d: dealloc %hs 0x%p: layer 0x%p", viewCount, object_getClassName(self), self, self->layer.get());
 
     // Unsubscribe from pointer events
-    [self.layer._xamlElement removePointerPressedEvent:self->priv->_pointerPressedEventRegistration];
-    [self.layer._xamlElement removePointerMovedEvent:self->priv->_pointerMovedEventRegistration];
-    [self.layer._xamlElement removePointerReleasedEvent:self->priv->_pointerReleasedEventRegistration];
-    [self.layer._xamlElement removePointerCanceledEvent:self->priv->_pointerCanceledEventRegistration];
-    [self.layer._xamlElement removePointerCaptureLostEvent:self->priv->_pointerCaptureLostEventRegistration];
+    self.layer._xamlElement.PointerPressed(self->priv->_pointerPressedEventRegistration);
+    self.layer._xamlElement.PointerMoved(self->priv->_pointerMovedEventRegistration);
+    self.layer._xamlElement.PointerReleased(self->priv->_pointerReleasedEventRegistration);
+    self.layer._xamlElement.PointerCanceled(self->priv->_pointerCanceledEventRegistration);
+    self.layer._xamlElement.PointerCaptureLost(self->priv->_pointerCaptureLostEventRegistration);
 
     [self removeFromSuperview];
     priv->backgroundColor = nil;
@@ -3448,30 +3464,37 @@ static void adjustSubviews(UIView* self, CGSize parentSize, CGSize delta) {
     return [viewScreenShot autorelease];
 }
 
-/**
- Microsoft Extension
- Retrieves the XAML FrameworkElement backing this UIView.
-*/
-- (WXFrameworkElement*)xamlElement {
+- (FrameworkElement)_winrtXamlElement {
     return self.layer._xamlElement;
 }
 
 /**
  Microsoft Extension
+ Retrieves the XAML FrameworkElement backing this UIView.
 */
-+ (WXFrameworkElement*)createXamlElement {
+- (RTObject*)xamlElement {
+    return objcwinrt::to_rtobj([self _winrtXamlElement]);
+}
+
+/**
+ Microsoft Extension
+*/
++ (RTObject*)createXamlElement {
     // Use CALayer's default backing Xaml element
     return nil;
 }
 
 // Retrieve the backing XAML element's Automation Id
 - (NSString*)accessibilityIdentifier {
-    return [WUXAAutomationProperties getAutomationId:[self xamlElement]];
+    winrt::hstring identifier = Automation::AutomationProperties::GetAutomationId([self _winrtXamlElement]);
+    return objcwinrt::string(identifier);
 }
 
 // Set the backing XAML element's Automation Id
 - (void)setAccessibilityIdentifier:(NSString*)accessibilityId {
-    [WUXAAutomationProperties setAutomationId:[self xamlElement] value:accessibilityId];
+    Automation::AutomationProperties::SetAutomationId(
+        [self _winrtXamlElement],
+        objcwinrt::string(accessibilityId));
 }
 
 /**

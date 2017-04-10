@@ -29,9 +29,13 @@
 #import "UWP/InteropBase.h"
 #import "UWP/WindowsUIXamlControls.h"
 
+#include "COMIncludes.h"
+#import <winrt/Windows.Foundation.h>
+#import <winrt/Windows.UI.Xaml.h>
+#import <winrt/Windows.UI.Xaml.Input.h>
+#include "COMIncludes_End.h"
+
 @class UIWindow;
-@class WXFrameworkElement;
-@class WUXIPointerRoutedEventArgs;
 
 // Round subpixel values to be able to perform per-pixel UI placement/calculations
 inline float doPixelRound(float f) {
@@ -90,11 +94,11 @@ public:
     BOOL translatesAutoresizingMaskIntoConstraints;
     CGRect _resizeRoundingError;
 
-    EventRegistrationToken _pointerPressedEventRegistration = { 0 };
-    EventRegistrationToken _pointerMovedEventRegistration = { 0 };
-    EventRegistrationToken _pointerReleasedEventRegistration = { 0 };
-    EventRegistrationToken _pointerCanceledEventRegistration = { 0 };
-    EventRegistrationToken _pointerCaptureLostEventRegistration = { 0 };
+    winrt::event_token _pointerPressedEventRegistration = { };
+    winrt::event_token _pointerMovedEventRegistration = { };
+    winrt::event_token _pointerReleasedEventRegistration = { };
+    winrt::event_token _pointerCanceledEventRegistration = { };
+    winrt::event_token _pointerCaptureLostEventRegistration = { };
 
     UIViewPrivateState(UIView* owner) {
         setSelf(owner);
@@ -137,7 +141,7 @@ public:
     UIViewPrivateState* priv;
 }
 
-- (UITouchPhase)_processPointerEvent:(WUXIPointerRoutedEventArgs*)pointerEventArgs forTouchPhase:(UITouchPhase)touchPhase;
+- (UITouchPhase)_processPointerEvent:(const winrt::Windows::UI::Xaml::Input::PointerRoutedEventArgs&)pointerEventArgs forTouchPhase:(UITouchPhase)touchPhase;
 
 + (void)_setPageTransitionForView:(UIView*)view fromLeft:(BOOL)fromLeft;
 - (void)_applyConstraints;
@@ -146,7 +150,7 @@ public:
 - (void)__setContentsImage:(id)image;
 - (UIWindow*)_getWindowInternal;
 - (BOOL)_isEnabled;
-
+- (winrt::Windows::UI::Xaml::FrameworkElement)_winrtXamlElement;
 @end
 
 @interface NSLayoutConstraint ()

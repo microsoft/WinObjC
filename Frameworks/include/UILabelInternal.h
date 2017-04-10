@@ -18,7 +18,9 @@
 
 #import <UIKit/UILabel.h>
 
-@class WXCTextBlock;
+#include "COMIncludes.h"
+#import <winrt/Windows.UI.Xaml.Controls.h>
+#include "COMIncludes_End.h"
 
 @interface UILabel (Internal) {
 }
@@ -26,5 +28,5 @@
 // Note: This is used for UX testing and won't be necessary when we are projecting
 // UIKit.Label into ObjectiveC, as at that point we can just expose the TextBlock directly
 // off of our UIKit.Label implementation.
-- (WXCTextBlock*)_getXamlTextBlock;
+- (winrt::Windows::UI::Xaml::Controls::TextBlock)_getXamlTextBlock;
 @end

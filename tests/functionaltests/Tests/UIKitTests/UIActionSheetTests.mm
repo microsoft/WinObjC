@@ -15,6 +15,7 @@
 //******************************************************************************
 #include <TestFramework.h>
 #import <UIKit/UIActionSheet.h>
+#import "UIViewInternal.h"
 
 #include <COMIncludes.h>
 #import <WRLHelpers.h>
@@ -25,10 +26,12 @@
 #import <wrl/async.h>
 #import <wrl/wrappers/corewrappers.h>
 #import <windows.foundation.h>
+#import <winrt/Windows.UI.Xaml.Controls.h>
 #include <COMIncludes_end.h>
 
 #include "ObjCXamlControls.h"
-#import "UWP/WindowsUIXamlControls.h"
+
+using namespace winrt::Windows::UI::Xaml;
 
 class UIKitActionSheetTests {
 public:
@@ -55,10 +58,10 @@ public:
     TEST_METHOD(GetXamlElement) {
         FrameworkHelper::RunOnUIThread([]() {
             UIActionSheet* actionSheet = [[[UIActionSheet alloc] init] autorelease];
-            WXFrameworkElement* backingElement = [actionSheet xamlElement];
+            FrameworkElement backingElement = [actionSheet _winrtXamlElement];
             ASSERT_TRUE(backingElement);
 
-            ASSERT_TRUE([backingElement isKindOfClass:[WXFrameworkElement class]]);
+            ASSERT_TRUE(backingElement.as<FrameworkElement>());
         });
     }
 
@@ -69,7 +72,7 @@ public:
                                                              cancelButtonTitle:nil
                                                         destructiveButtonTitle:nil
                                                              otherButtonTitles:nil] autorelease];
-            WXFrameworkElement* backingElement = [actionSheet xamlElement];
+            FrameworkElement backingElement = [actionSheet _winrtXamlElement];
             ASSERT_TRUE(backingElement);
 
             // Check that cancel button index, destructive button index, other button index are correct

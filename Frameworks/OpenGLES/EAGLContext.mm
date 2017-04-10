@@ -39,6 +39,7 @@
 #include "GLES1122/OpenGLES20/OpenGLES20Context.h"
 
 #include "LoggingNative.h"
+#import "CppWinRTHelpers.h"
 
 __declspec(thread) EAGLContext* tlsCurContext;
 static EGLDisplay eglDisplay = EGL_NO_DISPLAY;
@@ -336,10 +337,7 @@ static const wchar_t* TAG = L"EAGL";
         { EGL_WIDTH, _rbWidth, EGL_HEIGHT, _rbHeight, EGL_ANGLE_SURFACE_RENDER_TO_BACK_BUFFER, EGL_TRUE, EGL_FIXED_SIZE_ANGLE,
           EGL_TRUE,  EGL_NONE };
 
-    IUnknown* pUnkRaw = (IUnknown*)[surface.swapChainPanel comObj].Get();
-
-    IInspectable* pSwapChainInspectable;
-    pUnkRaw->QueryInterface(__uuidof(pSwapChainInspectable), (void**)&pSwapChainInspectable);
+    IInspectable* pSwapChainInspectable = objcwinrt::to_insp(surface.swapChainPanel);
 
     _eglSurface = eglCreateWindowSurface(eglDisplay, _mConfig, pSwapChainInspectable, surface_attribute_list);
     pSwapChainInspectable->Release();
@@ -384,8 +382,8 @@ static const wchar_t* TAG = L"EAGL";
     }
 
     auto layerSize = surface.bounds.size;
-    surface.swapChainPanel.width = layerSize.width;
-    surface.swapChainPanel.height = layerSize.height;
+    surface.swapChainPanel.Width(layerSize.width);
+    surface.swapChainPanel.Height(layerSize.height);
 
     if (tlsCurContext == self) {
         eglMakeCurrent(eglDisplay, _eglSurface, _eglSurface, _eglContext);

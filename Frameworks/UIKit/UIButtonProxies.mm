@@ -19,22 +19,7 @@
 #import <UIKit/UIImage.h>
 #import <UIKit/UIImageView.h>
 #import <Foundation/NSString.h>
-
-// TOOD: Bug 8706843:Constructor or Helper to create FontFamily isn't projected - thus no way to create a FontFamily from Objective C side.
-// remove this once 8706843 is resolved
-#ifdef __OBJC__
-#pragma push_macro("interface")
-#ifndef interface
-#define interface struct
-#endif
-#pragma push_macro("Nil")
-#undef Nil
-#endif
-#include <UWP/RTHelpers.h>
-#ifdef __OBJC__
-#pragma pop_macro("Nil")
-#pragma pop_macro("interface")
-#endif
+#include "CppWinRTHelpers.h"
 
 #import <CoreGraphics/CGContext.h>
 #import <UIKit/UIView.h>
@@ -43,12 +28,19 @@
 #import "UIButtonProxies.h"
 #import "UIFontInternal.h"
 
-#import <UWP/WindowsUIXamlControls.h>
 #import "XamlUtilities.h"
 
 #import "Activation.h"
 
 #include <Windows.UI.Xaml.Media.h>
+
+#include "COMIncludes.h"
+#import <winrt/Windows.UI.Xaml.h>
+#import <winrt/Windows.UI.Xaml.Media.h>
+#import <winrt/Windows.UI.Text.h>
+#include "COMIncludes_End.h"
+
+using namespace winrt::Windows::UI::Xaml;
 
 static const wchar_t* tag = L"UIButtonProxies";
 
@@ -75,17 +67,23 @@ static const wchar_t* tag = L"UIButtonProxies";
 
 @end
 
-@implementation _UIView_Proxy
+@implementation _UIView_Proxy {
+    TrivialDefaultConstructor<FrameworkElement> _xamlElement;
+}
 
 + (Class)_mockClass {
     return [UIView class];
 }
 
-- (instancetype)initWithXamlElement:(WXFrameworkElement*)xamlElement {
+- (instancetype)initWithXamlElement:(const FrameworkElement&)xamlElement {
     if (self = [super init]) {
         _xamlElement = xamlElement;
     }
     return self;
+}
+
+- (FrameworkElement)_winrtXamlElement {
+    return _xamlElement;
 }
 
 - (void)setFrame:(CGRect)frame {
@@ -93,23 +91,23 @@ static const wchar_t* tag = L"UIButtonProxies";
     // Otherwise we set them to infinity, which causes touch input issues.
     if (!CGRectIsNull(frame)) {
         // We're assuming everything will be held in a Canvas
-        [WXCCanvas setTop:_xamlElement length:frame.origin.y];
-        [WXCCanvas setLeft:_xamlElement length:frame.origin.x];
+        Controls::Canvas::SetTop(_xamlElement, frame.origin.y);
+        Controls::Canvas::SetLeft(_xamlElement, frame.origin.x);
     }
 
-    _xamlElement.width = frame.size.width;
-    _xamlElement.height = frame.size.height;
+    _xamlElement.Width(frame.size.width);
+    _xamlElement.Height(frame.size.height);
 }
 
 - (CGRect)frame {
     CGRect ret = { 0 };
 
     // We're assuming everything will be held in a Canvas
-    [WXCCanvas getTop:_xamlElement];
-    [WXCCanvas getLeft:_xamlElement];
+    Controls::Canvas::GetTop(_xamlElement);
+    Controls::Canvas::GetLeft(_xamlElement);
 
-    ret.size.width = _xamlElement.width;
-    ret.size.height = _xamlElement.height;
+    ret.size.width = _xamlElement.Width();
+    ret.size.height = _xamlElement.Height();
 
     return ret;
 }
@@ -118,16 +116,16 @@ static const wchar_t* tag = L"UIButtonProxies";
 
 @implementation _UIImageView_Proxy {
     // For convenience
-    WXCImage* _xamlImage;
+    TrivialDefaultConstructor<Controls::Image> _xamlImage;
 }
 
 + (Class)_mockClass {
     return [UIImageView class];
 }
 
-- (instancetype)initWithXamlElement:(WXFrameworkElement*)xamlElement {
+- (instancetype)initWithXamlElement:(const FrameworkElement&)xamlElement {
     FAIL_FAST_IF_NULL(xamlElement);
-    WXCImage* image = rt_dynamic_cast<WXCImage>(xamlElement);
+    auto image = xamlElement.try_as<Controls::Image>();
     FAIL_FAST_IF_NULL(image);
 
     if (self = [super initWithXamlElement:xamlElement]) {

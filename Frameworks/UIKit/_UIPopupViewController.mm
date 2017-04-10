@@ -17,50 +17,58 @@
 #import "UIApplicationInternal.h"
 #import "StarboardXaml/XamlCompositor.h"
 #import "_UIPopupViewController.h"
-#import <UWP/WindowsUIXamlControlsPrimitives.h>
+#import "CppWinRTHelpers.h"
+
+#include "COMIncludes.h"
+#import <winrt/Windows.UI.Xaml.Controls.Primitives.h>
+#include "COMIncludes_End.h"
+
+using namespace winrt::Windows::UI::Xaml;
+using winrt::Windows::UI::Xaml::Controls::Primitives::Popup;
+namespace WF = winrt::Windows::Foundation;
 
 static const wchar_t* TAG = L"_UIPopupViewController";
 
 @implementation _UIPopupViewController {
-    WUXCPPopup* _popup;
-    EventRegistrationToken _layoutUpdated;
+    TrivialDefaultConstructor<Popup> _popup;
+    winrt::event_token _layoutUpdated;
 }
 
 - (void)loadView {
-    _popup = [WUXCPPopup make];
-    _popup.child = [WXFrameworkElement createWith:XamlCompositor::GetRootElement().Get()];
+    _popup = Popup();
+    _popup.Child(objcwinrt::from_insp<FrameworkElement>(XamlCompositor::GetRootElement()));
 
     __weak _UIPopupViewController* weakSelf = self;
 
     // Keep the popup's contents sized to fit the window
-    _layoutUpdated = [_popup addLayoutUpdatedEvent:^(RTObject* sender, RTObject* args) {
+    _layoutUpdated = _popup.LayoutUpdated(objcwinrt::callback([weakSelf] (const WF::IInspectable& sender, const WF::IInspectable& e) {
         _UIPopupViewController* strongSelf = weakSelf;
 
         if (strongSelf == nil) {
             return;
         }
 
-        WUXCPPopup* popup = strongSelf->_popup;
-        WXUIElement* popupChild = popup.child;
+        Popup popup = strongSelf->_popup;
+        UIElement popupChild = popup.Child();
 
-        if (popupChild != nil) {
-            WXFrameworkElement* child = rt_dynamic_cast<WXFrameworkElement>(popupChild);
+        if (popupChild) {
+            FrameworkElement child = popupChild.as<FrameworkElement>();
 
-            WFRect* appFrame = [[WXWindow current] bounds];
+            winrt::Windows::Foundation::Rect appFrame = Window::Current().Bounds();
 
-            child.width = appFrame.width;
-            child.height = appFrame.height;
+            child.Width(appFrame.Width);
+            child.Height(appFrame.Height);
         }
-    }];
+    }));
 }
 
 - (void)dealloc {
-    [_popup removeLayoutUpdatedEvent:_layoutUpdated];
+    _popup.LayoutUpdated(_layoutUpdated);
 }
 
 - (void)presentViewController:(UIViewController*)viewControllerToPresent animated:(BOOL)flag completion:(void (^)())completion {
     [super presentViewController:viewControllerToPresent animated:flag completion:^{
-        _popup.isOpen = YES;
+        _popup.IsOpen(true);
 
         if (completion != nil) {
             completion();
@@ -70,7 +78,7 @@ static const wchar_t* TAG = L"_UIPopupViewController";
 
 - (void)dismissViewControllerAnimated:(BOOL)flag completion:(void (^)())completion {
     [super dismissViewControllerAnimated:flag completion:^{
-        _popup.isOpen = NO;
+        _popup.IsOpen(false);
 
         if (completion != nil) {
             completion();

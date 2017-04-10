@@ -21,14 +21,16 @@
 
 #import "UIApplicationInternal.h"
 #import <NSBundleInternal.h>
+#import "CppWinRTHelpers.h"
 
 #import <AVFoundation/AVFoundation.h>
-
-#include <UWP/WindowsUIXamlControls.h>
 
 #include <COMIncludes.h>
 #import <RawBuffer.h>
 #import <windows.storage.streams.h>
+#import <winrt/Windows.UI.Xaml.Controls.h>
+#import <winrt/Windows.UI.Xaml.Media.h>
+#import <winrt/Windows.Storage.Streams.h>
 #include <COMIncludes_End.h>
 #import "AssertARCEnabled.h"
 
@@ -36,10 +38,13 @@
 static const double c_durationCoef = 10000000.0;
 static const wchar_t* TAG = L"AVFoundation";
 
+using namespace winrt::Windows::UI::Xaml;
 using namespace ABI::Windows::Foundation;
 using namespace ABI::Windows::Storage::Streams;
 
 using namespace Microsoft::WRL;
+namespace WF = winrt::Windows::Foundation;
+namespace WSS = winrt::Windows::Storage::Streams;
 
 @interface _UIHiddenMediaView : UIView
 
@@ -51,8 +56,9 @@ using namespace Microsoft::WRL;
 
 @implementation AVAudioPlayer {
     _UIHiddenMediaView* _hiddenView;
-    WXCMediaElement* _mediaElement;
-    WUXMMediaElementState _lastState;
+    TrivialDefaultConstructor<Controls::MediaElement> _mediaElement;
+    TrivialDefaultConstructor<WSS::InMemoryRandomAccessStream> _stream;
+    Media::MediaElementState _lastState;
 
     NSDate* _startTime;
 
@@ -65,25 +71,25 @@ using namespace Microsoft::WRL;
 
 - (instancetype)init {
     if (self = [super init]) {
-        _mediaElement = [WXCMediaElement make];
-        _mediaElement.autoPlay = NO;
-        _mediaElement.volume = 1.0f;
-        _hiddenView = [[_UIHiddenMediaView alloc] initWithFrame:{ 0, 0, 0, 0 } xamlElement:_mediaElement];
+        _mediaElement = Controls::MediaElement();
+        _mediaElement.AutoPlay(false);
+        _mediaElement.Volume(1.0f);
+        _hiddenView = [[_UIHiddenMediaView alloc] initWithFrame:{ 0, 0, 0, 0 } xamlElement:objcwinrt::to_rtobj(_mediaElement)];
 
-        _lastState = _mediaElement.currentState;
+        _lastState = _mediaElement.CurrentState();
 
         // Set up events
         __weak AVAudioPlayer* weakSelf = self;
 
-        [_mediaElement addCurrentStateChangedEvent:^(RTObject* sender, WXRoutedEventArgs* e) {
+        _mediaElement.CurrentStateChanged([weakSelf] (const WF::IInspectable& sender, const RoutedEventArgs& e) {
             [weakSelf _handleMediaElementStateChange:sender args:e];
-        }];
-        [_mediaElement addMediaEndedEvent:^(RTObject* sender, WXRoutedEventArgs* e) {
+        });
+        _mediaElement.MediaEnded([weakSelf] (const WF::IInspectable& sender, const RoutedEventArgs& e) {
             [weakSelf _handleMediaElementMediaEnded:sender args:e];
-        }];
-        [_mediaElement addMediaFailedEvent:^(RTObject* sender, WXRoutedEventArgs* e) {
+        });
+        _mediaElement.MediaFailed([weakSelf] (const WF::IInspectable& sender, const RoutedEventArgs& e) {
             [weakSelf _handleMediaElementMediaFailed:sender args:e];
-        }];
+        });
 
         // We utilize the internal popup UIWindow, just to make sure we're always in the Xaml scene graph.
         [[[UIApplication sharedApplication] _popupWindow] addSubview:_hiddenView];
@@ -119,10 +125,10 @@ using namespace Microsoft::WRL;
         }
 
         _url = [[NSBundle mainBundle] _msAppxURLForResourceWithURL:url];
-        WFUri* mediaUri = [WFUri makeUri:_url.absoluteString];
+        WF::Uri mediaUri = winrt::hstring_view(objcwinrt::string(_url.absoluteString));
 
-        TraceInfo(TAG, L"Loading media at URI: %hs\n", [mediaUri.absoluteUri UTF8String]);
-        _mediaElement.source = mediaUri;
+        TraceInfo(TAG, L"Loading media at URI: %ls\n", mediaUri.AbsoluteUri().c_str());
+        _mediaElement.Source(mediaUri);
 
         if (outError) {
             // TODO: Some modicum of failure returns. Right now everything is async and bound to the Xaml thread, so
@@ -145,10 +151,10 @@ using namespace Microsoft::WRL;
         }
 
         _data = data;
+        _stream = WSS::InMemoryRandomAccessStream();
 
-        WSSInMemoryRandomAccessStream* stream = [WSSInMemoryRandomAccessStream make];
-        WSSDataWriter* rw = [WSSDataWriter makeDataWriter:[stream getOutputStreamAt:0]];
-        ComPtr<IBuffer> buffer;
+        WSS::DataWriter rw = _stream.GetOutputStreamAt(0);
+        WSS::Buffer buffer = nullptr;
         IBuffer* rawBuffer = nullptr;
         HRESULT result;
 
@@ -160,27 +166,21 @@ using namespace Microsoft::WRL;
                                          userInfo:nil];
         }
 
-        buffer.Attach(rawBuffer);
+        winrt::attach_abi(buffer, reinterpret_cast<winrt::ABI::Windows::Storage::Streams::IBuffer*>(rawBuffer));
 
-        // WARNING: If someone deletes this AVAudioPlayer before the StoreAsync is completed, _data may be released
-        // causing IBuffer to segfault.
+        rw.WriteBuffer(buffer);
+        WSS::DataWriterStoreOperation async = rw.StoreAsync();
 
-        // TODO: subclassed IAsyncOperation<T>s don't get generated correctly in ObjCUWP yet, when that happens it'll
-        // open up StoreAsync.
-        ComPtr<IDataWriter> writer;
-        ComPtr<IAsyncOperation<UInt32>> comp;
-
-        [rw comObj].As(&writer);
-
-        FAIL_FAST_HR_IF_NULL_MSG(E_UNEXPECTED, writer.Get(), "WSSDataWriter does not confrom to IDataWriter");
-
-        writer->WriteBuffer(buffer.Get());
-        writer->StoreAsync(&comp);
-
-        [_mediaElement setSource:stream mimeType:@""];
-
-        // TODO: Is this needed?
-        [rw detachStream];
+        // Hook the stream up to the media control when the load is complete
+        async.Completed(objcwinrt::callback([self] (const WF::IAsyncOperation<unsigned int>& operation, WF::AsyncStatus status) {
+            if (status == WF::AsyncStatus::Completed) {
+                // Access XAML control on main thread
+                dispatch_sync(dispatch_get_main_queue(), ^{
+                    self->_mediaElement.SetSource(self->_stream, L"");
+                    self->_stream = nullptr;
+                });
+            }
+        }));
 
         if (outError) {
             // TODO: Some modicum of failure returns. Right now everything is async and bound to the Xaml thread, so
@@ -192,14 +192,14 @@ using namespace Microsoft::WRL;
     return self;
 }
 
-- (void)_handleMediaElementStateChange:(RTObject*)sender args:(WXRoutedEventArgs*)e {
-    if (_mediaElement.currentState != _lastState) {
-        switch (_mediaElement.currentState) {
-            case WUXMMediaElementStateOpening:
-            case WUXMMediaElementStateBuffering:
+- (void)_handleMediaElementStateChange:(const WF::IInspectable&)sender args:(const RoutedEventArgs&)e {
+    if (_mediaElement.CurrentState() != _lastState) {
+        switch (_mediaElement.CurrentState()) {
+            case Media::MediaElementState::Opening:
+            case Media::MediaElementState::Buffering:
                 break;
 
-            case WUXMMediaElementStatePlaying:
+            case Media::MediaElementState::Playing:
                 if (_startTime != nil) {
                     _startTime = nil;
                 }
@@ -207,8 +207,8 @@ using namespace Microsoft::WRL;
                 _playing = TRUE;
                 break;
 
-            case WUXMMediaElementStateClosed:
-                if ((_lastState == WUXMMediaElementStateOpening) || (_lastState == WUXMMediaElementStateBuffering)) {
+            case Media::MediaElementState::Closed:
+                if ((_lastState == Media::MediaElementState::Opening) || (_lastState == Media::MediaElementState::Buffering)) {
                     if ([self.delegate respondsToSelector:@selector(audioPlayerDidFinishPlaying:successfully:)]) {
                         [self.delegate audioPlayerDidFinishPlaying:self successfully:FALSE];
                     }
@@ -218,9 +218,9 @@ using namespace Microsoft::WRL;
                 _playing = FALSE;
                 break;
 
-            case WUXMMediaElementStateStopped:
-            case WUXMMediaElementStatePaused:
-                if ((_lastState == WUXMMediaElementStatePlaying) &&
+            case Media::MediaElementState::Stopped:
+            case Media::MediaElementState::Paused:
+                if ((_lastState == Media::MediaElementState::Playing) &&
                     [self.delegate respondsToSelector:@selector(audioPlayerDidFinishPlaying:successfully:)]) {
                     [self.delegate audioPlayerDidFinishPlaying:self successfully:TRUE];
                 }
@@ -230,15 +230,15 @@ using namespace Microsoft::WRL;
                 break;
         }
 
-        _lastState = _mediaElement.currentState;
+        _lastState = _mediaElement.CurrentState();
     }
 }
 
-- (void)_handleMediaElementMediaEnded:(RTObject*)sender args:(WXRoutedEventArgs*)e {
+- (void)_handleMediaElementMediaEnded:(const WF::IInspectable&)sender args:(const RoutedEventArgs&)e {
     TraceInfo(TAG, L"Media ended\n");
 }
 
-- (void)_handleMediaElementMediaFailed:(RTObject*)sender args:(WXRoutedEventArgs*)e {
+- (void)_handleMediaElementMediaFailed:(const WF::IInspectable&)sender args:(const RoutedEventArgs&)e {
     TraceWarning(TAG, L"Media failed\n");
 }
 
@@ -252,9 +252,9 @@ using namespace Microsoft::WRL;
     // This is to catch the scenario where we play before the media is loaded.
     // It may be possibile the sound will play erroneously if someone plays, and a short time later pauses and catches
     // MediaElement in a (Loaded & !Playing) state
-    _mediaElement.autoPlay = YES;
+    _mediaElement.AutoPlay(true);
 
-    [_mediaElement play];
+    _mediaElement.Play();
 
     return TRUE;
 }
@@ -272,8 +272,8 @@ using namespace Microsoft::WRL;
 */
 - (void)pause {
     _playing = FALSE;
-    _mediaElement.autoPlay = NO;
-    [_mediaElement pause];
+    _mediaElement.AutoPlay(false);
+    _mediaElement.Pause();
 }
 
 /**
@@ -281,8 +281,8 @@ using namespace Microsoft::WRL;
 */
 - (void)stop {
     _playing = FALSE;
-    _mediaElement.autoPlay = NO;
-    [_mediaElement stop];
+    _mediaElement.AutoPlay(false);
+    _mediaElement.Stop();
 }
 
 /**
@@ -344,7 +344,7 @@ using namespace Microsoft::WRL;
 */
 - (void)setNumberOfLoops:(NSInteger)loops {
     _numberOfLoops = loops;
-    _mediaElement.isLooping = (loops != 0);
+    _mediaElement.IsLooping(loops != 0);
 }
 
 /**
@@ -382,7 +382,9 @@ using namespace Microsoft::WRL;
  @Status Interoperable
 */
 - (NSTimeInterval)duration {
-    NSTimeInterval interval = (NSTimeInterval)((double)_mediaElement.naturalDuration.timeSpan.duration / c_durationCoef);
+    WF::TimeSpan duration = _mediaElement.NaturalDuration().TimeSpan;
+    auto seconds = std::chrono::duration_cast<std::chrono::seconds>(duration);
+    NSTimeInterval interval = seconds.count();
 
     // This way sliders will still respond and keep the app operable.
     if (interval == 0) {
@@ -396,30 +398,32 @@ using namespace Microsoft::WRL;
  @Status Interoperable
 */
 - (NSTimeInterval)currentTime {
-    return (NSTimeInterval)((double)_mediaElement.position.duration / c_durationCoef);
+    WF::TimeSpan position = _mediaElement.Position();
+    auto seconds = std::chrono::duration_cast<std::chrono::seconds>(position);
+
+    return seconds.count();
 }
 
 /**
  @Status Interoperable
 */
 - (void)setCurrentTime:(NSTimeInterval)currentTime {
-    WFTimeSpan* ts = [WFTimeSpan new];
-    ts.duration = (int64_t)((double)currentTime * c_durationCoef);
-    _mediaElement.position = ts;
+    std::chrono::seconds time(static_cast<std::chrono::seconds::rep>(currentTime));
+    _mediaElement.Position(std::chrono::duration_cast<WF::TimeSpan>(time));
 }
 
 /**
  @Status Interoperable
 */
 - (float)pan {
-    return _mediaElement.balance;
+    return _mediaElement.Balance();
 }
 
 /**
  @Status Interoperable
 */
 - (void)setPan:(float)pan {
-    _mediaElement.balance = pan;
+    _mediaElement.Balance(pan);
 }
 
 /**
@@ -442,7 +446,7 @@ using namespace Microsoft::WRL;
 - (void)setRate:(float)rate {
     _rate = rate;
     if (_enableRate) {
-        _mediaElement.playbackRate = rate;
+        _mediaElement.PlaybackRate(rate);
     }
 }
 
@@ -459,7 +463,7 @@ using namespace Microsoft::WRL;
 - (void)setEnableRate:(BOOL)enable {
     _enableRate = enable;
     if (_enableRate) {
-        _mediaElement.playbackRate = _rate;
+        _mediaElement.PlaybackRate(_rate);
     }
 }
 
@@ -467,14 +471,14 @@ using namespace Microsoft::WRL;
  @Status Interoperable
 */
 - (float)volume {
-    return _mediaElement.volume;
+    return _mediaElement.Volume();
 }
 
 /**
  @Status Interoperable
 */
 - (void)setVolume:(float)volume {
-    _mediaElement.volume = volume;
+    _mediaElement.Volume(volume);
 }
 
 - (void)dealloc {

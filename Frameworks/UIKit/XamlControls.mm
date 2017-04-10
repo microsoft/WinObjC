@@ -18,37 +18,41 @@
 #include "../UIKit.Xaml/ObjCXamlControls.h"
 
 #include "XamlUtilities.h"
+#include "CppWinRTHelpers.h"
 
 using namespace Microsoft::WRL;
+using namespace winrt::Windows::UI::Xaml;
 
 namespace XamlControls {
 
 ////////////////////////////////////////////////////////////////////////////////////
 // Button
 ////////////////////////////////////////////////////////////////////////////////////
-WXCButton* CreateButton() {
+Controls::Button CreateButton() {
     ComPtr<IInspectable> inspectable;
     XamlCreateButton(&inspectable);
-    return _createRtProxy([WXCButton class], inspectable.Get());
+
+    return objcwinrt::from_insp<Controls::Button>(inspectable);
 }
 
-WXFrameworkElement* GetButtonLabel(WXCButton* button) {
-    Microsoft::WRL::ComPtr<IInspectable> inspectable(XamlGetButtonLabel([button comObj]));
-    return _createRtProxy([WXFrameworkElement class], inspectable.Get());
+FrameworkElement GetButtonLabel(const Controls::Button& button) {
+    Microsoft::WRL::ComPtr<IInspectable> inspectable(XamlGetButtonLabel(objcwinrt::to_insp(button)));
+    return objcwinrt::from_insp<FrameworkElement>(inspectable);
 }
 
-WXCImage* GetButtonImage(WXCButton* button) {
-    Microsoft::WRL::ComPtr<IInspectable> inspectable(XamlGetButtonImage([button comObj]));
-    return _createRtProxy([WXCImage class], inspectable.Get());
+Controls::Image GetButtonImage(const Controls::Button& button) {
+    Microsoft::WRL::ComPtr<IInspectable> inspectable(XamlGetButtonImage(objcwinrt::to_insp(button)));
+    return objcwinrt::from_insp<Controls::Image>(inspectable);
 }
 
-void HookButtonPointerEvents(WXCButton* button,
-                             WUXIPointerEventHandler pointerPressedHook,
-                             WUXIPointerEventHandler pointerMovedHook,
-                             WUXIPointerEventHandler pointerReleasedHook,
-                             WUXIPointerEventHandler pointerCanceledHook,
-                             WUXIPointerEventHandler pointerCaptureLostHook) {
-    XamlHookButtonPointerEvents([button comObj],
+void HookButtonPointerEvents(const Controls::Button& button,
+                             const Input::PointerEventHandler& pointerPressedHook,
+                             const Input::PointerEventHandler& pointerMovedHook,
+                             const Input::PointerEventHandler& pointerReleasedHook,
+                             const Input::PointerEventHandler& pointerCanceledHook,
+                             const Input::PointerEventHandler& pointerCaptureLostHook) {
+
+    XamlHookButtonPointerEvents(objcwinrt::to_insp(button),
                                 pointerPressedHook ? Make<WUXIPointerEventHandler_shim>(pointerPressedHook) : nullptr,
                                 pointerMovedHook ? Make<WUXIPointerEventHandler_shim>(pointerMovedHook) : nullptr,
                                 pointerReleasedHook ? Make<WUXIPointerEventHandler_shim>(pointerReleasedHook) : nullptr,
@@ -59,98 +63,99 @@ void HookButtonPointerEvents(WXCButton* button,
 ////////////////////////////////////////////////////////////////////////////////////
 // ContentDialog
 ////////////////////////////////////////////////////////////////////////////////////
-WXCContentDialog* CreateContentDialog() {
+Controls::ContentDialog CreateContentDialog() {
     ComPtr<IInspectable> inspectable;
     XamlCreateContentDialog(&inspectable);
-    return _createRtProxy([WXCContentDialog class], inspectable.Get());
+
+    return objcwinrt::from_insp<Controls::ContentDialog>(inspectable);
 }
 
-int XamlContentDialogPressedIndex(WXCContentDialog* contentDialog) {
-    ComPtr<IInspectable> inspectable([contentDialog comObj]);
-    return XamlContentDialogPressedIndex(inspectable);
+int XamlContentDialogPressedIndex(const Controls::ContentDialog& contentDialog) {
+    return XamlContentDialogPressedIndex(objcwinrt::to_insp(contentDialog));
 }
 
-unsigned int XamlContentDialogAddButtonWithTitle(WXCContentDialog* contentDialog, NSString* buttonTitle) {
-    ComPtr<IInspectable> inspectable([contentDialog comObj]);
+unsigned int XamlContentDialogAddButtonWithTitle(const Controls::ContentDialog& contentDialog, NSString* buttonTitle) {
+    ComPtr<IInspectable> inspectable(objcwinrt::to_insp(contentDialog));
 
     auto title = Strings::NarrowToWide<std::wstring>([buttonTitle UTF8String]);
     return XamlContentDialogAddButtonWithTitle(inspectable, title);
 }
 
-NSString* XamlContentDialogButtonTitleAtIndex(WXCContentDialog* contentDialog, unsigned int buttonIndex) {
-    ComPtr<IInspectable> inspectable([contentDialog comObj]);
+NSString* XamlContentDialogButtonTitleAtIndex(const Controls::ContentDialog& contentDialog, unsigned int buttonIndex) {
+    ComPtr<IInspectable> inspectable(objcwinrt::to_insp(contentDialog));
 
     ComPtr<IInspectable> inspPropVal(XamlContentDialogButtonTitleAtIndex(inspectable, buttonIndex));
     return XamlUtilities::NSStringFromPropertyValue(inspPropVal);
 }
 
-unsigned int XamlContentDialogNumberOfButtons(WXCContentDialog* contentDialog) {
-    ComPtr<IInspectable> inspectable([contentDialog comObj]);
+unsigned int XamlContentDialogNumberOfButtons(const Controls::ContentDialog& contentDialog) {
+    ComPtr<IInspectable> inspectable(objcwinrt::to_insp(contentDialog));
     return XamlContentDialogNumberOfButtons(inspectable);
 }
 
-void XamlContentDialogSetCancelButtonIndex(WXCContentDialog* contentDialog, unsigned int cancelButtonIndex) {
-    ComPtr<IInspectable> inspectable([contentDialog comObj]);
+void XamlContentDialogSetCancelButtonIndex(const Controls::ContentDialog& contentDialog, unsigned int cancelButtonIndex) {
+    ComPtr<IInspectable> inspectable(objcwinrt::to_insp(contentDialog));
     XamlContentDialogSetCancelButtonIndex(inspectable, cancelButtonIndex);
 }
 
-void XamlContentDialogSetDestructiveButtonIndex(WXCContentDialog* contentDialog, unsigned int destructiveButtonIndex) {
-    ComPtr<IInspectable> inspectable([contentDialog comObj]);
+void XamlContentDialogSetDestructiveButtonIndex(const Controls::ContentDialog& contentDialog, unsigned int destructiveButtonIndex) {
+    ComPtr<IInspectable> inspectable(objcwinrt::to_insp(contentDialog));
     XamlContentDialogSetDestructiveButtonIndex(inspectable, destructiveButtonIndex);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////
 // Label
 ////////////////////////////////////////////////////////////////////////////////////
-WXCGrid* CreateLabel() {
+Controls::Grid CreateLabel() {
     Microsoft::WRL::ComPtr<IInspectable> inspectable;
     XamlCreateLabel(&inspectable);
-    return _createRtProxy([WXCGrid class], inspectable.Get());
+
+    return objcwinrt::from_insp<Controls::Grid>(inspectable);
 }
 
-WXCTextBlock* GetLabelTextBlock(WXCGrid* labelGrid) {
-    Microsoft::WRL::ComPtr<IInspectable> inspectable(XamlGetLabelTextBlock([labelGrid comObj]));
-    return _createRtProxy([WXCTextBlock class], inspectable.Get());
+Controls::TextBlock GetLabelTextBlock(const Controls::Grid& labelGrid) {
+    ComPtr<IInspectable> inspectable(XamlGetLabelTextBlock(objcwinrt::to_insp(labelGrid)));
+    return objcwinrt::from_insp<Controls::TextBlock>(inspectable);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////
 // ScrollView
 ////////////////////////////////////////////////////////////////////////////////////
-WXFrameworkElement* CreateScrollView() {
+FrameworkElement CreateScrollView() {
     Microsoft::WRL::ComPtr<IInspectable> inspectable;
     XamlCreateScrollView(&inspectable);
-    return _createRtProxy([WXFrameworkElement class], inspectable.Get());
+    return objcwinrt::from_insp<FrameworkElement>(inspectable);
 }
 
-WXCScrollViewer* ScrollViewGetInnerScrollViewer(WXFrameworkElement* scrollView) {
-    Microsoft::WRL::ComPtr<IInspectable> inspectable(XamlScrollViewGetScrollViewer([scrollView comObj]));
-    return _createRtProxy([WXCScrollViewer class], inspectable.Get());
+Controls::ScrollViewer ScrollViewGetInnerScrollViewer(const FrameworkElement& scrollView) {
+    Microsoft::WRL::ComPtr<IInspectable> inspectable(XamlScrollViewGetScrollViewer(objcwinrt::to_insp(scrollView)));
+    return objcwinrt::from_insp<Controls::ScrollViewer>(inspectable);
 }
 
-WXCCanvas* ScrollViewGetSubLayerCanvas(WXFrameworkElement* scrollView) {
-    Microsoft::WRL::ComPtr<IInspectable> inspectable(XamlScrollViewGetSubLayerCanvas([scrollView comObj]));
-    return _createRtProxy([WXCCanvas class], inspectable.Get());
+Controls::Canvas ScrollViewGetSubLayerCanvas(const FrameworkElement& scrollView) {
+    Microsoft::WRL::ComPtr<IInspectable> inspectable(XamlScrollViewGetSubLayerCanvas(objcwinrt::to_insp(scrollView)));
+    return objcwinrt::from_insp<Controls::Canvas>(inspectable);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////
 // CoreAnimation Layer Support
 ////////////////////////////////////////////////////////////////////////////////////
-void SetFrameworkElementLayerProperties(WXFrameworkElement* targetElement,
-                                        WXCImage* layerContentProperty,
-                                        WXCCanvas* sublayerCanvasProperty) {
-    XamlSetFrameworkElementLayerProperties([targetElement comObj],
-                                           layerContentProperty ? [layerContentProperty comObj] : nullptr,
-                                           sublayerCanvasProperty ? [sublayerCanvasProperty comObj] : nullptr);
+void SetFrameworkElementLayerProperties(const FrameworkElement& targetElement,
+                                        const Controls::Image& layerContentProperty,
+                                        const Controls::Canvas& sublayerCanvasProperty) {
+    XamlSetFrameworkElementLayerProperties(objcwinrt::to_insp(targetElement),
+                                           objcwinrt::to_insp(layerContentProperty),
+                                           objcwinrt::to_insp(sublayerCanvasProperty));
 }
 
-WXCImage* GetFrameworkElementLayerContentProperty(WXFrameworkElement* targetElement) {
-    Microsoft::WRL::ComPtr<IInspectable> inspectable(XamlGetFrameworkElementLayerContentProperty([targetElement comObj]));
-    return _createRtProxy([WXCImage class], inspectable.Get());
+Controls::Image GetFrameworkElementLayerContentProperty(const FrameworkElement& targetElement) {
+    Microsoft::WRL::ComPtr<IInspectable> inspectable(XamlGetFrameworkElementLayerContentProperty(objcwinrt::to_insp(targetElement)));
+    return objcwinrt::from_insp<Controls::Image>(inspectable);
 }
 
-WXCCanvas* GetFrameworkElementSublayerCanvasProperty(WXFrameworkElement* targetElement) {
-    Microsoft::WRL::ComPtr<IInspectable> inspectable(XamlGetFrameworkElementSublayerCanvasProperty([targetElement comObj]));
-    return _createRtProxy([WXCCanvas class], inspectable.Get());
+Controls::Canvas GetFrameworkElementSublayerCanvasProperty(const FrameworkElement& targetElement) {
+    Microsoft::WRL::ComPtr<IInspectable> inspectable(XamlGetFrameworkElementSublayerCanvasProperty(objcwinrt::to_insp(targetElement)));
+    return objcwinrt::from_insp<Controls::Canvas>(inspectable);
 }
 
 } // namespace XamlControls

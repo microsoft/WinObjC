@@ -23,8 +23,13 @@
 #import <UIKit/UIColor.h>
 
 #import "XamlUtilities.h"
+#import "CppWinRTHelpers.h"
 
-#import <UWP/WindowsUIXamlControls.h>
+#include "COMIncludes.h"
+#import <winrt/Windows.UI.Xaml.Controls.h>
+#include "COMIncludes_End.h"
+
+using namespace winrt::Windows::UI::Xaml;
 
 static const int c_normalSquareLength = 20;
 static const int c_largeSquareLength = 37;
@@ -35,7 +40,7 @@ static const int c_largeSquareLength = 37;
     BOOL _startAnimating;
 
     StrongId<UIColor> _color;
-    StrongId<WXCProgressRing> _progressRing;
+    TrivialDefaultConstructor<Controls::ProgressRing> _progressRing;
     StrongId<UIView> _subView;
 
     UIActivityIndicatorViewStyle _style;
@@ -121,7 +126,7 @@ static const int c_largeSquareLength = 37;
 /**
  Microsoft Extension
 */
-- (instancetype)initWithFrame:(CGRect)frame xamlElement:(WXFrameworkElement*)xamlElement {
+- (instancetype)initWithFrame:(CGRect)frame xamlElement:(RTObject*)xamlElement {
     // TODO: We're passing nil to initWithFrame:xamlElement: because we have to *contain* a _subview for padding/layout.
     // Note: Pass 'xamlElement' instead, once we move to a *single* backing Xaml element for UIActivityIndicatorView.
     if (self = [super initWithFrame:frame xamlElement:nil]) {
@@ -140,17 +145,21 @@ static const int c_largeSquareLength = 37;
     _subView.center = { self.center.x - self.frame.origin.x, self.center.y - self.frame.origin.y };
 }
 
-- (void)_initUIActivityIndicatorView:(WXFrameworkElement*)xamlElement {
-    if (xamlElement != nil && [xamlElement isKindOfClass:[WXCProgressRing class]]) {
-        _progressRing = static_cast<WXCProgressRing*>(xamlElement);
-    } else {
-        _progressRing = [WXCProgressRing make];
+- (void)_initUIActivityIndicatorView:(RTObject*)xamlElement {
+    if (xamlElement != nil) {
+        _progressRing = objcwinrt::from_rtobj<Controls::ProgressRing>(xamlElement);
+    }
+
+    if (!_progressRing) {
+        _progressRing = Controls::ProgressRing();
     }
 
     // TODO: We should move this over to a single Xaml element which we return from a createXamlElement implementation.
     //       Which would also mean that we'd just reach into [self xamlElement] to get the backing _progressRing,
     //       and we would no longer have a _subview.
-    _subView = [[UIView alloc] initWithFrame:CGRectZero xamlElement:_progressRing];
+    _subView = [[UIView alloc] initWithFrame:CGRectZero
+                                 xamlElement:(xamlElement ? xamlElement : objcwinrt::to_rtobj(_progressRing))];
+
     [self addSubview:_subView];
     _isAnimating = NO;
     [self setHidesWhenStopped:YES];
@@ -223,7 +232,7 @@ static const int c_largeSquareLength = 37;
 
     _isAnimating = YES;
     [self setHidden:NO];
-    [_progressRing setIsActive:YES];
+    _progressRing.IsActive(true);
 }
 
 /**
@@ -235,7 +244,7 @@ static const int c_largeSquareLength = 37;
         _isAnimating = NO;
     }
 
-    [_progressRing setIsActive:NO];
+    _progressRing.IsActive(false);
     if (_hidesWhenStopped) {
         [self setHidden:YES];
     }
@@ -254,9 +263,9 @@ static const int c_largeSquareLength = 37;
 - (void)setColor:(UIColor*)color {
     _color = color;
 
-    WUColor* convertedColor = XamlUtilities::ConvertUIColorToWUColor(color);
-    WUXMSolidColorBrush* brush = [WUXMSolidColorBrush makeInstanceWithColor:convertedColor];
-    [_progressRing setForeground:brush];
+    winrt::Windows::UI::Color convertedColor = XamlUtilities::ConvertUIColorToWUColor(color);
+    Media::SolidColorBrush brush = convertedColor;
+    _progressRing.Foreground(brush);
 }
 
 /**

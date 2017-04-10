@@ -619,7 +619,7 @@ struct KeyValuePairAdapterObj : KeyValuePairAdapter {
     }
 };
 
-WINRT_EXPORT
+OBJCWINRT_EXPORT
 @interface RTProxiedKeyValuePair : RTKeyValuePair {
     std::unique_ptr<KeyValuePairAdapter> adapter;
 }
@@ -629,7 +629,7 @@ WINRT_EXPORT
 - (id)value;
 @end
 
-WINRT_EXPORT
+OBJCWINRT_EXPORT
 @interface RTProxiedNSMutableDictionary : NSMutableDictionary {
     std::unique_ptr<MutableDictionaryAdapter> adapter;
 }
@@ -654,7 +654,7 @@ WINRT_EXPORT
 - (void)setDictionary:(NSDictionary*)otherDict;
 @end
 
-WINRT_EXPORT
+OBJCWINRT_EXPORT
 @interface RTProxiedObservableNSMutableDictionary : NSMutableDictionary <RTObservableCollection> {
     std::unique_ptr<ObservableDictionaryAdapter> adapter;
 }
@@ -682,7 +682,7 @@ WINRT_EXPORT
 - (void)notify:(RTCollectionOperation)op atKey:(id)key;
 @end
 
-WINRT_EXPORT
+OBJCWINRT_EXPORT
 @interface RTProxiedNSDictionary : NSDictionary {
     std::unique_ptr<DictionaryAdapter> adapter;
 }
@@ -699,7 +699,7 @@ WINRT_EXPORT
 - (NSArray*)allValues;
 @end
 
-WINRT_EXPORT
+OBJCWINRT_EXPORT
 @interface RTProxiedNSDictionaryKeyEnumerator : NSEnumerator {
     std::unique_ptr<DictionaryKeyEnumeratorAdapter> adapter;
 }
@@ -708,7 +708,7 @@ WINRT_EXPORT
 - (id)nextObject;
 @end
 
-WINRT_EXPORT
+OBJCWINRT_EXPORT
 @interface RTProxiedNSArray : NSArray {
     std::unique_ptr<ArrayAdapter> adapter;
 }
@@ -722,12 +722,12 @@ WINRT_EXPORT
 - (void*)ptr;
 @end
 
-WINRT_EXPORT
+OBJCWINRT_EXPORT
 @interface RTProxiedNSArrayFull : RTProxiedNSArray
 - (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState*)state objects:(id __unsafe_unretained[])buffer count:(NSUInteger)len;
 @end
 
-WINRT_EXPORT
+OBJCWINRT_EXPORT
 @interface RTProxiedNSMutableArray : NSMutableArray {
     std::unique_ptr<MutableArrayAdapter> adapter;
 }
@@ -747,7 +747,7 @@ WINRT_EXPORT
 - (void)replaceObjectAtIndex:(NSUInteger)idx withObject:(id)obj;
 @end
 
-WINRT_EXPORT
+OBJCWINRT_EXPORT
 @interface RTProxiedObservableNSMutableArray : NSMutableArray <RTObservableCollection> {
     std::unique_ptr<ObservableArrayAdapter> adapter;
 }
@@ -770,12 +770,12 @@ WINRT_EXPORT
 - (void)notify:(RTCollectionOperation)op at:(unsigned int)idx;
 @end
 
-WINRT_EXPORT
+OBJCWINRT_EXPORT
 @interface RTProxiedNSMutableArrayFull : RTProxiedNSMutableArray
 - (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState*)state objects:(id __unsafe_unretained[])buffer count:(NSUInteger)len;
 @end
 
-WINRT_EXPORT
+OBJCWINRT_EXPORT
 @interface RTProxiedIterableNSArray : NSArray {
     std::unique_ptr<IterableArrayAdapter> adapter;
 }
@@ -792,7 +792,7 @@ WINRT_EXPORT
 - (id)next;
 @end
 
-WINRT_EXPORT
+OBJCWINRT_EXPORT
 @interface RTProxiedIterableNSArrayFull : RTProxiedIterableNSArray
 - (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState*)state objects:(id __unsafe_unretained[])buffer count:(NSUInteger)len;
 @end
@@ -1058,7 +1058,7 @@ inline RTCollectionOperation ccToOperation(CollectionChange cc) {
 // Iterable helpers.
 //
 
-WINRT_EXPORT_FN
+OBJCWINRT_EXPORT_FN
 UINT32 SizeByEnumeration(id<NSFastEnumeration> obj); // slow way to get an enumeration size.
 
 template <typename T>
@@ -2361,7 +2361,7 @@ BoxedObj<WRLT>* BuildNullable(id val) {
 //
 // For observable collections.
 //
-WINRT_EXPORT
+OBJCWINRT_EXPORT
 @interface ListenerMgr : NSObject
 - (id)init;
 - (id)initWith:(id)owner;
@@ -2372,9 +2372,9 @@ WINRT_EXPORT
 - (NSArray*)listeners;
 @end
 
-WINRT_EXPORT_FN
+OBJCWINRT_EXPORT_FN
 NSUInteger fastEnumArrayImpl(id self, NSFastEnumerationState* state, id* buffer, NSUInteger len);
-WINRT_EXPORT_FN
+OBJCWINRT_EXPORT_FN
 NSUInteger fastEnumIteratorImpl(id self, NSFastEnumerationState* state, id* buffer, NSUInteger len);
 
 //
@@ -2410,7 +2410,7 @@ public:
     }
 };
 
-WINRT_EXPORT_FN
+OBJCWINRT_EXPORT_FN
 void getPropertyValueArrayInfo(ComPtr<IPropertyValue> comPtr, unsigned int &res, void** resPtr);
 
 template <typename WRLT,

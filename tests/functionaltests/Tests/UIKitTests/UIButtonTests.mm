@@ -17,11 +17,60 @@
 #import "FunctionalTestHelpers.h"
 #import "UXTestHelpers.h"
 #import "UILabelInternal.h"
+#import "UIViewInternal.h"
+#include "CppWinRTHelpers.h"
 
 // Re-use existing sample code for validation
 #import "UIKitControls/UIButtonWithControlsViewController.h"
 
+#include "COMIncludes.h"
+#import <winrt/Windows.UI.Xaml.Media.Imaging.h>
+#include "COMIncludes_End.h"
+
 using namespace UXTestAPI;
+using namespace winrt::Windows::UI::Xaml;
+namespace WF = winrt::Windows::Foundation;
+
+// Callback object for the CurrentBackgroundImage test.
+// Normally a closure can be created with a lambda, but a compiler issue prevents that in
+// this case. Until it's fixed, use this object as a workaround.
+class LayoutUpdatedCallback
+{
+public:
+    LayoutUpdatedCallback(FrameworkElement* layerContentAddr, std::shared_ptr<UXTestAPI::UXEvent>& uxLayoutEvent, winrt::event_token* ert, const FrameworkElement& xamlElement) :
+        _layerContentAddr(layerContentAddr), _uxLayoutEvent(uxLayoutEvent), _ert(ert), _xamlElement(xamlElement) {
+    }
+
+    LayoutUpdatedCallback(LayoutUpdatedCallback&& other) :
+        _layerContentAddr(other._layerContentAddr), _uxLayoutEvent(other._uxLayoutEvent), _ert(other._ert), _xamlElement(other._xamlElement) {
+    }
+
+    LayoutUpdatedCallback(const LayoutUpdatedCallback& other) :
+        _layerContentAddr(other._layerContentAddr), _uxLayoutEvent(other._uxLayoutEvent), _ert(other._ert), _xamlElement(other._xamlElement) {
+    }
+
+    template <typename TSender, typename TArgs>
+    void operator()(TSender&&, TArgs&&) {
+        @autoreleasepool {
+            // Initially there is no LayerContent element unless we set a background image
+            if (!*_layerContentAddr) {
+                // Initially there is no LayerContent element
+                *_layerContentAddr = FindXamlChild(_xamlElement, @"LayerContent");
+                if (*_layerContentAddr) {
+                    // Ignore further layout events
+                    _xamlElement.LayoutUpdated(*_ert);
+                    _uxLayoutEvent->Set();
+                }
+            }
+        }
+    }
+
+private:
+    FrameworkElement* _layerContentAddr;
+    std::shared_ptr<UXTestAPI::UXEvent>& _uxLayoutEvent;
+    winrt::event_token* _ert;
+    FrameworkElement _xamlElement;
+};
 
 @interface UIDeallocTestButton : UIButton {
     std::shared_ptr<UXEvent> _event;
@@ -65,17 +114,15 @@ public:
     TEST_METHOD(UIButton_GetXamlElement) {
         FrameworkHelper::RunOnUIThread([]() {
             UIView* view = [[[UIButton alloc] init] autorelease];
-            WXFrameworkElement* backingElement = [view xamlElement];
-            ASSERT_OBJCNE(backingElement, nil);
-
-            // TODO: Fix up when UIButton moves fully to XAML
-            ASSERT_TRUE([backingElement isKindOfClass:[WXFrameworkElement class]]);
+            FrameworkElement backingElement = [view _winrtXamlElement];
+            ASSERT_TRUE(backingElement);
         });
     }
 
     TEST_METHOD(UIButton_CheckForLeaks) {
         Microsoft::WRL::WeakRef weakXamlElement;
-        {
+
+        @autoreleasepool {
             StrongId<UIButtonWithControlsViewController> buttonVC;
             buttonVC.attach([[UIButtonWithControlsViewController alloc] init]);
             UXTestAPI::ViewControllerPresenter testHelper(buttonVC);
@@ -125,36 +172,35 @@ public:
 
         UIButton* buttonToTest = [buttonVC defaultButton];
 
-        WXCControl* xamlControl = rt_dynamic_cast([WXCControl class], [buttonToTest xamlElement]);
-        ASSERT_OBJCNE(xamlControl, nil);
+        Controls::Control xamlControl = [buttonToTest _winrtXamlElement].as<Controls::Control>();
+        ASSERT_TRUE(xamlControl);
 
         // Extract UIButton.titleLabel control to verify its visual state
-        WXFrameworkElement* titleLabelXamlElement = [buttonToTest.titleLabel _getXamlTextBlock];
-        ASSERT_OBJCNE(titleLabelXamlElement, nil);
+        FrameworkElement titleLabelXamlElement = [buttonToTest.titleLabel _getXamlTextBlock];
+        ASSERT_TRUE(titleLabelXamlElement);
 
-        WXCTextBlock* textBlock = rt_dynamic_cast([WXCTextBlock class], titleLabelXamlElement);
-        ASSERT_OBJCNE(textBlock, nil);
+        auto textBlock = titleLabelXamlElement.as<Controls::TextBlock>();
+        ASSERT_TRUE(textBlock);
 
         // buttonType
         ASSERT_EQ(buttonToTest.buttonType, UIButtonTypeCustom);
 
         // Background color
         dispatch_sync(dispatch_get_main_queue(), ^{
-            WUXMSolidColorBrush* solidBackgroundBrush = rt_dynamic_cast([WUXMSolidColorBrush class], xamlControl.background);
+            auto solidBackgroundBrush = xamlControl.Background().as<Media::SolidColorBrush>();
             UIColor* expectedBackgroundColor = [UIColor colorWithRed:1.0f green:1.0f blue:1.0f alpha:0.0f];
             EXPECT_TRUE(UXTestAPI::IsRGBAEqual(solidBackgroundBrush, expectedBackgroundColor));
         });
 
         // Title color
-        __block auto uxEvent = UXEvent::CreateManual();
+        __block auto uxEvent = UXEvent::CreateAuto();
         __block auto xamlSubscriber = std::make_shared<XamlEventSubscription>();
+        UIColor* expectedColor = [UIColor whiteColor];
 
         dispatch_sync(dispatch_get_main_queue(), ^{
-            UIColor* expectedColor = [UIColor whiteColor];
-
             // Register RAII event subscription handler
-            xamlSubscriber->Set(textBlock, [WXCTextBlock foregroundProperty], ^(WXDependencyObject* sender, WXDependencyProperty* dp) {
-                WUXMSolidColorBrush* solidBrush = rt_dynamic_cast([WUXMSolidColorBrush class], [sender getValue:dp]);
+            xamlSubscriber->Set(textBlock, Controls::TextBlock::ForegroundProperty(), ^(const DependencyObject& sender, const DependencyProperty& dp) {
+                auto solidBrush = sender.GetValue(dp).as<Media::SolidColorBrush>();
 
                 // Validation
                 if (UXTestAPI::IsRGBAEqual(solidBrush, expectedColor)) {
@@ -163,12 +209,11 @@ public:
             });
 
             // Check the current state of the foreground brush in case it is already set which means the property callback will not get triggered
-            WUXMSolidColorBrush* solidBrush = rt_dynamic_cast([WUXMSolidColorBrush class], textBlock.foreground);
+            auto solidBrush = textBlock.Foreground().as<Media::SolidColorBrush>();
             if (UXTestAPI::IsRGBAEqual(solidBrush, expectedColor)) {
                 uxEvent->Set();
             }
         });
-
         ASSERT_TRUE_MSG(uxEvent->Wait(c_testTimeoutInSec), "FAILED: Waiting for property changed event state timed out!");
 
         // adjustImageWhen* is YES by default
@@ -186,22 +231,22 @@ public:
 
         UIButton* buttonToTest = [buttonVC customButton];
 
-        WXCControl* xamlControl = rt_dynamic_cast([WXCControl class], [buttonToTest xamlElement]);
-        ASSERT_OBJCNE(xamlControl, nil);
+        auto xamlControl = [buttonToTest _winrtXamlElement].as<Controls::Control>();
+        ASSERT_TRUE(xamlControl);
 
         // Extract UIButton.titleLabel control to verify its visual state
-        WXFrameworkElement* titleLabelXamlElement = [buttonToTest.titleLabel _getXamlTextBlock];
-        ASSERT_OBJCNE(titleLabelXamlElement, nil);
+        FrameworkElement titleLabelXamlElement = [buttonToTest.titleLabel _getXamlTextBlock];
+        ASSERT_TRUE(titleLabelXamlElement);
 
-        WXCTextBlock* textBlock = rt_dynamic_cast([WXCTextBlock class], titleLabelXamlElement);
-        ASSERT_OBJCNE(textBlock, nil);
+        auto textBlock = titleLabelXamlElement.as<Controls::TextBlock>();
+        ASSERT_TRUE(textBlock);
 
         // buttonType
         ASSERT_EQ(buttonToTest.buttonType, UIButtonTypeCustom);
 
         // Background color
         dispatch_sync(dispatch_get_main_queue(), ^{
-            WUXMSolidColorBrush* solidBackgroundBrush = rt_dynamic_cast([WUXMSolidColorBrush class], xamlControl.background);
+            auto solidBackgroundBrush = xamlControl.Background().as<Media::SolidColorBrush>();
             UIColor* expectedBackgroundColor = [UIColor colorWithRed:1.0f green:1.0f blue:1.0f alpha:0.0f];
             EXPECT_TRUE(UXTestAPI::IsRGBAEqual(solidBackgroundBrush, expectedBackgroundColor));
         });
@@ -214,8 +259,8 @@ public:
             UIColor* expectedColor = [UIColor whiteColor];
 
             // Register RAII event subscription handler
-            xamlSubscriber->Set(textBlock, [WXCTextBlock foregroundProperty], ^(WXDependencyObject* sender, WXDependencyProperty* dp) {
-                WUXMSolidColorBrush* solidBrush = rt_dynamic_cast([WUXMSolidColorBrush class], [sender getValue:dp]);
+            xamlSubscriber->Set(textBlock, Controls::TextBlock::ForegroundProperty(), ^(const DependencyObject& sender, const DependencyProperty& dp) {
+                auto solidBrush = sender.GetValue(dp).as<Media::SolidColorBrush>();
 
                 // Validation
                 if (UXTestAPI::IsRGBAEqual(solidBrush, expectedColor)) {
@@ -224,12 +269,11 @@ public:
             });
 
             // Check the current state of the foreground brush in case it is already set which means the property callback will not get triggered
-            WUXMSolidColorBrush* solidBrush = rt_dynamic_cast([WUXMSolidColorBrush class], textBlock.foreground);
+            auto solidBrush = textBlock.Foreground().as<Media::SolidColorBrush>();
             if (UXTestAPI::IsRGBAEqual(solidBrush, expectedColor)) {
                 uxEvent->Set();
             }
         });
-
         ASSERT_TRUE_MSG(uxEvent->Wait(c_testTimeoutInSec), "FAILED: Waiting for property changed event state timed out!");
 
         // adjustImageWhen* is YES by default
@@ -248,22 +292,22 @@ public:
         // Change to the UIButtonTypeSystem
         UIButton* buttonToTest = [buttonVC systemButton];
 
-        WXCControl* xamlControl = rt_dynamic_cast([WXCControl class], [buttonToTest xamlElement]);
-        ASSERT_OBJCNE(xamlControl, nil);
+        auto xamlControl = [buttonToTest _winrtXamlElement].as<Controls::Control>();
+        ASSERT_TRUE(xamlControl);
 
         // Extract UIButton.titleLabel control to verify its visual state
-        WXFrameworkElement* titleLabelXamlElement = [buttonToTest.titleLabel _getXamlTextBlock];
-        ASSERT_OBJCNE(titleLabelXamlElement, nil);
+        FrameworkElement titleLabelXamlElement = [buttonToTest.titleLabel _getXamlTextBlock];
+        ASSERT_TRUE(titleLabelXamlElement);
 
-        WXCTextBlock* textBlock = rt_dynamic_cast([WXCTextBlock class], titleLabelXamlElement);
-        ASSERT_OBJCNE(textBlock, nil);
+        auto textBlock = titleLabelXamlElement.as<Controls::TextBlock>();
+        ASSERT_TRUE(textBlock);
 
         // buttonType
         ASSERT_EQ(buttonToTest.buttonType, UIButtonTypeSystem);
 
         // Background color
         dispatch_sync(dispatch_get_main_queue(), ^{
-            WUXMSolidColorBrush* solidBackgroundBrush = rt_dynamic_cast([WUXMSolidColorBrush class], xamlControl.background);
+            auto solidBackgroundBrush = xamlControl.Background().as<Media::SolidColorBrush>();
             UIColor* expectedBackgroundColor = [UIColor colorWithRed:1.0f green:1.0f blue:1.0f alpha:0.0f];
             EXPECT_TRUE(UXTestAPI::IsRGBAEqual(solidBackgroundBrush, expectedBackgroundColor));
         });
@@ -271,13 +315,12 @@ public:
         // Title color
         __block auto uxEvent = UXEvent::CreateManual();
         __block auto xamlSubscriber = std::make_shared<XamlEventSubscription>();
-
         dispatch_sync(dispatch_get_main_queue(), ^{
             UIColor* expectedColor = [UIColor colorWithRed:0.0f green:0.47843137f blue:1.0f alpha:1.0f];
 
             // Register RAII event subscription handler
-            xamlSubscriber->Set(textBlock, [WXCTextBlock foregroundProperty], ^(WXDependencyObject* sender, WXDependencyProperty* dp) {
-                WUXMSolidColorBrush* solidBrush = rt_dynamic_cast([WUXMSolidColorBrush class], [sender getValue:dp]);
+            xamlSubscriber->Set(textBlock, Controls::TextBlock::ForegroundProperty(), ^(const DependencyObject& sender, const DependencyProperty& dp) {
+                auto solidBrush = sender.GetValue(dp).as<Media::SolidColorBrush>();
 
                 // Validation
                 if (UXTestAPI::IsRGBAEqual(solidBrush, expectedColor)) {
@@ -286,7 +329,7 @@ public:
             });
 
             // Check the current state of the foreground brush in case it is already set which means the property callback will not get triggered
-            WUXMSolidColorBrush* solidBrush = rt_dynamic_cast([WUXMSolidColorBrush class], textBlock.foreground);
+            auto solidBrush = textBlock.Foreground().as<Media::SolidColorBrush>();
             if (UXTestAPI::IsRGBAEqual(solidBrush, expectedColor)) {
                 uxEvent->Set();
             }
@@ -311,30 +354,30 @@ public:
 
         __block auto uxEvent = UXEvent::CreateAuto();
         __block auto xamlSubscriber = std::make_shared<XamlEventSubscription>();
-        __block StrongId<WXFrameworkElement> buttonBorder;
+        __block FrameworkElement buttonBorder = nullptr;
         __block StrongId<UIColor> expectedColor;
 
-        WXFrameworkElement* xamlElement = [buttonToTest xamlElement];
-        ASSERT_OBJCNE(xamlElement, nil);
+        FrameworkElement xamlElement = [buttonToTest _winrtXamlElement];
+        ASSERT_TRUE(xamlElement);
 
         // Find buttonBorder in the visual tree
         dispatch_sync(dispatch_get_main_queue(), ^{
             buttonBorder = FindXamlChild(xamlElement, @"buttonBorder");
         });
-        ASSERT_OBJCNE(buttonBorder, nil);
+        ASSERT_TRUE(buttonBorder);
 
         dispatch_sync(dispatch_get_main_queue(), ^{
             // Register RAII event subscription handler
-            xamlSubscriber->Set(buttonBorder, [WXCBorder backgroundProperty], ^(WXDependencyObject* sender, WXDependencyProperty* dp) {
+            xamlSubscriber->Set(buttonBorder, Controls::Border::BackgroundProperty(), ^(const DependencyObject& sender, const DependencyProperty& dp) {
                 if (expectedColor) {
-                    WUXMSolidColorBrush* solidBrush = rt_dynamic_cast([WUXMSolidColorBrush class], [sender getValue:dp]);
+                    auto solidBrush = sender.GetValue(dp).as<Media::SolidColorBrush>();
 
                     // Validation
                     EXPECT_TRUE(UXTestAPI::IsRGBAEqual(solidBrush, expectedColor));
                 }
                 else {
                     // In adjustsImageWhenHighlighted == NO scenario, we set the border background brush to nil
-                    EXPECT_OBJCEQ([sender getValue:dp], nil);
+                    EXPECT_FALSE(sender.GetValue(dp));
                 }
 
                 uxEvent->Set();
@@ -386,30 +429,30 @@ public:
 
         __block auto uxEvent = UXEvent::CreateAuto();
         __block auto xamlSubscriber = std::make_shared<XamlEventSubscription>();
-        __block StrongId<WXFrameworkElement> buttonBorder;
+        __block FrameworkElement buttonBorder = nullptr;
         __block StrongId<UIColor> expectedColor;
 
-        WXFrameworkElement* xamlElement = [buttonToTest xamlElement];
-        ASSERT_OBJCNE(xamlElement, nil);
+        FrameworkElement xamlElement = [buttonToTest _winrtXamlElement];
+        ASSERT_TRUE(xamlElement);
 
         // Find buttonBorder in the visual tree
         dispatch_sync(dispatch_get_main_queue(), ^{
             buttonBorder = FindXamlChild(xamlElement, @"buttonBorder");
         });
-        ASSERT_OBJCNE(buttonBorder, nil);
+        ASSERT_TRUE(buttonBorder);
 
         dispatch_sync(dispatch_get_main_queue(), ^{
             // Register RAII event subscription handler
-            xamlSubscriber->Set(buttonBorder, [WXCBorder backgroundProperty], ^(WXDependencyObject* sender, WXDependencyProperty* dp) {
+            xamlSubscriber->Set(buttonBorder, Controls::Border::BackgroundProperty(), ^(const DependencyObject& sender, const DependencyProperty& dp) {
                 if (expectedColor) {
-                    WUXMSolidColorBrush* solidBrush = rt_dynamic_cast([WUXMSolidColorBrush class], [sender getValue:dp]);
+                    auto solidBrush = sender.GetValue(dp).as<Media::SolidColorBrush>();
 
                     // Validation
                     EXPECT_TRUE(UXTestAPI::IsRGBAEqual(solidBrush, expectedColor));
                 }
                 else {
                     // In adjustsImageWhenDisabled == NO scenario, we set the border background brush to nil
-                    EXPECT_OBJCEQ([sender getValue:dp], nil);
+                    EXPECT_FALSE(sender.GetValue(dp));
                 }
 
                 uxEvent->Set();
@@ -459,13 +502,13 @@ public:
         __block NSString* expectedString;
 
         // Extract UIButton.titleLabel control to verify its visual state
-        WXFrameworkElement* xamlElement = [buttonToTest.titleLabel _getXamlTextBlock];
+        FrameworkElement xamlElement = [buttonToTest.titleLabel _getXamlTextBlock];
         ASSERT_TRUE(xamlElement);
 
         dispatch_async(dispatch_get_main_queue(), ^{
             // Register RAII event subscription handler
-            xamlSubscriber->Set(xamlElement, [WXCTextBlock textProperty], ^(WXDependencyObject* sender, WXDependencyProperty* dp) {
-                NSString* text = UXTestAPI::NSStringFromPropertyValue([sender getValue:dp]);
+            xamlSubscriber->Set(xamlElement, Controls::TextBlock::TextProperty(), ^(const DependencyObject& sender, const DependencyProperty& dp) {
+                NSString* text = UXTestAPI::NSStringFromPropertyValue(sender.GetValue(dp));
                 LOG_INFO("XAML text: %@", text);
 
                 // Validation
@@ -607,21 +650,21 @@ public:
         __block NSString* expectedColor;
 
         // Extract UIButton.titleLabel control to verify its visual state
-        WXFrameworkElement* xamlElement = [buttonToTest.titleLabel _getXamlTextBlock];
-        ASSERT_OBJCNE(xamlElement, nil);
+        FrameworkElement xamlElement = [buttonToTest.titleLabel _getXamlTextBlock];
+        ASSERT_TRUE(xamlElement);
 
         dispatch_async(dispatch_get_main_queue(), ^{
             // Add some text which helps display the changes in all states during development
             [buttonVC textTitle].text = @"Functional testing";
 
             // Register RAII event subscription handler
-            xamlSubscriber->Set(xamlElement, [WXCTextBlock foregroundProperty], ^(WXDependencyObject* sender, WXDependencyProperty* dp) {
-                WUXMSolidColorBrush* solidBrush = rt_dynamic_cast([WUXMSolidColorBrush class], [sender getValue:dp]);
+            xamlSubscriber->Set(xamlElement, Controls::TextBlock::ForegroundProperty(), ^(const DependencyObject& sender, const DependencyProperty& dp) {
+                auto solidBrush = sender.GetValue(dp).as<Media::SolidColorBrush>();
                 LOG_INFO("XAML solid color brush (rgba): %d,%d,%d,%d",
-                         [solidBrush.color r],
-                         [solidBrush.color g],
-                         [solidBrush.color b],
-                         [solidBrush.color a]);
+                         solidBrush.Color().R,
+                         solidBrush.Color().G,
+                         solidBrush.Color().B,
+                         solidBrush.Color().A);
 
                 // Validation
                 UIColor* color = [UIColor performSelector:NSSelectorFromString(expectedColor)];
@@ -758,27 +801,26 @@ public:
 
         UIButton* buttonToTest = [buttonVC defaultButton];
 
-        __block auto uxEvent = UXEvent::CreateAuto();
-        __block auto xamlSubscriber = std::make_shared<XamlEventSubscription>();
+        auto uxEvent = UXEvent::CreateAuto();
+        auto xamlSubscriber = std::make_shared<XamlEventSubscription>();
         __block NSString* expectedImage;
 
         // Extract UIButton.imageView control to verify its visual state
-        WXFrameworkElement* xamlElement = [buttonToTest.imageView xamlElement];
-        ASSERT_OBJCNE(xamlElement, nil);
+        FrameworkElement xamlElement = [buttonToTest.imageView _winrtXamlElement];
+        ASSERT_TRUE(xamlElement);
 
         dispatch_async(dispatch_get_main_queue(), ^{
             // Register RAII event subscription handler
-            xamlSubscriber->Set(xamlElement, [WXCImage sourceProperty], ^(WXDependencyObject* sender, WXDependencyProperty* dp) {
-                WUXMIBitmapSource* bitmapSource = rt_dynamic_cast([WUXMIBitmapSource class], [sender getValue:dp]);
-                LOG_INFO("XAML bitmap dimensions: %dx%d", [bitmapSource pixelWidth], [bitmapSource pixelHeight]);
+            xamlSubscriber->Set(xamlElement, Controls::Image::SourceProperty(), ^(const DependencyObject& sender, const DependencyProperty& dp) {
+                auto bitmapSource = sender.GetValue(dp).as<Media::Imaging::BitmapSource>();
+                LOG_INFO("XAML bitmap dimensions: %dx%d", bitmapSource.PixelWidth(), bitmapSource.PixelHeight());
 
-                NSString* imageDimensions = [NSString stringWithFormat:@"%dx%d.png", [bitmapSource pixelWidth], [bitmapSource pixelHeight]];
+                NSString* imageDimensions = [NSString stringWithFormat:@"%dx%d.png", bitmapSource.PixelWidth(), bitmapSource.PixelHeight()];
                 if ([imageDimensions isEqualToString:expectedImage]) {
                     uxEvent->Set();
                 }
             });
         });
-
         // Set UIControlStateNormal state value - test transitions to other states.
         // Without previously defined state values, any transition to those states should fallback to normal state value
         dispatch_sync(dispatch_get_main_queue(), ^{
@@ -907,34 +949,33 @@ public:
 
         UIButton* buttonToTest = [buttonVC defaultButton];
 
-        __block auto uxLayoutEvent = UXEvent::CreateManual();
-        __block StrongId<WXFrameworkElement> layerContent;
+        auto uxLayoutEvent = UXEvent::CreateManual();
+        FrameworkElement layerContent = nullptr;
+        FrameworkElement* layerContentAddr = &layerContent;
 
-        __block auto uxEvent = UXEvent::CreateAuto();
-        __block auto xamlSubscriber = std::make_shared<XamlEventSubscription>();
+        auto uxEvent = UXEvent::CreateAuto();
+        auto xamlSubscriber = std::make_shared<XamlEventSubscription>();
         __block NSString* expectedBackgroundImage;
-        EventRegistrationToken ert{};
-        EventRegistrationToken* const ertAddr = &ert;
+        __block winrt::event_token ert;
+        winrt::event_token* const ertAddr = &ert;
 
-        WXFrameworkElement* xamlElement = [buttonToTest xamlElement];
-        ASSERT_OBJCNE(xamlElement, nil);
+        FrameworkElement xamlElement = [buttonToTest _winrtXamlElement];
+        ASSERT_TRUE(xamlElement);
 
         // Wait for the layerContent to be part of the visual tree
         dispatch_sync(dispatch_get_main_queue(), ^{
-            *ertAddr = [xamlElement addLayoutUpdatedEvent:^(RTObject* sender, RTObject* args) {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    // Initially there is no LayerContent element unless we set a background image
-                    if (layerContent == nil) {
-                        // Initially there is no LayerContent element
-                        layerContent = FindXamlChild(xamlElement, @"LayerContent");
-                        if (layerContent) {
-                            // Ignore further layout events
-                            [xamlElement removeLayoutUpdatedEvent:*ertAddr];
-                            uxLayoutEvent->Set();
-                        }
+            ert = xamlElement.LayoutUpdated(objcwinrt::callback([layerContentAddr, uxLayoutEvent, ertAddr, xamlElement] (const WF::IInspectable&, const WF::IInspectable&) {
+                // Initially there is no LayerContent element unless we set a background image
+                if (!*layerContentAddr) {
+                    // Initially there is no LayerContent element
+                    *layerContentAddr = FindXamlChild(xamlElement, @"LayerContent");
+                    if (*layerContentAddr) {
+                        // Ignore further layout events
+                        xamlElement.LayoutUpdated(*ertAddr);
+                        uxLayoutEvent->Set();
                     }
-                });
-            }];
+                }
+            }));
 
             // Set a default background image so we trigger the LayerContent XAML addition
             [buttonVC textBackgroundImage].text = @"yellow_background.jpg";
@@ -942,18 +983,18 @@ public:
 
         // Wait for the LayerContent to be present before running background image tests
         uxLayoutEvent->Wait(c_testTimeoutInSec);
-        ASSERT_OBJCNE(layerContent, nil);
+        ASSERT_TRUE(layerContent);
 
         dispatch_sync(dispatch_get_main_queue(), ^{
-            xamlSubscriber->Set(layerContent, [WXCImage sourceProperty], ^(WXDependencyObject* sender, WXDependencyProperty* dp) {
+            xamlSubscriber->Set(layerContent, Controls::Image::SourceProperty(), ^(const DependencyObject& sender, const DependencyProperty& dp) {
                 // Upon cleanup or dismissal of the view, LayerCoordinator sets the source to NULL which we should avoid
-                RTObject* rtObject = [sender getValue:dp];
+                WF::IInspectable rtObject = sender.GetValue(dp);
                 if (rtObject) {
-                    WUXMIBitmapSource* bitmapSource = rt_dynamic_cast([WUXMIBitmapSource class], rtObject);
-                    LOG_INFO("XAML bitmap dimensions: %dx%d", [bitmapSource pixelWidth], [bitmapSource pixelHeight]);
+                    auto bitmapSource = rtObject.as<Media::Imaging::BitmapSource>();
+                    LOG_INFO("XAML bitmap dimensions: %dx%d", bitmapSource.PixelWidth(), bitmapSource.PixelHeight());
 
                     NSString* imageDimensions =
-                        [NSString stringWithFormat:@"%dx%d.png", [bitmapSource pixelWidth], [bitmapSource pixelHeight]];
+                        [NSString stringWithFormat:@"%dx%d.png", bitmapSource.PixelWidth(), bitmapSource.PixelHeight()];
                     if ([imageDimensions isEqualToString:expectedBackgroundImage]) {
                         uxEvent->Set();
                     }
@@ -1088,8 +1129,8 @@ public:
 
         UIButton* buttonToTest = [buttonVC defaultButton];
 
-        WXFrameworkElement* xamlElement = [buttonToTest.titleLabel _getXamlTextBlock];
-        ASSERT_OBJCNE(xamlElement, nil);
+        FrameworkElement xamlElement = [buttonToTest.titleLabel _getXamlTextBlock];
+        ASSERT_TRUE(xamlElement);
     }
 
     TEST_METHOD(UIButton_ContentEdgeInsets) {
@@ -1111,11 +1152,11 @@ public:
         __block auto xamlTitleWidthSubscriber = std::make_shared<XamlEventSubscription>();
         __block auto xamlTitleHeightSubscriber = std::make_shared<XamlEventSubscription>();
 
-        WXFrameworkElement* xamlImageElement = [buttonToTest.imageView xamlElement];
-        ASSERT_OBJCNE(xamlImageElement, nil);
+        FrameworkElement xamlImageElement = [buttonToTest.imageView _winrtXamlElement];
+        ASSERT_TRUE(xamlImageElement);
 
-        WXFrameworkElement* xamlTitleElement = [buttonToTest.titleLabel xamlElement];
-        ASSERT_OBJCNE(xamlTitleElement, nil);
+        FrameworkElement xamlTitleElement = [buttonToTest.titleLabel _winrtXamlElement];
+        ASSERT_TRUE(xamlTitleElement);
 
         dispatch_sync(dispatch_get_main_queue(), ^{
             [buttonVC textImageStateField].text = @"N;";
@@ -1127,44 +1168,43 @@ public:
             [buttonVC textTitleColor].text = @"redColor";
 
             // Register RAII event subscription handler
-            xamlImageWidthSubscriber->Set(xamlImageElement, [WXCImage widthProperty], ^(WXDependencyObject* sender, WXDependencyProperty* dp) {
-                double width = DoubleFromPropertyValue([sender getValue:dp]);
+            xamlImageWidthSubscriber->Set(xamlImageElement, FrameworkElement::WidthProperty(), ^(const DependencyObject& sender, const DependencyProperty& dp) {
+                double width = DoubleFromPropertyValue(sender.GetValue(dp));
 
                 // Validation
                 EXPECT_EQ(width, 40.0f);
                 uxEvent->Set();
             });
-            xamlImageHeightSubscriber->Set(xamlImageElement, [WXCImage heightProperty], ^(WXDependencyObject* sender, WXDependencyProperty* dp) {
-                double height = DoubleFromPropertyValue([sender getValue:dp]);
+            xamlImageHeightSubscriber->Set(xamlImageElement, FrameworkElement::HeightProperty(), ^(const DependencyObject& sender, const DependencyProperty& dp) {
+                double height = DoubleFromPropertyValue(sender.GetValue(dp));
 
                 // Validation
                 EXPECT_EQ(height, 40.0f);
                 uxEvent->Set();
             });
-            xamlImageCanvasLeftSubscriber->Set(xamlImageElement, [WXCCanvas leftProperty], ^(WXDependencyObject* sender, WXDependencyProperty* dp) {
-                double left = DoubleFromPropertyValue([sender getValue:dp]);
+            xamlImageCanvasLeftSubscriber->Set(xamlImageElement, Controls::Canvas::LeftProperty(), ^(const DependencyObject& sender, const DependencyProperty& dp) {
+                double left = DoubleFromPropertyValue(sender.GetValue(dp));
 
                 // Validation
                 EXPECT_EQ(left, 80.0f);
                 uxEvent->Set();
             });
-            xamlImageCanvasTopSubscriber->Set(xamlImageElement, [WXCCanvas topProperty], ^(WXDependencyObject* sender, WXDependencyProperty* dp) {
-                double top = DoubleFromPropertyValue([sender getValue:dp]);
+            xamlImageCanvasTopSubscriber->Set(xamlImageElement, Controls::Canvas::TopProperty(), ^(const DependencyObject& sender, const DependencyProperty& dp) {
+                double top = DoubleFromPropertyValue(sender.GetValue(dp));
 
                 // Validation
                 EXPECT_EQ(top, 80.0f);
                 uxEvent->Set();
             });
-
-            xamlTitleWidthSubscriber->Set(xamlTitleElement, [WXCGrid widthProperty], ^(WXDependencyObject* sender, WXDependencyProperty* dp) {
-                double width = DoubleFromPropertyValue([sender getValue:dp]);
+            xamlTitleWidthSubscriber->Set(xamlTitleElement, FrameworkElement::WidthProperty(), ^(const DependencyObject& sender, const DependencyProperty& dp) {
+                double width = DoubleFromPropertyValue(sender.GetValue(dp));
 
                 // Validation
                 EXPECT_EQ((int)width, 52);
                 uxEvent->Set();
             });
-            xamlTitleHeightSubscriber->Set(xamlTitleElement, [WXCGrid heightProperty], ^(WXDependencyObject* sender, WXDependencyProperty* dp) {
-                double height = DoubleFromPropertyValue([sender getValue:dp]);
+            xamlTitleHeightSubscriber->Set(xamlTitleElement, FrameworkElement::HeightProperty(), ^(const DependencyObject& sender, const DependencyProperty& dp) {
+                double height = DoubleFromPropertyValue(sender.GetValue(dp));
 
                 // Validation
                 EXPECT_EQ((int)height, 18);
@@ -1180,13 +1220,13 @@ public:
         // Ideally, we can capture the XAML event when the layout is updated but in testing the layout updated event can happen before the inset was applied.
         // For now confirm that the values matches the expected frame value after it has been set
         dispatch_sync(dispatch_get_main_queue(), ^{
-            WUXMTransformGroup* transformGroup = rt_dynamic_cast([WUXMTransformGroup class],[xamlTitleElement renderTransform]);
-            EXPECT_OBJCNE(transformGroup, nil);
+            auto transformGroup = xamlTitleElement.RenderTransform().as<Media::TransformGroup>();
+            EXPECT_TRUE(transformGroup);
 
             // Compare against the expected frame X and Y
-            WUXMMatrix* matrix = [transformGroup value];
-            EXPECT_EQ([matrix offsetX], 98.0f);
-            EXPECT_EQ([matrix offsetY], 90.0f);
+            Media::Matrix matrix = transformGroup.Value();
+            EXPECT_EQ(matrix.OffsetX, 98.0f);
+            EXPECT_EQ(matrix.OffsetY, 90.0f);
         });
     }
 
@@ -1201,9 +1241,8 @@ public:
         __block auto xamlWidthSubscriber = std::make_shared<XamlEventSubscription>();
         __block auto xamlHeightSubscriber = std::make_shared<XamlEventSubscription>();
 
-        // Extract UIButton.titleLabel "grid" to verify its visual state
-        WXFrameworkElement* xamlElement = [buttonToTest.titleLabel xamlElement];
-        ASSERT_OBJCNE(xamlElement, nil);
+        FrameworkElement xamlElement = [buttonToTest.titleLabel _winrtXamlElement];
+        ASSERT_TRUE(xamlElement);
 
         dispatch_sync(dispatch_get_main_queue(), ^{
             [buttonVC textTitleStateField].text = @"N;";
@@ -1212,15 +1251,15 @@ public:
             [buttonVC textTitleColor].text = @"redColor";
 
             // Register RAII event subscription handler
-            xamlWidthSubscriber->Set(xamlElement, [WXCGrid widthProperty], ^(WXDependencyObject* sender, WXDependencyProperty* dp) {
-                double width = DoubleFromPropertyValue([sender getValue:dp]);
+            xamlWidthSubscriber->Set(xamlElement, FrameworkElement::WidthProperty(), ^(const DependencyObject& sender, const DependencyProperty& dp) {
+                double width = DoubleFromPropertyValue(sender.GetValue(dp));
 
                 // Validation - see #2155
                 EXPECT_EQ((int)width, 40);
                 uxEvent->Set();
             });
-            xamlHeightSubscriber->Set(xamlElement, [WXCGrid heightProperty], ^(WXDependencyObject* sender, WXDependencyProperty* dp) {
-                double height = DoubleFromPropertyValue([sender getValue:dp]);
+            xamlHeightSubscriber->Set(xamlElement, FrameworkElement::HeightProperty(), ^(const DependencyObject& sender, const DependencyProperty& dp) {
+                double height = DoubleFromPropertyValue(sender.GetValue(dp));
 
                 // Validation
                 EXPECT_EQ((int)height, 18);
@@ -1234,13 +1273,13 @@ public:
         ASSERT_TRUE_MSG(uxEvent->Wait(c_testTimeoutInSec, 2 /* signal count */), "FAILED: Waiting for property changed events timed out!");
 
         dispatch_sync(dispatch_get_main_queue(), ^{
-            WUXMTransformGroup* transformGroup = rt_dynamic_cast([WUXMTransformGroup class],[xamlElement renderTransform]);
-            EXPECT_OBJCNE(transformGroup, nil);
+            auto transformGroup = xamlElement.RenderTransform().as<Media::TransformGroup>();
+            EXPECT_TRUE(transformGroup);
 
             // Compare against the expected frame X and Y - see #2155
-            WUXMMatrix* matrix = [transformGroup value];
-            EXPECT_EQ([matrix offsetX], 80.0f);
-            EXPECT_EQ([matrix offsetY], 90.0f);
+            Media::Matrix matrix = transformGroup.Value();
+            EXPECT_EQ(matrix.OffsetX, 80.0f);
+            EXPECT_EQ(matrix.OffsetY, 90.0f);
         });
     }
 
@@ -1258,37 +1297,37 @@ public:
         __block auto xamlCanvasTopSubscriber = std::make_shared<XamlEventSubscription>();
 
         // Extract UIButton.imageView control to verify its visual state
-        WXFrameworkElement* xamlElement = [buttonToTest.imageView xamlElement];
-        ASSERT_OBJCNE(xamlElement, nil);
+        FrameworkElement xamlElement = [buttonToTest.imageView _winrtXamlElement];
+        ASSERT_TRUE(xamlElement);
 
         dispatch_sync(dispatch_get_main_queue(), ^{
             [buttonVC textImageStateField].text = @"N;";
             [buttonVC textImage].text = @"50x50.png";
 
             // Register RAII event subscription handler
-            xamlWidthSubscriber->Set(xamlElement, [WXCImage widthProperty], ^(WXDependencyObject* sender, WXDependencyProperty* dp) {
-                double width = DoubleFromPropertyValue([sender getValue:dp]);
+            xamlWidthSubscriber->Set(xamlElement, FrameworkElement::WidthProperty(), ^(const DependencyObject& sender, const DependencyProperty& dp) {
+                double width = DoubleFromPropertyValue(sender.GetValue(dp));
 
                 // Validation
                 EXPECT_EQ(width, 40.0f);
                 uxEvent->Set();
             });
-            xamlHeightSubscriber->Set(xamlElement, [WXCImage heightProperty], ^(WXDependencyObject* sender, WXDependencyProperty* dp) {
-                double height = DoubleFromPropertyValue([sender getValue:dp]);
+            xamlHeightSubscriber->Set(xamlElement, FrameworkElement::HeightProperty(), ^(const DependencyObject& sender, const DependencyProperty& dp) {
+                double height = DoubleFromPropertyValue(sender.GetValue(dp));
 
                 // Validation
                 EXPECT_EQ(height, 40.0f);
                 uxEvent->Set();
             });
-            xamlCanvasLeftSubscriber->Set(xamlElement, [WXCCanvas leftProperty], ^(WXDependencyObject* sender, WXDependencyProperty* dp) {
-                double left = DoubleFromPropertyValue([sender getValue:dp]);
+            xamlCanvasLeftSubscriber->Set(xamlElement, Controls::Canvas::LeftProperty(), ^(const DependencyObject& sender, const DependencyProperty& dp) {
+                double left = DoubleFromPropertyValue(sender.GetValue(dp));
 
                 // Validation
                 EXPECT_EQ(left, 80.0f);
                 uxEvent->Set();
             });
-            xamlCanvasTopSubscriber->Set(xamlElement, [WXCCanvas topProperty], ^(WXDependencyObject* sender, WXDependencyProperty* dp) {
-                double top = DoubleFromPropertyValue([sender getValue:dp]);
+            xamlCanvasTopSubscriber->Set(xamlElement, Controls::Canvas::TopProperty(), ^(const DependencyObject& sender, const DependencyProperty& dp) {
+                double top = DoubleFromPropertyValue(sender.GetValue(dp));
 
                 // Validation
                 EXPECT_EQ(top, 80.0f);
@@ -1314,13 +1353,13 @@ public:
         __block NSString* expectedString = @"Functional testing - currentTitle";
 
         // Extract UIButton.titleLabel control to verify its visual state
-        WXFrameworkElement* xamlElement = [buttonToTest.titleLabel _getXamlTextBlock];
-        ASSERT_OBJCNE(xamlElement, nil);
+        FrameworkElement xamlElement = [buttonToTest.titleLabel _getXamlTextBlock];
+        ASSERT_TRUE(xamlElement);
 
         dispatch_sync(dispatch_get_main_queue(), ^{
             // Register RAII event subscription handler
-            xamlSubscriber->Set(xamlElement, [WXCTextBlock textProperty], ^(WXDependencyObject* sender, WXDependencyProperty* dp) {
-                NSString* text = UXTestAPI::NSStringFromPropertyValue([sender getValue:dp]);
+            xamlSubscriber->Set(xamlElement, Controls::TextBlock::TextProperty(), ^(const DependencyObject& sender, const DependencyProperty& dp) {
+                NSString* text = UXTestAPI::NSStringFromPropertyValue(sender.GetValue(dp));
 
                 // Validation
                 if ([text isEqualToString:expectedString]) {
@@ -1346,13 +1385,13 @@ public:
         __block auto xamlSubscriber = std::make_shared<XamlEventSubscription>();
 
         // Extract UIButton.titleLabel control to verify its visual state
-        WXFrameworkElement* xamlElement = [buttonToTest.titleLabel _getXamlTextBlock];
-        ASSERT_OBJCNE(xamlElement, nil);
+        FrameworkElement xamlElement = [buttonToTest.titleLabel _getXamlTextBlock];
+        ASSERT_TRUE(xamlElement);
 
         dispatch_async(dispatch_get_main_queue(), ^{
             // Register RAII event subscription handler
-            xamlSubscriber->Set(xamlElement, [WXCTextBlock foregroundProperty], ^(WXDependencyObject* sender, WXDependencyProperty* dp) {
-                WUXMSolidColorBrush* solidBrush = rt_dynamic_cast([WUXMSolidColorBrush class], [sender getValue:dp]);
+            xamlSubscriber->Set(xamlElement, Controls::TextBlock::ForegroundProperty(), ^(const DependencyObject& sender, const DependencyProperty& dp) {
+                auto solidBrush = sender.GetValue(dp).as<Media::SolidColorBrush>();
 
                 // Validation
                 EXPECT_TRUE(UXTestAPI::IsRGBAEqual(solidBrush, buttonToTest.currentTitleColor));
@@ -1378,18 +1417,18 @@ public:
         __block NSString* expectedImage = @"50x50.png";
 
         // Extract UIButton.imageView control to verify its visual state
-        WXFrameworkElement* xamlElement = [buttonToTest.imageView xamlElement];
-        ASSERT_OBJCNE(xamlElement, nil);
+        FrameworkElement xamlElement = [buttonToTest.imageView _winrtXamlElement];
+        ASSERT_TRUE(xamlElement);
 
         dispatch_async(dispatch_get_main_queue(), ^{
             // Register RAII event subscription handler
-            xamlSubscriber->Set(xamlElement, [WXCImage sourceProperty], ^(WXDependencyObject* sender, WXDependencyProperty* dp) {
-                WUXMIBitmapSource* bitmapSource = rt_dynamic_cast([WUXMIBitmapSource class], [sender getValue:dp]);
+            xamlSubscriber->Set(xamlElement, Controls::Image::SourceProperty(), ^(const DependencyObject& sender, const DependencyProperty& dp) {
+                auto bitmapSource = sender.GetValue(dp).as<Media::Imaging::BitmapSource>();
 
                 // Validation
                 UIImage* image = buttonToTest.currentImage;
-                EXPECT_EQ([bitmapSource pixelWidth], (int)image.size.width);
-                EXPECT_EQ([bitmapSource pixelHeight], (int)image.size.height);
+                EXPECT_EQ(bitmapSource.PixelWidth(), (int)image.size.width);
+                EXPECT_EQ(bitmapSource.PixelHeight(), (int)image.size.height);
                 uxEvent->Set();
             });
 
@@ -1408,33 +1447,22 @@ public:
         UIButton* buttonToTest = [buttonVC defaultButton];
 
         __block auto uxLayoutEvent = UXEvent::CreateManual();
-        __block StrongId<WXFrameworkElement> layerContent;
+        FrameworkElement layerContent = nullptr;
+        FrameworkElement* const layerContentAddr = &layerContent;
 
-        __block auto uxEvent = UXEvent::CreateAuto();
-        __block auto xamlSubscriber = std::make_shared<XamlEventSubscription>();
+        auto uxEvent = UXEvent::CreateAuto();
+        auto xamlSubscriber = std::make_shared<XamlEventSubscription>();
         __block NSString* expectedBackgroundImage = @"150x150.png";
-        EventRegistrationToken ert{};
-        EventRegistrationToken* const ertAddr = &ert;
+        __block winrt::event_token ert;
+        winrt::event_token* const ertAddr = &ert;
 
-        WXFrameworkElement* xamlElement = [buttonToTest xamlElement];
-        ASSERT_OBJCNE(xamlElement, nil);
+        FrameworkElement xamlElement = [buttonToTest _winrtXamlElement];
+        ASSERT_TRUE(xamlElement);
 
         // Wait for the layerContent to be part of the visual tree
         dispatch_sync(dispatch_get_main_queue(), ^{
-            *ertAddr = [xamlElement addLayoutUpdatedEvent:^(RTObject* sender, RTObject* args) {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    // Initially there is no LayerContent element unless we set a background image
-                    if (layerContent == nil) {
-                        // Initially there is no LayerContent element
-                        layerContent = FindXamlChild(xamlElement, @"LayerContent");
-                        if (layerContent) {
-                            // Ignore further layout events
-                            [xamlElement removeLayoutUpdatedEvent:*ertAddr];
-                            uxLayoutEvent->Set();
-                        }
-                    }
-                });
-            }];
+            LayoutUpdatedCallback callback(layerContentAddr, uxLayoutEvent, ertAddr, xamlElement);
+            ert = xamlElement.LayoutUpdated(callback);
 
             // Set a default background image so we trigger the LayerContent XAML addition
             [buttonVC textBackgroundImage].text = expectedBackgroundImage;
@@ -1442,19 +1470,19 @@ public:
 
         // Wait for the LayerContent to be present before running background image tests
         uxLayoutEvent->Wait(c_testTimeoutInSec);
-        ASSERT_OBJCNE(layerContent, nil);
+        ASSERT_TRUE(layerContent);
 
         dispatch_sync(dispatch_get_main_queue(), ^{
-            xamlSubscriber->Set(layerContent, [WXCImage sourceProperty], ^(WXDependencyObject* sender, WXDependencyProperty* dp) {
+            xamlSubscriber->Set(layerContent, Controls::Image::SourceProperty(), ^(const DependencyObject& sender, const DependencyProperty& dp) {
                 // Upon cleanup or dismissal of the view, LayerCoordinator sets the source to NULL which we should avoid
-                RTObject* rtObject = [sender getValue:dp];
+                WF::IInspectable rtObject = sender.GetValue(dp);
                 if (rtObject) {
-                    WUXMIBitmapSource* bitmapSource = rt_dynamic_cast([WUXMIBitmapSource class], rtObject);
+                    auto bitmapSource = rtObject.as<Media::Imaging::BitmapSource>();
 
                     // Validation
                     UIImage* image = buttonToTest.currentBackgroundImage;
-                    EXPECT_EQ([bitmapSource pixelWidth], (int)image.size.width);
-                    EXPECT_EQ([bitmapSource pixelHeight], (int)image.size.height);
+                    EXPECT_EQ(bitmapSource.PixelWidth(), (int)image.size.width);
+                    EXPECT_EQ(bitmapSource.PixelHeight(), (int)image.size.height);
                     uxEvent->Set();
                 }
             });
@@ -1473,7 +1501,7 @@ public:
         UXTestAPI::ViewControllerPresenter testHelper(buttonVC);
 
         UIButton* buttonToTest = [buttonVC defaultButton];
-        WXFrameworkElement* xamlElement = [buttonToTest.imageView xamlElement];
-        ASSERT_OBJCNE(xamlElement, nil);
+        FrameworkElement xamlElement = [buttonToTest.imageView _winrtXamlElement];
+        ASSERT_TRUE(xamlElement);
     }
 };

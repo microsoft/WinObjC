@@ -21,7 +21,14 @@
 #import "UIApplicationInternal.h"
 
 #import <algorithm>
-#import "UWP/WindowsUICore.h"
+
+#include "COMIncludes.h"
+#import "winrt/Windows.UI.Core.h"
+#import "winrt/Windows.Devices.Input.h"
+#include "COMIncludes_End.h"
+
+using namespace winrt::Windows::Devices::Input;
+namespace WF = winrt::Windows::Foundation;
 
 static const wchar_t* TAG = L"DisplayProperties";
 
@@ -60,7 +67,7 @@ float ScreenScale() {
     float scale = s_screenMagnification;
 
     // If we're not running in a UWP, return the default scale factor
-    if (![WUCCoreWindow getForCurrentThread]) {
+    if (!winrt::Windows::UI::Core::CoreWindow::GetForCurrentThread()) {
         return scale;
     }
 
@@ -87,12 +94,12 @@ float ScreenScale() {
             prevHeight = [UIApplication displayMode].fixedHeight;
 
             float maxDimension = 0;
-            NSArray* pointerDevices = [WDIPointerDevice getPointerDevices];
+            WF::Collections::IVectorView<PointerDevice> pointerDevices = PointerDevice::GetPointerDevices();
 
-            for (int i = 0; i < [pointerDevices count]; i++) {
-                WFRect* screenRect = [(WDIPointerDevice*)[pointerDevices objectAtIndex:i] screenRect];
+            for (int i = 0; i < pointerDevices.Size(); i++) {
+                WF::Rect screenRect = pointerDevices.GetAt(i).ScreenRect();
                 float hostScreenScale = [UIApplication displayMode].hostScreenScale;
-                maxDimension = std::max(maxDimension, std::max(screenRect.width * hostScreenScale, screenRect.height * hostScreenScale));
+                maxDimension = std::max(maxDimension, std::max(screenRect.Width * hostScreenScale, screenRect.Height * hostScreenScale));
             }
 
             // We can't know whether the app will be rotated, or moved from screen to screen. We have to take the

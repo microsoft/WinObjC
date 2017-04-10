@@ -15,6 +15,7 @@
 //******************************************************************************
 #import "AssertARCEnabled.h"
 #import "XamlUtilities.h"
+#import "CppWinRTHelpers.h"
 
 #import <UIKit/UIActivityIndicatorView.h>
 #import <UIKit/UIButton.h>
@@ -29,7 +30,9 @@
 #include <Windows.UI.Xaml.Media.h>
 
 using namespace Microsoft::WRL;
-using namespace Windows::Foundation;
+namespace WF = winrt::Windows::Foundation;
+namespace WU = winrt::Windows::UI;
+namespace WX = winrt::Windows::UI::Xaml;
 
 using namespace XamlUtilities;
 
@@ -37,188 +40,193 @@ using namespace XamlUtilities;
 static const int c_borderCornerRadius = 8;
 static const wchar_t* TAG = L"XamlUtilities";
 
-WUColor* XamlUtilities::ConvertUIColorToWUColor(UIColor* uiColor) {
+WU::Color XamlUtilities::ConvertUIColorToWUColor(UIColor* uiColor) {
     CGFloat r, g, b, a;
     [uiColor getRed:&r green:&g blue:&b alpha:&a];
 
-    return
-        [WUColorHelper fromArgb:(unsigned char)(a * 255) r:(unsigned char)(r * 255) g:(unsigned char)(g * 255) b:(unsigned char)(b * 255)];
+    WU::Color color;
+    color.R = (unsigned char)(r * 255);
+    color.G = (unsigned char)(g * 255);
+    color.B = (unsigned char)(b * 255);
+    color.A = (unsigned char)(a * 255);
+
+    return color;
 }
 
-UIColor* XamlUtilities::ConvertWUColorToUIColor(WUColor* wuColor) {
-    CGFloat r = wuColor.r / 255.0;
-    CGFloat g = wuColor.g / 255.0;
-    CGFloat b = wuColor.b / 255.0;
-    CGFloat a = wuColor.a / 255.0;
+UIColor* XamlUtilities::ConvertWUColorToUIColor(const WU::Color& color) {
+    CGFloat r = color.R / 255.0;
+    CGFloat g = color.G / 255.0;
+    CGFloat b = color.B / 255.0;
+    CGFloat a = color.A / 255.0;
     return [UIColor colorWithRed:r green:g blue:b alpha:a];
 }
 
-WUXMImageBrush* XamlUtilities::ConvertUIImageToWUXMImageBrush(UIImage* image) {
+WX::Media::ImageBrush XamlUtilities::ConvertUIImageToWUXMImageBrush(UIImage* image) {
     if (!image) {
-        return nil;
+        return nullptr;
     }
 
-    CGImageRef cgImg = [image CGImage];
-    Microsoft::WRL::ComPtr<IInspectable> inspectableNode(DisplayTexture::GetBitmapForCGImage(cgImg));
-    WUXMIBitmapSource* bitmapImageSource = CreateRtProxy([WUXMIBitmapSource class], inspectableNode.Get());
-    WUXMImageBrush* imageBrush = [WUXMImageBrush make];
-    imageBrush.imageSource = bitmapImageSource;
+    WX::Media::ImageBrush imageBrush;
+    imageBrush.ImageSource(ConvertUIImageToWUXMIBitmapSource(image));
 
     return imageBrush;
 }
 
-WUXMIBitmapSource* XamlUtilities::ConvertUIImageToWUXMIBitmapSource(UIImage* image) {
+WX::Media::Imaging::BitmapSource XamlUtilities::ConvertUIImageToWUXMIBitmapSource(UIImage* image) {
     if (!image) {
-        return nil;
+        return nullptr;
     }
 
     CGImageRef cgImg = [image CGImage];
     Microsoft::WRL::ComPtr<IInspectable> inspectableNode(DisplayTexture::GetBitmapForCGImage(cgImg));
-    WUXMIBitmapSource* bitmapImageSource = CreateRtProxy([WUXMIBitmapSource class], inspectableNode.Get());
+    auto bitmapImageSource = objcwinrt::from_insp<WX::Media::Imaging::BitmapSource>(inspectableNode);
 
     return bitmapImageSource;
 }
 
-WXTextAlignment XamlUtilities::ConvertUITextAlignmentToWXTextAlignment(UITextAlignment alignment) {
+WX::TextAlignment XamlUtilities::ConvertUITextAlignmentToWXTextAlignment(UITextAlignment alignment) {
     switch (alignment) {
         case UITextAlignmentLeft:
-            return WXTextAlignmentLeft;
+            return WX::TextAlignment::Left;
             break;
 
         case UITextAlignmentCenter:
-            return WXTextAlignmentCenter;
+            return WX::TextAlignment::Center;
             break;
 
         case UITextAlignmentRight:
-            return WXTextAlignmentRight;
+            return WX::TextAlignment::Right;
             break;
     }
 
-    return UITextAlignmentLeft;
+    return WX::TextAlignment::Left;
 }
 
-UITextAlignment XamlUtilities::ConvertWXTextAlignmentToUITextAlignment(WXTextAlignment alignment) {
+UITextAlignment XamlUtilities::ConvertWXTextAlignmentToUITextAlignment(WX::TextAlignment alignment) {
     switch (alignment) {
-        case WXTextAlignmentLeft:
+        case WX::TextAlignment::Left:
             return UITextAlignmentLeft;
             break;
 
-        case WXTextAlignmentCenter:
+        case WX::TextAlignment::Center:
             return UITextAlignmentCenter;
             break;
 
-        case WXTextAlignmentRight:
+        case WX::TextAlignment::Right:
             return UITextAlignmentRight;
+            break;
+
+        default:
             break;
     }
 
     return UITextAlignmentLeft;
 }
 
-WUXIInputScope* XamlUtilities::ConvertKeyboardTypeToInputScope(UIKeyboardType keyboardType, BOOL secureTextMode) {
-    WUXIInputScopeName* inputScopeName = [WUXIInputScopeName make];
-    inputScopeName.nameValue = WUXIInputScopeNameValueDefault;
+WX::Input::InputScope XamlUtilities::ConvertKeyboardTypeToInputScope(UIKeyboardType keyboardType, BOOL secureTextMode) {
+    WX::Input::InputScopeName inputScopeName;
+    inputScopeName.NameValue(WX::Input::InputScopeNameValue::Default);
 
     if (secureTextMode) {
         // passwordBox only supports NumbericPin and Password inputscope
         if (keyboardType == UIKeyboardTypeNumberPad) {
-            inputScopeName.nameValue = WUXIInputScopeNameValueNumericPin;
+            inputScopeName.NameValue(WX::Input::InputScopeNameValue::NumericPin);
         } else {
-            inputScopeName.nameValue = WUXIInputScopeNameValuePassword;
+            inputScopeName.NameValue(WX::Input::InputScopeNameValue::Password);
         }
     } else {
         // normal textmode supports a lot more keyboardType
         switch (keyboardType) {
             case UIKeyboardTypeDefault:
-                inputScopeName.nameValue = WUXIInputScopeNameValueDefault;
+                inputScopeName.NameValue(WX::Input::InputScopeNameValue::Default);
                 break;
 
             case UIKeyboardTypeASCIICapable:
-                inputScopeName.nameValue = WUXIInputScopeNameValueDefault;
+                inputScopeName.NameValue(WX::Input::InputScopeNameValue::Default);
                 break;
 
             case UIKeyboardTypeNumbersAndPunctuation:
-                inputScopeName.nameValue = WUXIInputScopeNameValueDigits;
+                inputScopeName.NameValue(WX::Input::InputScopeNameValue::Digits);
                 break;
 
             case UIKeyboardTypeURL:
-                inputScopeName.nameValue = WUXIInputScopeNameValueUrl;
+                inputScopeName.NameValue(WX::Input::InputScopeNameValue::Url);
                 break;
 
             case UIKeyboardTypeNumberPad:
-                inputScopeName.nameValue = WUXIInputScopeNameValueDigits;
+                inputScopeName.NameValue(WX::Input::InputScopeNameValue::Digits);
                 break;
 
             case UIKeyboardTypePhonePad:
-                inputScopeName.nameValue = WUXIInputScopeNameValueTelephoneNumber;
+                inputScopeName.NameValue(WX::Input::InputScopeNameValue::TelephoneNumber);
                 break;
 
             case UIKeyboardTypeNamePhonePad:
-                inputScopeName.nameValue = WUXIInputScopeNameValueNameOrPhoneNumber;
+                inputScopeName.NameValue(WX::Input::InputScopeNameValue::NameOrPhoneNumber);
                 break;
 
             case UIKeyboardTypeEmailAddress:
-                inputScopeName.nameValue = WUXIInputScopeNameValueEmailNameOrAddress;
+                inputScopeName.NameValue(WX::Input::InputScopeNameValue::EmailNameOrAddress);
                 break;
 
             case UIKeyboardTypeDecimalPad:
-                inputScopeName.nameValue = WUXIInputScopeNameValueNumber;
+                inputScopeName.NameValue(WX::Input::InputScopeNameValue::Number);
                 break;
 
             case UIKeyboardTypeTwitter:
-                inputScopeName.nameValue = WUXIInputScopeNameValueDefault;
+                inputScopeName.NameValue(WX::Input::InputScopeNameValue::Default);
                 break;
 
             case UIKeyboardTypeWebSearch:
-                inputScopeName.nameValue = WUXIInputScopeNameValueSearch;
+                inputScopeName.NameValue(WX::Input::InputScopeNameValue::Search);
                 break;
         }
     }
 
-    WUXIInputScope* inputScope = [WUXIInputScope make];
-    [inputScope.names addObject:inputScopeName];
+    WX::Input::InputScope inputScope;
+    inputScope.Names().Append(inputScopeName);
 
     return inputScope;
 }
 
-WXVerticalAlignment XamlUtilities::ConvertUIControlContentVerticalAlignmentToWXVerticalAlignment(
+WX::VerticalAlignment XamlUtilities::ConvertUIControlContentVerticalAlignmentToWXVerticalAlignment(
     UIControlContentVerticalAlignment alignment) {
-    WXVerticalAlignment ret = WXVerticalAlignmentTop;
+    WX::VerticalAlignment ret = WX::VerticalAlignment::Top;
 
     switch (alignment) {
         case UIControlContentVerticalAlignmentCenter:
-            ret = WXVerticalAlignmentCenter;
+            ret = WX::VerticalAlignment::Center;
             break;
         case UIControlContentVerticalAlignmentTop:
-            ret = WXVerticalAlignmentTop;
+            ret = WX::VerticalAlignment::Top;
             break;
         case UIControlContentVerticalAlignmentBottom:
-            ret = WXVerticalAlignmentBottom;
+            ret = WX::VerticalAlignment::Bottom;
             break;
         case UIControlContentVerticalAlignmentFill:
-            ret = WXVerticalAlignmentStretch;
+            ret = WX::VerticalAlignment::Stretch;
             break;
     }
 
     return ret;
 }
 
-WXFrameworkElement* XamlUtilities::FindTemplateChild(WXCControl* control, NSString* name) {
-    WXFrameworkElement* target = nullptr;
-    unsigned int count = [WUXMVisualTreeHelper getChildrenCount:control];
+WX::FrameworkElement XamlUtilities::FindTemplateChild(const WX::Controls::Control& control, NSString* name) {
+    WX::FrameworkElement target = nullptr;
+    unsigned int count = WX::Media::VisualTreeHelper::GetChildrenCount(control);
     if (count > 0) {
-        WXFrameworkElement* templateRoot = rt_dynamic_cast<WXFrameworkElement>([WUXMVisualTreeHelper getChild:control childIndex:0]);
-        if (templateRoot != nullptr) {
-            target = rt_dynamic_cast<WXFrameworkElement>([templateRoot findName:name]);
+        auto templateRoot = WX::Media::VisualTreeHelper::GetChild(control, 0).try_as<WX::FrameworkElement>();
+        if (templateRoot) {
+            target = templateRoot.FindName(objcwinrt::string(name)).try_as<WX::FrameworkElement>();
         }
     }
 
     return target;
 }
 
-NSString* XamlUtilities::NSStringFromPropertyValue(RTObject* rtPropertyValue) {
+NSString* XamlUtilities::NSStringFromPropertyValue(const WF::IInspectable& rtPropertyValue) {
     // BUGBUG:8791977 - WFIPropertyValue is not publicly exposed via projections so we used a workaround
-    ComPtr<IInspectable> inspPropVal = [rtPropertyValue comObj];
+    ComPtr<IInspectable> inspPropVal = objcwinrt::to_insp(rtPropertyValue);
     return NSStringFromPropertyValue(inspPropVal);
 }
 
@@ -239,29 +247,29 @@ NSString* XamlUtilities::NSStringFromPropertyValue(const ComPtr<IInspectable>& i
 }
 
 // Setup control border style
-void XamlUtilities::SetControlBorderStyle(WXCControl* control, UITextBorderStyle style) {
+void XamlUtilities::SetControlBorderStyle(const WX::Controls::Control& control, UITextBorderStyle style) {
     switch (style) {
         case UITextBorderStyleNone:
-            control.borderThickness = [WXThicknessHelper fromUniformLength:0];
+            control.BorderThickness(WX::ThicknessHelper::FromUniformLength(0));
             break;
 
         case UITextBorderStyleLine:
-            control.borderThickness = [WXThicknessHelper fromUniformLength:1];
+            control.BorderThickness(WX::ThicknessHelper::FromUniformLength(1));
             break;
 
         case UITextBorderStyleBezel:
             UNIMPLEMENTED_WITH_MSG("UITextBorderStyleBezel not yet supported; treated as no border.");
             // we don't support UITextBorderStyleBezel, treat it as no border
-            control.borderThickness = [WXThicknessHelper fromUniformLength:0];
+            control.BorderThickness(WX::ThicknessHelper::FromUniformLength(0));
             break;
 
         case UITextBorderStyleRoundedRect:
-            WXFrameworkElement* elem = FindTemplateChild(control, @"BorderElement");
+            WX::FrameworkElement elem = FindTemplateChild(control, @"BorderElement");
 
             // if the control template has not been loaded yet, it can return nullptr for borderElement
-            if (elem != nullptr) {
-                WXCBorder* border = rt_dynamic_cast<WXCBorder>(elem);
-                border.cornerRadius = [WXCornerRadiusHelper fromUniformRadius:c_borderCornerRadius];
+            if (elem) {
+                auto border = elem.as<WX::Controls::Border>();
+                border.CornerRadius(WX::CornerRadiusHelper::FromUniformRadius(c_borderCornerRadius));
             }
             break;
     }
@@ -271,8 +279,8 @@ ComPtr<ABI::Windows::UI::Xaml::Markup::IXamlType> XamlUtilities::ReturnXamlType(
     static ComPtr<ABI::Windows::UI::Xaml::Markup::IXamlMetadataProvider> xamlMetaProvider;
 
     if (!xamlMetaProvider) {
-        auto inspApplicationCurrent = [WXApplication.current comObj];
-        inspApplicationCurrent.As(&xamlMetaProvider);
+        auto inspApplicationCurrent = objcwinrt::to_insp(WX::Application::Current());
+        (void) inspApplicationCurrent->QueryInterface(IID_PPV_ARGS(&xamlMetaProvider));
     }
 
     ComPtr<ABI::Windows::UI::Xaml::Markup::IXamlType> xamlType;
@@ -287,65 +295,49 @@ ComPtr<ABI::Windows::UI::Xaml::Markup::IXamlType> XamlUtilities::ReturnXamlType(
     return nullptr;
 }
 
-UIView* XamlUtilities::GenerateUIKitControlFromXamlType(RTObject* xamlObject) {
-    if (xamlObject == nil) {
+UIView* XamlUtilities::GenerateUIKitControlFromXamlType(const WF::IInspectable& xamlObject) {
+    if (!xamlObject) {
         return nil;
     }
 
     UIView* control = nil;
 
     // TODO: For prototyping, this will suffice but it would be better to consolidate with Xib2Xaml in the long term
-    NSDictionary* xamlSupportedControls = @{
-            [WXCTextBlock class] : [UILabel class],
-            [WXCTextBox class] : [UITextField class],
-            [WXCButton class] : [UIButton class],
-            [WXCProgressRing class] : [UIActivityIndicatorView class],
-            [WXCSlider class] : [UISlider class],
+    std::vector<std::pair<IID, id>> xamlSupportedControls {
+        { __uuidof(winrt::ABI::default_interface<winrt::abi<WX::Controls::TextBlock>>), [UILabel class] },
+        { __uuidof(winrt::ABI::default_interface<winrt::abi<WX::Controls::TextBox>>), [UITextField class] },
+        { __uuidof(winrt::ABI::default_interface<winrt::abi<WX::Controls::Button>>), [UIButton class] },
+        { __uuidof(winrt::ABI::default_interface<winrt::abi<WX::Controls::ProgressRing>>), [UIActivityIndicatorView class] },
+        { __uuidof(winrt::ABI::default_interface<winrt::abi<WX::Controls::Slider>>), [UISlider class] }
     };
 
     // Create the UIKit control based on the XAML type and return it to the caller
-    for (NSObject* classType in [xamlSupportedControls allKeys]) {
-        try {
-            WXFrameworkElement* xamlElement = rt_dynamic_cast(classType, xamlObject);
-            if (xamlElement != nil) {
-                Class controlClass = xamlSupportedControls[classType];
-                control = [[controlClass alloc] initWithFrame:CGRectZero xamlElement:xamlElement];
-                break;
-            }
-        } catch (...) {
-            // TODO: ARM throws an exception when we try to pass NSException instead of ... - compiler update needed
-            continue;
+    for (auto&& xamlControl : xamlSupportedControls) {
+        WX::FrameworkElement xamlElement = nullptr;
+
+        if (SUCCEEDED(winrt::get_abi(xamlObject)->QueryInterface(xamlControl.first, reinterpret_cast<void**>(winrt::put_abi(xamlElement))))) {
+            Class controlClass = xamlControl.second;
+            control = [[controlClass alloc] initWithFrame:CGRectZero xamlElement:objcwinrt::to_rtobj(xamlElement)];
+            break;
         }
     }
 
     return control;
 }
 
-id XamlUtilities::CreateRtProxy(Class cls, IInspectable* iface) {
-    // Oddly, WinRT can hand us back NULL objects from successful function calls. Plumb these through as nil.
-    if (!iface) {
-        return nil;
-    }
-
-    RTObject* ret = [NSAllocateObject(cls, 0, 0) init];
-    [ret setComObj:iface];
-
-    return ret;
-}
-
-void XamlUtilities::ApplyLineBreakModeOnTextBlock(WXCTextBlock* textBlock, UILineBreakMode mode, int numberOfLines) {
+void XamlUtilities::ApplyLineBreakModeOnTextBlock(const WX::Controls::TextBlock& textBlock, UILineBreakMode mode, int numberOfLines) {
     // wrapping or not on reference platform is ultimatly decided by numberofLines of UILabel
     // e.g., if nubmerOfLines is 1, even though lineBreakMode can be set as UILineBreakModeWordWrap etc, no wrapping is happening.
     if (numberOfLines == 1) {
-        textBlock.textWrapping = WXTextWrappingNoWrap;
+        textBlock.TextWrapping(WX::TextWrapping::NoWrap);
     } else {
-        textBlock.textWrapping = WXTextWrappingWrap;
+        textBlock.TextWrapping(WX::TextWrapping::Wrap);
     }
 
     switch (mode) {
         case UILineBreakModeWordWrap:
             // when wrapping is allowed, no text trimming is happening
-            textBlock.textTrimming = WXTextTrimmingNone;
+            textBlock.TextTrimming(WX::TextTrimming::None);
             break;
 
         case UILineBreakModeCharacterWrap:
@@ -353,28 +345,28 @@ void XamlUtilities::ApplyLineBreakModeOnTextBlock(WXCTextBlock* textBlock, UILin
             UNIMPLEMENTED_WITH_MSG("UILineBreakModeCharacterWrap unsupported, using UILineBreakModeWordWrap instead");
 
             // when wrapping is allowed, no text trimming is happening
-            textBlock.textTrimming = WXTextTrimmingNone;
+            textBlock.TextTrimming(WX::TextTrimming::None);
             break;
 
         case UILineBreakModeClip:
-            textBlock.textTrimming = WXTextTrimmingClip;
+            textBlock.TextTrimming(WX::TextTrimming::Clip);
             break;
 
         case UILineBreakModeHeadTruncation:
             // GAP: currently textblock don't support UILineBreakModeHeadTruncation
             UNIMPLEMENTED_WITH_MSG("UILineBreakModeHeadTruncation unsupported, using UILineBreakModeTailTruncation instead");
-            textBlock.textTrimming = WXTextTrimmingCharacterEllipsis;
+            textBlock.TextTrimming(WX::TextTrimming::CharacterEllipsis);
             break;
 
         case UILineBreakModeMiddleTruncation:
             // GAP currently textblock don't support UILineBreakModeMiddleTruncation
             UNIMPLEMENTED_WITH_MSG("UILineBreakModeMiddleTruncation unsupported, using UILineBreakModeTailTruncation instead");
-            textBlock.textTrimming = WXTextTrimmingCharacterEllipsis;
+            textBlock.TextTrimming(WX::TextTrimming::CharacterEllipsis);
             break;
 
         case UILineBreakModeTailTruncation:
             // this is only truncation supported
-            textBlock.textTrimming = WXTextTrimmingCharacterEllipsis;
+            textBlock.TextTrimming(WX::TextTrimming::CharacterEllipsis);
             break;
     }
 }

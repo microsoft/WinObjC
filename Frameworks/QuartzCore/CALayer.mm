@@ -33,7 +33,6 @@
 #include "UIKit/UIColor.h"
 #include "UIColorInternal.h"
 #include "UIKit/NSValue+UIKitAdditions.h"
-#import <UWP/WindowsUIXaml.h>
 
 #include "QuartzCore/CALayer.h"
 #include "QuartzCore/CATransaction.h"
@@ -49,6 +48,7 @@
 #include "LoggingNative.h"
 #include "NSLogging.h"
 #include "CALayerInternal.h"
+#include "CppWinRTHelpers.h"
 
 #import <objc/objc-arc.h>
 
@@ -57,7 +57,14 @@
 #import <ErrorHandling.h>
 #import <wrl/client.h>
 #import <wrl/implements.h>
+#import <winrt/Windows.Foundation.h>
+#import <winrt/Windows.UI.Xaml.h>
+#import <winrt/Windows.UI.Xaml.Controls.h>
+#import <winrt/Windows.UI.Xaml.Media.h>
+#import <Windows.UI.Xaml.h>
 #include <COMIncludes_End.h>
+
+using namespace winrt::Windows::UI::Xaml;
 
 static const wchar_t* TAG = L"CALayer";
 
@@ -234,7 +241,9 @@ static void DoDisplayList(CALayer* layer) {
     }
 }
 
-CAPrivateInfo::CAPrivateInfo(CALayer* self, WXFrameworkElement* xamlElement) {
+CAPrivateInfo::CAPrivateInfo(CALayer* self, const FrameworkElement& xamlElement)
+    : _xamlElement(nullptr), _sublayerXamlElement(nullptr) {
+
     memset(this, 0, sizeof(CAPrivateInfo));
     setSelf(self);
 
@@ -281,12 +290,12 @@ CAPrivateInfo::CAPrivateInfo(CALayer* self, WXFrameworkElement* xamlElement) {
     _name = nil;
 
     // Create our backing layer proxy
-    _layerProxy = GetCACompositor()->CreateLayerProxy(xamlElement ? [xamlElement comObj] : nullptr);
+    _layerProxy = GetCACompositor()->CreateLayerProxy(objcwinrt::to_insp(xamlElement));
 
     // Query for our backing XAML node.
     // ILayerProxy will have created one if the xamlElement passed into the previous CreateLayerProxy call was nullptr.
     Microsoft::WRL::ComPtr<IInspectable> inspectable(_layerProxy->GetXamlElement());
-    _xamlElement = [WXFrameworkElement createWith:inspectable.Get()];
+    _xamlElement = objcwinrt::from_insp<FrameworkElement>(inspectable);
 }
 
 CAPrivateInfo::~CAPrivateInfo() {
@@ -343,7 +352,7 @@ CGContextRef CreateLayerContentsBitmapContext32(int width, int height, float sca
  All CALayers are ultimately backed by a Xaml FrameworkElement.  Passing nil here will
  result in the default Xaml FrameworkElement type being used.
 */
-- (instancetype)_initWithXamlElement:(WXFrameworkElement*)xamlElement {
+- (instancetype)_initWithXamlElement:(const FrameworkElement&)xamlElement {
     assert(!priv);
     priv = new CAPrivateInfo(self, xamlElement);
     return self;
@@ -353,7 +362,7 @@ CGContextRef CreateLayerContentsBitmapContext32(int width, int height, float sca
  Microsoft Extension
  Retrieves the XAML FrameworkElement backing this CALayer.
 */
-- (WXFrameworkElement*)_xamlElement {
+- (FrameworkElement)_xamlElement {
     return priv->_xamlElement;
 }
 
@@ -2314,10 +2323,10 @@ static CALayer* _findSuperLayerForLayer(CALayer* layer) {
 }
 
 // Queries for, caches, and returns our backing XAML node's sublayer element.
-- (WXFrameworkElement*)_getSublayerXamlElement {
+- (FrameworkElement)_getSublayerXamlElement {
     if (!priv->_sublayerXamlElement) {
         Microsoft::WRL::ComPtr<IInspectable> inspectable(priv->_layerProxy->GetSublayerXamlElement());
-        priv->_sublayerXamlElement = [WXFrameworkElement createWith:inspectable.Get()];
+        priv->_sublayerXamlElement = objcwinrt::from_insp<FrameworkElement>(inspectable);
     }
 
     return priv->_sublayerXamlElement;
@@ -2427,19 +2436,19 @@ bool _floatAlmostEqual(float a, float b) {
 
     // Get the backing sublayer xaml UIElement for fromLayer
     // We use the sublayer element to support proper point conversion within a scrolled view.
-    WXUIElement* fromLayerElement = [fromLayer _getSublayerXamlElement];
+    UIElement fromLayerElement = [fromLayer _getSublayerXamlElement];
 
     // Get the backing sublayer xaml UIElement for toLayer
     // We use the sublayer element to support proper point conversion within a scrolled view.
-    WXUIElement* toLayerElement = [toLayer _getSublayerXamlElement];
+    UIElement toLayerElement = [toLayer _getSublayerXamlElement];
 
     // set up transform from xaml elment in fromLayer to xaml element in toLayer
-    WUXMGeneralTransform* transform = [fromLayerElement transformToVisual:toLayerElement];
+    Media::GeneralTransform transform = fromLayerElement.TransformToVisual(toLayerElement);
 
     // transform the points in fromLayer to point in toLayer
-    WFPoint* pointInFromLayer = [WXPointHelper fromCoordinates:point.x y:point.y];
-    WFPoint* pointInToLayer = [transform transformPoint:pointInFromLayer];
-    CGPoint ret = { pointInToLayer.x, pointInToLayer.y };
+    winrt::Windows::Foundation::Point pointInFromLayer { point.x, point.y };
+    winrt::Windows::Foundation::Point pointInToLayer = transform.TransformPoint(pointInFromLayer);
+    CGPoint ret = { pointInToLayer.X, pointInToLayer.Y };
 
     if (DEBUG_VERBOSE) {
         // How does our new convertPoint logic compare to the legacy logic?
@@ -2481,21 +2490,21 @@ bool _floatAlmostEqual(float a, float b) {
 
     // Get the backing sublayer xaml UIElement for fromLayer
     // We use the sublayer element to support proper point conversion within a scrolled view.
-    WXUIElement* fromLayerElement = [fromLayer _getSublayerXamlElement];
+    UIElement fromLayerElement = [fromLayer _getSublayerXamlElement];
 
     // Get the backing sublayer xaml UIElement for toLayer
     // We use the sublayer element to support proper point conversion within a scrolled view.
-    WXUIElement* toLayerElement = [toLayer _getSublayerXamlElement];
+    UIElement toLayerElement = [toLayer _getSublayerXamlElement];
 
     // set up transform from xaml elment in fromLayer to xaml element in toLayer
-    WUXMGeneralTransform* transform = [fromLayerElement transformToVisual:toLayerElement];
+    Media::GeneralTransform transform = fromLayerElement.TransformToVisual(toLayerElement);
 
     // transform the rect in fromLayer to rect in toLayer
-    WFRect* rectInFromLayer =
-        [WXRectHelper fromCoordinatesAndDimensions:pos.origin.x y:pos.origin.y width:pos.size.width height:pos.size.height];
-    WFRect* rectInToLayer = [transform transformBounds:rectInFromLayer];
+    winrt::Windows::Foundation::Rect rectInFromLayer =
+        RectHelper::FromCoordinatesAndDimensions(pos.origin.x, pos.origin.y, pos.size.width, pos.size.height);
+    winrt::Windows::Foundation::Rect rectInToLayer = transform.TransformBounds(rectInFromLayer);
 
-    CGRect ret = { rectInToLayer.x, rectInToLayer.y, rectInToLayer.width, rectInToLayer.height };
+    CGRect ret = { rectInToLayer.X, rectInToLayer.Y, rectInToLayer.Width, rectInToLayer.Height };
 
     if (DEBUG_VERBOSE) {
         TraceVerbose(TAG,

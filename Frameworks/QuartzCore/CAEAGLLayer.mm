@@ -16,8 +16,6 @@
 
 #include "Starboard.h"
 
-#include "UWP/WindowsUIXamlControls.h"
-#include "UWP/WindowsUIXamlMedia.h"
 #include "QuartzCore/CALayer.h"
 #include "CALayerInternal.h"
 #include "UIKit/UIView.h"
@@ -29,11 +27,15 @@
 
 #include <COMIncludes.h>
 #include "Windows.ui.xaml.media.dxinterop.h"
+#include "winrt/Windows.UI.Xaml.Controls.h"
+#include "winrt/Windows.UI.Xaml.Media.h"
 #include <COMIncludes_End.h>
+
+using namespace winrt::Windows::UI::Xaml;
 
 @implementation CAEAGLLayer {
     NSDictionary* _properties;
-    StrongId<WXCSwapChainPanel> _swapChainPanel;
+    Controls::SwapChainPanel _swapChainPanel;
 }
 
 /**
@@ -54,12 +56,11 @@
 - (void)setContentsScale:(float)factor {
     [super setContentsScale:factor];
 
-    WUXMScaleTransform* scaleTransform = [WUXMScaleTransform make];
-    scaleTransform.scaleX = 1.0 / factor;
-    scaleTransform.scaleY = 1.0 / factor;
+    Media::ScaleTransform scaleTransform;
+    scaleTransform.ScaleX(1.0 / factor);
+    scaleTransform.ScaleY(1.0 / factor);
 
-    _swapChainPanel.get().renderTransform = scaleTransform;
-    [scaleTransform release];
+    _swapChainPanel.RenderTransform(scaleTransform);
 }
 
 /**
@@ -67,9 +68,6 @@
 */
 - (instancetype)init {
     if (self = [super init]) {
-        // Create our swapchain panel
-        _swapChainPanel.attach([WXCSwapChainPanel make]);
-
         // Create a sublayer for the swapchain panel
         StrongId<CALayer> sublayer;
         sublayer.attach([[CALayer alloc] _initWithXamlElement:_swapChainPanel]);
@@ -83,7 +81,7 @@
  @Status Caveat
  @Notes WinObjC extension
 */
-- (WXCSwapChainPanel*)swapChainPanel {
+- (Controls::SwapChainPanel)swapChainPanel {
     return _swapChainPanel;
 }
 

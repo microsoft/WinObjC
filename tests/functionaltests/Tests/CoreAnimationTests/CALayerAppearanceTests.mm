@@ -17,9 +17,11 @@
 #import "FunctionalTestHelpers.h"
 #import "UXTestHelpers.h"
 
+#import "UIViewInternal.h"
 #import "CALayerInternal.h"
 
 using namespace UXTestAPI;
+using namespace winrt::Windows::UI::Xaml;
 
 @interface CALayerViewController : UIViewController
 @property (nonatomic, readonly) CALayer* layer;
@@ -66,22 +68,22 @@ public:
         UXTestAPI::ViewControllerPresenter testHelper(caLayerVC);
 
         dispatch_async(dispatch_get_main_queue(), ^{
-            WXUIElement* xamlElement = [caLayerVC.layer _xamlElement];
+            UIElement xamlElement = [caLayerVC.layer _xamlElement];
 
             // Register RAII event subscription handler
-            xamlSubscriber->Set(xamlElement, [WXUIElement opacityProperty], ^(WXDependencyObject* sender, WXDependencyProperty* dp) {
+            xamlSubscriber->Set(xamlElement, UIElement::OpacityProperty(), ^(const DependencyObject& sender, const DependencyProperty& dp) {
                 // Validation
-                EXPECT_EQ_MSG(xamlElement.opacity, caLayerVC.layer.opacity, "Failed to match opacity");
-                EXPECT_EQ_MSG(xamlElement.opacity, expectedOpacity, "Failed to match opacity with expected value");
-
-                // Manually unregister the event so we avoid further opacity property changed events
-                xamlSubscriber->Reset();
+                EXPECT_EQ_MSG(xamlElement.Opacity(), caLayerVC.layer.opacity, "Failed to match opacity");
+                EXPECT_EQ_MSG(xamlElement.Opacity(), expectedOpacity, "Failed to match opacity with expected value");
 
                 uxEvent->Set();
             });
 
             // Action
             caLayerVC.layer.opacity = expectedOpacity;
+
+            // Manually unregister the event so we avoid further opacity property changed events
+            xamlSubscriber->Reset();
         });
 
         ASSERT_TRUE_MSG(uxEvent->Wait(c_testTimeoutInSec), "FAILED: Waiting for property changed event timed out!");
@@ -100,12 +102,12 @@ public:
         UXTestAPI::ViewControllerPresenter testHelper(caLayerVC);
 
         dispatch_async(dispatch_get_main_queue(), ^{
-            WXUIElement* xamlElement = [caLayerVC.layer _xamlElement];
+            UIElement xamlElement = [caLayerVC.layer _xamlElement];
 
             // Register RAII event subscription handler
-            xamlSubscriber->Set(xamlElement, [WXCPanel backgroundProperty], ^(WXDependencyObject* sender, WXDependencyProperty* dp) {
-                WUXMSolidColorBrush* solidBrush = rt_dynamic_cast([WUXMSolidColorBrush class], [sender getValue:dp]);
-                ASSERT_OBJCNE(solidBrush, nil);
+            xamlSubscriber->Set(xamlElement, Controls::Panel::BackgroundProperty(), ^(const DependencyObject& sender, const DependencyProperty& dp) {
+                Media::SolidColorBrush solidBrush = sender.GetValue(dp).as<Media::SolidColorBrush>();
+                ASSERT_TRUE(solidBrush);
 
                 // Validation
                 UIColor* colorFromCGColor = [UIColor colorWithCGColor:caLayerVC.layer.backgroundColor];
