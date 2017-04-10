@@ -21,7 +21,15 @@
 #import <Foundation/NSError.h>
 #import <AssetsLibrary/ALAsset.h>
 #import <AssetsLibrary/ALAssetRepresentation.h>
-#import <UWP/WindowsStorage.h>
+#import "NSErrorInternal.h"
+#include "CppWinRTHelpers.h"
+
+#include "COMIncludes.h"
+#import <winrt/Windows.Storage.h>
+#include "COMIncludes_End.h"
+
+using namespace winrt::Windows::Storage;
+namespace WF = winrt::Windows::Foundation;
 
 NSString* const ALAssetDomain = @"ALAsset";
 NSString* const ALAssetPropertyType = @"ALAssetPropertyType";
@@ -52,7 +60,7 @@ NSString* const ALAssetTypeUnknown = @"ALAssetTypeUnknown";
 */
 - (instancetype)_initWithURL:(NSURL*)url error:(NSError**)error {
     if ((self = [super init])) {
-        __block NSError* tempError = nil;
+        NSError* tempError = nil;
 
         if (!url) {
             if (error) {
@@ -69,24 +77,26 @@ NSString* const ALAssetTypeUnknown = @"ALAssetTypeUnknown";
             dispatch_group_enter(group);
 
             // Assemble the full path of the asset based on the location of the default Pictures library
-            [WSStorageLibrary getLibraryAsync:WSKnownLibraryIdPictures
-                success:^void(WSStorageLibrary* picturesLibrary) {
-                    _localPath = [picturesLibrary.saveFolder.path stringByAppendingString:[_assetURL path]];
+            WF::IAsyncOperation<StorageLibrary> async = StorageLibrary::GetLibraryAsync(KnownLibraryId::Pictures);
+
+            async.Completed(objcwinrt::callback([self, group, &tempError] (const WF::IAsyncOperation<StorageLibrary>& op, WF::AsyncStatus status) {
+                if (status == WF::AsyncStatus::Completed) {
+                    StorageLibrary picturesLibrary = op.GetResults();
+                    _localPath = objcwinrt::string(picturesLibrary.SaveFolder().Path());
+                    _localPath = [_localPath stringByAppendingString:[_assetURL path]];
                     _localPath = [_localPath stringByReplacingOccurrencesOfString:@"/" withString:@"\\"];
-                    dispatch_group_leave(group);
+                } else {
+                    tempError = [NSError _errorWithHRESULT:op.ErrorCode()];
                 }
-                failure:^void(NSError* storageError) {
-                    if (error) {
-                        tempError = [storageError copy];
-                    }
-                    dispatch_group_leave(group);
-                }];
+
+                dispatch_group_leave(group);
+            }));
 
             dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
             dispatch_release(group);
 
             if (error) {
-                *error = [tempError autorelease];
+                *error = tempError;
             }
 
             if (_localPath == nil) {

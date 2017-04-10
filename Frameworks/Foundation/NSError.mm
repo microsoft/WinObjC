@@ -90,6 +90,20 @@ static NSString* const _NSErrorArchivalUserInfoKey = @"NS.userInfo";
 }
 
 /**
+ Microsoft Extension
+*/
++ (instancetype)_errorWithHRESULT:(HRESULT)hr {
+    return [[[self alloc] initWithHRESULT:hr] autorelease];
+}
+
+/**
+ Microsoft Extension
+*/
+- (instancetype)_initWithHRESULT:(HRESULT)hr {
+    return [self initWithDomain:@"HRESULT" code:static_cast<NSInteger>(hr) userInfo:nil];
+}
+
+/**
  @Status Interoperable
 */
 - (NSString*)description {
