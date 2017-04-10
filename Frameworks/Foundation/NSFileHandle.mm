@@ -28,10 +28,10 @@ NSString* const NSFileHandleNotificationFileHandleItem = @"NSFileHandleNotificat
 NSString* const NSFileHandleNotificationDataItem = @"NSFileHandleNotificationDataItem";
 NSString* const NSFileHandleOperationException = @"NSFileHandleOperationException";
 NSString* const NSFileHandleNotificationMonitorModes = @"NSFileHandleNotificationMonitorModes";
-NSString* const NSFileHandleConnectionAcceptedNotification = @"NSFileHandleConnectionAccepted";
-NSString* const NSFileHandleDataAvailableNotification = @"NSFileHandleDataAvailable";
-NSString* const NSFileHandleReadCompletionNotification = @"NSFileHandleReadCompletion";
-NSString* const NSFileHandleReadToEndOfFileCompletionNotification = @"NSFileHandleReadToEndOfFileCompletion";
+NSString* const NSFileHandleConnectionAcceptedNotification = @"NSFileHandleConnectionAcceptedNotification";
+NSString* const NSFileHandleDataAvailableNotification = @"NSFileHandleDataAvailableNotification";
+NSString* const NSFileHandleReadCompletionNotification = @"NSFileHandleReadCompletionNotification";
+NSString* const NSFileHandleReadToEndOfFileCompletionNotification = @"NSFileHandleReadToEndOfFileCompletionNotification";
 
 typedef NS_ENUM(NSUInteger, _NSFileOpenMode) { _NSFileOpenModeRead, _NSFileOpenModeWrite, _NSFileOpenModeUpdate };
 
