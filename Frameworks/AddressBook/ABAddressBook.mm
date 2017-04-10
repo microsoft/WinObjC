@@ -22,9 +22,13 @@
 
 #import "ABAddressBookManagerInternal.h"
 
-#import "UWP/InteropBase.h"
-#import "UWP/WindowsDevicesEnumeration.h"
 #import "initguid.h"
+
+#include "COMIncludes.h"
+#import <winrt/Windows.Devices.Enumeration.h>
+#include "COMIncludes_End.h"
+
+using namespace winrt::Windows::Devices::Enumeration;
 
 // GUID to check Windows Contacts permissions.
 DEFINE_GUID(_ABAddressBookContactsGUID, 0x7D7E8402, 0x7C54, 0x4821, 0xA3, 0x4E, 0xAE, 0xEF, 0xD6, 0x2D, 0xED, 0x93);
@@ -64,18 +68,17 @@ ABAddressBookRef ABAddressBookCreateWithOptions(CFDictionaryRef options, CFError
  @Notes
 */
 ABAuthorizationStatus ABAddressBookGetAuthorizationStatus() {
-    WFGUID* guid = [WFGUID guidWithGUID:_ABAddressBookContactsGUID];
-    WDEDeviceAccessInformation* deviceAccessInformation = [WDEDeviceAccessInformation createFromDeviceClassId:guid];
-    WDEDeviceAccessStatus currentStatus = deviceAccessInformation.currentStatus;
+    DeviceAccessInformation deviceAccessInformation = DeviceAccessInformation::CreateFromDeviceClassId(_ABAddressBookContactsGUID);
+    DeviceAccessStatus currentStatus = deviceAccessInformation.CurrentStatus();
 
     switch (currentStatus) {
-        case WDEDeviceAccessStatusAllowed:
+        case DeviceAccessStatus::Allowed:
             return kABAuthorizationStatusAuthorized;
-        case WDEDeviceAccessStatusDeniedBySystem:
+        case DeviceAccessStatus::DeniedBySystem:
             return kABAuthorizationStatusRestricted;
-        case WDEDeviceAccessStatusDeniedByUser:
+        case DeviceAccessStatus::DeniedByUser:
             return kABAuthorizationStatusDenied;
-        default: // WDEDeviceAccessStatusUnspecified:
+        default: // DeviceAccessStatus::Unspecified:
             return kABAuthorizationStatusNotDetermined;
     }
 }

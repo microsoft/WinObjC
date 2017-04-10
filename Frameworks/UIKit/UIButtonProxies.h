@@ -38,6 +38,7 @@
 
 @end
 
+>>>>>>> Switch UIKit from projections to C++/WinRT (rough draft)
 @interface _UIImageView_Proxy : _UIView_Proxy
 
 @property (nonatomic, retain) UIImage* image;

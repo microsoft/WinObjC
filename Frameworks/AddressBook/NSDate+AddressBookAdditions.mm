@@ -15,11 +15,13 @@
 //******************************************************************************
 
 #import "NSDate+AddressBookAdditions.h"
-#import "UWP/WindowsApplicationModelContacts.h"
+
+using namespace winrt::Windows::ApplicationModel::Contacts;
+namespace WF = winrt::Windows::Foundation;
 
 @implementation NSDate (AddressBookAdditions)
 
-+ (NSDate*)dateWithWACContactDate:(WACContactDate*)date {
++ (NSDate*)dateWithContactDate:(const ContactDate&)date {
     NSCalendar* calendar = [NSCalendar currentCalendar];
     NSDateComponents* dateComponents = [[NSDateComponents alloc] init];
 
@@ -28,9 +30,13 @@
     // given NSDate. Default month of January and year
     // of 2004 are per the guidelines provided from
     // Windows.ApplicationModel.Contacts.ContactDate
-    dateComponents.day = [date.day integerValue];
-    dateComponents.month = date.month ? [date.month integerValue] : 1;
-    dateComponents.year = date.year ? [date.year integerValue] : 2004;
+    WF::IReference<unsigned int> day = date.Day();
+    WF::IReference<unsigned int> month = date.Month();
+    WF::IReference<int> year = date.Year();
+
+    dateComponents.day = day.Value();
+    dateComponents.month = month ? month.Value() : 1;
+    dateComponents.year = year ? year.Value() : 2004;
     NSDate* resultDate = [calendar dateFromComponents:dateComponents];
     return resultDate;
 }
