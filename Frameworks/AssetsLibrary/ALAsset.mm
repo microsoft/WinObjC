@@ -86,7 +86,7 @@ NSString* const ALAssetTypeUnknown = @"ALAssetTypeUnknown";
                     _localPath = [_localPath stringByAppendingString:[_assetURL path]];
                     _localPath = [_localPath stringByReplacingOccurrencesOfString:@"/" withString:@"\\"];
                 } else {
-                    tempError = [NSError _errorWithHRESULT:op.ErrorCode()];
+                    tempError = [[NSError alloc] _initWithHRESULT:op.ErrorCode()];
                 }
 
                 dispatch_group_leave(group);
@@ -96,7 +96,9 @@ NSString* const ALAssetTypeUnknown = @"ALAssetTypeUnknown";
             dispatch_release(group);
 
             if (error) {
-                *error = tempError;
+                *error = [tempError autorelease];
+            } else {
+                [tempError release];
             }
 
             if (_localPath == nil) {

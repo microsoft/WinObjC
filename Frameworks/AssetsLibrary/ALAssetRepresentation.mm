@@ -68,7 +68,7 @@ NSString* const ALAssetRepresentationDomain = @"ALAssetRepresentation";
             if (status == WF::AsyncStatus::Completed) {
                 _storageFile = op.GetResults();
             } else {
-                tempError = [NSError _errorWithHRESULT:op.ErrorCode()];
+                tempError = [[NSError alloc] _initWithHRESULT:op.ErrorCode()];
             }
 
             dispatch_group_leave(group);
@@ -78,7 +78,9 @@ NSString* const ALAssetRepresentationDomain = @"ALAssetRepresentation";
         dispatch_release(group);
 
         if (error) {
-            *error = tempError;
+            *error = [tempError autorelease];
+        } else {
+            [tempError release];
         }
 
         if (_storageFile == nil) {
@@ -234,13 +236,13 @@ NSString* const ALAssetRepresentationDomain = @"ALAssetRepresentation";
                                     memcpy_s(buffer, length, byteBuffer, bufferLength);
                                 }
                             } else {
-                                tempError = [NSError _errorWithHRESULT:op.ErrorCode()];
+                                tempError = [[NSError alloc] _initWithHRESULT:op.ErrorCode()];
                             }
 
                             dispatch_group_leave(group);
                     }));
                 } else {
-                    tempError = [NSError _errorWithHRESULT:op.ErrorCode()];
+                    tempError = [[NSError alloc] _initWithHRESULT:op.ErrorCode()];
                     dispatch_group_leave(group);
                 }
         }));
@@ -249,7 +251,9 @@ NSString* const ALAssetRepresentationDomain = @"ALAssetRepresentation";
         dispatch_release(group);
 
         if (error) {
-            *error = tempError;
+            *error = [tempError autorelease];
+        } else {
+            [tempError release];
         }
 
     } else {
