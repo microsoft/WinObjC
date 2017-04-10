@@ -21,6 +21,7 @@
 #import <Starboard/SmartTypes.h>
 
 #import "ABAddressBookManagerInternal.h"
+#import "CppWinRTHelpers.h"
 
 #import "initguid.h"
 

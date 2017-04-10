@@ -29,6 +29,7 @@ namespace WDE = winrt::Windows::Devices::Enumeration;
 
 // Status to be returned by mocked version of currentStatus.
 static WDE::DeviceAccessStatus statusToMock = WDE::DeviceAccessStatus::Unspecified;
+@class _ABAddressBookDevice;
 
 @interface __ABAddressBookDevice_Swizzle : NSObject
 
@@ -47,7 +48,7 @@ static WDE::DeviceAccessStatus statusToMock = WDE::DeviceAccessStatus::Unspecifi
 /**
  * Returns a mocked version of WDE::DeviceAccessStatus.
  */
-- (WDE::DeviceAccessStatus)mockCurrentStatus;
++ (WDE::DeviceAccessStatus)mockCurrentStatus;
 
 @end
 
@@ -57,20 +58,20 @@ static WDE::DeviceAccessStatus statusToMock = WDE::DeviceAccessStatus::Unspecifi
     SEL originalSelector = @selector(currentStatus);
     SEL swizzledSelector = @selector(mockCurrentStatus);
     Method swizzledMethod = class_getClassMethod([__ABAddressBookDevice_Swizzle class], swizzledSelector);
-    return class_replaceMethod(objc_getMetaClass("_ABAddressBookDevice"),
+    return class_replaceMethod([_ABAddressBookDevice class],
                                originalSelector,
                                method_getImplementation(swizzledMethod),
-                               [[NSString stringWithFormat:@"%@@:", @encode(WDE::DeviceAccessStatus)] UTF8String]);
+                               [[NSString stringWithFormat:@"%s@:", @encode(WDE::DeviceAccessStatus)] UTF8String]);
 }
 
 + (void)tearDownMock:(IMP)implementation {
-    class_replaceMethod(objc_getMetaClass("_ABAddressBookDevice"),
+    class_replaceMethod([_ABAddressBookDevice class],
                         @selector(currentStatus),
                         implementation,
-                        [[NSString stringWithFormat:@"%@@:", @encode(WDE::DeviceAccessStatus)] UTF8String]);
+                        [[NSString stringWithFormat:@"%s@:", @encode(WDE::DeviceAccessStatus)] UTF8String]);
 }
 
-- (WDE::DeviceAccessStatus)currentStatus {
++ (WDE::DeviceAccessStatus)mockCurrentStatus {
     return statusToMock;
 }
 
