@@ -24,6 +24,7 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 #import "LoggingNative.h"
 #import "NSURLProtocolInternal.h"
 
+#import <algorithm>
 #import <vector>
 
 static const wchar_t* TAG = L"NSURLConnection";
@@ -55,8 +56,6 @@ static NSURLProtocol* _protocolForRequest(NSURLRequest* request, id<NSURLProtoco
 
     StrongId<NSURLResponse> _response;
     StrongId<NSMutableData> _data;
-
-    bool _started;
 }
 
 + (instancetype)delegateWithQueue:(NSOperationQueue*)queue handler:(void (^)(NSURLResponse*, NSData*, NSError*))handler {
@@ -110,18 +109,15 @@ static NSURLProtocol* _protocolForRequest(NSURLRequest* request, id<NSURLProtoco
     StrongId<NSURLResponse> _response;
     NSURLCacheStoragePolicy _storagePolicy;
     StrongId<NSURLProtocol> _protocol;
+
+    bool _started;
 }
 
 /**
  @Status Interoperable
 */
 + (BOOL)canHandleRequest:(NSURLRequest*)request {
-    Class protocolClass = [NSURLProtocol _URLProtocolClassForRequest:request];
-    if (!protocolClass) {
-        return NO;
-    }
-
-    return [protocolClass canInitWithRequest:request];
+    return [[NSURLProtocol _URLProtocolClassForRequest:request] canInitWithRequest:request];
 }
 
 /**
@@ -329,7 +325,11 @@ static NSURLProtocol* _protocolForRequest(NSURLRequest* request, id<NSURLProtoco
 */
 - (void)unscheduleFromRunLoop:(NSRunLoop*)aRunLoop forMode:(NSRunLoopMode)mode {
     @synchronized(self) {
-        auto it = std::find(_scheduledRunLoops.begin(), _scheduledRunLoops.end());
+        auto it = std::find_if(_scheduledRunLoops.begin(),
+                               _scheduledRunLoops.end(),
+                               [aRunLoop](std::pair<StrongId<NSRunLoop>, StrongId<NSRunLoopMode>>& pair) {
+                                   return aRunLoop == pair.first.get();
+                               });
         if (it != _scheduledRunLoops.end()) {
             _scheduledRunLoops.erase(it);
             return;

@@ -322,7 +322,9 @@ static std::function<R(Args...)> bindObjC(id instance, SEL _cmd) {
             ComPtr<IMap<HSTRING, HSTRING>> headerMap;
             THROW_IF_FAILED(headerCollection.As(&headerMap));
 
-            if ([self.request HTTPShouldHandleCookies]) {
+            NSURLRequest* request = self.request;
+
+            if ([request HTTPShouldHandleCookies]) {
                 NSHTTPCookieStorage* cookieStorage = [NSHTTPCookieStorage sharedHTTPCookieStorage];
                 NSMutableDictionary* collectedCookies = [NSMutableDictionary dictionary];
                 int index = 0;
@@ -350,8 +352,8 @@ static std::function<R(Args...)> bindObjC(id instance, SEL _cmd) {
                                         });
                 THROW_IF_FAILED(hr);
 
-                NSArray* cookies = [NSHTTPCookie cookiesWithResponseHeaderFields:collectedCookies forURL:[self.request URL]];
-                [cookieStorage setCookies:cookies forURL:[self.request URL] mainDocumentURL:nil];
+                NSArray* cookies = [NSHTTPCookie cookiesWithResponseHeaderFields:collectedCookies forURL:[request URL]];
+                [cookieStorage setCookies:cookies forURL:[request URL] mainDocumentURL:nil];
             }
 
             NSMutableDictionary* nsHeaders = [NSMutableDictionary dictionary];
@@ -393,7 +395,7 @@ static std::function<R(Args...)> bindObjC(id instance, SEL _cmd) {
                 default:
                     httpVersionStr = nil;
             }
-            NSHTTPURLResponse* nsResponse = [[[NSHTTPURLResponse alloc] initWithURL:[self.request URL]
+            NSHTTPURLResponse* nsResponse = [[[NSHTTPURLResponse alloc] initWithURL:[request URL]
                                                                          statusCode:statusCode
                                                                         HTTPVersion:httpVersionStr
                                                                        headerFields:nsHeaders] autorelease];
@@ -409,7 +411,7 @@ static std::function<R(Args...)> bindObjC(id instance, SEL _cmd) {
                 THROW_IF_FAILED(uri->get_AbsoluteUri(uriString.GetAddressOf()));
 
                 // The location header can specify a relative or absolute URL: attempt to join it with the request URL.
-                NSURL* targetUrl = [NSURL URLWithString:Strings::WideToNSString(uriString.Get()) relativeToURL:[self.request URL]];
+                NSURL* targetUrl = [NSURL URLWithString:Strings::WideToNSString(uriString.Get()) relativeToURL:[request URL]];
                 NSURLRequest* req = [NSURLRequest requestWithURL:targetUrl];
                 [self.client URLProtocol:self wasRedirectedToRequest:req redirectResponse:nsResponse];
                 // After a redirect, NSURLProtocol ceases to exist: we could redirect to a completely different one.

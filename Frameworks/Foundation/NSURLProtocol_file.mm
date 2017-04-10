@@ -84,9 +84,10 @@ static const wchar_t* TAG = L"NSURLProtocol_file";
 - (id)_doFileLoad {
     NSData* dataReceived = [NSData dataWithContentsOfFile:_path];
 
-    [self.client URLProtocol:self didReceiveResponse:nil cacheStoragePolicy:NSURLCacheStorageAllowed];
-    [self.client URLProtocol:self didLoadData:dataReceived];
-    [self.client URLProtocolDidFinishLoading:self];
+    id<NSURLProtocolClient> client = self.client;
+    [client URLProtocol:self didReceiveResponse:nil cacheStoragePolicy:NSURLCacheStorageAllowed];
+    [client URLProtocol:self didLoadData:dataReceived];
+    [client URLProtocolDidFinishLoading:self];
 
     return self;
 }
