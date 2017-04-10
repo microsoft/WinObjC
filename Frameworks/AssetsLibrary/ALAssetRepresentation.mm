@@ -167,7 +167,7 @@ NSString* const ALAssetRepresentationDomain = @"ALAssetRepresentation";
             _fileSize = op.GetResults().Size();
         } else {
             _fileSize = 0;
-            TraceError(TAG, L"Error getting basic properties of file - %d", op.ErrorCode());
+            TraceError(TAG, L"Error getting basic properties of file - %x", op.ErrorCode());
         }
 
         dispatch_group_leave(group);
