@@ -233,9 +233,9 @@ public:
 
 BENCHMARK_F(CoreText, CTFrameDrawComplete);
 
-class CTFrameDrawYuge : public TextBenchmarkBase {
+class CTFrameDrawHuge : public TextBenchmarkBase {
 public:
-    CTFrameDrawYuge() {
+    CTFrameDrawHuge() {
         CTParagraphStyleSetting setting;
         CTTextAlignment alignment = kCTCenterTextAlignment;
         setting.spec = kCTParagraphStyleSpecifierAlignment;
@@ -277,7 +277,7 @@ private:
     woc::AutoCF<CTFrameRef> m_frame;
 };
 
-BENCHMARK_F(CoreText, CTFrameDrawYuge);
+BENCHMARK_F(CoreText, CTFrameDrawHuge);
 
 class CTLineDrawBase : public TextBenchmarkBase {
 public:
