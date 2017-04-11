@@ -34,7 +34,7 @@ _UT_OBJECTS += $(_UT_OBJ_DIR)/EntryPoint.o
 endif
 
 _INC := $(_UT_BASE_DIR)/../frameworks/include $(_UT_BASE_DIR)/../frameworks/gtest $(_UT_BASE_DIR)/../frameworks/gtest/include
-_INC += $(_UT_BASE_DIR)/../frameworks/OSXShims/include $(_UT_BASE_DIR)/../../include/xplat
+_INC += $(_UT_BASE_DIR)/../frameworks/OSXShims/include $(_UT_BASE_DIR)/../../include/xplat $(_UT_BASE_DIR)/../../tools/include/xplat
 
 _ALL_CXXFLAGS := -std=c++14
 _ALL_CXXFLAGS += $(UT_CXXFLAGS) $(UT_CCFLAGS)
