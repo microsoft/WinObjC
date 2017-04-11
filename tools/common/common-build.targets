@@ -21,7 +21,8 @@
       <_ImportLibraryFileNames Include="@(Link -> '%(ImportLibrary)')">
       </_ImportLibraryFileNames>
       
-      <PackageFile Include="@(BuiltProjectOutputGroupOutput -> '%(FinalOutputPath)')">
+      <_BuiltProjectOutputGroupOutput Include="@(BuiltProjectOutputGroupOutput -> '%(FinalOutputPath)')" />
+      <PackageFile Include="@(_BuiltProjectOutputGroupOutput)" Condition="Exists('%(FullPath)')">
         <PackagePath>$(PackageContentBasePath)\%(Filename)%(Extension)</PackagePath>
       </PackageFile>
       

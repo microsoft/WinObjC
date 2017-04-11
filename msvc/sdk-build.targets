@@ -53,8 +53,9 @@
       <PackageFile Include="@(_IncludeFiles)" Condition="Exists('%(FullPath)')">
         <PackagePath>build\include\$(MSBuildProjectName)\%(RecursiveDir)%(Filename)%(Extension)</PackagePath>
       </PackageFile>
-      
-      <PackageFile Include="@(BuiltProjectOutputGroupOutput -> '%(FinalOutputPath)')">
+
+      <_BuiltProjectOutputGroupOutput Include="@(BuiltProjectOutputGroupOutput -> '%(FinalOutputPath)')" />
+      <PackageFile Include="@(_BuiltProjectOutputGroupOutput)" Condition="Exists('%(FullPath)')">
         <PackagePath>$(PackageContentBasePath)\%(Filename)%(Extension)</PackagePath>
       </PackageFile>
       
