@@ -21,6 +21,7 @@
 #import "DWriteWrapper_CoreText.h"
 #import <Foundation/NSAttributedString.h>
 #import <algorithm>
+#import <CFCppBase.h>
 #import "LoggingNative.h"
 
 static const wchar_t* TAG = L"CTTypesetter";
@@ -28,27 +29,28 @@ static const wchar_t* TAG = L"CTTypesetter";
 const CFStringRef kCTTypesetterOptionDisableBidiProcessing = CFSTR("kCTTypesetterOptionDisableBidiProcessing");
 const CFStringRef kCTTypesetterOptionForcedEmbeddingLevel = CFSTR("kCTTypesetterOptionForcedEmbeddingLevel");
 
-@implementation _CTTypesetter
-- (instancetype)initWithAttributedString:(NSAttributedString*)str {
-    _attributedString = str;
-    _string = [str string];
+struct __CTTypesetter : CoreFoundation::CppBase<__CTTypesetter> {
+    __CTTypesetter(CFAttributedStringRef attributedString) : _attributedString(attributedString) {
+    }
 
-    return self;
-}
+    inline CFAttributedStringRef AttributedString() const {
+        return _attributedString;
+    }
 
-- (void)dealloc {
-    _string = nil;
-    _attributedString = nil;
-    [super dealloc];
+private:
+    woc::StrongCF<CFAttributedStringRef> _attributedString;
+};
+
+CFAttributedStringRef _CTTypesetterGetAttributedString(CTTypesetterRef typesetter) {
+    RETURN_NULL_IF(!typesetter);
+    return typesetter->AttributedString();
 }
-@end
 
 /**
 @Status Interoperable
 */
 CTTypesetterRef CTTypesetterCreateWithAttributedString(CFAttributedStringRef string) {
-    _CTTypesetter* ret = [[_CTTypesetter alloc] initWithAttributedString:(NSAttributedString*)string];
-    return (CTTypesetterRef)ret;
+    return __CTTypesetter::CreateInstance(kCFAllocatorDefault, string);
 }
 
 /**
@@ -62,7 +64,6 @@ CTTypesetterRef CTTypesetterCreateWithAttributedStringAndOptions(CFAttributedStr
 
 /**
  @Status Interoperable
- @Notes
 */
 CTLineRef CTTypesetterCreateLine(CTTypesetterRef typesetter, CFRange stringRange) {
     return CTTypesetterCreateLineWithOffset(typesetter, stringRange, 0.0f);
@@ -70,12 +71,9 @@ CTLineRef CTTypesetterCreateLine(CTTypesetterRef typesetter, CFRange stringRange
 
 /**
  @Status Interoperable
- @Notes
 */
 CTLineRef CTTypesetterCreateLineWithOffset(CTTypesetterRef ts, CFRange range, double offset) {
-    _CTFrame* frame = _DWriteGetFrame(static_cast<CFAttributedStringRef>(static_cast<_CTTypesetter*>(ts)->_attributedString.get()),
-                                      range,
-                                      CGRectMake(offset, 0, FLT_MAX, FLT_MAX));
+    _CTFrame* frame = _DWriteGetFrame(ts->AttributedString(), range, CGRectMake(offset, 0, FLT_MAX, FLT_MAX));
 
     RETURN_NULL_IF(!frame);
     if ([frame->_lines count] != 1) {
@@ -92,7 +90,6 @@ CTLineRef CTTypesetterCreateLineWithOffset(CTTypesetterRef ts, CFRange range, do
 
 /**
  @Status Interoperable
- @Notes
 */
 CFIndex CTTypesetterSuggestLineBreak(CTTypesetterRef typesetter, CFIndex startIndex, double width) {
     return CTTypesetterSuggestLineBreakWithOffset(typesetter, startIndex, width, 0.0f);
@@ -100,14 +97,16 @@ CFIndex CTTypesetterSuggestLineBreak(CTTypesetterRef typesetter, CFIndex startIn
 
 /**
  @Status Interoperable
- @Notes
 */
-CFIndex CTTypesetterSuggestLineBreakWithOffset(CTTypesetterRef ts, CFIndex index, double width, double offset) {
-    _CTTypesetter* typesetter = static_cast<_CTTypesetter*>(ts);
-    _CTFrame* frame = _DWriteGetFrame(static_cast<CFAttributedStringRef>(typesetter->_attributedString.get()),
-                                      CFRangeMake(index, [typesetter->_string length] - index),
+CFIndex CTTypesetterSuggestLineBreakWithOffset(CTTypesetterRef typesetter, CFIndex index, double width, double offset) {
+    _CTFrame* frame = _DWriteGetFrame(typesetter->AttributedString(),
+                                      CFRangeMake(index, CFAttributedStringGetLength(typesetter->AttributedString()) - index),
                                       CGRectMake(offset, 0, width, FLT_MAX));
-    return ([frame->_lines count] > 0) ? static_cast<_CTLine*>([frame->_lines firstObject])->_strRange.length : 0;
+    if ([frame->_lines count] > 0) {
+        return static_cast<_CTLine*>([frame->_lines firstObject])->_strRange.length;
+    }
+
+    return 0;
 }
 
 /**
@@ -129,10 +128,8 @@ CFIndex CTTypesetterSuggestClusterBreakWithOffset(CTTypesetterRef typesetter, CF
 }
 
 /**
- @Status NotInPlan
- @Notes
+ @Status Interoperable
 */
 CFTypeID CTTypesetterGetTypeID() {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return __CTTypesetter::GetTypeID();
 }

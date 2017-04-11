@@ -39,4 +39,4 @@ CORETEXT_EXPORT CFIndex CTTypesetterSuggestClusterBreakWithOffset(CTTypesetterRe
                                                                   CFIndex startIndex,
                                                                   double width,
                                                                   double offset) STUB_METHOD;
-CORETEXT_EXPORT CFTypeID CTTypesetterGetTypeID() NOTINPLAN_METHOD;
+CORETEXT_EXPORT CFTypeID CTTypesetterGetTypeID();
