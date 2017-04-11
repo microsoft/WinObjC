@@ -46,8 +46,10 @@
     knowing if a project is already built.
   -->
   <Target Name="RemoveGlobalPropertiesFromMultiplexing" BeforeTargets="BeforeResolveReferences">
-    <_GlobalPropertiesToRemove>BuildingPackage;</_GlobalPropertiesToRemove>
-    <_GlobalPropertiesToRemove Condition="'$(SkipGetPackageContentsForOtherPlatforms)' == 'true'">$(_GlobalPropertiesToRemove);SkipGetPackageContentsForOtherPlatforms;IsPackable;</_GlobalPropertiesToRemove>
+    <PropertyGroup>
+      <_GlobalPropertiesToRemove>BuildingPackage;</_GlobalPropertiesToRemove>
+      <_GlobalPropertiesToRemove Condition="'$(SkipGetPackageContentsForOtherPlatforms)' == 'true'">$(_GlobalPropertiesToRemove);SkipGetPackageContentsForOtherPlatforms;IsPackable;</_GlobalPropertiesToRemove>
+    </PropertyGroup>
     <ItemGroup>
       <ProjectReference>
         <GlobalPropertiesToRemove>%(ProjectReference.GlobalPropertiesToRemove);$(_GlobalPropertiesToRemove);</GlobalPropertiesToRemove>
