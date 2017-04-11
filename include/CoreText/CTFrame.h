@@ -45,4 +45,4 @@ CORETEXT_EXPORT CFDictionaryRef CTFrameGetFrameAttributes(CTFrameRef frame) STUB
 CORETEXT_EXPORT CFArrayRef CTFrameGetLines(CTFrameRef frame);
 CORETEXT_EXPORT void CTFrameGetLineOrigins(CTFrameRef frame, CFRange range, CGPoint origins[]);
 CORETEXT_EXPORT void CTFrameDraw(CTFrameRef frame, CGContextRef context);
-CORETEXT_EXPORT CFTypeID CTFrameGetTypeID() STUB_METHOD;
+CORETEXT_EXPORT CFTypeID CTFrameGetTypeID();
