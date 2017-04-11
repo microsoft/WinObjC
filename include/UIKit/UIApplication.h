@@ -198,68 +198,64 @@ UIKIT_EXPORT_CLASS
 @interface UIApplication : UIResponder
 
 + (UIApplication*)sharedApplication;
-+ (void)registerObjectForStateRestoration:(id<UIStateRestoring>)object restorationIdentifier:(NSString*)restorationIdentifier STUB_METHOD;
++ (void)registerObjectForStateRestoration:(id<UIStateRestoring>)object restorationIdentifier:(NSString*)restorationIdentifier NOTINPLAN_METHOD;
 - (BOOL)canOpenURL:(NSURL*)URL;
 - (BOOL)isIgnoringInteractionEvents;
-- (BOOL)isRegisteredForRemoteNotifications STUB_METHOD;
+- (BOOL)isRegisteredForRemoteNotifications NOTINPLAN_METHOD;
 - (BOOL)openURL:(NSURL*)url;
 - (BOOL)sendAction:(SEL)action to:(id)target from:(id)sender forEvent:(UIEvent*)event;
-- (BOOL)setKeepAliveTimeout:(NSTimeInterval)timeout handler:(void (^)(void))keepAliveHandler STUB_METHOD;
+- (BOOL)setKeepAliveTimeout:(NSTimeInterval)timeout handler:(void (^)(void))keepAliveHandler NOTINPLAN_METHOD;
 - (UIBackgroundTaskIdentifier)beginBackgroundTaskWithExpirationHandler:(void (^)(void))handler;
 - (UIBackgroundTaskIdentifier)beginBackgroundTaskWithName:(NSString*)taskName expirationHandler:(void (^)(void))handler STUB_METHOD;
-- (UIInterfaceOrientationMask)supportedInterfaceOrientationsForWindow:(UIWindow*)window STUB_METHOD;
-- (UIRemoteNotificationType)enabledRemoteNotificationTypes STUB_METHOD;
+- (UIInterfaceOrientationMask)supportedInterfaceOrientationsForWindow:(UIWindow*)window NOTINPLAN_METHOD;
+- (UIRemoteNotificationType)enabledRemoteNotificationTypes NOTINPLAN_METHOD;
 - (UIUserNotificationSettings*)currentUserNotificationSettings STUB_METHOD;
 - (void)beginIgnoringInteractionEvents;
-- (void)beginReceivingRemoteControlEvents STUB_METHOD;
-- (void)cancelAllLocalNotifications STUB_METHOD;
-- (void)cancelLocalNotification:(UILocalNotification*)notification STUB_METHOD;
-- (void)clearKeepAliveTimeout STUB_METHOD;
-- (void)completeStateRestoration STUB_METHOD;
+- (void)beginReceivingRemoteControlEvents NOTINPLAN_METHOD;
+- (void)cancelAllLocalNotifications NOTINPLAN_METHOD;
+- (void)cancelLocalNotification:(UILocalNotification*)notification NOTINPLAN_METHOD;
+- (void)clearKeepAliveTimeout NOTINPLAN_METHOD;
+- (void)completeStateRestoration NOTINPLAN_METHOD;
 - (void)endBackgroundTask:(UIBackgroundTaskIdentifier)identifier;
 - (void)endIgnoringInteractionEvents;
-- (void)endReceivingRemoteControlEvents STUB_METHOD;
-- (void)extendStateRestoration STUB_METHOD;
-- (void)ignoreSnapshotOnNextApplicationLaunch STUB_METHOD;
-- (void)presentLocalNotificationNow:(UILocalNotification*)notification STUB_METHOD;
-- (void)registerForRemoteNotificationTypes:(UIRemoteNotificationType)types STUB_METHOD;
-- (void)registerForRemoteNotifications STUB_METHOD;
-- (void)registerUserNotificationSettings:(UIUserNotificationSettings*)notificationSettings STUB_METHOD;
-- (void)scheduleLocalNotification:(UILocalNotification*)notification STUB_METHOD;
-- (void)sendEvent:(UIEvent*)event STUB_METHOD;
-- (void)setMinimumBackgroundFetchInterval:(NSTimeInterval)minimumBackgroundFetchInterval STUB_METHOD;
-- (void)setNewsstandIconImage:(UIImage*)image STUB_METHOD;
-- (void)setStatusBarHidden:(BOOL)hidden animated:(BOOL)animated STUB_METHOD;
-- (void)setStatusBarHidden:(BOOL)hidden withAnimation:(UIStatusBarAnimation)animation STUB_METHOD;
-- (void)setStatusBarOrientation:(UIInterfaceOrientation)interfaceOrientation animated:(BOOL)animated STUB_METHOD;
-- (void)setStatusBarStyle:(UIStatusBarStyle)statusBarStyle animated:(BOOL)animated STUB_METHOD;
-- (void)unregisterForRemoteNotifications STUB_METHOD;
-@property (copy, nonatomic) NSArray* scheduledLocalNotifications STUB_PROPERTY;
-@property (copy, nonatomic) NSArray* shortcutItems STUB_PROPERTY;
+- (void)endReceivingRemoteControlEvents NOTINPLAN_METHOD;
+- (void)extendStateRestoration NOTINPLAN_METHOD;
+- (void)ignoreSnapshotOnNextApplicationLaunch NOTINPLAN_METHOD;
+- (void)presentLocalNotificationNow:(UILocalNotification*)notification NOTINPLAN_METHOD;
+- (void)registerForRemoteNotificationTypes:(UIRemoteNotificationType)types NOTINPLAN_METHOD;
+- (void)registerForRemoteNotifications NOTINPLAN_METHOD;
+- (void)registerUserNotificationSettings:(UIUserNotificationSettings*)notificationSettings NOTINPLAN_METHOD;
+- (void)scheduleLocalNotification:(UILocalNotification*)notification NOTINPLAN_METHOD;
+- (void)sendEvent:(UIEvent*)event NOTINPLAN_METHOD;
+- (void)setMinimumBackgroundFetchInterval:(NSTimeInterval)minimumBackgroundFetchInterval NOTINPLAN_METHOD;
+- (void)setNewsstandIconImage:(UIImage*)image NOTINPLAN_METHOD;
+- (void)setStatusBarHidden:(BOOL)hidden animated:(BOOL)animated NOTINPLAN_METHOD;
+- (void)setStatusBarHidden:(BOOL)hidden withAnimation:(UIStatusBarAnimation)animation NOTINPLAN_METHOD;
+- (void)setStatusBarOrientation:(UIInterfaceOrientation)interfaceOrientation animated:(BOOL)animated NOTINPLAN_METHOD;
+- (void)setStatusBarStyle:(UIStatusBarStyle)statusBarStyle animated:(BOOL)animated NOTINPLAN_METHOD;
+- (void)unregisterForRemoteNotifications NOTINPLAN_METHOD;
+@property (copy, nonatomic) NSArray* scheduledLocalNotifications NOTINPLAN_PROPERTY;
+@property (copy, nonatomic) NSArray* shortcutItems NOTINPLAN_PROPERTY;
 @property (getter=isIdleTimerDisabled, nonatomic) BOOL idleTimerDisabled;
-@property (getter=isNetworkActivityIndicatorVisible, nonatomic) BOOL networkActivityIndicatorVisible STUB_PROPERTY;
-@property (getter=isProximitySensingEnabled, nonatomic) BOOL proximitySensingEnabled STUB_PROPERTY;
-@property (nonatomic) BOOL applicationSupportsShakeToEdit STUB_PROPERTY;
+@property (getter=isNetworkActivityIndicatorVisible, nonatomic) BOOL networkActivityIndicatorVisible NOTINPLAN_PROPERTY;
+@property (getter=isProximitySensingEnabled, nonatomic) BOOL proximitySensingEnabled NOTINPLAN_PROPERTY;
+@property (nonatomic) BOOL applicationSupportsShakeToEdit NOTINPLAN_PROPERTY;
 @property (nonatomic) NSInteger applicationIconBadgeNumber;
-@property (nonatomic) UIInterfaceOrientation statusBarOrientation STUB_PROPERTY;
+@property (nonatomic) UIInterfaceOrientation statusBarOrientation NOTINPLAN_PROPERTY;
 @property (nonatomic, assign) id<UIApplicationDelegate> delegate;
-@property (nonatomic, copy) NSString* preferredContentSizeCategory STUB_PROPERTY;
-@property (nonatomic, getter=isStatusBarHidden) BOOL statusBarHidden STUB_PROPERTY;
-@property (nonatomic, readonly) CGRect statusBarFrame STUB_PROPERTY;
+@property (nonatomic, copy) NSString* preferredContentSizeCategory NOTINPLAN_PROPERTY;
+@property (nonatomic, getter=isStatusBarHidden) BOOL statusBarHidden NOTINPLAN_PROPERTY;
+@property (nonatomic, readonly) CGRect statusBarFrame NOTINPLAN_PROPERTY;
 @property (nonatomic, readonly) NSArray<UIWindow*>* windows;
-@property (nonatomic, readonly) NSTimeInterval statusBarOrientationAnimationDuration STUB_PROPERTY;
+@property (nonatomic, readonly) NSTimeInterval statusBarOrientationAnimationDuration NOTINPLAN_PROPERTY;
 @property (nonatomic, readonly) UIApplicationState applicationState;
-@property (nonatomic, readonly) UIUserInterfaceLayoutDirection userInterfaceLayoutDirection STUB_PROPERTY;
+@property (nonatomic, readonly) UIUserInterfaceLayoutDirection userInterfaceLayoutDirection NOTINPLAN_PROPERTY;
 @property (nonatomic, readonly) UIWindow* keyWindow;
 @property (readonly, getter=isProtectedDataAvailable, nonatomic) BOOL protectedDataAvailable STUB_PROPERTY;
 @property (readonly, nonatomic) NSTimeInterval backgroundTimeRemaining STUB_PROPERTY;
 @property (readonly, nonatomic) UIBackgroundRefreshStatus backgroundRefreshStatus STUB_PROPERTY;
 @property (readonly, nonatomic) UIStatusBarStyle statusBarStyle STUB_PROPERTY;
 
-@end
-
-@interface UIApplication (UIApplicationStarboardAdditions)
-- (void)registerForRemoteNotificationTypes:(UIRemoteNotificationType)types withId:(NSString*)id;
 @end
 
 enum {

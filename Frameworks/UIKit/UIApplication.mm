@@ -617,13 +617,6 @@ static int __EbrSortViewPriorities(id val1, id val2, void* context) {
 /**
  @Status NotInPlan
 */
-- (void)registerForRemoteNotificationTypes:(UIRemoteNotificationType)types withId:(id)identifier {
-    UNIMPLEMENTED();
-}
-
-/**
- @Status NotInPlan
-*/
 - (void)registerUserNotificationSettings:(UIUserNotificationSettings*)notificationSettings {
     UNIMPLEMENTED();
 }

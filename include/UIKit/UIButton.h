@@ -60,28 +60,28 @@ UIKIT_EXPORT_CLASS
                                  UITraitEnvironment>
 
 + (instancetype)buttonWithType:(UIButtonType)buttonType;
-- (CGRect)backgroundRectForBounds:(CGRect)bounds STUB_METHOD;
+- (CGRect)backgroundRectForBounds:(CGRect)bounds NOTINPLAN_METHOD;
 - (CGRect)contentRectForBounds:(CGRect)bounds;
 - (CGRect)imageRectForContentRect:(CGRect)contentRect;
 - (CGRect)titleRectForContentRect:(CGRect)contentRect;
-- (NSAttributedString*)attributedTitleForState:(UIControlState)state STUB_METHOD;
+- (NSAttributedString*)attributedTitleForState:(UIControlState)state NOTINPLAN_METHOD;
 - (NSString*)titleForState:(UIControlState)state;
 - (UIColor*)titleColorForState:(UIControlState)state;
-- (UIColor*)titleShadowColorForState:(UIControlState)state STUB_METHOD;
+- (UIColor*)titleShadowColorForState:(UIControlState)state NOTINPLAN_METHOD;
 - (UIImage*)backgroundImageForState:(UIControlState)state;
 - (UIImage*)imageForState:(UIControlState)state;
-- (void)setAttributedTitle:(NSAttributedString*)title forState:(UIControlState)state STUB_METHOD;
+- (void)setAttributedTitle:(NSAttributedString*)title forState:(UIControlState)state NOTINPLAN_METHOD;
 - (void)setBackgroundImage:(UIImage*)image forState:(UIControlState)state;
 - (void)setImage:(UIImage*)image forState:(UIControlState)state;
 - (void)setTitle:(NSString*)title forState:(UIControlState)state;
 - (void)setTitleColor:(UIColor*)color forState:(UIControlState)state;
-- (void)setTitleShadowColor:(UIColor*)color forState:(UIControlState)state STUB_METHOD;
+- (void)setTitleShadowColor:(UIColor*)color forState:(UIControlState)state NOTINPLAN_METHOD;
 
 @property (nonatomic) BOOL adjustsImageWhenDisabled;
 @property (nonatomic) BOOL adjustsImageWhenHighlighted;
-@property (nonatomic) BOOL reversesTitleShadowWhenHighlighted STUB_PROPERTY;
-@property (nonatomic) BOOL showsTouchWhenHighlighted STUB_PROPERTY;
-@property (nonatomic) CGSize titleShadowOffset STUB_PROPERTY;
+@property (nonatomic) BOOL reversesTitleShadowWhenHighlighted NOTINPLAN_PROPERTY;
+@property (nonatomic) BOOL showsTouchWhenHighlighted NOTINPLAN_PROPERTY;
+@property (nonatomic) CGSize titleShadowOffset NOTINPLAN_PROPERTY;
 @property (nonatomic) NSLineBreakMode lineBreakMode;
 @property (nonatomic) UIEdgeInsets contentEdgeInsets;
 @property (nonatomic) UIEdgeInsets imageEdgeInsets;
@@ -89,13 +89,13 @@ UIKIT_EXPORT_CLASS
 @property (nonatomic, readonly) UIButtonType buttonType;
 @property (nonatomic, readonly, retain) NSString* currentTitle;
 @property (nonatomic, readonly, retain) UIColor* currentTitleColor;
-@property (nonatomic, readonly, retain) UIColor* currentTitleShadowColor;
+@property (nonatomic, readonly, retain) UIColor* currentTitleShadowColor NOTINPLAN_PROPERTY;
 @property (nonatomic, readonly, retain) UIImage* currentBackgroundImage;
 @property (nonatomic, readonly, retain) UIImage* currentImage;
 @property (nonatomic, readonly, retain) UIImageView* imageView;
 @property (nonatomic, readonly, retain) UILabel* titleLabel;
-@property (nonatomic, retain) UIColor* tintColor STUB_PROPERTY;
+@property (nonatomic, retain) UIColor* tintColor NOTINPLAN_PROPERTY;
 @property (nonatomic, retain) UIFont* font;
-@property (readonly, nonatomic, strong) NSAttributedString* currentAttributedTitle STUB_PROPERTY;
+@property (readonly, nonatomic, strong) NSAttributedString* currentAttributedTitle NOTINPLAN_PROPERTY;
 
 @end

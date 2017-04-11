@@ -86,10 +86,10 @@ UIKIT_EXPORT_CLASS
 - (void)makeKeyAndVisible;
 - (void)resignKeyWindow;
 - (void)becomeKeyWindow;
-- (void)sendEvent:(UIEvent*)event STUB_METHOD;
+- (void)sendEvent:(UIEvent*)event NOTINPLAN_METHOD;
 
 @property (nonatomic, readonly, getter=isKeyWindow) BOOL keyWindow;
-@property (nonatomic, retain) UIScreen* screen STUB_PROPERTY;
+@property (nonatomic, retain) UIScreen* screen NOTINPLAN_PROPERTY;
 @property (nonatomic, assign) UIWindowLevel windowLevel;
 @property (nonatomic, retain) UIViewController* rootViewController;
 @property (nonatomic) BOOL sizeUIWindowToFit;
