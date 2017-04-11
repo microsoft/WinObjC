@@ -18,22 +18,28 @@
 #import <AudioToolbox/SystemSound.h>
 #import <StubReturn.h>
 #import <Starboard.h>
-#import <UWP/WindowsMediaPlayback.h>
 #import <mutex>
 #import <NSBundleInternal.h>
 #import <NSLogging.h>
 #import "AssertARCEnabled.h"
+#import "CppWinRTHelpers.h"
 
 #include <COMIncludes.h>
 #import <wrl\wrappers\corewrappers.h>
 #import <windows.phone.devices.notification.h>
 #import <windows.foundation.metadata.h>
+#import <winrt/Windows.Media.Playback.h>
 #include <COMIncludes_End.h>
+
+// Issue #2485: BackgroundMediaPlayer is deprecated
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
 
 using namespace Microsoft::WRL;
 using namespace Microsoft::WRL::Wrappers;
 using namespace ABI::Windows::Phone::Devices::Notification;
 using namespace ABI::Windows::Foundation;
+using namespace winrt::Windows::Media::Playback;
+namespace WF = winrt::Windows::Foundation;
 
 static const wchar_t* TAG = L"AudioToolbox";
 
@@ -47,23 +53,24 @@ NSMutableDictionary* _systemSoundDictionary = [NSMutableDictionary dictionary];
 // and call the respective callback function if any.
 static SystemSoundID _latestSystemSoundID = 0;
 static int _numberOfCallbacksRegistered = 0;
-static EventRegistrationToken _mediaEndedToken;
+static winrt::event_token _mediaEndedToken;
 static std::mutex _mutex;
 void _handleMediaEndedEvent(); 
 
 
 // Local class to store URL and callback function for an audio file.
 @interface SystemSound : NSObject
-@property WFUri* mediaUri;
 @property BOOL callbackRegistered;
 - (void)setCallbackFunction:(AudioServicesSystemSoundCompletionProc)callbackFunction withClientData:(void*)clientData;
 - (void)runCallbackFunction;
+- (WF::Uri)mediaUri;
 @end
 
 
 @implementation SystemSound {
     AudioServicesSystemSoundCompletionProc _callbackFunction;
     SystemSoundID _systemSoundID;
+    TrivialDefaultConstructor<WF::Uri> _mediaUri;
     void* _clientData;
 }
 
@@ -74,8 +81,8 @@ void _handleMediaEndedEvent();
         _systemSoundID = systemSoundID;
 
         NSURL* url = [[NSBundle mainBundle] _msAppxURLForResourceWithURL:(__bridge NSURL*)inFileURL];
-        _mediaUri = [WFUri makeUri:url.absoluteString];
-        TraceInfo(TAG, L"Loading media at URI: %hs\n", [_mediaUri.absoluteUri UTF8String]);  
+        _mediaUri = WF::Uri(objcwinrt::string(url.absoluteString));
+        TraceInfo(TAG, L"Loading media at URI: %hs\n", [url.absoluteString UTF8String]);  
     }
 
     return self;
@@ -101,6 +108,10 @@ void _handleMediaEndedEvent();
     self.callbackRegistered = false;
     _callbackFunction = nil;
     _clientData = nil;
+}
+
+- (WF::Uri)mediaUri {
+    return _mediaUri;
 }
 @end
 
@@ -213,25 +224,25 @@ static inline void _playSound(SystemSoundID inSystemSoundID, BOOL vibration) {
         SystemSound* systemSoundObject = _systemSoundDictionary[[NSNumber numberWithUnsignedInt:inSystemSoundID]];
 
         if (systemSoundObject) {
-            WMPMediaPlayer* mediaPlayer = [WMPBackgroundMediaPlayer current];
-            
-            if (mediaPlayer.currentState == WMPMediaPlayerStatePlaying) {
-                [mediaPlayer pause];
+            MediaPlayer mediaPlayer = BackgroundMediaPlayer::Current();
+
+            if (mediaPlayer.CurrentState() == MediaPlayerState::Playing) {
+                mediaPlayer.Pause();
 
                 // This runs the callback function, if any, for the audio file that was playing.
                 _handleMediaEndedEvent();
             }
 
-            [mediaPlayer setAutoPlay:false];
-            [mediaPlayer setIsLoopingEnabled:false];
+            mediaPlayer.AutoPlay(false);
+            mediaPlayer.IsLoopingEnabled(false);
 
             if (vibration) {
                 vibrateDevice();
             }
 
             _latestSystemSoundID = inSystemSoundID;
-            [mediaPlayer setUriSource:[systemSoundObject mediaUri]];
-            [mediaPlayer play];
+            mediaPlayer.SetUriSource([systemSoundObject mediaUri]);
+            mediaPlayer.Play();
         }
     } else if (inSystemSoundID == kSystemSoundID_Vibrate) {
         vibrateDevice();        
@@ -275,12 +286,12 @@ OSStatus AudioServicesAddSystemSoundCompletion(SystemSoundID inSystemSoundID,
 
         if (systemSoundObject) {
 
-            // Registers for WMPMediaPlayer event if there aren't any audio files with callback function registered yet.
+            // Registers for MediaPlayer event if there aren't any audio files with callback function registered yet.
             if (_numberOfCallbacksRegistered == 0) {
-                WMPMediaPlayer* mediaPlayer = [WMPBackgroundMediaPlayer current];
-                _mediaEndedToken = [mediaPlayer addMediaEndedEvent:^(WMPMediaPlayer* mediaPlayer, RTObject* e){ 
-                                                                        _handleMediaEndedEvent(); 
-                                                                    }];
+                MediaPlayer mediaPlayer = BackgroundMediaPlayer::Current();
+                _mediaEndedToken = mediaPlayer.MediaEnded(objcwinrt::callback([] (const MediaPlayer&, const WF::IInspectable&) {
+                    _handleMediaEndedEvent();
+                }));
             }
 
             std::lock_guard<std::mutex> lock(_mutex);
@@ -314,10 +325,10 @@ void AudioServicesRemoveSystemSoundCompletion(SystemSoundID inSystemSoundID) {
                 --_numberOfCallbacksRegistered;
             }
 
-            // Unregisters from WMPMediaPlayer events when none of the audio files have callback function registered;
+            // Unregisters from MediaPlayer events when none of the audio files have callback function registered;
             if (_numberOfCallbacksRegistered == 0) {
-                WMPMediaPlayer* mediaPlayer = [WMPBackgroundMediaPlayer current];
-                [mediaPlayer removeMediaEndedEvent:_mediaEndedToken];
+                MediaPlayer mediaPlayer = BackgroundMediaPlayer::Current();
+                mediaPlayer.MediaEnded(_mediaEndedToken);
             }
 
             if (_latestSystemSoundID == inSystemSoundID) {
