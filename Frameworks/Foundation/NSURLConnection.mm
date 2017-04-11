@@ -327,8 +327,8 @@ static NSURLProtocol* _protocolForRequest(NSURLRequest* request, id<NSURLProtoco
     @synchronized(self) {
         auto it = std::find_if(_scheduledRunLoops.begin(),
                                _scheduledRunLoops.end(),
-                               [aRunLoop](std::pair<StrongId<NSRunLoop>, StrongId<NSRunLoopMode>>& pair) {
-                                   return aRunLoop == pair.first.get();
+                               [aRunLoop](const std::pair<StrongId<NSRunLoop>, StrongId<NSRunLoopMode>>& pair) {
+                                   return aRunLoop == pair.first;
                                });
         if (it != _scheduledRunLoops.end()) {
             _scheduledRunLoops.erase(it);
