@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -28,12 +28,128 @@ NSString* const NSFileHandleNotificationFileHandleItem = @"NSFileHandleNotificat
 NSString* const NSFileHandleNotificationDataItem = @"NSFileHandleNotificationDataItem";
 NSString* const NSFileHandleOperationException = @"NSFileHandleOperationException";
 NSString* const NSFileHandleNotificationMonitorModes = @"NSFileHandleNotificationMonitorModes";
+NSString* const NSFileHandleConnectionAcceptedNotification = @"NSFileHandleConnectionAcceptedNotification";
+NSString* const NSFileHandleDataAvailableNotification = @"NSFileHandleDataAvailableNotification";
+NSString* const NSFileHandleReadCompletionNotification = @"NSFileHandleReadCompletionNotification";
+NSString* const NSFileHandleReadToEndOfFileCompletionNotification = @"NSFileHandleReadToEndOfFileCompletionNotification";
 
 typedef NS_ENUM(NSUInteger, _NSFileOpenMode) { _NSFileOpenModeRead, _NSFileOpenModeWrite, _NSFileOpenModeUpdate };
 
 @implementation NSFileHandle {
     BOOL _closeOnDealloc;
     int _fileDescriptor;
+}
+
+/**
+ @Status Caveat
+ @Notes NSFileHandle only supports file URLs.
+ */
++ (instancetype)fileHandleForReadingFromURL:(NSURL*)url error:(NSError* _Nullable*)error {
+    return [NSFileHandle _fileHandleForURL:url error:error openType:_NSFileOpenModeRead];
+}
+
+/**
+ @Status Interoperable
+*/
++ (instancetype)fileHandleForReadingAtPath:(NSString*)file {
+    return [[[self alloc] _initWithFileAtPath:file openType:_NSFileOpenModeRead] autorelease];
+}
+
+/**
+ @Status Caveat
+ @Notes NSFileHandle only supports file URLs.
+ */
++ (instancetype)fileHandleForWritingToURL:(NSURL*)url error:(NSError* _Nullable*)error {
+    return [NSFileHandle _fileHandleForURL:url error:error openType:_NSFileOpenModeWrite];
+}
+
+/**
+ @Status Interoperable
+*/
++ (instancetype)fileHandleForWritingAtPath:(NSString*)file {
+    return [[[self alloc] _initWithFileAtPath:file openType:_NSFileOpenModeWrite] autorelease];
+}
+
+/**
+ @Status Caveat
+ @Notes NSFileHandle only supports file URLs.
+ */
++ (instancetype)fileHandleForUpdatingURL:(NSURL*)url error:(NSError* _Nullable*)error {
+    return [NSFileHandle _fileHandleForURL:url error:error openType:_NSFileOpenModeUpdate];
+}
+
++ (instancetype)_fileHandleForURL:(NSURL*)url error:(NSError* _Nullable*)error openType:(_NSFileOpenMode)type {
+    if (url == nil) {
+        return nil;
+    }
+
+    if (![url isFileURL]) {
+        UNIMPLEMENTED_WITH_MSG("NSFileHandle only supports file URLs.");
+        return nil;
+    }
+
+    NSFileHandle* ret = nil;
+    switch (type) {
+        case _NSFileOpenModeRead:
+            ret = [NSFileHandle fileHandleForReadingAtPath:[url path]];
+            break;
+        case _NSFileOpenModeWrite:
+            ret = [NSFileHandle fileHandleForWritingAtPath:[url path]];
+            break;
+        case _NSFileOpenModeUpdate:
+            ret = [NSFileHandle fileHandleForUpdatingAtPath:[url path]];
+            break;
+        default:
+            break;
+    }
+
+    if (ret == nil) {
+        if (error) {
+            *error = [NSError errorWithDomain:NSFileHandleOperationException code:errno userInfo:nil];
+        }
+        return nil;
+    }
+
+    return ret;
+}
+
+/**
+ @Status Interoperable
+*/
++ (instancetype)fileHandleForUpdatingAtPath:(NSString*)file {
+    return [[[self alloc] _initWithFileAtPath:file openType:_NSFileOpenModeUpdate] autorelease];
+}
+
+/**
+ @Status Caveat
+ @Notes UWPs do not have Standard I/O, so this API will return a null device.
+*/
++ (NSFileHandle*)fileHandleWithStandardError {
+    return [self fileHandleWithNullDevice];
+}
+
+/**
+ @Status Caveat
+ @Notes UWPs do not have Standard I/O, so this API will return a null device.
+*/
++ (NSFileHandle*)fileHandleWithStandardInput {
+    return [self fileHandleWithNullDevice];
+}
+
+/**
+ @Status Caveat
+ @Notes UWPs do not have Standard I/O, so this API will return a null device.
+*/
++ (NSFileHandle*)fileHandleWithStandardOutput {
+    return [self fileHandleWithNullDevice];
+}
+
+/**
+ @Status Interoperable
+*/
++ (NSFileHandle*)fileHandleWithNullDevice {
+    static StrongId<NSFileHandle> nullDeviceHandle{ woc::TakeOwnership, [_NSFileHandleNullDevice new] };
+    return nullDeviceHandle;
 }
 
 /**
@@ -77,6 +193,16 @@ typedef NS_ENUM(NSUInteger, _NSFileOpenMode) { _NSFileOpenModeRead, _NSFileOpenM
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
+- (void)dealloc {
+    if (_closeOnDealloc) {
+        [self closeFile];
+    }
+    [super dealloc];
+}
+
 - (int)_openFile:(NSString*)file openType:(_NSFileOpenMode)type {
     switch (type) {
         case _NSFileOpenModeRead:
@@ -92,120 +218,6 @@ typedef NS_ENUM(NSUInteger, _NSFileOpenMode) { _NSFileOpenModeRead, _NSFileOpenM
             break;
     }
     return -1;
-}
-
-/**
- @Status Caveat
- @Notes NSFileHandle only supports file URLs.
- */
-+ (instancetype)fileHandleForReadingFromURL:(NSURL*)url error:(NSError* _Nullable*)error {
-    return [NSFileHandle _fileHandleForURl:url error:error openType:_NSFileOpenModeRead];
-}
-
-/**
- @Status Interoperable
-*/
-+ (instancetype)fileHandleForReadingAtPath:(NSString*)file {
-    return [[[self alloc] _initWithFileAtPath:file openType:_NSFileOpenModeRead] autorelease];
-}
-
-/**
- @Status Caveat
- @Notes NSFileHandle only supports file URLs.
- */
-+ (instancetype)fileHandleForWritingToURL:(NSURL*)url error:(NSError* _Nullable*)error {
-    return [NSFileHandle _fileHandleForURl:url error:error openType:_NSFileOpenModeWrite];
-}
-
-/**
- @Status Interoperable
-*/
-+ (instancetype)fileHandleForWritingAtPath:(NSString*)file {
-    return [[[self alloc] _initWithFileAtPath:file openType:_NSFileOpenModeWrite] autorelease];
-}
-
-/**
- @Status Caveat
- @Notes NSFileHandle only supports file URLs.
- */
-+ (instancetype)fileHandleForUpdatingURL:(NSURL*)url error:(NSError* _Nullable*)error {
-    return [NSFileHandle _fileHandleForURl:url error:error openType:_NSFileOpenModeUpdate];
-}
-
-+ (instancetype)_fileHandleForURl:(NSURL*)url error:(NSError* _Nullable*)error openType:(_NSFileOpenMode)type {
-    if (url == nil) {
-        return nil;
-    }
-
-    if (![url isFileURL]) {
-        UNIMPLEMENTED_WITH_MSG("NSFileHandle only supports file URLs.");
-        return nil;
-    }
-
-    NSFileHandle* ret = nil;
-    switch (type) {
-        case _NSFileOpenModeRead:
-            ret = [NSFileHandle fileHandleForReadingAtPath:[url path]];
-            break;
-        case _NSFileOpenModeWrite:
-            ret = [NSFileHandle fileHandleForWritingAtPath:[url path]];
-            break;
-        case _NSFileOpenModeUpdate:
-            ret = [NSFileHandle fileHandleForUpdatingAtPath:[url path]];
-            break;
-        default:
-            break;
-    }
-
-    if (ret == nil) {
-        if (error) {
-            *error = [NSError errorWithDomain:NSFileHandleOperationException code:errno userInfo:nil];
-        }
-        return nil;
-    }
-
-    return ret;
-}
-
-/**
- @Status Interoperable
-*/
-+ (instancetype)fileHandleForUpdatingAtPath:(NSString*)file {
-    return [[[self alloc] _initWithFileAtPath:file openType:_NSFileOpenModeUpdate] autorelease];
-}
-
-/**
- @Status Stub
- @Notes
-*/
-+ (NSFileHandle*)fileHandleWithStandardError {
-    UNIMPLEMENTED();
-    return StubReturn();
-}
-
-/**
- @Status Stub
- @Notes
-*/
-+ (NSFileHandle*)fileHandleWithStandardInput {
-    UNIMPLEMENTED();
-    return StubReturn();
-}
-
-/**
- @Status Stub
- @Notes
-*/
-+ (NSFileHandle*)fileHandleWithStandardOutput {
-    UNIMPLEMENTED();
-    return StubReturn();
-}
-
-/**
- @Status Interoperable
-*/
-+ (NSFileHandle*)fileHandleWithNullDevice {
-    return [[_NSFileHandleNullDevice new] autorelease];
 }
 
 /**
@@ -257,6 +269,7 @@ typedef NS_ENUM(NSUInteger, _NSFileOpenMode) { _NSFileOpenModeRead, _NSFileOpenM
 
 /**
  @Status Interoperable
+ @Notes Since NSFileHandle does not support communication channels, this will always read until EOF.
 */
 - (NSData*)availableData {
     return [self readDataToEndOfFile];
@@ -356,10 +369,96 @@ typedef NS_ENUM(NSUInteger, _NSFileOpenMode) { _NSFileOpenModeRead, _NSFileOpenM
 /**
  @Status Interoperable
 */
-- (void)dealloc {
-    if (_closeOnDealloc) {
-        [self closeFile];
-    }
-    [super dealloc];
+- (id)initWithCoder:(NSCoder*)coder {
+    [self release];
+    [NSException raise:NSInvalidArgumentException format:@"%hs: file handles cannot be unarchived", __PRETTY_FUNCTION__];
+    return nil;
+}
+
+/**
+ @Status Interoperable
+*/
+- (void)encodeWithCoder:(NSCoder*)coder {
+    [NSException raise:NSInvalidArgumentException format:@"%hs: file handles cannot be archived", __PRETTY_FUNCTION__];
+}
+
+/**
+ @Status NotInPlan
+ @Notes The background APIs are intended for use with sockets but WinSock does not provide
+        a unified File Descriptor and Socket interface. As such, NSFileHandle cannot, as
+        specified, work with sockets.
+*/
+- (void)acceptConnectionInBackgroundAndNotify {
+    [self acceptConnectionInBackgroundAndNotifyForModes:@[ NSDefaultRunLoopMode ]];
+}
+
+/**
+ @Status NotInPlan
+ @Notes The background APIs are intended for use with sockets but WinSock does not provide
+        a unified File Descriptor and Socket interface. As such, NSFileHandle cannot, as
+        specified, work with sockets.
+*/
+- (void)acceptConnectionInBackgroundAndNotifyForModes:(NSArray*)modes {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status NotInPlan
+ @Notes The background APIs are intended for use with sockets but WinSock does not provide
+        a unified File Descriptor and Socket interface. As such, NSFileHandle cannot, as
+        specified, work with sockets.
+*/
+- (void)readInBackgroundAndNotify {
+    [self readInBackgroundAndNotifyForModes:@[ NSDefaultRunLoopMode ]];
+}
+
+/**
+ @Status NotInPlan
+ @Notes The background APIs are intended for use with sockets but WinSock does not provide
+        a unified File Descriptor and Socket interface. As such, NSFileHandle cannot, as
+        specified, work with sockets.
+*/
+- (void)readInBackgroundAndNotifyForModes:(NSArray*)modes {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status NotInPlan
+ @Notes The background APIs are intended for use with sockets but WinSock does not provide
+        a unified File Descriptor and Socket interface. As such, NSFileHandle cannot, as
+        specified, work with sockets.
+*/
+- (void)readToEndOfFileInBackgroundAndNotify {
+    [self readToEndOfFileInBackgroundAndNotifyForModes:@[ NSDefaultRunLoopMode ]];
+}
+
+/**
+ @Status NotInPlan
+ @Notes The background APIs are intended for use with sockets but WinSock does not provide
+        a unified File Descriptor and Socket interface. As such, NSFileHandle cannot, as
+        specified, work with sockets.
+*/
+- (void)readToEndOfFileInBackgroundAndNotifyForModes:(NSArray*)modes {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status NotInPlan
+ @Notes The background APIs are intended for use with sockets but WinSock does not provide
+        a unified File Descriptor and Socket interface. As such, NSFileHandle cannot, as
+        specified, work with sockets.
+*/
+- (void)waitForDataInBackgroundAndNotify {
+    [self waitForDataInBackgroundAndNotifyForModes:@[ NSDefaultRunLoopMode ]];
+}
+
+/**
+ @Status NotInPlan
+ @Notes The background APIs are intended for use with sockets but WinSock does not provide
+        a unified File Descriptor and Socket interface. As such, NSFileHandle cannot, as
+        specified, work with sockets.
+*/
+- (void)waitForDataInBackgroundAndNotifyForModes:(NSArray*)modes {
+    UNIMPLEMENTED();
 }
 @end

@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -36,12 +36,6 @@ FOUNDATION_EXPORT NSString* const NSFileHandleReadToEndOfFileCompletionNotificat
 FOUNDATION_EXPORT_CLASS
 @interface NSFileHandle : NSObject
 
-@property (readonly) int fileDescriptor;
-@property (readonly, copy) NSData* availableData;
-@property (copy, nonnull) void (^readabilityHandler)(NSFileHandle*) STUB_PROPERTY;
-@property (copy, nonnull) void (^writeabilityHandler)(NSFileHandle*) STUB_PROPERTY;
-@property (readonly) unsigned long long offsetInFile;
-
 + (instancetype)fileHandleForReadingAtPath:(NSString*)path;
 + (instancetype)fileHandleForReadingFromURL:(NSURL*)url error:(NSError* _Nullable*)error;
 + (instancetype)fileHandleForWritingAtPath:(NSString*)path;
@@ -49,30 +43,38 @@ FOUNDATION_EXPORT_CLASS
 + (instancetype)fileHandleForUpdatingAtPath:(NSString*)path;
 + (instancetype)fileHandleForUpdatingURL:(NSURL*)url error:(NSError* _Nullable*)error;
 
-+ (NSFileHandle*)fileHandleWithStandardError STUB_METHOD;
-+ (NSFileHandle*)fileHandleWithStandardInput STUB_METHOD;
-+ (NSFileHandle*)fileHandleWithStandardOutput STUB_METHOD;
++ (NSFileHandle*)fileHandleWithStandardError;
++ (NSFileHandle*)fileHandleWithStandardInput;
++ (NSFileHandle*)fileHandleWithStandardOutput;
 + (NSFileHandle*)fileHandleWithNullDevice;
 
 - (instancetype)initWithFileDescriptor:(int)fileDescriptor;
 - (instancetype)initWithFileDescriptor:(int)fileDescriptor closeOnDealloc:(BOOL)flag;
 
-- (NSData*)readDataToEndOfFile;
-- (NSData*)readDataOfLength:(NSUInteger)length;
-- (void)writeData:(NSData*)data;
-
-- (void)acceptConnectionInBackgroundAndNotify STUB_METHOD;
-- (void)acceptConnectionInBackgroundAndNotifyForModes:(NSArray*)modes STUB_METHOD;
-- (void)readInBackgroundAndNotify STUB_METHOD;
-- (void)readInBackgroundAndNotifyForModes:(NSArray*)modes STUB_METHOD;
-- (void)readToEndOfFileInBackgroundAndNotify STUB_METHOD;
-- (void)readToEndOfFileInBackgroundAndNotifyForModes:(NSArray*)modes STUB_METHOD;
-- (void)waitForDataInBackgroundAndNotify STUB_METHOD;
-- (void)waitForDataInBackgroundAndNotifyForModes:(NSArray*)modes STUB_METHOD;
+@property (readonly) int fileDescriptor;
+@property (readonly, copy) NSData* availableData;
+@property (readonly) unsigned long long offsetInFile;
 
 - (unsigned long long)seekToEndOfFile;
 - (void)seekToFileOffset:(unsigned long long)offset;
+
+// Synchronous Operations
+- (NSData*)readDataToEndOfFile;
+- (NSData*)readDataOfLength:(NSUInteger)length;
+- (void)writeData:(NSData*)data;
 - (void)closeFile;
 - (void)synchronizeFile;
 - (void)truncateFileAtOffset:(unsigned long long)offset;
+
+// Asynchronous Operations
+@property (copy, nonnull) void (^readabilityHandler)(NSFileHandle*) NOTINPLAN_PROPERTY;
+@property (copy, nonnull) void (^writeabilityHandler)(NSFileHandle*) NOTINPLAN_PROPERTY;
+- (void)acceptConnectionInBackgroundAndNotify NOTINPLAN_METHOD;
+- (void)acceptConnectionInBackgroundAndNotifyForModes:(NSArray*)modes NOTINPLAN_METHOD;
+- (void)readInBackgroundAndNotify NOTINPLAN_METHOD;
+- (void)readInBackgroundAndNotifyForModes:(NSArray*)modes NOTINPLAN_METHOD;
+- (void)readToEndOfFileInBackgroundAndNotify NOTINPLAN_METHOD;
+- (void)readToEndOfFileInBackgroundAndNotifyForModes:(NSArray*)modes NOTINPLAN_METHOD;
+- (void)waitForDataInBackgroundAndNotify NOTINPLAN_METHOD;
+- (void)waitForDataInBackgroundAndNotifyForModes:(NSArray*)modes NOTINPLAN_METHOD;
 @end
