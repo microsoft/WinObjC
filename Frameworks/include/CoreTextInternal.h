@@ -45,12 +45,6 @@ inline void _SafeRelease(T** p) {
     }
 }
 
-@interface _CTFramesetter : NSObject {
-@public
-    StrongId<_CTTypesetter> _typesetter;
-}
-@end
-
 CFAttributedStringRef _CTTypesetterGetAttributedString(CTTypesetterRef typesetter);
 
 @interface _CTRun : NSObject {

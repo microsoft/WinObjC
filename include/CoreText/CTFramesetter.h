@@ -35,4 +35,4 @@ CORETEXT_EXPORT CTFrameRef CTFramesetterCreateFrame(CTFramesetterRef framesetter
 CORETEXT_EXPORT CTTypesetterRef CTFramesetterGetTypesetter(CTFramesetterRef framesetter);
 CORETEXT_EXPORT CGSize CTFramesetterSuggestFrameSizeWithConstraints(
     CTFramesetterRef framesetter, CFRange stringRange, CFDictionaryRef frameAttributes, CGSize constraints, CFRange* fitRange);
-CORETEXT_EXPORT CFTypeID CTFramesetterGetTypeID() STUB_METHOD;
+CORETEXT_EXPORT CFTypeID CTFramesetterGetTypeID();
