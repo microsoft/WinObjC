@@ -14,12 +14,16 @@
 //
 //******************************************************************************
 
-#import "UWP/WindowsApplicationModelContacts.h"
+#import <Foundation/NSDate.h>
+
+#include "COMIncludes.h"
+#import <winrt/Windows.ApplicationModel.Contacts.h>
+#include "COMIncludes_End.h"
 
 @interface NSDate (AddressBookAdditions)
 
 // Returns an NSDate* for the same day, month, and year
-// as the given WACContactDate*.
-+ (NSDate*)dateWithWACContactDate:(WACContactDate*)date;
+// as the given ContactDate.
++ (NSDate*)dateWithContactDate:(const winrt::Windows::ApplicationModel::Contacts::ContactDate&)date;
 
 @end

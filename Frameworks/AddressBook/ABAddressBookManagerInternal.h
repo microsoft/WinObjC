@@ -16,12 +16,16 @@
 
 #pragma once
 
-#import "UWP/WindowsApplicationModelContacts.h"
+#import <Foundation/Foundation.h>
 #import <AddressBook/ABRecord.h>
+
+#include "COMIncludes.h"
+#import <winrt/Windows.ApplicationModel.Contacts.h>
+#include "COMIncludes_End.h"
 
 @interface _ABAddressBookManager : NSObject
 
-@property WACContactStore* contactStore;
+@property winrt::Windows::ApplicationModel::Contacts::ContactStore contactStore;
 - (NSArray*)getListOfContacts;
 - (NSArray*)getListOfModifiableContacts;
 - (bool)addContact:(ABRecordRef)record error:(CFErrorRef*)error;
@@ -35,7 +39,7 @@
 @interface __ABContactOperation : NSObject
 
 @property BOOL shouldDelete;
-@property WACContact* contact;
-- (id)initWithContact:(WACContact*)contact shouldDelete:(BOOL)shouldDelete;
+@property winrt::Windows::ApplicationModel::Contacts::Contact contact;
+- (id)initWithContact:(const winrt::Windows::ApplicationModel::Contacts::Contact&)contact shouldDelete:(BOOL)shouldDelete;
 
 @end

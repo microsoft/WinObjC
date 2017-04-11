@@ -14,19 +14,38 @@
 //
 //******************************************************************************
 
+#import <unordered_set>
+#import <unordered_map>
+#import <utility>
 #import "ABAddressBookManagerInternal.h"
 #import "ABContactInternal.h"
-#import "UWP/WindowsApplicationModelContacts.h"
+#import "CppWinRTHelpers.h"
 
-@implementation __ABContactOperation
+using namespace winrt::Windows::ApplicationModel::Contacts;
+namespace WF = winrt::Windows::Foundation;
+namespace WFC = winrt::Windows::Foundation::Collections;
 
-- (id)initWithContact:(WACContact*)contact shouldDelete:(BOOL)shouldDelete {
+@implementation __ABContactOperation {
+    TrivialDefaultConstructor<Contact> _contact;
+}
+
+- (id)initWithContact:(const Contact&)contact shouldDelete:(BOOL)shouldDelete {
     if (self = [super init]) {
         self.shouldDelete = shouldDelete;
         self.contact = contact;
     }
 
     return self;
+}
+
+@dynamic contact;
+
+- (Contact)contact {
+    return _contact;
+}
+
+- (void)setContact:(Contact)contact {
+    _contact = std::move(contact);
 }
 
 @end
@@ -43,11 +62,11 @@ static void _setError(CFErrorRef* error, NSString* message) {
     }
 }
 
-static void _copyWrappedContacts(NSArray* /* WACContact* */ source,
+static void _copyWrappedContacts(const WFC::IVectorView<Contact>& source,
                                  NSMutableArray* /* _ABContact* */ destination,
                                  ABRecordContactType type,
                                  ABRecordRef manager) {
-    for (WACContact* contact in source) {
+    for (const Contact& contact : source) {
         _ABContact* wrappedContact = [[_ABContact alloc] initWithContact:contact andType:type];
         wrappedContact.manager = manager;
         [destination addObject:wrappedContact];
@@ -55,33 +74,32 @@ static void _copyWrappedContacts(NSArray* /* WACContact* */ source,
 }
 
 @implementation _ABAddressBookManager {
-    NSMutableSet<WACContact*>* _toAdd;
-    NSMutableDictionary<NSString*, __ABContactOperation*>* _operations;
-    WACContactStore* _writableStore;
-    WACContactList* _contactList;
+    std::unordered_set<Contact> _toAdd;
+    std::unordered_map<winrt::hstring, __ABContactOperation*> _operations;
+    TrivialDefaultConstructor<ContactStore> _writableStore;
+    TrivialDefaultConstructor<ContactList> _contactList;
+    TrivialDefaultConstructor<ContactStore> _contactStore;
 }
 
 - (id)init {
     self = [super init];
     if (self) {
-        _toAdd = [[NSMutableSet alloc] init];
-        _operations = [[NSMutableDictionary alloc] init];
-
-        __block WACContactStore* result = nil;
-        __block BOOL failed = YES;
+        ContactStore result = nullptr;
+        BOOL failed = YES;
         dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
 
         // Get the contact store for contacts that are read-only.
-        [WACContactManager requestStoreAsyncWithAccessType:WACContactStoreAccessTypeAllContactsReadOnly
-            success:^(WACContactStore* success) {
-                result = success;
+        WF::IAsyncOperation<ContactStore> async =
+            ContactManager::RequestStoreAsync(ContactStoreAccessType::AllContactsReadOnly);
+
+        async.Completed(objcwinrt::callback([&result, &failed, semaphore] (const WF::IAsyncOperation<ContactStore>& success, WF::AsyncStatus status) {
+            if (status == WF::AsyncStatus::Completed) {
+                result = success.GetResults();
                 failed = NO;
-                dispatch_semaphore_signal(semaphore);
             }
-            failure:^(NSError* failure) {
-                failed = YES;
-                dispatch_semaphore_signal(semaphore);
-            }];
+
+            dispatch_semaphore_signal(semaphore);
+        }));
 
         // Wait until async method completes.
         dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
@@ -94,16 +112,18 @@ static void _copyWrappedContacts(NSArray* /* WACContact* */ source,
         }
 
         // Get the contact store for the user's app (which has read-write access).
-        [WACContactManager requestStoreAsyncWithAccessType:WACContactStoreAccessTypeAppContactsReadWrite
-            success:^(WACContactStore* success) {
-                result = success;
+        async = ContactManager::RequestStoreAsync(ContactStoreAccessType::AppContactsReadWrite);
+
+        async.Completed(objcwinrt::callback([&result, &failed, semaphore] (const WF::IAsyncOperation<ContactStore>& success, WF::AsyncStatus status) {
+            if (status == WF::AsyncStatus::Completed) {
+                result = success.GetResults();
                 failed = NO;
-                dispatch_semaphore_signal(semaphore);
-            }
-            failure:^(NSError* failure) {
+            } else {
                 failed = YES;
-                dispatch_semaphore_signal(semaphore);
-            }];
+            }
+
+            dispatch_semaphore_signal(semaphore);
+        }));
 
         // Wait until async method completes.
         dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
@@ -115,25 +135,32 @@ static void _copyWrappedContacts(NSArray* /* WACContact* */ source,
             _writableStore = result;
         }
 
-        __block WACContactList* list = nil;
-        __block BOOL shouldCreateList = NO;
+        ContactList list = nullptr;
+        BOOL shouldCreateList = NO;
 
         // Get the contact list associated with the user's app for adding/removing contacts.
         // If no such list exists yet, create a new one.
-        [_writableStore findContactListsAsyncWithSuccess:^(NSArray* success) {
-            if ([success count] == 0) {
-                shouldCreateList = YES;
-            } else {
-                list = success[0];
-                shouldCreateList = NO;
-            }
-            failed = NO;
-            dispatch_semaphore_signal(semaphore);
-        }
-            failure:^(NSError* failure) {
-                failed = YES;
+        WF::IAsyncOperation<WFC::IVectorView<ContactList>> contactsAsync = _writableStore.FindContactListsAsync();
+
+        contactsAsync.Completed(objcwinrt::callback(
+            [&list, &failed, &shouldCreateList, semaphore] (const WF::IAsyncOperation<WFC::IVectorView<ContactList>>& success, WF::AsyncStatus status) {
+                if (status == WF::AsyncStatus::Completed) {
+                    WFC::IVectorView<ContactList> contactList = success.GetResults();
+
+                    if (contactList.Size() == 0) {
+                        shouldCreateList = YES;
+                    } else {
+                        list = contactList.GetAt(0);
+                        shouldCreateList = NO;
+                    }
+
+                    failed = NO;
+                } else {
+                    failed = YES;
+                }
+
                 dispatch_semaphore_signal(semaphore);
-            }];
+            }));
 
         // Wait until async method completes.
         dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
@@ -144,17 +171,18 @@ static void _copyWrappedContacts(NSArray* /* WACContact* */ source,
         }
 
         if (shouldCreateList) {
-            [_writableStore createContactListAsync:@"ABAddressBook"
-                success:^(WACContactList* success) {
-                    list = success;
+            WF::IAsyncOperation<ContactList> listAsync = _writableStore.CreateContactListAsync(L"ABAddressBook");
+
+            listAsync.Completed(objcwinrt::callback([&list, &failed, semaphore] (const WF::IAsyncOperation<ContactList>& success, WF::AsyncStatus status) {
+                if (status == WF::AsyncStatus::Completed) {
+                    list = success.GetResults();
                     failed = NO;
-                    dispatch_semaphore_signal(semaphore);
+                } else {
+                    failed = YES;
                 }
 
-                failure:^(NSError* failure) {
-                    failed = YES;
-                    dispatch_semaphore_signal(semaphore);
-                }];
+                dispatch_semaphore_signal(semaphore);
+            }));
 
             // Wait until async method completes.
             dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
@@ -172,22 +200,36 @@ static void _copyWrappedContacts(NSArray* /* WACContact* */ source,
     return self;
 }
 
+@dynamic contactStore;
+
+- (ContactStore)contactStore {
+    return _contactStore;
+}
+
+- (void)setContactStore:(ContactStore)store {
+    _contactStore = std::move(store);
+}
+
 - (NSArray*)getListOfContacts {
-    __block NSMutableArray* result = nil;
+    NSMutableArray* result = nil;
     dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
 
-    [self.contactStore findContactsAsyncWithSuccess:^(NSArray* success) {
-        result = [NSMutableArray arrayWithCapacity:[success count]];
+    WF::IAsyncOperation<WFC::IVectorView<Contact>> async = self.contactStore.FindContactsAsync();
 
-        // Copy over the contacts wrapped in _ABContacts.
-        _copyWrappedContacts(success, result, kAddressBookReadOnlyContact, (__bridge ABRecordRef)self);
+    async.Completed(objcwinrt::callback([&result, semaphore, self] (const WF::IAsyncOperation<WFC::IVectorView<Contact>>& success, WF::AsyncStatus status) {
+        if (status == WF::AsyncStatus::Completed) {
+            WFC::IVectorView<Contact> contacts = success.GetResults();
+
+            result = [NSMutableArray arrayWithCapacity:contacts.Size()];
+
+            // Copy over the contacts wrapped in _ABContacts.
+            _copyWrappedContacts(contacts, result, kAddressBookReadOnlyContact, (__bridge ABRecordRef)self);
+        } else {
+            // In the failure case, result will be nil
+        }
 
         dispatch_semaphore_signal(semaphore);
-    }
-        failure:^(NSError* failure) {
-            // In the failure case, result will be nil.
-            dispatch_semaphore_signal(semaphore);
-        }];
+    }));
 
     // Wait until async method completes.
     dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
@@ -198,26 +240,30 @@ static void _copyWrappedContacts(NSArray* /* WACContact* */ source,
 
 - (NSArray*)getListOfModifiableContacts {
     NSMutableArray* result = [[NSMutableArray alloc] init];
-    WACContactReader* reader = [_contactList getContactReader];
+    ContactReader reader = _contactList.GetContactReader();
     dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
 
-    __block BOOL shouldContinue = YES;
+    BOOL shouldContinue = YES;
     while (shouldContinue) {
         // Keep reading batches until the batch is empty.
-        [reader readBatchAsyncWithSuccess:^(WACContactBatch* success) {
-            if ([success.contacts count] == 0) {
-                shouldContinue = NO;
-            } else {
-                shouldContinue = YES;
-                _copyWrappedContacts(success.contacts, result, kAddressBookReadWriteContact, (__bridge ABRecordRef)self);
-            }
-            dispatch_semaphore_signal(semaphore);
-        }
+        WF::IAsyncOperation<ContactBatch> async = reader.ReadBatchAsync();
 
-            failure:^(NSError* error) {
+        async.Completed(objcwinrt::callback([&shouldContinue, result, semaphore, self] (const WF::IAsyncOperation<ContactBatch>& success, WF::AsyncStatus status) {
+            if (status == WF::AsyncStatus::Completed) {
+                ContactBatch batch = success.GetResults();
+
+                if (batch.Contacts().Size() == 0) {
+                    shouldContinue = NO;
+                } else {
+                    shouldContinue = YES;
+                    _copyWrappedContacts(batch.Contacts(), result, kAddressBookReadWriteContact, (__bridge ABRecordRef)self);
+                }
+            } else {
                 shouldContinue = NO;
-                dispatch_semaphore_signal(semaphore);
-            }];
+            }
+
+            dispatch_semaphore_signal(semaphore);
+        }));
 
         dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
     }
@@ -231,17 +277,16 @@ static void _copyWrappedContacts(NSArray* /* WACContact* */ source,
 
     switch (contact.type) {
         case kAddressBookNewContact: {
-            // New contacts can't be added twice.
-            if ([_toAdd containsObject:contact.contact]) {
+            std::pair<std::unordered_set<Contact>::iterator, bool> result = _toAdd.insert(contact.contact);
+            if (!result.second) {
+                // New contacts can't be added twice.
                 _setError(error, @"This contact has already been added.\n");
-                return false;
             }
 
-            [_toAdd addObject:contact.contact];
-            return true;
+            return result.second;
         }
         case kAddressBookReadWriteContact: {
-            __ABContactOperation* operation = _operations[contact.contact.id];
+            __ABContactOperation* operation = _operations[contact.contact.Id()];
 
             // A read-write contact can only be added if it was previously deleted,
             // so ensure that the current operation does exist and that it is marked
@@ -266,25 +311,27 @@ static void _copyWrappedContacts(NSArray* /* WACContact* */ source,
 
     switch (contact.type) {
         case kAddressBookNewContact: {
+            std::unordered_set<Contact>::iterator it = _toAdd.find(contact.contact);
+
             // New contacts can only be removed if they were
             // previously marked to be added.
-            if ([_toAdd containsObject:contact.contact]) {
-                [_toAdd removeObject:contact.contact];
-                return true;
+            if (it == _toAdd.end()) {
+                _setError(error, @"Only existing contacts can be removed from the AddressBook.\n");
+                return false;
             }
 
-            _setError(error, @"Only existing contacts can be removed from the AddressBook.\n");
-            return false;
+            _toAdd.erase(it);
+            return true;
         }
         case kAddressBookReadWriteContact: {
-            __ABContactOperation* operation = _operations[contact.contact.id];
+            __ABContactOperation* operation = _operations[contact.contact.Id()];
 
             // A read/write contact can be deleted in 2 cases: if no operation was associated,
             // or if the associated operation is that it has been modified. In the case that
             // it is already marked to delete, deleting twice doesn't make sense.
             if (operation == nil) {
                 operation = [[__ABContactOperation alloc] initWithContact:contact.contact shouldDelete:YES];
-                _operations[contact.contact.id] = operation;
+                _operations[contact.contact.Id()] = operation;
                 return true;
             } else if (operation.shouldDelete) {
                 _setError(error, @"This contact has already been deleted.\n");
@@ -305,7 +352,7 @@ static void _copyWrappedContacts(NSArray* /* WACContact* */ source,
 
 - (void)modifyContact:(ABRecordRef)record {
     _ABContact* contact = (__bridge _ABContact*)record;
-    __ABContactOperation* operation = _operations[contact.contact.id];
+    __ABContactOperation* operation = _operations[contact.contact.Id()];
 
     // If there was no operation previously associated with this record, then
     // set it to be modified. The other two cases are that the contact was
@@ -314,44 +361,39 @@ static void _copyWrappedContacts(NSArray* /* WACContact* */ source,
     // it is to be deleted, there is no need to worry about any modifications.
     if (operation == nil) {
         operation = [[__ABContactOperation alloc] initWithContact:contact.contact shouldDelete:NO];
-        _operations[contact.contact.id] = operation;
+        _operations[contact.contact.Id()] = operation;
     }
 }
 
 - (bool)hasUnsavedChanges {
-    return _toAdd.count + _operations.count > 0;
+    return _toAdd.size() + _operations.size() > 0;
 }
 
 - (void)revert {
-    [_toAdd removeAllObjects];
-    [_operations removeAllObjects];
+    _toAdd.clear();
+    _operations.clear();
 }
 
 - (bool)save {
-    // TODO #942: When the projections for WACContactList's saveContactAsync and deleteContactAsync
-    // get success/fail blocks, use a dispatch_group_t to spawn off all async calls at the same
-    // time rather than the blocking WFIASyncAction getResults, and return false in the case
-    // that the fail block is called (rather than just returning true always).
+    // TODO #942: Use a dispatch_group_t to spawn off all async calls at the same
+    // time rather than the blocking IASyncAction getResults, and return false in the case
+    // that the async action failed (rather than just returning true always).
 
     // Go through all contacts that were newly created and need to be added,
     // and save them to this app's contact list.
-    for (WACContact* contact in _toAdd) {
-        RTObject<WFIAsyncAction>* asyncAction = [_contactList saveContactAsync:contact];
-        [asyncAction getResults];
+    for (const Contact& contact : _toAdd) {
+        _contactList.SaveContactAsync(contact).GetResults();
     }
 
     // Go through all contacts that were pre-existing and need to either be
     // saved due to modification, or need to be deleted due to be removed.
-    for (NSString* key in _operations) {
-        __ABContactOperation* operation = _operations[key];
-        BOOL shouldDelete = operation.shouldDelete;
-        WACContact* contact = operation.contact;
+    for (const std::pair<const winrt::hstring, __ABContactOperation*>& operation : _operations) {
+        BOOL shouldDelete = operation.second.shouldDelete;
+        Contact contact = operation.second.contact;
         if (shouldDelete) {
-            RTObject<WFIAsyncAction>* asyncAction = [_contactList deleteContactAsync:contact];
-            [asyncAction getResults];
+            _contactList.DeleteContactAsync(contact).GetResults();
         } else {
-            RTObject<WFIAsyncAction>* asyncAction = [_contactList saveContactAsync:contact];
-            [asyncAction getResults];
+            _contactList.SaveContactAsync(contact).GetResults();
         }
     }
 

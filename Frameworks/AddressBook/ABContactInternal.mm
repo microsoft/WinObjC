@@ -16,11 +16,12 @@
 
 #import "ABContactInternal.h"
 #import "ABAddressBookManagerInternal.h"
-#import "UWP/WindowsApplicationModelContacts.h"
+
+using namespace winrt::Windows::ApplicationModel::Contacts;
 
 @implementation _ABContact
 
-- (id)initWithContact:(WACContact*)contact andType:(ABRecordContactType)type {
+- (id)initWithContact:(const Contact&)contact andType:(ABRecordContactType)type {
     if (self = [super init]) {
         self->_contact = contact;
         self->_manager = nil;

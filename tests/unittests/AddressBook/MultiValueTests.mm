@@ -19,86 +19,83 @@
 #import <CoreFoundation/CoreFoundation.h>
 #import <Foundation/Foundation.h>
 
-#import "UWP/WindowsApplicationModelContacts.h"
 #import <AddressBook/ABAddressBook.h>
 #import <AddressBook/ABRecord.h>
 #import <AddressBook/ABPerson.h>
 #import <AddressBook/ABMultiValue.h>
 #import "NSDate+AddressBookAdditions.h"
 #import "ABContactInternal.h"
+#import "CppWinRTHelpers.h"
+
+using namespace winrt::Windows::ApplicationModel::Contacts;
 
 class AddressBookMultiValueQueryTest
     : public ::testing::TestWithParam<::testing::tuple<ABPropertyID, CFStringRef, CFIndex, NSString*, CFIndex>> {
 protected:
     virtual void SetUp() {
-        WACContact* contact = [WACContact make];
+        Contact contact;
 
-        addPhone(contact, WACContactPhoneKindHome, @"0000000000");
-        addPhone(contact, WACContactPhoneKindMobile, @"1111111111");
-        addPhone(contact, WACContactPhoneKindWork, @"2222222222");
-        addPhone(contact, WACContactPhoneKindPager, @"3333333333");
-        addPhone(contact, WACContactPhoneKindBusinessFax, @"4444444444");
-        addPhone(contact, WACContactPhoneKindHomeFax, @"5555555555");
-        addPhone(contact, WACContactPhoneKindCompany, @"6666666666");
-        addPhone(contact, WACContactPhoneKindAssistant, @"7777777777");
-        addPhone(contact, WACContactPhoneKindRadio, @"8888888888");
-        addPhone(contact, WACContactPhoneKindOther, @"9999999999");
+        addPhone(contact, ContactPhoneKind::Home, L"0000000000");
+        addPhone(contact, ContactPhoneKind::Mobile, L"1111111111");
+        addPhone(contact, ContactPhoneKind::Work, L"2222222222");
+        addPhone(contact, ContactPhoneKind::Pager, L"3333333333");
+        addPhone(contact, ContactPhoneKind::BusinessFax, L"4444444444");
+        addPhone(contact, ContactPhoneKind::HomeFax, L"5555555555");
+        addPhone(contact, ContactPhoneKind::Company, L"6666666666");
+        addPhone(contact, ContactPhoneKind::Assistant, L"7777777777");
+        addPhone(contact, ContactPhoneKind::Radio, L"8888888888");
+        addPhone(contact, ContactPhoneKind::Other, L"9999999999");
 
-        addEmail(contact, WACContactEmailKindPersonal, @"a@ms.com");
-        addEmail(contact, WACContactEmailKindWork, @"b@ms.com");
-        addEmail(contact, WACContactEmailKindOther, @"c@ms.com");
+        addEmail(contact, ContactEmailKind::Personal, L"a@ms.com");
+        addEmail(contact, ContactEmailKind::Work, L"b@ms.com");
+        addEmail(contact, ContactEmailKind::Other, L"c@ms.com");
 
-        addURL(contact, @"bing.com");
-        addURL(contact, @"microsoft.com");
+        addURL(contact, L"bing.com");
+        addURL(contact, L"microsoft.com");
 
-        addSO(contact, WACContactRelationshipOther, @"Random Name");
-        addSO(contact, WACContactRelationshipSpouse, @"Wife's Name");
-        addSO(contact, WACContactRelationshipPartner, @"Buzz");
-        addSO(contact, WACContactRelationshipSibling, @"Link");
-        addSO(contact, WACContactRelationshipParent, @"Pops");
-        addSO(contact, WACContactRelationshipChild, @"Sun Ray");
+        addSO(contact, ContactRelationship::Other, L"Random Name");
+        addSO(contact, ContactRelationship::Spouse, L"Wife's Name");
+        addSO(contact, ContactRelationship::Partner, L"Buzz");
+        addSO(contact, ContactRelationship::Sibling, L"Link");
+        addSO(contact, ContactRelationship::Parent, L"Pops");
+        addSO(contact, ContactRelationship::Child, L"Sun Ray");
 
         _record = (__bridge_retained ABRecordRef)[[_ABContact alloc] initWithContact:contact andType:kAddressBookNewContact];
-        [contact release];
     }
 
     virtual void TearDown() {
         CFRelease(_record);
     }
 
-    void addPhone(WACContact* contact, WACContactPhoneKind kind, NSString* number) {
-        WACContactPhone* phone = [WACContactPhone make];
-        phone.number = number;
-        phone.kind = kind;
+    void addPhone(const Contact& contact, ContactPhoneKind kind, const wchar_t* number) {
+        ContactPhone phone;
+        phone.Number(number);
+        phone.Kind(kind);
 
-        [contact.phones addObject:phone];
-        [phone release];
+        contact.Phones().Append(phone);
     }
 
-    void addEmail(WACContact* contact, WACContactEmailKind kind, NSString* address) {
-        WACContactEmail* email = [WACContactEmail make];
-        email.address = address;
-        email.kind = kind;
+    void addEmail(const Contact& contact, ContactEmailKind kind, const wchar_t* address) {
+        ContactEmail email;
+        email.Address(address);
+        email.Kind(kind);
 
-        [contact.emails addObject:email];
-        [email release];
+        contact.Emails().Append(email);
     }
 
-    void addURL(WACContact* contact, NSString* value) {
-        WACContactWebsite* website = [WACContactWebsite make];
-        website.rawValue = value;
+    void addURL(const Contact& contact, const wchar_t* value) {
+        ContactWebsite website;
+        website.RawValue(value);
 
-        [contact.websites addObject:website];
-        [website release];
+        contact.Websites().Append(website);
     }
 
-    void addSO(WACContact* contact, WACContactRelationship kind, NSString* name) {
-        WACContactSignificantOther* person = [WACContactSignificantOther make];
-        person.name = name;
-        person.relationship = kind;
+    void addSO(const Contact& contact, ContactRelationship kind, const wchar_t* name) {
+        ContactSignificantOther person;
+        person.Name(name);
+        person.Relationship(kind);
 
-        [contact.significantOthers addObject:person];
-        [person release];
+        contact.SignificantOthers().Append(person);
     }
 
     ABRecordRef _record;
@@ -151,27 +148,25 @@ INSTANTIATE_TEST_CASE_P(AddressBook,
                                           ::testing::make_tuple(kABPersonRelatedNamesProperty, kABPersonChildLabel, 5, @"Sun Ray", 6)));
 
 TEST(AddressBook, QueryContactDates) {
-    WACContact* contact = [WACContact make];
+    Contact contact;
 
-    WACContactDate* anniversary = [WACContactDate make];
-    anniversary.year = @1975;
-    anniversary.month = @4;
-    anniversary.day = @5;
-    anniversary.kind = WACContactDateKindAnniversary;
+    ContactDate anniversary;
+    anniversary.Year(objcwinrt::optional(1975));
+    anniversary.Month(objcwinrt::optional(4u));
+    anniversary.Day(objcwinrt::optional(5u));
+    anniversary.Kind(ContactDateKind::Anniversary);
 
-    [contact.importantDates addObject:anniversary];
-    NSDate* realAnniversary = [NSDate dateWithWACContactDate:anniversary];
-    [anniversary release];
+    contact.ImportantDates().Append(anniversary);
+    NSDate* realAnniversary = [NSDate dateWithContactDate:anniversary];
 
-    WACContactDate* other = [WACContactDate make];
-    other.year = @1975;
-    other.month = @4;
-    other.day = @6;
-    other.kind = WACContactDateKindOther;
+    ContactDate other;
+    other.Year(objcwinrt::optional(1975));
+    other.Month(objcwinrt::optional(4u));
+    other.Day(objcwinrt::optional(6u));
+    other.Kind(ContactDateKind::Other);
 
-    [contact.importantDates addObject:other];
-    NSDate* realOther = [NSDate dateWithWACContactDate:other];
-    [other release];
+    contact.ImportantDates().Append(other);
+    NSDate* realOther = [NSDate dateWithContactDate:other];
 
     ABRecordRef record = (__bridge_retained ABRecordRef)[[_ABContact alloc] initWithContact:contact andType:kAddressBookNewContact];
     ABMultiValueRef multiValue = (ABMultiValueRef)ABRecordCopyValue(record, kABPersonDateProperty);
@@ -197,22 +192,20 @@ TEST(AddressBook, QueryContactDates) {
     CFRelease(dates);
     CFRelease(multiValue);
     CFRelease(record);
-    [contact release];
 }
 
 TEST(AddressBook, QueryContactAddress) {
-    WACContact* contact = [WACContact make];
+    Contact contact;
 
-    WACContactAddress* address = [WACContactAddress make];
-    address.kind = WACContactAddressKindHome;
-    address.streetAddress = @"1234 5th Street";
-    address.region = @"WA";
-    address.postalCode = @"12345";
-    address.locality = @"Redmond";
-    address.country = @"United States of America";
+    ContactAddress address;
+    address.Kind(ContactAddressKind::Home);
+    address.StreetAddress(L"1234 5th Street");
+    address.Region(L"WA");
+    address.PostalCode(L"12345");
+    address.Locality(L"Redmond");
+    address.Country(L"United States of America");
 
-    [contact.addresses addObject:address];
-    [address release];
+    contact.Addresses().Append(address);
 
     ABRecordRef record = (__bridge_retained ABRecordRef)[[_ABContact alloc] initWithContact:contact andType:kAddressBookNewContact];
     ABMultiValueRef multiValue = (ABMultiValueRef)ABRecordCopyValue(record, kABPersonAddressProperty);
@@ -230,5 +223,4 @@ TEST(AddressBook, QueryContactAddress) {
     CFRelease(dict);
     CFRelease(multiValue);
     CFRelease(record);
-    [contact release];
 }

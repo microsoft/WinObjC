@@ -19,29 +19,29 @@
 #import <CoreFoundation/CoreFoundation.h>
 #import <Foundation/Foundation.h>
 
-#import <UWP/WindowsApplicationModelContacts.h>
 #import <AddressBook/ABAddressBook.h>
 #import <AddressBook/ABRecord.h>
 #import <AddressBook/ABPerson.h>
 #import <AddressBook/ABMultiValue.h>
 #import <AddressBook/ABMutableMultiValue.h>
 #import "ABContactInternal.h"
+#import "CppWinRTHelpers.h"
 
-void addPhone(WACContact* contact, WACContactPhoneKind kind, NSString* number) {
-    WACContactPhone* phone = [WACContactPhone make];
-    phone.number = number;
-    phone.kind = kind;
+using namespace winrt::Windows::ApplicationModel::Contacts;
 
-    [contact.phones addObject:phone];
-    [phone release];
+void addPhone(const Contact& contact, ContactPhoneKind kind, const wchar_t* number) {
+    ContactPhone phone;
+    phone.Number(number);
+    phone.Kind(kind);
+
+    contact.Phones().Append(phone);
 }
 
 ABMultiValueRef createMultiValue() {
-    WACContact* contact = [WACContact make];
-    addPhone(contact, WACContactPhoneKindHome, @"0000000000");
-    addPhone(contact, WACContactPhoneKindMobile, @"1111111111");
+    Contact contact;
+    addPhone(contact, ContactPhoneKind::Home, L"0000000000");
+    addPhone(contact, ContactPhoneKind::Mobile, L"1111111111");
     ABRecordRef record = (__bridge_retained ABRecordRef)[[_ABContact alloc] initWithContact:contact andType:kAddressBookNewContact];
-    [contact release];
     ABMultiValueRef multiValue = (ABMultiValueRef)ABRecordCopyValue(record, kABPersonPhoneProperty);
     CFRelease(record);
     return multiValue;

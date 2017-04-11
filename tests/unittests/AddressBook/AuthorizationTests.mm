@@ -17,111 +17,87 @@
 #include <TestFramework.h>
 
 #include <COMIncludes.h>
-#include "MockClass.h"
-#include <windows.devices.enumeration.h>
-#include <windows.foundation.h>
+#import <winrt/Windows.Devices.Enumeration.h>
 #include <COMIncludes_End.h>
 
 #import <CoreFoundation/CoreFoundation.h>
 #import <Foundation/Foundation.h>
 
-#import "UWP/WindowsDevicesEnumeration.h"
 #import <AddressBook/ABAddressBook.h>
 
-using namespace ABI::Windows::Devices::Enumeration;
-using namespace ABI::Windows::Foundation;
-using namespace Microsoft::WRL;
+namespace WDE = winrt::Windows::Devices::Enumeration;
 
-// Status to be returned by mocked version of get_CurrentStatus.
-static WDEDeviceAccessStatus statusToMock = WDEDeviceAccessStatusUnspecified;
+// Status to be returned by mocked version of currentStatus.
+static WDE::DeviceAccessStatus statusToMock = WDE::DeviceAccessStatus::Unspecified;
+@class _ABAddressBookDevice;
 
-// Mocked version of WDEDeviceAccessInformation.
-MOCK_CLASS(MockDeviceAccessInformation,
-           public RuntimeClass<RuntimeClassFlags<WinRtClassicComMix>, IDeviceAccessInformation> {
-               InspectableClass(RuntimeClass_Windows_Devices_Enumeration_DeviceAccessInformation, BaseTrust);
-
-           public:
-               MOCK_STDCALL_METHOD_2(add_AccessChanged);
-               MOCK_STDCALL_METHOD_1(remove_AccessChanged);
-               MOCK_STDCALL_METHOD_1(get_CurrentStatus);
-           });
-
-@interface __ABAddressBook_Swizzle : NSObject
+@interface __ABAddressBookDevice_Swizzle : NSObject
 
 /**
- * Swizzles WDEDeviceAccessInformation's createFromDeviceClassId: to return a
- * mocked version of WDEDeviceAccessInformation, and returns the original
- * implementation of createFromDeviceClassId:.
+ * Swizzles _ABAddressBookDevice's currentStatus to return a movked status,
+ * and returns the original implementation of currentStatus.
  */
 + (IMP)setupMock;
 
 /**
- * Swizzles the given implementation to WDEDeviceAccessInformation's
- * createFromDeviceClassId: (the passed in implementation should be the
- * value returend from setupMock).
+ * Swizzles the given implementation to _ABAddressBookDevice's currentStatus
+ * (the passed in implementation should be the value returend from setupMock).
  */
 + (void)tearDownMock:(IMP)implementation;
 
 /**
- * Returns a mocked version of WDEDeviceAccessInformation.
+ * Returns a mocked version of WDE::DeviceAccessStatus.
  */
-+ (WDEDeviceAccessInformation*)mockCreateFromDeviceClassId:(WFGUID*)deviceClassId;
++ (WDE::DeviceAccessStatus)mockCurrentStatus;
 
 @end
 
-@implementation __ABAddressBook_Swizzle
+@implementation __ABAddressBookDevice_Swizzle
 
 + (IMP)setupMock {
-    SEL originalSelector = @selector(createFromDeviceClassId:);
-    SEL swizzledSelector = @selector(mockCreateFromDeviceClassId:);
-    Method swizzledMethod = class_getClassMethod([__ABAddressBook_Swizzle class], swizzledSelector);
-    return class_replaceMethod(objc_getMetaClass("WDEDeviceAccessInformation"),
+    SEL originalSelector = @selector(currentStatus);
+    SEL swizzledSelector = @selector(mockCurrentStatus);
+    Method swizzledMethod = class_getClassMethod([__ABAddressBookDevice_Swizzle class], swizzledSelector);
+    return class_replaceMethod([_ABAddressBookDevice class],
                                originalSelector,
                                method_getImplementation(swizzledMethod),
-                               @encode(WFGUID*));
+                               [[NSString stringWithFormat:@"%s@:", @encode(WDE::DeviceAccessStatus)] UTF8String]);
 }
 
 + (void)tearDownMock:(IMP)implementation {
-    class_replaceMethod(objc_getMetaClass("WDEDeviceAccessInformation"),
-                        @selector(createFromDeviceClassId:),
+    class_replaceMethod([_ABAddressBookDevice class],
+                        @selector(currentStatus),
                         implementation,
-                        @encode(WFGUID*));
+                        [[NSString stringWithFormat:@"%s@:", @encode(WDE::DeviceAccessStatus)] UTF8String]);
 }
 
-+ (WDEDeviceAccessInformation*)mockCreateFromDeviceClassId:(WFGUID*)deviceClassId {
-    auto fakeDeviceAccessInformation = Make<MockDeviceAccessInformation>();
-
-    fakeDeviceAccessInformation->Setget_CurrentStatus([](DeviceAccessStatus* result) {
-        *result = static_cast<DeviceAccessStatus>(statusToMock);
-        return S_OK;
-    });
-
-    return [WDEDeviceAccessInformation createWith:fakeDeviceAccessInformation.Get()];
++ (WDE::DeviceAccessStatus)mockCurrentStatus {
+    return statusToMock;
 }
 
 @end
 
-class AddressBookTest : public ::testing::TestWithParam<::testing::tuple<WDEDeviceAccessStatus, ABAuthorizationStatus, const char*>> {
+class AddressBookTest : public ::testing::TestWithParam<::testing::tuple<WDE::DeviceAccessStatus, ABAuthorizationStatus, const char*>> {
 protected:
     virtual void SetUp() {
-        _originalImplementation = [__ABAddressBook_Swizzle setupMock];
+        _originalImplementation = [__ABAddressBookDevice_Swizzle setupMock];
     }
 
     virtual void TearDown() {
-        [__ABAddressBook_Swizzle tearDownMock:_originalImplementation];
+        [__ABAddressBookDevice_Swizzle tearDownMock:_originalImplementation];
     }
 
     IMP _originalImplementation;
 };
 
-class AddressBookTest2 : public ::testing::TestWithParam<::testing::tuple<WDEDeviceAccessStatus, bool>> {
+class AddressBookTest2 : public ::testing::TestWithParam<::testing::tuple<WDE::DeviceAccessStatus, bool>> {
 protected:
     virtual void SetUp() {
-        _originalImplementation = [__ABAddressBook_Swizzle setupMock];
+        _originalImplementation = [__ABAddressBookDevice_Swizzle setupMock];
     }
 
     virtual void TearDown() {
-        [__ABAddressBook_Swizzle tearDownMock:_originalImplementation];
+        [__ABAddressBookDevice_Swizzle tearDownMock:_originalImplementation];
     }
 
     IMP _originalImplementation;
@@ -148,20 +124,20 @@ TEST_P(AddressBookTest2, RequestAuthorization) {
 
 INSTANTIATE_TEST_CASE_P(AddressBook,
                         AddressBookTest,
-                        ::testing::Values(::testing::make_tuple(WDEDeviceAccessStatusUnspecified,
+                        ::testing::Values(::testing::make_tuple(WDE::DeviceAccessStatus::Unspecified,
                                                                 kABAuthorizationStatusNotDetermined,
                                                                 "FAILED: Authorization Status should be undetermined!\n"),
-                                          ::testing::make_tuple(WDEDeviceAccessStatusAllowed,
+                                          ::testing::make_tuple(WDE::DeviceAccessStatus::Allowed,
                                                                 kABAuthorizationStatusAuthorized,
                                                                 "FAILED: Authorization Status should be authorized!\n"),
-                                          ::testing::make_tuple(WDEDeviceAccessStatusDeniedByUser,
+                                          ::testing::make_tuple(WDE::DeviceAccessStatus::DeniedByUser,
                                                                 kABAuthorizationStatusDenied,
                                                                 "FAILED: Authorization Status should be denied!\n"),
-                                          ::testing::make_tuple(WDEDeviceAccessStatusDeniedBySystem,
+                                          ::testing::make_tuple(WDE::DeviceAccessStatus::DeniedBySystem,
                                                                 kABAuthorizationStatusRestricted,
                                                                 "FAILED: Authorization Status should be restricted!\n")));
 
 INSTANTIATE_TEST_CASE_P(AddressBook,
                         AddressBookTest2,
-                        ::testing::Values(::testing::make_tuple(WDEDeviceAccessStatusUnspecified, false),
-                                          ::testing::make_tuple(WDEDeviceAccessStatusAllowed, true)));
+                        ::testing::Values(::testing::make_tuple(WDE::DeviceAccessStatus::Unspecified, false),
+                                          ::testing::make_tuple(WDE::DeviceAccessStatus::Allowed, true)));

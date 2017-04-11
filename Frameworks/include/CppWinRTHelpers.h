@@ -139,22 +139,36 @@ NSString* string(winrt::hstring_view str) {
 //
 
 template <typename T>
-winrt::Windows::Foundation::IReference<T> optional(const T& t) {
+winrt::Windows::Foundation::IReference<T> optional(T t) {
     static_assert(false, "objcwinrt::optional<T> not specialized");
 }
 
 template <>
 inline
-winrt::Windows::Foundation::IReference<double> optional<double>(const double& d) {
+winrt::Windows::Foundation::IReference<double> optional<double>(double d) {
     auto ref = winrt::Windows::Foundation::PropertyValue::CreateDouble(d);
     return ref.as<winrt::Windows::Foundation::IReference<double>>();
 }
 
 template <>
 inline
-winrt::Windows::Foundation::IReference<float> optional<float>(const float& f) {
+winrt::Windows::Foundation::IReference<float> optional<float>(float f) {
     auto ref = winrt::Windows::Foundation::PropertyValue::CreateSingle(f);
     return ref.as<winrt::Windows::Foundation::IReference<float>>();
+}
+
+template <>
+inline
+winrt::Windows::Foundation::IReference<int> optional<int>(int i) {
+    auto ref = winrt::Windows::Foundation::PropertyValue::CreateInt32(i);
+    return ref.as<winrt::Windows::Foundation::IReference<int>>();
+}
+
+template <>
+inline
+winrt::Windows::Foundation::IReference<unsigned int> optional<unsigned int>(unsigned int u) {
+    auto ref = winrt::Windows::Foundation::PropertyValue::CreateUInt32(u);
+    return ref.as<winrt::Windows::Foundation::IReference<unsigned int>>();
 }
 
 //

@@ -26,6 +26,11 @@
 #import "ABSourceInternal.h"
 #import "ABMultiValueInternal.h"
 #import "NSDate+AddressBookAdditions.h"
+#import "CppWinRTHelpers.h"
+
+using namespace winrt::Windows::ApplicationModel::Contacts;
+namespace WF = winrt::Windows::Foundation;
+namespace WFC = winrt::Windows::Foundation::Collections;
 
 // Verifies that the given value doesn't have a length greater than the given length. If value's length
 // is longer, returns false and, if error is not null, creates an error with the given propertyName.
@@ -111,7 +116,7 @@ ABRecordID ABRecordGetRecordID(ABRecordRef record) {
     switch (recordType) {
         case kABPersonType: {
             _ABContact* person = (__bridge _ABContact*)record;
-            NSString* fullId = person.contact.id;
+            NSString* fullId = objcwinrt::string(person.contact.Id());
 
             // Windows IDs are in the format {storeid.itemtype.id}
             // Therefore, we trim off the last curly brace and split on periods, giving us:
@@ -195,52 +200,52 @@ bool ABRecordSetValue(ABRecordRef record, ABPropertyID contactProperty, CFTypeRe
             return false;
         }
 
-        person.contact.firstName = firstName;
+        person.contact.FirstName(objcwinrt::string(firstName));
     } else if (contactProperty == kABPersonLastNameProperty) {
         NSString* lastName = (__bridge NSString*)value;
         if (!_checkLength(lastName, kABPersonLastNameLength, error, @"last name")) {
             return false;
         }
 
-        person.contact.lastName = lastName;
+        person.contact.LastName(objcwinrt::string(lastName));
     } else if (contactProperty == kABPersonMiddleNameProperty) {
         NSString* middleName = (__bridge NSString*)value;
         if (!_checkLength(middleName, kABPersonMiddleNameLength, error, @"middle name")) {
             return false;
         }
 
-        person.contact.middleName = middleName;
+        person.contact.MiddleName(objcwinrt::string(middleName));
     } else if (contactProperty == kABPersonPrefixProperty) {
         NSString* prefix = (__bridge NSString*)value;
         if (!_checkLength(prefix, kABPersonPrefixLength, error, @"prefix")) {
             return false;
         }
 
-        person.contact.honorificNamePrefix = prefix;
+        person.contact.HonorificNamePrefix(objcwinrt::string(prefix));
     } else if (contactProperty == kABPersonSuffixProperty) {
         NSString* suffix = (__bridge NSString*)value;
         if (!_checkLength(suffix, kABPersonSuffixLength, error, @"suffix")) {
             return false;
         }
 
-        person.contact.honorificNameSuffix = suffix;
+        person.contact.HonorificNameSuffix(objcwinrt::string(suffix));
     } else if (contactProperty == kABPersonNicknameProperty) {
         NSString* nickname = (__bridge NSString*)value;
-        person.contact.nickname = nickname;
+        person.contact.Nickname(objcwinrt::string(nickname));
     } else if (contactProperty == kABPersonFirstNamePhoneticProperty) {
         NSString* phoneticFirstName = (__bridge NSString*)value;
         if (!_checkLength(phoneticFirstName, kABPersonFirstNamePhoneticLength, error, @"first name phonetic")) {
             return false;
         }
 
-        person.contact.yomiGivenName = phoneticFirstName;
+        person.contact.YomiGivenName(objcwinrt::string(phoneticFirstName));
     } else if (contactProperty == kABPersonLastNamePhoneticProperty) {
         NSString* phoneticLastName = (__bridge NSString*)value;
         if (!_checkLength(phoneticLastName, kABPersonLastNamePhoneticLength, error, @"last name phonetic")) {
             return false;
         }
 
-        person.contact.yomiFamilyName = phoneticLastName;
+        person.contact.YomiFamilyName(objcwinrt::string(phoneticLastName));
 
         // Cases for job-related properties.
     } else if (contactProperty == kABPersonOrganizationProperty) {
@@ -249,67 +254,62 @@ bool ABRecordSetValue(ABRecordRef record, ABPropertyID contactProperty, CFTypeRe
             return false;
         }
 
-        NSMutableArray* jobInfo = person.contact.jobInfo;
-        if ([jobInfo count] == 0) {
-            [jobInfo addObject:[WACContactJobInfo make]];
+        WFC::IVector<ContactJobInfo> jobInfo = person.contact.JobInfo();
+        if (jobInfo.Size() == 0) {
+            jobInfo.Append(ContactJobInfo());
         }
 
-        WACContactJobInfo* job = jobInfo[0];
-        job.companyName = organization;
+        ContactJobInfo job = jobInfo.GetAt(0);
+        job.CompanyName(objcwinrt::string(organization));
     } else if (contactProperty == kABPersonJobTitleProperty) {
         NSString* jobTitle = (__bridge NSString*)value;
         if (!_checkLength(jobTitle, kABPersonJobTitleLength, error, @"job title")) {
             return false;
         }
 
-        NSMutableArray* jobInfo = person.contact.jobInfo;
-        if ([jobInfo count] == 0) {
-            [jobInfo addObject:[WACContactJobInfo make]];
+        WFC::IVector<ContactJobInfo> jobInfo = person.contact.JobInfo();
+        if (jobInfo.Size() == 0) {
+            jobInfo.Append(ContactJobInfo());
         }
 
-        WACContactJobInfo* job = jobInfo[0];
-        job.title = jobTitle;
+        ContactJobInfo job = jobInfo.GetAt(0);
+        job.Title(objcwinrt::string(jobTitle));
     } else if (contactProperty == kABPersonDepartmentProperty) {
         NSString* department = (__bridge NSString*)value;
         if (!_checkLength(department, kABPersonDepartmentLength, error, @"department")) {
             return false;
         }
 
-        NSMutableArray* jobInfo = person.contact.jobInfo;
-        if ([jobInfo count] == 0) {
-            [jobInfo addObject:[WACContactJobInfo make]];
+        WFC::IVector<ContactJobInfo> jobInfo = person.contact.JobInfo();
+        if (jobInfo.Size() == 0) {
+            jobInfo.Append(ContactJobInfo());
         }
 
-        WACContactJobInfo* job = jobInfo[0];
-        job.department = department;
+        ContactJobInfo job = jobInfo.GetAt(0);
+        job.Department(objcwinrt::string(department));
 
         // Case for birthday-related property.
     } else if (contactProperty == kABPersonBirthdayProperty) {
-        NSMutableArray* dates = person.contact.importantDates;
+        WFC::IVector<ContactDate> dates = person.contact.ImportantDates();
+        ContactDate date = nullptr;
 
         // Find the first date in the contact's important dates
         // that is marked as a birthday, since a Windows contact stores
         // all of its important dates in a list under a single property
         // rather than explicitly storing the birthday.
-        NSUInteger birthdayIndex = [dates indexOfObjectPassingTest:^BOOL(id obj, NSUInteger idx, BOOL* stop) {
-            WACContactDate* date = (WACContactDate*)obj;
-            if (date.kind == WACContactDateKindBirthday) {
-                *stop = YES;
-                return YES;
-            } else {
-                return NO;
+        for (const ContactDate& d : dates) {
+            if (d.Kind() == ContactDateKind::Birthday) {
+                date = d;
+                break;
             }
-        }];
+        }
 
-        // If not birthday was found, create a new date for it --
+        // If no birthday was found, create a new date for it --
         // otherwise, just use the existing birthday.
-        WACContactDate* date;
-        if (birthdayIndex == NSNotFound) {
-            date = [WACContactDate make];
-            date.kind = WACContactDateKindBirthday;
-            [dates addObject:date];
-        } else {
-            date = dates[birthdayIndex];
+        if (!date) {
+            date = ContactDate();
+            date.Kind(ContactDateKind::Birthday);
+            dates.Append(date);
         }
 
         NSDate* birthday = (__bridge NSDate*)value;
@@ -317,9 +317,9 @@ bool ABRecordSetValue(ABRecordRef record, ABPropertyID contactProperty, CFTypeRe
         NSCalendar* calendar = [NSCalendar currentCalendar];
         NSDateComponents* components = [calendar components:units fromDate:birthday];
 
-        date.year = @([components year]);
-        date.month = @([components month]);
-        date.day = @([components day]);
+        date.Year(objcwinrt::optional<int>([components year]));
+        date.Month(objcwinrt::optional<unsigned int>([components month]));
+        date.Day(objcwinrt::optional<unsigned int>([components day]));
 
         // Case for note-related property.
     } else if (contactProperty == kABPersonNoteProperty) {
@@ -328,7 +328,7 @@ bool ABRecordSetValue(ABRecordRef record, ABPropertyID contactProperty, CFTypeRe
             return false;
         }
 
-        person.contact.notes = note;
+        person.contact.Notes(objcwinrt::string(note));
 
         // Cases for various multi-value properties.
     } else if (contactProperty == kABPersonEmailProperty) {
@@ -346,22 +346,22 @@ bool ABRecordSetValue(ABRecordRef record, ABPropertyID contactProperty, CFTypeRe
             }
         }
 
-        NSMutableArray* emails = person.contact.emails;
-        [emails removeAllObjects];
+        WFC::IVector<ContactEmail> emails = person.contact.Emails();
+        emails.Clear();
 
         NSDictionary* dict = @{
-            ((__bridge NSString*)kABHomeLabel) : @(WACContactEmailKindPersonal),
-            ((__bridge NSString*)kABWorkLabel) : @(WACContactEmailKindWork),
-            ((__bridge NSString*)kABOtherLabel) : @(WACContactEmailKindOther)
+            ((__bridge NSString*)kABHomeLabel) : @(static_cast<NSInteger>(ContactEmailKind::Personal)),
+            ((__bridge NSString*)kABWorkLabel) : @(static_cast<NSInteger>(ContactEmailKind::Work)),
+            ((__bridge NSString*)kABOtherLabel) : @(static_cast<NSInteger>(ContactEmailKind::Other))
         };
 
         for (int i = 0; i < [multiValue getCount]; i++) {
             NSString* label = (__bridge_transfer NSString*)[multiValue copyLabelAtIndex:i];
             NSString* value = (__bridge_transfer NSString*)[multiValue copyValueAtIndex:i];
-            WACContactEmail* email = [WACContactEmail make];
-            email.address = value;
-            email.kind = dict[label] == nil ? WACContactEmailKindOther : [dict[label] integerValue];
-            [emails addObject:email];
+            ContactEmail email;
+            email.Address(objcwinrt::string(value));
+            email.Kind(dict[label] == nil ? ContactEmailKind::Other : static_cast<ContactEmailKind>([dict[label] integerValue]));
+            emails.Append(email);
         }
     } else if (contactProperty == kABPersonAddressProperty) {
         _ABMultiValue* multiValue = (__bridge _ABMultiValue*)value;
@@ -380,27 +380,27 @@ bool ABRecordSetValue(ABRecordRef record, ABPropertyID contactProperty, CFTypeRe
             }
         }
 
-        NSMutableArray* addresses = person.contact.addresses;
-        [addresses removeAllObjects];
+        WFC::IVector<ContactAddress> addresses = person.contact.Addresses();
+        addresses.Clear();
 
         NSDictionary* dict = @{
-            ((__bridge NSString*)kABHomeLabel) : @(WACContactAddressKindHome),
-            ((__bridge NSString*)kABWorkLabel) : @(WACContactAddressKindWork),
-            ((__bridge NSString*)kABOtherLabel) : @(WACContactAddressKindOther)
+            ((__bridge NSString*)kABHomeLabel) : @(static_cast<NSInteger>(ContactAddressKind::Home)),
+            ((__bridge NSString*)kABWorkLabel) : @(static_cast<NSInteger>(ContactAddressKind::Work)),
+            ((__bridge NSString*)kABOtherLabel) : @(static_cast<NSInteger>(ContactAddressKind::Other))
         };
 
         for (int i = 0; i < [multiValue getCount]; i++) {
             NSString* label = (__bridge_transfer NSString*)[multiValue copyLabelAtIndex:i];
-            NSDictionary* value = (__bridge_transfer NSDictionary*)[multiValue copyValueAtIndex:i];
-            WACContactAddress* address = [WACContactAddress make];
-            address.kind = dict[label] == nil ? WACContactAddressKindOther : [dict[label] integerValue];
-            address.streetAddress = value[(__bridge NSString*)kABPersonAddressStreetKey];
-            address.locality = value[(__bridge NSString*)kABPersonAddressCityKey];
-            address.region = value[(__bridge NSString*)kABPersonAddressStateKey];
-            address.postalCode = value[(__bridge NSString*)kABPersonAddressZIPKey];
-            address.country = value[(__bridge NSString*)kABPersonAddressCountryKey];
+            NSDictionary<NSString*,NSString*>* value = (__bridge_transfer NSDictionary<NSString*,NSString*>*)[multiValue copyValueAtIndex:i];
+            ContactAddress address;
+            address.Kind(dict[label] == nil ? ContactAddressKind::Other : static_cast<ContactAddressKind>([dict[label] integerValue]));
+            address.StreetAddress(objcwinrt::string(value[(__bridge NSString*)kABPersonAddressStreetKey]));
+            address.Locality(objcwinrt::string(value[(__bridge NSString*)kABPersonAddressCityKey]));
+            address.Region(objcwinrt::string(value[(__bridge NSString*)kABPersonAddressStateKey]));
+            address.PostalCode(objcwinrt::string(value[(__bridge NSString*)kABPersonAddressZIPKey]));
+            address.Country(objcwinrt::string(value[(__bridge NSString*)kABPersonAddressCountryKey]));
 
-            [addresses addObject:address];
+            addresses.Append(address);
         }
     } else if (contactProperty == kABPersonDateProperty) {
         _ABMultiValue* multiValue = (__bridge _ABMultiValue*)value;
@@ -410,33 +410,35 @@ bool ABRecordSetValue(ABRecordRef record, ABPropertyID contactProperty, CFTypeRe
 
         // Filter importantDates so it only contains birthdays (since those should
         // not be removed in this case.)
-        NSMutableArray* importantDates = person.contact.importantDates;
-        NSPredicate* predicate = [NSPredicate predicateWithBlock:^BOOL(id obj, NSDictionary* bindings) {
-            return ((WACContactDate*)obj).kind == WACContactDateKindBirthday;
-        }];
-
-        [importantDates filterUsingPredicate:predicate];
+        WFC::IVector<ContactDate> importantDates = person.contact.ImportantDates();
+        for (unsigned int i = 0; i < importantDates.Size(); ) {
+            if (importantDates.GetAt(i).Kind() == ContactDateKind::Birthday) {
+                i++;
+            } else {
+                importantDates.RemoveAt(i);
+            }
+        }
 
         NSDictionary* dict = @{
-            ((__bridge NSString*)kABPersonAnniversaryLabel) : @(WACContactDateKindAnniversary),
-            ((__bridge NSString*)kABOtherLabel) : @(WACContactDateKindOther)
+            ((__bridge NSString*)kABPersonAnniversaryLabel) : @(static_cast<NSInteger>(ContactDateKind::Anniversary)),
+            ((__bridge NSString*)kABOtherLabel) : @(static_cast<NSInteger>(ContactDateKind::Other))
         };
 
         for (int i = 0; i < [multiValue getCount]; i++) {
             NSString* label = (__bridge_transfer NSString*)[multiValue copyLabelAtIndex:i];
             NSDate* value = (__bridge_transfer NSDate*)[multiValue copyValueAtIndex:i];
-            WACContactDate* date = [WACContactDate make];
-            date.kind = dict[label] == nil ? WACContactDateKindOther : [dict[label] integerValue];
+            ContactDate date;
+            date.Kind(dict[label] == nil ? ContactDateKind::Other : static_cast<ContactDateKind>([dict[label] integerValue]));
 
             unsigned int units = NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit;
             NSCalendar* calendar = [NSCalendar currentCalendar];
             NSDateComponents* components = [calendar components:units fromDate:value];
 
-            date.year = @([components year]);
-            date.month = @([components month]);
-            date.day = @([components day]);
+            date.Year(objcwinrt::optional<int>([components year]));
+            date.Month(objcwinrt::optional<unsigned int>([components month]));
+            date.Day(objcwinrt::optional<unsigned int>([components day]));
 
-            [importantDates addObject:date];
+            importantDates.Append(date);
         }
     } else if (contactProperty == kABPersonPhoneProperty) {
         _ABMultiValue* multiValue = (__bridge _ABMultiValue*)value;
@@ -453,29 +455,29 @@ bool ABRecordSetValue(ABRecordRef record, ABPropertyID contactProperty, CFTypeRe
             }
         }
 
-        NSMutableArray* phones = person.contact.phones;
-        [phones removeAllObjects];
+        WFC::IVector<ContactPhone> phones = person.contact.Phones();
+        phones.Clear();
 
         NSDictionary* dict = @{
-            ((__bridge NSString*)kABHomeLabel) : @(WACContactPhoneKindHome),
-            ((__bridge NSString*)kABPersonPhoneMobileLabel) : @(WACContactPhoneKindMobile),
-            ((__bridge NSString*)kABWorkLabel) : @(WACContactPhoneKindWork),
-            ((__bridge NSString*)kABPersonPhonePagerLabel) : @(WACContactPhoneKindPager),
-            ((__bridge NSString*)kABPersonPhoneWorkFAXLabel) : @(WACContactPhoneKindBusinessFax),
-            ((__bridge NSString*)kABPersonPhoneHomeFAXLabel) : @(WACContactPhoneKindHomeFax),
-            ((__bridge NSString*)kABPersonPhoneCompanyLabel) : @(WACContactPhoneKindCompany),
-            ((__bridge NSString*)kABPersonPhoneAssistantLabel) : @(WACContactPhoneKindAssistant),
-            ((__bridge NSString*)kABPersonPhoneRadioLabel) : @(WACContactPhoneKindRadio),
-            ((__bridge NSString*)kABOtherLabel) : @(WACContactPhoneKindOther)
+            ((__bridge NSString*)kABHomeLabel) : @(static_cast<NSInteger>(ContactPhoneKind::Home)),
+            ((__bridge NSString*)kABPersonPhoneMobileLabel) : @(static_cast<NSInteger>(ContactPhoneKind::Mobile)),
+            ((__bridge NSString*)kABWorkLabel) : @(static_cast<NSInteger>(ContactPhoneKind::Work)),
+            ((__bridge NSString*)kABPersonPhonePagerLabel) : @(static_cast<NSInteger>(ContactPhoneKind::Pager)),
+            ((__bridge NSString*)kABPersonPhoneWorkFAXLabel) : @(static_cast<NSInteger>(ContactPhoneKind::BusinessFax)),
+            ((__bridge NSString*)kABPersonPhoneHomeFAXLabel) : @(static_cast<NSInteger>(ContactPhoneKind::HomeFax)),
+            ((__bridge NSString*)kABPersonPhoneCompanyLabel) : @(static_cast<NSInteger>(ContactPhoneKind::Company)),
+            ((__bridge NSString*)kABPersonPhoneAssistantLabel) : @(static_cast<NSInteger>(ContactPhoneKind::Assistant)),
+            ((__bridge NSString*)kABPersonPhoneRadioLabel) : @(static_cast<NSInteger>(ContactPhoneKind::Radio)),
+            ((__bridge NSString*)kABOtherLabel) : @(static_cast<NSInteger>(ContactPhoneKind::Other))
         };
 
         for (int i = 0; i < [multiValue getCount]; i++) {
             NSString* label = (__bridge_transfer NSString*)[multiValue copyLabelAtIndex:i];
             NSString* value = (__bridge_transfer NSString*)[multiValue copyValueAtIndex:i];
-            WACContactPhone* phone = [WACContactPhone make];
-            phone.number = value;
-            phone.kind = dict[label] == nil ? WACContactPhoneKindOther : [dict[label] integerValue];
-            [phones addObject:phone];
+            ContactPhone phone;
+            phone.Number(objcwinrt::string(value));
+            phone.Kind(dict[label] == nil ? ContactPhoneKind::Other : static_cast<ContactPhoneKind>([dict[label] integerValue]));
+            phones.Append(phone);
         }
     } else if (contactProperty == kABPersonURLProperty) {
         _ABMultiValue* multiValue = (__bridge _ABMultiValue*)value;
@@ -483,14 +485,14 @@ bool ABRecordSetValue(ABRecordRef record, ABPropertyID contactProperty, CFTypeRe
             return false;
         }
 
-        NSMutableArray* websites = person.contact.websites;
-        [websites removeAllObjects];
+        WFC::IVector<ContactWebsite> websites = person.contact.Websites();
+        websites.Clear();
 
         for (int i = 0; i < [multiValue getCount]; i++) {
             NSString* value = (__bridge_transfer NSString*)[multiValue copyValueAtIndex:i];
-            WACContactWebsite* website = [WACContactWebsite make];
-            website.rawValue = value;
-            [websites addObject:website];
+            ContactWebsite website;
+            website.RawValue(objcwinrt::string(value));
+            websites.Append(website);
         }
     } else if (contactProperty == kABPersonRelatedNamesProperty) {
         _ABMultiValue* multiValue = (__bridge _ABMultiValue*)value;
@@ -507,25 +509,25 @@ bool ABRecordSetValue(ABRecordRef record, ABPropertyID contactProperty, CFTypeRe
             }
         }
 
-        NSMutableArray* significantOthers = person.contact.significantOthers;
-        [significantOthers removeAllObjects];
+        WFC::IVector<ContactSignificantOther> significantOthers = person.contact.SignificantOthers();
+        significantOthers.Clear();
 
         NSDictionary* dict = @{
-            ((__bridge NSString*)kABPersonSpouseLabel) : @(WACContactRelationshipSpouse),
-            ((__bridge NSString*)kABPersonPartnerLabel) : @(WACContactRelationshipPartner),
-            ((__bridge NSString*)kABPersonSiblingLabel) : @(WACContactRelationshipSibling),
-            ((__bridge NSString*)kABPersonParentLabel) : @(WACContactRelationshipParent),
-            ((__bridge NSString*)kABPersonChildLabel) : @(WACContactRelationshipChild),
-            ((__bridge NSString*)kABOtherLabel) : @(WACContactRelationshipOther)
+            ((__bridge NSString*)kABPersonSpouseLabel) : @(static_cast<NSInteger>(ContactRelationship::Spouse)),
+            ((__bridge NSString*)kABPersonPartnerLabel) : @(static_cast<NSInteger>(ContactRelationship::Partner)),
+            ((__bridge NSString*)kABPersonSiblingLabel) : @(static_cast<NSInteger>(ContactRelationship::Sibling)),
+            ((__bridge NSString*)kABPersonParentLabel) : @(static_cast<NSInteger>(ContactRelationship::Parent)),
+            ((__bridge NSString*)kABPersonChildLabel) : @(static_cast<NSInteger>(ContactRelationship::Child)),
+            ((__bridge NSString*)kABOtherLabel) : @(static_cast<NSInteger>(ContactRelationship::Other))
         };
 
         for (int i = 0; i < [multiValue getCount]; i++) {
             NSString* label = (__bridge_transfer NSString*)[multiValue copyLabelAtIndex:i];
             NSString* value = (__bridge_transfer NSString*)[multiValue copyValueAtIndex:i];
-            WACContactSignificantOther* significantOther = [WACContactSignificantOther make];
-            significantOther.name = value;
-            significantOther.relationship = dict[label] == nil ? WACContactRelationshipOther : [dict[label] integerValue];
-            [significantOthers addObject:significantOther];
+            ContactSignificantOther significantOther;
+            significantOther.Name(objcwinrt::string(value));
+            significantOther.Relationship(dict[label] == nil ? ContactRelationship::Other : static_cast<ContactRelationship>([dict[label] integerValue]));
+            significantOthers.Append(significantOther);
         }
     } else {
         // No matching property was found.
@@ -565,68 +567,64 @@ CFTypeRef ABRecordCopyValue(ABRecordRef record, ABPropertyID contactProperty) {
 
     // Cases for various name properties.
     if (contactProperty == kABPersonFirstNameProperty) {
-        return (__bridge_retained CFTypeRef)person.contact.firstName;
+        return (__bridge_retained CFTypeRef)objcwinrt::string(person.contact.FirstName());
     } else if (contactProperty == kABPersonLastNameProperty) {
-        return (__bridge_retained CFTypeRef)person.contact.lastName;
+        return (__bridge_retained CFTypeRef)objcwinrt::string(person.contact.LastName());
     } else if (contactProperty == kABPersonMiddleNameProperty) {
-        return (__bridge_retained CFTypeRef)person.contact.middleName;
+        return (__bridge_retained CFTypeRef)objcwinrt::string(person.contact.MiddleName());
     } else if (contactProperty == kABPersonPrefixProperty) {
-        return (__bridge_retained CFTypeRef)person.contact.honorificNamePrefix;
+        return (__bridge_retained CFTypeRef)objcwinrt::string(person.contact.HonorificNamePrefix());
     } else if (contactProperty == kABPersonSuffixProperty) {
-        return (__bridge_retained CFTypeRef)person.contact.honorificNameSuffix;
+        return (__bridge_retained CFTypeRef)objcwinrt::string(person.contact.HonorificNameSuffix());
     } else if (contactProperty == kABPersonNicknameProperty) {
-        return (__bridge_retained CFTypeRef)person.contact.nickname;
+        return (__bridge_retained CFTypeRef)objcwinrt::string(person.contact.Nickname());
     } else if (contactProperty == kABPersonFirstNamePhoneticProperty) {
-        return (__bridge_retained CFTypeRef)person.contact.yomiGivenName;
+        return (__bridge_retained CFTypeRef)objcwinrt::string(person.contact.YomiGivenName());
     } else if (contactProperty == kABPersonLastNamePhoneticProperty) {
-        return (__bridge_retained CFTypeRef)person.contact.yomiFamilyName;
+        return (__bridge_retained CFTypeRef)objcwinrt::string(person.contact.YomiFamilyName());
     }
 
     // Cases for job-related properties.
     if (contactProperty == kABPersonOrganizationProperty) {
-        NSArray* jobInfo = person.contact.jobInfo;
-        return [jobInfo count] > 0 ? (__bridge_retained CFTypeRef)((WACContactJobInfo*)jobInfo[0]).companyName : nullptr;
+        WFC::IVector<ContactJobInfo> jobInfo = person.contact.JobInfo();
+        return jobInfo.Size() > 0 ? (__bridge_retained CFTypeRef)objcwinrt::string(jobInfo.GetAt(0).CompanyName()) : nullptr;
     } else if (contactProperty == kABPersonJobTitleProperty) {
-        NSArray* jobInfo = person.contact.jobInfo;
-        return [jobInfo count] > 0 ? (__bridge_retained CFTypeRef)((WACContactJobInfo*)jobInfo[0]).title : nullptr;
+        WFC::IVector<ContactJobInfo> jobInfo = person.contact.JobInfo();
+        return jobInfo.Size() > 0 ? (__bridge_retained CFTypeRef)objcwinrt::string(jobInfo.GetAt(0).Title()) : nullptr;
     } else if (contactProperty == kABPersonDepartmentProperty) {
-        NSArray* jobInfo = person.contact.jobInfo;
-        return [jobInfo count] > 0 ? (__bridge_retained CFTypeRef)((WACContactJobInfo*)jobInfo[0]).department : nullptr;
+        WFC::IVector<ContactJobInfo> jobInfo = person.contact.JobInfo();
+        return jobInfo.Size() > 0 ? (__bridge_retained CFTypeRef)objcwinrt::string(jobInfo.GetAt(0).Department()) : nullptr;
     }
 
     // Case for birthday-related property.
     if (contactProperty == kABPersonBirthdayProperty) {
-        NSArray* dates = person.contact.importantDates;
+        WFC::IVector<ContactDate> dates = person.contact.ImportantDates();
+        ContactDate date = nullptr;
 
         // Find the first date in the contact's important dates
         // that is marked as a birthday, since a Windows contact stores
         // all of its important dates in a list under a single property
         // rather than explicitly storing the birthday.
-        NSUInteger birthdayIndex = [dates indexOfObjectPassingTest:^BOOL(id obj, NSUInteger idx, BOOL* stop) {
-            WACContactDate* date = (WACContactDate*)obj;
-            if (date.kind == WACContactDateKindBirthday) {
-                *stop = YES;
-                return YES;
-            } else {
-                return NO;
+        for (const ContactDate& d : dates) {
+            if (d.Kind() == ContactDateKind::Birthday) {
+                date = d;
+                break;
             }
-        }];
+        }
 
-        if (birthdayIndex == NSNotFound) {
+        if (!date) {
             return nullptr;
         } else {
-            WACContactDate* date = dates[birthdayIndex];
-
             // NSDate is toll-free bridged with CFDate, which is the type
             // the user expects to receive.
-            NSDate* resultDate = [NSDate dateWithWACContactDate:date];
+            NSDate* resultDate = [NSDate dateWithContactDate:date];
             return (__bridge_retained CFTypeRef)resultDate;
         }
     }
 
     // Case for note-related property.
     if (contactProperty == kABPersonNoteProperty) {
-        return (__bridge_retained CFTypeRef)person.contact.notes;
+        return (__bridge_retained CFTypeRef)objcwinrt::string(person.contact.Notes());
     }
 
     /* The following properties don't have a good 1-1 mapping between iOS contacts
@@ -646,25 +644,24 @@ CFTypeRef ABRecordCopyValue(ABRecordRef record, ABPropertyID contactProperty) {
     // Cases for various multi-value properties.
     if (contactProperty == kABPersonEmailProperty) {
         _ABMultiValue* emailMultiValue = [[_ABMultiValue alloc] initWithPropertyType:kABStringPropertyType];
-        NSArray* emails = person.contact.emails;
-        [emails enumerateObjectsUsingBlock:^void(id obj, NSUInteger idx, BOOL* stop) {
-            WACContactEmail* email = (WACContactEmail*)obj;
+        WFC::IVector<ContactEmail> emails = person.contact.Emails();
+        for (const ContactEmail& email : emails) {
             CFStringRef label;
-            switch (email.kind) {
-                case WACContactEmailKindPersonal:
+            switch (email.Kind()) {
+                case ContactEmailKind::Personal:
                     label = kABHomeLabel;
                     break;
-                case WACContactEmailKindWork:
+                case ContactEmailKind::Work:
                     label = kABWorkLabel;
                     break;
-                case WACContactEmailKindOther:
+                case ContactEmailKind::Other:
                 default:
                     label = kABOtherLabel;
                     break;
             }
 
-            [emailMultiValue appendPairWithLabel:(__bridge NSString*)label andValue:email.address];
-        }];
+            [emailMultiValue appendPairWithLabel:(__bridge NSString*)label andValue:objcwinrt::string(email.Address())];
+        };
 
         [emailMultiValue makeImmutable];
         return (__bridge_retained CFTypeRef)emailMultiValue;
@@ -672,33 +669,33 @@ CFTypeRef ABRecordCopyValue(ABRecordRef record, ABPropertyID contactProperty) {
 
     if (contactProperty == kABPersonAddressProperty) {
         _ABMultiValue* addressMultiValue = [[_ABMultiValue alloc] initWithPropertyType:kABDictionaryPropertyType];
-        NSArray* addresses = person.contact.addresses;
-        [addresses enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL* stop) {
-            WACContactAddress* address = (WACContactAddress*)obj;
+        WFC::IVector<ContactAddress> addresses = person.contact.Addresses();
+
+        for (const ContactAddress& address : addresses) {
             CFStringRef label;
-            switch (address.kind) {
-                case WACContactAddressKindHome:
+            switch (address.Kind()) {
+                case ContactAddressKind::Home:
                     label = kABHomeLabel;
                     break;
-                case WACContactAddressKindWork:
+                case ContactAddressKind::Work:
                     label = kABWorkLabel;
                     break;
-                case WACContactAddressKindOther:
+                case ContactAddressKind::Other:
                 default:
                     label = kABOtherLabel;
                     break;
             }
 
             NSDictionary* dictionary = @{
-                ((__bridge NSString*)kABPersonAddressStreetKey) : address.streetAddress,
-                ((__bridge NSString*)kABPersonAddressCityKey) : address.locality,
-                ((__bridge NSString*)kABPersonAddressStateKey) : address.region,
-                ((__bridge NSString*)kABPersonAddressZIPKey) : address.postalCode,
-                ((__bridge NSString*)kABPersonAddressCountryKey) : address.country
+                ((__bridge NSString*)kABPersonAddressStreetKey) : objcwinrt::string(address.StreetAddress()),
+                ((__bridge NSString*)kABPersonAddressCityKey) : objcwinrt::string(address.Locality()),
+                ((__bridge NSString*)kABPersonAddressStateKey) : objcwinrt::string(address.Region()),
+                ((__bridge NSString*)kABPersonAddressZIPKey) : objcwinrt::string(address.PostalCode()),
+                ((__bridge NSString*)kABPersonAddressCountryKey) : objcwinrt::string(address.Country())
             };
 
             [addressMultiValue appendPairWithLabel:(__bridge NSString*)label andValue:dictionary];
-        }];
+        };
 
         [addressMultiValue makeImmutable];
         return (__bridge_retained CFTypeRef)addressMultiValue;
@@ -706,27 +703,26 @@ CFTypeRef ABRecordCopyValue(ABRecordRef record, ABPropertyID contactProperty) {
 
     if (contactProperty == kABPersonDateProperty) {
         _ABMultiValue* dateMultiValue = [[_ABMultiValue alloc] initWithPropertyType:kABDateTimePropertyType];
-        NSArray* dates = person.contact.importantDates;
-        [dates enumerateObjectsUsingBlock:^void(id obj, NSUInteger idx, BOOL* stop) {
-            WACContactDate* date = (WACContactDate*)obj;
+        WFC::IVector<ContactDate> dates = person.contact.ImportantDates();
+        for (const ContactDate& date : dates) {
             CFStringRef label;
-            switch (date.kind) {
-                case WACContactDateKindBirthday:
+            switch (date.Kind()) {
+                case ContactDateKind::Birthday:
                     // Ignore the contact's birthday, since iOS
                     // has a separate property for the user's birthday.
-                    return;
-                case WACContactDateKindAnniversary:
+                    continue;
+                case ContactDateKind::Anniversary:
                     label = kABPersonAnniversaryLabel;
                     break;
-                case WACContactDateKindOther:
+                case ContactDateKind::Other:
                 default:
                     label = kABOtherLabel;
                     break;
             }
 
-            NSDate* resultDate = [NSDate dateWithWACContactDate:date];
+            NSDate* resultDate = [NSDate dateWithContactDate:date];
             [dateMultiValue appendPairWithLabel:(__bridge NSString*)label andValue:resultDate];
-        }];
+        };
 
         [dateMultiValue makeImmutable];
         return (__bridge_retained CFTypeRef)dateMultiValue;
@@ -734,46 +730,45 @@ CFTypeRef ABRecordCopyValue(ABRecordRef record, ABPropertyID contactProperty) {
 
     if (contactProperty == kABPersonPhoneProperty) {
         _ABMultiValue* phoneMultiValue = [[_ABMultiValue alloc] initWithPropertyType:kABStringPropertyType];
-        NSArray* phoneNumbers = person.contact.phones;
-        [phoneNumbers enumerateObjectsUsingBlock:^void(id obj, NSUInteger idx, BOOL* stop) {
-            WACContactPhone* phoneNumber = (WACContactPhone*)obj;
+        WFC::IVector<ContactPhone> phoneNumbers = person.contact.Phones();
+        for (const ContactPhone& phoneNumber : phoneNumbers) {
             CFStringRef label;
-            switch (phoneNumber.kind) {
-                case WACContactPhoneKindHome:
+            switch (phoneNumber.Kind()) {
+                case ContactPhoneKind::Home:
                     label = kABHomeLabel;
                     break;
-                case WACContactPhoneKindMobile:
+                case ContactPhoneKind::Mobile:
                     label = kABPersonPhoneMobileLabel;
                     break;
-                case WACContactPhoneKindWork:
+                case ContactPhoneKind::Work:
                     label = kABWorkLabel;
                     break;
-                case WACContactPhoneKindPager:
+                case ContactPhoneKind::Pager:
                     label = kABPersonPhonePagerLabel;
                     break;
-                case WACContactPhoneKindBusinessFax:
+                case ContactPhoneKind::BusinessFax:
                     label = kABPersonPhoneWorkFAXLabel;
                     break;
-                case WACContactPhoneKindHomeFax:
+                case ContactPhoneKind::HomeFax:
                     label = kABPersonPhoneHomeFAXLabel;
                     break;
-                case WACContactPhoneKindCompany:
+                case ContactPhoneKind::Company:
                     label = kABPersonPhoneCompanyLabel;
                     break;
-                case WACContactPhoneKindAssistant:
+                case ContactPhoneKind::Assistant:
                     label = kABPersonPhoneAssistantLabel;
                     break;
-                case WACContactPhoneKindRadio:
+                case ContactPhoneKind::Radio:
                     label = kABPersonPhoneRadioLabel;
                     break;
-                case WACContactPhoneKindOther:
+                case ContactPhoneKind::Other:
                 default:
                     label = kABOtherLabel;
                     break;
             }
 
-            [phoneMultiValue appendPairWithLabel:(__bridge NSString*)label andValue:phoneNumber.number];
-        }];
+            [phoneMultiValue appendPairWithLabel:(__bridge NSString*)label andValue:objcwinrt::string(phoneNumber.Number())];
+        };
 
         [phoneMultiValue makeImmutable];
         return (__bridge_retained CFTypeRef)phoneMultiValue;
@@ -781,11 +776,11 @@ CFTypeRef ABRecordCopyValue(ABRecordRef record, ABPropertyID contactProperty) {
 
     if (contactProperty == kABPersonURLProperty) {
         _ABMultiValue* urlMultiValue = [[_ABMultiValue alloc] initWithPropertyType:kABStringPropertyType];
-        NSArray* websites = person.contact.websites;
-        [websites enumerateObjectsUsingBlock:^void(id obj, NSUInteger idx, BOOL* stop) {
-            WACContactWebsite* website = (WACContactWebsite*)obj;
-            [urlMultiValue appendPairWithLabel:(__bridge NSString*)kABPersonHomePageLabel andValue:website.rawValue];
-        }];
+        WFC::IVector<ContactWebsite> websites = person.contact.Websites();
+        for (const ContactWebsite& website : websites) {
+            [urlMultiValue appendPairWithLabel:(__bridge NSString*)kABPersonHomePageLabel
+                                      andValue:objcwinrt::string(website.RawValue())];
+        };
 
         [urlMultiValue makeImmutable];
         return (__bridge_retained CFTypeRef)urlMultiValue;
@@ -793,34 +788,34 @@ CFTypeRef ABRecordCopyValue(ABRecordRef record, ABPropertyID contactProperty) {
 
     if (contactProperty == kABPersonRelatedNamesProperty) {
         _ABMultiValue* relatedNamesMultiValue = [[_ABMultiValue alloc] initWithPropertyType:kABStringPropertyType];
-        NSArray* significantOthers = person.contact.significantOthers;
-        [significantOthers enumerateObjectsUsingBlock:^void(id obj, NSUInteger idx, BOOL* stop) {
-            WACContactSignificantOther* significantOther = (WACContactSignificantOther*)obj;
+        WFC::IVector<ContactSignificantOther> significantOthers = person.contact.SignificantOthers();
+        for (const ContactSignificantOther& significantOther : significantOthers) {
             CFStringRef label;
-            switch (significantOther.relationship) {
-                case WACContactRelationshipSpouse:
+            switch (significantOther.Relationship()) {
+                case ContactRelationship::Spouse:
                     label = kABPersonSpouseLabel;
                     break;
-                case WACContactRelationshipPartner:
+                case ContactRelationship::Partner:
                     label = kABPersonPartnerLabel;
                     break;
-                case WACContactRelationshipSibling:
+                case ContactRelationship::Sibling:
                     label = kABPersonSiblingLabel;
                     break;
-                case WACContactRelationshipParent:
+                case ContactRelationship::Parent:
                     label = kABPersonParentLabel;
                     break;
-                case WACContactRelationshipChild:
+                case ContactRelationship::Child:
                     label = kABPersonChildLabel;
                     break;
-                case WACContactRelationshipOther:
+                case ContactRelationship::Other:
                 default:
                     label = kABOtherLabel;
                     break;
             }
 
-            [relatedNamesMultiValue appendPairWithLabel:(__bridge NSString*)label andValue:significantOther.name];
-        }];
+            [relatedNamesMultiValue appendPairWithLabel:(__bridge NSString*)label
+                                               andValue:objcwinrt::string(significantOther.Name())];
+        };
 
         [relatedNamesMultiValue makeImmutable];
         return (__bridge_retained CFTypeRef)relatedNamesMultiValue;
@@ -849,5 +844,5 @@ CFStringRef ABRecordCopyCompositeName(ABRecordRef record) {
     // and the Windows Contacts Framework doesn't support Group records, so we can assume
     // it is a Person record.
     _ABContact* person = (__bridge _ABContact*)record;
-    return (__bridge_retained CFStringRef)person.contact.fullName;
+    return (__bridge_retained CFStringRef)objcwinrt::string(person.contact.FullName());
 }

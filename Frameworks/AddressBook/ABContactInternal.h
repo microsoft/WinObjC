@@ -16,9 +16,12 @@
 
 #pragma once
 
-#import "UWP/WindowsApplicationModelContacts.h"
 #import "ABRecordInternal.h"
 #import <AddressBook/ABAddressBook.h>
+
+#include "COMIncludes.h"
+#import <winrt/Windows.ApplicationModel.Contacts.h>
+#include "COMIncludes_End.h"
 
 typedef enum ABRecordContactType {
     kAddressBookNewContact = 0,
@@ -28,9 +31,9 @@ typedef enum ABRecordContactType {
 
 @interface _ABContact : _ABRecord
 
-@property WACContact* contact;
+@property winrt::Windows::ApplicationModel::Contacts::Contact contact;
 @property ABAddressBookRef manager;
 @property (readonly) ABRecordContactType type;
-- (id)initWithContact:(WACContact*)contact andType:(ABRecordContactType)type;
+- (id)initWithContact:(const winrt::Windows::ApplicationModel::Contacts::Contact&)contact andType:(ABRecordContactType)type;
 
 @end

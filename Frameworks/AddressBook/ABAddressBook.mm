@@ -21,15 +21,44 @@
 #import <Starboard/SmartTypes.h>
 
 #import "ABAddressBookManagerInternal.h"
+#import "CppWinRTHelpers.h"
 
-#import "UWP/InteropBase.h"
-#import "UWP/WindowsDevicesEnumeration.h"
 #import "initguid.h"
+
+#include "COMIncludes.h"
+#import <winrt/Windows.Devices.Enumeration.h>
+#include "COMIncludes_End.h"
+
+using namespace winrt::Windows::Devices::Enumeration;
 
 // GUID to check Windows Contacts permissions.
 DEFINE_GUID(_ABAddressBookContactsGUID, 0x7D7E8402, 0x7C54, 0x4821, 0xA3, 0x4E, 0xAE, 0xEF, 0xD6, 0x2D, 0xED, 0x93);
 
 const CFStringRef ABAddressBookErrorDomain = static_cast<const CFStringRef>(@"ABAddressBookErrorDomain");
+
+// Wrapper around WDE::DeviceAccessInformation, whose implementation can be
+// replaced in test scenarios
+@interface _ABAddressBookDevice : NSObject
+- (instancetype)initWithDeviceClassId:(GUID)classId;
+- (DeviceAccessStatus)currentStatus;
+@end
+
+@implementation _ABAddressBookDevice {
+    TrivialDefaultConstructor<DeviceAccessInformation> _deviceInfo;
+}
+
+- (instancetype)initWithDeviceClassId:(GUID)classId {
+    if (self = [super init]) {
+        _deviceInfo = DeviceAccessInformation::CreateFromDeviceClassId(classId);
+    }
+
+    return self;
+}
+
+- (DeviceAccessStatus)currentStatus {
+    return _deviceInfo.CurrentStatus();
+}
+@end
 
 /**
  @Status Interoperable
@@ -64,18 +93,16 @@ ABAddressBookRef ABAddressBookCreateWithOptions(CFDictionaryRef options, CFError
  @Notes
 */
 ABAuthorizationStatus ABAddressBookGetAuthorizationStatus() {
-    WFGUID* guid = [WFGUID guidWithGUID:_ABAddressBookContactsGUID];
-    WDEDeviceAccessInformation* deviceAccessInformation = [WDEDeviceAccessInformation createFromDeviceClassId:guid];
-    WDEDeviceAccessStatus currentStatus = deviceAccessInformation.currentStatus;
+    _ABAddressBookDevice* deviceInfo = [[_ABAddressBookDevice alloc] initWithDeviceClassId:_ABAddressBookContactsGUID];
 
-    switch (currentStatus) {
-        case WDEDeviceAccessStatusAllowed:
+    switch ([deviceInfo currentStatus]) {
+        case DeviceAccessStatus::Allowed:
             return kABAuthorizationStatusAuthorized;
-        case WDEDeviceAccessStatusDeniedBySystem:
+        case DeviceAccessStatus::DeniedBySystem:
             return kABAuthorizationStatusRestricted;
-        case WDEDeviceAccessStatusDeniedByUser:
+        case DeviceAccessStatus::DeniedByUser:
             return kABAuthorizationStatusDenied;
-        default: // WDEDeviceAccessStatusUnspecified:
+        default: // DeviceAccessStatus::Unspecified:
             return kABAuthorizationStatusNotDetermined;
     }
 }

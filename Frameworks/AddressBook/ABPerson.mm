@@ -21,6 +21,9 @@
 
 #import "ABAddressBookManagerInternal.h"
 #import "ABContactInternal.h"
+#import "CppWinRTHelpers.h"
+
+using namespace winrt::Windows::ApplicationModel::Contacts;
 
 const ABPropertyID kABPersonFirstNameProperty = 101;
 const ABPropertyID kABPersonLastNameProperty = 102;
@@ -122,7 +125,7 @@ const CFStringRef kABPersonSiblingLabel = static_cast<const CFStringRef>(@"ABPer
  @Notes
 */
 ABRecordRef ABPersonCreate() {
-    return (__bridge_retained ABRecordRef)[[_ABContact alloc] initWithContact:[WACContact make] andType:kAddressBookNewContact];
+    return (__bridge_retained ABRecordRef)[[_ABContact alloc] initWithContact:Contact() andType:kAddressBookNewContact];
 }
 
 /**
@@ -248,7 +251,7 @@ ABRecordRef ABAddressBookGetPersonWithRecordID(ABAddressBookRef addressBook, ABR
     NSString* ending = [NSString stringWithFormat:@".%d}", recordID];
     NSUInteger index = [contacts indexOfObjectPassingTest:^BOOL(id obj, NSUInteger idx, BOOL* stop) {
         _ABContact* person = (_ABContact*)obj;
-        if ([person.contact.id hasSuffix:ending]) {
+        if ([objcwinrt::string(person.contact.Id()) hasSuffix:ending]) {
             *stop = YES;
             return YES;
         } else {
