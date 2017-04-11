@@ -57,8 +57,10 @@ CTFrameRef CTFramesetterCreateFrame(CTFramesetterRef framesetter, CFRange range,
         range.length = CFAttributedStringGetLength(attributedString) - range.location;
     }
 
-    StrongId<_CTFrame> ret = _DWriteGetFrame(attributedString, range, frameRect);
-    ret->_path.reset(CGPathRetain(path));
+    woc::StrongCF<__CTFrame*> ret;
+    ret =
+        const_cast<__CTFrame*>(_DWriteGetFrame(static_cast<CFAttributedStringRef>(typesetter->_attributedString.get()), range, frameRect));
+    ret->_path = path;
     ret->_frameRect.origin = frameRect.origin;
 
     // Trying to access attributes without any text will throw an error
@@ -102,7 +104,7 @@ CTFrameRef CTFramesetterCreateFrame(CTFramesetterRef framesetter, CFRange range,
         (lineBreakMode == kCTLineBreakByClipping || lineBreakMode == kCTLineBreakByTruncatingHead ||
          lineBreakMode == kCTLineBreakByTruncatingTail || lineBreakMode == kCTLineBreakByTruncatingMiddle)) {
         for (size_t i = 0; i < ret->_lineOrigins.size(); ++i) {
-            _CTLine* line = [ret->_lines objectAtIndex:i];
+            _CTLine* line = static_cast<_CTLine*>(CFArrayGetValueAtIndex(ret->_lines, i));
             if (line->_width > frameRect.size.width) {
                 ret->_lineOrigins[i].x -= line->_relativeXOffset;
             }

@@ -17,6 +17,7 @@
 
 #import <CoreText/CoreText.h>
 #import <CoreText/CTParagraphStyle.h>
+#import <CFCppBase.h>
 #import "Starboard.h"
 #include <COMIncludes.h>
 #import <DWrite.h>
@@ -73,14 +74,19 @@ CFAttributedStringRef _CTTypesetterGetAttributedString(CTTypesetterRef typesette
 }
 @end
 
-@interface _CTFrame : NSObject {
-@public
+#pragma region CTFrame
+struct __CTFrame : CoreFoundation::CppBase<__CTFrame> {
+    __CTFrame() : _lines(CFArrayCreateMutable(kCFAllocatorDefault, 0, &kCFTypeArrayCallBacks)) {
+    }
+
     CGRect _frameRect;
-    woc::unique_cf<CGPathRef> _path;
+    woc::StrongCF<CGPathRef> _path;
     std::vector<CGPoint> _lineOrigins;
-    StrongId<NSMutableArray<_CTLine*>> _lines;
-}
-@end
+    // Hold CTLineRef
+    woc::StrongCF<CFMutableArrayRef> _lines;
+};
+
+#pragma endregion CTFrame
 
 // Private helper methods for UIKit
 CORETEXT_EXPORT CGSize _CTFrameGetSize(CTFrameRef frame);
