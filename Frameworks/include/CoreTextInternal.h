@@ -17,7 +17,6 @@
 
 #import <CoreText/CoreText.h>
 #import <CoreText/CTParagraphStyle.h>
-
 #import "Starboard.h"
 #include <COMIncludes.h>
 #import <DWrite.h>
@@ -46,18 +45,13 @@ inline void _SafeRelease(T** p) {
     }
 }
 
-@interface _CTTypesetter : NSObject {
-@public
-    StrongId<NSAttributedString> _attributedString;
-    StrongId<NSString> _string;
-}
-@end
-
 @interface _CTFramesetter : NSObject {
 @public
     StrongId<_CTTypesetter> _typesetter;
 }
 @end
+
+CFAttributedStringRef _CTTypesetterGetAttributedString(CTTypesetterRef typesetter);
 
 @interface _CTRun : NSObject {
 @public
