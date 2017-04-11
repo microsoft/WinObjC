@@ -142,12 +142,10 @@ void CTFrameDraw(CTFrameRef frame, CGContextRef ctx) {
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 CFTypeID CTFrameGetTypeID() {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return __CTFrame::GetTypeID();
 }
 
 // Convenience private function for NSString+UIKitAdditions
