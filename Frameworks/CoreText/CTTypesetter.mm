@@ -73,19 +73,20 @@ CTLineRef CTTypesetterCreateLine(CTTypesetterRef typesetter, CFRange stringRange
  @Status Interoperable
 */
 CTLineRef CTTypesetterCreateLineWithOffset(CTTypesetterRef ts, CFRange range, double offset) {
-    _CTFrame* frame = _DWriteGetFrame(ts->AttributedString(), range, CGRectMake(offset, 0, FLT_MAX, FLT_MAX));
-
+    CTFrameRef frame = _DWriteGetFrame(ts->AttributedString(), range, CGRectMake(offset, 0, FLT_MAX, FLT_MAX));
     RETURN_NULL_IF(!frame);
-    if ([frame->_lines count] != 1) {
+
+    CFIndex count = CFArrayGetCount(frame->_lines);
+    if (count != 1) {
         TraceError(TAG,
                    L"CTTypesetterCreateLineWithOffset - range {%f, %f} did not fit on a single line, instead used %u.",
                    range.location,
                    range.length,
-                   [frame->_lines count]);
+                   count);
         return nullptr;
     }
 
-    return static_cast<CTLineRef>([[frame->_lines firstObject] retain]);
+    return static_cast<CTLineRef>(CFRetain(CFArrayGetValueAtIndex(frame->_lines, 0)));
 }
 
 /**
@@ -99,11 +100,12 @@ CFIndex CTTypesetterSuggestLineBreak(CTTypesetterRef typesetter, CFIndex startIn
  @Status Interoperable
 */
 CFIndex CTTypesetterSuggestLineBreakWithOffset(CTTypesetterRef typesetter, CFIndex index, double width, double offset) {
-    _CTFrame* frame = _DWriteGetFrame(typesetter->AttributedString(),
+      CTFrameRef frame = _DWriteGetFrame(typesetter->AttributedString(),
                                       CFRangeMake(index, CFAttributedStringGetLength(typesetter->AttributedString()) - index),
                                       CGRectMake(offset, 0, width, FLT_MAX));
-    if ([frame->_lines count] > 0) {
-        return static_cast<_CTLine*>([frame->_lines firstObject])->_strRange.length;
+
+    if (CFArrayGetCount(frame->_lines) > 0) {
+        return static_cast<_CTLine*>(CFArrayGetValueAtIndex(frame->_lines, 0))->_strRange.length;
     }
 
     return 0;

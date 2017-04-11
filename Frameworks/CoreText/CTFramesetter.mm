@@ -58,8 +58,7 @@ CTFrameRef CTFramesetterCreateFrame(CTFramesetterRef framesetter, CFRange range,
     }
 
     woc::StrongCF<__CTFrame*> ret;
-    ret =
-        const_cast<__CTFrame*>(_DWriteGetFrame(static_cast<CFAttributedStringRef>(typesetter->_attributedString.get()), range, frameRect));
+    ret = const_cast<__CTFrame*>(_DWriteGetFrame(attributedString, range, frameRect));
     ret->_path = path;
     ret->_frameRect.origin = frameRect.origin;
 
