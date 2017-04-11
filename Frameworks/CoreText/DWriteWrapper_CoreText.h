@@ -52,7 +52,7 @@ struct _DWriteGlyphRunDetails {
 bool _CloneDWriteGlyphRun(_In_ DWRITE_GLYPH_RUN const* src, _Outptr_ DWRITE_GLYPH_RUN* dest);
 
 CGSize _DWriteGetFrameSize(CFAttributedStringRef string, CFRange range, CGSize maxSize, CFRange* fitRange);
-_CTFrame* _DWriteGetFrame(CFAttributedStringRef string, CFRange range, CGRect frameSize);
+CTFrameRef _DWriteGetFrame(CFAttributedStringRef string, CFRange range, CGRect frameSize);
 _CTLine* _DWriteGetLine(CFAttributedStringRef string);
 
 // DWriteWrapper functions relating to CTFont, CTFontDescriptor

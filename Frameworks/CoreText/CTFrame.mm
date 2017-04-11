@@ -28,26 +28,33 @@ const CFStringRef kCTFramePathWidthAttributeName = CFSTR("kCTFramePathWidthAttri
 const CFStringRef kCTFrameClippingPathsAttributeName = CFSTR("kCTFrameClippingPathsAttributeName");
 const CFStringRef kCTFramePathClippingPathAttributeName = CFSTR("kCTFramePathClippingPathAttributeName");
 
-@implementation _CTFrame : NSObject
-- (instancetype)init {
-    if ([super init]) {
-        _lines.attach([NSMutableArray new]);
+/**
+ @Status Interoperable
+*/
+CFRange CTFrameGetStringRange(CTFrameRef frame) {
+    RETURN_RESULT_IF_NULL(frame, CFRangeMake(0, 0));
+
+    CFIndex count = 0;
+    CFIndex len = CFArrayGetCount(frame->_lines);
+
+    for (CFIndex index = 0; index < len; ++index) {
+        _CTLine* line = static_cast<_CTLine*>(CFArrayGetValueAtIndex(frame->_lines, index));
+        count += line->_strRange.length;
     }
 
-    return self;
+    return CFRangeMake(0, count);
 }
-
-@end
 
 /**
  @Status Interoperable
- @Notes
 */
-CFRange CTFrameGetStringRange(CTFrameRef frame) {
-    _CTFrame* framePtr = static_cast<_CTFrame*>(frame);
+CFRange CTFrameGetVisibleStringRange(CTFrameRef frame) {
+    RETURN_RESULT_IF_NULL(frame, CFRangeMake(0, 0));
+
     CFIndex count = 0;
-    if (framePtr) {
-        for (_CTLine* line in static_cast<id<NSFastEnumeration>>(framePtr->_lines)) {
+    for (size_t index = 0; index < frame->_lineOrigins.size(); ++index) {
+        if (frame->_lineOrigins[index].y < frame->_frameRect.size.height) {
+            _CTLine* line = static_cast<_CTLine*>(CFArrayGetValueAtIndex(frame->_lines, index));
             count += line->_strRange.length;
         }
     }
@@ -56,28 +63,10 @@ CFRange CTFrameGetStringRange(CTFrameRef frame) {
 
 /**
  @Status Interoperable
- @Notes
-*/
-CFRange CTFrameGetVisibleStringRange(CTFrameRef frame) {
-    _CTFrame* framePtr = static_cast<_CTFrame*>(frame);
-    CFIndex count = 0;
-    if (framePtr) {
-        for (size_t i = 0; i < framePtr->_lineOrigins.size(); ++i) {
-            if (framePtr->_lineOrigins[i].y < framePtr->_frameRect.size.height) {
-                _CTLine* line = static_cast<_CTLine*>([framePtr->_lines objectAtIndex:i]);
-                count += line->_strRange.length;
-            }
-        }
-    }
-    return CFRangeMake(0, count);
-}
-
-/**
- @Status Interoperable
- @Notes
 */
 CGPathRef CTFrameGetPath(CTFrameRef frame) {
-    return frame ? static_cast<_CTFrame*>(frame)->_path.get() : nil;
+    RETURN_NULL_IF(!frame);
+    return frame->_path;
 }
 
 /**
@@ -93,61 +82,62 @@ CFDictionaryRef CTFrameGetFrameAttributes(CTFrameRef frame) {
  @Status Interoperable
 */
 CFArrayRef CTFrameGetLines(CTFrameRef frame) {
-    return frame ? static_cast<CFArrayRef>(static_cast<_CTFrame*>(frame)->_lines.get()) : nil;
+    RETURN_NULL_IF(!frame);
+    return frame->_lines;
 }
 
 /**
  @Status Interoperable
 */
-void CTFrameGetLineOrigins(CTFrameRef frameRef, CFRange range, CGPoint origins[]) {
-    _CTFrame* frame = static_cast<_CTFrame*>(frameRef);
-    if (frame) {
-        _boundedCopy(range, frame->_lineOrigins.size(), frame->_lineOrigins.data(), origins);
-    }
+void CTFrameGetLineOrigins(CTFrameRef frame, CFRange range, CGPoint origins[]) {
+    RETURN_IF(!frame);
+    _boundedCopy(range, frame->_lineOrigins.size(), frame->_lineOrigins.data(), origins);
 }
 
 /**
  @Status Interoperable
 */
-void CTFrameDraw(CTFrameRef frameRef, CGContextRef ctx) {
-    _CTFrame* frame = static_cast<_CTFrame*>(frameRef);
-    if (frame && ctx) {
-        std::vector<GlyphRunData> runs;
+void CTFrameDraw(CTFrameRef frame, CGContextRef ctx) {
+    RETURN_IF(!ctx);
+    RETURN_IF(!frame);
 
-        for (size_t i = 0; i < frame->_lineOrigins.size() && (frame->_lineOrigins[i].y < frame->_frameRect.size.height); ++i) {
-            _CTLine* line = static_cast<_CTLine*>([frame->_lines objectAtIndex:i]);
-            CGPoint relativePosition = frame->_lineOrigins[i];
-            for (size_t j = 0; j < [line->_runs count]; ++j) {
-                _CTRun* curRun = [line->_runs objectAtIndex:j];
-                if (j > 0) {
-                    // Adjusts x position relative to the last run drawn
-                    relativePosition.x += curRun->_relativeXOffset;
-                }
-                runs.emplace_back(GlyphRunData{ &curRun->_dwriteGlyphRun, relativePosition, (CFDictionaryRef)curRun->_attributes.get() });
+    std::vector<GlyphRunData> runs;
+
+    for (size_t i = 0; i < frame->_lineOrigins.size() && (frame->_lineOrigins[i].y < frame->_frameRect.size.height); ++i) {
+        _CTLine* line = static_cast<_CTLine*>(CFArrayGetValueAtIndex(frame->_lines, i));
+
+        CGPoint relativePosition = frame->_lineOrigins[i];
+
+        for (size_t j = 0; j < [line->_runs count]; ++j) {
+            _CTRun* curRun = [line->_runs objectAtIndex:j];
+            if (j > 0) {
+                // Adjusts x position relative to the last run drawn
+                relativePosition.x += curRun->_relativeXOffset;
             }
+            runs.emplace_back(GlyphRunData{ &curRun->_dwriteGlyphRun, relativePosition, (CFDictionaryRef)curRun->_attributes.get() });
         }
+    }
 
-        if (!runs.empty()) {
-            // Need to invert and translate coordinates so frame draws from top-left
-            CGRect boundingRect = CGPathGetBoundingBox(frame->_path.get());
-            CGContextTranslateCTM(ctx, 0, boundingRect.size.height);
+    if (!runs.empty()) {
+        // Need to invert and translate coordinates so frame draws from top-left
+        CGRect boundingRect = CGPathGetBoundingBox(frame->_path);
+        CGContextTranslateCTM(ctx, 0, boundingRect.size.height);
 
-            // Invert Text Matrix and CTM so glyphs are drawn in correct orientation and position
-            CGAffineTransform textMatrix = CGContextGetTextMatrix(ctx);
-            CGContextSetTextMatrix(ctx, CGAffineTransformMake(textMatrix.a, -textMatrix.b, textMatrix.c, -textMatrix.d, 0, 0));
+        // Invert Text Matrix and CTM so glyphs are drawn in correct orientation and position
+        CGAffineTransform textMatrix = CGContextGetTextMatrix(ctx);
+        CGContextSetTextMatrix(ctx, CGAffineTransformMake(textMatrix.a, -textMatrix.b, textMatrix.c, -textMatrix.d, 0, 0));
+        CGContextScaleCTM(ctx, 1.0f, -1.0f);
+
+        _CGContextPushBeginDraw(ctx);
+        auto popEnd = wil::ScopeExit([&]() {
+            // Restore CTM and Text Matrix to values before we modified them
+            CGContextSetTextMatrix(ctx, textMatrix);
             CGContextScaleCTM(ctx, 1.0f, -1.0f);
+            CGContextTranslateCTM(ctx, 0, -boundingRect.size.height);
+            _CGContextPopEndDraw(ctx);
+        });
 
-            _CGContextPushBeginDraw(ctx);
-            auto popEnd = wil::ScopeExit([&]() {
-                // Restore CTM and Text Matrix to values before we modified them
-                CGContextSetTextMatrix(ctx, textMatrix);
-                CGContextScaleCTM(ctx, 1.0f, -1.0f);
-                CGContextTranslateCTM(ctx, 0, -boundingRect.size.height);
-                _CGContextPopEndDraw(ctx);
-            });
-
-            _CGContextDrawGlyphRuns(ctx, runs.data(), runs.size());
-        }
+        _CGContextDrawGlyphRuns(ctx, runs.data(), runs.size());
     }
 }
 
@@ -162,5 +152,6 @@ CFTypeID CTFrameGetTypeID() {
 
 // Convenience private function for NSString+UIKitAdditions
 CGSize _CTFrameGetSize(CTFrameRef frame) {
-    return frame ? static_cast<_CTFrame*>(frame)->_frameRect.size : CGSize{};
+    RETURN_RESULT_IF_NULL(frame, CGSize{});
+    return frame->_frameRect.size;
 }

@@ -395,9 +395,9 @@ public:
  */
 static _CTLine* _DWriteGetLine(CFAttributedStringRef string) {
     CFRange range = CFRangeMake(0, CFAttributedStringGetLength(string));
-    _CTFrame* frame = _DWriteGetFrame(string, range, CGRectMake(0, 0, FLT_MAX, FLT_MAX));
-    if ([frame->_lines count] > 0) {
-        return [[frame->_lines firstObject] retain];
+    CTFrameRef frame = _DWriteGetFrame(string, range, CGRectMake(0, 0, FLT_MAX, FLT_MAX));
+    if (CFArrayGetCount(frame->_lines) > 0) {
+        return [static_cast<_CTLine*>(CFArrayGetValueAtIndex(frame->_lines, 0)) retain];
     }
 
     return [_CTLine new];
@@ -410,15 +410,15 @@ static _CTLine* _DWriteGetLine(CFAttributedStringRef string) {
  * @parameter range attributed string range to use.
  * @parameter frameSize size parameters of the frame to fit the text into.
  *
- * @return _CTFrame* created using the given parameters
+ * @return CTFrameRef created using the given parameters
  */
-static _CTFrame* _DWriteGetFrame(CFAttributedStringRef string, CFRange range, CGRect frameSize) {
+static CTFrameRef _DWriteGetFrame(CFAttributedStringRef string, CFRange range, CGRect frameSize) {
     RETURN_NULL_IF(!string);
 
-    _CTFrame* frame = [[_CTFrame new] autorelease];
-    if (range.length <= 0) {
-        return frame;
-    }
+    __CTFrame* frame = __CTFrame::CreateInstance(kCFAllocatorDefault);
+    CFAutorelease(frame);
+
+    RETURN_RESULT_IF(range.length <= 0, frame);
 
     ComPtr<IDWriteTextLayout> textLayout;
     RETURN_NULL_IF_FAILED(__DWriteTextLayoutCreate(string, range, frameSize, &textLayout));
@@ -446,7 +446,8 @@ static _CTFrame* _DWriteGetFrame(CFAttributedStringRef string, CFRange range, CG
 
     while (i < numOfGlyphRuns) {
         _CTLine* line = [[_CTLine new] autorelease];
-        NSMutableArray<_CTRun*>* runs = [NSMutableArray array];
+
+        auto runs = woc::MakeStrongCF<CFMutableArrayRef>(CFArrayCreateMutable(kCFAllocatorDefault, 0, &kCFTypeArrayCallBacks));
         uint32_t stringRange = 0;
         uint32_t glyphCount = 0;
         prevXPosForDraw = 0;
@@ -495,7 +496,7 @@ static _CTFrame* _DWriteGetFrame(CFAttributedStringRef string, CFRange range, CG
                 line->_width += glyphRunDetails._dwriteGlyphRun[j].glyphAdvances[index];
             }
 
-            [runs addObject:run];
+            CFArrayAppendValue(runs, run);
             stringRange += run->_range.length;
             glyphCount += glyphRunDetails._dwriteGlyphRun[j].glyphCount;
         }
@@ -503,10 +504,10 @@ static _CTFrame* _DWriteGetFrame(CFAttributedStringRef string, CFRange range, CG
         // Fast-forward i to start on the next line
         i = j;
 
-        if ([runs count] > 0) {
+        if (CFArrayGetCount(runs) > 0) {
             prevYPosForDraw = yPos;
-            line->_runs = runs;
-            _CTRun* firstRun = static_cast<_CTRun*>(runs[0]);
+            line->_runs = static_cast<NSMutableArray*>(runs.get());
+            _CTRun* firstRun = static_cast<_CTRun*>(CFArrayGetValueAtIndex(runs, 0));
             line->_strRange.location = firstRun->_range.location;
             line->_strRange.length = stringRange;
             line->_glyphCount = glyphCount;
@@ -521,7 +522,7 @@ static _CTFrame* _DWriteGetFrame(CFAttributedStringRef string, CFRange range, CG
                 lineOrigin = { firstRun->_glyphOrigins[0].x, firstRun->_glyphOrigins[0].y };
             }
 
-            [frame->_lines addObject:line];
+            CFArrayAppendValue(frame->_lines, line);
             frame->_lineOrigins.emplace_back(lineOrigin);
         }
     }
