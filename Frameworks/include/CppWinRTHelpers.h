@@ -206,6 +206,40 @@ NSError* to_nserror(const TAsync& async, winrt::Windows::Foundation::AsyncStatus
 }
 
 //
+// Convert async status to NSError
+//
+template <typename TAsync>
+NSError* to_nserror(const TAsync& async, winrt::Windows::Foundation::AsyncStatus status) {
+    // Results are roughly compatible with what ObjCUWP projections do
+    NSError* error = nil;
+
+    switch (status) {
+        case winrt::Windows::Foundation::AsyncStatus::Completed:
+            // No error
+            break;
+
+        case winrt::Windows::Foundation::AsyncStatus::Error: {
+            HRESULT hr = async.ErrorCode();
+
+            // None of this "error: the operation succeeded" nonsense
+            if (hr == S_OK) {
+                hr = E_UNEXPECTED;
+            }
+
+            error = [NSError errorWithDomain:@"HRESULT" code:static_cast<NSInteger>(hr) userInfo:nil];
+            break;
+        }
+
+        case winrt::Windows::Foundation::AsyncStatus::Canceled:
+        default:
+            error = [NSError errorWithDomain:@"Async" code:static_cast<NSInteger>(status) userInfo:nil];
+            break;
+    }
+
+    return error;
+}
+
+//
 // Callback wrapper
 //
 namespace impl {
