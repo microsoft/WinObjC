@@ -4,7 +4,7 @@
   <Target Name="AddBuiltOutput" BeforeTargets="GetPackageContents" Condition="'$(SkipGetPackageContentsForOtherPlatforms)' != 'true'">
       <ItemGroup>
           <!-- Include *all* of /include/, /include/xplat/ and /include_next/ folder.  -->
-          <_IncludeFiles Include="$(MSBuildThisFileDirectory)..\include\**\*.*"/>
+          <_IncludeFiles Include="$(MSBuildThisFileDirectory)..\include\**\*.*" Exclude="$(MSBuildThisFileDirectory)..\include\xplat\**\*.*"/>
           <_IncludeFiles Include="$(MSBuildThisFileDirectory)..\include\xplat\**\*.*"/>
           <_IncludeFiles Include="$(MSBuildThisFileDirectory)..\include_next\**\*.*"/>
 
