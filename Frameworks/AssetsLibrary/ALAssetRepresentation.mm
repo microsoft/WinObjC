@@ -28,7 +28,6 @@
 #import <Foundation/NSURL.h>
 #import <AssetsLibrary/ALAssetRepresentation.h>
 #import "CppWinRTHelpers.h"
-#import "NSErrorInternal.h"
 
 using namespace Microsoft::WRL;
 using namespace winrt::Windows::Storage;
@@ -68,7 +67,7 @@ NSString* const ALAssetRepresentationDomain = @"ALAssetRepresentation";
             if (status == WF::AsyncStatus::Completed) {
                 _storageFile = op.GetResults();
             } else {
-                tempError = [[NSError alloc] _initWithHRESULT:op.ErrorCode()];
+                tempError = [objcwinrt::to_nserror(op, status) retain];
             }
 
             dispatch_group_leave(group);
@@ -236,13 +235,13 @@ NSString* const ALAssetRepresentationDomain = @"ALAssetRepresentation";
                                     memcpy_s(buffer, length, byteBuffer, bufferLength);
                                 }
                             } else {
-                                tempError = [[NSError alloc] _initWithHRESULT:op.ErrorCode()];
+                                tempError = [objcwinrt::to_nserror(op, status) retain];
                             }
 
                             dispatch_group_leave(group);
                     }));
                 } else {
-                    tempError = [[NSError alloc] _initWithHRESULT:op.ErrorCode()];
+                    tempError = [objcwinrt::to_nserror(op, status) retain];
                     dispatch_group_leave(group);
                 }
         }));

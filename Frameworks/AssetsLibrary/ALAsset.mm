@@ -21,7 +21,6 @@
 #import <Foundation/NSError.h>
 #import <AssetsLibrary/ALAsset.h>
 #import <AssetsLibrary/ALAssetRepresentation.h>
-#import "NSErrorInternal.h"
 #include "CppWinRTHelpers.h"
 
 #include "COMIncludes.h"
@@ -86,7 +85,7 @@ NSString* const ALAssetTypeUnknown = @"ALAssetTypeUnknown";
                     _localPath = [_localPath stringByAppendingString:[_assetURL path]];
                     _localPath = [_localPath stringByReplacingOccurrencesOfString:@"/" withString:@"\\"];
                 } else {
-                    tempError = [[NSError alloc] _initWithHRESULT:op.ErrorCode()];
+                    tempError = [objcwinrt::to_nserror(op, status) retain];
                 }
 
                 dispatch_group_leave(group);
