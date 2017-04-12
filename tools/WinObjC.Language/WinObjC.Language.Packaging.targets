@@ -3,12 +3,11 @@
 
   <Target Name="AddBuiltOutput" BeforeTargets="GetPackageContents" Condition="'$(SkipGetPackageContentsForOtherPlatforms)' != 'true'">
       <ItemGroup>
-          <!-- Include *all* of /include/, /include/xplat/ and /include_next/ folder.  -->
-          <_IncludeFiles Include="$(MSBuildThisFileDirectory)..\include\**\*.*" Exclude="$(MSBuildThisFileDirectory)..\include\xplat\**\*.*"/>
-          <_IncludeFiles Include="$(MSBuildThisFileDirectory)..\include\xplat\**\*.*"/>
+          <!-- Inlcude *all* of /include/  and /include_next/ folder.  -->
+          <_IncludeFiles Include="$(MSBuildThisFileDirectory)..\include\**\*.*"/>
           <_IncludeFiles Include="$(MSBuildThisFileDirectory)..\include_next\**\*.*"/>
 
-          <!-- Include *all* of /msvc/ folder. Almost certainly overkill at this stage. Things like the .sln     -->
+          <!-- Inlcude *all* of /msvc/ folder. Almost certainly overkill at this stage. Things like the .sln     -->
           <!-- for ClangCompile shouldn't be shipped in the package really but ok for bootstrapping the process. -->
           <!-- Pare this down in a future version!!! -->
           <_MSVCFiles Include="$(MSBuildThisFileDirectory)..\msvc\**\*.*"/>
@@ -33,7 +32,7 @@
           </PackageFile>
       </ItemGroup>
 
-      <!-- Include custom .props and .targets files. These are automatically added to a consuming project. -->
+      <!-- Inlcude custom .props and .targets files. These are automatically added to a consuming project. -->
       <!-- This helps bootstrap the package and abstracts out starboard and other concepts that may change -->
       <!-- in future versions of the package. -->
       <ItemGroup>

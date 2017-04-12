@@ -41,7 +41,7 @@
   <ItemDefinitionGroup>
     <ClCompile>
       <AdditionalOptions>"/DLOGGING_IMPEXP= " "/DWIL_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(MSBuildThisFileDirectory)..\..\include\WOCStdLib\;$(MSBuildThisFileDirectory)..\..\include\;$(MSBuildThisFileDirectory)..\..\include\xplat\;$(MSBuildThisFileDirectory)..\include\;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(MSBuildThisFileDirectory)..\..\include\WOCStdLib\;$(MSBuildThisFileDirectory)..\..\include\;$(MSBuildThisFileDirectory)..\include\;</AdditionalIncludeDirectories>
     </ClCompile>
   </ItemDefinitionGroup>
   <Import Project="$(MSBuildThisFileDirectory)..\..\common\common-build.targets" />

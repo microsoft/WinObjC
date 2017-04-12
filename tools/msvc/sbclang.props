@@ -42,7 +42,7 @@
     </ClangCompile>
 
     <ClCompile>
-      <AdditionalIncludeDirectories>$(StarboardSdkRoot)\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(StarboardSdkRoot)\include\;$(StarboardSdkRoot)\include\xplat;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
   </ItemDefinitionGroup>
 

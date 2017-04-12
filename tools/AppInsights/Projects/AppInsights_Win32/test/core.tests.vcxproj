@@ -50,7 +50,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>true</LinkIncremental>
     <LibraryPath>$(ProjectDir)\..\..\lib\win32;$(LibraryPath)</LibraryPath>
-    <IncludePath>$(ProjectDir)\..\..\include;$(ProjectDir)\..\..\include\xplat;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)\..\..\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

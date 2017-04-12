@@ -51,7 +51,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup>
     <ClCompile>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(MSBuildThisFileDirectory)..\..\include\WOCStdLib\;$(MSBuildThisFileDirectory)..\..\include\;$(MSBuildThisFileDirectory)..\..\include\xplat\;$(MSBuildThisFileDirectory)..\..\Logging\include\;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(MSBuildThisFileDirectory)..\..\include\WOCStdLib\;$(MSBuildThisFileDirectory)..\..\include\;$(MSBuildThisFileDirectory)..\..\Logging\include\;</AdditionalIncludeDirectories>
     </ClCompile>
   </ItemDefinitionGroup>
   <Import Project="$(MSBuildThisFileDirectory)..\..\common\common-build.targets" />
