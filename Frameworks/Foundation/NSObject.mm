@@ -42,7 +42,8 @@
 #import "NSInvocationInternal.h"
 
 static void _NSObjCEnumerationMutation(id object) {
-    [NSException raise:NSInternalInconsistencyException format:@"Collection <%s %p> mutated while being enumerated!", object_getClassName(object), object];
+    [NSException raise:NSInternalInconsistencyException
+                format:@"Collection <%s %p> mutated while being enumerated!", object_getClassName(object), object];
 }
 
 static BOOL _NSSelectorNotFoundIsNonFatal;
@@ -258,28 +259,28 @@ static id _NSWeakLoad(id obj) {
  @Status Interoperable
 */
 - (id)performSelector:(SEL)selector {
-    return ((id (*)(id, SEL))objc_msgSend)(self, selector);
+    return ((id(*)(id, SEL))objc_msgSend)(self, selector);
 }
 
 /**
  @Status Interoperable
 */
 - (id)performSelector:(SEL)selector withObject:(id)obj1 {
-    return ((id (*)(id, SEL, id))objc_msgSend)(self, selector, obj1);
+    return ((id(*)(id, SEL, id))objc_msgSend)(self, selector, obj1);
 }
 
 /**
  @Status Interoperable
 */
 - (id)performSelector:(SEL)selector withObject:(id)obj1 withObject:(id)obj2 {
-    return ((id (*)(id, SEL, id, id))objc_msgSend)(self, selector, obj1, obj2);
+    return ((id(*)(id, SEL, id, id))objc_msgSend)(self, selector, obj1, obj2);
 }
 
 /**
  @Status Interoperable
 */
 - (id)performSelector:(SEL)selector withObject:(id)obj1 withObject:(id)obj2 withObject:(id)obj3 {
-    return ((id (*)(id, SEL, id, id, id))objc_msgSend)(self, selector, obj1, obj2, obj3);
+    return ((id(*)(id, SEL, id, id, id))objc_msgSend)(self, selector, obj1, obj2, obj3);
 }
 
 /**
@@ -504,7 +505,6 @@ static IMP _NSIMPForward(id object, SEL selector) {
     return _NSSlotForward(object, selector)->method;
 }
 
-
 /**
  @Status Interoperable
 */
@@ -677,12 +677,11 @@ static IMP _NSIMPForward(id object, SEL selector) {
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
 - (BOOL)isProxy {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return NO;
 }
 
 - (id)autoContentAccessingProxy {
@@ -708,7 +707,8 @@ __attribute__((objc_root_class)) @interface NSZombie {
 }
 @end
 
-static void _dealloc_zombify(id self, SEL _cmd); // forward declaration
+    static void
+    _dealloc_zombify(id self, SEL _cmd); // forward declaration
 
 static void _NSCFZombifyHook(id object) {
     _dealloc_zombify(object, nullptr);
@@ -737,7 +737,7 @@ static void _NSCFZombifyHook(id object) {
 /**
  @Status Interoperable
 */
-- (void)doesNotRecognizeSelector: (SEL)selector {
+- (void)doesNotRecognizeSelector:(SEL)selector {
     // NSZombie subclasses store the original class as a class variable. Retrieve it here.
     Class oldIsa = reinterpret_cast<Class*>(object_getIndexedIvars(isa))[0];
     THROW_NS_HR_MSG(HRESULT_FROM_WIN32(ERROR_INVALID_HANDLE),
@@ -748,8 +748,7 @@ static void _NSCFZombifyHook(id object) {
 }
 @end
 
-static void
-_dealloc_dispose(id self, SEL _cmd) {
+static void _dealloc_dispose(id self, SEL _cmd) {
     object_dispose(self);
 }
 
