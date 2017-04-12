@@ -30,12 +30,14 @@
 
 #pragma once
 
+#import "UIKitExport.h"
 #import "UIGestureRecognizer.h"
 
 // This will only trigger on old-school scroll wheels and momentum scroll events.
 // Unlike UIPanGestureRecognizer, this is a discrete recognizer. It is also,
 // obviously, entirely non-standard. :)
 
+UIKIT_EXPORT_CLASS
 @interface UIScrollWheelGestureRecognizer : UIGestureRecognizer {
     CGPoint _translation;
 }

@@ -30,8 +30,10 @@
 
 #pragma once
 
+#import "UIKitExport.h"
 #import <Foundation/Foundation.h>
 
+UIKIT_EXPORT_CLASS
 @interface UIScreenMode : NSObject
 
 @property (readonly, nonatomic) CGFloat pixelAspectRatio;

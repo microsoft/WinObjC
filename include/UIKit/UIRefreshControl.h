@@ -16,8 +16,10 @@
 
 #pragma once
 
+#import "UIKitExport.h"
 #import <UIKit/UIControl.h>
 
+UIKIT_EXPORT_CLASS
 @interface UIRefreshControl : UIControl
 
 - (void)beginRefreshing;

@@ -30,10 +30,12 @@
 
 #pragma once
 
+#import "UIKitExport.h"
 #import <Foundation/Foundation.h>
 
 typedef double UIAccelerationValue;
 
+UIKIT_EXPORT_CLASS
 @interface UIAcceleration : NSObject {
     UIAccelerationValue _x;
     UIAccelerationValue _y;

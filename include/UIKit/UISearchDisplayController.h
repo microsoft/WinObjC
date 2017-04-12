@@ -36,12 +36,14 @@
 
 #pragma once
 
+#import "UIKitExport.h"
 #import "UITableView.h"
 
 @class UISearchBar, UITableView, UIViewController, UIPopoverController;
 @protocol UITableViewDataSource
 , UITableViewDelegate, UISearchDisplayDelegate;
 
+UIKIT_EXPORT_CLASS
 @interface UISearchDisplayController : NSObject {
     UIViewController* _viewController;
     UISearchBar* _searchBar;

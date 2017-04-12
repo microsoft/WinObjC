@@ -30,10 +30,12 @@
 
 #pragma once
 
+#import "UIKitExport.h"
 #import "UIScrollView.h"
 
 @class NSView, UINSClipView;
 
+UIKIT_EXPORT_CLASS
 @interface UIViewAdapter : UIScrollView {
 @private
     UINSClipView* _clipView;
