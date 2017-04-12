@@ -30,8 +30,10 @@
 
 #pragma once
 
+#import "UIKitExport.h"
 #import <Foundation/Foundation.h>
 
+UIKIT_EXPORT_CLASS
 @interface UIMenuItem : NSObject {
 @private
     SEL _action;

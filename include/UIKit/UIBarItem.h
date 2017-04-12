@@ -30,6 +30,7 @@
 
 #pragma once
 
+#import "UIKitExport.h"
 #import <Foundation/Foundation.h>
 #import <UIKit/UIAppearance.h>
 #import <UIKit/UIControl.h>
@@ -38,6 +39,7 @@
 
 @class UIImage;
 
+UIKIT_EXPORT_CLASS
 @interface UIBarItem : NSObject <NSCoding, UIAppearance, UIAccessibility>
 
 @property (nonatomic, getter=isEnabled) BOOL enabled;

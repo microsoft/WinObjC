@@ -30,8 +30,10 @@
 
 #pragma once
 
+#import "UIKitExport.h"
 #import "UIGestureRecognizer.h"
 
+UIKIT_EXPORT_CLASS
 @interface UIRotationGestureRecognizer : UIGestureRecognizer {
     CGFloat _rotation;
 }

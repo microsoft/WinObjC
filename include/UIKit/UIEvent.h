@@ -15,6 +15,7 @@
 //******************************************************************************
 #pragma once
 
+#import "UIKitExport.h"
 #import <Foundation/Foundation.h>
 
 typedef NS_ENUM(NSInteger, UIEventType) {
@@ -41,6 +42,7 @@ typedef NS_ENUM(NSInteger, UIEventSubtype) {
 
 @class UITouch, UIWindow, UIView, UIGestureRecognizer;
 
+UIKIT_EXPORT_CLASS
 @interface UIEvent : NSObject
 
 - (NSSet<UITouch*>*)allTouches;
