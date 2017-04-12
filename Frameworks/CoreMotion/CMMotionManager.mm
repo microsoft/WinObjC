@@ -18,15 +18,20 @@
 #import <CoreMotion/CoreMotion.h>
 #import <StubReturn.h>
 #import <NSLogging.h>
+#import <chrono>
 #import "CMMotionManagerInternal.h"
 #import "UWP/WindowsGraphicsDisplay.h"
 #import "windows.h"
+#import "CppWinRTHelpers.h"
 
-// Timestamps for readings are in seconds for iOS and in 100-nanoseconds for WinRT
-static const double c_secondToHundredNanoseconds = 10000000.0;
+#include "COMIncludes.h"
+#import <winrt/Windows.Foundation.h>
+#import <winrt/Windows.Graphics.Display.h>
+#include "COMIncludes_End.h"
 
-// GetTickCount64() unit is millisecond and SystemTime unit is 100-nanosecond
-static const double c_millisecondToHundredNanoseconds = 10000.0;
+using namespace winrt::Windows::Devices::Sensors;
+using namespace winrt::Windows::Graphics::Display;
+namespace WF = winrt::Windows::Foundation;
 
 // iOS uses (double)seconds while WinRT uses (uint)milliseconds. Thus (double)c_secondToMilliseconds for conversions.
 static const double c_secondToMilliseconds = 1000.0;
@@ -37,12 +42,12 @@ static const double c_degreeToRadian = M_PI / 180;
 // For converting quaternion from landscape to portrait reference frame.
 static const double c_cos45 = cos(-45 * c_degreeToRadian);
 
-static double _bootTime;
+static WF::DateTime _bootTime;
 
-// Converting from number of 100-nanosecond intervals passed after midnight on January 1, 1601
-// to number of seconds passed since the devices booted.
-inline double toSecondsSinceBoot(WFDateTime* time) {
-    return (static_cast<double>(time.universalTime) - _bootTime) / c_secondToHundredNanoseconds;
+// Converting from WF::DateTime to number of seconds passed since the devices booted.
+inline double toSecondsSinceBoot(const WF::DateTime& time) {
+    auto millis = std::chrono::duration_cast<std::chrono::milliseconds>(time - _bootTime);
+    return millis.count() / c_secondToMilliseconds;
 }
 
 static const wchar_t* TAG = L"CMMotionManager";
@@ -50,22 +55,19 @@ NSString* const CMErrorDomain = @"CMErrorDomain";
 
 @interface CMMotionManager ()
 
-@property WDSAccelerometer* accelerometer;
-@property EventRegistrationToken accelerometerToken;
+@property winrt::event_token accelerometerToken;
 @property NSOperationQueue* accelerometerQueue;
 @property (readwrite, nonatomic, getter=isAccelerometerActive) BOOL accelerometerActive;
 @property (readwrite, nonatomic, getter=isAccelerometerAvailable) BOOL accelerometerAvailable;
 @property (readwrite) CMAccelerometerData* accelerometerData;
 
-@property WDSGyrometer* gyrometer;
-@property EventRegistrationToken gyrometerToken;
+@property winrt::event_token gyrometerToken;
 @property NSOperationQueue* gyroQueue;
 @property (readwrite, nonatomic, getter=isGyroActive) BOOL gyroActive;
 @property (readwrite, nonatomic, getter=isGyroAvailable) BOOL gyroAvailable;
 @property (readwrite) CMGyroData* gyroData;
 
-@property WDSMagnetometer* magnetometer;
-@property EventRegistrationToken magnetometerToken;
+@property winrt::event_token magnetometerToken;
 @property NSOperationQueue* magnetometerQueue;
 @property (readwrite, nonatomic, getter=isMagnetometerActive) BOOL magnetometerActive;
 @property (readwrite, nonatomic, getter=isMagnetometerAvailable) BOOL magnetometerAvailable;
@@ -73,8 +75,7 @@ NSString* const CMErrorDomain = @"CMErrorDomain";
 
 // The orientation sensors returns rotation matrix and quaternion.
 // We will use the rotation matrix to calculate pitch, roll and yaw values.
-@property WDSOrientationSensor* orientation;
-@property EventRegistrationToken deviceMotionToken;
+@property winrt::event_token deviceMotionToken;
 @property NSOperationQueue* deviceMotionQueue;
 @property (readwrite, nonatomic, getter=isDeviceMotionActive) BOOL deviceMotionActive;
 @property (readwrite, nonatomic, getter=isDeviceMotionAvailable) BOOL deviceMotionAvailable;
@@ -82,78 +83,67 @@ NSString* const CMErrorDomain = @"CMErrorDomain";
 
 @end
 
-@implementation CMMotionManager
+@implementation CMMotionManager {
+    TrivialDefaultConstructor<Accelerometer> _accelerometer;
+    TrivialDefaultConstructor<Gyrometer> _gyrometer;
+    TrivialDefaultConstructor<Magnetometer> _magnetometer;
+    TrivialDefaultConstructor<OrientationSensor> _orientation;
+}
 
 - (instancetype)init {
     if (self = [super init]) {
         // GetTickCount64() returns the number of milliseconds passed since device boot
-        _bootTime = static_cast<double>(GetTickCount64());
+        ULONGLONG ticks = GetTickCount64();
+        _bootTime = winrt::clock::now() - std::chrono::milliseconds(ticks);
 
-        FILETIME fileTime;
-        GetSystemTimeAsFileTime(&fileTime);
-
-        ULARGE_INTEGER nowTime;
-        nowTime.LowPart = fileTime.dwLowDateTime;
-        nowTime.HighPart = fileTime.dwHighDateTime;
-
-        // On iOS the timestamps represent the number of seconds passed since the device booted while
-        // WinRT returns the number of 100-nanosecond intervals passed after midnight on January 1, 1601.
-        // Hence we calculate the bootTime as number of 100-nanosecond intervals after midnight on January 1, 1601
-        // till device boot and then we can simply subtract this value from each readings' timestamp.
-        _bootTime = static_cast<double>(nowTime.QuadPart) - (_bootTime * c_millisecondToHundredNanoseconds);
-
-        _accelerometer = [WDSAccelerometer getDefault];
+        _accelerometer = Accelerometer::GetDefault();
         _accelerometerActive = false;
-        _accelerometerToken.value = 0;
 
         if (_accelerometer) {
             _accelerometerAvailable = true;
 
             // The ref. frame is portrait-mode for iOS, while it is different across devices running Windows.
-            [_accelerometer setReadingTransform:WGDDisplayOrientationsPortrait];
+            _accelerometer.ReadingTransform(DisplayOrientations::Portrait);
         } else {
             _accelerometerAvailable = false;
             NSTraceInfo(TAG, @"Accelerometer not found!");
         }
 
-        _gyrometer = [WDSGyrometer getDefault];
+        _gyrometer = Gyrometer::GetDefault();
         _gyroActive = false;
-        _gyrometerToken.value = 0;
 
         if (_gyrometer) {
             _gyroAvailable = true;
 
             // The ref. frame is portrait-mode for iOS, while it is different across devices running Windows.
-            [_gyrometer setReadingTransform:WGDDisplayOrientationsPortrait];
+            _gyrometer.ReadingTransform(DisplayOrientations::Portrait);
         } else {
             _gyroAvailable = false;
             NSTraceInfo(TAG, @"Gyrometer not found!");
         }
 
-        _magnetometer = [WDSMagnetometer getDefault];
+        _magnetometer = Magnetometer::GetDefault();
         _magnetometerActive = false;
-        _magnetometerToken.value = 0;
 
         if (_magnetometer) {
             _magnetometerAvailable = true;
 
             // The ref. frame is portrait-mode for iOS, while it is different across devices running Windows.
-            [_magnetometer setReadingTransform:WGDDisplayOrientationsPortrait];
+            _magnetometer.ReadingTransform(DisplayOrientations::Portrait);
         } else {
             _magnetometerAvailable = false;
             NSTraceInfo(TAG, @"Magnetometer not found!");
         }
 
-        _orientation = [WDSOrientationSensor getDefault];
+        _orientation = OrientationSensor::GetDefault();
         _deviceMotionActive = false;
-        _deviceMotionToken.value = 0;
 
         if (_orientation) {
             _deviceMotionAvailable = true;
 
             // The range for pitch and roll is different (and swapped) across iOS and WinRT.
             // Hence we set the reference orientation to landscape and then swap the readings to match iOS behaviour.
-            [_orientation setReadingTransform:WGDDisplayOrientationsLandscape];
+            _orientation.ReadingTransform(DisplayOrientations::Landscape);
         } else {
             _deviceMotionAvailable = false;
             NSTraceInfo(TAG, @"DeviceMotion not found!");
@@ -167,14 +157,14 @@ NSString* const CMErrorDomain = @"CMErrorDomain";
 // Conversion is based on  https://msdn.microsoft.com/en-us/library/windows/apps/dn440593.aspx
 // For the quaternion conversion we assume the x and y component of Qref are zero.
 // For roll and pitch we swap the values.
-+ (CMAttitude*)toAttitude:(WDSSensorRotationMatrix*)rm quaternion:(WDSSensorQuaternion*)q {
-    CMRotationMatrix rotationMatrix = { rm.m21, rm.m22, rm.m23, -rm.m11, -rm.m12, -rm.m13, rm.m31, rm.m32, rm.m33 };
++ (CMAttitude*)toAttitude:(const SensorRotationMatrix&)rm quaternion:(const SensorQuaternion&)q {
+    CMRotationMatrix rotationMatrix = { rm.M21(), rm.M22(), rm.M23(), -rm.M11(), -rm.M12(), -rm.M13(), rm.M31(), rm.M32(), rm.M33() };
 
-    CMQuaternion quaternion = { (q.x + q.y) * c_cos45, (-q.x + q.y) * c_cos45, (q.z - q.w) * c_cos45, (q.z + q.w) * c_cos45 };
+    CMQuaternion quaternion = { (q.X() + q.Y()) * c_cos45, (-q.X() + q.Y()) * c_cos45, (q.Z() - q.W()) * c_cos45, (q.Z() + q.W()) * c_cos45 };
 
-    CMAttitude* attitude = [[CMAttitude alloc] initWithValues:-atan2(rm.m32, rm.m33)
-                                                        pitch:atan2(-rm.m31, sqrt(rm.m32 * rm.m32 + rm.m33 * rm.m33))
-                                                          yaw:atan2(-rm.m11, rm.m21)
+    CMAttitude* attitude = [[CMAttitude alloc] initWithValues:-atan2(rm.M32(), rm.M33())
+                                                        pitch:atan2(-rm.M31(), sqrt(rm.M32() * rm.M32() + rm.M33() * rm.M33()))
+                                                          yaw:atan2(-rm.M11(), rm.M21())
                                                rotationMatrix:rotationMatrix
                                                    quaternion:quaternion];
     return attitude;
@@ -190,18 +180,18 @@ NSString* const CMErrorDomain = @"CMErrorDomain";
         self.accelerometerQueue = queue;
 
         self.accelerometerToken =
-            [self.accelerometer addReadingChangedEvent:^void(WDSAccelerometer* sender, WDSAccelerometerReadingChangedEventArgs* e) {
+            _accelerometer.ReadingChanged(objcwinrt::callback([queue, handler] (const Accelerometer& sender, const AccelerometerReadingChangedEventArgs& e) {
+                AccelerometerReading reading = e.Reading();
 
-                WDSAccelerometerReading* reading = e.reading;
+                CMAccelerometerData* data = [[CMAccelerometerData alloc] initWithValues:reading.AccelerationX()
+                                                                                      y:reading.AccelerationY()
+                                                                                      z:reading.AccelerationZ()
+                                                                                   time:toSecondsSinceBoot(reading.Timestamp())];
 
-                CMAccelerometerData* data = [[CMAccelerometerData alloc] initWithValues:reading.accelerationX
-                                                                                      y:reading.accelerationY
-                                                                                      z:reading.accelerationZ
-                                                                                   time:toSecondsSinceBoot(reading.timestamp)];
                 [queue addOperationWithBlock:^{
                     handler(data, nil);
                 }];
-            }];
+            }));
     }
 }
 
@@ -217,7 +207,7 @@ NSString* const CMErrorDomain = @"CMErrorDomain";
             }
 
             self.accelerometerActive = true;
-            self.accelerometer.reportInterval = static_cast<unsigned int>(self.accelerometerUpdateInterval * c_secondToMilliseconds);
+            _accelerometer.ReportInterval(static_cast<unsigned int>(self.accelerometerUpdateInterval * c_secondToMilliseconds));
         }
     }
 }
@@ -232,11 +222,11 @@ NSString* const CMErrorDomain = @"CMErrorDomain";
             self.accelerometerActive = false;
 
             // the reportInterval is set to 0, the default value.
-            self.accelerometer.reportInterval = 0;
+            _accelerometer.ReportInterval(0);
 
             if (self.accelerometerToken.value != 0) {
-                [self.accelerometer removeReadingChangedEvent:self.accelerometerToken];
-                self.accelerometerToken = { 0 };
+                _accelerometer.ReadingChanged(self.accelerometerToken);
+                self.accelerometerToken = {};
             }
 
             if (self.accelerometerQueue) {
@@ -252,25 +242,31 @@ NSString* const CMErrorDomain = @"CMErrorDomain";
  @Notes
 */
 - (CMAccelerometerData*)accelerometerData {
-    WDSAccelerometerReading* reading = [self.accelerometer getCurrentReading];
+    if (!self.isAccelerometerAvailable) {
+        return nil;
+    }
 
-    _accelerometerData = [[CMAccelerometerData alloc] initWithValues:reading.accelerationX
-                                                                   y:reading.accelerationY
-                                                                   z:reading.accelerationZ
-                                                                time:toSecondsSinceBoot(reading.timestamp)];
+    AccelerometerReading reading = _accelerometer.GetCurrentReading();
+
+    _accelerometerData = [[CMAccelerometerData alloc] initWithValues:reading.AccelerationX()
+                                                                   y:reading.AccelerationY()
+                                                                   z:reading.AccelerationZ()
+                                                                time:toSecondsSinceBoot(reading.Timestamp())];
     return _accelerometerData;
 }
 
 - (void)setAccelerometerUpdateInterval:(NSTimeInterval)updateInterval {
     @synchronized(self) {
-        // iOS uses seconds while WinRT uses milliseconds, hence the multiplication/division by c_secondToMilliseconds
-        if (updateInterval * c_secondToMilliseconds < self.accelerometer.minimumReportInterval) {
-            _accelerometerUpdateInterval = self.accelerometer.minimumReportInterval / c_secondToMilliseconds;
-            self.accelerometer.reportInterval = self.accelerometer.minimumReportInterval;
-            NSTraceInfo(TAG, @"accelerometerUpdateInterval capped to minimum supported value: %d", _accelerometerUpdateInterval);
-        } else {
-            _accelerometerUpdateInterval = updateInterval;
-            self.accelerometer.reportInterval = static_cast<unsigned int>(_accelerometerUpdateInterval * c_secondToMilliseconds);
+        if (self.isAccelerometerAvailable) {
+            // iOS uses seconds while WinRT uses milliseconds, hence the multiplication/division by c_secondToMilliseconds
+            if (updateInterval * c_secondToMilliseconds < _accelerometer.MinimumReportInterval()) {
+                _accelerometerUpdateInterval = _accelerometer.MinimumReportInterval() / c_secondToMilliseconds;
+                _accelerometer.ReportInterval(_accelerometer.MinimumReportInterval());
+                NSTraceInfo(TAG, @"accelerometerUpdateInterval capped to minimum supported value: %d", _accelerometerUpdateInterval);
+            } else {
+                _accelerometerUpdateInterval = updateInterval;
+                _accelerometer.ReportInterval(static_cast<unsigned int>(_accelerometerUpdateInterval * c_secondToMilliseconds));
+            }
         }
     }
 }
@@ -284,19 +280,19 @@ NSString* const CMErrorDomain = @"CMErrorDomain";
         [self startGyroUpdates];
         self.gyroQueue = queue;
 
-        self.gyrometerToken = [self.gyrometer addReadingChangedEvent:^void(WDSGyrometer* sender, WDSGyrometerReadingChangedEventArgs* e) {
-
-            WDSGyrometerReading* reading = e.reading;
+        self.gyrometerToken = _gyrometer.ReadingChanged(objcwinrt::callback([queue, handler] (const Gyrometer& sender, const GyrometerReadingChangedEventArgs& e) {
+            GyrometerReading reading = e.Reading();
 
             // For gyrometer values iOS uses unit as radians per sec. while WinRT uses degrees per sec.
-            CMGyroData* data = [[CMGyroData alloc] initWithValues:reading.angularVelocityX * c_degreeToRadian
-                                                                y:reading.angularVelocityY * c_degreeToRadian
-                                                                z:reading.angularVelocityZ * c_degreeToRadian
-                                                             time:toSecondsSinceBoot(reading.timestamp)];
+            CMGyroData* data = [[CMGyroData alloc] initWithValues:reading.AngularVelocityX() * c_degreeToRadian
+                                                                y:reading.AngularVelocityY() * c_degreeToRadian
+                                                                z:reading.AngularVelocityZ() * c_degreeToRadian
+                                                             time:toSecondsSinceBoot(reading.Timestamp())];
+
             [queue addOperationWithBlock:^{
                 handler(data, nil);
             }];
-        }];
+        }));
     }
 }
 
@@ -312,7 +308,7 @@ NSString* const CMErrorDomain = @"CMErrorDomain";
             }
 
             self.gyroActive = true;
-            self.gyrometer.reportInterval = static_cast<unsigned int>(self.gyroUpdateInterval * c_secondToMilliseconds);
+            _gyrometer.ReportInterval(static_cast<unsigned int>(self.gyroUpdateInterval * c_secondToMilliseconds));
         }
     }
 }
@@ -327,11 +323,11 @@ NSString* const CMErrorDomain = @"CMErrorDomain";
             self.gyroActive = false;
 
             // the reportInterval is set to 0, the default value.
-            self.gyrometer.reportInterval = 0;
+            _gyrometer.ReportInterval(0);
 
             if (self.gyrometerToken.value != 0) {
-                [self.gyrometer removeReadingChangedEvent:self.gyrometerToken];
-                self.gyrometerToken = { 0 };
+                _gyrometer.ReadingChanged(self.gyrometerToken);
+                self.gyrometerToken = {};
             }
 
             if (self.gyroQueue) {
@@ -347,26 +343,32 @@ NSString* const CMErrorDomain = @"CMErrorDomain";
  @Notes
 */
 - (CMGyroData*)gyroData {
-    WDSGyrometerReading* reading = [self.gyrometer getCurrentReading];
+    if (!self.isGyroAvailable) {
+        return nil;
+    }
+
+    GyrometerReading reading = _gyrometer.GetCurrentReading();
 
     // For gyrometer values iOS uses unit as radians per sec. while WinRT uses degrees per sec.
-    _gyroData = [[CMGyroData alloc] initWithValues:reading.angularVelocityX * c_degreeToRadian
-                                                 y:reading.angularVelocityY * c_degreeToRadian
-                                                 z:reading.angularVelocityZ * c_degreeToRadian
-                                              time:toSecondsSinceBoot(reading.timestamp)];
+    _gyroData = [[CMGyroData alloc] initWithValues:reading.AngularVelocityX() * c_degreeToRadian
+                                                 y:reading.AngularVelocityY() * c_degreeToRadian
+                                                 z:reading.AngularVelocityZ() * c_degreeToRadian
+                                              time:toSecondsSinceBoot(reading.Timestamp())];
     return _gyroData;
 }
 
 - (void)setGyroUpdateInterval:(NSTimeInterval)updateInterval {
     @synchronized(self) {
-        // iOS uses seconds while WinRT uses milliseconds, hence the multiplication/division by c_secondToMilliseconds
-        if (updateInterval * c_secondToMilliseconds < self.gyrometer.minimumReportInterval) {
-            _gyroUpdateInterval = self.gyrometer.minimumReportInterval / c_secondToMilliseconds;
-            self.gyrometer.reportInterval = self.gyrometer.minimumReportInterval;
-            NSTraceInfo(TAG, @"gyroUpdateInterval capped to minimum supported value: %d", _gyroUpdateInterval);
-        } else {
-            _gyroUpdateInterval = updateInterval;
-            self.gyrometer.reportInterval = static_cast<unsigned int>(_gyroUpdateInterval * c_secondToMilliseconds);
+        if (self.isGyroAvailable) {
+            // iOS uses seconds while WinRT uses milliseconds, hence the multiplication/division by c_secondToMilliseconds
+            if (updateInterval * c_secondToMilliseconds < _gyrometer.MinimumReportInterval()) {
+                _gyroUpdateInterval = _gyrometer.MinimumReportInterval() / c_secondToMilliseconds;
+                _gyrometer.ReportInterval(_gyrometer.MinimumReportInterval());
+                NSTraceInfo(TAG, @"gyroUpdateInterval capped to minimum supported value: %d", _gyroUpdateInterval);
+            } else {
+                _gyroUpdateInterval = updateInterval;
+                _gyrometer.ReportInterval(static_cast<unsigned int>(_gyroUpdateInterval * c_secondToMilliseconds));
+            }
         }
     }
 }
@@ -381,18 +383,18 @@ NSString* const CMErrorDomain = @"CMErrorDomain";
         self.magnetometerQueue = queue;
 
         self.magnetometerToken =
-            [self.magnetometer addReadingChangedEvent:^void(WDSMagnetometer* sender, WDSMagnetometerReadingChangedEventArgs* e) {
+            _magnetometer.ReadingChanged(objcwinrt::callback([queue, handler] (const Magnetometer& sender, const MagnetometerReadingChangedEventArgs& e) {
+                MagnetometerReading reading = e.Reading();
 
-                WDSMagnetometerReading* reading = e.reading;
+                CMMagnetometerData* data = [[CMMagnetometerData alloc] initWithValues:reading.MagneticFieldX()
+                                                                                    y:reading.MagneticFieldY()
+                                                                                    z:reading.MagneticFieldZ()
+                                                                                 time:toSecondsSinceBoot(reading.Timestamp())];
 
-                CMMagnetometerData* data = [[CMMagnetometerData alloc] initWithValues:reading.magneticFieldX
-                                                                                    y:reading.magneticFieldY
-                                                                                    z:reading.magneticFieldZ
-                                                                                 time:toSecondsSinceBoot(reading.timestamp)];
                 [queue addOperationWithBlock:^{
                     handler(data, nil);
                 }];
-            }];
+            }));
     }
 }
 
@@ -409,7 +411,7 @@ NSString* const CMErrorDomain = @"CMErrorDomain";
 
             self.magnetometerActive = true;
 
-            self.magnetometer.reportInterval = static_cast<unsigned int>(self.magnetometerUpdateInterval * c_secondToMilliseconds);
+            _magnetometer.ReportInterval(static_cast<unsigned int>(self.magnetometerUpdateInterval * c_secondToMilliseconds));
         }
     }
 }
@@ -424,11 +426,11 @@ NSString* const CMErrorDomain = @"CMErrorDomain";
             self.magnetometerActive = false;
 
             // the reportInterval is set to 0, the default value.
-            self.magnetometer.reportInterval = 0;
+            _magnetometer.ReportInterval(0);
 
             if (self.magnetometerToken.value != 0) {
-                [self.magnetometer removeReadingChangedEvent:self.magnetometerToken];
-                self.magnetometerToken = { 0 };
+                _magnetometer.ReadingChanged(self.magnetometerToken);
+                self.magnetometerToken = {};
             }
 
             if (self.magnetometerQueue) {
@@ -444,25 +446,31 @@ NSString* const CMErrorDomain = @"CMErrorDomain";
 @Notes
 */
 - (CMMagnetometerData*)magnetometerData {
-    WDSMagnetometerReading* reading = [self.magnetometer getCurrentReading];
+    if (!self.isMagnetometerAvailable) {
+        return nil;
+    }
 
-    _magnetometerData = [[CMMagnetometerData alloc] initWithValues:reading.magneticFieldX
-                                                                 y:reading.magneticFieldY
-                                                                 z:reading.magneticFieldZ
-                                                              time:toSecondsSinceBoot(reading.timestamp)];
+    MagnetometerReading reading = _magnetometer.GetCurrentReading();
+
+    _magnetometerData = [[CMMagnetometerData alloc] initWithValues:reading.MagneticFieldX()
+                                                                 y:reading.MagneticFieldY()
+                                                                 z:reading.MagneticFieldZ()
+                                                              time:toSecondsSinceBoot(reading.Timestamp())];
     return _magnetometerData;
 }
 
 - (void)setMagnetometerUpdateInterval:(NSTimeInterval)updateInterval {
     @synchronized(self) {
-        // iOS uses seconds while WinRT uses milliseconds, hence the multiplication/division by c_secondToMilliseconds
-        if (updateInterval * c_secondToMilliseconds < self.magnetometer.minimumReportInterval) {
-            _magnetometerUpdateInterval = self.magnetometer.minimumReportInterval / c_secondToMilliseconds;
-            self.magnetometer.reportInterval = self.magnetometer.minimumReportInterval;
-            NSTraceInfo(TAG, @"magnetometerUpdateInterval capped to minimum supported value: %d", _magnetometerUpdateInterval);
-        } else {
-            _magnetometerUpdateInterval = updateInterval;
-            self.magnetometer.reportInterval = static_cast<unsigned int>(_magnetometerUpdateInterval * c_secondToMilliseconds);
+        if (self.isMagnetometerAvailable) {
+            // iOS uses seconds while WinRT uses milliseconds, hence the multiplication/division by c_secondToMilliseconds
+            if (updateInterval * c_secondToMilliseconds < _magnetometer.MinimumReportInterval()) {
+                _magnetometerUpdateInterval = _magnetometer.MinimumReportInterval() / c_secondToMilliseconds;
+                _magnetometer.ReportInterval(_magnetometer.MinimumReportInterval());
+                NSTraceInfo(TAG, @"magnetometerUpdateInterval capped to minimum supported value: %d", _magnetometerUpdateInterval);
+            } else {
+                _magnetometerUpdateInterval = updateInterval;
+                _magnetometer.ReportInterval(static_cast<unsigned int>(_magnetometerUpdateInterval * c_secondToMilliseconds));
+            }
         }
     }
 }
@@ -487,17 +495,16 @@ NSString* const CMErrorDomain = @"CMErrorDomain";
         self.deviceMotionQueue = queue;
 
         self.deviceMotionToken =
-            [self.orientation addReadingChangedEvent:^void(WDSOrientationSensor* sender, WDSOrientationSensorReadingChangedEventArgs* e) {
-
-                WDSOrientationSensorReading* reading = e.reading;
+            _orientation.ReadingChanged(objcwinrt::callback([queue, handler] (const OrientationSensor& sender, const OrientationSensorReadingChangedEventArgs& e) {
+                OrientationSensorReading reading = e.Reading();
 
                 CMDeviceMotion* deviceMotion =
-                    [[CMDeviceMotion alloc] initWithValues:[CMMotionManager toAttitude:reading.rotationMatrix quaternion:reading.quaternion]
-                                                      time:toSecondsSinceBoot(reading.timestamp)];
+                    [[CMDeviceMotion alloc] initWithValues:[CMMotionManager toAttitude:reading.RotationMatrix() quaternion:reading.Quaternion()]
+                                                      time:toSecondsSinceBoot(reading.Timestamp())];
                 [queue addOperationWithBlock:^{
                     handler(deviceMotion, nil);
                 }];
-            }];
+            }));
     }
 }
 
@@ -521,7 +528,7 @@ NSString* const CMErrorDomain = @"CMErrorDomain";
             }
 
             self.deviceMotionActive = true;
-            self.orientation.reportInterval = static_cast<unsigned int>(self.deviceMotionUpdateInterval * c_secondToMilliseconds);
+            _orientation.ReportInterval(static_cast<unsigned int>(self.deviceMotionUpdateInterval * c_secondToMilliseconds));
         }
     }
 }
@@ -536,11 +543,11 @@ NSString* const CMErrorDomain = @"CMErrorDomain";
             self.deviceMotionActive = false;
 
             // the reportInterval is set to 0, the default value.
-            self.orientation.reportInterval = 0;
+            _orientation.ReportInterval(0);
 
             if (self.deviceMotionToken.value != 0) {
-                [self.orientation removeReadingChangedEvent:self.deviceMotionToken];
-                self.deviceMotionToken = { 0 };
+                _orientation.ReadingChanged(self.deviceMotionToken);
+                self.deviceMotionToken = {};
             }
 
             if (self.deviceMotionQueue) {
@@ -556,23 +563,29 @@ NSString* const CMErrorDomain = @"CMErrorDomain";
  @Notes Only attitude property is supported currently.
 */
 - (CMDeviceMotion*)deviceMotion {
-    WDSOrientationSensorReading* reading = [self.orientation getCurrentReading];
+    if (!self.isDeviceMotionAvailable) {
+        return nil;
+    }
 
-    _deviceMotion = [[CMDeviceMotion alloc] initWithValues:[CMMotionManager toAttitude:reading.rotationMatrix quaternion:reading.quaternion]
-                                                      time:toSecondsSinceBoot(reading.timestamp)];
+    OrientationSensorReading reading = _orientation.GetCurrentReading();
+
+    _deviceMotion = [[CMDeviceMotion alloc] initWithValues:[CMMotionManager toAttitude:reading.RotationMatrix() quaternion:reading.Quaternion()]
+                                                      time:toSecondsSinceBoot(reading.Timestamp())];
     return _deviceMotion;
 }
 
 - (void)setDeviceMotionUpdateInterval:(NSTimeInterval)updateInterval {
     @synchronized(self) {
-        // iOS uses seconds while WinRT uses milliseconds, hence the multiplication/division by c_secondToMilliseconds
-        if (updateInterval * c_secondToMilliseconds < self.orientation.minimumReportInterval) {
-            _deviceMotionUpdateInterval = self.orientation.minimumReportInterval / c_secondToMilliseconds;
-            self.orientation.reportInterval = self.orientation.minimumReportInterval;
-            NSTraceInfo(TAG, @"deviceMotionUpdateInterval capped to minimum supported value: %d", _deviceMotionUpdateInterval);
-        } else {
-            _deviceMotionUpdateInterval = updateInterval;
-            self.orientation.reportInterval = static_cast<unsigned int>(self.deviceMotionUpdateInterval * c_secondToMilliseconds);
+        if (self.isDeviceMotionAvailable) {
+            // iOS uses seconds while WinRT uses milliseconds, hence the multiplication/division by c_secondToMilliseconds
+            if (updateInterval * c_secondToMilliseconds < _orientation.MinimumReportInterval()) {
+                _deviceMotionUpdateInterval = _orientation.MinimumReportInterval() / c_secondToMilliseconds;
+                _orientation.ReportInterval(_orientation.MinimumReportInterval());
+                NSTraceInfo(TAG, @"deviceMotionUpdateInterval capped to minimum supported value: %d", _deviceMotionUpdateInterval);
+            } else {
+                _deviceMotionUpdateInterval = updateInterval;
+                _orientation.ReportInterval(static_cast<unsigned int>(self.deviceMotionUpdateInterval * c_secondToMilliseconds));
+            }
         }
     }
 }
