@@ -255,7 +255,8 @@
   </ImportGroup>
   <Target Name="AddBuiltOutput" BeforeTargets="GetPackageContents">
     <ItemGroup>
-      <PackageFile Include="@(BuiltProjectOutputGroupOutput -> '%(FinalOutputPath)')">
+      <_BuiltProjectOutputGroupOutput Include="@(BuiltProjectOutputGroupOutput -> '%(FinalOutputPath)')" />
+      <PackageFile Include="@(_BuiltProjectOutputGroupOutput)" Condition="Exists('%(FullPath)')">
         <PackagePath>build\bin\%(Filename)%(Extension)</PackagePath>
       </PackageFile>
     </ItemGroup>
