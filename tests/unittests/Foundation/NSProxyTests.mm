@@ -39,6 +39,7 @@
 @implementation _NSTestMutableArrayProxy
 
 - (instancetype)initWithMutableArray:(NSMutableArray*)array {
+    // NSProxy subclasses do not/should not/cannot call [super init], as NSProxy is an abstract class that does not have an init
     self->_forwardArray = array;
     return self;
 }

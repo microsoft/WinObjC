@@ -19,6 +19,10 @@
 
 #import <objc/objc-arc.h>
 
+#define RAISE_NSPROXY_ABSTRACT_FUNCTION_EXCEPTION \
+    [NSException raise:NSInvalidArgumentException \
+                format:@"%hs was called directly. It must be overridden in a subclass.", __PRETTY_FUNCTION__]
+
 @implementation NSProxy
 
 #pragma region NSProxy member functions
@@ -56,20 +60,18 @@
 
 /**
  @Status Interoperable
- @Notes
+ @Notes  Must be overridden in a subclass
 */
 - (void)forwardInvocation:(NSInvocation*)anInvocation {
-    [NSException raise:NSInvalidArgumentException
-                format:@"[NSProxy forwardInvocation:] was called directly. It must be overridden in a subclass."];
+    RAISE_NSPROXY_ABSTRACT_FUNCTION_EXCEPTION;
 }
 
 /**
  @Status Interoperable
- @Notes
+ @Notes  Must be overridden in a subclass
 */
 - (NSMethodSignature*)methodSignatureForSelector:(SEL)aSelector {
-    [NSException raise:NSInvalidArgumentException
-                format:@"[NSProxy methodSignatureForSelector:] was called directly. It must be overridden in a subclass."];
+    RAISE_NSPROXY_ABSTRACT_FUNCTION_EXCEPTION;
     return nil;
 }
 
@@ -137,7 +139,7 @@
  @Notes
 */
 - (Class)superclass {
-    return class_getSuperclass(object_getClass(self));
+    return class_getSuperclass([self class]);
 }
 
 // clang-format on
@@ -162,7 +164,7 @@
  @Notes
 */
 - (instancetype)self {
-    return (id)self;
+    return self;
 }
 
 /**

@@ -196,6 +196,9 @@ static id _NSWeakLoad(id obj) {
     return obj;
 }
 
+// clang format doesn't play well with 'class' here, so turn it off
+// clang-format off
+
 /**
  @Status Interoperable
 */
@@ -203,12 +206,14 @@ static id _NSWeakLoad(id obj) {
     return object_getClass(self);
 }
 
-    /**
-     @Status Interoperable
-    */
-    - (Class)superclass {
-    return class_getSuperclass(object_getClass(self));
+/**
+ @Status Interoperable
+*/
+- (Class)superclass {
+    return class_getSuperclass([self class]);
 }
+
+// clang-format on
 
 /**
  @Status Interoperable
@@ -557,7 +562,7 @@ static IMP _NSIMPForward(id object, SEL selector) {
  @Status Interoperable
 */
 + (id)self {
-    return (id)self;
+    return self;
 }
 
 /**
@@ -699,6 +704,7 @@ void WinObjC_SetMissingSelectorFatal(BOOL fatal) {
     _NSSelectorNotFoundIsNonFatal = !fatal;
 }
 
+// clang-format off
 #pragma region NSZombie Support
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-objc-isa-usage" // We are knowingly accessing ->isa directly.
@@ -707,8 +713,8 @@ __attribute__((objc_root_class)) @interface NSZombie {
 }
 @end
 
-    static void
-    _dealloc_zombify(id self, SEL _cmd); // forward declaration
+static void _dealloc_zombify(id self, SEL _cmd); // forward declaration
+// clang-format on
 
 static void _NSCFZombifyHook(id object) {
     _dealloc_zombify(object, nullptr);
