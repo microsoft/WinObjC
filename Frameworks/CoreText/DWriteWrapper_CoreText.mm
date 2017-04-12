@@ -506,8 +506,8 @@ static CTFrameRef _DWriteGetFrame(CFAttributedStringRef string, CFRange range, C
 
         if (CFArrayGetCount(runs) > 0) {
             prevYPosForDraw = yPos;
-            line->_runs = static_cast<NSMutableArray*>(runs.get());
-            _CTRun* firstRun = static_cast<_CTRun*>(CFArrayGetValueAtIndex(runs, 0));
+            line->_runs = runs.get();
+            CTRunRef firstRun = static_cast<CTRunRef>(CFArrayGetValueAtIndex(runs, 0));
             line->_strRange.location = firstRun->_range.location;
             line->_strRange.length = stringRange;
             line->_glyphCount = glyphCount;

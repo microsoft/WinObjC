@@ -33,7 +33,7 @@ static NSMutableAttributedString* _getTruncatedStringFromSourceLine(CTLineRef li
 @implementation _CTLine : NSObject
 - (instancetype)init {
     if (self = [super init]) {
-        _runs.attach([NSMutableArray new]);
+        _runs.attach(CFArrayCreateMutable(kCFAllocatorDefault, 0, &kCFTypeArrayCallBacks));
     }
     return self;
 }
@@ -46,7 +46,7 @@ static NSMutableAttributedString* _getTruncatedStringFromSourceLine(CTLineRef li
     ret->_descent = _descent;
     ret->_leading = _leading;
     ret->_glyphCount = _glyphCount;
-    ret->_runs.attach([_runs copy]);
+    ret->_runs.attach(CFArrayCreateMutableCopy(kCFAllocatorDefault, 0, _runs));
     ret->_relativeXOffset = _relativeXOffset;
 
     return ret;
@@ -102,8 +102,8 @@ CTLineRef CTLineCreateTruncatedLine(CTLineRef sourceLine, double width, CTLineTr
         for (int i = 0; i < numberOfRuns; ++i) {
             CTRunRef run = static_cast<CTRunRef>(CFArrayGetValueAtIndex(tokenRuns, i));
             CFDictionaryRef attribs = CTRunGetAttributes(run);
-            NSAttributedString* string =
-                [[NSAttributedString alloc] initWithString:(static_cast<_CTRun*>(run))->_stringFragment attributes:(NSDictionary*)attribs];
+            NSAttributedString* string = [[NSAttributedString alloc] initWithString:static_cast<NSString*>(run->_stringFragment.get())
+                                                                         attributes:(NSDictionary*)attribs];
             [stringFromToken appendAttributedString:string];
             [string release];
         }
@@ -162,8 +162,7 @@ static NSMutableAttributedString* _getTruncatedStringFromSourceLine(CTLineRef so
             runIndex = i;
         }
 
-        CTRunRef currentRun = static_cast<CTRunRef>(CFArrayGetValueAtIndex(glyphRuns, runIndex));
-        _CTRun* run = static_cast<_CTRun*>(currentRun);
+        CTRunRef run = static_cast<CTRunRef>(CFArrayGetValueAtIndex(glyphRuns, runIndex));
         NSMutableString* runString = [NSMutableString new];
 
         int numberOfGlyphs = run->_dwriteGlyphRun.glyphCount;
@@ -181,11 +180,11 @@ static NSMutableAttributedString* _getTruncatedStringFromSourceLine(CTLineRef so
             }
 
             extractedWidth += run->_dwriteGlyphRun.glyphAdvances[glyphIndex];
-            char glyph = [run->_stringFragment characterAtIndex:glyphIndex];
+            char glyph = CFStringGetCharacterAtIndex(run->_stringFragment, glyphIndex);
             [runString appendString:[NSString stringWithFormat:@"%c", glyph]];
         }
 
-        CFDictionaryRef attribs = CTRunGetAttributes(currentRun);
+        CFDictionaryRef attribs = CTRunGetAttributes(run);
 
         if (truncationType == kCTLineTruncationStart) {
             NSString* reverse = [runString _reverseString];
@@ -229,11 +228,12 @@ void CTLineDraw(CTLineRef lineRef, CGContextRef ctx) {
 
     // Translate by the inverse of the relativeXOffset to draw at the text position
     CGPoint relativePosition = { -line->_relativeXOffset, 0 };
-    for (size_t i = 0; i < [line->_runs count]; ++i) {
-        _CTRun* curRun = [line->_runs objectAtIndex:i];
+    CFIndex count = CFArrayGetCount(line->_runs);
+    for (CFIndex i = 0; i < count; ++i) {
+        __CTRun* curRun = const_cast<__CTRun*>(static_cast<CTRunRef>(CFArrayGetValueAtIndex(line->_runs, i)));
         // Adjusts x position relative to the last run drawn
         relativePosition.x += curRun->_relativeXOffset;
-        runs.emplace_back(GlyphRunData{ &curRun->_dwriteGlyphRun, relativePosition, (CFDictionaryRef)curRun->_attributes.get() });
+        runs.emplace_back(GlyphRunData{ &curRun->_dwriteGlyphRun, relativePosition, curRun->_attributes });
     }
 
     if (!runs.empty()) {
@@ -289,20 +289,19 @@ CGRect CTLineGetImageBounds(CTLineRef line, CGContextRef context) {
 
 /**
  @Status Interoperable
- @Notes
 */
 double CTLineGetTypographicBounds(CTLineRef lineRef, CGFloat* ascent, CGFloat* descent, CGFloat* leading) {
     _CTLine* line = static_cast<_CTLine*>(lineRef);
 
-    if (!line || [line->_runs count] == 0) {
-        return 0;
-    }
+    RETURN_RESULT_IF((!line) || (CFArrayGetCount(line->_runs) == 0), 0);
 
     // Created with impossible values -FLT_MAX which signify they need to be populated
     if ((line->_ascent == -FLT_MAX || line->_descent == -FLT_MAX || line->_leading == -FLT_MAX) && (ascent || descent || leading)) {
-        for (_CTRun* run in static_cast<id<NSFastEnumeration>>(line->_runs)) {
+        CFIndex count = CFArrayGetCount(line->_runs);
+        for (CFIndex i = 0; i < count; ++i) {
+            CTRunRef run = static_cast<CTRunRef>(CFArrayGetValueAtIndex(line->_runs, i));
             CGFloat newAscent, newDescent, newLeading;
-            CTRunGetTypographicBounds(static_cast<CTRunRef>(run), { 0, 0 }, &newAscent, &newDescent, &newLeading);
+            CTRunGetTypographicBounds(run, { 0, 0 }, &newAscent, &newDescent, &newLeading);
             line->_ascent = std::max(line->_ascent, newAscent);
             line->_descent = std::max(line->_descent, newDescent);
             line->_leading = std::max(line->_leading, newLeading);
@@ -341,7 +340,9 @@ CFIndex CTLineGetStringIndexForPosition(CTLineRef lineRef, CGPoint position) {
     }
 
     CGFloat curPos = 0;
-    for (_CTRun* run in static_cast<id<NSFastEnumeration>>(line->_runs)) {
+    CFIndex count = CFArrayGetCount(line->_runs);
+    for (CFIndex i = 0; i < count; ++i) {
+        CTRunRef run = static_cast<CTRunRef>(CFArrayGetValueAtIndex(line->_runs, i));
         curPos += run->_relativeXOffset;
         CGFloat runPos = curPos;
         for (int i = 0; i < run->_dwriteGlyphRun.glyphCount; i++) {
@@ -373,7 +374,9 @@ CGFloat CTLineGetOffsetForStringIndex(CTLineRef lineRef, CFIndex charIndex, CGFl
         if (charIndex > line->_strRange.location + line->_strRange.length) {
             ret = line->_width;
         } else {
-            for (_CTRun* run in static_cast<id<NSFastEnumeration>>(line->_runs)) {
+            CFIndex count = CFArrayGetCount(line->_runs);
+            for (CFIndex i = 0; i < count; ++i) {
+                CTRunRef run = static_cast<CTRunRef>(CFArrayGetValueAtIndex(line->_runs, i));
                 if (run->_range.location + run->_range.length >= charIndex && run->_stringIndices.size() > 0) {
                     int index = std::upper_bound(run->_stringIndices.begin(), run->_stringIndices.end(), charIndex) -
                                 run->_stringIndices.begin() - 1;
