@@ -69,7 +69,7 @@ CFAttributedStringRef _CTTypesetterGetAttributedString(CTTypesetterRef typesette
     CGFloat _relativeXOffset;
     CGFloat _width;
     NSUInteger _glyphCount;
-    StrongId<NSMutableArray<_CTRun*>> _runs;
+    woc::StrongCF<CFMutableArrayRef> _runs;
     CGFloat _ascent, _descent, _leading;
 }
 @end
