@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -27,7 +27,13 @@
 #include "Starboard.h"
 #include "StubReturn.h"
 #include "VAListHelper.h"
+#import "NSKeyValueObserving-Internal.h"
 #import <_NSKeyValueCodingAggregateFunctions.h>
+
+@interface NSSet ()
+// Public interface for NSSet does not have this method, but is necessary for proper formatting with nested collections
+- (NSString*)descriptionWithLocale:(id)locale indent:(NSUInteger)level;
+@end
 
 @implementation NSSet
 
@@ -98,7 +104,7 @@ BASE_CLASS_REQUIRED_IMPLS(NSSet, NSSetPrototype, CFSetGetTypeID);
 /**
  @Status Interoperable
 */
-- (instancetype)initWithObjects:(id*)objects count:(unsigned)count {
+- (instancetype)initWithObjects:(id _Nonnull const*)objects count:(NSUInteger)count {
     // Derived classes are required to implement this initializer.
     return NSInvalidAbstractInvocationReturn();
 }
@@ -276,7 +282,7 @@ BASE_CLASS_REQUIRED_IMPLS(NSSet, NSSetPrototype, CFSetGetTypeID);
 /**
  @Status Interoperable
 */
-- (unsigned)countByEnumeratingWithState:(NSFastEnumerationState*)state objects:(id*)stackBuf count:(unsigned)maxCount {
+- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState*)state objects:(id _Nullable*)stackBuf count:(NSUInteger)maxCount {
     if (state->state == 0) {
         state->mutationsPtr = (unsigned long*)&state->extra[1];
         state->extra[0] = (unsigned long)[self objectEnumerator];
@@ -388,23 +394,38 @@ BASE_CLASS_REQUIRED_IMPLS(NSSet, NSSetPrototype, CFSetGetTypeID);
 }
 
 /**
- @Status Caveat
- @Notes options parameter not supported
+ @Status Interoperable
+ @Notes NSEnumerationReverse is undefined on reference platform so we will ignore it
 */
 - (void)enumerateObjectsWithOptions:(NSEnumerationOptions)options usingBlock:(void (^)(id, BOOL*))block {
-    if (options & NSEnumerationReverse) {
-        assert(0);
-    } else {
-        BOOL stop = FALSE;
-        int i = 0;
+    dispatch_queue_t queue;
+    dispatch_group_t group;
 
-        for (id curObj in self) {
+    // Initialize dispatch queue for concurrent enumeration
+    if (options & NSEnumerationConcurrent) {
+        queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+        group = dispatch_group_create();
+    }
+
+    __block BOOL stop = NO;
+    for (id curObj in self) {
+        if (options & NSEnumerationConcurrent) {
+            dispatch_group_async(group, queue, ^() {
+                block(curObj, &stop);
+            });
+        } else {
             block(curObj, &stop);
-            i++;
-            if (stop) {
-                break;
-            }
         }
+
+        if (stop) {
+            break;
+        }
+    }
+
+    // Wait for dispatch queue to execute
+    if (options & NSEnumerationConcurrent) {
+        dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
+        dispatch_release(group);
     }
 }
 
@@ -450,12 +471,10 @@ BASE_CLASS_REQUIRED_IMPLS(NSSet, NSSetPrototype, CFSetGetTypeID);
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 + (BOOL)supportsSecureCoding {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return YES;
 }
 
 /**
@@ -481,35 +500,35 @@ BASE_CLASS_REQUIRED_IMPLS(NSSet, NSSetPrototype, CFSetGetTypeID);
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 - (void)makeObjectsPerformSelector:(SEL)aSelector withObject:(id)argument {
-    UNIMPLEMENTED();
+    for (id element in self) {
+        [element performSelector:aSelector withObject:argument];
+    }
 }
 
 /**
  @Status Interoperable
 */
 - (NSSet*)objectsPassingTest:(BOOL (^)(id, BOOL*))predicate {
-    NSMutableSet* ret = [NSMutableSet setWithCapacity:0];
-
-    [self enumerateObjectsUsingBlock:^void(id obj, BOOL* stop) {
-        if (predicate(obj, stop)) {
-            [ret addObject:obj];
-        }
-    }];
-
-    return ret;
+    return [self objectsWithOptions:0 passingTest:predicate];
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 - (NSSet*)objectsWithOptions:(NSEnumerationOptions)opts passingTest:(BOOL (^)(id, BOOL*))predicate {
-    UNIMPLEMENTED();
-    return StubReturn();
+    __block NSMutableSet* ret = [NSMutableSet setWithCapacity:[self count]];
+
+    [self enumerateObjectsWithOptions:opts
+                           usingBlock:^void(id obj, BOOL* stop) {
+                               if (predicate(obj, stop)) {
+                                   [ret addObject:obj];
+                               }
+                           }];
+
+    return ret;
 }
 
 /**
@@ -554,12 +573,93 @@ BASE_CLASS_REQUIRED_IMPLS(NSSet, NSSetPrototype, CFSetGetTypeID);
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 - (NSString*)descriptionWithLocale:(id)locale {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return [self descriptionWithLocale:locale indent:0];
+}
+
+/**
+ @Status Interoperable
+*/
+- (NSString*)description {
+    return [self descriptionWithLocale:nil indent:0];
+}
+
+- (NSString*)descriptionWithLocale:(id)locale indent:(NSUInteger)level {
+    NSMutableString* s = [NSMutableString string];
+    NSString* indentStr = @"    ";
+    for (NSUInteger i = 0; i < level; ++i) {
+        [s appendString:indentStr];
+    }
+
+    [s appendString:@"{(\n"];
+
+    {
+        ++level;
+        auto deferPop = wil::ScopeExit([&level]() { --level; });
+        for (id val in self) {
+            for (NSUInteger i = 0; i < level; ++i) {
+                [s appendString:indentStr];
+            }
+
+            // Documentation states order to determine what values are printed
+            NSString* valToWrite = nil;
+            if ([val isKindOfClass:[NSString class]]) {
+                // If val is an NSString, use it directly
+                valToWrite = val;
+            }
+
+            if (valToWrite.length == 0 && [val respondsToSelector:@selector(descriptionWithLocale:indent:)]) {
+                // If val is not a string but responds to descriptionWithLocale:indent, use that value
+                valToWrite = [val descriptionWithLocale:locale indent:level];
+            }
+
+            if (valToWrite.length == 0 && [val respondsToSelector:@selector(descriptionWithLocale:)]) {
+                // If not an NSString and doesn't respond to descriptionWithLocale:indent but does descriptionWithLocale:, use that
+                valToWrite = [val descriptionWithLocale:locale];
+            }
+
+            if (valToWrite.length == 0) {
+                // If all else fails, use description
+                valToWrite = [val description];
+            }
+
+            [s appendFormat:@"%@,\n", valToWrite];
+        }
+
+        if ([self count] > 0) {
+            [s deleteCharactersInRange:{[s length] - 2, 1 }];
+        }
+    }
+
+    for (NSUInteger i = 0; i < level; ++i) {
+        [s appendString:indentStr];
+    }
+
+    [s appendString:@")}"];
+    return s;
+}
+
+/**
+ @Status Interoperable
+*/
+- (void)addObserver:(id)observer forKeyPath:(NSString*)keyPath options:(NSKeyValueObservingOptions)options context:(void*)context {
+    NS_COLLECTION_THROW_ILLEGAL_KVO(keyPath);
+}
+
+/**
+ @Status Interoperable
+*/
+- (void)removeObserver:(id)observer forKeyPath:(NSString*)keyPath context:(void*)context {
+    NS_COLLECTION_THROW_ILLEGAL_KVO(keyPath);
+}
+
+/**
+ @Status Interoperable
+*/
+- (void)removeObserver:(id)observer forKeyPath:(NSString*)keyPath {
+    NS_COLLECTION_THROW_ILLEGAL_KVO(keyPath);
 }
 
 @end
