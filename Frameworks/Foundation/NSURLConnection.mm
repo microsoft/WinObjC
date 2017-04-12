@@ -31,7 +31,7 @@ static const wchar_t* TAG = L"NSURLConnection";
 
 // Private helper function that returns a NSURLProtocol object capable of handling a NSURLRequest
 // Returns nil if one cannot be created
-static NSURLProtocol* _protocolForRequest(NSURLRequest* request, id<NSURLProtocolClient> client) {
+static NSURLProtocol* __protocolForRequest(NSURLRequest* request, id<NSURLProtocolClient> client) {
     Class cls = [NSURLProtocol _URLProtocolClassForRequest:request];
     if (!cls || ![cls canInitWithRequest:request]) {
         return nil;
@@ -64,8 +64,8 @@ static NSURLProtocol* _protocolForRequest(NSURLRequest* request, id<NSURLProtoco
 
 - (instancetype)initWithQueue:(NSOperationQueue*)queue handler:(void (^)(NSURLResponse*, NSData*, NSError*))handler {
     if (self = [super init]) {
-        self->_operationQueue = queue;
-        self->_completionHandler = handler;
+        _operationQueue = queue;
+        _completionHandler = handler;
     }
     return self;
 }
@@ -140,14 +140,14 @@ static NSURLProtocol* _protocolForRequest(NSURLRequest* request, id<NSURLProtoco
                             queue:queue
                 completionHandler:^void(NSURLResponse* innerResponse, NSData* innerData, NSError* innerError) {
                     if (response) {
-                        *response = innerResponse ? [innerResponse retain] : nil;
+                        *response = [innerResponse retain];
                     }
 
                     if (error) {
-                        *error = innerError ? [innerError retain] : nil;
+                        *error = [innerError retain];
                     }
 
-                    data = innerData ? [innerData retain] : nil;
+                    data = [innerData retain];
 
                     [condition lock];
                     finished = true;
@@ -239,7 +239,7 @@ static NSURLProtocol* _protocolForRequest(NSURLRequest* request, id<NSURLProtoco
 
         _started = true;
 
-        NSURLProtocol* protocol = _protocolForRequest(_currentRequest, self);
+        NSURLProtocol* protocol = __protocolForRequest(_currentRequest, self);
         if (!protocol) {
             TraceError(TAG, L"[NSURLConnection start] could not create a NSURLProtocol for its NSURLRequest.");
             return;
@@ -450,7 +450,7 @@ static NSURLProtocol* _protocolForRequest(NSURLRequest* request, id<NSURLProtoco
         return;
     }
 
-    NSURLProtocol* protocol = _protocolForRequest(request, self);
+    NSURLProtocol* protocol = __protocolForRequest(request, self);
     if (!protocol) {
         TraceError(TAG, L"NSURLConnection was redirected to a new request, but could not create a NSURLProtocol for the new request.");
         return;

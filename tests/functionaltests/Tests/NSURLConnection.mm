@@ -42,9 +42,9 @@ typedef NS_ENUM(NSInteger, NSURLConnectionDelegateType) {
 @implementation NSURLConnectionTestHelper
 - (instancetype)init {
     if (self = [super init]) {
-        self->_condition = [NSCondition new];
-        self->_queue = dispatch_queue_create("NSURLConnectionDelegateCallOrder", NULL);
-        self->_delegateCallOrder = [NSMutableArray new];
+        _condition = [NSCondition new];
+        _queue = dispatch_queue_create("NSURLConnectionDelegateCallOrder", NULL);
+        _delegateCallOrder = [NSMutableArray new];
     }
     return self;
 }
@@ -102,7 +102,7 @@ typedef NS_ENUM(NSInteger, NSURLConnectionDelegateType) {
 @implementation NSURLConnectionTestHelper_OperationQueue
 - (instancetype)init {
     if (self = [super init]) {
-        self->_operationQueue = [NSOperationQueue new];
+        _operationQueue = [NSOperationQueue new];
     }
     return self;
 }
@@ -128,8 +128,8 @@ typedef NS_ENUM(NSInteger, NSURLConnectionDelegateType) {
 
 - (instancetype)init {
     if (self = [super init]) {
-        self->_thread = [[NSThread alloc] initWithTarget:self selector:@selector(spinRunLoop) object:nil];
-        [self->_thread start];
+        _thread = [[NSThread alloc] initWithTarget:self selector:@selector(spinRunLoop) object:nil];
+        [_thread start];
     }
     return self;
 }
