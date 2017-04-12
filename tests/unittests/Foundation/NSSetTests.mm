@@ -150,8 +150,8 @@ TEST(NSMutableSet, ShouldThrowWhenTryingToInsertNil) {
     EXPECT_EQ(0, [set count]);
 }
 
-// Cannot be certain of order of elements so cannot compare directly with reference platform
-// The reference platform also has some unexpected behaviours when nesting collections, so we have opted for consistency
+// Cannot be certain of order of elements so only validating output that MUST exist
+// Reference platform seems to have a bug getting the description of nested NSSets so disabling on OSX
 OSX_DISABLED_TEST(NSSet, Description) {
     NSSet* emptySet = [NSSet set];
     EXPECT_OBJCEQ(@"{(\n)}", emptySet.description);
