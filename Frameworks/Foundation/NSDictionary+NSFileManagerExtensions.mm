@@ -26,49 +26,56 @@
 }
 
 /**
- @Status Interoperable
+ @Status Caveat
+ @Notes Value will not be set by NSFileManager methods
 */
 - (BOOL)fileExtensionHidden {
     return [[self objectForKey:NSFileExtensionHidden] boolValue];
 }
 
 /**
- @Status Interoperable
+ @Status Caveat
+ @Notes Value will not be set by NSFileManager methods
 */
 - (NSNumber*)fileGroupOwnerAccountID {
     return [self objectForKey:NSFileGroupOwnerAccountID];
 }
 
 /**
- @Status Interoperable
+ @Status Caveat
+ @Notes Value will not be set by NSFileManager methods
 */
 - (NSString*)fileGroupOwnerAccountName {
     return [self objectForKey:NSFileGroupOwnerAccountName];
 }
 
 /**
- @Status Interoperable
+ @Status Caveat
+ @Notes Value will not be set by NSFileManager methods
 */
 - (OSType)fileHFSCreatorCode {
     return [[self objectForKey:NSFileHFSCreatorCode] unsignedIntegerValue];
 }
 
 /**
- @Status Interoperable
+ @Status Caveat
+ @Notes Value will not be set by NSFileManager methods
 */
 - (OSType)fileHFSTypeCode {
     return [[self objectForKey:NSFileHFSTypeCode] unsignedIntegerValue];
 }
 
 /**
- @Status Interoperable
+ @Status Caveat
+ @Notes Value will not be set by NSFileManager methods
 */
 - (BOOL)fileIsAppendOnly {
     return [[self objectForKey:NSFileAppendOnly] boolValue];
 }
 
 /**
- @Status Interoperable
+ @Status Caveat
+ @Notes Value will not be set by NSFileManager methods
 */
 - (BOOL)fileIsImmutable {
     return [[self objectForKey:NSFileImmutable] boolValue];
@@ -82,42 +89,48 @@
 }
 
 /**
- @Status Interoperable
+ @Status Caveat
+ @Notes Value will not be set by NSFileManager methods
 */
 - (NSNumber*)fileOwnerAccountID {
     return [self objectForKey:NSFileOwnerAccountID];
 }
 
 /**
- @Status Interoperable
+ @Status Caveat
+ @Notes Value will not be set by NSFileManager methods
 */
 - (NSString*)fileOwnerAccountName {
     return [self objectForKey:NSFileOwnerAccountName];
 }
 
 /**
- @Status Interoperable
+ @Status Caveat
+ @Notes Value will not be set by NSFileManager methods
 */
 - (NSUInteger)filePosixPermissions {
     return [[self objectForKey:NSFilePosixPermissions] unsignedIntegerValue];
 }
 
 /**
- @Status Interoperable
+ @Status Caveat
+ @Notes Value will not be set by NSFileManager methods
 */
 - (unsigned long long int)fileSize {
     return [[self objectForKey:NSFileSize] unsignedLongLongValue];
 }
 
 /**
- @Status Interoperable
+ @Status Caveat
+ @Notes Value will not be set by NSFileManager methods
 */
 - (NSUInteger)fileSystemFileNumber {
     return [[self objectForKey:NSFileSystemFileNumber] unsignedIntegerValue];
 }
 
 /**
- @Status Interoperable
+ @Status Caveat
+ @Notes Value will not be set by NSFileManager methods
 */
 - (NSInteger)fileSystemNumber {
     return [[self objectForKey:NSFileSystemNumber] unsignedIntegerValue];
