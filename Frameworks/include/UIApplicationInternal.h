@@ -46,6 +46,5 @@
 
 // UIApplicationMainInit is declared here instead of UIApplicationMainInternal.h because it uses NS* types and cannot be defined in
 // in a file that gets included in C++/CX sources.
-UIKIT_EXPORT int UIApplicationMainInit(
-    NSString* pClassName, NSString* dClassName, UIInterfaceOrientation defaultOrientation, int activationType, id activationArg);
+void _UIApplicationMainInit(NSString* principalClassName, NSString* delegateClassName, int activationType, id activationArg);
 void _UIApplicationShutdown();

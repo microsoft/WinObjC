@@ -50,7 +50,6 @@
 #import "LoggingNative.h"
 #import <MainDispatcher.h>
 #import "StarboardXaml/DisplayProperties.h"
-#import <UWP/WindowsApplicationModelActivation.h>
 
 static const wchar_t* TAG = L"UIApplicationMain";
 
@@ -123,14 +122,7 @@ UIInterfaceOrientation UIOrientationFromString(UIInterfaceOrientation curOrienta
 UIDeviceOrientation newDeviceOrientation = UIDeviceOrientationUnknown;
 static NSAutoreleasePoolWarn* outerPool;
 
-/**
- @Public No
-*/
-int UIApplicationMainInit(NSString* principalClassName,
-                          NSString* delegateClassName,
-                          UIInterfaceOrientation defaultOrientation,
-                          int activationType,
-                          id activationArg) {
+void _UIApplicationMainInit(NSString* principalClassName, NSString* delegateClassName, int activationType, id activationArg) {
     // Make sure we reference classes we need:
     void ForceInclusion();
     ForceInclusion();
@@ -144,16 +136,16 @@ int UIApplicationMainInit(NSString* principalClassName,
     UIApplication* uiApplication;
 
     // Register fonts listed in app's Info.plist, from the app's bundle
-    // This needs to happen before [UIApplication new]/[objc_getClass(pClassName) new] below,
-    // as they may attempt to use fonts from the app's bundle
+    // This needs to happen before we instantiate the UIApplication instance below,
+    // as it may attempt to use fonts from the app's bundle.
     if (infoDict) {
         NSArray* fonts = [infoDict objectForKey:@"UIAppFonts"];
-        if (fonts != nil) {
+        if (fonts) {
             NSMutableArray* fontURLs = [NSMutableArray array];
             for (NSString* curFontName in fonts) {
                 // curFontName contains extension, so pass in nil
                 NSURL* url = [[NSBundle mainBundle] URLForResource:curFontName withExtension:nil];
-                if (url != nil) {
+                if (url) {
                     [fontURLs addObject:url];
                 }
             }
@@ -162,44 +154,40 @@ int UIApplicationMainInit(NSString* principalClassName,
         }
     }
 
-    // If a principalClassName was specified, allocate the specified UIApplication class
+    // If no principalClassName was specified, try to grab one from the infoDict
     if (!principalClassName) {
         principalClassName = [infoDict objectForKey:@"NSPrincipalClass"];
     }
 
+    // If a principalClassName (custom UIApplication type) was specified, instantiate it.
     if (principalClassName) {
-        char* pClassName = (char*)[principalClassName UTF8String];
-        uiApplication = [objc_getClass(pClassName) new];
+        uiApplication = [NSClassFromString(principalClassName) new];
     } else {
         uiApplication = [UIApplication new];
     }
 
-    // If a delegateClassName was specified, allocate the specified UIApplicationDelegate and set it on the UIApplication instance.
+    // If a delegateClassName (custom UIApplicationDelegate type) was specified, 
+    // instantiate it and assign it to the UIApplication instance.
     id<UIApplicationDelegate> appDelegate;
     if (delegateClassName) {
-        char* pClassName = (char*)[delegateClassName UTF8String];
-        appDelegate = [objc_getClass(pClassName) new];
+        appDelegate = [NSClassFromString(delegateClassName) new];
         [uiApplication setDelegate:appDelegate];
     } else {
+        // Else use the default provided by the UIApplication instance
         appDelegate = [uiApplication delegate];
     }
 
     // Load nib/storyboard info
     StrongId<UIViewController> rootController;
     if (infoDict) {
-        if (defaultOrientation != UIInterfaceOrientationUnknown) {
-            [uiApplication setStatusBarOrientation:defaultOrientation];
-        }
-
         NSNumber* statusBarHidden = [infoDict objectForKey:@"UIStatusBarHidden"];
-        int hideStatusBar = 0;
-        if (statusBarHidden != nil) {
+        if (statusBarHidden) {
             if ([statusBarHidden intValue] != 0) {
-                hideStatusBar = 1;
+                [uiApplication setStatusBarHidden:YES];
             }
         }
-        [uiApplication setStatusBarHidden:hideStatusBar];
 
+        // Do we have a main nib/xib file (vs. a storyboard file)?
         NSString* mainNibFile;
         if (DisplayProperties::IsTablet()) {
             mainNibFile = [infoDict objectForKey:@"NSMainNibFile~ipad"];
@@ -210,13 +198,13 @@ int UIApplicationMainInit(NSString* principalClassName,
             mainNibFile = [infoDict objectForKey:@"NSMainNibFile"];
         }
 
-        if (mainNibFile != nil) {
+        if (mainNibFile) {
+            // It looks like we're launching a Xib application
             NSString* nibPath = [[NSBundle mainBundle] pathForResource:mainNibFile ofType:@"nib"];
-            if (nibPath != nil) {
+            if (nibPath) {
                 NSArray* obj =
                     [[[UINib nibWithNibName:nibPath bundle:[NSBundle mainBundle]] instantiateWithOwner:uiApplication options:nil] retain];
                 int count = [obj count];
-
                 for (int i = 0; i < count; i++) {
                     NSObject* curObj = [obj objectAtIndex:i];
 
@@ -227,6 +215,7 @@ int UIApplicationMainInit(NSString* principalClassName,
                 }
             }
         } else {
+            // Are we launching a storyboard application?
             NSString* storyBoardName = nil;
             if (DisplayProperties::IsTablet()) {
                 storyBoardName = [infoDict objectForKey:@"UIMainStoryboardFile~ipad"];
@@ -236,10 +225,10 @@ int UIApplicationMainInit(NSString* principalClassName,
                 storyBoardName = [infoDict objectForKey:@"UIMainStoryboardFile"];
             }
 
-            if (storyBoardName != nil) {
+            if (storyBoardName) {
                 UIStoryboard* storyBoard = [UIStoryboard storyboardWithName:storyBoardName bundle:[NSBundle mainBundle]];
                 UIViewController* viewController = [storyBoard instantiateInitialViewController];
-                if (viewController != nil) {
+                if (viewController) {
                     [viewController _setResizeToScreen:1];
                     rootController = viewController;
                 }
@@ -266,7 +255,7 @@ int UIApplicationMainInit(NSString* principalClassName,
             break;
     }
 
-    // If the xib/storyboard specified a root ViewController, set it here
+    // If we're a storyboard application, and the storyboard specified a root ViewController, set it here
     if (rootController) {
         // Give the app delegate UIWindow if it doesn't provide its own
         UIWindow* window = appDelegate.window;
@@ -311,8 +300,6 @@ int UIApplicationMainInit(NSString* principalClassName,
     }
 
     [pool release];
-
-    return 0;
 }
 
 void _UIApplicationShutdown() {

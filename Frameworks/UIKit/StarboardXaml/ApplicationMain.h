@@ -18,12 +18,5 @@
 #include "StarboardXaml.h"
 #include <inspectable.h>
 
-// IOS application main startup path
-extern "C" int ApplicationMainStart(const char* principalName,
-                                    const char* delegateName,
-                                    float windowWidth,
-                                    float windowHeight,
-                                    ActivationType activationType,
-                                    IInspectable* activationArg);
-
-void SetTemporaryFolder(const wchar_t* folder);
+// ObjectiveC application entry point to be called after initial WinRT app launch/activation
+void RunApplicationMain(const char* principalName, const char* delegateName, ActivationType activationType, IInspectable* activationArg);

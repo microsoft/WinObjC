@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -13,20 +13,12 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
-// clang-format does not seem to like C++/CX
-// clang-format off
 #pragma once
 
-#include "StarboardXaml.h"
+#import <UIKit/UIApplication.h>
 
-#ifdef __cplusplus_winrt
-extern "C" void RunApplicationMain(Platform::String^ principalClassName,
-                                   Platform::String^ delegateClassName,
-                                   float windowWidth,
-                                   float windowHeight,
-                                   ActivationType type,
-                                   Platform::Object^ activationArg);
-
-#endif
-
-// clang-format on
+// Optional internal protocol for UIApplicationDelegate; extension point for functional test automation
+@protocol UIApplicationDelegateInternal
+@optional
+- (NSDictionary*)_mainInfoDictionary;
+@end

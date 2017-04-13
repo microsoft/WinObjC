@@ -16,6 +16,9 @@
 
 #pragma once
 
+// This is a method that UIKit exposes for the test frameworks to use.
+extern "C" void UIApplicationInitializeFunctionalTest(const wchar_t*, const wchar_t*);
+
 // Setup method to call before every test class to initialize the UIApplication
 bool FunctionalTestSetupUIApplication();
 

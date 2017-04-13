@@ -25,9 +25,6 @@
 #import <StringHelpers.h>
 #import <UWP/WindowsApplicationModel.h>
 
-// This is a method that UIKit exposes for the test frameworks to use.
-extern "C" void UIApplicationInitializeFunctionalTest(const wchar_t*, const wchar_t*);
-
 // Launches the functional test app
 bool FunctionalTestSetupUIApplication() {
     //Note: Functional Tests (TAEF) are called on a background thread.  UIApplicationInitializeFunctionalTest will initialize 
