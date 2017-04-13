@@ -18,15 +18,25 @@
 #include <wrl/client.h>
 #include <Windows.Storage.streams.h>
 
+// Issue #2506: The IBufferByteAccess declared in RoBuffer.h is not parsable by clang
+
+#if __clang__
+// STDMETHOD generates a warning when building for ARM
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wignored-attributes"
+#endif
+
 // clang-format off
-// copied from "Robuffer.h" but fixed up the declaration to get it to compile. As it was, I got errors around calling __uuidof
-// for an object without a guid. Curious, I know.
 struct __declspec(uuid("905a0fef-bc53-11df-8c49-001e4fc686da")) __declspec(novtable) IBufferByteAccess : public IUnknown
 {
     // an IBuffer object is created by a client, and the buffer is provided by IBufferByteAccess::Buffer.
     STDMETHOD(Buffer)(_Outptr_result_buffer_(_Inexpressible_("size given by different API")) byte** value) = 0;
 };
 // clang-format on
+
+#if __clang__
+#pragma clang diagnostic pop
+#endif
 
 // Interop between WRL and ObjC is *incredibly* frustrating so define a helper function
 // to help isolate the code as much as possible.

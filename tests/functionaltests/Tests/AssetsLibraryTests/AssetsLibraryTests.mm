@@ -22,7 +22,6 @@
 #import <AssetsLibrary/ALAssetRepresentation.h>
 #import <AssetsLibrary/AssetsLibrary.h>
 #import <Starboard/SmartTypes.h>
-#import <UWP/WindowsStorage.h>
 
 class AssetsLibrary {
 public:
