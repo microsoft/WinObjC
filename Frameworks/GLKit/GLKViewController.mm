@@ -34,7 +34,7 @@ namespace WF = winrt::Windows::Foundation;
 static NSTimeInterval timeSpanToInterval(const WF::TimeSpan& timeSpan) {
     // NSTimeInterval is in seconds
     auto millis = std::chrono::duration_cast<std::chrono::milliseconds>(timeSpan);
-    return millis / 1000.0;
+    return millis.count() / 1000.0;
 }
 
 @protocol _GLKViewControllerInformal <NSObject>
