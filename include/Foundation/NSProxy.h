@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -22,9 +22,16 @@
 @class NSMethodSignature;
 @class NSString;
 
+// clang format doesn't play well with the first three lines here, so turn it off
+// clang-format off
 __attribute__((objc_root_class))
 FOUNDATION_EXPORT_CLASS
-@interface NSProxy <NSObject>
+@interface NSProxy <NSObject> {
+@public
+    Class isa;
+}
+
+- (instancetype)init NS_UNAVAILABLE;
 + (id)alloc;
 + (id)allocWithZone:(NSZone*)zone;
 - (void)dealloc;
@@ -32,9 +39,8 @@ FOUNDATION_EXPORT_CLASS
 - (void)forwardInvocation:(NSInvocation*)anInvocation;
 - (NSMethodSignature*)methodSignatureForSelector:(SEL)aSelector;
 + (BOOL)respondsToSelector:(SEL)aSelector;
-+ (Class) class;
++ (Class)class;
++ (Class)superclass; // Not in doc, but is supported
 @property (readonly, copy) NSString* description;
 @property (readonly, copy) NSString* debugDescription;
-@property(readonly) NSUInteger hash;
-@property(readonly) Class superclass;
 @end
