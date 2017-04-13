@@ -219,6 +219,30 @@ Pixel PixelComparisonModeMask<FailureThreshold>::ComparePixels(const LP& backgro
     return gp;
 }
 
+template <size_t FailureThreshold>
+template <typename LP, typename RP>
+Pixel PixelComparisonModeVisual<FailureThreshold>::ComparePixels(const LP& background, const LP& bp, const RP& cp, size_t& npxchg) {
+    Pixel gp{};
+    if (!(bp.near(cp))) {
+        ++npxchg;
+        if (cp == background) {
+            // Pixel is in EXPECTED but not ACTUAL
+            gp.r = gp.a = 255;
+        } else if (bp == background) {
+            // Pixel is in ACTUAL but not EXPECTED
+            gp.g = gp.a = 255;
+        } else {
+            // Pixel is in BOTH but DIFFERENT
+            gp.r = gp.g = gp.a = 255;
+        }
+    } else {
+        gp.r = gp.g = gp.b = 0;
+        gp.a = 255;
+    }
+
+    return gp;
+}
+
 template <typename PixelComparisonMode>
 ImageDelta PixelByPixelImageComparator<PixelComparisonMode>::CompareImages(CGImageRef left, CGImageRef right) {
     if (!left || !right) {
@@ -280,3 +304,5 @@ ImageDelta PixelByPixelImageComparator<PixelComparisonMode>::CompareImages(CGIma
 template class PixelByPixelImageComparator<>;
 template class PixelByPixelImageComparator<PixelComparisonModeMask<>>;
 template class PixelByPixelImageComparator<PixelComparisonModeMask<64>>;
+template class PixelByPixelImageComparator<PixelComparisonModeVisual<>>;
+template class PixelByPixelImageComparator<PixelComparisonModeVisual<100>>;

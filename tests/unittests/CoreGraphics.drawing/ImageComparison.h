@@ -24,10 +24,13 @@ enum class ImageComparisonResult : unsigned int { Unknown = 0, Incomparable, Dif
 struct Pixel {
     uint8_t r, g, b, a;
     bool operator==(const Pixel& o) const {
-        return r == o.r && g == o.g && g == o.g && a == o.a;
+        return r == o.r && g == o.g && g == o.g && b == o.b && a == o.a;
     }
     bool operator!=(const Pixel& o) const {
         return !(*this == o);
+    }
+    bool near(const Pixel& o) const {
+        return (abs(r - o.r) + abs(g - o.g) + abs(b - o.b) + abs(a - o.a)) < 4;
     }
 };
 
@@ -45,6 +48,13 @@ struct PixelComparisonModeMask {
     Pixel ComparePixels(const LP& background, const LP& bp, const RP& cp, size_t& npxchg);
 };
 
+template <size_t FailureThreshold = 1>
+struct PixelComparisonModeVisual {
+    static constexpr size_t Threshold = FailureThreshold;
+    template <typename LP, typename RP>
+    Pixel ComparePixels(const LP& background, const LP& bp, const RP& cp, size_t& npxchg);
+};
+
 struct ImageDelta {
     ImageComparisonResult result;
     size_t differences;
@@ -57,7 +67,8 @@ struct ImageDelta {
         : result(result), differences(differences), deltaImage(CGImageRetain(deltaImage)) {
     }
 
-    ImageDelta(ImageDelta&& other) : result(other.result), differences(other.differences), deltaImage(other.deltaImage.release()) {}
+    ImageDelta(ImageDelta&& other) : result(other.result), differences(other.differences), deltaImage(other.deltaImage.release()) {
+    }
 };
 
 class ImageComparator {

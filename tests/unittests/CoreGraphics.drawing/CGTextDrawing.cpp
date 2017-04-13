@@ -68,7 +68,7 @@ static const CGAffineTransform c_transforms[] = { CGAffineTransformMakeRotation(
                                                   { 2, 2, 1.75, 2, 0, 0 },
                                                   CGAffineTransformIdentity };
 
-class CGTransform : public WhiteBackgroundTest<PixelByPixelImageComparator<PixelComparisonModeMask<>>>,
+class CGTransform : public WhiteBackgroundTest<PixelByPixelImageComparator<PixelComparisonModeVisual<>>>,
                     public ::testing::WithParamInterface<::testing::tuple<CGAffineTransform, CGAffineTransform>> {};
 
 TEXT_DRAW_TEST_P(CGTransform, TestMatrices) {
@@ -87,7 +87,7 @@ INSTANTIATE_TEST_CASE_P(TestDrawingTextWithTransformedMatrices,
                         CGTransform,
                         ::testing::Combine(::testing::ValuesIn(c_transforms), ::testing::ValuesIn(c_transforms)));
 
-class CGUIKitTransform : public UIKitMimicTest<PixelByPixelImageComparator<PixelComparisonModeMask<>>>,
+class CGUIKitTransform : public UIKitMimicTest<PixelByPixelImageComparator<PixelComparisonModeVisual<>>>,
                          public ::testing::WithParamInterface<::testing::tuple<CGAffineTransform, CGAffineTransform>> {};
 
 TEXT_DRAW_TEST_P(CGUIKitTransform, TestMatrices) {

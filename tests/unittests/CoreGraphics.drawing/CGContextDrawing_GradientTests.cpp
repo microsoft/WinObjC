@@ -51,7 +51,7 @@ static void _drawShortLinearGradientWithOptions(CGContextRef context, CGRect bou
                         option);
 }
 
-DRAW_TEST_F(CGGradient, LinearGradient, UIKitMimicTest<>) {
+DRAW_TEST_F(CGGradient, LinearGradient, UIKitMimicTest<PixelByPixelImageComparator<PixelComparisonModeVisual<>>>) {
     CGFloat locations[2] = { 0, 1 };
     CGFloat components[8] = { 0.0, 0.0, 1, 1.0, 1.0, 0, 0, 1.0 };
 
@@ -156,7 +156,7 @@ DRAW_TEST_F(CGGradient, LinearGradient2, UIKitMimicTest<>) {
                         kCGGradientDrawsBeforeStartLocation);
 }
 
-DRAW_TEST_F(CGGradient, LinearGradientNullLocations, UIKitMimicTest<>) {
+DRAW_TEST_F(CGGradient, LinearGradientNullLocations, UIKitMimicTest<PixelByPixelImageComparator<PixelComparisonModeVisual<>>>) {
     CGFloat components[] = {
         0, 0, 1, 1.0, 1, 0, 0, 1.0, 0.85, 0.3, 0, 1.0, 1, 0, 1, 1.0,
     };

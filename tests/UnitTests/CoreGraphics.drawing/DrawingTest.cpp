@@ -244,3 +244,7 @@ template class UIKitMimicTest<PixelByPixelImageComparator<PixelComparisonModeMas
 template class ::testing::DrawTest<PixelByPixelImageComparator<PixelComparisonModeMask<64>>>;
 template class WhiteBackgroundTest<PixelByPixelImageComparator<PixelComparisonModeMask<64>>>;
 template class UIKitMimicTest<PixelByPixelImageComparator<PixelComparisonModeMask<64>>>;
+template class ::testing::DrawTest<PixelByPixelImageComparator<PixelComparisonModeVisual<>>>;
+template class WhiteBackgroundTest<PixelByPixelImageComparator<PixelComparisonModeVisual<>>>;
+template class UIKitMimicTest<PixelByPixelImageComparator<PixelComparisonModeVisual<>>>;
+template class UIKitMimicTest<PixelByPixelImageComparator<PixelComparisonModeVisual<100>>>;

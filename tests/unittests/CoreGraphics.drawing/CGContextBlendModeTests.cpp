@@ -106,7 +106,7 @@ static void __drawRightStackPink(CGContextRef context, CGRect bounds) {
     CGFloat unitHeight = bounds.size.height / 4.f;
 
     CGRect cursor = _CGRectCenteredOnPoint({ 2.f * bounds.size.width / 3.f, unitHeight },
-                                    { bounds.origin.x + (2.f * bounds.size.width / 3.f), bounds.origin.y + (unitHeight / 2.f) });
+                                           { bounds.origin.x + (2.f * bounds.size.width / 3.f), bounds.origin.y + (unitHeight / 2.f) });
 
     CGContextSaveGState(context);
     CGContextSetRGBFillColor(context, .95, .25, .66, 1.0);
@@ -131,7 +131,8 @@ static void __drawRightStackPink(CGContextRef context, CGRect bounds) {
     CGContextRestoreGState(context);
 }
 
-class CGContextBlendMode : public WhiteBackgroundTest<>, public ::testing::WithParamInterface<::testing::tuple<bool, CGNamedBlendMode>> {
+class CGContextBlendMode : public WhiteBackgroundTest<PixelByPixelImageComparator<PixelComparisonModeVisual<100>>>,
+                           public ::testing::WithParamInterface<::testing::tuple<bool, CGNamedBlendMode>> {
     CFStringRef CreateOutputFilename() {
         const char* blendModeName = ::testing::get<1>(GetParam()).name;
         bool useTransparencyLayer = ::testing::get<0>(GetParam());
@@ -186,14 +187,19 @@ INSTANTIATE_TEST_CASE_P(OperatorBlendModes,
                         ::testing::Combine(::testing::Values(false, true), ::testing::ValuesIn(blendOperators)));
 #endif
 
-class CGContextBlendModeImage : public WhiteBackgroundTest<>, public ::testing::WithParamInterface<CGNamedBlendMode> {
+class CGContextBlendModeImage : public WhiteBackgroundTest<PixelByPixelImageComparator<PixelComparisonModeVisual<100>>>,
+                                public ::testing::WithParamInterface<CGNamedBlendMode> {
     CFStringRef CreateOutputFilename() {
         const char* blendModeName = GetParam().name;
         // This works around the fact that TAEF cannot give us test case names.
         // We have to divine them from the test full name. :(
         auto testFullName = GetTestFullName();
         bool source = (testFullName.find("ImageAsSource", 0) != std::string::npos);
-        return CFStringCreateWithFormat(nullptr, nullptr, CFSTR("TestImage.CGContext.Blending_Image%s_%s.png"), source ? "Source" : "Destination", blendModeName);
+        return CFStringCreateWithFormat(nullptr,
+                                        nullptr,
+                                        CFSTR("TestImage.CGContext.Blending_Image%s_%s.png"),
+                                        source ? "Source" : "Destination",
+                                        blendModeName);
     }
 
 public:
