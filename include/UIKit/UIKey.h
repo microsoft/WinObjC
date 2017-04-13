@@ -30,6 +30,7 @@
 
 #pragma once
 
+#import "UIKitExport.h"
 #import <Foundation/Foundation.h>
 
 // NOTE: This does not come from Apple's UIKit and only exist to solve some current problems.
@@ -52,6 +53,7 @@ typedef enum {
     UIKeyTypePageDown,
 } UIKeyType;
 
+UIKIT_EXPORT_CLASS
 @interface UIKey : NSObject {
 @private
     unsigned short _keyCode;

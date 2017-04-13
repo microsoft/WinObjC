@@ -122,13 +122,13 @@ FOUNDATION_EXPORT_CLASS
 - (NSArray<NSURL*>*)subpathsOfDirectoryAtPath:(NSString*)path error:(NSError* _Nullable*)error;
 - (NSArray<NSURL*>*)subpathsAtPath:(NSString*)path;
 - (BOOL)createDirectoryAtURL:(NSURL*)url
- withIntermediateDirectories:(BOOL)createIntermediates
-                  attributes:(NSDictionary<NSString*, id>*)attributes
-                       error:(NSError* _Nullable*)error;
+    withIntermediateDirectories:(BOOL)createIntermediates
+                     attributes:(NSDictionary<NSString*, id>*)attributes
+                          error:(NSError* _Nullable*)error;
 - (BOOL)createDirectoryAtPath:(NSString*)path
-  withIntermediateDirectories:(BOOL)createIntermediates
-                   attributes:(NSDictionary<NSString*, id>*)attributes
-                        error:(NSError* _Nullable*)error;
+    withIntermediateDirectories:(BOOL)createIntermediates
+                     attributes:(NSDictionary<NSString*, id>*)attributes
+                          error:(NSError* _Nullable*)error;
 - (BOOL)createFileAtPath:(NSString*)path contents:(NSData*)contents attributes:(NSDictionary<NSString*, id>*)attributes;
 - (BOOL)removeItemAtURL:(NSURL*)URL error:(NSError* _Nullable*)error;
 - (BOOL)removeItemAtPath:(NSString*)path error:(NSError* _Nullable*)error;
@@ -223,4 +223,23 @@ FOUNDATION_EXPORT_CLASS
     shouldProceedAfterError:(NSError*)error
           linkingItemAtPath:(NSString*)srcPath
                      toPath:(NSString*)dstPath;
+@end
+
+@interface NSDictionary (NSFileManagerExtensions)
+- (NSDate*)fileCreationDate;
+- (BOOL)fileExtensionHidden;
+- (NSNumber*)fileGroupOwnerAccountID;
+- (NSString*)fileGroupOwnerAccountName;
+- (OSType)fileHFSCreatorCode;
+- (OSType)fileHFSTypeCode;
+- (BOOL)fileIsAppendOnly;
+- (BOOL)fileIsImmutable;
+- (NSDate*)fileModificationDate;
+- (NSNumber*)fileOwnerAccountID;
+- (NSString*)fileOwnerAccountName;
+- (NSUInteger)filePosixPermissions;
+- (unsigned long long int)fileSize;
+- (NSUInteger)fileSystemFileNumber;
+- (NSInteger)fileSystemNumber;
+- (NSString*)fileType;
 @end

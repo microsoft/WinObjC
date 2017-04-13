@@ -325,3 +325,43 @@ TEST(NSDictionary, KeysOfEntriesWithOptionsPassingTest) {
 
     EXPECT_OBJCEQ(expected, actual);
 }
+
+TEST(NSDictionary, NSFileManagerExtensions) {
+    NSDate* now = [NSDate date];
+    NSDictionary* fileAttributes = @{
+        NSFileAppendOnly : @YES,
+        NSFileBusy : @YES,
+        NSFileCreationDate : now,
+        NSFileOwnerAccountName : @"Name",
+        NSFileGroupOwnerAccountName : @"GroupName",
+        NSFileDeviceIdentifier : @1,
+        NSFileExtensionHidden : @YES,
+        NSFileGroupOwnerAccountID : @12,
+        NSFileHFSCreatorCode : @123,
+        NSFileHFSTypeCode : @1234,
+        NSFileImmutable : @YES,
+        NSFileModificationDate : now,
+        NSFileOwnerAccountID : @12345,
+        NSFilePosixPermissions : @123456,
+        NSFileReferenceCount : @2,
+        NSFileSize : @23,
+        NSFileSystemFileNumber : @234,
+        NSFileType : @"filetype"
+    };
+    EXPECT_OBJCEQ(now, fileAttributes.fileCreationDate);
+    EXPECT_EQ(YES, fileAttributes.fileExtensionHidden);
+    EXPECT_OBJCEQ(@12, fileAttributes.fileGroupOwnerAccountID);
+    EXPECT_OBJCEQ(@"GroupName", fileAttributes.fileGroupOwnerAccountName);
+    EXPECT_EQ(123, fileAttributes.fileHFSCreatorCode);
+    EXPECT_EQ(1234, fileAttributes.fileHFSTypeCode);
+    EXPECT_EQ(YES, fileAttributes.fileIsAppendOnly);
+    EXPECT_EQ(YES, fileAttributes.fileIsImmutable);
+    EXPECT_OBJCEQ(now, fileAttributes.fileModificationDate);
+    EXPECT_OBJCEQ(@12345, fileAttributes.fileOwnerAccountID);
+    EXPECT_OBJCEQ(@"Name", fileAttributes.fileOwnerAccountName);
+    EXPECT_EQ(123456, fileAttributes.filePosixPermissions);
+    EXPECT_EQ(23, fileAttributes.fileSize);
+    EXPECT_EQ(234, fileAttributes.fileSystemFileNumber);
+    EXPECT_EQ(0, fileAttributes.fileSystemNumber);
+    EXPECT_OBJCEQ(@"filetype", fileAttributes.fileType);
+}

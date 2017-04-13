@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 // Copyright (c) 2006-2007 Christopher J. W. Lloyd
 //
 // This code is licensed under the MIT License (MIT).
@@ -75,26 +75,6 @@ FOUNDATION_EXPORT_CLASS
 - (BOOL)writeToURL:(NSURL*)aURL atomically:(BOOL)flag;
 @property (readonly, copy) NSString* description;
 @property (readonly, copy) NSString* descriptionInStringsFileFormat;
-
-/* NSFileManager Extensions */
-- (NSDate*)fileCreationDate;
-- (BOOL)fileExtensionHidden STUB_METHOD;
-- (NSNumber*)fileGroupOwnerAccountID STUB_METHOD;
-- (NSString*)fileGroupOwnerAccountName STUB_METHOD;
-- (OSType)fileHFSCreatorCode STUB_METHOD;
-- (OSType)fileHFSTypeCode STUB_METHOD;
-- (BOOL)fileIsAppendOnly STUB_METHOD;
-- (BOOL)fileIsImmutable STUB_METHOD;
-- (NSDate*)fileModificationDate;
-- (NSNumber*)fileOwnerAccountID STUB_METHOD;
-- (NSString*)fileOwnerAccountName STUB_METHOD;
-- (NSUInteger)filePosixPermissions STUB_METHOD;
-- (unsigned long long)fileSize;
-- (NSUInteger)fileSystemFileNumber STUB_METHOD;
-- (NSInteger)fileSystemNumber STUB_METHOD;
-- (NSString*)fileType;
-- (NSString*)descriptionWithLocale:(id)locale;
-- (NSString*)descriptionWithLocale:(id)locale indent:(NSUInteger)level;
 @end
 
 #define NSDictionaryOfVariableBindings(...) _NSDictionaryOfVariableBindings(@"" #__VA_ARGS__, __VA_ARGS__, nil)

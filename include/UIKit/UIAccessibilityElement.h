@@ -30,8 +30,10 @@
 
 #pragma once
 
+#import <UIKit/UIKitExport.h>
 #import "UIAccessibility.h"
 
+UIKIT_EXPORT_CLASS
 @interface UIAccessibilityElement : NSObject <UIAccessibility>
 
 - (id)initWithAccessibilityContainer:(id)container;

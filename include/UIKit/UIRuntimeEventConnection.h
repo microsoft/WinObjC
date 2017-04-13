@@ -16,8 +16,10 @@
 
 #pragma once
 
+#import "UIKitExport.h"
 #import <Foundation/NSObject.h>
 
+UIKIT_EXPORT_CLASS
 @interface UIRuntimeEventConnection : NSObject
 @property (nonatomic, readonly, assign) NSUInteger mask;
 @property (nonatomic, readonly, assign) SEL sel;
