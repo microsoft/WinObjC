@@ -33,7 +33,7 @@ static const wchar_t* TAG = L"CGColor";
 */
 CGColorRef CGColorGetConstantColor(CFStringRef name) {
     CGColorRef ret = nullptr;
-    woc::StrongCF<CGColorSpaceRef> colorspace{ woc::MakeStrongCF<CGColorSpaceRef>(CGColorSpaceCreateDeviceGray()) };
+    woc::StrongCF<CGColorSpaceRef> colorspace{ woc::TakeOwnership, CGColorSpaceCreateDeviceGray() };
     if (CFEqual(kCGColorBlack, name)) {
         ret = static_cast<CGColorRef>([[__LazyUIColor blackColor] CGColor]);
     } else if (CFEqual(kCGColorWhite, name)) {
