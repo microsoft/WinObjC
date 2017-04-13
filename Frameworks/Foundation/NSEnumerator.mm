@@ -195,7 +195,7 @@
 @end
 
 // Helper function for foundation collections which returns the description for value
-NSString* _descriptionString(id value, id locale, NSUInteger indent) {
+NSString* _descriptionForCollectionElement(id value, id locale, NSUInteger indent) {
     NSString* valueToWrite = nil;
     if ([value isKindOfClass:[NSString class]]) {
         // If val is an NSString, use it directly

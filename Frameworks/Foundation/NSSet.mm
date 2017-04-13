@@ -575,7 +575,7 @@ BASE_CLASS_REQUIRED_IMPLS(NSSet, NSSetPrototype, CFSetGetTypeID);
                 [s appendString:indentStr];
             }
 
-            [s appendFormat:@"%@,\n", _descriptionString(val, locale, level)];
+            [s appendFormat:@"%@,\n", _descriptionForCollectionElement(val, locale, level)];
         }
 
         if ([self count] > 0) {

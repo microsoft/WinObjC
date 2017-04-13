@@ -950,7 +950,7 @@ static CFComparisonResult _CFComparatorFunctionFromComparator(const void* val1, 
                 [s appendString:indentStr];
             }
 
-            [s appendFormat:@"%@,\n", _descriptionString(val, locale, level)];
+            [s appendFormat:@"%@,\n", _descriptionForCollectionElement(val, locale, level)];
         }
 
         if ([self count] > 0) {

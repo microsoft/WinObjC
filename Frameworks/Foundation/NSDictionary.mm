@@ -771,7 +771,7 @@ BASE_CLASS_REQUIRED_IMPLS(NSDictionary, NSDictionaryPrototype, CFDictionaryGetTy
 
 /**
  @Status Interoperable
- @Notes NSEnumerationReverse is undefined on reference platform so we will ignore it
+ @Notes NSEnumerationReverse is undefined on the reference platform so we will ignore it
 */
 - (void)enumerateKeysAndObjectsWithOptions:(NSEnumerationOptions)options usingBlock:(void (^)(id, id, BOOL*))block {
     _enumerateWithBlock([self keyEnumerator], options, ^(id key, BOOL* stop) {
@@ -837,7 +837,8 @@ BASE_CLASS_REQUIRED_IMPLS(NSDictionary, NSDictionaryPrototype, CFDictionaryGetTy
 }
 
 /**
- @Status Interoperable
+ @Status Stub
+ @Notes
 */
 - (BOOL)fileExtensionHidden {
     UNIMPLEMENTED();
@@ -980,8 +981,8 @@ BASE_CLASS_REQUIRED_IMPLS(NSDictionary, NSDictionaryPrototype, CFDictionaryGetTy
             }
 
             [s appendFormat:@"%@ = %@;\n",
-                            _descriptionString(key, locale, indent),
-                            _descriptionString([self objectForKey:key], locale, indent)];
+                            _descriptionForCollectionElement(key, locale, indent),
+                            _descriptionForCollectionElement([self objectForKey:key], locale, indent)];
         }
     }
 

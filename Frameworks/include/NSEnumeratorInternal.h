@@ -34,7 +34,7 @@ typedef int (*nextValueFunc)(id obj, void* enumeratorHolder, id* ret, int count)
 @end
 
 // Helper function for foundation collections which returns the description for value
-NSString* _descriptionString(id value, id locale, NSUInteger indent);
+NSString* _descriptionForCollectionElement(id value, id locale, NSUInteger indent);
 
 __inline void _enumerateWithBlock(id<NSFastEnumeration> enumerator, NSEnumerationOptions options, void (^block)(id, BOOL*)) {
     dispatch_queue_t queue;
