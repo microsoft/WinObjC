@@ -27,8 +27,8 @@ FOUNDATION_EXPORT NSString* const NSInvocationOperationCancelledException;
 
 FOUNDATION_EXPORT_CLASS
 @interface NSInvocationOperation : NSOperation
-- (instancetype)initWithTarget:(id)target selector:(SEL)sel object:(id)arg STUB_METHOD;
-- (instancetype)initWithInvocation:(NSInvocation*)inv STUB_METHOD;
-@property (readonly, retain) NSInvocation* invocation STUB_PROPERTY;
-@property (readonly, retain) id result STUB_PROPERTY;
+- (instancetype)initWithTarget:(id)target selector:(SEL)sel object:(id)arg;
+- (instancetype)initWithInvocation:(NSInvocation*)invocation;
+@property (readonly, retain) NSInvocation* invocation;
+@property (readonly, retain) id result;
 @end
