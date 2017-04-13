@@ -195,6 +195,10 @@ NSUncaughtExceptionHandler* NSGetUncaughtExceptionHandler() {
     [super dealloc];
 }
 
+- (NSString*)description {
+    return [self reason];
+}
+
 // Returns exception name from HRESULT.
 + (NSString*)_exceptionNameForHRESULT:(int)errorCode {
     switch (errorCode) {
