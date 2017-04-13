@@ -53,7 +53,7 @@ static const wchar_t* TAG = L"NSURLProtocol_file";
 
 - (id)initWithRequest:(id)request cachedResponse:(id)response client:(id)client {
     if (self = [super initWithRequest:request cachedResponse:response client:client]) {
-        id url = [_request URL];
+        id url = [self.request URL];
         TraceVerbose(TAG, L"Loading %hs", [[url absoluteString] UTF8String]);
 
         _path.attach([[url path] copy]);
@@ -84,9 +84,10 @@ static const wchar_t* TAG = L"NSURLProtocol_file";
 - (id)_doFileLoad {
     NSData* dataReceived = [NSData dataWithContentsOfFile:_path];
 
-    [_client URLProtocol:self didReceiveResponse:nil cacheStoragePolicy:NSURLCacheStorageAllowed];
-    [_client URLProtocol:self didLoadData:dataReceived];
-    [_client URLProtocolDidFinishLoading:self];
+    id<NSURLProtocolClient> client = self.client;
+    [client URLProtocol:self didReceiveResponse:nil cacheStoragePolicy:NSURLCacheStorageAllowed];
+    [client URLProtocol:self didLoadData:dataReceived];
+    [client URLProtocolDidFinishLoading:self];
 
     return self;
 }

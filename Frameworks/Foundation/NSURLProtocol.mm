@@ -1,5 +1,5 @@
 /* Copyright (c) 2006-2007 Christopher J. W. Lloyd
-   Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+   Copyright (c) Microsoft. All rights reserved.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
 documentation files (the "Software"), to deal in the Software without restriction, including without limitation the
@@ -28,15 +28,15 @@ static const wchar_t* TAG = L"NSURLProtocol";
 
 @implementation NSURLProtocol
 
-+ (NSMutableArray*)_registeredClasses {
-    static StrongId<NSMutableArray> _registeredClasses([NSMutableArray array]);
++ (NSMutableArray<Class>*)_registeredClasses {
+    static StrongId<NSMutableArray<Class>> _registeredClasses([NSMutableArray<Class> array]);
     return _registeredClasses;
 }
 
 /**
  @Status Interoperable
 */
-+ (BOOL)registerClass:(id)cls {
++ (BOOL)registerClass:(Class)cls {
     @synchronized(self) {
         if ([[self _registeredClasses] containsObject:cls]) {
             return NO;
@@ -46,20 +46,20 @@ static const wchar_t* TAG = L"NSURLProtocol";
     }
 }
 
-+ (id)_URLProtocolClassForRequest:(id)request {
++ (Class)_URLProtocolClassForRequest:(NSURLRequest*)request {
     @synchronized(self) {
-        NSArray* classes = [self _registeredClasses];
+        NSArray<Class>* classes = [self _registeredClasses];
         NSInteger count = [classes count];
 
         while (--count >= 0) {
-            id check = [classes objectAtIndex:count];
+            Class check = [classes objectAtIndex:count];
 
             if ([check canInitWithRequest:request])
                 return check;
         }
 
-        id url = [request URL];
-        id absStr = [url absoluteString];
+        NSURL* url = [request URL];
+        NSString* absStr = [url absoluteString];
         const char* urlStr = [absStr UTF8String];
         TraceWarning(TAG, L"Couldn't find protocol handler for %hs", urlStr ? urlStr : "(null)");
 
@@ -74,32 +74,11 @@ static const wchar_t* TAG = L"NSURLProtocol";
                  cachedResponse:(NSCachedURLResponse*)cachedResponse
                          client:(id<NSURLProtocolClient>)client {
     if (self = [super init]) {
-        _request.attach([request mutableCopy]);
-        _cachedResponse = cachedResponse;
-        _client = client;
+        _request = [request mutableCopy];
+        _cachedResponse = [cachedResponse copy];
+        _client = [client retain];
     }
     return self;
-}
-
-/**
- @Status Interoperable
-*/
-- (id<NSURLProtocolClient>)client {
-    return [[_client retain] autorelease];
-}
-
-/**
- @Status Interoperable
-*/
-- (NSURLRequest*)request {
-    return [[_request retain] autorelease];
-}
-
-/**
- @Status Interoperable
-*/
-- (NSCachedURLResponse*)cachedResponse {
-    return [[_cachedResponse retain] autorelease];
 }
 
 - (id)scheduleInRunLoop:(id)runLoop forMode:(id)mode {
