@@ -398,35 +398,7 @@ BASE_CLASS_REQUIRED_IMPLS(NSSet, NSSetPrototype, CFSetGetTypeID);
  @Notes NSEnumerationReverse is undefined on reference platform so we will ignore it
 */
 - (void)enumerateObjectsWithOptions:(NSEnumerationOptions)options usingBlock:(void (^)(id, BOOL*))block {
-    dispatch_queue_t queue;
-    dispatch_group_t group;
-
-    // Initialize dispatch queue for concurrent enumeration
-    if (options & NSEnumerationConcurrent) {
-        queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
-        group = dispatch_group_create();
-    }
-
-    __block BOOL stop = NO;
-    for (id curObj in self) {
-        if (options & NSEnumerationConcurrent) {
-            dispatch_group_async(group, queue, ^() {
-                block(curObj, &stop);
-            });
-        } else {
-            block(curObj, &stop);
-        }
-
-        if (stop) {
-            break;
-        }
-    }
-
-    // Wait for dispatch queue to execute
-    if (options & NSEnumerationConcurrent) {
-        dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
-        dispatch_release(group);
-    }
+    _enumerateWithBlock(self, options, block);
 }
 
 /**
@@ -603,29 +575,7 @@ BASE_CLASS_REQUIRED_IMPLS(NSSet, NSSetPrototype, CFSetGetTypeID);
                 [s appendString:indentStr];
             }
 
-            // Documentation states order to determine what values are printed
-            NSString* valToWrite = nil;
-            if ([val isKindOfClass:[NSString class]]) {
-                // If val is an NSString, use it directly
-                valToWrite = val;
-            }
-
-            if (valToWrite.length == 0 && [val respondsToSelector:@selector(descriptionWithLocale:indent:)]) {
-                // If val is not a string but responds to descriptionWithLocale:indent, use that value
-                valToWrite = [val descriptionWithLocale:locale indent:level];
-            }
-
-            if (valToWrite.length == 0 && [val respondsToSelector:@selector(descriptionWithLocale:)]) {
-                // If not an NSString and doesn't respond to descriptionWithLocale:indent but does descriptionWithLocale:, use that
-                valToWrite = [val descriptionWithLocale:locale];
-            }
-
-            if (valToWrite.length == 0) {
-                // If all else fails, use description
-                valToWrite = [val description];
-            }
-
-            [s appendFormat:@"%@,\n", valToWrite];
+            [s appendFormat:@"%@,\n", _descriptionString(val, locale, level)];
         }
 
         if ([self count] > 0) {

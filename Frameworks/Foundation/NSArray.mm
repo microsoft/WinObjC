@@ -950,29 +950,7 @@ static CFComparisonResult _CFComparatorFunctionFromComparator(const void* val1, 
                 [s appendString:indentStr];
             }
 
-            // Documentation states order to determine what values are printed
-            NSString* valToWrite = nil;
-            if ([val isKindOfClass:[NSString class]]) {
-                // If val is an NSString, use it directly
-                valToWrite = val;
-            }
-
-            if (valToWrite.length == 0 && [val respondsToSelector:@selector(descriptionWithLocale:indent:)]) {
-                // If val is not a string but responds to descriptionWithLocale:indent, use that value
-                valToWrite = [val descriptionWithLocale:locale indent:level];
-            }
-
-            if (valToWrite.length == 0 && [val respondsToSelector:@selector(descriptionWithLocale:)]) {
-                // If not an NSString and doesn't respond to descriptionWithLocale:indent but does descriptionWithLocale:, use that
-                valToWrite = [val descriptionWithLocale:locale];
-            }
-
-            if (valToWrite.length == 0) {
-                // If all else fails, use description
-                valToWrite = [val description];
-            }
-
-            [s appendFormat:@"%@,\n", valToWrite];
+            [s appendFormat:@"%@,\n", _descriptionString(val, locale, level)];
         }
 
         if ([self count] > 0) {

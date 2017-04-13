@@ -730,26 +730,7 @@ BASE_CLASS_REQUIRED_IMPLS(NSDictionary, NSDictionaryPrototype, CFDictionaryGetTy
  @Status Interoperable
 */
 - (NSString*)description {
-    thread_local unsigned int indent = 0;
-    NSMutableString* s = [NSMutableString new];
-    [s appendString:@"{"];
-    {
-        ++indent;
-        auto deferPop = wil::ScopeExit([]() { --indent; });
-        for (id key in [self keyEnumerator]) {
-            [s appendString:@"\n"];
-            for (unsigned int i = 0; i < indent; ++i) {
-                [s appendString:@"    "];
-            }
-            [s appendFormat:@"\"%@\" = %@", [key description], [[self objectForKey:key] description]];
-        }
-    }
-    [s appendString:@"\n"];
-    for (unsigned int i = 0; i < indent; ++i) {
-        [s appendString:@"    "];
-    }
-    [s appendString:@"}"];
-    return [s autorelease];
+    return [self descriptionWithLocale:nil indent:0];
 }
 
 /**
@@ -789,15 +770,10 @@ BASE_CLASS_REQUIRED_IMPLS(NSDictionary, NSDictionaryPrototype, CFDictionaryGetTy
 }
 
 /**
-   @Status Caveat
-   @Notes NSEnumerationReverse not implemented.
+ @Status Interoperable
+ @Notes NSEnumerationReverse is undefined on reference platform so we will ignore it
 */
 - (void)enumerateKeysAndObjectsWithOptions:(NSEnumerationOptions)options usingBlock:(void (^)(id, id, BOOL*))block {
-    if (options & NSEnumerationReverse) {
-        UNIMPLEMENTED();
-        return;
-    }
-
     _enumerateWithBlock([self keyEnumerator], options, ^(id key, BOOL* stop) {
         id value = [self objectForKey:key];
         block(key, value, stop);
@@ -825,35 +801,43 @@ BASE_CLASS_REQUIRED_IMPLS(NSDictionary, NSDictionaryPrototype, CFDictionaryGetTy
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 - (NSSet*)keysOfEntriesPassingTest:(BOOL (^)(id, id, BOOL*))predicate {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return [self keysOfEntriesWithOptions:0 passingTest:predicate];
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
-- (NSSet*)keysOfEntriesWithOptions:(NSEnumerationOptions)opts passingTest:(BOOL (^)(id, id, BOOL*))predicate {
-    UNIMPLEMENTED();
-    return StubReturn();
+- (NSSet*)keysOfEntriesWithOptions:(NSEnumerationOptions)options passingTest:(BOOL (^)(id, id, BOOL*))predicate {
+    __block NSMutableSet* ret = [NSMutableSet setWithCapacity:[self count]];
+    [self enumerateKeysAndObjectsWithOptions:options
+                                  usingBlock:^(id key, id obj, BOOL* stop) {
+                                      if (predicate(key, obj, stop)) {
+                                          [ret addObject:key];
+                                      }
+                                  }];
+
+    return ret;
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Caveat
+ @Notes atomically parameter not supported
 */
-- (BOOL)writeToURL:(NSURL*)aURL atomically:(BOOL)flag {
-    UNIMPLEMENTED();
-    return StubReturn();
+- (BOOL)writeToURL:(NSURL*)url atomically:(BOOL)atomically {
+    NSError* error = nil;
+    NSData* data = [NSPropertyListSerialization dataWithPropertyList:self format:NSPropertyListXMLFormat_v1_0 options:0 error:&error];
+    if (error != nil) {
+        return NO;
+    }
+
+    return [data writeToURL:url atomically:atomically];
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 - (BOOL)fileExtensionHidden {
     UNIMPLEMENTED();
@@ -964,22 +948,54 @@ BASE_CLASS_REQUIRED_IMPLS(NSDictionary, NSDictionaryPrototype, CFDictionaryGetTy
  @Notes
 */
 - (NSString*)descriptionWithLocale:(id)locale {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return [self descriptionWithLocale:locale indent:0];
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
-- (NSString*)descriptionWithLocale:(id)locale indent:(NSUInteger)level {
-    UNIMPLEMENTED();
-    return StubReturn();
+- (NSString*)descriptionWithLocale:(id)locale indent:(NSUInteger)indent {
+    NSMutableString* s = [NSMutableString new];
+    for (NSUInteger i = 0; i < indent; ++i) {
+        [s appendString:@"    "];
+    }
+
+    [s appendString:@"{\n"];
+
+    {
+        ++indent;
+        auto deferPop = wil::ScopeExit([&indent]() { --indent; });
+
+        // Documentation specifies that output should be sorted by key using -[compare:] for NSString* keys
+        // Order is undefined if keys aren't NSString so just return ascending
+        NSArray* sortedKeys = [[self allKeys] sortedArrayUsingFunction:[](id key1, id key2, void* context) {
+            return ([key1 isKindOfClass:[NSString class]] && [key2 isKindOfClass:[NSString class]]) ? [key1 compare:key2] :
+                                                                                                      NSOrderedAscending;
+        }
+                                                               context:nullptr];
+
+        for (id key in sortedKeys) {
+            for (NSUInteger i = 0; i < indent; ++i) {
+                [s appendString:@"    "];
+            }
+
+            [s appendFormat:@"%@ = %@;\n",
+                            _descriptionString(key, locale, indent),
+                            _descriptionString([self objectForKey:key], locale, indent)];
+        }
+    }
+
+    for (NSUInteger i = 0; i < indent; ++i) {
+        [s appendString:@"    "];
+    }
+
+    [s appendString:@"}"];
+    return [s autorelease];
 }
 
 /**
- @Status Stub
- @Notes
+ @Status NotInPlan
+ @Notes Method relies on implementation-specific optimization which will not necessarily translate to WinObjC
 */
 + (id)sharedKeySetForKeys:(NSArray*)keys {
     UNIMPLEMENTED();

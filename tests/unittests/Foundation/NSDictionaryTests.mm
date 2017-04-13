@@ -159,3 +159,169 @@ TEST(NSMutableDictionary, SetObjectWithNilShouldThrow) {
     EXPECT_ANY_THROW([dict setObject:nil forKey:@"fail"]);
     EXPECT_OBJCEQ(@"world", dict[@"hello"]);
 }
+
+TEST(NSDictionary, ReadWriteURL) {
+    NSURL* url = [NSURL fileURLWithPath:@"dictionaryTestData.txt" isDirectory:NO];
+    NSDictionary* dict = @{ @"key1" : @1, @"k2" : @"val", @"z" : @[ @5 ] };
+    EXPECT_TRUE([dict writeToURL:url atomically:NO]);
+    NSDictionary* read = [NSDictionary dictionaryWithContentsOfURL:url];
+    EXPECT_OBJCEQ(dict, read);
+}
+
+TEST(NSDictionary, Description) {
+    NSDictionary* empty = @{};
+    EXPECT_OBJCEQ(@"{\n}", [empty description]);
+
+    NSDictionary* dict = @{ @"A" : @[ @1, @{ @"Key" : @9 } ], @"Z" : @"Value", @"G" : @"ZValue" };
+    NSString* expected = @"{\n"
+                          "    A =     (\n"
+                          "        1,\n"
+                          "                {\n"
+                          "            Key = 9;\n"
+                          "        }\n"
+                          "    );\n"
+                          "    G = ZValue;\n"
+                          "    Z = Value;\n"
+                          "}";
+    EXPECT_OBJCEQ(expected, [dict description]);
+}
+
+@interface NSDictionaryDescriptionTest : NSObject
++ (NSDictionaryDescriptionTest*)test;
+- (NSString*)descriptionWithLocale:(id)locale indent:(NSUInteger)level;
+- (NSString*)fakeDescriptionWithLocale:(id)locale indent:(NSUInteger)level;
+- (NSString*)descriptionWithLocale:(id)locale;
+- (NSString*)fakeDescriptionWithLocale:(id)locale;
+- (NSString*)description;
+@end
+
+@implementation NSDictionaryDescriptionTest
++ (NSDictionaryDescriptionTest*)test {
+    return [[NSDictionaryDescriptionTest new] autorelease];
+}
+
+- (NSString*)descriptionWithLocale:(id)locale indent:(NSUInteger)level {
+    if (locale) {
+        if (level > 1) {
+            return @"Both";
+        }
+
+        return @"JustLocale";
+    } else {
+        if (level > 1) {
+            return @"JustLevel";
+        }
+
+        return @"Neither";
+    }
+}
+- (NSString*)fakeDescriptionWithLocale:(id)locale indent:(NSUInteger)level {
+    return nil;
+}
+
+- (NSString*)descriptionWithLocale:(id)locale {
+    if (locale) {
+        return @"Locale";
+    }
+
+    return @"NoLocale";
+}
+
+- (NSString*)fakeDescriptionWithLocale:(id)locale {
+    return nil;
+}
+
+- (NSString*)description {
+    return @"Description";
+}
+@end
+
+// Unfortunately despite what documentation suggests [NSDictionary descriptionWithLocale:] and [NSDictionary descriptionWithLocale:indent:]
+// do not actually call descriptionWithLocale:indent: and descriptionWithLocale: when available (and does not follow the ordering
+// specified to check for availability) so we are opting to implement this correctly and not test on the reference platform
+OSX_DISABLED_TEST(NSDictionary, DescriptionWithLocale) {
+    NSDictionary* testDictionary = @{ @"HI" : [NSDictionaryDescriptionTest test] };
+
+    // Should default to descriptionWithLocale:indent:
+    EXPECT_OBJCEQ(@"{\n    HI = JustLocale;\n}", [testDictionary descriptionWithLocale:[NSLocale currentLocale]]);
+    EXPECT_OBJCEQ(@"{\n    HI = Neither;\n}", [testDictionary descriptionWithLocale:nil]);
+
+    Method originalDescWithLocaleIndent =
+        class_getInstanceMethod([NSDictionaryDescriptionTest class], @selector(descriptionWithLocale:indent:));
+    Method fakeDescWithLocaleIndent =
+        class_getInstanceMethod([NSDictionaryDescriptionTest class], @selector(fakeDescriptionWithLocale:indent:));
+    method_exchangeImplementations(originalDescWithLocaleIndent, fakeDescWithLocaleIndent);
+
+    // Should that fail then to descriptionWithLocale:
+    EXPECT_OBJCEQ(@"{\n    HI = Locale;\n}", [testDictionary descriptionWithLocale:[NSLocale currentLocale]]);
+    EXPECT_OBJCEQ(@"{\n    HI = NoLocale;\n}", [testDictionary descriptionWithLocale:nil]);
+
+    Method originalDescWithLocale = class_getInstanceMethod([NSDictionaryDescriptionTest class], @selector(descriptionWithLocale:));
+    Method fakeDescWithLocale = class_getInstanceMethod([NSDictionaryDescriptionTest class], @selector(fakeDescriptionWithLocale:));
+    method_exchangeImplementations(originalDescWithLocale, fakeDescWithLocale);
+
+    // Should that fail then to description
+    EXPECT_OBJCEQ(@"{\n    HI = Description;\n}", [testDictionary descriptionWithLocale:[NSLocale currentLocale]]);
+    EXPECT_OBJCEQ(@"{\n    HI = Description;\n}", [testDictionary descriptionWithLocale:nil]);
+
+    method_exchangeImplementations(originalDescWithLocaleIndent, fakeDescWithLocaleIndent);
+    method_exchangeImplementations(originalDescWithLocale, fakeDescWithLocale);
+}
+
+OSX_DISABLED_TEST(NSDictionary, DescriptionWithLocaleIndent) {
+    NSDictionary* testDictionary = @{ @"HI" : [NSDictionaryDescriptionTest test] };
+
+    // Should default to descriptionWithLocale:indent:
+    EXPECT_OBJCEQ(@"    {\n        HI = Both;\n    }", [testDictionary descriptionWithLocale:[NSLocale currentLocale] indent:1]);
+    EXPECT_OBJCEQ(@"{\n    HI = JustLocale;\n}", [testDictionary descriptionWithLocale:[NSLocale currentLocale] indent:0]);
+    EXPECT_OBJCEQ(@"    {\n        HI = JustLevel;\n    }", [testDictionary descriptionWithLocale:nil indent:1]);
+    EXPECT_OBJCEQ(@"{\n    HI = Neither;\n}", [testDictionary descriptionWithLocale:nil indent:0]);
+
+    Method originalDescWithLocaleIndent =
+        class_getInstanceMethod([NSDictionaryDescriptionTest class], @selector(descriptionWithLocale:indent:));
+    Method fakeDescWithLocaleIndent =
+        class_getInstanceMethod([NSDictionaryDescriptionTest class], @selector(fakeDescriptionWithLocale:indent:));
+    method_exchangeImplementations(originalDescWithLocaleIndent, fakeDescWithLocaleIndent);
+
+    // Should that fail then to descriptionWithLocale:
+    EXPECT_OBJCEQ(@"{\n    HI = Locale;\n}", [testDictionary descriptionWithLocale:[NSLocale currentLocale] indent:0]);
+    EXPECT_OBJCEQ(@"    {\n        HI = Locale;\n    }", [testDictionary descriptionWithLocale:[NSLocale currentLocale] indent:1]);
+    EXPECT_OBJCEQ(@"{\n    HI = NoLocale;\n}", [testDictionary descriptionWithLocale:nil indent:0]);
+    EXPECT_OBJCEQ(@"    {\n        HI = NoLocale;\n    }", [testDictionary descriptionWithLocale:nil indent:1]);
+
+    Method originalDescWithLocale = class_getInstanceMethod([NSDictionaryDescriptionTest class], @selector(descriptionWithLocale:));
+    Method fakeDescWithLocale = class_getInstanceMethod([NSDictionaryDescriptionTest class], @selector(fakeDescriptionWithLocale:));
+    method_exchangeImplementations(originalDescWithLocale, fakeDescWithLocale);
+
+    // Should that fail then to description
+    EXPECT_OBJCEQ(@"{\n    HI = Description;\n}", [testDictionary descriptionWithLocale:[NSLocale currentLocale] indent:0]);
+    EXPECT_OBJCEQ(@"    {\n        HI = Description;\n    }", [testDictionary descriptionWithLocale:[NSLocale currentLocale] indent:1]);
+    EXPECT_OBJCEQ(@"{\n    HI = Description;\n}", [testDictionary descriptionWithLocale:nil indent:0]);
+    EXPECT_OBJCEQ(@"    {\n        HI = Description;\n    }", [testDictionary descriptionWithLocale:nil indent:1]);
+
+    method_exchangeImplementations(originalDescWithLocaleIndent, fakeDescWithLocaleIndent);
+    method_exchangeImplementations(originalDescWithLocale, fakeDescWithLocale);
+}
+
+TEST(NSDictionary, KeysOfEntriesPassingTest) {
+    NSDictionary* dict = @{ @"one" : @1, @"two" : @2, @"three" : @3, @"four" : @4, @"five" : @5 };
+
+    NSSet* expected = [NSSet setWithObjects:@"one", @"three", @"five", nil];
+    NSSet* actual = [dict keysOfEntriesPassingTest:^BOOL(id key, id obj, BOOL* stop) {
+        return ([obj integerValue] % 2) == 1 ? YES : NO;
+    }];
+
+    EXPECT_OBJCEQ(expected, actual);
+}
+
+TEST(NSDictionary, KeysOfEntriesWithOptionsPassingTest) {
+    NSDictionary* dict = @{ @"one" : @1, @"two" : @2, @"three" : @3, @"four" : @4, @"five" : @5 };
+
+    NSSet* expected = [NSSet setWithObjects:@"one", @"three", @"five", nil];
+    NSSet* actual = [dict keysOfEntriesWithOptions:NSEnumerationConcurrent
+                                       passingTest:^BOOL(id key, id obj, BOOL* stop) {
+                                           return ([obj integerValue] % 2) == 1 ? YES : NO;
+                                       }];
+
+    EXPECT_OBJCEQ(expected, actual);
+}

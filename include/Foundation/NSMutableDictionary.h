@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -28,7 +28,7 @@ FOUNDATION_EXPORT_CLASS
 @interface NSMutableDictionary <KeyType, ObjectType> : NSDictionary <NSCopying, NSFastEnumeration, NSMutableCopying, NSSecureCoding>
 + (instancetype)dictionaryWithCapacity:(NSUInteger)numItems;
 - (instancetype)initWithCapacity:(NSUInteger)numItems;
-+ (NSMutableDictionary*)dictionaryWithSharedKeySet:(id)keyset STUB_METHOD;
++ (NSMutableDictionary*)dictionaryWithSharedKeySet:(id)keyset;
 - (void)setObject:(ObjectType)anObject forKey:(id<NSCopying>)aKey;
 - (void)setObject:(ObjectType)object forKeyedSubscript:(id<NSCopying>)aKey;
 - (void)setValue:(ObjectType)value forKey:(NSString*)key;
