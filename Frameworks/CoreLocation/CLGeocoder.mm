@@ -144,7 +144,7 @@ void createResultsArray(const MapLocationFinderResult& results, NSMutableArray* 
                     MapLocationFinderResult result = op.GetResults();
                     geocodeStatus = parseError(result);
 
-                    geocodeResult = [[NSMutableArray alloc] init];
+                    geocodeResult = [NSMutableArray new];
                     createResultsArray(result, geocodeResult);
                 }
 
@@ -180,7 +180,7 @@ void createResultsArray(const MapLocationFinderResult& results, NSMutableArray* 
                     MapLocationFinderResult result = op.GetResults();
                     geocodeStatus = parseError(result);
 
-                    geocodeResult = [[NSMutableArray alloc] init];
+                    geocodeResult = [NSMutableArray new];
                     createResultsArray(result, geocodeResult);
                 }
 
