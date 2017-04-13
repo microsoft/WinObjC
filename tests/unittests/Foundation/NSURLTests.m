@@ -206,7 +206,8 @@ TEST(NSURL, URLByAppendingPathExtension) {
     ASSERT_OBJCEQ_MSG(fileURLString, newFileURLString, "File URLs do not match!");
 }
 
-TEST(NSURL, CheckResourceIsReachable) {
+// Reference platform has bug on some machines where currentDirectoryPath returns the incorrect path
+OSX_DISABLED_TEST(NSURL, CheckResourceIsReachable) {
     NSFileManager* manager = [NSFileManager defaultManager];
     NSString* originalPath = [manager currentDirectoryPath];
     // construct target URL using current directory and relative URL
