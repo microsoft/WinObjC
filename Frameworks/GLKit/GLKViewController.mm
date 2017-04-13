@@ -18,11 +18,24 @@
 #import <GLKit/GLKitExport.h>
 #import <GLKit/GLKView.h>
 #import <GLKit/GLKViewController.h>
-
-#import <UWP/WindowsFoundation.h>
-#import <UWP/WindowsGlobalization.h>
+#import <chrono>
 
 #import "CALayerInternal.h"
+#import "CppWinRTHelpers.h"
+
+#include "COMIncludes.h"
+#import <winrt/Windows.Foundation.h>
+#import <winrt/Windows.Globalization.h>
+#include "COMIncludes_End.h"
+
+using namespace winrt::Windows::Globalization;
+namespace WF = winrt::Windows::Foundation;
+
+static NSTimeInterval timeSpanToInterval(const WF::TimeSpan& timeSpan) {
+    // NSTimeInterval is in seconds
+    auto millis = std::chrono::duration_cast<std::chrono::milliseconds>(timeSpan);
+    return millis.count() / 1000.0;
+}
 
 @protocol _GLKViewControllerInformal <NSObject>
 - (BOOL)_renderFrame;
@@ -30,10 +43,10 @@
 
 @implementation GLKViewController {
     CADisplayLink* _link;
-    int64_t _firstStart;
-    int64_t _lastStart;
-    int64_t _lastFrame;
-    WGCalendar* _calendar;
+    WF::DateTime _firstStart;
+    WF::DateTime _lastStart;
+    WF::DateTime _lastFrame;
+    TrivialDefaultConstructor<Calendar> _calendar;
     BOOL _isGlkView;
 }
 
@@ -52,11 +65,9 @@
     _link = [CADisplayLink displayLinkWithTarget:self selector:@selector(_renderFrame)];
     [_link retain];
 
-    _calendar = [WGCalendar make];
-    [_calendar setToNow];
-    WFDateTime* dt = [_calendar getDateTime];
-    _firstStart = dt.universalTime;
-    _lastFrame = dt.universalTime;
+    _calendar = Calendar();
+    _calendar.SetToNow();
+    _firstStart = _lastFrame = _calendar.GetDateTime();
 }
 
 - (void)dealloc {
@@ -74,9 +85,8 @@
 
     [_link addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
 
-    [_calendar setToNow];
-    WFDateTime* dt = [_calendar getDateTime];
-    _lastStart = dt.universalTime;
+    _calendar.SetToNow();
+    _lastStart = _calendar.GetDateTime();
 }
 
 /**
@@ -91,13 +101,12 @@
 }
 
 - (BOOL)_renderFrame {
-    [_calendar setToNow];
-    WFDateTime* dt = [_calendar getDateTime];
-    int64_t frameTime = dt.universalTime;
+    _calendar.SetToNow();
+    WF::DateTime frameTime = _calendar.GetDateTime();
 
-    _timeSinceFirstResume = static_cast<NSTimeInterval>(frameTime - _firstStart) * 0.0000001;
-    _timeSinceLastResume = static_cast<NSTimeInterval>(frameTime - _lastStart) * 0.0000001;
-    _timeSinceLastUpdate = static_cast<NSTimeInterval>(frameTime - _lastFrame) * 0.0000001;
+    _timeSinceFirstResume = timeSpanToInterval(frameTime - _firstStart);
+    _timeSinceLastResume = timeSpanToInterval(frameTime - _lastStart);
+    _timeSinceLastUpdate = timeSpanToInterval(frameTime - _lastFrame);
     _timeSinceLastDraw = _timeSinceLastUpdate;
 
     _lastFrame = frameTime;
