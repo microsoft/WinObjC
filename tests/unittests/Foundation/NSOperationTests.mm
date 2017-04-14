@@ -693,6 +693,10 @@ TEST(NSOperation, NSBlockOperationInQueue) {
     ASSERT_FALSE([operation isExecuting]);
 }
 
+TEST(NSOperation, DeallocWithoutInit) {
+    ASSERT_NO_THROW([[NSOperation alloc] release]);
+}
+
 TEST(NSOperation, QueuePriority) {
     NSOperation* op = [[NSOperation new] autorelease];
 
