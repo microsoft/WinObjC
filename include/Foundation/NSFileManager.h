@@ -23,7 +23,6 @@
 @protocol NSCoding;
 @protocol NSCopying;
 @class NSFileManager;
-@class NSDictionary<KeyType, ObjectType>;
 @class NSString;
 @class NSURL;
 @class NSError;
