@@ -22,6 +22,8 @@
 enum class ImageComparisonResult : unsigned int { Unknown = 0, Incomparable, Different, Same };
 
 struct Pixel {
+    // Value at which pixel differences become perceptible
+    static constexpr size_t sc_visualThreshold = 4;
     uint8_t r, g, b, a;
     bool operator==(const Pixel& o) const {
         return r == o.r && g == o.g && g == o.g && b == o.b && a == o.a;
@@ -30,7 +32,7 @@ struct Pixel {
         return !(*this == o);
     }
     bool near(const Pixel& o) const {
-        return (abs(r - o.r) + abs(g - o.g) + abs(b - o.b) + abs(a - o.a)) < 4;
+        return (abs(r - o.r) + abs(g - o.g) + abs(b - o.b) + abs(a - o.a)) < sc_visualThreshold;
     }
 };
 
@@ -49,7 +51,7 @@ struct PixelComparisonModeMask {
 };
 
 template <size_t FailureThreshold = 1>
-struct PixelComparisonModeVisual {
+struct PixelComparisonModeDifferenceLimen {
     static constexpr size_t Threshold = FailureThreshold;
     template <typename LP, typename RP>
     Pixel ComparePixels(const LP& background, const LP& bp, const RP& cp, size_t& npxchg);

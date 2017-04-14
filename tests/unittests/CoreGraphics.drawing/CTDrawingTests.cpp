@@ -290,7 +290,7 @@ INSTANTIATE_TEST_CASE_P(TestDrawingTextWithTransformedMatrices,
                         Transform,
                         ::testing::Combine(::testing::ValuesIn(c_transforms), ::testing::ValuesIn(c_transforms)));
 
-class UIKitTransform : public UIKitMimicTest<PixelByPixelImageComparator<PixelComparisonModeVisual<>>>,
+class UIKitTransform : public UIKitMimicTest<PixelByPixelImageComparator<PixelComparisonModeDifferenceLimen<>>>,
                        public ::testing::WithParamInterface<::testing::tuple<CGAffineTransform, CGAffineTransform>> {};
 
 TEXT_DRAW_TEST_P(UIKitTransform, TestMatrices) {

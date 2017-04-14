@@ -221,7 +221,10 @@ Pixel PixelComparisonModeMask<FailureThreshold>::ComparePixels(const LP& backgro
 
 template <size_t FailureThreshold>
 template <typename LP, typename RP>
-Pixel PixelComparisonModeVisual<FailureThreshold>::ComparePixels(const LP& background, const LP& bp, const RP& cp, size_t& npxchg) {
+Pixel PixelComparisonModeDifferenceLimen<FailureThreshold>::ComparePixels(const LP& background,
+                                                                          const LP& bp,
+                                                                          const RP& cp,
+                                                                          size_t& npxchg) {
     Pixel gp{};
     if (!(bp.near(cp))) {
         ++npxchg;
@@ -304,5 +307,5 @@ ImageDelta PixelByPixelImageComparator<PixelComparisonMode>::CompareImages(CGIma
 template class PixelByPixelImageComparator<>;
 template class PixelByPixelImageComparator<PixelComparisonModeMask<>>;
 template class PixelByPixelImageComparator<PixelComparisonModeMask<64>>;
-template class PixelByPixelImageComparator<PixelComparisonModeVisual<>>;
-template class PixelByPixelImageComparator<PixelComparisonModeVisual<100>>;
+template class PixelByPixelImageComparator<PixelComparisonModeDifferenceLimen<>>;
+template class PixelByPixelImageComparator<PixelComparisonModeDifferenceLimen<100>>;

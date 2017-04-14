@@ -131,7 +131,7 @@ static void __drawRightStackPink(CGContextRef context, CGRect bounds) {
     CGContextRestoreGState(context);
 }
 
-class CGContextBlendMode : public WhiteBackgroundTest<PixelByPixelImageComparator<PixelComparisonModeVisual<100>>>,
+class CGContextBlendMode : public WhiteBackgroundTest<PixelByPixelImageComparator<PixelComparisonModeDifferenceLimen<100>>>,
                            public ::testing::WithParamInterface<::testing::tuple<bool, CGNamedBlendMode>> {
     CFStringRef CreateOutputFilename() {
         const char* blendModeName = ::testing::get<1>(GetParam()).name;
@@ -187,7 +187,7 @@ INSTANTIATE_TEST_CASE_P(OperatorBlendModes,
                         ::testing::Combine(::testing::Values(false, true), ::testing::ValuesIn(blendOperators)));
 #endif
 
-class CGContextBlendModeImage : public WhiteBackgroundTest<PixelByPixelImageComparator<PixelComparisonModeVisual<100>>>,
+class CGContextBlendModeImage : public WhiteBackgroundTest<PixelByPixelImageComparator<PixelComparisonModeDifferenceLimen<100>>>,
                                 public ::testing::WithParamInterface<CGNamedBlendMode> {
     CFStringRef CreateOutputFilename() {
         const char* blendModeName = GetParam().name;
