@@ -18,6 +18,7 @@
 #import <Foundation/FoundationExport.h>
 #import <Foundation/NSObject.h>
 #import <Foundation/NSPathUtilities.h>
+#import <Foundation/NSDictionary.h>
 
 @protocol NSCoding;
 @protocol NSCopying;
