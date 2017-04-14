@@ -815,17 +815,17 @@ BASE_CLASS_REQUIRED_IMPLS(NSDictionary, NSDictionaryPrototype, CFDictionaryGetTy
 /**
  @Status Interoperable
 */
-- (NSString*)descriptionWithLocale:(id)locale indent:(NSUInteger)indent {
-    NSMutableString* s = [NSMutableString new];
-    for (NSUInteger i = 0; i < indent; ++i) {
-        [s appendString:@"    "];
+- (NSString*)descriptionWithLocale:(id)locale indent:(NSUInteger)level {
+    NSMutableString* ret = [NSMutableString new];
+    if (level != 0) {
+        [ret appendFormat:[NSString stringWithFormat:@"%%%us", sc_indentSpaces * level], " "];
     }
 
-    [s appendString:@"{\n"];
+    [ret appendString:@"{\n"];
 
     {
-        ++indent;
-        auto deferPop = wil::ScopeExit([&indent]() { --indent; });
+        ++level;
+        auto deferPop = wil::ScopeExit([&level]() { --level; });
 
         // Documentation specifies that output should be sorted by key using -[compare:] for NSString* keys
         // Order is undefined if keys aren't NSString so just return ascending
@@ -836,22 +836,19 @@ BASE_CLASS_REQUIRED_IMPLS(NSDictionary, NSDictionaryPrototype, CFDictionaryGetTy
                                                                context:nullptr];
 
         for (id key in sortedKeys) {
-            for (NSUInteger i = 0; i < indent; ++i) {
-                [s appendString:@"    "];
-            }
-
-            [s appendFormat:@"%@ = %@;\n",
-                            _descriptionForCollectionElement(key, locale, indent),
-                            _descriptionForCollectionElement([self objectForKey:key], locale, indent)];
+            [ret appendFormat:[NSString stringWithFormat:@"%%%us%%@ = %%@;\n", sc_indentSpaces * level],
+                              " ",
+                              _descriptionForCollectionElement(key, locale, level),
+                              _descriptionForCollectionElement([self objectForKey:key], locale, level)];
         }
     }
 
-    for (NSUInteger i = 0; i < indent; ++i) {
-        [s appendString:@"    "];
+    if (level != 0) {
+        [ret appendFormat:[NSString stringWithFormat:@"%%%us", sc_indentSpaces * level], " "];
     }
 
-    [s appendString:@"}"];
-    return [s autorelease];
+    [ret appendString:@"}"];
+    return [ret autorelease];
 }
 
 /**

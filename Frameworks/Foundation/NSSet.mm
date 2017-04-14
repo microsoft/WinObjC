@@ -559,36 +559,33 @@ BASE_CLASS_REQUIRED_IMPLS(NSSet, NSSetPrototype, CFSetGetTypeID);
 }
 
 - (NSString*)descriptionWithLocale:(id)locale indent:(NSUInteger)level {
-    NSMutableString* s = [NSMutableString string];
-    NSString* indentStr = @"    ";
-    for (NSUInteger i = 0; i < level; ++i) {
-        [s appendString:indentStr];
+    NSMutableString* ret = [NSMutableString string];
+    if (level != 0) {
+        [ret appendFormat:[NSString stringWithFormat:@"%%%us", sc_indentSpaces * level], " "];
     }
 
-    [s appendString:@"{(\n"];
+    [ret appendString:@"{(\n"];
 
     {
         ++level;
         auto deferPop = wil::ScopeExit([&level]() { --level; });
         for (id val in self) {
-            for (NSUInteger i = 0; i < level; ++i) {
-                [s appendString:indentStr];
-            }
-
-            [s appendFormat:@"%@,\n", _descriptionForCollectionElement(val, locale, level)];
+            [ret appendFormat:[NSString stringWithFormat:@"%%%us%%@,\n", sc_indentSpaces * level],
+                              " ",
+                              _descriptionForCollectionElement(val, locale, level)];
         }
 
         if ([self count] > 0) {
-            [s deleteCharactersInRange:{[s length] - 2, 1 }];
+            [ret deleteCharactersInRange:{[ret length] - 2, 1 }];
         }
     }
 
-    for (NSUInteger i = 0; i < level; ++i) {
-        [s appendString:indentStr];
+    if (level != 0) {
+        [ret appendFormat:[NSString stringWithFormat:@"%%%us", sc_indentSpaces * level], " "];
     }
 
-    [s appendString:@")}"];
-    return s;
+    [ret appendString:@")}"];
+    return ret;
 }
 
 /**

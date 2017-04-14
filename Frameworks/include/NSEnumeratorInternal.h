@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -15,6 +15,8 @@
 //******************************************************************************
 
 #pragma once
+
+static constexpr size_t sc_indentSpaces = 4;
 
 #include <Foundation/NSEnumerator.h>
 

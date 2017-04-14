@@ -74,6 +74,8 @@ FOUNDATION_EXPORT_CLASS
 - (BOOL)writeToFile:(NSString*)path atomically:(BOOL)flag;
 - (BOOL)writeToURL:(NSURL*)aURL atomically:(BOOL)flag;
 @property (readonly, copy) NSString* description;
+- (NSString*)descriptionWithLocale:(id)locale;
+- (NSString*)descriptionWithLocale:(id)locale indent:(NSUInteger)level;
 @property (readonly, copy) NSString* descriptionInStringsFileFormat;
 @end
 
