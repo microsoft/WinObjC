@@ -92,11 +92,13 @@ public:
 
     TEST_METHOD(Show) {
         FrameworkHelper::RunOnUIThread([]() {
-            StrongId<UIActionSheet> actionSheet = [[UIActionSheet alloc] initWithTitle:@"Title"
-                                                                              delegate:nil
-                                                                     cancelButtonTitle:@"Cancel"
-                                                                destructiveButtonTitle:@"OK"
-                                                                     otherButtonTitles:nil];
+            StrongId<UIActionSheet> actionSheet;
+
+            actionSheet.attach([[UIActionSheet alloc] initWithTitle:@"Title"
+                                                           delegate:nil
+                                                  cancelButtonTitle:@"Cancel"
+                                             destructiveButtonTitle:@"OK"
+                                                  otherButtonTitles:nil]);
 
             UIView* mainView = UIApplication.sharedApplication.keyWindow.rootViewController.view;
             [actionSheet showInView:mainView];
