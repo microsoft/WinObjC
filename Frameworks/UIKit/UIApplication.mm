@@ -650,7 +650,7 @@ static int __EbrSortViewPriorities(id val1, id val2, void* context) {
 
 // NOTE: This method is here merely due to the fact that Xib2Nib writes it to the Nib file.
 // If this method is removed, we crash when instantiating storyboards.
-// TODO: <FILE BUG> To remove this or hook it up properly.
+// TODO: #2523 Validate Xib2Nib's "sceneViewController" outlet connection on UIApplication.
 - (void)setSceneViewController:(UIViewController*)controller {
     UNIMPLEMENTED();
 }

@@ -92,6 +92,8 @@ UIKIT_EXPORT_CLASS
 @property (nonatomic, retain) UIScreen* screen NOTINPLAN_PROPERTY;
 @property (nonatomic, assign) UIWindowLevel windowLevel;
 @property (nonatomic, retain) UIViewController* rootViewController;
+
+// Microsoft Extension
 @property (nonatomic) BOOL sizeUIWindowToFit;
 
 @end

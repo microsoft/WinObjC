@@ -256,14 +256,14 @@ const UIWindowLevel UIWindowLevelStatusBar = 1000.0f;
 }
 
 /**
- @Status Interoperable
+ Microsoft Extension
 */
 - (BOOL)sizeUIWindowToFit {
     return _sizeUIWindowToFit;
 }
 
 /**
- @Status Interoperable
+ Microsoft Extension
 */
 - (void)setSizeUIWindowToFit:(BOOL)shouldSize {
     _sizeUIWindowToFit = shouldSize;
@@ -348,7 +348,7 @@ const UIWindowLevel UIWindowLevelStatusBar = 1000.0f;
 */
 - (CGPoint)convertPoint:(CGPoint)point toWindow:(UIWindow*)window {
     UNIMPLEMENTED();
-    return point;
+    return StubReturn();
 }
 
 /**
@@ -356,7 +356,7 @@ const UIWindowLevel UIWindowLevelStatusBar = 1000.0f;
 */
 - (CGPoint)convertPoint:(CGPoint)point fromWindow:(UIWindow*)window {
     UNIMPLEMENTED();
-    return point;
+    return StubReturn();
 }
 
 /**
@@ -364,7 +364,7 @@ const UIWindowLevel UIWindowLevelStatusBar = 1000.0f;
 */
 -(CGRect)convertRect:(CGRect)rect toWindow:(UIWindow*)window {
     UNIMPLEMENTED();
-    return rect;
+    return StubReturn();
 }
 
 /**
@@ -372,10 +372,10 @@ const UIWindowLevel UIWindowLevelStatusBar = 1000.0f;
 */
 - (CGRect)convertRect:(CGRect)rect fromWindow:(UIWindow*)window {
     UNIMPLEMENTED();
-    return rect;
+    return StubReturn();
 }
 
-// TODO: <bug number> Remove this unnecessary method in favor of properly implementing UIView point/rect conversion
+// TODO: #2440 Remove this unnecessary method in favor of properly implementing UIView point/rect conversion
 - (CGPoint)_convertPoint:(CGPoint)point fromView:(UIView*)fromView toView:(UIView*)toView {
     return [CALayer convertPoint:point fromLayer:[fromView layer] toLayer:[toView layer]];
 }
