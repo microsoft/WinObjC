@@ -881,30 +881,15 @@ static NSString* hstrToNSStr(HSTRING str, bool free = false) {
 
 static HString nsStrToHstr(NSString* str) {
     HString ret;
-    if (str == nil) {
-        return ret;
-    }
-
     NSUInteger dataBytes = [str length];
-    std::vector<unichar> data;
-    if (dataBytes == 0) {
-        // empty string.
-        // WindowsCreateString will return a null pointer if the length is set to 0.
-        // We increment this just to make sure that we return an empty HString.
-        dataBytes++;
 
-        // Allocate a vector containing only the null character.
-        data.resize(dataBytes, L'\0');
+    // Include size of the terminating '\0' character.
+    std::vector<unichar> data(dataBytes + 1);
 
-    } else {
-        // Include size of the terminating '\0' character.
-        data.reserve(dataBytes + 1);
+    [str getCharacters:&data[0]];
 
-        [str getCharacters : data.data()];
-        
-        // Add terminating NULL character.
-        data[dataBytes] = L'\0';
-    }
+    // Add terminating NULL character.
+    data[dataBytes] = L'\0';
 
     HRESULT hr = WindowsCreateString((LPWSTR)&data[0], dataBytes, ret.GetAddressOf());
     assert(SUCCEEDED(hr));
