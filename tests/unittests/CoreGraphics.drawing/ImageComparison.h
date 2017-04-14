@@ -22,8 +22,10 @@
 enum class ImageComparisonResult : unsigned int { Unknown = 0, Incomparable, Different, Same };
 
 struct Pixel {
-    // Value at which pixel differences become perceptible
+    // Value is slightly below threshold at which differences between two pixels are perceptible
+    // Allows us to safely ignore minute differences which can pop up between OS versions
     static constexpr size_t sc_visualThreshold = 4;
+
     uint8_t r, g, b, a;
     bool operator==(const Pixel& o) const {
         return r == o.r && g == o.g && g == o.g && b == o.b && a == o.a;
