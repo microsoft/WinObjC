@@ -192,7 +192,9 @@ TEST(NSSet, MakeObjectsPerformSelector) {
     EXPECT_TRUE([otherSet containsObject:@6]);
 }
 
-TEST(NSSet, ObjectsWithOptionsPassingTest) {
+// Reference platform is not guaranteed to run concurrently so this can fail
+// Still keep to guarantee properly support concurrency
+OSX_DISABLED_TEST(NSSet, ObjectsWithOptionsPassingTest) {
     NSSet* set = [NSSet setWithObjects:@1, @2, @3, @4, @5, nil];
 
     // Verify that the NSEnumerationConcurrent option executes the blocks concurrently

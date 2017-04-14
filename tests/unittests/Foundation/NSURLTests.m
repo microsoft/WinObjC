@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -207,40 +207,13 @@ TEST(NSURL, URLByAppendingPathExtension) {
 }
 
 TEST(NSURL, CheckResourceIsReachable) {
-    NSFileManager* manager = [NSFileManager defaultManager];
-    NSString* originalPath = [manager currentDirectoryPath];
-    // construct target URL using current directory and relative URL
-    // get test startup full path
-    wchar_t startUpPath[_MAX_PATH];
     auto fullPath = GetCurrentTestDirectory();
-    std::mbstowcs(startUpPath, fullPath.c_str(), _MAX_PATH);
-
-// File systems differ between platforms - Windows needs separate handling for drive character, etc
-#if TARGET_OS_WIN32
-    // construct the start up dir
-    wchar_t drive[_MAX_DRIVE];
-    wchar_t dir[_MAX_DIR];
-    ASSERT_TRUE(::_wsplitpath_s(startUpPath, drive, _countof(drive), dir, _countof(dir), nullptr, 0, nullptr, 0) == 0);
-    ASSERT_TRUE(::_wmakepath_s(startUpPath, _countof(startUpPath), drive, dir, L"", L"") == 0);
-
-    // change current dir to app start up path
-    ASSERT_TRUE(SetCurrentDirectoryW(startUpPath) != 0);
-#else
-    char tempBuffer[_MAX_PATH];
-    wcstombs(tempBuffer, startUpPath, _MAX_PATH);
-
-    ASSERT_TRUE(chdir(dirname(tempBuffer)) == 0);
-#endif
-
-    NSURL* baseURL = [NSURL fileURLWithPath:[manager currentDirectoryPath]];
+    NSURL* baseURL = [NSURL fileURLWithPath:[NSString stringWithUTF8String:fullPath.c_str()]];
     NSURL* targetURL = [NSURL URLWithString:@"data/NSFileManagerUT.txt" relativeToURL:baseURL];
-    ASSERT_TRUE_MSG([targetURL checkResourceIsReachableAndReturnError:nullptr], "The target URL %@ exists", targetURL);
+    EXPECT_TRUE_MSG([targetURL checkResourceIsReachableAndReturnError:nullptr], "The target URL %@ exists", targetURL);
 
     NSURL* targetURLNonExist = [NSURL URLWithString:@"data/foo.txt" relativeToURL:baseURL];
-    ASSERT_FALSE_MSG([targetURLNonExist checkResourceIsReachableAndReturnError:nullptr],
-                     "The target %@URL does not exist",
-                     targetURLNonExist);
-    ASSERT_TRUE([manager changeCurrentDirectoryPath:originalPath]);
+    EXPECT_FALSE_MSG([targetURLNonExist checkResourceIsReachableAndReturnError:nullptr], "The target %@ does not exist", targetURLNonExist);
 }
 
 TEST(NSURL, GetFileSystemRepresentation) {
