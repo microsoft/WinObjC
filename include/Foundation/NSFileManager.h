@@ -18,11 +18,11 @@
 #import <Foundation/FoundationExport.h>
 #import <Foundation/NSObject.h>
 #import <Foundation/NSPathUtilities.h>
+#import <Foundation/NSDictionary.h>
 
 @protocol NSCoding;
 @protocol NSCopying;
 @class NSFileManager;
-@class NSDictionary<KeyType, ObjectType>;
 @class NSString;
 @class NSURL;
 @class NSError;
