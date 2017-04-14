@@ -44,7 +44,7 @@ const NSTimeInterval CLTimeIntervalMax = std::numeric_limits<double>::max();
 
 static const wchar_t* TAG = L"CLLocationManager";
 
-// Issue #XXXX: clang bug forces us to redeclare this from the C++/WinRT headers
+// Issue #2529: clang bug forces us to redeclare this from the C++/WinRT headers
 constexpr winrt::clock::time_point winrt::clock::time_t_epoch;
 
 static std::mutex s_extendedExecutionMutex;
