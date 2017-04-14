@@ -110,10 +110,12 @@ static const int s_InvalidButtonIndex = -1;
         objcwinrt::callback([weakSelf] (const Controls::ContentDialog&, const Controls::ContentDialogOpenedEventArgs&) {
             __strong UIActionSheet* strongSelf = weakSelf;
 
-            strongSelf->_isContentDialogVisible = YES;
+            if (strongSelf != nil) {
+                strongSelf->_isContentDialogVisible = YES;
 
-            if ([strongSelf->_delegate respondsToSelector:@selector(didPresentActionSheet:)]) {
-                [strongSelf->_delegate didPresentActionSheet:strongSelf];
+                if ([strongSelf->_delegate respondsToSelector:@selector(didPresentActionSheet:)]) {
+                    [strongSelf->_delegate didPresentActionSheet:strongSelf];
+                }
             }
         }));
 
@@ -122,11 +124,13 @@ static const int s_InvalidButtonIndex = -1;
         objcwinrt::callback([weakSelf] (const Controls::ContentDialog&, const Controls::ContentDialogClosingEventArgs& e) {
             __strong UIActionSheet* strongSelf = weakSelf;
 
-            // Verify whether a button was pressed or if we dismissed the dialog via ESC
-            int pressedIndex = XamlControls::XamlContentDialogPressedIndex(strongSelf->_contentDialog);
-            if (pressedIndex == s_InvalidButtonIndex && strongSelf->_cancelButtonIndex == s_InvalidButtonIndex) {
-                // Cancel closing the dialog if ESC was pressed and cancelButtonIndex is invalid
-                e.Cancel(true);
+            if (strongSelf != nil) {
+                // Verify whether a button was pressed or if we dismissed the dialog via ESC
+                int pressedIndex = XamlControls::XamlContentDialogPressedIndex(strongSelf->_contentDialog);
+                if (pressedIndex == s_InvalidButtonIndex && strongSelf->_cancelButtonIndex == s_InvalidButtonIndex) {
+                    // Cancel closing the dialog if ESC was pressed and cancelButtonIndex is invalid
+                    e.Cancel(true);
+                }
             }
         }));
 
@@ -135,7 +139,9 @@ static const int s_InvalidButtonIndex = -1;
         objcwinrt::callback([weakSelf] (const Controls::ContentDialog&, const Controls::ContentDialogClosedEventArgs&) {
             __strong UIActionSheet* strongSelf = weakSelf;
 
-            strongSelf->_isContentDialogVisible = NO;
+            if (strongSelf != nil) {
+                strongSelf->_isContentDialogVisible = NO;
+            }
         }));
 }
 
@@ -244,24 +250,21 @@ static const int s_InvalidButtonIndex = -1;
     // However on iOS, a call to isVisible indicates it is visible almost as soon as showInView: is called
     _isContentDialogVisible = YES;
 
-    // Display the ContentDialog and ultimately capture its dismissal events in either the success or failure blocks
-    __weak UIActionSheet* weakSelf = self;
+    // Display the ContentDialog and ultimately capture its dismissal event
     WF::IAsyncOperation<Controls::ContentDialogResult> async = _contentDialog.ShowAsync();
 
-    async.Completed(objcwinrt::callback([weakSelf] (const WF::IAsyncOperation<Controls::ContentDialogResult>& operation, WF::AsyncStatus status) {
-        __strong UIActionSheet* strongSelf = weakSelf;
-
+    async.Completed(objcwinrt::callback([self] (const WF::IAsyncOperation<Controls::ContentDialogResult>& operation, WF::AsyncStatus status) {
         if (status == WF::AsyncStatus::Completed) {
-            int pressedIndex = XamlControls::XamlContentDialogPressedIndex(strongSelf->_contentDialog);
+            int pressedIndex = XamlControls::XamlContentDialogPressedIndex(_contentDialog);
             if (pressedIndex != s_InvalidButtonIndex) {
-                [strongSelf _buttonClicked:pressedIndex];
+                [self _buttonClicked:pressedIndex];
             } else {
                 // Dismissed the dialog via ESC which imitates the cancel button being pressed
-                [strongSelf _buttonClicked:strongSelf->_cancelButtonIndex];
+                [self _buttonClicked:_cancelButtonIndex];
             }
         } else {
             TraceVerbose(TAG, L"Failed with error code %u", (unsigned)status);
-            strongSelf->_isContentDialogVisible = NO;
+            _isContentDialogVisible = NO;
         }
     }));
 }
