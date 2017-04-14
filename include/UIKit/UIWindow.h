@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2011, The Iconfactory. All rights reserved.
- * Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+ * Copyright (c) Microsoft Corporation. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -77,24 +77,23 @@ UIKIT_EXPORT_CLASS
                               UIFocusEnvironment,
                               UITraitEnvironment>
 
-- (CGPoint)convertPoint:(CGPoint)toConvert toWindow:(UIWindow*)toWindow STUB_METHOD;
-- (CGPoint)convertPoint:(CGPoint)toConvert fromWindow:(UIWindow*)fromWindow STUB_METHOD;
-- (CGRect)convertRect:(CGRect)toConvert fromWindow:(UIWindow*)fromWindow;
-- (CGRect)convertRect:(CGRect)toConvert toWindow:(UIWindow*)toWindow STUB_METHOD;
-- (CGRect)convertRect:(CGRect)toConvert fromView:(UIView*)fromView toView:(UIView*)toView STUB_METHOD;
-- (CGPoint)convertPoint:(CGPoint)toConvert fromView:(UIView*)fromView toView:(UIView*)toView;
-- (CGPoint)convertPoint:(CGPoint)toConvert fromLayer:(CALayer*)fromView toLayer:(CALayer*)toView STUB_METHOD;
+- (CGPoint)convertPoint:(CGPoint)point toWindow:(UIWindow*)toWindow STUB_METHOD;
+- (CGPoint)convertPoint:(CGPoint)point fromWindow:(UIWindow*)fromWindow STUB_METHOD;
+- (CGRect)convertRect:(CGRect)rect toWindow : (UIWindow*)toWindow STUB_METHOD;
+- (CGRect)convertRect:(CGRect)rect fromWindow:(UIWindow*)fromWindow STUB_METHOD;
 
 - (void)makeKeyWindow;
 - (void)makeKeyAndVisible;
 - (void)resignKeyWindow;
 - (void)becomeKeyWindow;
-- (void)sendEvent:(UIEvent*)event;
+- (void)sendEvent:(UIEvent*)event NOTINPLAN_METHOD;
 
 @property (nonatomic, readonly, getter=isKeyWindow) BOOL keyWindow;
-@property (nonatomic, retain) UIScreen* screen STUB_PROPERTY;
+@property (nonatomic, retain) UIScreen* screen NOTINPLAN_PROPERTY;
 @property (nonatomic, assign) UIWindowLevel windowLevel;
 @property (nonatomic, retain) UIViewController* rootViewController;
+
+// Microsoft Extension
 @property (nonatomic) BOOL sizeUIWindowToFit;
 
 @end

@@ -1,4 +1,9 @@
 //******************************************************************************
+//
+// Copyright (c) Microsoft Corporation. All rights reserved.
+//
+// This code is licensed under the MIT License (MIT).
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 // FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -40,10 +45,9 @@ static const wchar_t* TAG = L"UILabel";
 @implementation UILabel {
     idretaintype(NSString) _text;
     idretaintype(UIFont) _font;
-    idretaintype(UIColor) _textColor, _shadowColor, _highlightedTextColor;
-    idretaintype(NSAttributedString) _attributedText;
+    idretaintype(UIColor) _textColor;
+    idretaintype(UIColor) _highlightedTextColor;
     idretaintype(UIColor) _savedBackgroundColor;
-    CGSize _shadowOffset;
     UITextAlignment _alignment;
     UILineBreakMode _lineBreakMode;
     BOOL _adjustFontSize;
@@ -51,9 +55,7 @@ static const wchar_t* TAG = L"UILabel";
     BOOL _useMinimumScaleFactor;
     float _minimumScaleFactor;
     int _numberOfLines;
-    BOOL _isDisabled;
     BOOL _isHighlighted;
-    UIBaselineAdjustment _baselineAdjustment;
     TrivialDefaultConstructor<Controls::TextBlock> _textBlock;
 }
 
@@ -111,7 +113,6 @@ static const wchar_t* TAG = L"UILabel";
         _text = [coder decodeObjectForKey:@"UIText"];
         _textColor = [coder decodeObjectForKey:@"UITextColor"];
         _highlightedTextColor = [coder decodeObjectForKey:@"UIHighlightedColor"];
-        _shadowColor = [coder decodeObjectForKey:@"UIShadowColor"];
 
         UIFont* font = [coder decodeObjectForKey:@"UIFont"];
         if (font != nil) {
@@ -157,18 +158,6 @@ static const wchar_t* TAG = L"UILabel";
             _lineBreakMode = UILineBreakModeTailTruncation;
         }
 
-        if ([coder containsValueForKey:@"UIShadowOffset"]) {
-            id obj = [coder decodeObjectForKey:@"UIShadowOffset"];
-            CGSize size = { 0 };
-            if ([obj isKindOfClass:[NSString class]]) {
-                const char* str = (const char*)([obj UTF8String]);
-                sscanf_s(str, "{%f, %f}", &_shadowOffset.width, &_shadowOffset.height);
-            } else {
-                CGSize* pSize = (CGSize*)((char*)[obj bytes] + 1);
-                memcpy(&_shadowOffset, pSize, sizeof(CGSize));
-            }
-        }
-
         [self _applyPropertiesOnTextBlock];
     }
 
@@ -208,7 +197,6 @@ static const wchar_t* TAG = L"UILabel";
     _alignment = UITextAlignmentLeft;
     _lineBreakMode = UILineBreakModeTailTruncation;
     _textColor = [UIColor blackColor];
-    _shadowColor = _textColor;
 
     // on reference platform, default minimum font size is zero but always slightly bigger than zero in reality acccording to the
     // documentation
@@ -341,8 +329,6 @@ static const wchar_t* TAG = L"UILabel";
 */
 - (void)setAttributedText:(NSAttributedString*)newStr {
     UNIMPLEMENTED_WITH_MSG("Attributed text is not easily supported by Xaml.");
-    _attributedText = [newStr copy];
-    [self setText:[_attributedText string]];
 }
 
 /**
@@ -351,7 +337,7 @@ static const wchar_t* TAG = L"UILabel";
 */
 - (NSAttributedString*)attributedText {
     UNIMPLEMENTED_WITH_MSG("Attributed text is not easily supported by Xaml.");
-    return _attributedText;
+    return StubReturn();
 }
 
 /**
@@ -360,7 +346,6 @@ static const wchar_t* TAG = L"UILabel";
 */
 - (void)setEnabled:(BOOL)enable {
     UNIMPLEMENTED_WITH_MSG("enabled is not a property that XAML has available for TextBlock");
-    _isDisabled = !enable;
 }
 
 /**
@@ -369,7 +354,7 @@ static const wchar_t* TAG = L"UILabel";
 */
 - (BOOL)isEnabled {
     UNIMPLEMENTED_WITH_MSG("enabled is not a  property that XAML has available for TextBlock");
-    return _isDisabled;
+    return StubReturn();
 }
 
 /**
@@ -432,7 +417,6 @@ static const wchar_t* TAG = L"UILabel";
 */
 - (void)setShadowColor:(UIColor*)colorref {
     UNIMPLEMENTED_WITH_MSG("ShadowColor is not a feature currently supported by Xaml.");
-    _shadowColor = colorref;
 }
 
 /**
@@ -441,7 +425,7 @@ static const wchar_t* TAG = L"UILabel";
 */
 - (UIColor*)shadowColor {
     UNIMPLEMENTED_WITH_MSG("ShadowColor is not a feature currently supported by Xaml.");
-    return _shadowColor;
+    return StubReturn();
 }
 
 /**
@@ -450,7 +434,6 @@ static const wchar_t* TAG = L"UILabel";
 */
 - (void)setShadowOffset:(CGSize)offset {
     UNIMPLEMENTED_WITH_MSG("ShadowOffset is not a feature currently supported by Xaml.");
-    _shadowOffset = offset;
 }
 
 /**
@@ -459,7 +442,7 @@ static const wchar_t* TAG = L"UILabel";
 */
 - (CGSize)shadowOffset {
     UNIMPLEMENTED_WITH_MSG("ShadowOffset is not a feature currently supported by Xaml.");
-    return _shadowOffset;
+    return StubReturn();
 }
 
 /**
@@ -515,7 +498,6 @@ static const wchar_t* TAG = L"UILabel";
 */
 - (void)setBaselineAdjustment:(UIBaselineAdjustment)adjustment {
     UNIMPLEMENTED_WITH_MSG("baselineAdjustment is not a feature currently supported by Xaml.");
-    _baselineAdjustment = adjustment;
 }
 
 /**
@@ -524,7 +506,7 @@ static const wchar_t* TAG = L"UILabel";
 */
 - (UIBaselineAdjustment)baselineAdjustment {
     UNIMPLEMENTED_WITH_MSG("baselineAdjustment is not a feature currently supported by Xaml.");
-    return _baselineAdjustment;
+    return StubReturn();
 }
 
 /**

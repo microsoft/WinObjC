@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -217,7 +217,7 @@ static std::string _printViewhierarchy(UIView* leafView) {
     // Perform a hit test starting at the owning window
     UIWindow* rootWindow = [self _getWindowInternal];
     CGPoint point = { touch->_touchX, touch->_touchY };
-    point = [rootWindow convertPoint:point fromView:rootWindow toView:rootWindow];
+    point = [rootWindow _convertPoint:point fromView:rootWindow toView:rootWindow];
     UIView* hitTestResult = [rootWindow hitTest:point withEvent:hitTestEvent];
 
     if (hitTestResult && (hitTestResult != self)) {
@@ -1913,7 +1913,7 @@ static void adjustSubviews(UIView* self, CGSize parentSize, CGSize delta) {
             continue;
         }
 
-        CGPoint newPoint = [window convertPoint:point fromView:self toView:view];
+        CGPoint newPoint = [window _convertPoint:point fromView:self toView:view];
         if ([view pointInside:newPoint withEvent:event]) {
             if (DEBUG_HIT_TESTING) {
                 TraceVerbose(TAG, L"Point (%f, %f) was inside %hs(0x%p).", newPoint.x, newPoint.y, object_getClassName(view), view);
@@ -1965,8 +1965,8 @@ static void adjustSubviews(UIView* self, CGSize parentSize, CGSize delta) {
     pt2.x += pos.size.width;
     pt2.y += pos.size.height;
 
-    pt1 = [ourWindow convertPoint:pt1 fromView:self toView:toView];
-    pt2 = [ourWindow convertPoint:pt2 fromView:self toView:toView];
+    pt1 = [ourWindow _convertPoint:pt1 fromView:self toView:toView];
+    pt2 = [ourWindow _convertPoint:pt2 fromView:self toView:toView];
 
     ret.origin.x = pt1.x < pt2.x ? pt1.x : pt2.x;
     ret.origin.y = pt1.y < pt2.y ? pt1.y : pt2.y;
@@ -2001,8 +2001,8 @@ static void adjustSubviews(UIView* self, CGSize parentSize, CGSize delta) {
     pt2.x += pos.size.width;
     pt2.y += pos.size.height;
 
-    pt1 = [ourWindow convertPoint:pt1 fromView:fromView toView:self];
-    pt2 = [ourWindow convertPoint:pt2 fromView:fromView toView:self];
+    pt1 = [ourWindow _convertPoint:pt1 fromView:fromView toView:self];
+    pt2 = [ourWindow _convertPoint:pt2 fromView:fromView toView:self];
 
     ret.origin.x = pt1.x < pt2.x ? pt1.x : pt2.x;
     ret.origin.y = pt1.y < pt2.y ? pt1.y : pt2.y;
@@ -2026,7 +2026,7 @@ static void adjustSubviews(UIView* self, CGSize parentSize, CGSize delta) {
     if (toView == nil)
         toView = ourWindow;
 
-    ret = [ourWindow convertPoint:pos fromView:self toView:toView];
+    ret = [ourWindow _convertPoint:pos fromView:self toView:toView];
 
     return ret;
 }
@@ -2045,7 +2045,7 @@ static void adjustSubviews(UIView* self, CGSize parentSize, CGSize delta) {
     if (fromView == nil)
         fromView = ourWindow;
 
-    ret = [ourWindow convertPoint:pos fromView:fromView toView:self];
+    ret = [ourWindow _convertPoint:pos fromView:fromView toView:self];
 
     return ret;
 }
@@ -2115,6 +2115,7 @@ static void adjustSubviews(UIView* self, CGSize parentSize, CGSize delta) {
         return nil;
     }
 
+    // Ultimately calls into UIWindow's _getWindowInternal implementation
     return [priv->superview _getWindowInternal];
 }
 

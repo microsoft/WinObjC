@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2011, The Iconfactory. All rights reserved.
- * Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+ * Copyright (c) Microsoft Corporation. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -39,27 +39,27 @@ UIKIT_EXPORT_CLASS
 @interface UILabel : UIView
 
 - (CGRect)textRectForBounds:(CGRect)bounds limitedToNumberOfLines:(NSInteger)numberOfLines;
-- (void)drawTextInRect:(CGRect)rect STUB_METHOD;
+- (void)drawTextInRect:(CGRect)rect NOTINPLAN_METHOD;
 
 @property (getter=isUserInteractionEnabled, nonatomic) BOOL userInteractionEnabled;
 @property (nonatomic) BOOL adjustsFontSizeToFitWidth;
 @property (nonatomic) BOOL adjustsLetterSpacingToFitWidth STUB_PROPERTY;
-@property (nonatomic) BOOL allowsDefaultTighteningForTruncation STUB_PROPERTY;
+@property (nonatomic) BOOL allowsDefaultTighteningForTruncation NOTINPLAN_PROPERTY;
 @property (nonatomic) BOOL clipsToBounds STUB_PROPERTY;
 @property (nonatomic) CGFloat minimumFontSize;
 @property (nonatomic) CGFloat minimumScaleFactor;
 @property (nonatomic) CGFloat preferredMaxLayoutWidth STUB_PROPERTY;
-@property (nonatomic) CGSize shadowOffset STUB_PROPERTY;
+@property (nonatomic) CGSize shadowOffset NOTINPLAN_PROPERTY;
 @property (nonatomic) NSInteger numberOfLines;
-@property (nonatomic) UIBaselineAdjustment baselineAdjustment STUB_PROPERTY;
+@property (nonatomic) UIBaselineAdjustment baselineAdjustment NOTINPLAN_PROPERTY;
 @property (nonatomic) UILineBreakMode lineBreakMode;
 @property (nonatomic) UITextAlignment textAlignment;
-@property (nonatomic, copy) NSAttributedString* attributedText STUB_PROPERTY;
+@property (nonatomic, copy) NSAttributedString* attributedText NOTINPLAN_PROPERTY;
 @property (nonatomic, copy) NSString* text;
-@property (nonatomic, getter=isEnabled) BOOL enabled STUB_PROPERTY;
+@property (nonatomic, getter=isEnabled) BOOL enabled NOTINPLAN_PROPERTY;
 @property (nonatomic, getter=isHighlighted) BOOL highlighted;
 @property (nonatomic, retain) UIColor* highlightedTextColor;
-@property (nonatomic, retain) UIColor* shadowColor STUB_PROPERTY;
+@property (nonatomic, retain) UIColor* shadowColor NOTINPLAN_PROPERTY;
 @property (nonatomic, retain) UIColor* textColor;
 @property (nonatomic, retain) UIFont* font;
 

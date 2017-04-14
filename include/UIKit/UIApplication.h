@@ -1,6 +1,6 @@
 /*
 * Copyright (c) 2011, The Iconfactory. All rights reserved.
-* Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+* Copyright (c) Microsoft Corporation. All rights reserved.
 *
 * Redistribution and use in source and binary forms, with or without
 * modification, are permitted provided that the following conditions are met:
@@ -141,27 +141,6 @@ typedef enum : NSInteger {
     UIStatusBarAnimationSlide,
 } UIStatusBarAnimation;
 
-// whenever the NSApplication is no longer "active" from OSX's point of view, your UIApplication instance
-// will switch to UIApplicationStateInactive. This happens when the app is no longer in the foreground, for instance.
-// chameleon will also switch to the inactive state when the screen is put to sleep due to power saving mode.
-// when the screen wakes up or the app is brought to the foreground, it is switched back to UIApplicationStateActive.
-//
-// UIApplicationStateBackground is now supported and your app will transition to this state in two possible ways.
-// one is when the AppKitIntegration method -terminateApplicationBeforeDate: is called. that method is intended to be
-// used when your NSApplicationDelegate is being asked to terminate. the application is also switched to
-// UIApplicationStateBackground when the machine is put to sleep. when the machine is reawakened, it will transition
-// back to UIApplicationStateInactive (as per the UIKit docs). The OS tends to reactive the app in the usual way if
-// it happened to be the foreground app when the machine was put to sleep, so it should ultimately work out as expected.
-//
-// any registered background tasks are allowed to complete whenever the app switches into UIApplicationStateBackground
-// mode, so that means that when -terminateApplicationBeforeDate: is called directly, we will wait on background tasks
-// and also show an alert to the user letting them know what's happening. it also means we attempt to delay machine
-// sleep whenever sleep is initiated for as long as we can until any pending background tasks are completed. (there is no
-// alert in that case) this should allow your app time to do any of the usual things like sync with network services or
-// save state. just as on iOS, there's no guarentee you'll have time to complete you background task and there's no
-// guarentee that your expiration handler will even be called. additionally, the reliability of your network is certainly
-// going to be suspect when entering sleep as well. so be aware - but basically these same constraints exist on iOS so
-// in many respects it shouldn't affect your code much or at all.
 typedef enum : NSInteger {
     UIApplicationStateActive,
     UIApplicationStateInactive,
@@ -219,72 +198,64 @@ UIKIT_EXPORT_CLASS
 @interface UIApplication : UIResponder
 
 + (UIApplication*)sharedApplication;
-+ (void)registerObjectForStateRestoration:(id<UIStateRestoring>)object restorationIdentifier:(NSString*)restorationIdentifier STUB_METHOD;
++ (void)registerObjectForStateRestoration:(id<UIStateRestoring>)object restorationIdentifier:(NSString*)restorationIdentifier NOTINPLAN_METHOD;
 - (BOOL)canOpenURL:(NSURL*)URL;
 - (BOOL)isIgnoringInteractionEvents;
-- (BOOL)isRegisteredForRemoteNotifications;
+- (BOOL)isRegisteredForRemoteNotifications NOTINPLAN_METHOD;
 - (BOOL)openURL:(NSURL*)url;
 - (BOOL)sendAction:(SEL)action to:(id)target from:(id)sender forEvent:(UIEvent*)event;
-- (BOOL)setKeepAliveTimeout:(NSTimeInterval)timeout handler:(void (^)(void))keepAliveHandler STUB_METHOD;
+- (BOOL)setKeepAliveTimeout:(NSTimeInterval)timeout handler:(void (^)(void))keepAliveHandler NOTINPLAN_METHOD;
 - (UIBackgroundTaskIdentifier)beginBackgroundTaskWithExpirationHandler:(void (^)(void))handler;
 - (UIBackgroundTaskIdentifier)beginBackgroundTaskWithName:(NSString*)taskName expirationHandler:(void (^)(void))handler STUB_METHOD;
-- (UIInterfaceOrientationMask)supportedInterfaceOrientationsForWindow:(UIWindow*)window STUB_METHOD;
-- (UIRemoteNotificationType)enabledRemoteNotificationTypes;
+- (UIInterfaceOrientationMask)supportedInterfaceOrientationsForWindow:(UIWindow*)window NOTINPLAN_METHOD;
+- (UIRemoteNotificationType)enabledRemoteNotificationTypes NOTINPLAN_METHOD;
 - (UIUserNotificationSettings*)currentUserNotificationSettings STUB_METHOD;
 - (void)beginIgnoringInteractionEvents;
-- (void)beginReceivingRemoteControlEvents;
-- (void)cancelAllLocalNotifications;
-- (void)cancelLocalNotification:(UILocalNotification*)notification;
-- (void)clearKeepAliveTimeout STUB_METHOD;
-- (void)completeStateRestoration STUB_METHOD;
+- (void)beginReceivingRemoteControlEvents NOTINPLAN_METHOD;
+- (void)cancelAllLocalNotifications NOTINPLAN_METHOD;
+- (void)cancelLocalNotification:(UILocalNotification*)notification NOTINPLAN_METHOD;
+- (void)clearKeepAliveTimeout NOTINPLAN_METHOD;
+- (void)completeStateRestoration NOTINPLAN_METHOD;
 - (void)endBackgroundTask:(UIBackgroundTaskIdentifier)identifier;
 - (void)endIgnoringInteractionEvents;
-- (void)endReceivingRemoteControlEvents STUB_METHOD;
-- (void)extendStateRestoration STUB_METHOD;
-- (void)ignoreSnapshotOnNextApplicationLaunch STUB_METHOD;
-- (void)presentLocalNotificationNow:(UILocalNotification*)notification;
-- (void)registerForRemoteNotificationTypes:(UIRemoteNotificationType)types;
-- (void)registerForRemoteNotifications;
-- (void)registerUserNotificationSettings:(UIUserNotificationSettings*)notificationSettings;
-- (void)scheduleLocalNotification:(UILocalNotification*)notification;
-- (void)sendEvent:(UIEvent*)event STUB_METHOD;
-- (void)setMinimumBackgroundFetchInterval:(NSTimeInterval)minimumBackgroundFetchInterval STUB_METHOD;
-- (void)setNewsstandIconImage:(UIImage*)image STUB_METHOD;
-- (void)setStatusBarHidden:(BOOL)hidden animated:(BOOL)animated;
-- (void)setStatusBarHidden:(BOOL)hidden withAnimation:(UIStatusBarAnimation)animation;
-- (void)setStatusBarOrientation:(UIInterfaceOrientation)interfaceOrientation animated:(BOOL)animated;
-- (void)setStatusBarStyle:(UIStatusBarStyle)statusBarStyle animated:(BOOL)animated STUB_METHOD;
-- (void)unregisterForRemoteNotifications STUB_METHOD;
-@property (copy, nonatomic) NSArray* scheduledLocalNotifications STUB_PROPERTY;
-@property (copy, nonatomic) NSArray* shortcutItems STUB_PROPERTY;
+- (void)endReceivingRemoteControlEvents NOTINPLAN_METHOD;
+- (void)extendStateRestoration NOTINPLAN_METHOD;
+- (void)ignoreSnapshotOnNextApplicationLaunch NOTINPLAN_METHOD;
+- (void)presentLocalNotificationNow:(UILocalNotification*)notification NOTINPLAN_METHOD;
+- (void)registerForRemoteNotificationTypes:(UIRemoteNotificationType)types NOTINPLAN_METHOD;
+- (void)registerForRemoteNotifications NOTINPLAN_METHOD;
+- (void)registerUserNotificationSettings:(UIUserNotificationSettings*)notificationSettings NOTINPLAN_METHOD;
+- (void)scheduleLocalNotification:(UILocalNotification*)notification NOTINPLAN_METHOD;
+- (void)sendEvent:(UIEvent*)event NOTINPLAN_METHOD;
+- (void)setMinimumBackgroundFetchInterval:(NSTimeInterval)minimumBackgroundFetchInterval NOTINPLAN_METHOD;
+- (void)setNewsstandIconImage:(UIImage*)image NOTINPLAN_METHOD;
+- (void)setStatusBarHidden:(BOOL)hidden animated:(BOOL)animated NOTINPLAN_METHOD;
+- (void)setStatusBarHidden:(BOOL)hidden withAnimation:(UIStatusBarAnimation)animation NOTINPLAN_METHOD;
+- (void)setStatusBarOrientation:(UIInterfaceOrientation)interfaceOrientation animated:(BOOL)animated NOTINPLAN_METHOD;
+- (void)setStatusBarStyle:(UIStatusBarStyle)statusBarStyle animated:(BOOL)animated NOTINPLAN_METHOD;
+- (void)unregisterForRemoteNotifications NOTINPLAN_METHOD;
+@property (copy, nonatomic) NSArray* scheduledLocalNotifications NOTINPLAN_PROPERTY;
+@property (copy, nonatomic) NSArray* shortcutItems NOTINPLAN_PROPERTY;
 @property (getter=isIdleTimerDisabled, nonatomic) BOOL idleTimerDisabled;
-@property (getter=isNetworkActivityIndicatorVisible, nonatomic) BOOL networkActivityIndicatorVisible STUB_PROPERTY;
-@property (getter=isProximitySensingEnabled, nonatomic) BOOL proximitySensingEnabled STUB_PROPERTY;
-@property (nonatomic) BOOL applicationSupportsShakeToEdit STUB_PROPERTY;
+@property (getter=isNetworkActivityIndicatorVisible, nonatomic) BOOL networkActivityIndicatorVisible NOTINPLAN_PROPERTY;
+@property (getter=isProximitySensingEnabled, nonatomic) BOOL proximitySensingEnabled NOTINPLAN_PROPERTY;
+@property (nonatomic) BOOL applicationSupportsShakeToEdit NOTINPLAN_PROPERTY;
 @property (nonatomic) NSInteger applicationIconBadgeNumber;
-@property (nonatomic) UIInterfaceOrientation statusBarOrientation;
+@property (nonatomic) UIInterfaceOrientation statusBarOrientation NOTINPLAN_PROPERTY;
 @property (nonatomic, assign) id<UIApplicationDelegate> delegate;
-@property (nonatomic, copy) NSString* preferredContentSizeCategory;
-@property (nonatomic, getter=isStatusBarHidden) BOOL statusBarHidden;
-@property (nonatomic, readonly) CGRect statusBarFrame;
+@property (nonatomic, copy) NSString* preferredContentSizeCategory NOTINPLAN_PROPERTY;
+@property (nonatomic, getter=isStatusBarHidden) BOOL statusBarHidden NOTINPLAN_PROPERTY;
+@property (nonatomic, readonly) CGRect statusBarFrame NOTINPLAN_PROPERTY;
 @property (nonatomic, readonly) NSArray<UIWindow*>* windows;
-@property (nonatomic, readonly) NSTimeInterval statusBarOrientationAnimationDuration;
-@property (nonatomic, readonly) UIApplicationState applicationState; // see notes near UIApplicationState struct for details!
-@property (nonatomic, readonly) UIUserInterfaceLayoutDirection userInterfaceLayoutDirection;
+@property (nonatomic, readonly) NSTimeInterval statusBarOrientationAnimationDuration NOTINPLAN_PROPERTY;
+@property (nonatomic, readonly) UIApplicationState applicationState;
+@property (nonatomic, readonly) UIUserInterfaceLayoutDirection userInterfaceLayoutDirection NOTINPLAN_PROPERTY;
 @property (nonatomic, readonly) UIWindow* keyWindow;
 @property (readonly, getter=isProtectedDataAvailable, nonatomic) BOOL protectedDataAvailable STUB_PROPERTY;
 @property (readonly, nonatomic) NSTimeInterval backgroundTimeRemaining STUB_PROPERTY;
 @property (readonly, nonatomic) UIBackgroundRefreshStatus backgroundRefreshStatus STUB_PROPERTY;
 @property (readonly, nonatomic) UIStatusBarStyle statusBarStyle STUB_PROPERTY;
 
-@end
-
-@interface UIApplication (UIApplicationDeprecated)
-- (void)setStatusBarHidden:(BOOL)hidden animated:(BOOL)animated __attribute__((deprecated)); // use -setStatusBarHidden:withAnimation:
-@end
-
-@interface UIApplication (UIApplicationStarboardAdditions)
-- (void)registerForRemoteNotificationTypes:(UIRemoteNotificationType)types withId:(NSString*)id;
 @end
 
 enum {

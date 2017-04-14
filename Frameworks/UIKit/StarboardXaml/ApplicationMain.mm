@@ -20,6 +20,7 @@
 #import "ApplicationMain.h"
 #import <windows.foundation.h>
 #import <windows.applicationmodel.activation.h>
+#import "winrt/Windows.Storage.h"
 #import <winrt/Windows.UI.Xaml.h>
 #include <COMIncludes_End.h>
 
@@ -38,7 +39,6 @@
 #import <StringHelpers.h>
 #import <CollectionHelpers.h>
 #import <UIInterface.h>
-#import <CACompositorClient.h>
 #import <UIApplicationInternal.h>
 #import <MainDispatcher.h>
 #import <_UIPopupViewController.h>
@@ -47,18 +47,31 @@ using namespace Microsoft::WRL;
 using namespace winrt::Windows::UI::Xaml;
 namespace WF = winrt::Windows::Foundation;
 
-static CACompositorClientInterface* _compositorClient = NULL;
-
-void SetCACompositorClient(CACompositorClientInterface* client) {
-    _compositorClient = client;
+void _SetTemporaryFolder(const wchar_t* folder) {
+    NSSetTemporaryDirectory([NSString stringWithCharacters:reinterpret_cast<const unichar*>(folder) length:wcslen(folder)]);
 }
 
-int ApplicationMainStart(const char* principalName,
-                         const char* delegateName,
-                         float windowWidth,
-                         float windowHeight,
-                         ActivationType activationType,
-                         IInspectable* activationArg) {
+void _InitializeApp() {
+    // Only init once.
+    // No lock needed as this is only called from the UI thread.
+    static bool initialized = false;
+    if (initialized) {
+        return;
+    }
+    initialized = true;
+
+    // Set our writable and temp folders
+    IwSetWritableFolder(winrt::Windows::Storage::ApplicationData::Current().LocalFolder().Path().data());
+    _SetTemporaryFolder(winrt::Windows::Storage::ApplicationData::Current().TemporaryFolder().Path().data());
+
+    // Set the waiter routine for the main runloop to yield
+    SetupMainRunLoopTimedMultipleWaiter();
+}
+
+void RunApplicationMain(const char* principalName, const char* delegateName, ActivationType activationType, IInspectable* activationArg) {
+    // Perform initialization
+    _InitializeApp();
+
     // Note: We must use nil rather than an empty string for these class names
     NSString* principalClassName = Strings::IsEmpty<const char*>(principalName) ? nil : [[NSString alloc] initWithCString:principalName];
     NSString* delegateClassName = Strings::IsEmpty<const char*>(delegateName) ? nil : [[NSString alloc] initWithCString:delegateName];
@@ -81,8 +94,8 @@ int ApplicationMainStart(const char* principalName,
         THROW_NS_IF_FAILED(Collections::WRLToNSCollection(map, &userInput));
 
         NSDictionary* toastAction = @{
-            UIApplicationLaunchOptionsToastActionArgumentKey : toastArgument.argument,
-            UIApplicationLaunchOptionsToastActionUserInputKey : userInput
+            UIApplicationLaunchOptionsToastActionArgumentKey:toastArgument.argument,
+            UIApplicationLaunchOptionsToastActionUserInputKey:userInput
         };
         activationArgument = toastAction;
     } else if (activationType == ActivationTypeVoiceCommand) {
@@ -96,18 +109,20 @@ int ApplicationMainStart(const char* principalName,
         activationArgument = activatedEventArgs;
     }
 
+    // Grab window dimensions from CPP/WinRT and initialize our display accordingly
+    auto windowBounds = winrt::Windows::UI::Xaml::Window::Current().Bounds();
     WOCDisplayMode* displayMode = [UIApplication displayMode];
-    [displayMode _setWindowSize:CGSizeMake(windowWidth, windowHeight)];
+    [displayMode _setWindowSize:CGSizeMake(windowBounds.Width, windowBounds.Height)];
 
     if (activationType == ActivationTypeLibrary) {
         // In library mode, honor app's native display size
         [displayMode setDisplayPreset:WOCDisplayPresetNative];
     }
 
-    NSDictionary* infoDict = [[NSBundle mainBundle] infoDictionary];
-
     //  Figure out what our initial default orientation should be from Info.plist
+    // TODO: #2438 UIApplication/UIWindow/UIScreen/UIDevice orientation/rotation needs some work
     UIInterfaceOrientation defaultOrientation = UIInterfaceOrientationUnknown;
+    NSDictionary* infoDict = [[NSBundle mainBundle] infoDictionary];
     if (infoDict != nil) {
         defaultOrientation = EbrGetWantedOrientation();
 
@@ -156,7 +171,7 @@ int ApplicationMainStart(const char* principalName,
 
     [displayMode _updateDisplaySettings];
 
-    UIApplicationMainInit(principalClassName, delegateClassName, defaultOrientation, (int)activationType, activationArgument);
+    _UIApplicationMainInit(principalClassName, delegateClassName, (int)activationType, activationArgument);
 
     if (activationType == ActivationTypeLibrary) {
         // Create a top-level UIWindow with popup view controller, which will not normally be visible.
@@ -174,12 +189,5 @@ int ApplicationMainStart(const char* principalName,
     // The apps can (and do) handle application launch delegate from the first tine NSRunloop run is called, and that can
     // take a REALLY long time to complete, causing PLM to terminate us.  We were getting lucky in some cases and the app would launch.
     // This will also fix the number of sporadic launch test failures that we have seen in the labs.
-
     ScheduleMainRunLoopAsync();
-
-    return 0;
-}
-
-void SetTemporaryFolder(const wchar_t* folder) {
-    NSSetTemporaryDirectory([NSString stringWithCharacters:reinterpret_cast<const unichar*>(folder) length:wcslen(folder)]);
 }

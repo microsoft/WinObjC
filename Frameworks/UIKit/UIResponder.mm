@@ -35,9 +35,6 @@ static int _changingResponder = 0;
 - (BOOL)resignFirstResponder {
     if (_curFirstResponder == self) {
         _curFirstResponder = nil;
-        if (_changingResponder == 0) {
-            [[UIApplication sharedApplication] _evaluateKeyboard];
-        }
     }
 
     return TRUE;

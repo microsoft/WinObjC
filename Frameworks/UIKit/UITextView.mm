@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -37,9 +37,6 @@ const float textViewRightPadding = 12.5f;
 NSString* const UITextViewTextDidBeginEditingNotification = @"UITextViewTextDidBeginEditingNotification";
 NSString* const UITextViewTextDidChangeNotification = @"UITextViewTextDidChangeNotification";
 NSString* const UITextViewTextDidEndEditingNotification = @"UITextViewTextDidEndEditingNotification";
-
-extern float keyboardBaseHeight;
-static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
 
 @interface UITextView ()
 @property (nonatomic) NSString* _text;
@@ -661,10 +658,8 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
 */
 - (void)setInputView:(UIView*)view {
     UNIMPLEMENTED();
-    keyboardBaseHeight = INPUTVIEW_DEFAULT_HEIGHT;
     _inputView = view;
     [self setNeedsLayout];
-    [[UIApplication sharedApplication] _keyboardChanged];
 }
 
 /**
