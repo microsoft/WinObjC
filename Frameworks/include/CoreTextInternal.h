@@ -76,7 +76,7 @@ CFAttributedStringRef _CTTypesetterGetAttributedString(CTTypesetterRef typesette
 
 #pragma region CTFrame
 struct __CTFrame : CoreFoundation::CppBase<__CTFrame> {
-    __CTFrame() : _lines(CFArrayCreateMutable(kCFAllocatorDefault, 0, &kCFTypeArrayCallBacks)) {
+    __CTFrame() : _lines(woc::TakeOwnership, CFArrayCreateMutable(kCFAllocatorDefault, 0, &kCFTypeArrayCallBacks)) {
     }
 
     CGRect _frameRect;
