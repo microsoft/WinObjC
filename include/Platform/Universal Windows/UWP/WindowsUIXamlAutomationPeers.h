@@ -418,37 +418,6 @@ OBJCUWPWINDOWSUIXAMLEXPORT
 - (void)invalidatePeer;
 - (WUXAPAutomationPeer*)getPeerFromPoint:(WFPoint*)point;
 - (WUXAPAutomationLiveSetting)getLiveSetting;
-- (RTObject*)getPatternCore:(WUXAPPatternInterface)patternInterface;
-- (NSString *)getAcceleratorKeyCore;
-- (NSString *)getAccessKeyCore;
-- (WUXAPAutomationControlType)getAutomationControlTypeCore;
-- (NSString *)getAutomationIdCore;
-- (WFRect*)getBoundingRectangleCore;
-- (NSMutableArray* /* WUXAPAutomationPeer* */)getChildrenCore;
-- (NSString *)getClassNameCore;
-- (WFPoint*)getClickablePointCore;
-- (NSString *)getHelpTextCore;
-- (NSString *)getItemStatusCore;
-- (NSString *)getItemTypeCore;
-- (WUXAPAutomationPeer*)getLabeledByCore;
-- (NSString *)getLocalizedControlTypeCore;
-- (NSString *)getNameCore;
-- (WUXAPAutomationOrientation)getOrientationCore;
-- (BOOL)hasKeyboardFocusCore;
-- (BOOL)isContentElementCore;
-- (BOOL)isControlElementCore;
-- (BOOL)isEnabledCore;
-- (BOOL)isKeyboardFocusableCore;
-- (BOOL)isOffscreenCore;
-- (BOOL)isPasswordCore;
-- (BOOL)isRequiredForFormCore;
-- (void)setFocusCore;
-- (WUXAPAutomationPeer*)getPeerFromPointCore:(WFPoint*)point;
-- (WUXAPAutomationLiveSetting)getLiveSettingCore;
-- (WUXAPAutomationPeer*)peerFromProvider:(WUXAPIRawElementProviderSimple*)provider;
-- (WUXAPIRawElementProviderSimple*)providerFromPeer:(WUXAPAutomationPeer*)peer;
-- (void)showContextMenuCore;
-- (NSArray* /* WUXAPAutomationPeer* */)getControlledPeersCore;
 - (RTObject*)navigate:(WUXAPAutomationNavigationDirection)direction;
 - (RTObject*)getElementFromPoint:(WFPoint*)pointInWindowCoordinates;
 - (RTObject*)getFocusedElement;
@@ -461,26 +430,11 @@ OBJCUWPWINDOWSUIXAMLEXPORT
 - (int)getSizeOfSet;
 - (int)getLevel;
 - (void)raiseStructureChangedEvent:(WUXAPAutomationStructureChangeType)structureChangeType child:(WUXAPAutomationPeer*)child;
-- (RTObject*)navigateCore:(WUXAPAutomationNavigationDirection)direction;
-- (RTObject*)getElementFromPointCore:(WFPoint*)pointInWindowCoordinates;
-- (RTObject*)getFocusedElementCore;
-- (NSMutableArray* /* WUXAPAutomationPeerAnnotation* */)getAnnotationsCore;
-- (int)getPositionInSetCore;
-- (int)getSizeOfSetCore;
-- (int)getLevelCore;
 - (WUXAPAutomationLandmarkType)getLandmarkType;
 - (NSString *)getLocalizedLandmarkType;
-- (WUXAPAutomationLandmarkType)getLandmarkTypeCore;
-- (NSString *)getLocalizedLandmarkTypeCore;
 - (BOOL)isPeripheral;
 - (BOOL)isDataValidForForm;
 - (NSString *)getFullDescription;
-- (BOOL)isPeripheralCore;
-- (BOOL)isDataValidForFormCore;
-- (NSString *)getFullDescriptionCore;
-- (id<NSFastEnumeration> /* WUXAPAutomationPeer* */)getDescribedByCore;
-- (id<NSFastEnumeration> /* WUXAPAutomationPeer* */)getFlowsToCore;
-- (id<NSFastEnumeration> /* WUXAPAutomationPeer* */)getFlowsFromCore;
 @end
 
 #endif // __WUXAPAutomationPeer_DEFINED__
@@ -1054,7 +1008,6 @@ OBJCUWPWINDOWSUIXAMLEXPORT
 #endif
 - (WUXAPIRawElementProviderSimple*)findItemByProperty:(WUXAPIRawElementProviderSimple*)startAfter automationProperty:(WUXAAutomationProperty*)automationProperty value:(RTObject*)value;
 - (WUXAPItemAutomationPeer*)createItemAutomationPeer:(RTObject*)item;
-- (WUXAPItemAutomationPeer*)onCreateItemAutomationPeer:(RTObject*)item;
 @end
 
 #endif // __WUXAPItemsControlAutomationPeer_DEFINED__

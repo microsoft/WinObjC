@@ -893,21 +893,18 @@ static HString nsStrToHstr(NSString* str) {
         // We increment this just to make sure that we return an empty HString.
         dataBytes++;
 
-        // Include size of the additional terminating '\0' character.
-        data.reserve(dataBytes + 1);
+        // Allocate a vector containing only the null character.
+        data.resize(dataBytes, L'\0');
 
-        // Since the string is empty, assign the terminating character
-        // right at the start.
-        data[0] = L'\0';
     } else {
         // Include size of the terminating '\0' character.
         data.reserve(dataBytes + 1);
 
-        [str getCharacters : &data[0]];
+        [str getCharacters : data.data()];
+        
+        // Add terminating NULL character.
+        data[dataBytes] = L'\0';
     }
-
-    // Add terminating NULL character.
-    data[dataBytes] = L'\0';
 
     HRESULT hr = WindowsCreateString((LPWSTR)&data[0], dataBytes, ret.GetAddressOf());
     assert(SUCCEEDED(hr));
