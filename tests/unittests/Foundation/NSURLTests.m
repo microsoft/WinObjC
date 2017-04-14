@@ -213,9 +213,7 @@ TEST(NSURL, CheckResourceIsReachable) {
     EXPECT_TRUE_MSG([targetURL checkResourceIsReachableAndReturnError:nullptr], "The target URL %@ exists", targetURL);
 
     NSURL* targetURLNonExist = [NSURL URLWithString:@"data/foo.txt" relativeToURL:baseURL];
-    EXPECT_FALSE_MSG([targetURLNonExist checkResourceIsReachableAndReturnError:nullptr],
-                     "The target %@URL does not exist",
-                     targetURLNonExist);
+    EXPECT_FALSE_MSG([targetURLNonExist checkResourceIsReachableAndReturnError:nullptr], "The target %@ does not exist", targetURLNonExist);
 }
 
 TEST(NSURL, GetFileSystemRepresentation) {
