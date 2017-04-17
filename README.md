@@ -29,6 +29,8 @@ To use the bridge you'll need:
 
   
    Ensure the following individual components are selected during installation. Selecting the Universal Windows Platform development workflow should give most of the below 
+   
+   **NOTE:** Please also install the **Mobile development with .NET** workflow option (Xamarin Tools) due to a bug in Nugetizer (See [Issue 5026](https://github.com/NuGet/Home/issues/5026))
 
    <details><summary><b>(Click to Expand)</b></summary><p>
 
