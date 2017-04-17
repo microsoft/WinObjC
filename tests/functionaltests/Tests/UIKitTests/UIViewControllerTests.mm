@@ -221,15 +221,16 @@ protected:
     }
 
     void TestModalPresentDismiss(UIModalPresentationStyle style, BOOL animated) {
-        auto uxEvent = UXEvent::CreateManual();
+        auto initialPresentEvent = UXEvent::CreateManual();
+        auto finalPresentEvent = UXEvent::CreateManual();
+        auto initialDismissEvent = UXEvent::CreateManual();
+        auto finalDismissEvent = UXEvent::CreateManual();
 
         dispatch_async(dispatch_get_main_queue(), ^{
 
             UIWindow* currentWindow = GetCurrentWindow();
 
-            // Avoid capture of |presenting| in block to ensure presentViewController mechanism keeps it alive.
-            __block StrongId<ModalEventsTestViewController> presenting;
-
+            StrongId<ModalEventsTestViewController> presenting;
             presenting.attach([[ModalEventsTestViewController alloc] init]);
 
             // Assume rootViewController is top-most.
@@ -237,6 +238,8 @@ protected:
                 presentViewController:presenting
                              animated:NO
                            completion:^{
+                               initialPresentEvent->Set();
+
                                EXPECT_TRUE(sel_isEqual([presenting lastEvent], @selector(viewDidAppear:)));
 
                                EXPECT_FALSE([presenting isBeingPresented]);
@@ -249,6 +252,8 @@ protected:
                                    presentViewController:presented
                                                 animated:animated
                                               completion:^{
+                                                  finalPresentEvent->Set();
+
                                                   EXPECT_FALSE([presented isBeingPresented]);
                                                   EXPECT_FALSE([presenting isBeingDismissed]);
 
@@ -260,6 +265,8 @@ protected:
 
                                                   [presenting dismissViewControllerAnimated:animated
                                                                                  completion:^{
+                                                                                     initialDismissEvent->Set();
+
                                                                                      EXPECT_FALSE([presenting isBeingDismissed]);
 
                                                                                      EXPECT_TRUE(sel_isEqual([presented lastEvent],
@@ -267,10 +274,11 @@ protected:
                                                                                      EXPECT_TRUE(sel_isEqual([presenting lastEvent],
                                                                                                              @selector(viewDidAppear:)));
 
-                                                                                     [presenting dismissViewControllerAnimated:animated
-                                                                                                                    completion:^{
-                                                                                                                        uxEvent->Set();
-                                                                                                                    }];
+                                                                                     [presenting
+                                                                                         dismissViewControllerAnimated:animated
+                                                                                                            completion:^{
+                                                                                                                finalDismissEvent->Set();
+                                                                                                            }];
                                                                                  }];
                                               }];
 
@@ -282,7 +290,10 @@ protected:
                            }];
         });
 
-        ASSERT_TRUE_MSG(uxEvent->Wait(5), "FAILED: Waiting for final view controller dismiss completion timed out!");
+        ASSERT_TRUE_MSG(initialPresentEvent->Wait(5), "FAILED: Waiting for initial present completion timed out!");
+        ASSERT_TRUE_MSG(finalPresentEvent->Wait(5), "FAILED: Waiting for final present completion timed out!");
+        ASSERT_TRUE_MSG(initialDismissEvent->Wait(5), "FAILED: Waiting for initial dismiss completion timed out!");
+        ASSERT_TRUE_MSG(finalDismissEvent->Wait(5), "FAILED: Waiting for final dismiss completion timed out!");
     }
 };
 
