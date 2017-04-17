@@ -783,7 +783,9 @@ BASE_CLASS_REQUIRED_IMPLS(NSDictionary, NSDictionaryPrototype, CFDictionaryGetTy
     [self enumerateKeysAndObjectsWithOptions:options
                                   usingBlock:^(id key, id obj, BOOL* stop) {
                                       if (predicate(key, obj, stop)) {
-                                          [ret addObject:key];
+                                          @synchronized(ret) {
+                                              [ret addObject:key];
+                                          }
                                       }
                                   }];
 

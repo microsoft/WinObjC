@@ -994,7 +994,9 @@ static CFComparisonResult _CFComparatorFunctionFromComparator(const void* val1, 
                             options:opts
                          usingBlock:^(id element, NSUInteger index, BOOL* stop) {
                              if (predicate(element, index, stop)) {
-                                 [ret addIndex:index];
+                                 @synchronized(ret) {
+                                     [ret addIndex:index];
+                                 }
                              }
                          }];
 

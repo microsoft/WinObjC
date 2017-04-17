@@ -202,7 +202,8 @@ OSX_DISABLED_TEST(NSSet, ObjectsWithOptionsPassingTest) {
     // in which case it will signal the other blocks to continue and they all decrement waitingCount
     // so all blocks should be run concurrently, otherwise waitingCount will not return to 0
     __block NSCondition* condition = [[NSCondition new] autorelease];
-    __block unsigned waitingCount = 0;
+    __block unsigned int waitingCount = 0;
+    __block unsigned int timesHit = 0;
     NSSet* matching = [set objectsWithOptions:NSEnumerationConcurrent
                                   passingTest:^BOOL(id obj, BOOL* stop) {
                                       [condition lock];
@@ -213,18 +214,27 @@ OSX_DISABLED_TEST(NSSet, ObjectsWithOptionsPassingTest) {
                                       --waitingCount;
                                       [condition signal];
                                       [condition unlock];
-                                      return [obj unsignedIntegerValue] % 2 == 0 ? YES : NO;
+                                      if ([obj unsignedIntegerValue] % 2 == 0) {
+                                          ++timesHit;
+                                          return YES;
+                                      }
+
+                                      return NO;
                                   }];
 
     ASSERT_EQ(0, waitingCount);
+    EXPECT_EQ(2, timesHit);
+    EXPECT_EQ(2, matching.count);
+    EXPECT_TRUE([matching containsObject:@2]);
+    EXPECT_TRUE([matching containsObject:@4]);
 
     NSSet* defaultMatching = [set objectsWithOptions:0
                                          passingTest:^BOOL(id obj, BOOL* stop) {
                                              return [obj unsignedIntegerValue] % 2 == 0 ? YES : NO;
                                          }];
 
-    EXPECT_EQ(2, matching.count);
-    EXPECT_TRUE([matching containsObject:@2]);
-    EXPECT_TRUE([matching containsObject:@4]);
+    EXPECT_EQ(2, defaultMatching.count);
+    EXPECT_TRUE([defaultMatching containsObject:@2]);
+    EXPECT_TRUE([defaultMatching containsObject:@4]);
     EXPECT_OBJCEQ(matching, defaultMatching);
 }
