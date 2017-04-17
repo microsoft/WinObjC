@@ -14,9 +14,7 @@
 //
 //******************************************************************************
 
-#include "Starboard.h"
-#include "StubReturn.h"
-#include "Foundation/NSNull.h"
+#import <Foundation/NSNull.h>
 
 static NSNull* nullSingleton;
 
@@ -26,30 +24,8 @@ static NSNull* nullSingleton;
 */
 + (void)initialize {
     if (self == [NSNull class]) {
-        nullSingleton = [super allocWithZone:nil];
+        nullSingleton = [super allocWithZone:nullptr];
     }
-}
-
-/**
- @Status Interoperable
-*/
-- (instancetype)initWithCoder:(NSCoder*)coder {
-    return self;
-}
-
-/**
- @Status Stub
- @Notes
- */
-- (void)encodeWithCoder:(NSCoder*)coder {
-    UNIMPLEMENTED();
-}
-
-/**
- @Status Interoperable
-*/
-- (instancetype)copyWithZone:(NSZone*)zone {
-    return nullSingleton;
 }
 
 /**
@@ -62,7 +38,36 @@ static NSNull* nullSingleton;
 /**
  @Status Interoperable
 */
-- (oneway void)release {
++ (NSNull*)null {
+    return nullSingleton;
+}
+
+/**
+ @Status Interoperable
+*/
++ (BOOL)supportsSecureCoding {
+    return YES;
+}
+
+/**
+ @Status Interoperable
+*/
+- (instancetype)initWithCoder:(NSCoder*)coder {
+    return self;
+}
+
+/**
+ @Status Interoperable
+ @Notes This method encodes nothing as there's nothing to encode.
+ */
+- (void)encodeWithCoder:(NSCoder*)coder {
+}
+
+/**
+ @Status Interoperable
+*/
+- (instancetype)copyWithZone:(NSZone*)zone {
+    return nullSingleton;
 }
 
 /**
@@ -72,13 +77,23 @@ static NSNull* nullSingleton;
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
+- (oneway void)release {
+}
+
+- (NSUInteger)retainCount {
+    return NSUIntegerMax;
+}
+
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wobjc-missing-super-calls"
 /**
  @Status Interoperable
 */
 - (void)dealloc {
-    assert(0 && "NSNull should never be deallocated");
+    // This method was found to be a no-op on the reference platform.
 }
 #pragma clang diagnostic pop
 
@@ -87,21 +102,5 @@ static NSNull* nullSingleton;
 */
 - (NSString*)description {
     return @"<null>";
-}
-
-/**
- @Status Interoperable
-*/
-+ (NSNull*)null {
-    return nullSingleton;
-}
-
-/**
- @Status Stub
- @Notes
-*/
-+ (BOOL)supportsSecureCoding {
-    UNIMPLEMENTED();
-    return StubReturn();
 }
 @end
