@@ -35,13 +35,6 @@
     <HMapAddFrameworkEntries>@(ClangCompile->AnyHaveMetadataValue('HeaderMapAddFrameworkEntries','true'))</HMapAddFrameworkEntries>
     <DummyClangFile>$(IntDir)DummyNoCompile.mm</DummyClangFile>
   </PropertyGroup>
-
-  <PropertyGroup>
-    <DepWalkerPathFile>$(IntDir)$(ProjectName).dwp</DepWalkerPathFile>
-    <DepWalkerOutputFile>$(IntDir)$(ProjectName).dwo</DepWalkerOutputFile>
-    <DepWalkerCommand>"$(MSBuildThisFileDirectory)..\bin\depends.exe" /c /f:1 /d:"$(DepWalkerPathFile)" /oc:"$(DepWalkerOutputFile)" "$(TargetPath)"</DepWalkerCommand>
-    <LibPathPattern>^,"([^"]*.\DLL)"</LibPathPattern>
-  </PropertyGroup>
   
   <PropertyGroup>
     <WritePublicHeaderList>false</WritePublicHeaderList>
@@ -294,38 +287,77 @@
 
   </Target>
   
-  <Target
-    Name="ComputeLibsToCopy"
-    Condition="'$(CopyStarboardLibraries)' == 'true'"
-    BeforeTargets="SBResourcePackage"
-    AfterTargets="Link">
+  <PropertyGroup>
+    <!-- BuildLinkTargets is only defined for vcxproj. C# "Links" by calling csc with multiple files so the Compile step should be sufficient there -->
+    <RemoveExtraLibsDependsOn Condition="'$(ProjectExt)' != '.vcxproj'">Compile;</RemoveExtraLibsDependsOn>
+    <RemoveExtraLibsDependsOn Condition="'$(ProjectExt)' == '.vcxproj'">Link;</RemoveExtraLibsDependsOn>
+  </PropertyGroup>
 
-    <!-- Write a Dependency Walker Path file -->
+  <Target
+    Name="RemoveExtraLibs"
+    BeforeTargets="_CopyFilesMarkedCopyLocal"
+    Condition="'$(ConfigurationType)' != 'Utility' And '$(ConfigurationType)' != 'StaticLibrary'"
+    DependsOnTargets="$(RemoveExtraLibsDependsOn)">
+
+    <PropertyGroup>
+      <DepWalkerSearchPathFile>$(IntDir)$(ProjectName).dwp</DepWalkerSearchPathFile>
+      <LibPathPattern>^,"([^"]*.\DLL)"</LibPathPattern>
+    </PropertyGroup>
+
+    <!-- 1. Collect items that need to be walked. This includes the main target and all refernces. -->
+    <ItemGroup>
+      <DepWalkerInputs Include="$(TargetPath)" />
+
+      <!-- Assume dll is next to winmd -->
+      <_DepWalkerInputs Include="@(Reference -> '%(RootDir)%(Directory)%(Implementation)')" Condition="'%(Reference.Extension)' == '.winmd' And '%(Reference.Implementation)' != ''" />
+      <DepWalkerInputs Include="@(_DepWalkerInputs->Distinct())" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <!-- Add in a command and output file metadata for each item that needs walked.  -->
+      <DepWalkerInputs>
+        <OutputFile>$(IntDir)%(FileName).dwo</OutputFile>
+      </DepWalkerInputs>
+      <DepWalkerInputs>
+        <Command>"$(MSBuildThisFileDirectory)..\bin\depends.exe" /c /f:1 /d:"$(DepWalkerSearchPathFile)" /oc:"%(OutputFile)" "%(FullPath)"</Command>
+      </DepWalkerInputs>
+    </ItemGroup>
+
+    <!-- 2. Collect dep walker search paths and write to a file. This is the closure of all WinObjC ReferenceCopyLocalPaths dlls. -->
+    <ItemGroup>
+      <DepWalkerSearchPaths Include="@(ReferenceCopyLocalPaths -> 'UserDir %(RootDir)%(Directory)')" Condition="'%(ReferenceCopyLocalPaths.Extension)' == '.dll' And '%(ReferenceCopyLocalPaths.IsWinObjC)' == 'true'" />
+    </ItemGroup>
+    
     <WriteLinesToFile
-      File="$(DepWalkerPathFile)"
+      File="$(DepWalkerSearchPathFile)"
       Encoding="ASCII"
       Overwrite="true"
-      Lines="UserDir $(StarboardLibDirs);UserDir $(StarboardConfigSpecificLibsDir);UserDir $(StarboardPrebuiltLibsDir);UserDir $(StarboardConfigSpecificPrebuiltLibsDir)" />
+      Lines="@(DepWalkerSearchPaths->Distinct())" />
 
-    <!-- Call Dependency Walker -->
+    <!-- 3. Call Dependency Walker -->
     <Exec
+      Condition="Exists('%(DepWalkerInputs.FullPath)')"
       IgnoreExitCode="true"
-      Command="$(DepWalkerCommand)" />
+      Command="%(DepWalkerInputs.Command)" />
 
-    <!-- Read Dependency Walker output -->
-    <ReadLinesFromFile File="$(DepWalkerOutputFile)">
+    <!-- 4. Read Dependency Walker output -->
+    <ReadLinesFromFile File="%(DepWalkerInputs.OutputFile)">
       <Output TaskParameter="Lines" ItemName="DepWalkerOutputLines"/>
     </ReadLinesFromFile>
 
-    <!-- Extract paths to dependencies -->
+    <!-- 5. Extract dependencies -->
     <ItemGroup>
-      <SBResourceCopy Include="$([System.Text.RegularExpressions.Regex]::Match('%(DepWalkerOutputLines.Identity)', $(LibPathPattern)).Groups[1].Value)"/>
+      <_DependenciesToInclude Include="$([System.Text.RegularExpressions.Regex]::Match('%(DepWalkerOutputLines.Identity)', $(LibPathPattern)).Groups[1].Value)"/>
     </ItemGroup>
 
-    <!-- Clean up -->
+    <!-- 6. Do a little set subtraction to figure out which items to *NOT* include since by default all items are copied. 
+            This is a little more robust of a failure mode but is more complicated to calculate. -->
     <ItemGroup>
-      <DepWalkerOutputLines Remove="@(DepWalkerOutputLines)" />
+      <_ReferenceCopyLocalPathsToRemove Include="@(ReferenceCopyLocalPaths)" Condition="'%(ReferenceCopyLocalPaths.Extension)' == '.dll' And '%(ReferenceCopyLocalPaths.IsWinObjC)' == 'true'"  />
+      <_ReferenceCopyLocalPathsToRemove Remove="@(_ReferenceCopyLocalPathsToRemove)" Condition="'%(FileName)' != '' And '@(_DependenciesToInclude)' != '' And '@(_ReferenceCopyLocalPathsToRemove)' != ''" />
+      <ReferenceCopyLocalPaths Remove="@(_ReferenceCopyLocalPathsToRemove)" />
     </ItemGroup>
+    
   </Target>
 
   <PropertyGroup>
@@ -352,21 +384,6 @@
       <!-- Choose configuration that corresponds to the CRT -->
       <StarboardCRTConfig>Release</StarboardCRTConfig>
       <StarboardCRTConfig Condition="'$(StarboardCRT)' == 'MultiThreadedDebugDLL'">Debug</StarboardCRTConfig>
-    </PropertyGroup>
-
-    <PropertyGroup>
-      <!-- Library directories for in-tree builds and builds linking against the source tree. -->
-      <StarboardLibDirs>$(MSBuildThisFileDirectory)..\lib\$(TargetOsAndVersion)\$(PlatformTarget)</StarboardLibDirs>
-      <!-- Directory for built libraries whose configuration must match the client's -->
-      <StarboardConfigSpecificLibsDir>$(StarboardLibDirs)\$(StarboardCRTConfig)</StarboardConfigSpecificLibsDir>
-      <!-- Prebuilts for all configurations -->
-      <StarboardPrebuiltLibsDir Condition="'$(StarboardPrebuiltLibsDir)' == ''">$(MSBuildThisFileDirectory)..\deps\prebuilt\$(TargetOsAndVersion)\$(PlatformTarget)</StarboardPrebuiltLibsDir>
-      <!-- Configuration-specific prebuilts (libraries that need to use the same allocator as the client -->
-      <StarboardConfigSpecificPrebuiltLibsDir>$(StarboardPrebuiltLibsDir)\$(StarboardCRTConfig)</StarboardConfigSpecificPrebuiltLibsDir>
-    </PropertyGroup>
-
-    <PropertyGroup>
-      <StarboardAllLibDirs>$(StarboardLibDirs);$(StarboardConfigSpecificLibsDir);$(StarboardPrebuiltLibsDir);$(StarboardConfigSpecificPrebuiltLibsDir)</StarboardAllLibDirs>
     </PropertyGroup>
 
     <!-- Print which WinObjC libraries will be used, when copying dependent libraries -->
@@ -631,14 +648,14 @@
   </ItemDefinitionGroup>
 
   <PropertyGroup>
-    <ComputeLinkInputsTargets>$(ComputeLinkInputsTargets);ComputeClangLinkInputs;ComputeRuntimeInputs</ComputeLinkInputsTargets>
+    <ComputeLinkInputsTargets>$(ComputeLinkInputsTargets);ComputeClangLinkInputs;</ComputeLinkInputsTargets>
     <ComputeLibInputsTargets>$(ComputeLibInputsTargets);ComputeClangLibInputs;</ComputeLibInputsTargets>
     <ComputeImpLibInputsTargets>$(ComputeImpLibInputsTargets);ComputeClangImpLibInputs;</ComputeImpLibInputsTargets>
   </PropertyGroup>
 
-  <!-- Fix up AdditionalLibraryDirectories before the CreateWinMD target runs. -->
+  <!-- Fix up AdditionalOptions before the CreateWinMD target runs. -->
   <Target
-    Name="FixAdditionalLibraryDirectoriesWinMD"
+    Name="FixAdditionalOptionsWinMD"
     DependsOnTargets="$(ComputeLinkInputsTargets)"
     BeforeTargets="CreateWinMD">
 
@@ -649,10 +666,9 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Link Condition="'%(Link.ContainsStarboardLibraryDirectories)' != 'true'">
-        <AdditionalLibraryDirectories>%(Link.AdditionalLibraryDirectories);$(StarboardAllLibDirs)</AdditionalLibraryDirectories>
+      <Link Condition="'%(Link.AdjustedAdditionalOptions)' != 'true'">
         <AdditionalOptions Condition="$(AdditionalOptionsToUse) != ''">$(AdditionalOptionsToUse) %(Link.AdditionalOptions)</AdditionalOptions>
-        <ContainsStarboardLibraryDirectories>true</ContainsStarboardLibraryDirectories>
+        <AdjustedAdditionalOptions>true</AdjustedAdditionalOptions>
       </Link>
     </ItemGroup>
 
@@ -660,16 +676,16 @@
 
 
   <PropertyGroup>
-    <FixAdditionalLibraryDirectoriesLinkDependsOn>FixAdditionalLibraryDirectoriesWinMD;</FixAdditionalLibraryDirectoriesLinkDependsOn>
-    <FixAdditionalLibraryDirectoriesLinkDependsOn Condition="'$(WindowsAppContainer)' == 'true'">$(FixAdditionalLibraryDirectoriesLinkDependsOn);XamlPreLink</FixAdditionalLibraryDirectoriesLinkDependsOn>
+    <FixAdditionalOptionsLinkDependsOn>$(FixAdditionalOptionsLinkDependsOn);FixAdditionalOptionsWinMD;</FixAdditionalOptionsLinkDependsOn>
+    <FixAdditionalOptionsLinkDependsOn Condition="'$(WindowsAppContainer)' == 'true'">$(FixAdditionalOptionsLinkDependsOn);XamlPreLink</FixAdditionalOptionsLinkDependsOn>
   </PropertyGroup>
 
   <!-- The build process for XAML files adds Link item(s) in between the execution of CreateWinMD and Link targets.
-       These items need to be updated with our AdditionalLibraryDirectories. Otherwise, a mismatch of
+       These items need to be updated with our AdditionalOptions. Otherwise, a mismatch of
        metadata will result in multiple invocations of link.exe due to task batching. -->
   <Target
-    Name="FixAdditionalLibraryDirectoriesLink"
-    DependsOnTargets="$(FixAdditionalLibraryDirectoriesLinkDependsOn)"
+    Name="FixAdditionalOptionsLink"
+    DependsOnTargets="$(FixAdditionalOptionsLinkDependsOn)"
     BeforeTargets="Link">
 
     <PropertyGroup Condition="'@(ClCompile)' != ''">
@@ -679,10 +695,9 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Link Condition="'%(Link.ContainsStarboardLibraryDirectories)' != 'true'">
-        <AdditionalLibraryDirectories>%(Link.AdditionalLibraryDirectories);$(StarboardAllLibDirs)</AdditionalLibraryDirectories>
+      <Link Condition="'%(Link.AdjustedAdditionalOptions)' != 'true'">
         <AdditionalOptions Condition="$(AdditionalOptionsToUse) != ''">$(AdditionalOptionsToUse) %(Link.AdditionalOptions)</AdditionalOptions>
-        <ContainsStarboardLibraryDirectories>true</ContainsStarboardLibraryDirectories>
+        <AdjustedAdditionalOptions>true</AdjustedAdditionalOptions>
       </Link>
     </ItemGroup>
 
@@ -709,13 +724,6 @@
       <StarboardRequiresObjectiveCRuntime Condition="'@(_StarboardReferencesRequiringObjectiveC)' != ''">true</StarboardRequiresObjectiveCRuntime>
       <StarboardRequiresObjectiveCRuntime Condition="'$(StarboardHasObjCSources)' == 'true'">true</StarboardRequiresObjectiveCRuntime>
     </PropertyGroup>
-  </Target>
-
-  <Target Name="ComputeRuntimeInputs" DependsOnTargets="ComputeClangOptions;ComputeStarboardRequiresObjectiveCRuntime">
-    <ItemGroup>
-      <Link Condition="'$(StarboardLinkObjCRuntime)' == 'true' and '$(StarboardRequiresObjectiveCRuntime)' == 'true'" Include="$(StarboardObjCRuntimeLib)"/>
-      <Link Condition="'$(StarboardDefaultLibs)' != ''" Include="$(StarboardDefaultLibs)"/>
-    </ItemGroup>
   </Target>
 
   <Target Name="ComputeClangLinkInputs" DependsOnTargets="_ClangCompile">
@@ -802,18 +810,13 @@
 
   <!-- Clean generated files -->
   <PropertyGroup>
-    <CleanDependsOn>$(CleanDependsOn);CleanClang;CleanDepWalkerFiles</CleanDependsOn>
+    <CleanDependsOn>$(CleanDependsOn);CleanClang;</CleanDependsOn>
   </PropertyGroup>
 
   <Target Name="CleanClang" Condition="'@(ClangCompile)' != ''" DependsOnTargets="ComputeClangOptions">
     <!-- Delete header maps -->
     <Delete Files="$(CombinedHMapFilename).txt;$(CombinedHMapFilename).hmap;$(ProjectHMapFilename).txt;$(ProjectHMapFilename).hmap" />
     <RemoveDir Directories="@(ClangCompile->Metadata('ObjectiveCModulesCachePath')->Distinct()->ClearMetadata())" />
-  </Target>
-
-  <Target Name="CleanDepWalkerFiles">
-    <!-- Delete Dependency Walker files -->
-    <Delete Files="$(DepWalkerPathFile);$(DepWalkerOutputFile)" />
   </Target>
 
 
@@ -827,26 +830,5 @@
       <ForceSymbolReferences>??2@YAPAXI@Z</ForceSymbolReferences>
     </Link>
   </ItemDefinitionGroup>
-
-
-  <!-- TODO: This should use XMLPoke or similar to dynamically figure out where the important bits are packaged to.-->
-  <ItemGroup Condition="'$(ConfigurationType)' != 'StaticLibrary'">
-    <_ReferencesFromPackage Include="$(MSBuildThisFileDirectory)..\lib\$(TargetOsAndVersion)\$(PlatformTarget)\*.winmd"/>    
-    <_ReferencesFromPackage Include="$(MSBuildThisFileDirectory)..\lib\$(TargetOsAndVersion)\$(PlatformTarget)\$(Configuration)\*.winmd"/>
-
-    <_ReferencesFromPackage Include="$(MSBuildThisFileDirectory)..\deps\prebuilt\$(TargetOsAndVersion)\$(PlatformTarget)\*.winmd"/>
-    <_ReferencesFromPackage Include="$(MSBuildThisFileDirectory)..\deps\prebuilt\$(TargetOsAndVersion)\$(PlatformTarget)\$(Configuration)\*.winmd"/>
-    
-    <Reference Include="@(_ReferencesFromPackage)">
-      <Implementation>%(Filename).dll</Implementation>
-    </Reference>
-
-    <ReferenceCopyLocalPaths Include="$(MSBuildThisFileDirectory)..\lib\$(TargetOsAndVersion)\$(PlatformTarget)\*.dll"/>
-    <ReferenceCopyLocalPaths Include="$(MSBuildThisFileDirectory)..\lib\$(TargetOsAndVersion)\$(PlatformTarget)\$(Configuration)\*.dll"/>
-
-    <ReferenceCopyLocalPaths Include="$(MSBuildThisFileDirectory)..\deps\prebuilt\$(TargetOsAndVersion)\$(PlatformTarget)\*.dll"/>
-    <ReferenceCopyLocalPaths Include="$(MSBuildThisFileDirectory)..\deps\prebuilt\$(TargetOsAndVersion)\$(PlatformTarget)\$(Configuration)\*.dll"/>
-
-  </ItemGroup>
 
 </Project>

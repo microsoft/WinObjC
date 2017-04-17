@@ -9,7 +9,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup>
     <ClCompile>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(MSBuildThisFileDirectory);$(MSBuildThisFileDirectory)..\..\..\tests\Tests.Shared\;$(MSBuildThisFileDirectory)..\..\..\Frameworks\Inlcude\;$(MSBuildThisFileDirectory)..\..\..\Frameworks\Include\;$(MSBuildThisFileDirectory)..\..\..\include\;$(MSBuildThisFileDirectory)..\..\..\include\xplat;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(MSBuildThisFileDirectory);$(MSBuildThisFileDirectory)..\..\..\tests\Tests.Shared\;$(MSBuildThisFileDirectory)..\..\..\Frameworks\Inlcude\;$(MSBuildThisFileDirectory)..\..\..\Frameworks\Include\;$(MSBuildThisFileDirectory)..\..\..\include\;$(MSBuildThisFileDirectory)..\..\..\include\xplat;$(MSBuildThisFileDirectory)..\..\..\deps\prebuilt\include\;</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>INLINE_TEST_METHOD_MARKUP;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <CompileAsWinRT>false</CompileAsWinRT>
     </ClCompile>
