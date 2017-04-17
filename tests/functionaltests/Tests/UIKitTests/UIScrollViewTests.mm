@@ -193,7 +193,8 @@ public:
 
             // changing contentInsets
             scrollView.contentInset = UIEdgeInsetsMake(100, 200, 300, 400);
-            ASSERT_TRUE(canvas.Margin().Top == 100 && canvas.Margin().Left == 200 && canvas.Margin().Bottom == 300 && canvas.Margin().Right == 400);
+            ASSERT_TRUE(canvas.Margin().Top == 100 && canvas.Margin().Left == 200 && canvas.Margin().Bottom == 300 &&
+                        canvas.Margin().Right == 400);
         });
     }
 
@@ -348,6 +349,75 @@ public:
             scrollView.maximumZoomScale = 20;
             LOG_INFO("expected maximumZoomScale {%f}, actual on xaml {%f}", scrollView.maximumZoomScale, scrollViewer.MaxZoomFactor());
             EXPECT_TRUE(scrollViewer.MaxZoomFactor() == 20);
+        });
+    }
+
+    // Test to verify that Issue #2471 is fixed (UIScrollView programmatic scroll methods do not work if .scrollEnabled = NO)
+    TEST_METHOD(UIScrollView_VerifyProgrammaticScrollingEnabledWhenUserScrollIsDisabled) {
+        StrongId<UIScrollViewController> scrollViewVC;
+        scrollViewVC.attach([[UIScrollViewController alloc] init]);
+        UXTestAPI::ViewControllerPresenter testHelper(scrollViewVC, 2);
+
+        UIScrollView* scrollView = [scrollViewVC scrollView];
+
+        dispatch_sync(dispatch_get_main_queue(), ^{
+            // get the backing xaml element
+            FrameworkElement xamlScrollView = [scrollView _winrtXamlElement];
+            Microsoft::WRL::ComPtr<IInspectable> inspectable(XamlScrollViewGetScrollViewer(objcwinrt::to_insp(xamlScrollView)));
+            auto scrollViewer = objcwinrt::from_insp<Controls::ScrollViewer>(inspectable);
+            ASSERT_TRUE(scrollViewer);
+
+            // scrollEnabled = No
+            scrollView.scrollEnabled = NO;
+            scrollView.showsHorizontalScrollIndicator = YES;
+            scrollView.showsVerticalScrollIndicator = YES;
+            // Verify at zero offset
+            ASSERT_TRUE(scrollView.contentOffset == CGPointZero);
+            ASSERT_TRUE(scrollViewer.HorizontalOffset() == 0);
+            ASSERT_TRUE(scrollViewer.VerticalOffset() == 0);
+
+            // move x only previously this would fail to change the offset
+            scrollView.contentOffset = CGPointMake(100, 0);
+            LOG_INFO("expected contentOffset {%f, %f}, actual on xaml {%f, %f}",
+                     scrollView.contentOffset.x,
+                     scrollView.contentOffset.y,
+                     scrollViewer.HorizontalOffset(),
+                     scrollViewer.VerticalOffset());
+
+            EXPECT_TRUE(scrollViewer.HorizontalOffset() == 100);
+            EXPECT_TRUE(scrollViewer.VerticalOffset() == 0);
+
+            // scrollEnabled = No and Scrollbars not visible
+            scrollView.scrollEnabled = NO;
+            scrollView.showsHorizontalScrollIndicator = NO;
+            scrollView.showsVerticalScrollIndicator = NO;
+
+            // move x 10 more pixels previously this would fail to change the offset
+            scrollView.contentOffset = CGPointMake(110, 0);
+            LOG_INFO("expected contentOffset {%f, %f}, actual on xaml {%f, %f}",
+                     scrollView.contentOffset.x,
+                     scrollView.contentOffset.y,
+                     scrollViewer.HorizontalOffset(),
+                     scrollViewer.VerticalOffset());
+
+            EXPECT_TRUE(scrollViewer.HorizontalOffset() == 110);
+            EXPECT_TRUE(scrollViewer.VerticalOffset() == 0);
+
+            // scrollEnabled = Yes and Scrollbars not visible
+            scrollView.scrollEnabled = YES;
+            scrollView.showsHorizontalScrollIndicator = NO;
+            scrollView.showsVerticalScrollIndicator = NO;
+
+            // move x 10 more pixels this worked before and should continue to update offset
+            scrollView.contentOffset = CGPointMake(120, 0);
+            LOG_INFO("expected contentOffset {%f, %f}, actual on xaml {%f, %f}",
+                     scrollView.contentOffset.x,
+                     scrollView.contentOffset.y,
+                     scrollViewer.HorizontalOffset(),
+                     scrollViewer.VerticalOffset());
+
+            EXPECT_TRUE(scrollViewer.HorizontalOffset() == 120);
+            EXPECT_TRUE(scrollViewer.VerticalOffset() == 0);
         });
     }
 };

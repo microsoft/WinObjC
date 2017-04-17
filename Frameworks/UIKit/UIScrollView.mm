@@ -217,7 +217,8 @@ const float UIScrollViewDecelerationRateFast = StubConstant();
 
 - (void)_setupViewChangingHandler {
     __weak UIScrollView* weakself = self;
-    _viewChangingEventToken = _scrollViewer.ViewChanging(objcwinrt::callback([weakself] (const WF::IInspectable&, const Controls::ScrollViewerViewChangingEventArgs& arg) {
+    _viewChangingEventToken = _scrollViewer.ViewChanging(objcwinrt::callback([weakself](
+        const WF::IInspectable&, const Controls::ScrollViewerViewChangingEventArgs& arg) {
         __strong UIScrollView* strongSelf = weakself;
         if (strongSelf) {
             if (DEBUG_VERBOSE) {
@@ -285,11 +286,13 @@ const float UIScrollViewDecelerationRateFast = StubConstant();
                                 CGRect bound = [strongSelf bounds];
                                 CGPoint offset;
                                 if (strongSelf->_scrollViewer.HorizontalOffset() != arg.NextView().HorizontalOffset()) {
-                                    int curScrollPage = int((arg.FinalView().HorizontalOffset() + bound.size.width / 2.0f) / bound.size.width);
+                                    int curScrollPage =
+                                        int((arg.FinalView().HorizontalOffset() + bound.size.width / 2.0f) / bound.size.width);
                                     offset = { curScrollPage * bound.size.width, 0 };
 
                                 } else {
-                                    int curScrollPage = int((arg.FinalView().VerticalOffset() + bound.size.height / 2.0f) / bound.size.height);
+                                    int curScrollPage =
+                                        int((arg.FinalView().VerticalOffset() + bound.size.height / 2.0f) / bound.size.height);
                                     offset = { 0, curScrollPage * bound.size.height };
                                 }
 
@@ -361,7 +364,8 @@ const float UIScrollViewDecelerationRateFast = StubConstant();
 
 - (void)_setupViewChangedHandler {
     __weak UIScrollView* weakself = self;
-    _viewChangedEventToken = _scrollViewer.ViewChanged(objcwinrt::callback([weakself] (const WF::IInspectable&, const Controls::ScrollViewerViewChangedEventArgs& arg) {
+    _viewChangedEventToken = _scrollViewer.ViewChanged(objcwinrt::callback([weakself](
+        const WF::IInspectable&, const Controls::ScrollViewerViewChangedEventArgs& arg) {
         __strong UIScrollView* strongSelf = weakself;
         if (strongSelf) {
             // when we get notification from scrollviewer, associated offset contains insets
@@ -462,48 +466,49 @@ const float UIScrollViewDecelerationRateFast = StubConstant();
 
 - (void)_setupManipulationEventHandlers {
     __weak UIScrollView* weakself = self;
-    _directManipulationStartedEventToken = _scrollViewer.DirectManipulationStarted(objcwinrt::callback([weakself] (const WF::IInspectable&, const WF::IInspectable&) {
-        __strong UIScrollView* strongSelf = weakself;
-        if (DEBUG_VERBOSE) {
-            TraceVerbose(TAG, L"DirectManipulation----Started");
-        }
+    _directManipulationStartedEventToken =
+        _scrollViewer.DirectManipulationStarted(objcwinrt::callback([weakself](const WF::IInspectable&, const WF::IInspectable&) {
+            __strong UIScrollView* strongSelf = weakself;
+            if (DEBUG_VERBOSE) {
+                TraceVerbose(TAG, L"DirectManipulation----Started");
+            }
 
-        if (strongSelf) {
-            strongSelf->_manipulationStarted = YES;
-        }
-    }));
+            if (strongSelf) {
+                strongSelf->_manipulationStarted = YES;
+            }
+        }));
 
-    _directManipulationCompletedEventToken = _scrollViewer.DirectManipulationCompleted(objcwinrt::callback([weakself] (const WF::IInspectable&, const WF::IInspectable&) {
-        __strong UIScrollView* strongSelf = weakself;
-        if (DEBUG_VERBOSE) {
-            TraceVerbose(TAG, L"DirectManipulation----Completed");
-        }
+    _directManipulationCompletedEventToken =
+        _scrollViewer.DirectManipulationCompleted(objcwinrt::callback([weakself](const WF::IInspectable&, const WF::IInspectable&) {
+            __strong UIScrollView* strongSelf = weakself;
+            if (DEBUG_VERBOSE) {
+                TraceVerbose(TAG, L"DirectManipulation----Completed");
+            }
 
-        if (strongSelf) {
-            // re-setting manipulationMode of scrollview (on its canvas) chain to be ALL.
-            // so that direct manipulation will be disabled on all scrollviews
-            [strongSelf _setManipulationMode:Input::ManipulationModes::All recursive:YES];
-            strongSelf->_manipulationStarted = NO;
-            strongSelf->_isTracking = NO;
-            strongSelf->_isDragging = NO;
-        }
-    }));
+            if (strongSelf) {
+                // re-setting manipulationMode of scrollview (on its canvas) chain to be ALL.
+                // so that direct manipulation will be disabled on all scrollviews
+                [strongSelf _setManipulationMode:Input::ManipulationModes::All recursive:YES];
+                strongSelf->_manipulationStarted = NO;
+                strongSelf->_isTracking = NO;
+                strongSelf->_isDragging = NO;
+            }
+        }));
 }
 
 - (void)_setupLoadedEventHandler {
     __weak UIScrollView* weakSelf = self;
-    _loadEventToken = self->_scrollViewer.Loaded(objcwinrt::callback([weakSelf] (const WF::IInspectable&, const RoutedEventArgs&) {
+    _loadEventToken = self->_scrollViewer.Loaded(objcwinrt::callback([weakSelf](const WF::IInspectable&, const RoutedEventArgs&) {
         __strong UIScrollView* strongSelf = weakSelf;
         if (strongSelf && (strongSelf->_contentOffset != CGPointZero || strongSelf->_zoomScale != strongSelf->_scrollViewer.ZoomFactor())) {
             strongSelf->_loaded = YES;
 
             const double paddedOffsetX = (double)(strongSelf->_contentOffset.x + strongSelf->_contentInset.left);
             const double paddedOffsetY = (double)(strongSelf->_contentOffset.y + strongSelf->_contentInset.top);
-            BOOL changeViewSucceed =
-                strongSelf->_scrollViewer.ChangeView(objcwinrt::optional(paddedOffsetX),
-                                                     objcwinrt::optional(paddedOffsetY),
-                                                     objcwinrt::optional(strongSelf->_zoomScale),
-                                                     true);
+            BOOL changeViewSucceed = strongSelf->_scrollViewer.ChangeView(objcwinrt::optional(paddedOffsetX),
+                                                                          objcwinrt::optional(paddedOffsetY),
+                                                                          objcwinrt::optional(strongSelf->_zoomScale),
+                                                                          true);
             if (!changeViewSucceed) {
                 TraceWarning(TAG,
                              L"changeViewWithOptionalAnimation failed, self->_scrollViewer.Visibility = %d",
@@ -791,104 +796,108 @@ static void clipPoint(UIScrollView* o, CGPoint& p, bool bounce = true) {
 static void changeContentOffset(UIScrollView* self, CGPoint offset, BOOL animated, bool kvo = true) {
     if (DEBUG_VERBOSE) {
         TraceVerbose(TAG,
-                     L"changeContentOffset: from currentOffset=[%f, %f] to targetOffset=[%f, %f], animated=%d, kvo=%d",
+                     L"changeContentOffset: from currentOffset=[%f, %f] to targetOffset=[%f, %f], animated=%d, kvo=%d, scrollEnabled=%s",
                      self->_contentOffset.x,
                      self->_contentOffset.y,
                      offset.x,
                      offset.y,
                      animated,
-                     kvo);
+                     kvo,
+                     self.isScrollEnabled == YES ? L"YES" : L"NO");
     }
 
-    const double paddedOffsetX = (double)(offset.x + self->_contentInset.left);
-    const double paddedOffsetY = (double)(offset.y + self->_contentInset.top);
-    const double actualOffsetX = self->_scrollViewer.HorizontalOffset();
-    const double actualOffsetY = self->_scrollViewer.VerticalOffset();
+    // Only attempt to change the ScrollOffset if scrolling is enabled.
+    if (self.isScrollEnabled == YES) {
+        const double paddedOffsetX = (double)(offset.x + self->_contentInset.left);
+        const double paddedOffsetY = (double)(offset.y + self->_contentInset.top);
+        const double actualOffsetX = self->_scrollViewer.HorizontalOffset();
+        const double actualOffsetY = self->_scrollViewer.VerticalOffset();
 
-    if (animated == NO) {
-        if (self->_contentOffset != offset) {
-            if (kvo) {
-                setContentOffsetKVOed(self, offset);
-            } else {
-                self->_contentOffset = offset;
+        if (animated == NO) {
+            if (self->_contentOffset != offset) {
+                if (kvo) {
+                    setContentOffsetKVOed(self, offset);
+                } else {
+                    self->_contentOffset = offset;
+                }
+
+                [self _refreshOrigin];
+
+                if (!self->_scrollingTriggeredByScrollviewer) {
+                    self->_scrollingTriggeredByScrollviewer = YES;
+
+                    if (DEBUG_VERBOSE) {
+                        TraceVerbose(TAG,
+                                     L"changeContentOffset (without Animation): from [%f, %f] to [%f, %f], ScrollviewerOffset=[%f, %f], "
+                                     L"contentsize = [%f, %f]",
+                                     self->_contentOffset.x,
+                                     self->_contentOffset.y,
+                                     paddedOffsetX,
+                                     paddedOffsetY,
+                                     actualOffsetX,
+                                     actualOffsetY,
+                                     self->_contentSize.width,
+                                     self->_contentSize.height);
+                    }
+
+                    if (paddedOffsetX != actualOffsetX || paddedOffsetY != actualOffsetY) {
+                        self->_isChangingContentOffset = YES;
+                        TraceVerbose(TAG,
+                                     L"_isChangingContentOffset set to %d changeContentOffset (without Animation)",
+                                     self->_isChangingContentOffset);
+
+                        bool changeViewSucceed = self->_scrollViewer.ChangeView(objcwinrt::optional(paddedOffsetX),
+                                                                                objcwinrt::optional(paddedOffsetY),
+                                                                                nullptr,
+                                                                                !animated);
+                        if (!changeViewSucceed) {
+                            TraceWarning(TAG,
+                                         L"changeViewWithOptionalAnimation failed, self->_scrollViewer.Visibility = %d, loaded=%d",
+                                         self->_scrollViewer.Visibility(),
+                                         self->_loaded);
+                            self->_isChangingContentOffset = NO;
+                        } else {
+                            self->_scrollViewer.UpdateLayout();
+                        }
+                    }
+                }
             }
-
-            [self _refreshOrigin];
-
-            if (!self->_scrollingTriggeredByScrollviewer) {
+        } else {
+            if (self->_contentOffset != offset) {
+                // changeContentOffset is coming through the API call, we need trigger scrollviewer to scroll.
+                // mark the scrolling is caused by Scrollviewer
                 self->_scrollingTriggeredByScrollviewer = YES;
 
                 if (DEBUG_VERBOSE) {
                     TraceVerbose(TAG,
-                                 L"changeContentOffset (without Animation): from [%f, %f] to [%f, %f], ScrollviewerOffset=[%f, %f], "
-                                 L"contentsize = [%f, %f]",
+                                 L"changeContentOffset (with Animation): Before changing: _contentOffset=[%f,%f], _contentSize=[%f,%f], "
+                                 L"targetOffset=[%f,%f], acutalScrollviewerOffset=[%f, %f]",
                                  self->_contentOffset.x,
                                  self->_contentOffset.y,
+                                 self->_contentSize.width,
+                                 self->_contentSize.height,
                                  paddedOffsetX,
                                  paddedOffsetY,
                                  actualOffsetX,
-                                 actualOffsetY,
-                                 self->_contentSize.width,
-                                 self->_contentSize.height);
+                                 actualOffsetY);
                 }
 
-                if (paddedOffsetX != actualOffsetX || paddedOffsetY != actualOffsetY) {
-                    self->_isChangingContentOffset = YES;
-                    TraceVerbose(TAG,
-                                 L"_isChangingContentOffset set to %d changeContentOffset (without Animation)",
-                                 self->_isChangingContentOffset);
-
-                    bool changeViewSucceed = self->_scrollViewer.ChangeView(objcwinrt::optional(paddedOffsetX),
-                                                                            objcwinrt::optional(paddedOffsetY),
-                                                                            nullptr,
-                                                                            !animated);
-                    if (!changeViewSucceed) {
-                        TraceWarning(TAG,
-                                     L"changeViewWithOptionalAnimation failed, self->_scrollViewer.Visibility = %d, loaded=%d",
-                                     self->_scrollViewer.Visibility(),
-                                     self->_loaded);
-                        self->_isChangingContentOffset = NO;
-                    } else {
-                        self->_scrollViewer.UpdateLayout();
-                    }
-                }
-            }
-        }
-    } else {
-        if (self->_contentOffset != offset) {
-            // changeContentOffset is coming through the API call, we need trigger scrollviewer to scroll.
-            // mark the scrolling is caused by Scrollviewer
-            self->_scrollingTriggeredByScrollviewer = YES;
-
-            if (DEBUG_VERBOSE) {
+                self->_scrollViewer.CancelDirectManipulations();
+                self->_isChangingContentOffset = YES;
                 TraceVerbose(TAG,
-                             L"changeContentOffset (with Animation): Before changing: _contentOffset=[%f,%f], _contentSize=[%f,%f], "
-                             L"targetOffset=[%f,%f], acutalScrollviewerOffset=[%f, %f]",
-                             self->_contentOffset.x,
-                             self->_contentOffset.y,
-                             self->_contentSize.width,
-                             self->_contentSize.height,
-                             paddedOffsetX,
-                             paddedOffsetY,
-                             actualOffsetX,
-                             actualOffsetY);
-            }
-
-            self->_scrollViewer.CancelDirectManipulations();
-            self->_isChangingContentOffset = YES;
-            TraceVerbose(TAG,
-                         L"_isChangingContentOffset set to %d in changeContentOffset (with Animation) ",
-                         self->_isChangingContentOffset);
-            BOOL changeViewSucceed = self->_scrollViewer.ChangeView(objcwinrt::optional(paddedOffsetX),
-                                                                    objcwinrt::optional(paddedOffsetY),
-                                                                    nullptr,
-                                                                    !animated);
-            if (!changeViewSucceed) {
-                TraceWarning(TAG,
-                             L"changeViewWithOptionalAnimation failed, self->_scrollViewer.Visibility = %d, loaded=%d",
-                             self->_scrollViewer.Visibility(),
-                             self->_loaded);
-                self->_isChangingContentOffset = NO;
+                             L"_isChangingContentOffset set to %d in changeContentOffset (with Animation) ",
+                             self->_isChangingContentOffset);
+                BOOL changeViewSucceed = self->_scrollViewer.ChangeView(objcwinrt::optional(paddedOffsetX),
+                                                                        objcwinrt::optional(paddedOffsetY),
+                                                                        nullptr,
+                                                                        !animated);
+                if (!changeViewSucceed) {
+                    TraceWarning(TAG,
+                                 L"changeViewWithOptionalAnimation failed, self->_scrollViewer.Visibility = %d, loaded=%d",
+                                 self->_scrollViewer.Visibility(),
+                                 self->_loaded);
+                    self->_isChangingContentOffset = NO;
+                }
             }
         }
     }
@@ -925,10 +934,14 @@ static void changeContentOffset(UIScrollView* self, CGPoint offset, BOOL animate
 */
 - (void)setShowsHorizontalScrollIndicator:(BOOL)show {
     if (show) {
-        _scrollViewer.HorizontalScrollBarVisibility(Controls::ScrollBarVisibility::Auto);
+        if (self.isScrollEnabled) {
+            _scrollViewer.HorizontalScrollBarVisibility(Controls::ScrollBarVisibility::Auto);
+        }
         _previousHorizontalScrollBarVisibility = Controls::ScrollBarVisibility::Auto;
     } else {
-        _scrollViewer.HorizontalScrollBarVisibility(Controls::ScrollBarVisibility::Hidden);
+        if (self.isScrollEnabled) {
+            _scrollViewer.HorizontalScrollBarVisibility(Controls::ScrollBarVisibility::Hidden);
+        }
         _previousHorizontalScrollBarVisibility = Controls::ScrollBarVisibility::Hidden;
     }
 }
@@ -1074,9 +1087,8 @@ static void changeContentOffset(UIScrollView* self, CGPoint offset, BOOL animate
 
     _scrollViewer.MaxZoomFactor(scale);
 
-    _scrollViewer.ZoomMode((_scrollViewer.MinZoomFactor() != _scrollViewer.MaxZoomFactor())
-        ? Controls::ZoomMode::Enabled
-        : Controls::ZoomMode::Disabled);
+    _scrollViewer.ZoomMode((_scrollViewer.MinZoomFactor() != _scrollViewer.MaxZoomFactor()) ? Controls::ZoomMode::Enabled :
+                                                                                              Controls::ZoomMode::Disabled);
 
     float newScale = _zoomScale;
     clamp(newScale, _scrollViewer.MinZoomFactor(), _scrollViewer.MaxZoomFactor());
@@ -1101,9 +1113,8 @@ static void changeContentOffset(UIScrollView* self, CGPoint offset, BOOL animate
 
     _scrollViewer.MinZoomFactor(scale);
 
-    _scrollViewer.ZoomMode((_scrollViewer.MinZoomFactor() != _scrollViewer.MaxZoomFactor())
-        ? Controls::ZoomMode::Enabled
-        : Controls::ZoomMode::Disabled);
+    _scrollViewer.ZoomMode((_scrollViewer.MinZoomFactor() != _scrollViewer.MaxZoomFactor()) ? Controls::ZoomMode::Enabled :
+                                                                                              Controls::ZoomMode::Disabled);
 
     float newScale = _zoomScale;
     clamp(newScale, _scrollViewer.MinZoomFactor(), _scrollViewer.MaxZoomFactor());
@@ -1130,11 +1141,10 @@ static void zoomToPoint(UIScrollView* self, NSNumber* x, NSNumber* y, NSNumber* 
         self->_zoomView = view;
     }
 
-    bool changeViewSucceed =
-        self->_scrollViewer.ChangeView(x ? objcwinrt::optional(x.doubleValue) : nullptr,
-                                       y ? objcwinrt::optional(y.doubleValue) : nullptr,
-                                       scale ? objcwinrt::optional(scale.floatValue) : nullptr,
-                                       !animated);
+    bool changeViewSucceed = self->_scrollViewer.ChangeView(x ? objcwinrt::optional(x.doubleValue) : nullptr,
+                                                            y ? objcwinrt::optional(y.doubleValue) : nullptr,
+                                                            scale ? objcwinrt::optional(scale.floatValue) : nullptr,
+                                                            !animated);
     if (!changeViewSucceed) {
         TraceWarning(TAG, L"changeViewWithOptionalAnimation failed, self->_scrollViewer.Visibility=%d", self->_scrollViewer.Visibility());
     } else if (!animated) {
