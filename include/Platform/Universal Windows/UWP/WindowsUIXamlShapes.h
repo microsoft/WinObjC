@@ -363,9 +363,6 @@ OBJCUWPWINDOWSUIXAMLSHAPESEXPORT
 - (void)invalidateMeasure;
 - (void)invalidateArrange;
 - (void)updateLayout;
-- (WUXAPAutomationPeer*)onCreateAutomationPeer;
-- (void)onDisconnectVisualChildren;
-- (id<NSFastEnumeration> /* id<NSFastEnumeration> < WFPoint* > */)findSubElementsForTouchTargeting:(WFPoint*)point boundingRect:(WFRect*)boundingRect;
 - (BOOL)cancelDirectManipulations;
 - (void)startDragAsync:(WUIPointerPoint*)pointerPoint success:(void (^)(WADDataPackageOperation))success failure:(void (^)(NSError*))failure;
 @end
@@ -449,11 +446,7 @@ OBJCUWPWINDOWSUIXAMLSHAPESEXPORT
 - (void)removeLoadingEvent:(EventRegistrationToken)tok;
 - (RTObject*)findName:(NSString *)name;
 - (void)setBinding:(WXDependencyProperty*)dp binding:(WUXDBindingBase*)binding;
-- (WFSize*)measureOverride:(WFSize*)availableSize;
-- (WFSize*)arrangeOverride:(WFSize*)finalSize;
-- (void)onApplyTemplate;
 - (WUXDBindingExpression*)getBindingExpression:(WXDependencyProperty*)dp;
-- (BOOL)goToElementStateCore:(NSString *)stateName useTransitions:(BOOL)useTransitions;
 @end
 
 #endif // __WXFrameworkElement_DEFINED__

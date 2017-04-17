@@ -1491,7 +1491,6 @@ OBJCUWPWINDOWSUIXAMLEXPORT
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
-- (void)setActive:(BOOL)IsActive;
 @end
 
 #endif // __WXStateTriggerBase_DEFINED__
@@ -1702,9 +1701,6 @@ OBJCUWPWINDOWSUIXAMLEXPORT
 - (void)invalidateMeasure;
 - (void)invalidateArrange;
 - (void)updateLayout;
-- (WUXAPAutomationPeer*)onCreateAutomationPeer;
-- (void)onDisconnectVisualChildren;
-- (id<NSFastEnumeration> /* id<NSFastEnumeration> < WFPoint* > */)findSubElementsForTouchTargeting:(WFPoint*)point boundingRect:(WFRect*)boundingRect;
 - (BOOL)cancelDirectManipulations;
 - (void)startDragAsync:(WUIPointerPoint*)pointerPoint success:(void (^)(WADDataPackageOperation))success failure:(void (^)(NSError*))failure;
 @end
@@ -1766,9 +1762,6 @@ OBJCUWPWINDOWSUIXAMLEXPORT
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 + (WXDependencyProperty*)customVisualStateManagerProperty;
-- (BOOL)goToStateCore:(WXCControl*)control templateRoot:(WXFrameworkElement*)templateRoot stateName:(NSString *)stateName group:(WXVisualStateGroup*)group state:(WXVisualState*)state useTransitions:(BOOL)useTransitions;
-- (void)raiseCurrentStateChanging:(WXVisualStateGroup*)stateGroup oldState:(WXVisualState*)oldState newState:(WXVisualState*)newState control:(WXCControl*)control;
-- (void)raiseCurrentStateChanged:(WXVisualStateGroup*)stateGroup oldState:(WXVisualState*)oldState newState:(WXVisualState*)newState control:(WXCControl*)control;
 @end
 
 #endif // __WXVisualStateManager_DEFINED__
@@ -1903,11 +1896,7 @@ OBJCUWPWINDOWSUIXAMLEXPORT
 - (void)removeLoadingEvent:(EventRegistrationToken)tok;
 - (RTObject*)findName:(NSString *)name;
 - (void)setBinding:(WXDependencyProperty*)dp binding:(WUXDBindingBase*)binding;
-- (WFSize*)measureOverride:(WFSize*)availableSize;
-- (WFSize*)arrangeOverride:(WFSize*)finalSize;
-- (void)onApplyTemplate;
 - (WUXDBindingExpression*)getBindingExpression:(WXDependencyProperty*)dp;
-- (BOOL)goToElementStateCore:(NSString *)stateName useTransitions:(BOOL)useTransitions;
 @end
 
 #endif // __WXFrameworkElement_DEFINED__
@@ -2044,16 +2033,6 @@ OBJCUWPWINDOWSUIXAMLEXPORT
 - (EventRegistrationToken)addLeavingBackgroundEvent:(WXLeavingBackgroundEventHandler)del;
 - (void)removeLeavingBackgroundEvent:(EventRegistrationToken)tok;
 - (void)exit;
-- (void)onActivated:(RTObject<WAAIActivatedEventArgs>*)args;
-- (void)onLaunched:(WAALaunchActivatedEventArgs*)args;
-- (void)onFileActivated:(WAAFileActivatedEventArgs*)args;
-- (void)onSearchActivated:(WAASearchActivatedEventArgs*)args;
-- (void)onShareTargetActivated:(WAAShareTargetActivatedEventArgs*)args;
-- (void)onFileOpenPickerActivated:(WAAFileOpenPickerActivatedEventArgs*)args;
-- (void)onFileSavePickerActivated:(WAAFileSavePickerActivatedEventArgs*)args;
-- (void)onCachedFileUpdaterActivated:(WAACachedFileUpdaterActivatedEventArgs*)args;
-- (void)onWindowCreated:(WXWindowCreatedEventArgs*)args;
-- (void)onBackgroundActivated:(WAABackgroundActivatedEventArgs*)args;
 @end
 
 #endif // __WXApplication_DEFINED__

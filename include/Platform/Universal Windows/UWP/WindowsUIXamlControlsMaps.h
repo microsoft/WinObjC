@@ -1083,9 +1083,6 @@ OBJCUWPWINDOWSUIXAMLCONTROLSMAPSEXPORT
 - (void)invalidateMeasure;
 - (void)invalidateArrange;
 - (void)updateLayout;
-- (WUXAPAutomationPeer*)onCreateAutomationPeer;
-- (void)onDisconnectVisualChildren;
-- (id<NSFastEnumeration> /* id<NSFastEnumeration> < WFPoint* > */)findSubElementsForTouchTargeting:(WFPoint*)point boundingRect:(WFRect*)boundingRect;
 - (BOOL)cancelDirectManipulations;
 - (void)startDragAsync:(WUIPointerPoint*)pointerPoint success:(void (^)(WADDataPackageOperation))success failure:(void (^)(NSError*))failure;
 @end
@@ -1169,11 +1166,7 @@ OBJCUWPWINDOWSUIXAMLCONTROLSMAPSEXPORT
 - (void)removeLoadingEvent:(EventRegistrationToken)tok;
 - (RTObject*)findName:(NSString *)name;
 - (void)setBinding:(WXDependencyProperty*)dp binding:(WUXDBindingBase*)binding;
-- (WFSize*)measureOverride:(WFSize*)availableSize;
-- (WFSize*)arrangeOverride:(WFSize*)finalSize;
-- (void)onApplyTemplate;
 - (WUXDBindingExpression*)getBindingExpression:(WXDependencyProperty*)dp;
-- (BOOL)goToElementStateCore:(NSString *)stateName useTransitions:(BOOL)useTransitions;
 @end
 
 #endif // __WXFrameworkElement_DEFINED__
@@ -1257,32 +1250,6 @@ OBJCUWPWINDOWSUIXAMLCONTROLSMAPSEXPORT
 - (void)removeFocusEngagedEvent:(EventRegistrationToken)tok;
 - (BOOL)applyTemplate;
 - (BOOL)focus:(WXFocusState)value;
-- (void)onPointerEntered:(WUXIPointerRoutedEventArgs*)e;
-- (void)onPointerPressed:(WUXIPointerRoutedEventArgs*)e;
-- (void)onPointerMoved:(WUXIPointerRoutedEventArgs*)e;
-- (void)onPointerReleased:(WUXIPointerRoutedEventArgs*)e;
-- (void)onPointerExited:(WUXIPointerRoutedEventArgs*)e;
-- (void)onPointerCaptureLost:(WUXIPointerRoutedEventArgs*)e;
-- (void)onPointerCanceled:(WUXIPointerRoutedEventArgs*)e;
-- (void)onPointerWheelChanged:(WUXIPointerRoutedEventArgs*)e;
-- (void)onTapped:(WUXITappedRoutedEventArgs*)e;
-- (void)onDoubleTapped:(WUXIDoubleTappedRoutedEventArgs*)e;
-- (void)onHolding:(WUXIHoldingRoutedEventArgs*)e;
-- (void)onRightTapped:(WUXIRightTappedRoutedEventArgs*)e;
-- (void)onManipulationStarting:(WUXIManipulationStartingRoutedEventArgs*)e;
-- (void)onManipulationInertiaStarting:(WUXIManipulationInertiaStartingRoutedEventArgs*)e;
-- (void)onManipulationStarted:(WUXIManipulationStartedRoutedEventArgs*)e;
-- (void)onManipulationDelta:(WUXIManipulationDeltaRoutedEventArgs*)e;
-- (void)onManipulationCompleted:(WUXIManipulationCompletedRoutedEventArgs*)e;
-- (void)onKeyUp:(WUXIKeyRoutedEventArgs*)e;
-- (void)onKeyDown:(WUXIKeyRoutedEventArgs*)e;
-- (void)onGotFocus:(WXRoutedEventArgs*)e;
-- (void)onLostFocus:(WXRoutedEventArgs*)e;
-- (void)onDragEnter:(WXDragEventArgs*)e;
-- (void)onDragLeave:(WXDragEventArgs*)e;
-- (void)onDragOver:(WXDragEventArgs*)e;
-- (void)onDrop:(WXDragEventArgs*)e;
-- (WXDependencyObject*)getTemplateChild:(NSString *)childName;
 - (void)removeFocusEngagement;
 @end
 

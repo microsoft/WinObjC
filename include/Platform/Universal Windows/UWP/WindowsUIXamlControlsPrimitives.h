@@ -1026,9 +1026,6 @@ OBJCUWPWINDOWSUIXAMLEXPORT
 - (void)invalidateMeasure;
 - (void)invalidateArrange;
 - (void)updateLayout;
-- (WUXAPAutomationPeer*)onCreateAutomationPeer;
-- (void)onDisconnectVisualChildren;
-- (id<NSFastEnumeration> /* id<NSFastEnumeration> < WFPoint* > */)findSubElementsForTouchTargeting:(WFPoint*)point boundingRect:(WFRect*)boundingRect;
 - (BOOL)cancelDirectManipulations;
 - (void)startDragAsync:(WUIPointerPoint*)pointerPoint success:(void (^)(WADDataPackageOperation))success failure:(void (^)(NSError*))failure;
 @end
@@ -1112,11 +1109,7 @@ OBJCUWPWINDOWSUIXAMLEXPORT
 - (void)removeLoadingEvent:(EventRegistrationToken)tok;
 - (RTObject*)findName:(NSString *)name;
 - (void)setBinding:(WXDependencyProperty*)dp binding:(WUXDBindingBase*)binding;
-- (WFSize*)measureOverride:(WFSize*)availableSize;
-- (WFSize*)arrangeOverride:(WFSize*)finalSize;
-- (void)onApplyTemplate;
 - (WUXDBindingExpression*)getBindingExpression:(WXDependencyProperty*)dp;
-- (BOOL)goToElementStateCore:(NSString *)stateName useTransitions:(BOOL)useTransitions;
 @end
 
 #endif // __WXFrameworkElement_DEFINED__
@@ -1215,12 +1208,6 @@ OBJCUWPWINDOWSUIXAMLEXPORT
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WXCItemContainerGenerator* itemContainerGenerator;
-- (void)onItemsChanged:(RTObject*)sender args:(WUXCPItemsChangedEventArgs*)args;
-- (void)onClearChildren;
-- (void)bringIndexIntoView:(int)index;
-- (void)addInternalChild:(WXUIElement*)child;
-- (void)insertInternalChild:(int)index child:(WXUIElement*)child;
-- (void)removeInternalChildRange:(int)index range:(int)range;
 @end
 
 #endif // __WXCVirtualizingPanel_DEFINED__
@@ -1420,8 +1407,6 @@ OBJCUWPWINDOWSUIXAMLEXPORT
 + (WXDependencyProperty*)lineHeightProperty;
 + (WXDependencyProperty*)horizontalContentAlignmentProperty;
 + (WXDependencyProperty*)cornerRadiusProperty;
-- (void)onContentTemplateChanged:(WXDataTemplate*)oldContentTemplate newContentTemplate:(WXDataTemplate*)newContentTemplate;
-- (void)onContentTemplateSelectorChanged:(WXCDataTemplateSelector*)oldContentTemplateSelector newContentTemplateSelector:(WXCDataTemplateSelector*)newContentTemplateSelector;
 @end
 
 #endif // __WXCContentPresenter_DEFINED__
@@ -1687,32 +1672,6 @@ OBJCUWPWINDOWSUIXAMLEXPORT
 - (void)removeFocusEngagedEvent:(EventRegistrationToken)tok;
 - (BOOL)applyTemplate;
 - (BOOL)focus:(WXFocusState)value;
-- (void)onPointerEntered:(WUXIPointerRoutedEventArgs*)e;
-- (void)onPointerPressed:(WUXIPointerRoutedEventArgs*)e;
-- (void)onPointerMoved:(WUXIPointerRoutedEventArgs*)e;
-- (void)onPointerReleased:(WUXIPointerRoutedEventArgs*)e;
-- (void)onPointerExited:(WUXIPointerRoutedEventArgs*)e;
-- (void)onPointerCaptureLost:(WUXIPointerRoutedEventArgs*)e;
-- (void)onPointerCanceled:(WUXIPointerRoutedEventArgs*)e;
-- (void)onPointerWheelChanged:(WUXIPointerRoutedEventArgs*)e;
-- (void)onTapped:(WUXITappedRoutedEventArgs*)e;
-- (void)onDoubleTapped:(WUXIDoubleTappedRoutedEventArgs*)e;
-- (void)onHolding:(WUXIHoldingRoutedEventArgs*)e;
-- (void)onRightTapped:(WUXIRightTappedRoutedEventArgs*)e;
-- (void)onManipulationStarting:(WUXIManipulationStartingRoutedEventArgs*)e;
-- (void)onManipulationInertiaStarting:(WUXIManipulationInertiaStartingRoutedEventArgs*)e;
-- (void)onManipulationStarted:(WUXIManipulationStartedRoutedEventArgs*)e;
-- (void)onManipulationDelta:(WUXIManipulationDeltaRoutedEventArgs*)e;
-- (void)onManipulationCompleted:(WUXIManipulationCompletedRoutedEventArgs*)e;
-- (void)onKeyUp:(WUXIKeyRoutedEventArgs*)e;
-- (void)onKeyDown:(WUXIKeyRoutedEventArgs*)e;
-- (void)onGotFocus:(WXRoutedEventArgs*)e;
-- (void)onLostFocus:(WXRoutedEventArgs*)e;
-- (void)onDragEnter:(WXDragEventArgs*)e;
-- (void)onDragLeave:(WXDragEventArgs*)e;
-- (void)onDragOver:(WXDragEventArgs*)e;
-- (void)onDrop:(WXDragEventArgs*)e;
-- (WXDependencyObject*)getTemplateChild:(NSString *)childName;
 - (void)removeFocusEngagement;
 @end
 
@@ -1737,9 +1696,6 @@ OBJCUWPWINDOWSUIXAMLEXPORT
 + (WXDependencyProperty*)contentTemplateProperty;
 + (WXDependencyProperty*)contentTemplateSelectorProperty;
 + (WXDependencyProperty*)contentTransitionsProperty;
-- (void)onContentChanged:(RTObject*)oldContent newContent:(RTObject*)newContent;
-- (void)onContentTemplateChanged:(WXDataTemplate*)oldContentTemplate newContentTemplate:(WXDataTemplate*)newContentTemplate;
-- (void)onContentTemplateSelectorChanged:(WXCDataTemplateSelector*)oldContentTemplateSelector newContentTemplateSelector:(WXCDataTemplateSelector*)newContentTemplateSelector;
 @end
 
 #endif // __WXCContentControl_DEFINED__
@@ -1780,9 +1736,6 @@ OBJCUWPWINDOWSUIXAMLEXPORT
 + (WXDependencyProperty*)valueProperty;
 - (EventRegistrationToken)addValueChangedEvent:(WUXCPRangeBaseValueChangedEventHandler)del;
 - (void)removeValueChangedEvent:(EventRegistrationToken)tok;
-- (void)onMinimumChanged:(double)oldMinimum newMinimum:(double)newMinimum;
-- (void)onMaximumChanged:(double)oldMaximum newMaximum:(double)newMaximum;
-- (void)onValueChanged:(double)oldValue newValue:(double)newValue;
 @end
 
 #endif // __WUXCPRangeBase_DEFINED__
@@ -1933,16 +1886,6 @@ OBJCUWPWINDOWSUIXAMLEXPORT
 + (WXDependencyProperty*)itemTemplateSelectorProperty;
 + (WXDependencyProperty*)itemsPanelProperty;
 + (WXDependencyProperty*)itemsSourceProperty;
-- (BOOL)isItemItsOwnContainerOverride:(RTObject*)item;
-- (WXDependencyObject*)getContainerForItemOverride;
-- (void)clearContainerForItemOverride:(WXDependencyObject*)element item:(RTObject*)item;
-- (void)prepareContainerForItemOverride:(WXDependencyObject*)element item:(RTObject*)item;
-- (void)onItemsChanged:(RTObject*)e;
-- (void)onItemContainerStyleChanged:(WXStyle*)oldItemContainerStyle newItemContainerStyle:(WXStyle*)newItemContainerStyle;
-- (void)onItemContainerStyleSelectorChanged:(WXCStyleSelector*)oldItemContainerStyleSelector newItemContainerStyleSelector:(WXCStyleSelector*)newItemContainerStyleSelector;
-- (void)onItemTemplateChanged:(WXDataTemplate*)oldItemTemplate newItemTemplate:(WXDataTemplate*)newItemTemplate;
-- (void)onItemTemplateSelectorChanged:(WXCDataTemplateSelector*)oldItemTemplateSelector newItemTemplateSelector:(WXCDataTemplateSelector*)newItemTemplateSelector;
-- (void)onGroupStyleSelectorChanged:(WXCGroupStyleSelector*)oldGroupStyleSelector newGroupStyleSelector:(WXCGroupStyleSelector*)newGroupStyleSelector;
 - (RTObject*)itemFromContainer:(WXDependencyObject*)container;
 - (WXDependencyObject*)containerFromItem:(RTObject*)item;
 - (int)indexFromContainer:(WXDependencyObject*)container;
@@ -2016,7 +1959,6 @@ OBJCUWPWINDOWSUIXAMLEXPORT
 - (void)removeIndeterminateEvent:(EventRegistrationToken)tok;
 - (EventRegistrationToken)addUncheckedEvent:(WXRoutedEventHandler)del;
 - (void)removeUncheckedEvent:(EventRegistrationToken)tok;
-- (void)onToggle;
 @end
 
 #endif // __WUXCPToggleButton_DEFINED__
@@ -2069,7 +2011,6 @@ OBJCUWPWINDOWSUIXAMLEXPORT
 - (void)removeClosingEvent:(EventRegistrationToken)tok;
 - (void)showAt:(WXFrameworkElement*)placementTarget;
 - (void)hide;
-- (WXCControl*)createPresenter;
 @end
 
 #endif // __WUXCPFlyoutBase_DEFINED__
@@ -2141,8 +2082,6 @@ OBJCUWPWINDOWSUIXAMLEXPORT
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 + (WXDependencyProperty*)titleProperty;
-- (void)onConfirmed;
-- (BOOL)shouldShowConfirmationButtons;
 @end
 
 #endif // __WUXCPPickerFlyoutBase_DEFINED__

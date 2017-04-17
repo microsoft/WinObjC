@@ -280,7 +280,6 @@ OBJCUWPWINDOWSUIXAMLMEDIAIMAGINGEXPORT
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
-- (void)onRun:(RTObject<WABIBackgroundTaskInstance>*)taskInstance;
 @end
 
 #endif // __WUXMIXamlRenderingBackgroundTask_DEFINED__

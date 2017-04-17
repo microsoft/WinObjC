@@ -580,8 +580,6 @@ OBJCUWPWINDOWSUIXAMLEXPORT
 - (WFPoint*)transformPoint:(WFPoint*)point;
 - (BOOL)tryTransform:(WFPoint*)inPoint outPoint:(WFPoint**)outPoint;
 - (WFRect*)transformBounds:(WFRect*)rect;
-- (BOOL)tryTransformCore:(WFPoint*)inPoint outPoint:(WFPoint**)outPoint;
-- (WFRect*)transformBoundsCore:(WFRect*)rect;
 @end
 
 #endif // __WUXMGeneralTransform_DEFINED__
