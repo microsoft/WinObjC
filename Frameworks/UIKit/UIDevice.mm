@@ -21,9 +21,15 @@
 #import "UIKit/UIApplication.h"
 #import "UIKit/UIViewController.h"
 #import "UIKit/UIView.h"
-#import "UWP/WindowsApplicationModel.h"
 #import "UIViewControllerInternal.h"
 #import "StarboardXaml/DisplayProperties.h"
+#import "CppWinRTHelpers.h"
+
+#include "COMIncludes.h"
+#import <winrt/Windows.ApplicationModel.h>
+#include "COMIncludes_End.h"
+
+using namespace winrt::Windows::ApplicationModel;
 
 NSString* const UIDeviceBatteryLevelDidChangeNotification = @"UIDeviceBatteryLevelDidChangeNotification";
 NSString* const UIDeviceBatteryStateDidChangeNotification = @"UIDeviceBatteryStateDidChangeNotification";
@@ -68,9 +74,9 @@ DWORD uuid_generate(BYTE* uuid);
 }
 
 - (NSUUID*)_newIdentifierForVendor {
-    WAPackage* currentPackage = [WAPackage current];
-    WAPackageId* packageid = currentPackage.id;
-    NSString* famName = packageid.familyName;
+    Package currentPackage = Package::Current();
+    PackageId packageid = currentPackage.Id();
+    NSString* famName = objcwinrt::string(packageid.FamilyName());
     return [[NSUUID alloc] initWithUUIDString:famName];
 }
 

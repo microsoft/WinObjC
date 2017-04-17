@@ -28,7 +28,6 @@
 #import "UIGestureRecognizerInternal.h"
 #import "LoggingNative.h"
 #import "UIScrollViewInternal.h"
-#import "UWP/WindowsUIInput.h"
 #import "UITouchInternal.h"
 #import "UIPanGestureRecognizerInternal.h"
 #import "UIWindowInternal.h"
