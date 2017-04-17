@@ -14,7 +14,8 @@
 //
 //******************************************************************************
 
-#include <TestFramework.h>
+#import <TestFramework.h>
+#import "TestUtils.h"
 #import <Foundation/Foundation.h>
 
 TEST(NSDictionary, Enumerate) {
@@ -161,7 +162,9 @@ TEST(NSMutableDictionary, SetObjectWithNilShouldThrow) {
 }
 
 TEST(NSDictionary, ReadWriteURL) {
-    NSURL* url = [NSURL fileURLWithPath:@"dictionaryTestData.txt" isDirectory:NO];
+    NSString* filePath = @"dictionaryTestData.txt";
+    SCOPE_DELETE_FILE(filePath);
+    NSURL* url = [NSURL fileURLWithPath:filePath isDirectory:NO];
     NSDictionary* dict = @{ @"key1" : @1, @"k2" : @"val", @"z" : @[ @5 ] };
     EXPECT_TRUE([dict writeToURL:url atomically:NO]);
     NSDictionary* read = [NSDictionary dictionaryWithContentsOfURL:url];
