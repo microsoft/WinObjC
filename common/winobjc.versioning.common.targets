@@ -42,7 +42,7 @@
       <PackageVersion_Major>$(GitVersion_Major)</PackageVersion_Major>
       <PackageVersion_Minor>$(GitVersion_Minor)</PackageVersion_Minor>
       
-      <PackageVersion_Patch Condition="'$(PackageVersion_Patch)' == '' And '$(GitVersion_PreReleaseLabel)' == ''">$([System.DateTime]::Now.ToUniversalTime()ToString(yyMMdd))</PackageVersion_Patch>
+      <PackageVersion_Patch Condition="'$(PackageVersion_Patch)' == '' And '$(GitVersion_PreReleaseLabel)' == ''">$([System.DateTime]::Now.ToUniversalTime().ToString(yyMMdd))</PackageVersion_Patch>
       <PackageVersion_Patch Condition="'$(PackageVersion_Patch)' == '' And '$(GitVersion_PreReleaseLabel)' != ''">$(GitVersion_Patch)</PackageVersion_Patch>
 
       <PackageVersion_PreReleaseLabel>$(GitVersion_PreReleaseLabel)</PackageVersion_PreReleaseLabel>
