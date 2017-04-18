@@ -14,10 +14,6 @@
 //
 //******************************************************************************
 
-// This should probably eventually be moved to a SystemConfiguration project but there's little else
-// interesting in the SC group of stuff so... eh. This is in the Foundation to have easier access
-// to NSRunLoopSource.
-
 #include <winsock2.h>
 #include <Ws2tcpip.h>
 
@@ -25,14 +21,24 @@
 #include <Foundation/NSOperation.h>
 #include "SystemConfiguration/SystemConfiguration.h"
 #include "SystemConfiguration/SCNetworkReachability.h"
+#import "CppWinRTHelpers.h"
 
 #include "NSRunLoopSource.h"
 #include "NSRunLoop+Internal.h"
 
-#include "UWP/WindowsNetworkingSockets.h"
-#include "UWP/WindowsNetworking.h"
+#include "COMIncludes.h"
+#import <winrt/Windows.Networking.h>
+#import <winrt/Windows.Networking.Connectivity.h>
+#import <winrt/Windows.Networking.Sockets.h>
+#include "COMIncludes_End.h"
 
 #include <objc/objc-arc.h>
+
+using namespace winrt::Windows::Networking;
+using namespace winrt::Windows::Networking::Connectivity;
+using namespace winrt::Windows::Networking::Sockets;
+namespace WF = winrt::Windows::Foundation;
+namespace WFC = winrt::Windows::Foundation::Collections;
 
 static __declspec(thread) int SCLastError = 0;
 
@@ -105,9 +111,9 @@ static NSLock* _allReachabilityOperationsLock;
 @implementation SCNetworkReachability
 + (void)initialize {
     if (self == [SCNetworkReachability class]) {
-        [WNCNetworkInformation addNetworkStatusChangedEvent:^void(RTObject* sender) {
-            [self _networkStatusChanged];
-        }];
+        NetworkInformation::NetworkStatusChanged(objcwinrt::callback([self] (const WF::IInspectable&) {
+                [self _networkStatusChanged];
+        }));
         [self _checkGlobalReachability];
     }
 }
@@ -133,20 +139,20 @@ static NSLock* _allReachabilityOperationsLock;
 }
 
 + (void)_checkGlobalReachability {
-    @try {
-        WNCConnectionProfile* internetConnectionProfile = [WNCNetworkInformation getInternetConnectionProfile];
+    try {
+        ConnectionProfile internetConnectionProfile = NetworkInformation::GetInternetConnectionProfile();
         if (internetConnectionProfile &&
-            [internetConnectionProfile getNetworkConnectivityLevel] == WNCNetworkConnectivityLevelInternetAccess) {
+            internetConnectionProfile.GetNetworkConnectivityLevel() == NetworkConnectivityLevel::InternetAccess) {
             SCNetworkReachabilityFlags newFlags = kSCNetworkReachabilityFlagsReachable;
 
-            if (internetConnectionProfile.isWwanConnectionProfile) {
+            if (internetConnectionProfile.IsWwanConnectionProfile()) {
                 newFlags |= kSCNetworkReachabilityFlagsIsWWAN;
             }
             _globalReachableFlags = newFlags;
         } else {
             _globalReachableFlags = 0;
         }
-    } @catch (...) {
+    } catch (...) {
         _globalReachableFlags = 0;
     }
 }
@@ -393,22 +399,20 @@ static NSLock* _allReachabilityOperationsLock;
         //  keep ourself around until the reachability test completes
         [self retain];
 
-        NSString* strAddress = [NSString stringWithCharacters:(const unichar*)addressStr length:addressStrLen - 1];
-        WNHostName* wnHostName = [WNHostName makeHostName:strAddress];
-        [WNSDatagramSocket getEndpointPairsAsync:wnHostName
-            remoteServiceName:@"0"
-            success:^void(id<NSFastEnumeration> pairs) {
-                for (WNEndpointPair* cur in pairs) {
+        HostName hostName(addressStr);
+        WF::IAsyncOperation<WFC::IVectorView<EndpointPair>> async = DatagramSocket::GetEndpointPairsAsync(hostName, L"0");
+
+        async.Completed(objcwinrt::callback([self] (const WF::IAsyncOperation<WFC::IVectorView<EndpointPair>>& op, WF::AsyncStatus status) {
+            if (status == WF::AsyncStatus::Completed) {
+                if (op.GetResults().Size() > 0) {
                     [self _setReachabilityFlags:_globalReachableFlags | kSCNetworkReachabilityFlagsReachable];
-                    break;
                 }
-                [self release];
-            }
-            failure:^void(NSError* error) {
+            } else {
                 [self _setReachabilityFlags:0];
-                [self release];
-            }];
-        [wnHostName release];
+            }
+
+            [self release];
+        }));
     } else {
         //  Address error, unreachable
         [self _setReachabilityFlags:0];
@@ -438,26 +442,26 @@ static NSLock* _allReachabilityOperationsLock;
     //  To extract just the host name in case we're fed an URL
     NSURL* url = [NSURL URLWithString:hostStr];
 
-    WNHostName* wnHostName;
+    HostName hostName = nullptr;
     if (url.host.length > 0) {
-        wnHostName = [WNHostName makeHostName:url.host];
+        hostName = HostName(objcwinrt::string(url.host));
     } else {
-        wnHostName = [WNHostName makeHostName:hostStr];
+        hostName = HostName(objcwinrt::string(hostStr));
     }
-    [WNSDatagramSocket getEndpointPairsAsync:wnHostName
-        remoteServiceName:@"0"
-        success:^void(id<NSFastEnumeration> pairs) {
-            for (WNEndpointPair* cur in pairs) {
+
+    WF::IAsyncOperation<WFC::IVectorView<EndpointPair>> async = DatagramSocket::GetEndpointPairsAsync(hostName, L"0");
+
+    async.Completed(objcwinrt::callback([self] (const WF::IAsyncOperation<WFC::IVectorView<EndpointPair>>& op, WF::AsyncStatus status) {
+        if (status == WF::AsyncStatus::Completed) {
+            if (op.GetResults().Size() > 0) {
                 [self _setReachabilityFlags:_globalReachableFlags | kSCNetworkReachabilityFlagsReachable];
-                break;
             }
-            [self release];
-        }
-        failure:^void(NSError* error) {
+        } else {
             [self _setReachabilityFlags:0];
-            [self release];
-        }];
-    [wnHostName release];
+        }
+
+        [self release];
+    }));
 }
 @end
 
