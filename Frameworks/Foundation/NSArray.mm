@@ -751,27 +751,8 @@ static CFComparisonResult _CFComparatorFunctionFromComparator(const void* val1, 
  @Status Interoperable
 */
 - (void)enumerateObjectsWithOptions:(NSEnumerationOptions)options usingBlock:(void (^)(id, NSUInteger, BOOL*))block {
-    id<NSFastEnumeration> enumerator;
-    __block NSUInteger index;
-    __block BOOL reverse;
-    if (options & NSEnumerationReverse) {
-        enumerator = [self reverseObjectEnumerator];
-        index = [self count] - 1;
-        reverse = true;
-    } else {
-        enumerator = self;
-        index = 0;
-        reverse = false;
-    }
-
-    _enumerateWithBlock(enumerator, options, ^(id key, BOOL* stop) {
-        block(key, index, stop);
-        if (reverse) {
-            index--;
-        } else {
-            index++;
-        }
-    });
+    NSIndexSet* indexSet = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, [self count])];
+    [self enumerateObjectsAtIndexes:indexSet options:options usingBlock:block];
 }
 
 /**
