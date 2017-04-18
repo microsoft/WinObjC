@@ -79,16 +79,6 @@ TEST(Sanity, SanityTest) {
     // NSDateComponents* comp2 = [curCal components:NSSecondCalendarUnit fromDate:startDate toDate:endDate options:0];
     // ASSERT_EQ_MSG(comp2.second, 4060800, "FAILED: comp2 not accurate: %d\n", comp2.second);
     //
-    // /*** NSNull ***/
-    // NSNull *nul1 = [NSNull null], *nul2 = [NSNull alloc], *nul3 = [NSNull new], *nul4 = [nul1 copy];
-    // ASSERT_FALSE_MSG(nul1 != nul2 || nul2 != nul3 || nul3 != nul4 || ![nul1 isEqual:nul4],
-    //                  "FAILED: comp1 not accurate: %d %d %d %d %d %d\n",
-    //                  comp1.second,
-    //                  comp1.minute,
-    //                  comp1.hour,
-    //                  comp1.day,
-    //                  comp1.month,
-    //                  comp1.year);
 }
 
 TEST(NSUUID, NSUUID) {

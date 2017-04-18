@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -14,20 +14,40 @@
 //
 //******************************************************************************
 
-#include "Starboard.h"
-#include "StubReturn.h"
-#include "Foundation/NSNull.h"
-
-static NSNull* nullSingleton;
+#import <Foundation/NSNull.h>
+#import <CFFoundationInternal.h>
 
 @implementation NSNull
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-objc-isa-usage"
++ (void)load {
+    _CFRuntimeBridgeTypeToClass(CFNullGetTypeID(), self);
+
+    // We have to do this for Objective-C dispatch, but we can't rely on type ID bridging to set it for us
+    // because kCFNull already exists.
+    static_cast<NSNull*>(kCFNull)->isa = self;
+}
+#pragma clang diagnostic pop
+
 /**
  @Status Interoperable
 */
-+ (void)initialize {
-    if (self == [NSNull class]) {
-        nullSingleton = [super allocWithZone:nil];
-    }
++ (instancetype)allocWithZone:(NSZone*)zone {
+    return static_cast<NSNull*>(kCFNull);
+}
+
+/**
+ @Status Interoperable
+*/
++ (NSNull*)null {
+    return static_cast<NSNull*>(kCFNull);
+}
+
+/**
+ @Status Interoperable
+*/
++ (BOOL)supportsSecureCoding {
+    return YES;
 }
 
 /**
@@ -38,31 +58,17 @@ static NSNull* nullSingleton;
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
+ @Notes This method encodes nothing as there's nothing to encode.
  */
 - (void)encodeWithCoder:(NSCoder*)coder {
-    UNIMPLEMENTED();
 }
 
 /**
  @Status Interoperable
 */
 - (instancetype)copyWithZone:(NSZone*)zone {
-    return nullSingleton;
-}
-
-/**
- @Status Interoperable
-*/
-+ (instancetype)allocWithZone:(NSZone*)zone {
-    return nullSingleton;
-}
-
-/**
- @Status Interoperable
-*/
-- (oneway void)release {
+    return static_cast<NSNull*>(kCFNull);
 }
 
 /**
@@ -72,13 +78,23 @@ static NSNull* nullSingleton;
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
+- (oneway void)release {
+}
+
+- (NSUInteger)retainCount {
+    return NSUIntegerMax;
+}
+
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wobjc-missing-super-calls"
 /**
  @Status Interoperable
 */
 - (void)dealloc {
-    assert(0 && "NSNull should never be deallocated");
+    // This method was found to be a no-op on the reference platform.
 }
 #pragma clang diagnostic pop
 
@@ -89,19 +105,15 @@ static NSNull* nullSingleton;
     return @"<null>";
 }
 
-/**
- @Status Interoperable
-*/
-+ (NSNull*)null {
-    return nullSingleton;
+- (id)valueForKey:(NSString*)key {
+    return self;
 }
 
-/**
- @Status Stub
- @Notes
-*/
-+ (BOOL)supportsSecureCoding {
-    UNIMPLEMENTED();
-    return StubReturn();
+- (id)valueForKeyPath:(NSString*)keypath {
+    return self;
+}
+
+- (CFTypeID)_cfTypeId {
+    return CFNullGetTypeID();
 }
 @end
