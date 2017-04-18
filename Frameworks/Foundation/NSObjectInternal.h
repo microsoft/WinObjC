@@ -14,6 +14,8 @@
 //
 //******************************************************************************
 
+#pragma once
+
 #import <Foundation/NSObject.h>
 
 long _throwUnrecognizedSelectorException(id self, Class isa, SEL sel);
