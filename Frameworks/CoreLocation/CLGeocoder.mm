@@ -19,9 +19,17 @@
 #import <CoreLocation/CLLocation.h>
 #import <CoreLocation/CLPlacemark.h>
 #import <StubReturn.h>
-#import <UWP/WindowsDevicesGeolocation.h>
-#import <UWP/WindowsServicesMaps.h>
 #import "CLPlacemarkInternal.h"
+#import "CppWinRTHelpers.h"
+
+#include "COMIncludes.h"
+#import <winrt/Windows.Devices.Geolocation.h>
+#import <winrt/Windows.Services.Maps.h>
+#include "COMIncludes_End.h"
+
+using namespace winrt::Windows::Devices::Geolocation;
+using namespace winrt::Windows::Services::Maps;
+namespace WF = winrt::Windows::Foundation;
 
 @interface CLGeocoder () {
 }
@@ -40,22 +48,22 @@
 }
 
 // Helper function to convert WSM error code to NSError codes
-NSError* parseError(WSMMapLocationFinderResult* results) {
+NSError* parseError(const MapLocationFinderResult& results) {
     // Unknown Error and Status Not Supported don't map to any iOS error codes
-    WSMMapLocationFinderStatus status = results.status;
-    if (status == WSMMapLocationFinderStatusSuccess) {
+    MapLocationFinderStatus status = results.Status();
+    if (status == MapLocationFinderStatus::Success) {
         return nullptr;
-    } else if (status == WSMMapLocationFinderStatusUnknownError) {
+    } else if (status == MapLocationFinderStatus::UnknownError) {
         return nullptr;
-    } else if (status == WSMMapLocationFinderStatusInvalidCredentials) {
+    } else if (status == MapLocationFinderStatus::InvalidCredentials) {
         return [NSError errorWithDomain:@"kCLErrorDomain" code:kCLErrorDenied userInfo:nullptr];
-    } else if (status == WSMMapLocationFinderStatusBadLocation) {
+    } else if (status == MapLocationFinderStatus::BadLocation) {
         return [NSError errorWithDomain:@"kCLErrorDomain" code:kCLErrorLocationUnknown userInfo:nullptr];
-    } else if (status == WSMMapLocationFinderStatusIndexFailure) {
+    } else if (status == MapLocationFinderStatus::IndexFailure) {
         return [NSError errorWithDomain:@"kCLErrorDomain" code:kCLErrorGeocodeFoundNoResult userInfo:nullptr];
-    } else if (status == WSMMapLocationFinderStatusNetworkFailure) {
+    } else if (status == MapLocationFinderStatus::NetworkFailure) {
         return [NSError errorWithDomain:@"kCLErrorDomain" code:kCLErrorNetwork userInfo:nullptr];
-    } else if (status == WSMMapLocationFinderStatusNotSupported) {
+    } else if (status == MapLocationFinderStatus::NotSupported) {
         return nullptr;
     }
 
@@ -63,40 +71,40 @@ NSError* parseError(WSMMapLocationFinderResult* results) {
 }
 
 // Helper function to parse address results from the location finder and put them into an array of placemarks
-void createResultsArray(WSMMapLocationFinderResult* results, NSMutableArray* geocodeResult) {
-    int geocodeResultCount = [results.locations count];
+void createResultsArray(const MapLocationFinderResult& results, NSMutableArray* geocodeResult) {
+    int geocodeResultCount = results.Locations().Size();
     for (int i = 0; i < geocodeResultCount; i++) {
-        WSMMapLocation* currentResult = [results.locations objectAtIndex:i];
-        WSMMapAddress* currentAddress = [currentResult address];
+        MapLocation currentResult = results.Locations().GetAt(i);
+        MapAddress currentAddress = currentResult.Address();
 
         NSMutableDictionary* addressDictionary = [[NSMutableDictionary alloc] init];
 
         NSString* placemarkName;
-        if ([currentAddress streetNumber] && [currentAddress street]) {
-            placemarkName = [NSString stringWithFormat:@"%@ %@", [currentAddress streetNumber], [currentAddress street]];
-        } else if ([currentAddress street]) {
-            placemarkName = [currentAddress street];
-        } else if ([currentAddress town] && [currentAddress region]) {
-            placemarkName = [NSString stringWithFormat:@"%@, %@", [currentAddress town], [currentAddress region]];
-        } else if ([currentAddress town]) {
-            placemarkName = [currentAddress town];
+        if (!currentAddress.StreetNumber().empty() && !currentAddress.Street().empty()) {
+            placemarkName = [NSString stringWithFormat:@"%S %S", currentAddress.StreetNumber().c_str(), currentAddress.Street().c_str()];
+        } else if (!currentAddress.Street().empty()) {
+            placemarkName = objcwinrt::string(currentAddress.Street());
+        } else if (!currentAddress.Town().empty() && !currentAddress.Region().empty()) {
+            placemarkName = [NSString stringWithFormat:@"%S, %S", currentAddress.Town().c_str(), currentAddress.Region().c_str()];
+        } else if (!currentAddress.Town().empty()) {
+            placemarkName = objcwinrt::string(currentAddress.Town());
         } else {
             // Do whatever Windows decides should be the default
-            placemarkName = [currentAddress formattedAddress];
+            placemarkName = objcwinrt::string(currentAddress.FormattedAddress());
         }
 
         [addressDictionary setValue:placemarkName forKey:@"placemarkName"];
-        [addressDictionary setValue:[currentAddress countryCode] forKey:@"CountryCode"];
-        [addressDictionary setValue:[currentAddress country] forKey:@"Country"];
-        [addressDictionary setValue:[currentAddress postCode] forKey:@"PostalCode"];
-        [addressDictionary setValue:[currentAddress region] forKey:@"AdministrativeArea"];
-        [addressDictionary setValue:[currentAddress district] forKey:@"SubAdministrativeArea"];
-        [addressDictionary setValue:[currentAddress town] forKey:@"Locality"];
-        [addressDictionary setValue:[currentAddress neighborhood] forKey:@"SubLocality"];
-        [addressDictionary setValue:[currentAddress street] forKey:@"Thoroughfare"];
-        [addressDictionary setValue:[currentAddress streetNumber] forKey:@"SubThoroughfare"];
-        CLLocation* resultLocation = [[CLLocation alloc] initWithLatitude:[[[currentResult point] position] latitude]
-                                                                longitude:[[[currentResult point] position] longitude]];
+        [addressDictionary setValue:objcwinrt::string(currentAddress.CountryCode()) forKey:@"CountryCode"];
+        [addressDictionary setValue:objcwinrt::string(currentAddress.Country()) forKey:@"Country"];
+        [addressDictionary setValue:objcwinrt::string(currentAddress.PostCode()) forKey:@"PostalCode"];
+        [addressDictionary setValue:objcwinrt::string(currentAddress.Region()) forKey:@"AdministrativeArea"];
+        [addressDictionary setValue:objcwinrt::string(currentAddress.District()) forKey:@"SubAdministrativeArea"];
+        [addressDictionary setValue:objcwinrt::string(currentAddress.Town()) forKey:@"Locality"];
+        [addressDictionary setValue:objcwinrt::string(currentAddress.Neighborhood()) forKey:@"SubLocality"];
+        [addressDictionary setValue:objcwinrt::string(currentAddress.Street()) forKey:@"Thoroughfare"];
+        [addressDictionary setValue:objcwinrt::string(currentAddress.StreetNumber()) forKey:@"SubThoroughfare"];
+        CLLocation* resultLocation = [[CLLocation alloc] initWithLatitude:currentResult.Point().Position().Latitude
+                                                                longitude:currentResult.Point().Position().Longitude];
 
         CLPlacemark* currentPlacemark = [[CLPlacemark alloc] initWithLocation:resultLocation dictionary:addressDictionary];
         [geocodeResult addObject:currentPlacemark];
@@ -119,32 +127,67 @@ void createResultsArray(WSMMapLocationFinderResult* results, NSMutableArray* geo
         } else {
             self.geocoding = true;
 
-            WDGBasicGeoposition* geoposition = [[WDGBasicGeoposition alloc] init];
-            geoposition.latitude = location.coordinate.latitude;
-            geoposition.longitude = location.coordinate.longitude;
+            BasicGeoposition geoposition;
+            geoposition.Latitude = location.coordinate.latitude;
+            geoposition.Longitude = location.coordinate.longitude;
 
-            WDGGeopoint* geopoint = [WDGGeopoint make:geoposition];
+            Geopoint geopoint(geoposition);
 
-            [WSMMapLocationFinder findLocationsAtAsync:geopoint
-                success:^void(WSMMapLocationFinderResult* results) {
-                    self.geocoding = false;
+            WF::IAsyncOperation<MapLocationFinderResult> async = MapLocationFinder::FindLocationsAtAsync(geopoint);
 
-                    WSMMapLocationFinderStatus status = results.status;
-                    NSError* geocodeStatus = parseError(results);
+            async.Completed(objcwinrt::callback([self, completionHandler] (const WF::IAsyncOperation<MapLocationFinderResult>& op, WF::AsyncStatus status) {
+                NSError* geocodeStatus = objcwinrt::to_nserror(op, status);
+                NSMutableArray* geocodeResult = nil;
+                self.geocoding = NO;
 
-                    NSMutableArray* geocodeResult = [[NSMutableArray alloc] init];
-                    createResultsArray(results, geocodeResult);
+                if (status == WF::AsyncStatus::Completed) {
+                    MapLocationFinderResult result = op.GetResults();
+                    geocodeStatus = parseError(result);
 
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        completionHandler(geocodeResult, geocodeStatus);
-                    });
+                    geocodeResult = [NSMutableArray new];
+                    createResultsArray(result, geocodeResult);
                 }
-                failure:^void(NSError* error) {
-                    self.geocoding = false;
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        completionHandler(nullptr, error);
-                    });
-                }];
+
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    completionHandler(geocodeResult, geocodeStatus);
+                });
+            }));
+        }
+    }
+}
+
+/**
+ Internal method
+*/
+- (void)_geocodeAddress:(NSString*)address atPoint:(const Geopoint&)point completionHandler:(CLGeocodeCompletionHandler)completion {
+    @synchronized(self) {
+        if (self.isGeocoding) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                completion(nil, [NSError errorWithDomain:@"kCLErrorDomain" code:kCLErrorGeocodeCanceled userInfo:nil]);
+            });
+        } else {
+            self.geocoding = YES;
+
+            WF::IAsyncOperation<MapLocationFinderResult> async =
+                MapLocationFinder::FindLocationsAsync(objcwinrt::string(address), point);
+
+            async.Completed(objcwinrt::callback([self, completion] (const WF::IAsyncOperation<MapLocationFinderResult>& op, WF::AsyncStatus status) {
+                NSError* geocodeStatus = objcwinrt::to_nserror(op, status);
+                NSMutableArray* geocodeResult = nil;
+                self.geocoding = NO;
+
+                if (status == WF::AsyncStatus::Completed) {
+                    MapLocationFinderResult result = op.GetResults();
+                    geocodeStatus = parseError(result);
+
+                    geocodeResult = [NSMutableArray new];
+                    createResultsArray(result, geocodeResult);
+                }
+
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    completion(geocodeResult, geocodeStatus);
+                });
+            }));
         }
     }
 }
@@ -153,104 +196,45 @@ void createResultsArray(WSMMapLocationFinderResult* results, NSMutableArray* geo
  @Status Interoperable
 */
 - (void)geocodeAddressDictionary:(NSDictionary*)addressDictionary completionHandler:(CLGeocodeCompletionHandler)completionHandler {
-    @synchronized(self) {
-        if (self.isGeocoding) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                completionHandler(nullptr, [NSError errorWithDomain:@"kCLErrorDomain" code:kCLErrorGeocodeCanceled userInfo:nullptr]);
-            });
-        } else {
-            self.geocoding = true;
+    const NSString* addressStreet = (const NSString*)[addressDictionary objectForKey:@"Street"];
+    const NSString* addressCity = (const NSString*)[addressDictionary objectForKey:@"City"];
+    const NSString* addressState = (const NSString*)[addressDictionary objectForKey:@"State"];
+    const NSString* addressZIP = (const NSString*)[addressDictionary objectForKey:@"ZIP"];
+    const NSString* addressCountry = (const NSString*)[addressDictionary objectForKey:@"Country"];
 
-            const NSString* addressStreet = (const NSString*)[addressDictionary objectForKey:@"Street"];
-            const NSString* addressCity = (const NSString*)[addressDictionary objectForKey:@"City"];
-            const NSString* addressState = (const NSString*)[addressDictionary objectForKey:@"State"];
-            const NSString* addressZIP = (const NSString*)[addressDictionary objectForKey:@"ZIP"];
-            const NSString* addressCountry = (const NSString*)[addressDictionary objectForKey:@"Country"];
-
-            NSMutableString* fullAddress = [[NSMutableString alloc] init];
-            if (addressStreet) {
-                [fullAddress appendFormat:@"%@, ", addressStreet];
-            }
-
-            if (addressCity) {
-                [fullAddress appendFormat:@"%@, ", addressCity];
-            }
-
-            if (addressState && addressZIP) {
-                [fullAddress appendFormat:@"%@ %@, ", addressState, addressZIP];
-            } else if (addressState) {
-                [fullAddress appendFormat:@"%@, ", addressState];
-            } else if (addressZIP) {
-                [fullAddress appendFormat:@"%@, ", addressZIP];
-            }
-
-            if (addressCountry) {
-                [fullAddress appendFormat:@"%@", addressCountry];
-            }
-
-            if ([fullAddress hasSuffix:@", "]) {
-                [fullAddress deleteCharactersInRange:NSMakeRange([fullAddress length] - 2, 2)];
-            }
-
-            [WSMMapLocationFinder findLocationsAsync:fullAddress
-                referencePoint:nullptr
-                success:^void(WSMMapLocationFinderResult* results) {
-                    self.geocoding = false;
-
-                    WSMMapLocationFinderStatus status = results.status;
-                    NSError* geocodeStatus = parseError(results);
-
-                    NSMutableArray* geocodeResult = [[NSMutableArray alloc] init];
-                    createResultsArray(results, geocodeResult);
-
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        completionHandler(geocodeResult, geocodeStatus);
-                    });
-                }
-                failure:^void(NSError* error) {
-                    self.geocoding = false;
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        completionHandler(nullptr, error);
-                    });
-                }];
-        }
+    NSMutableString* fullAddress = [[NSMutableString alloc] init];
+    if (addressStreet) {
+        [fullAddress appendFormat:@"%@, ", addressStreet];
     }
+
+    if (addressCity) {
+        [fullAddress appendFormat:@"%@, ", addressCity];
+    }
+
+    if (addressState && addressZIP) {
+        [fullAddress appendFormat:@"%@ %@, ", addressState, addressZIP];
+    } else if (addressState) {
+        [fullAddress appendFormat:@"%@, ", addressState];
+    } else if (addressZIP) {
+        [fullAddress appendFormat:@"%@, ", addressZIP];
+    }
+
+    if (addressCountry) {
+        [fullAddress appendFormat:@"%@", addressCountry];
+    }
+
+    if ([fullAddress hasSuffix:@", "]) {
+        [fullAddress deleteCharactersInRange:NSMakeRange([fullAddress length] - 2, 2)];
+    }
+
+    [self _geocodeAddress:fullAddress atPoint:nullptr completionHandler:completionHandler];
 }
 
 /**
  @Status Interoperable
 */
 - (void)geocodeAddressString:(NSString*)addressString completionHandler:(CLGeocodeCompletionHandler)completionHandler {
-    @synchronized(self) {
-        if (self.isGeocoding) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                completionHandler(nullptr, [NSError errorWithDomain:@"kCLErrorDomain" code:kCLErrorGeocodeCanceled userInfo:nullptr]);
-            });
-        } else {
-            self.geocoding = true;
-            [WSMMapLocationFinder findLocationsAsync:addressString
-                referencePoint:nullptr
-                success:^void(WSMMapLocationFinderResult* results) {
-                    self.geocoding = false;
-
-                    WSMMapLocationFinderStatus status = results.status;
-                    NSError* geocodeStatus = parseError(results);
-
-                    NSMutableArray* geocodeResult = [[NSMutableArray alloc] init];
-                    createResultsArray(results, geocodeResult);
-
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        completionHandler(geocodeResult, geocodeStatus);
-                    });
-                }
-                failure:^void(NSError* error) {
-                    self.geocoding = false;
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        completionHandler(nullptr, error);
-                    });
-                }];
-        }
-    }
+    [self _geocodeAddress:addressString atPoint:nullptr completionHandler:completionHandler];
 }
 
 /**
@@ -261,42 +245,14 @@ void createResultsArray(WSMMapLocationFinderResult* results, NSMutableArray* geo
 - (void)geocodeAddressString:(NSString*)addressString
                     inRegion:(CLRegion*)region
            completionHandler:(CLGeocodeCompletionHandler)completionHandler {
-    @synchronized(self) {
-        if (self.isGeocoding) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                completionHandler(nullptr, [NSError errorWithDomain:@"kCLErrorDomain" code:kCLErrorGeocodeCanceled userInfo:nullptr]);
-            });
-        } else {
-            self.geocoding = true;
-            WDGBasicGeoposition* geoposition = [[WDGBasicGeoposition alloc] init];
-            geoposition.latitude = region.center.latitude;
-            geoposition.longitude = region.center.longitude;
 
-            WDGGeopoint* geopoint = [WDGGeopoint make:geoposition];
+    BasicGeoposition geoposition;
+    geoposition.Latitude = region.center.latitude;
+    geoposition.Longitude = region.center.longitude;
 
-            [WSMMapLocationFinder findLocationsAsync:addressString
-                referencePoint:geopoint
-                success:^void(WSMMapLocationFinderResult* results) {
-                    self.geocoding = false;
+    Geopoint geopoint(geoposition);
 
-                    WSMMapLocationFinderStatus status = results.status;
-                    NSError* geocodeStatus = parseError(results);
-
-                    NSMutableArray* geocodeResult = [[NSMutableArray alloc] init];
-                    createResultsArray(results, geocodeResult);
-
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        completionHandler(geocodeResult, geocodeStatus);
-                    });
-                }
-                failure:^void(NSError* error) {
-                    self.geocoding = false;
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        completionHandler(nullptr, error);
-                    });
-                }];
-        }
-    }
+    [self _geocodeAddress:addressString atPoint:geopoint completionHandler:completionHandler];
 }
 
 /**
