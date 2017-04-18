@@ -29,7 +29,7 @@ namespace WF = winrt::Windows::Foundation;
 static const wchar_t* TAG = L"UrlLauncher";
 
 // A thin wrapper around Windows::System::Launcher
-@interface _DefaultLauncher
+@interface _DefaultLauncher : NSObject
 + (void)launchUriAsync:(const WF::Uri&)uri success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 + (void)queryUriSupportAsync:(const WF::Uri&)uri
       launchQuerySupportType:(LaunchQuerySupportType)type
