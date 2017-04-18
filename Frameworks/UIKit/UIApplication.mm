@@ -725,7 +725,8 @@ static int __EbrSortViewPriorities(id val1, id val2, void* context) {
 - (instancetype)init {
     g_windows = [[NSMutableArray alloc] init];
 
-    _launcher = [[UrlLauncher alloc] initWithLauncher:[WSLauncher class]];
+    // Use default system launcher
+    _launcher = [[UrlLauncher alloc] initWithLauncher:Nil];
 
     return self;
 }

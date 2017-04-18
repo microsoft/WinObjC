@@ -16,17 +16,23 @@
 
 #include <TestFramework.h>
 #include "UIKit/UIApplication.h"
-#include "UWP/WindowsSystem.h"
+
+#include "COMIncludes.h"
+#import <winrt/Windows.System.h>
+#include "COMIncludes_End.h"
+
+using namespace winrt::Windows::System;
+namespace WF = winrt::Windows::Foundation;
 
 // Mock launcher allowing us to spoof launchUriAsync and queryUriSupportAsync behavior
 @interface MockWSLauncher : RTObject
 
 // Mock methods
-+ (void)launchUriAsync:(WFUri*)uri success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
++ (void)launchUriAsync:(const WF::Uri&)uri success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 
-+ (void)queryUriSupportAsync:(WFUri*)uri
-      launchQuerySupportType:(WSLaunchQuerySupportType)launchQuerySupportType
-                     success:(void (^)(WSLaunchQuerySupportStatus))success
++ (void)queryUriSupportAsync:(const WF::Uri&)uri
+      launchQuerySupportType:(LaunchQuerySupportType)launchQuerySupportType
+                     success:(void (^)(LaunchQuerySupportStatus))success
                      failure:(void (^)(NSError*))failure;
 
 // Invokes previously set success method, allowing us to spoof an app launch
@@ -51,7 +57,7 @@
 @implementation MockWSLauncher
 static void (^_launchSuccessFunction)(BOOL) = nil;
 static void (^_launchFailureFunction)(NSError*) = nil;
-static void (^_querySuccessFunction)(WSLaunchQuerySupportStatus) = nil;
+static void (^_querySuccessFunction)(LaunchQuerySupportStatus) = nil;
 static void (^_queryFailureFunction)(NSError*) = nil;
 
 // The MockWSLauncher internals are declared static as globals even though they are only accessed by class functions.
@@ -118,7 +124,7 @@ static BOOL s_launchReady;
     s_invokeLaunchCompleteCondition = nil;
 }
 
-+ (void)launchUriAsync:(WFUri*)uri success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure {
++ (void)launchUriAsync:(const WF::Uri&)uri success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure {
     [s_launchCompleteCondition lock];
     if (!_launchSuccessFunction) {
         _launchSuccessFunction = Block_copy(success);
@@ -131,9 +137,9 @@ static BOOL s_launchReady;
     [s_launchCompleteCondition unlock];
 }
 
-+ (void)queryUriSupportAsync:(WFUri*)uri
-      launchQuerySupportType:(WSLaunchQuerySupportType)launchQuerySupportType
-                     success:(void (^)(WSLaunchQuerySupportStatus))success
++ (void)queryUriSupportAsync:(const WF::Uri&)uri
+      launchQuerySupportType:(LaunchQuerySupportType)launchQuerySupportType
+                     success:(void (^)(LaunchQuerySupportStatus))success
                      failure:(void (^)(NSError*))failure {
     [s_queryCompleteCondition lock];
     if (!_querySuccessFunction) {
@@ -186,7 +192,7 @@ static BOOL s_launchReady;
 
     s_launchReady = NO;
     s_count++;
-    _querySuccessFunction([status unsignedIntegerValue]);
+    _querySuccessFunction(static_cast<LaunchQuerySupportStatus>([status unsignedIntegerValue]));
     [s_queryCompleteCondition unlock];
 }
 
@@ -263,10 +269,10 @@ void invokeLaunchFailure() {
 }
 
 // On a separate thread, delivers query results
-void invokeQuerySuccess(unsigned int status) {
+void invokeQuerySuccess(LaunchQuerySupportStatus status) {
     NSThread* thread = [[NSThread alloc] initWithTarget:[MockWSLauncher class]
                                                selector:@selector(invokeQuerySuccess:)
-                                                 object:[NSNumber numberWithUnsignedInteger:status]];
+                                                 object:[NSNumber numberWithUnsignedInteger:static_cast<unsigned int>(status)]];
     [thread autorelease];
     [thread start];
     [MockWSLauncher waitForTestCondition];
@@ -287,7 +293,7 @@ TEST(UIKit, UIApplicationOpenURLSuccess) {
     NSURL* testURL = [NSURL URLWithString:@"http://www.bing.com/news"];
 
     // Because [UIApplication openURL:] first checks if the URL to open is valid, setup test such that query returns success
-    invokeQuerySuccess(WSLaunchQuerySupportStatusAvailable);
+    invokeQuerySuccess(LaunchQuerySupportStatus::Available);
     // Now set up the success for the launch - this result is actually not verified in this test as the URL open happens
     // asynchronously.
     invokeLaunchSuccess(YES);
@@ -305,7 +311,7 @@ TEST(UIKit, UIApplicationOpenURLFailure) {
     NSURL* testURL = [NSURL URLWithString:@"http://www.bing.com/news"];
 
     // Because [UIApplication openURL:] first checks if the URL to open is valid, setup test such that query returns failure
-    invokeQuerySuccess(WSLaunchQuerySupportStatusNotSupported);
+    invokeQuerySuccess(LaunchQuerySupportStatus::NotSupported);
     // There is no need to setup anything for launch as [UIApplication openURL:] will not invoke launch if the [UIApplication canOpenURL:]
     // fails.
     BOOL result;
@@ -322,10 +328,10 @@ TEST(UIKit, UIApplicationOpenURLDoubleCall) {
     NSURL* testURL = [NSURL URLWithString:@"http://www.bing.com/news"];
 
     // For the first test setup setup query and launch to success
-    invokeQuerySuccess(WSLaunchQuerySupportStatusAvailable);
+    invokeQuerySuccess(LaunchQuerySupportStatus::Available);
     invokeLaunchSuccess(YES);
     // For the second test setup setup query to failure
-    invokeQuerySuccess(WSLaunchQuerySupportStatusNotSupported);
+    invokeQuerySuccess(LaunchQuerySupportStatus::NotSupported);
 
     BOOL result = [testApplication openURL:testURL];
     ASSERT_EQ_MSG(YES, result, "openURL returned unexpected result");
@@ -346,11 +352,11 @@ TEST(UIKit, UIApplicationCanOpenURLSuccess) {
     UIApplication* testApplication = [[UIApplication alloc] _initForTestingWithLauncher:[MockWSLauncher class]];
     NSURL* testURL = [NSURL URLWithString:@"http://www.bing.com/news"];
 
-    invokeQuerySuccess(WSLaunchQuerySupportStatusAvailable);
+    invokeQuerySuccess(LaunchQuerySupportStatus::Available);
     BOOL result = [testApplication canOpenURL:testURL];
     ASSERT_EQ_MSG(YES, result, "canOpenURL returned unexpected result");
 
-    invokeQuerySuccess(WSLaunchQuerySupportStatusNotSupported);
+    invokeQuerySuccess(LaunchQuerySupportStatus::NotSupported);
     result = [testApplication canOpenURL:testURL];
     ASSERT_EQ_MSG(NO, result, "canOpenURL returned unexpected result");
 
@@ -376,8 +382,8 @@ TEST(UIKit, UIApplicationCanOpenURLDoubleCall) {
     UIApplication* testApplication = [[UIApplication alloc] _initForTestingWithLauncher:[MockWSLauncher class]];
     NSURL* testURL = [NSURL URLWithString:@"http://www.bing.com/news"];
 
-    invokeQuerySuccess(WSLaunchQuerySupportStatusAvailable);
-    invokeQuerySuccess(WSLaunchQuerySupportStatusNotSupported);
+    invokeQuerySuccess(LaunchQuerySupportStatus::Available);
+    invokeQuerySuccess(LaunchQuerySupportStatus::NotSupported);
 
     BOOL result = [testApplication canOpenURL:testURL];
     ASSERT_EQ_MSG(YES, result, "openURL returned unexpected result");

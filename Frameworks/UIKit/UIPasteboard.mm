@@ -358,7 +358,7 @@ DataPackageView _getClipboardContent() {
     }
 
     if (data && pasteboardType) {
-        // only set data when both data and pasteType are avaiable
+        // only set data when both data and pasteType are available
         DataPackage dataPackage;
         dataPackage.RequestedOperation(DataPackageOperation::Copy);
         [UIPasteboard _setData:pasteboardType withData:data on:dataPackage];
