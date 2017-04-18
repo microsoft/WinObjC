@@ -58,11 +58,16 @@
 #include "UIEventInternal.h"
 #include "UrlLauncher.h"
 #include "StringHelpers.h"
+#import <string>
 
 #include "UIInterface.h"
 
 #include "COMIncludes.h"
-#import "winrt/Windows.System.Display.h"
+#import <winrt/Windows.System.Display.h>
+#import <winrt/Windows.Graphics.Display.h>
+#import <winrt/Windows.Data.Xml.Dom.h>
+#import <winrt/Windows.UI.Notifications.h>
+#import <winrt/Windows.UI.Core.h>
 #include "COMIncludes_End.h"
 
 #include "LoggingNative.h"
@@ -71,9 +76,12 @@
 #import "StarboardXaml/UWPBackgroundTask.h"
 
 using winrt::Windows::System::Display::DisplayRequest;
-using winrt::Windows::Media::SpeechRecognition::SpeechRecognitionResult;
-using winrt::Windows::ApplicationModel::Activation::FileActivatedEventArgs;
-using winrt::Windows::Foundation::Uri;
+using winrt::Windows::Graphics::Display::DisplayInformation;
+
+using namespace winrt::Windows::Data::Xml::Dom;
+using namespace winrt::Windows::UI::Notifications;
+using namespace winrt::Windows::UI::Core;
+namespace WF = winrt::Windows::Foundation;
 
 static const wchar_t* TAG = L"UIApplication";
 
@@ -205,10 +213,10 @@ BOOL idleDisabled = FALSE;
     // TODO: #2442 This will be revisited when we sort out our WinRT navigation integration model
     // Subscribe to back button events
     // Note: This method may be called from UnitTests, so make sure we don't fall over if we're not running from within a UWP.
-    if ([WUCCoreWindow getForCurrentThread]) {
-        [[WUCSystemNavigationManager getForCurrentView] addBackRequestedEvent:^(RTObject* sender, WUCBackRequestedEventArgs* e) {
-            e.handled = [UIApplication _doBackAction];
-        }];
+    if (CoreWindow::GetForCurrentThread()) {
+        SystemNavigationManager::GetForCurrentView().BackRequested(objcwinrt::callback([] (const WF::IInspectable& sender, const BackRequestedEventArgs& e) {
+            e.Handled([UIApplication _doBackAction]);
+        }));
     }
 
     return sharedApplication;
@@ -556,26 +564,26 @@ static int __EbrSortViewPriorities(id val1, id val2, void* context) {
         _applicationIconBadgeNumber = 0;
     }
 
-    WDXDXmlDocument* doc = [WUNBadgeUpdateManager getTemplateContent:WUNBadgeTemplateTypeBadgeNumber];
-    WDXDXmlNodeList* badges = [doc getElementsByTagName:@"badge"];
+    XmlDocument doc = BadgeUpdateManager::GetTemplateContent(BadgeTemplateType::BadgeNumber);
+    XmlNodeList badges = doc.GetElementsByTagName(L"badge");
 
-    if ([badges count] == 0) {
+    if (badges.Length() == 0) {
         return;
     }
 
-    id badgeObject = [badges objectAtIndex:0];
+    IXmlNode badgeObject = badges.GetAt(0);
 
-    if (badgeObject == nil) {
+    if (!badgeObject) {
         return;
     }
 
-    WDXDXmlElement* badgeElement = rt_dynamic_cast<WDXDXmlElement>(badgeObject);
-    [badgeElement setAttribute:@"value" attributeValue:[NSString stringWithFormat:@"%i", num]];
+    XmlElement badgeElement = badgeObject.as<XmlElement>();
+    badgeElement.SetAttribute(L"value", std::to_wstring(num));
 
-    WUNBadgeNotification* notification = [WUNBadgeNotification makeBadgeNotification:doc];
-    WUNBadgeUpdater* updater = [WUNBadgeUpdateManager createBadgeUpdaterForApplication];
+    BadgeNotification notification(doc);
+    BadgeUpdater updater = BadgeUpdateManager::CreateBadgeUpdaterForApplication();
 
-    [updater update:notification];
+    updater.Update(notification);
 }
 
 + (void)_shutdownEvent {
@@ -745,7 +753,7 @@ static int __EbrSortViewPriorities(id val1, id val2, void* context) {
 
     // Disable input for this Window
     if (ignoringInteractionEvents == 1) {
-        [WUCCoreWindow getForCurrentThread].isInputEnabled = NO;
+        CoreWindow::GetForCurrentThread().IsInputEnabled(false);
     }
 }
 
@@ -773,7 +781,7 @@ static int __EbrSortViewPriorities(id val1, id val2, void* context) {
 
     if (ignoringInteractionEvents == 0) {
         // Re-enable input for this Window
-        [WUCCoreWindow getForCurrentThread].isInputEnabled = YES;
+        CoreWindow::GetForCurrentThread().IsInputEnabled(true);
     }
 }
 
@@ -1378,7 +1386,7 @@ void UIShutdown() {
 */
 - (float)hostScreenScale {
     if (_hostScale == 0.0f) {
-        _hostScale = ((float)[[WGDDisplayInformation getForCurrentView] resolutionScale]) / 100.0f;
+        _hostScale = ((float)DisplayInformation::GetForCurrentView().ResolutionScale()) / 100.0f;
     }
     return _hostScale;
 }
@@ -1409,11 +1417,10 @@ void UIShutdown() {
     CGSize sizePixels = self.hostScreenSizePixels;
 
     if (_hostScreenDpi.width == 0 || _hostScreenDpi.height == 0) {
-        float dpiX = [WGDDisplayInformation getForCurrentView].logicalDpi;
-        float dpiY = [WGDDisplayInformation getForCurrentView].logicalDpi;
+        float dpi = DisplayInformation::GetForCurrentView().LogicalDpi();
 
-        _hostScreenDpi.width = dpiX;
-        _hostScreenDpi.height = dpiY;
+        _hostScreenDpi.width = dpi;
+        _hostScreenDpi.height = dpi;
     }
     return CGSizeMake(sizePixels.width / _hostScreenDpi.width, sizePixels.height / _hostScreenDpi.height);
 }
