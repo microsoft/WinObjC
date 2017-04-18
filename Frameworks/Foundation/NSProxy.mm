@@ -27,6 +27,8 @@
 #import <objc/objc-arc.h>
 #import <string>
 
+#import "NSObjectInternal.h"
+
 #define RAISE_NSPROXY_ABSTRACT_FUNCTION_EXCEPTION \
     [NSException raise:NSInvalidArgumentException \
                 format:@"%hs was called directly. It must be overridden in a subclass.", __PRETTY_FUNCTION__]
@@ -208,21 +210,6 @@
 - (BOOL)conformsToProtocol:(Protocol*)aProtocol {
     Class forwardClass = static_cast<Class>([self performSelector:@selector(class)]);
     return class_conformsToProtocol(forwardClass, aProtocol);
-}
-
-// NOTE: long return value to allow nonfatal continuation to get a "valid" result (for non-fpret/non-stret calls)
-static long _throwUnrecognizedSelectorException(id self, Class isa, SEL sel) {
-    std::string reason;
-    BOOL isMeta = class_isMetaClass(isa);
-    if (isMeta) {
-        reason = woc::string::format("+[%s %s]: unrecognized selector sent to class.", class_getName(isa), sel_getName(sel));
-    } else {
-        reason = woc::string::format("-[%s %s]: unrecognized selector sent to instance %p.", class_getName(isa), sel_getName(sel), self);
-    }
-
-    THROW_NS_HR_MSG(HRESULT_FROM_WIN32(ERROR_NOT_FOUND), "%hs", reason.c_str());
-
-    return 0;
 }
 
 /**
