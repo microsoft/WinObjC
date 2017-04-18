@@ -15,9 +15,17 @@
 //******************************************************************************
 
 #import <Foundation/NSProxy.h>
-#import <Starboard/SmartTypes.h>
+
+#import <Foundation/NSAutoreleasePool.h>
+#import <Foundation/NSException.h>
+#import <Foundation/NSInvocation.h>
+#import <Foundation/NSString.h>
+
+#import <Starboard/String.h>
+#import <ErrorHandling.h>
 
 #import <objc/objc-arc.h>
+#import <string>
 
 #define RAISE_NSPROXY_ABSTRACT_FUNCTION_EXCEPTION \
     [NSException raise:NSInvalidArgumentException \
@@ -202,12 +210,40 @@
     return class_conformsToProtocol(forwardClass, aProtocol);
 }
 
+// NOTE: long return value to allow nonfatal continuation to get a "valid" result (for non-fpret/non-stret calls)
+static long _throwUnrecognizedSelectorException(id self, Class isa, SEL sel) {
+    std::string reason;
+    BOOL isMeta = class_isMetaClass(isa);
+    if (isMeta) {
+        reason = woc::string::format("+[%s %s]: unrecognized selector sent to class.", class_getName(isa), sel_getName(sel));
+    } else {
+        reason = woc::string::format("-[%s %s]: unrecognized selector sent to instance %p.", class_getName(isa), sel_getName(sel), self);
+    }
+
+    THROW_NS_HR_MSG(HRESULT_FROM_WIN32(ERROR_NOT_FOUND), "%hs", reason.c_str());
+
+    return 0;
+}
+
+/**
+ @Status Interoperable
+*/
+- (void)doesNotRecognizeSelector:(SEL)selector {
+    Class cls = object_getClass(self);
+    _throwUnrecognizedSelectorException(self, cls, selector);
+}
+
 /**
  @Status Interoperable
  @Notes
 */
 - (id)performSelector:(SEL)aSelector {
-    NSInvocation* invocation = [NSInvocation invocationWithMethodSignature:[self methodSignatureForSelector:aSelector]];
+    NSMethodSignature* methodSignature = [self methodSignatureForSelector:aSelector];
+    if (!methodSignature) {
+        [self doesNotRecognizeSelector:aSelector];
+    }
+
+    NSInvocation* invocation = [NSInvocation invocationWithMethodSignature:methodSignature];
     invocation.selector = aSelector;
     [self forwardInvocation:invocation];
 
@@ -221,7 +257,12 @@
  @Notes
 */
 - (id)performSelector:(SEL)aSelector withObject:(id)anObject {
-    NSInvocation* invocation = [NSInvocation invocationWithMethodSignature:[self methodSignatureForSelector:aSelector]];
+    NSMethodSignature* methodSignature = [self methodSignatureForSelector:aSelector];
+    if (!methodSignature) {
+        [self doesNotRecognizeSelector:aSelector];
+    }
+
+    NSInvocation* invocation = [NSInvocation invocationWithMethodSignature:methodSignature];
     invocation.selector = aSelector;
     [invocation setArgument:anObject atIndex:2];
     [self forwardInvocation:invocation];
@@ -236,7 +277,12 @@
  @Notes
 */
 - (id)performSelector:(SEL)aSelector withObject:(id)anObject withObject:(id)anotherObject {
-    NSInvocation* invocation = [NSInvocation invocationWithMethodSignature:[self methodSignatureForSelector:aSelector]];
+    NSMethodSignature* methodSignature = [self methodSignatureForSelector:aSelector];
+    if (!methodSignature) {
+        [self doesNotRecognizeSelector:aSelector];
+    }
+
+    NSInvocation* invocation = [NSInvocation invocationWithMethodSignature:methodSignature];
     invocation.selector = aSelector;
     [invocation setArgument:anObject atIndex:2];
     [invocation setArgument:anotherObject atIndex:3];
