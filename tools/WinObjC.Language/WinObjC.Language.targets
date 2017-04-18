@@ -41,6 +41,11 @@
       <InternalSystemIncludePaths>$(MSBuildThisFileDirectory)\include\;$(MSBuildThisFileDirectory)\deps\prebuilt\include\;$(MSBuildThisFileDirectory)\include\xplat;%(InternalSystemIncludePaths);</InternalSystemIncludePaths>
     </ClangCompile>
 
+    <!-- At the language level, there are some includes that could be consumed from Cl C++ like libobjc2/libdispatch headers -->
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(MSBuildThisFileDirectory)\include\;$(MSBuildThisFileDirectory)\deps\prebuilt\include\;$(MSBuildThisFileDirectory)\include\xplat;%(InternalSystemIncludePaths);</AdditionalIncludeDirectories>
+    </ClCompile>
+
     <Link>
       <AdditionalLibraryDirectories>$(MSBuildThisFileDirectory)\lib\$(TargetOsAndVersion)\$(PlatformTarget)\;$(MSBuildThisFileDirectory)\lib\$(TargetOsAndVersion)\$(PlatformTarget)\$(Configuration)\;$(MSBuildThisFileDirectory)\deps\prebuilt\$(TargetOsAndVersion)\$(PlatformTarget)\;$(MSBuildThisFileDirectory)\deps\prebuilt\$(TargetOsAndVersion)\$(PlatformTarget)\$(Configuration)\;%(AdditionalLibraryDirectories);</AdditionalLibraryDirectories>
     </Link>

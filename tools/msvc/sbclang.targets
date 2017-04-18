@@ -323,7 +323,14 @@
       </DepWalkerInputs>
     </ItemGroup>
 
-    <!-- 2. Collect dep walker search paths and write to a file. This is the closure of all WinObjC ReferenceCopyLocalPaths dlls. -->
+    <!-- 
+         2. Collect dep walker search paths and write to a file. This is the closure of all WinObjC ReferenceCopyLocalPaths dlls.
+
+         In order to distinguish between ReferenceCopyLocalPaths that the app itself or other middleware may have added and WinObjC specific ones, look for
+         the IsWinObjC metadata. This is a more conservative approach to dependency walking as only the WinObjC binaries are subject to being exceluded from
+         ending up in the output directory. Additionally, all "sidecar" files (like .pri files / .winmds / etc) that a dll may need are going to end up in the
+         the output regardless. The assumption is that these are small enough to not care about for now.
+     -->
     <ItemGroup>
       <DepWalkerSearchPaths Include="@(ReferenceCopyLocalPaths -> 'UserDir %(RootDir)%(Directory)')" Condition="'%(ReferenceCopyLocalPaths.Extension)' == '.dll' And '%(ReferenceCopyLocalPaths.IsWinObjC)' == 'true'" />
     </ItemGroup>
