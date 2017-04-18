@@ -1,5 +1,6 @@
 module ObjC [extern_c] {
     umbrella header "objc.h"
     exclude header "*.h"
+    header "blocks_runtime.h"
     export *
 }
