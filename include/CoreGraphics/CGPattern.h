@@ -50,4 +50,4 @@ COREGRAPHICS_EXPORT CGPatternRef CGPatternCreate(void* info,
 COREGRAPHICS_EXPORT CGPatternRef CGPatternRetain(CGPatternRef pattern);
 COREGRAPHICS_EXPORT void CGPatternRelease(CGPatternRef pattern);
 
-COREGRAPHICS_EXPORT CFTypeID CGPatternGetTypeID() STUB_METHOD;
+COREGRAPHICS_EXPORT CFTypeID CGPatternGetTypeID();

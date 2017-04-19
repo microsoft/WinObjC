@@ -168,12 +168,12 @@ FOUNDATION_EXPORT_CLASS
                                    options:(NSURLBookmarkResolutionOptions)options
                              relativeToURL:(NSURL*)relativeURL
                        bookmarkDataIsStale:(BOOL*)isStale
-                                     error:(NSError* _Nullable*)error STUB_METHOD;
+                                     error:(NSError* _Nullable*)error;
 - (instancetype)initByResolvingBookmarkData:(NSData*)bookmarkData
                                     options:(NSURLBookmarkResolutionOptions)options
                               relativeToURL:(NSURL*)relativeURL
                         bookmarkDataIsStale:(BOOL*)isStale
-                                      error:(NSError* _Nullable*)error STUB_METHOD;
+                                      error:(NSError* _Nullable*)error;
 + (NSURL*)fileURLWithFileSystemRepresentation:(const char*)path isDirectory:(BOOL)isDir relativeToURL:(NSURL*)baseURL;
 - (BOOL)getFileSystemRepresentation:(char*)buffer maxLength:(NSUInteger)maxBufferLength;
 - (instancetype)initFileURLWithFileSystemRepresentation:(const char*)path isDirectory:(BOOL)isDir relativeToURL:(NSURL*)baseURL;

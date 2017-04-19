@@ -103,7 +103,7 @@ COREGRAPHICS_EXPORT void CGPathAddQuadCurveToPoint(
     CGMutablePathRef path, const CGAffineTransform* m, CGFloat cpx, CGFloat cpy, CGFloat x, CGFloat y);
 COREGRAPHICS_EXPORT void CGPathAddRect(CGMutablePathRef path, const CGAffineTransform* m, CGRect rect);
 
-COREGRAPHICS_EXPORT void CGPathAddRects(CGMutablePathRef path, const CGAffineTransform* m, const CGRect* rects, size_t count) STUB_METHOD;
+COREGRAPHICS_EXPORT void CGPathAddRects(CGMutablePathRef path, const CGAffineTransform* m, const CGRect* rects, size_t count);
 COREGRAPHICS_EXPORT void CGPathAddRoundedRect(
     CGMutablePathRef path, const CGAffineTransform* transform, CGRect rect, CGFloat cornerWidth, CGFloat cornerHeight);
 COREGRAPHICS_EXPORT void CGPathApply(CGPathRef path, void* info, CGPathApplierFunction function);
