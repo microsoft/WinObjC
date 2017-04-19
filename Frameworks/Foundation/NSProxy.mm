@@ -15,9 +15,19 @@
 //******************************************************************************
 
 #import <Foundation/NSProxy.h>
-#import <Starboard/SmartTypes.h>
+
+#import <Foundation/NSAutoreleasePool.h>
+#import <Foundation/NSException.h>
+#import <Foundation/NSInvocation.h>
+#import <Foundation/NSString.h>
+
+#import <Starboard/String.h>
+#import <ErrorHandling.h>
 
 #import <objc/objc-arc.h>
+#import <string>
+
+#import "NSObjectInternal.h"
 
 #define RAISE_NSPROXY_ABSTRACT_FUNCTION_EXCEPTION \
     [NSException raise:NSInvalidArgumentException \
@@ -204,10 +214,23 @@
 
 /**
  @Status Interoperable
+*/
+- (void)doesNotRecognizeSelector:(SEL)selector {
+    Class cls = object_getClass(self);
+    _throwUnrecognizedSelectorException(self, cls, selector);
+}
+
+/**
+ @Status Interoperable
  @Notes
 */
 - (id)performSelector:(SEL)aSelector {
-    NSInvocation* invocation = [NSInvocation invocationWithMethodSignature:[self methodSignatureForSelector:aSelector]];
+    NSMethodSignature* methodSignature = [self methodSignatureForSelector:aSelector];
+    if (!methodSignature) {
+        [self doesNotRecognizeSelector:aSelector];
+    }
+
+    NSInvocation* invocation = [NSInvocation invocationWithMethodSignature:methodSignature];
     invocation.selector = aSelector;
     [self forwardInvocation:invocation];
 
@@ -221,7 +244,12 @@
  @Notes
 */
 - (id)performSelector:(SEL)aSelector withObject:(id)anObject {
-    NSInvocation* invocation = [NSInvocation invocationWithMethodSignature:[self methodSignatureForSelector:aSelector]];
+    NSMethodSignature* methodSignature = [self methodSignatureForSelector:aSelector];
+    if (!methodSignature) {
+        [self doesNotRecognizeSelector:aSelector];
+    }
+
+    NSInvocation* invocation = [NSInvocation invocationWithMethodSignature:methodSignature];
     invocation.selector = aSelector;
     [invocation setArgument:anObject atIndex:2];
     [self forwardInvocation:invocation];
@@ -236,7 +264,12 @@
  @Notes
 */
 - (id)performSelector:(SEL)aSelector withObject:(id)anObject withObject:(id)anotherObject {
-    NSInvocation* invocation = [NSInvocation invocationWithMethodSignature:[self methodSignatureForSelector:aSelector]];
+    NSMethodSignature* methodSignature = [self methodSignatureForSelector:aSelector];
+    if (!methodSignature) {
+        [self doesNotRecognizeSelector:aSelector];
+    }
+
+    NSInvocation* invocation = [NSInvocation invocationWithMethodSignature:methodSignature];
     invocation.selector = aSelector;
     [invocation setArgument:anObject atIndex:2];
     [invocation setArgument:anotherObject atIndex:3];
