@@ -953,19 +953,19 @@ static void _sendMemoryWarningToViewControllers(UIView* subview) {
     }
 }
 
-- (void)_sendVoiceCommandReceivedEvent:(WMSSpeechRecognitionResult*)result {
+- (void)_sendVoiceCommandReceivedEvent:(RTObject*)result {
     if ([self.delegate respondsToSelector:@selector(application:didReceiveVoiceCommand:)]) {
         [self.delegate application:sharedApplication didReceiveVoiceCommand:result];
     }
 }
 
-- (void)_sendFileReceivedEvent:(WAAFileActivatedEventArgs*)result {
+- (void)_sendFileReceivedEvent:(RTObject*)result {
     if ([self.delegate respondsToSelector:@selector(application:didReceiveFile:)]) {
         [self.delegate application:sharedApplication didReceiveFile:result];
     }
 }
 
-- (void)_sendProtocolReceivedEvent:(WFUri*)protocolUri source:(NSString*)source {
+- (void)_sendProtocolReceivedEvent:(NSURL*)protocolUri source:(NSString*)source {
     id delegate = self.delegate;
 
     if ([delegate respondsToSelector:@selector(application:didReceiveProtocol:)]) {
@@ -973,9 +973,7 @@ static void _sendMemoryWarningToViewControllers(UIView* subview) {
     }
 
     if ([delegate respondsToSelector:@selector(application:openURL:sourceApplication:annotation:)]) {
-        NSURL* url = [NSURL URLWithString:protocolUri.absoluteUri];
-
-        [delegate application:sharedApplication openURL:url sourceApplication:source annotation:nil];
+        [delegate application:sharedApplication openURL:protocolUri sourceApplication:source annotation:nil];
     }
 }
 

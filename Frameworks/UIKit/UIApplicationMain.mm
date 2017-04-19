@@ -34,6 +34,7 @@
 
 #include <COMIncludes.h>
 #import <windows.foundation.h>
+#import <winrt/Windows.ApplicationModel.h>
 #include <COMIncludes_End.h>
 
 #import <StringHelpers.h>
@@ -50,10 +51,13 @@
 #import "LoggingNative.h"
 #import <MainDispatcher.h>
 #import "StarboardXaml/DisplayProperties.h"
+#import "CppWinRTHelpers.h"
 
 static const wchar_t* TAG = L"UIApplicationMain";
 
 using namespace Microsoft::WRL;
+using namespace winrt::Windows::ApplicationModel;
+namespace WF = winrt::Windows::Foundation;
 
 @interface NSAutoreleasePoolWarn : NSAutoreleasePool
 @end
@@ -336,7 +340,7 @@ extern "C" void UIApplicationMainHandleToastActionEvent(HSTRING toastArgument, I
     THROW_NS_IF_FAILED(comPtr.As(&map));
 
     NSMutableDictionary* userInput = nil;
-    THROW_NS_IF_FAILED(Collections::WRLToNSCollection(map, &userInput));
+    THROW_NS_IF_FAILED(::Collections::WRLToNSCollection(map, &userInput));
 
     NSDictionary* toastAction =
         @{ UIApplicationLaunchOptionsToastActionArgumentKey : argument, UIApplicationLaunchOptionsToastActionUserInputKey : userInput };
@@ -352,12 +356,15 @@ extern "C" void UIApplicationMainHandleWindowVisibilityChangeEvent(bool isVisibl
 }
 
 extern "C" void UIApplicationMainHandleVoiceCommandEvent(IInspectable* voiceCommandResult) {
-    WMSSpeechRecognitionResult* result = [WMSSpeechRecognitionResult createWith:voiceCommandResult];
+    WF::IInspectable inspectable = objcwinrt::from_insp<WF::IInspectable>(voiceCommandResult);
+    RTObject* result = objcwinrt::to_rtobj(inspectable);
+
     [[UIApplication sharedApplication] _sendVoiceCommandReceivedEvent:result];
 }
 
 extern "C" void UIApplicationMainHandleFileEvent(IInspectable* result) {
-    [[UIApplication sharedApplication] _sendFileReceivedEvent:[WAAFileActivatedEventArgs createWith:result]];
+    WF::IInspectable inspectable = objcwinrt::from_insp<WF::IInspectable>(result);
+    [[UIApplication sharedApplication] _sendFileReceivedEvent:objcwinrt::to_rtobj(inspectable)];
 }
 
 static NSString* _bundleIdFromPackageFamilyName(const wchar_t* packageFamily) {
@@ -366,7 +373,7 @@ static NSString* _bundleIdFromPackageFamilyName(const wchar_t* packageFamily) {
                                                        length:wcslen(packageFamily) * sizeof(wchar_t)
                                                      encoding:NSUnicodeStringEncoding] autorelease];
 
-    NSString* thisFamily = [[[WAPackage current] id] familyName];
+    NSString* thisFamily = objcwinrt::string(Package::Current().Id().FamilyName());
 
     if ([sourceFamily isEqualToString:thisFamily]) {
         // The activation is coming from inside our own application. The only
@@ -384,8 +391,10 @@ static NSString* _bundleIdFromPackageFamilyName(const wchar_t* packageFamily) {
 }
 
 extern "C" void UIApplicationMainHandleProtocolEvent(IInspectable* protocolUri, const wchar_t* sourceApplication) {
-    WFUri* protocolResult = [WFUri createWith:protocolUri];
+    WF::Uri uri = objcwinrt::from_insp<WF::Uri>(protocolUri);
+    NSURL* url = [NSURL URLWithString:objcwinrt::string(uri.AbsoluteUri())];
+
     NSString* source = _bundleIdFromPackageFamilyName(sourceApplication);
 
-    [[UIApplication sharedApplication] _sendProtocolReceivedEvent:protocolResult source:source];
+    [[UIApplication sharedApplication] _sendProtocolReceivedEvent:url source:source];
 }

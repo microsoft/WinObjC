@@ -16,9 +16,8 @@
 #pragma once
 
 #import <UIKit/UIApplication.h>
-#import <UWP/WindowsFoundation.h>
-#import <UWP/WindowsMediaSpeechRecognition.h>
-#import <UWP/WindowsApplicationModelActivation.h>
+#import <Foundation/NSURL.h>
+#import <UWP/InteropBase.h>
 
 @interface UIApplication (internal)
 // TODO: #2443 Remove _popupWindow (and all references to it) when we move UIAlertView over to Xaml
@@ -31,9 +30,9 @@
 - (void)_sendSuspendEvent;
 - (void)_sendResumeEvent;
 - (void)_sendToastActionReceivedEvent:(NSDictionary*)toastAction;
-- (void)_sendVoiceCommandReceivedEvent:(WMSSpeechRecognitionResult*)result;
-- (void)_sendProtocolReceivedEvent:(WFUri*)protocolUri source:(NSString*)source;
-- (void)_sendFileReceivedEvent:(WAAFileActivatedEventArgs*)result;
+- (void)_sendVoiceCommandReceivedEvent:(RTObject*)result;
+- (void)_sendProtocolReceivedEvent:(NSURL*)protocolUri source:(NSString*)source;
+- (void)_sendFileReceivedEvent:(RTObject*)result;
 @end
 
 @interface WOCDisplayMode (internal)
