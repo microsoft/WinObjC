@@ -22,9 +22,6 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)\dllmain.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="WinObjCRT.def" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="$(MSBuildThisFileDirectory)..\lib\WinObjCRTLib.vcxproj">
       <Project>{faebdba2-dff7-4944-9b13-bcc4da340804}</Project>
       <IncludeInPackage>false</IncludeInPackage>
@@ -48,7 +45,7 @@
   </ImportGroup>
   <ItemDefinitionGroup>
     <Link>
-      <ModuleDefinitionFile>WinObjCRT.def</ModuleDefinitionFile>
+      <ModuleDefinitionFile>WinObjCRT_$(Configuration).def</ModuleDefinitionFile>
     </Link>
   </ItemDefinitionGroup>
   <ImportGroup Label="ExtensionTargets">
@@ -56,6 +53,7 @@
   </ImportGroup>
   <ItemGroup>
     <None Include="Project.json" />
+    <None Include="WinObjCRT_*.def" />
   </ItemGroup>
 
     <Target Name="AddSingleConfigBuildOutput"  Returns="@(_PackageContentsForConfig)"> 
