@@ -241,6 +241,13 @@ void _UIApplicationMainInit(NSString* principalClassName, NSString* delegateClas
 
     // Populate launch options
     NSMutableDictionary* launchOption = [NSMutableDictionary dictionary];
+
+    if (!activationArg) {
+        // If no activation argument provided, possibly because projections aren't loaded,
+        // populate the launch options with null just to let the app know they're missing something
+        activationArg = [NSNull null];
+    }
+
     switch (activationType) {
         case ActivationTypeToast:
             [launchOption setValue:activationArg forKey:UIApplicationLaunchOptionsToastActionKey];
@@ -357,17 +364,13 @@ extern "C" void UIApplicationMainHandleWindowVisibilityChangeEvent(bool isVisibl
 extern "C" void UIApplicationMainHandleVoiceCommandEvent(IInspectable* voiceCommandResult) {
     id result = _createProjectionObject("WMSSpeechRecognitionResult", voiceCommandResult, "voice commands");
 
-    if (result) {
-        [[UIApplication sharedApplication] _sendVoiceCommandReceivedEvent:result];
-    }
+    [[UIApplication sharedApplication] _sendVoiceCommandReceivedEvent:result];
 }
 
 extern "C" void UIApplicationMainHandleFileEvent(IInspectable* fileResult) {
     id result = _createProjectionObject("WAAFileActivatedEventArgs", fileResult, "file activation");
 
-    if (result) {
-        [[UIApplication sharedApplication] _sendFileReceivedEvent:result];
-    }
+    [[UIApplication sharedApplication] _sendFileReceivedEvent:result];
 }
 
 static NSString* _bundleIdFromPackageFamilyName(const wchar_t* packageFamily) {
@@ -395,12 +398,9 @@ static NSString* _bundleIdFromPackageFamilyName(const wchar_t* packageFamily) {
 
 extern "C" void UIApplicationMainHandleProtocolEvent(IInspectable* protocolUri, const wchar_t* sourceApplication) {
     id result = _createProjectionObject("WFUri", protocolUri, "protocol activation");
+    NSString* source = _bundleIdFromPackageFamilyName(sourceApplication);
 
-    if (result) {
-        NSString* source = _bundleIdFromPackageFamilyName(sourceApplication);
-
-        [[UIApplication sharedApplication] _sendProtocolReceivedEvent:result source:source];
-    }
+    [[UIApplication sharedApplication] _sendProtocolReceivedEvent:result source:source];
 }
 
 id _createProjectionObject(const char* className, IInspectable* source, const char* description) {
@@ -411,7 +411,9 @@ id _createProjectionObject(const char* className, IInspectable* source, const ch
     id cls = objc_getClass(className);
 
     if (cls) {
-        result = objc_msgSend(cls, @selector(createWith:), source);
+        // objc_msgSend is declared as a varargs function but is not really one
+        auto msgSend = reinterpret_cast<id (*)(id, SEL, IInspectable*)>(objc_msgSend);
+        result = msgSend(cls, @selector(createWith:), source);
     } else {
         TraceWarning(TAG, L"%hs class not registered - link with WinObjC UWP library to receive %hs", className, description);
     }

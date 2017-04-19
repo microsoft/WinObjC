@@ -115,10 +115,6 @@ void RunApplicationMain(const char* principalName, const char* delegateName, Act
             break;
     }
 
-    if (!activationArgument) {
-        activationType = ActivationTypeNone;
-    }
-
     // Grab window dimensions from CPP/WinRT and initialize our display accordingly
     auto windowBounds = Window::Current().Bounds();
     WOCDisplayMode* displayMode = [UIApplication displayMode];
