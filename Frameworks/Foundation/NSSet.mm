@@ -496,7 +496,9 @@ BASE_CLASS_REQUIRED_IMPLS(NSSet, NSSetPrototype, CFSetGetTypeID);
     [self enumerateObjectsWithOptions:opts
                            usingBlock:^void(id obj, BOOL* stop) {
                                if (predicate(obj, stop)) {
-                                   [ret addObject:obj];
+                                   @synchronized(ret) {
+                                       [ret addObject:obj];
+                                   }
                                }
                            }];
 
