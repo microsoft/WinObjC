@@ -40,6 +40,7 @@
 #import "ForFoundationOnly.h"
 #import "CFFoundationInternal.h"
 #import "NSInvocationInternal.h"
+#import "NSObjectInternal.h"
 
 static void _NSObjCEnumerationMutation(id object) {
     [NSException raise:NSInternalInconsistencyException
@@ -375,7 +376,7 @@ static id _NSWeakLoad(id obj) {
 }
 
 // NOTE: long return value to allow nonfatal continuation to get a "valid" result (for non-fpret/non-stret calls)
-static long _throwUnrecognizedSelectorException(id self, Class isa, SEL sel) {
+long _throwUnrecognizedSelectorException(id self, Class isa, SEL sel) {
     std::string reason;
     BOOL isMeta = class_isMetaClass(isa);
     if (isMeta) {
