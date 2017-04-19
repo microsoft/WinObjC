@@ -31,6 +31,7 @@
 #import "UWP/WindowsUIInput.h"
 #import "UITouchInternal.h"
 #import "UIPanGestureRecognizerInternal.h"
+#import "UIWindowInternal.h"
 
 #import <vector>
 
@@ -371,13 +372,13 @@ static CGPoint lastMidpoint(const std::vector<TouchInfo>& touches) {
 
 static CGPoint pointToView(const CGPoint& pt, UIView* viewAddr) {
     CGPoint newPt;
-    newPt = [[viewAddr window] convertPoint:pt fromView:nil toView:viewAddr];
+    newPt = [[viewAddr window] _convertPoint:pt fromView:nil toView:viewAddr];
     return newPt;
 }
 
 static CGPoint pointFromView(const CGPoint& pt, UIView* viewAddr) {
     CGPoint newPt;
-    newPt = [[viewAddr window] convertPoint:pt fromView:viewAddr toView:nil];
+    newPt = [[viewAddr window] _convertPoint:pt fromView:viewAddr toView:nil];
     return newPt;
 }
 
@@ -428,7 +429,7 @@ static CGPoint pointFromView(const CGPoint& pt, UIView* viewAddr) {
 */
 - (CGPoint)locationInView:(id)viewAddr {
     CGPoint ret;
-    ret = [[viewAddr window] convertPoint:_priv->lastCenter fromView:nil toView:viewAddr];
+    ret = [[viewAddr window] _convertPoint:_priv->lastCenter fromView:nil toView:viewAddr];
     return ret;
 }
 

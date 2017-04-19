@@ -14,9 +14,10 @@
 //
 //******************************************************************************
 
-#import <UWP/WindowsStorage.h>
-
 #include <COMIncludes.h>
+#import <winrt/Windows.Storage.h>
+#import <winrt/Windows.Storage.Streams.h>
+#import <winrt/Windows.Storage.FileProperties.h>
 #include "RawBuffer.h"
 #include <COMIncludes_End.h>
 
@@ -26,23 +27,20 @@
 #import <Foundation/NSError.h>
 #import <Foundation/NSURL.h>
 #import <AssetsLibrary/ALAssetRepresentation.h>
+#import "CppWinRTHelpers.h"
 
 using namespace Microsoft::WRL;
-using namespace ABI::Windows::Storage::Streams;
+using namespace winrt::Windows::Storage;
+using namespace winrt::Windows::Storage::Streams;
+using namespace winrt::Windows::Storage::FileProperties;
+namespace WF = winrt::Windows::Foundation;
 
 static const wchar_t* TAG = L"ALAssetRepresentation";
 NSString* const ALAssetRepresentationDomain = @"ALAssetRepresentation";
 
-// TODO: Task 8286702 - Make createWith public
-// Remove once completed
-@interface WSSBuffer (ShouldExist)
-+ (WSSBuffer*)createWith:(IBuffer*)buffer;
-@end
-// TODO end
-
 @interface ALAssetRepresentation () {
     StrongId<NSURL> _urlRep;
-    StrongId<WSStorageFile> _storageFile;
+    TrivialDefaultConstructor<StorageFile> _storageFile;
     uint64_t _fileSize;
 }
 @end
@@ -57,29 +55,31 @@ NSString* const ALAssetRepresentationDomain = @"ALAssetRepresentation";
     if ((self = [super init])) {
         _urlRep = url;
         _storageFile = nil;
-        __block NSError* tempError = nil;
+        NSError* tempError = nil;
 
         dispatch_group_t group = dispatch_group_create();
         dispatch_group_enter(group);
 
         // Make sure the file path is valid and get its StorageFile object
-        [WSStorageFile getFileFromPathAsync:path
-            success:^void(WSStorageFile* storageFile) {
-                _storageFile = storageFile;
-                dispatch_group_leave(group);
+        WF::IAsyncOperation<StorageFile> async = StorageFile::GetFileFromPathAsync(objcwinrt::string(path));
+
+        async.Completed(objcwinrt::callback([self, group, &tempError] (const WF::IAsyncOperation<StorageFile>& op, WF::AsyncStatus status) {
+            if (status == WF::AsyncStatus::Completed) {
+                _storageFile = op.GetResults();
+            } else {
+                tempError = [objcwinrt::to_nserror(op, status) retain];
             }
-            failure:^void(NSError* storageError) {
-                if (error) {
-                    tempError = [storageError copy];
-                }
-                dispatch_group_leave(group);
-            }];
+
+            dispatch_group_leave(group);
+        }));
 
         dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
         dispatch_release(group);
 
         if (error) {
             *error = [tempError autorelease];
+        } else {
+            [tempError release];
         }
 
         if (_storageFile == nil) {
@@ -161,15 +161,18 @@ NSString* const ALAssetRepresentationDomain = @"ALAssetRepresentation";
     dispatch_group_t group = dispatch_group_create();
     dispatch_group_enter(group);
 
-    [_storageFile getBasicPropertiesAsyncWithSuccess:^void(WSFBasicProperties* basicProperties) {
-        _fileSize = [basicProperties size];
-        dispatch_group_leave(group);
-    }
-        failure:^void(NSError* error) {
+    WF::IAsyncOperation<BasicProperties> async = _storageFile.GetBasicPropertiesAsync();
+
+    async.Completed(objcwinrt::callback([self, group] (const WF::IAsyncOperation<BasicProperties>& op, WF::AsyncStatus status) {
+        if (status == WF::AsyncStatus::Completed) {
+            _fileSize = op.GetResults().Size();
+        } else {
             _fileSize = 0;
-            TraceError(TAG, L"Error getting basic properties of file - %@", error);
-            dispatch_group_leave(group);
-        }];
+            TraceError(TAG, L"Error getting basic properties of file - %x", op.ErrorCode());
+        }
+
+        dispatch_group_leave(group);
+    }));
 
     dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
     dispatch_release(group);
@@ -182,70 +185,74 @@ NSString* const ALAssetRepresentationDomain = @"ALAssetRepresentation";
  @Notes Copy specified bytes into buffer
 */
 - (NSUInteger)getBytes:(uint8_t*)buffer fromOffset:(long long)offset length:(NSUInteger)length error:(NSError**)error {
-    __block unsigned int bufferLength = 0;
-    __block NSError* tempError = nil;
+    unsigned int bufferLength = 0;
+    NSError* tempError = nil;
 
     if (_storageFile) {
         dispatch_group_t group = dispatch_group_create();
         dispatch_group_enter(group);
 
-        [_storageFile openReadAsyncWithSuccess:^void(RTObject<WSSIRandomAccessStreamWithContentType>* fileStream) {
-            [fileStream seek:offset];
+        WF::IAsyncOperation<IRandomAccessStreamWithContentType> async = _storageFile.OpenReadAsync();
 
-            // Create IBuffer from our buffer
-            ComPtr<IBuffer> inBuffer;
-            HRESULT result = BufferFromRawData(inBuffer.GetAddressOf(), buffer, length);
-            THROW_NS_IF_FAILED_MSG(result, "Internal error: Failed to create IBuffer.");
-            inBuffer->put_Length(0);
+        async.Completed(objcwinrt::callback(
+            [buffer, offset, length, group, &bufferLength, &tempError] (const WF::IAsyncOperation<IRandomAccessStreamWithContentType>& op, WF::AsyncStatus status) {
+                if (status == WF::AsyncStatus::Completed) {
+                    IRandomAccessStreamWithContentType fileStream = op.GetResults();
+                    fileStream.Seek(offset);
 
-            // Use IBuffer as WSSBuffer to read the stream
-            [fileStream readAsync:[WSSBuffer createWith:*(inBuffer.GetAddressOf())]
-                count:length
-                options:WSSInputStreamOptionsNone
-                success:^void(RTObject<WSSIBuffer>* outBuffer) {
-                    bufferLength = outBuffer.length;
+                    // Create IBuffer from our buffer
+                    IBuffer inBuffer = nullptr;
+                    ComPtr<ABI::Windows::Storage::Streams::IBuffer> inBufferRaw;
+                    HRESULT result = BufferFromRawData(inBufferRaw.GetAddressOf(), buffer, length);
+                    THROW_NS_IF_FAILED_MSG(result, "Internal error: Failed to create IBuffer.");
+                    winrt::attach_abi(inBuffer, reinterpret_cast<winrt::ABI::Windows::Storage::Streams::IBuffer*>(inBufferRaw.Detach()));
+                    inBuffer.Length(0);
 
-                    // Get the data buffer out of the com object.
-                    ComPtr<IInspectable> insp = [outBuffer comObj];
-                    ComPtr<IBufferByteAccess> bufferByteAccess;
-                    HRESULT result = insp.As(&bufferByteAccess);
-                    THROW_NS_IF_FAILED_MSG(result, "Internal error: Failed to get data from com object.");
+                    // Use IBuffer to read the stream
+                    WF::IAsyncOperationWithProgress<IBuffer, unsigned int> async =
+                        fileStream.ReadAsync(inBuffer, length, InputStreamOptions::None);
 
-                    // Retrieve the buffer data.
-                    uint8_t* byteBuffer = nullptr;
-                    result = bufferByteAccess->Buffer(&byteBuffer);
-                    THROW_NS_IF_FAILED_MSG(result, "Internal error: Failed to retrieve buffer data.");
+                    async.Completed(objcwinrt::callback(
+                        [buffer, length, group, &bufferLength, &tempError] (const WF::IAsyncOperationWithProgress<IBuffer, unsigned int>& op, WF::AsyncStatus status) {
+                            if (status == WF::AsyncStatus::Completed) {
+                                IBuffer outBuffer = op.GetResults();
+                                bufferLength = outBuffer.Length();
 
-                    // If readAsync put the data at a different address other than the one passed in,
-                    // copy the data into our buffer
-                    if (byteBuffer != buffer) {
-                        memcpy_s(buffer, length, byteBuffer, bufferLength);
-                    }
+                                // Get the data buffer out of the com object.
+                                ComPtr<IInspectable> insp = objcwinrt::to_insp(outBuffer);
+                                ComPtr<IBufferByteAccess> bufferByteAccess;
+                                HRESULT result = insp.As(&bufferByteAccess);
+                                THROW_NS_IF_FAILED_MSG(result, "Internal error: Failed to get data from com object.");
 
+                                // Retrieve the buffer data.
+                                uint8_t* byteBuffer = nullptr;
+                                result = bufferByteAccess->Buffer(&byteBuffer);
+                                THROW_NS_IF_FAILED_MSG(result, "Internal error: Failed to retrieve buffer data.");
+
+                                // If ReadAsync put the data at a different address than
+                                // the one passed in, copy the data into our buffer
+                                if (byteBuffer != buffer) {
+                                    memcpy_s(buffer, length, byteBuffer, bufferLength);
+                                }
+                            } else {
+                                tempError = [objcwinrt::to_nserror(op, status) retain];
+                            }
+
+                            dispatch_group_leave(group);
+                    }));
+                } else {
+                    tempError = [objcwinrt::to_nserror(op, status) retain];
                     dispatch_group_leave(group);
                 }
-                progress:^void(unsigned int progress) {
-
-                }
-                failure:^void(NSError* fileError) {
-                    if (error) {
-                        tempError = [fileError copy];
-                    }
-                    dispatch_group_leave(group);
-                }];
-        }
-            failure:^void(NSError* fileError) {
-                if (error) {
-                    tempError = [fileError copy];
-                }
-                dispatch_group_leave(group);
-            }];
+        }));
 
         dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
         dispatch_release(group);
 
         if (error) {
             *error = [tempError autorelease];
+        } else {
+            [tempError release];
         }
 
     } else {

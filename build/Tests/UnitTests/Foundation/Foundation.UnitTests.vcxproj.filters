@@ -45,6 +45,7 @@
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSPredicateTests.m" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSProcessInfoTests.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSProgressTests.mm" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSProxyTests.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSStringTests.m" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSTimeZoneTests.m" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSURLCacheTests.mm" />
@@ -142,6 +143,7 @@
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSDecimalNumberTests.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\UnitTests\Foundation\NSURLSessionTests.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\UnitTests\Foundation\NSIndexPathTests.mm" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSNullTests.mm" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\..\..\tests\unittests\Foundation\NSFileManagerUT.txt" />

@@ -44,7 +44,9 @@ TEST(NSBundle, Paths) {
     // #endif
 
     ASSERT_OBJCEQ([bundle pathForAuxiliaryExecutable:@"no_such_file"], nil);
-    ASSERT_OBJCEQ(bundle.appStoreReceiptURL, nil);
+
+    // WINOBJC: Disable because no longer correct on reference platform
+    //ASSERT_OBJCEQ(bundle.appStoreReceiptURL, nil);
 }
 
 TEST(NSBundle, Resources) {

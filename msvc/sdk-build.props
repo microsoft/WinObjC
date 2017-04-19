@@ -44,7 +44,9 @@
   <ItemGroup>
     <PackageReference Include="NuGet.Build.Packaging" Version="0.1.186" />
     <PackageReference Include="WinObjC.Language" Version="*" />
-    <PackageReference Include="cppwinrt" Version="*" />
+    <PackageReference Include="cppwinrt" Version="*">
+        <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
   </ItemGroup>
 
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />

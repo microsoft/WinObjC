@@ -16,10 +16,12 @@
 
 #pragma once
 
+#import "UIKitExport.h"
 #import <UIKit/UIActionSheet.h>
 
 @protocol UIDocumentInteractionControllerDelegate;
 
+UIKIT_EXPORT_CLASS
 @interface UIDocumentInteractionController : NSObject <UIActionSheetDelegate>
 
 @property (nonatomic, assign) id<UIDocumentInteractionControllerDelegate> delegate;

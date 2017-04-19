@@ -466,15 +466,20 @@ static CTFrameRef _DWriteGetFrame(CFAttributedStringRef string, CFRange range, C
         // Iterate through runs on the current line
         for (j = i; (j < numOfGlyphRuns) && (glyphRunDetails._baselineOriginY[j] == baselineOriginYForCurrentLine); ++j) {
             // Create _CTRun objects and make them part of _CTLine
-            _CTRun* run = [[_CTRun new] autorelease];
+            auto runRef = woc::MakeStrongCF<CTRunRef>(_CTRunCreate());
+            __CTRun* run = const_cast<__CTRun*>(runRef.get());
+
             run->_range.location = glyphRunDetails._glyphRunDescriptions[j]._textPosition;
             run->_range.length = glyphRunDetails._glyphRunDescriptions[j]._stringLength;
-            run->_stringFragment = [static_cast<NSString*>(CFAttributedStringGetString(string))
-                substringWithRange:NSMakeRange(range.location + run->_range.location, run->_range.length)];
+
+            run->_stringFragment.attach(
+                CFStringCreateWithSubstring(nullptr,
+                                            CFAttributedStringGetString(string),
+                                            CFRangeMake(range.location + run->_range.location, run->_range.length)));
             run->_dwriteGlyphRun = move(glyphRunDetails._dwriteGlyphRun[j]);
             run->_stringIndices = move(glyphRunDetails._glyphRunDescriptions[j]._clusterMap);
-            run->_attributes =
-                [static_cast<NSAttributedString*>(string) attributesAtIndex:(range.location + run->_range.location) effectiveRange:NULL];
+            run->_attributes = const_cast<CFMutableDictionaryRef>(
+                CFAttributedStringGetAttributes(string, (range.location + run->_range.location), nullptr));
 
             xPos = glyphRunDetails._baselineOriginX[j];
             yPos = glyphRunDetails._baselineOriginY[j];
@@ -506,8 +511,8 @@ static CTFrameRef _DWriteGetFrame(CFAttributedStringRef string, CFRange range, C
 
         if (CFArrayGetCount(runs) > 0) {
             prevYPosForDraw = yPos;
-            line->_runs = static_cast<NSMutableArray*>(runs.get());
-            _CTRun* firstRun = static_cast<_CTRun*>(CFArrayGetValueAtIndex(runs, 0));
+            line->_runs = runs.get();
+            CTRunRef firstRun = static_cast<CTRunRef>(CFArrayGetValueAtIndex(runs, 0));
             line->_strRange.location = firstRun->_range.location;
             line->_strRange.length = stringRange;
             line->_glyphCount = glyphCount;

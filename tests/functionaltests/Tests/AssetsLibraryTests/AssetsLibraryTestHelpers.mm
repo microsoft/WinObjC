@@ -17,47 +17,70 @@
 #import "FunctionalTestHelpers.h"
 #import <Starboard/SmartTypes.h>
 #import <TestFramework.h>
-#import <UWP/WindowsStorage.h>
+#import "CppWinRTHelpers.h"
+
+#include "COMIncludes.h"
+#import <winrt/Windows.Storage.h>
+#include "COMIncludes_End.h"
+
+using namespace winrt::Windows::Storage;
+namespace WF = winrt::Windows::Foundation;
 
 static bool copyFileToPicturesLibrary(NSString* fullPathToFile, NSString* fileName) {
-    __block bool success = YES;
+    bool success = false;
 
     dispatch_group_t group = dispatch_group_create();
     dispatch_group_enter(group);
 
-    void (^onFailure)(NSError*) = ^(NSError* error) {
-        LOG_ERROR([[error description] UTF8String]);
-        success = NO;
-        dispatch_group_leave(group);
-    };
-
     // Get StorageFile reference for file in local folder
-    [WSStorageFile
-        getFileFromPathAsync:fullPathToFile
-                     success:^void(WSStorageFile* storageFile) {
-                         // Get StorageFolder for Picture Library known folder
-                         [WSStorageLibrary
-                             getLibraryAsync:WSKnownLibraryIdPictures
-                                     success:^void(WSStorageLibrary* picturesLibrary) {
-                                         [picturesLibrary.saveFolder
-                                             tryGetItemAsync:fileName
-                                                     success:^void(RTObject<WSIStorageItem>* storageItem) {
-                                                         if (storageItem == nil) {
-                                                             [storageFile
-                                                                 copyOverloadDefaultNameAndOptions:picturesLibrary.saveFolder
-                                                                                           success:^void(WSStorageFile* storageFile) {
-                                                                                               dispatch_group_leave(group);
-                                                                                           }
-                                                                                           failure:onFailure];
-                                                         } else {
-                                                             dispatch_group_leave(group);
-                                                         }
-                                                     }
-                                                     failure:onFailure];
-                                     }
-                                     failure:onFailure];
-                     }
-                     failure:onFailure];
+    WF::IAsyncOperation<StorageFile> async = StorageFile::GetFileFromPathAsync(objcwinrt::string(fullPathToFile));
+
+    async.Completed(objcwinrt::callback([fileName, group, &success] (const WF::IAsyncOperation<StorageFile>& op, WF::AsyncStatus status) {
+        if (status == WF::AsyncStatus::Completed) {
+            StorageFile storageFile = op.GetResults();
+
+            // Get StorageFolder for Picture Library known folder
+            WF::IAsyncOperation<StorageLibrary> async = StorageLibrary::GetLibraryAsync(KnownLibraryId::Pictures);
+
+            async.Completed(objcwinrt::callback([fileName, group, storageFile, &success] (const WF::IAsyncOperation<StorageLibrary>& op, WF::AsyncStatus status) {
+                if (status == WF::AsyncStatus::Completed) {
+                    StorageLibrary picturesLibrary = op.GetResults();
+                    WF::IAsyncOperation<IStorageItem> async = picturesLibrary.SaveFolder().TryGetItemAsync(objcwinrt::string(fileName));
+
+                    async.Completed(objcwinrt::callback([group, storageFile, picturesLibrary, &success] (const WF::IAsyncOperation<IStorageItem>& op, WF::AsyncStatus status) {
+                        if (status == WF::AsyncStatus::Completed) {
+                            IStorageItem storageItem = op.GetResults();
+
+                            if (!storageItem) {
+                                WF::IAsyncOperation<StorageFile> async = storageFile.CopyAsync(picturesLibrary.SaveFolder());
+
+                                async.Completed(objcwinrt::callback([group, &success] (const WF::IAsyncOperation<StorageFile>& op, WF::AsyncStatus status) {
+                                    if (status == WF::AsyncStatus::Completed) {
+                                        success = true;
+                                    } else {
+                                        LOG_ERROR("Failed to copy to pictures library: HRESULT = %x", op.ErrorCode());
+                                    }
+
+                                    dispatch_group_leave(group);
+                                }));
+                            } else {
+                                dispatch_group_leave(group);
+                            }
+                        } else {
+                            LOG_ERROR("Failed to get item from pictures library: HRESULT = %x", op.ErrorCode());
+                            dispatch_group_leave(group);
+                        }
+                    }));
+                } else {
+                    LOG_ERROR("Failed to open pictures library: HRESULT = %x", op.ErrorCode());
+                    dispatch_group_leave(group);
+                }
+            }));
+        } else {
+            LOG_ERROR("Failed to open local StorageFile: HRESULT = %x", op.ErrorCode());
+            dispatch_group_leave(group);
+        }
+    }));
 
     dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
     dispatch_release(group);
@@ -74,29 +97,36 @@ bool AssetsLibraryTestVideoSetup(const char* fileNameTemp) {
 
 // Remove video file that was copied to the Picture library
 bool AssetsLibraryTestVideoCleanup(const char* fileNameTemp) {
-    __block bool success = YES;
+    bool success = false;
     NSString* fileName = [NSString stringWithUTF8String:fileNameTemp];
 
     dispatch_group_t group = dispatch_group_create();
     dispatch_group_enter(group);
 
-    void (^onFailure)(NSError*) = ^(NSError* error) {
-        LOG_ERROR([[error description] UTF8String]);
-        success = NO;
-        dispatch_group_leave(group);
-    };
+    WF::IAsyncOperation<StorageLibrary> async = StorageLibrary::GetLibraryAsync(KnownLibraryId::Pictures);
 
-    [WSStorageLibrary getLibraryAsync:WSKnownLibraryIdPictures
-                              success:^void(WSStorageLibrary* picturesLibrary) {
-                                  [picturesLibrary.saveFolder getFileAsync:fileName
-                                                                   success:^void(WSStorageFile* storageFile) {
-                                                                       // Delete permantently so the Recycle Bin doesn't get filled up
-                                                                       [storageFile deleteAsync:WSStorageDeleteOptionPermanentDelete];
-                                                                       dispatch_group_leave(group);
-                                                                   }
-                                                                   failure:onFailure];
-                              }
-                              failure:onFailure];
+    async.Completed(objcwinrt::callback([group, fileName, &success] (const WF::IAsyncOperation<StorageLibrary>& op, WF::AsyncStatus status) {
+        if (status == WF::AsyncStatus::Completed) {
+            StorageLibrary picturesLibrary = op.GetResults();
+
+            WF::IAsyncOperation<StorageFile> async = picturesLibrary.SaveFolder().GetFileAsync(objcwinrt::string(fileName));
+
+            async.Completed(objcwinrt::callback([group, &success] (const WF::IAsyncOperation<StorageFile>& op, WF::AsyncStatus status) {
+                if (status == WF::AsyncStatus::Completed) {
+                    StorageFile storageFile = op.GetResults();
+                    storageFile.DeleteAsync(StorageDeleteOption::PermanentDelete);
+                    success = true;
+                } else {
+                    LOG_ERROR("Failed to get file from pictures library: HRESULT = %x", op.ErrorCode());
+                }
+
+                dispatch_group_leave(group);
+            }));
+        } else {
+            LOG_ERROR("Failed to open pictures library: HRESULT = %x", op.ErrorCode());
+            dispatch_group_leave(group);
+        }
+    }));
 
     dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
     dispatch_release(group);

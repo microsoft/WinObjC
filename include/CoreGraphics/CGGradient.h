@@ -39,6 +39,6 @@ COREGRAPHICS_EXPORT CGGradientRef CGGradientCreateWithColors(CGColorSpaceRef spa
 COREGRAPHICS_EXPORT void CGGradientRelease(CGGradientRef gradient);
 COREGRAPHICS_EXPORT CGGradientRef CGGradientRetain(CGGradientRef gradient);
 
-COREGRAPHICS_EXPORT CFTypeID CGGradientGetTypeID() STUB_METHOD;
+COREGRAPHICS_EXPORT CFTypeID CGGradientGetTypeID();
 
 CF_IMPLICIT_BRIDGING_DISABLED

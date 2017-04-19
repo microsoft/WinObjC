@@ -193,3 +193,29 @@
 }
 
 @end
+
+// Helper function for foundation collections which returns the description for value
+NSString* _descriptionForCollectionElement(id value, id locale, NSUInteger indent) {
+    NSString* valueToWrite = nil;
+    if ([value isKindOfClass:[NSString class]]) {
+        // If val is an NSString, use it directly
+        valueToWrite = value;
+    }
+
+    if (valueToWrite.length == 0 && [value respondsToSelector:@selector(descriptionWithLocale:indent:)]) {
+        // If val is not a string but responds to descriptionWithLocale:indent, use that value
+        valueToWrite = [value descriptionWithLocale:locale indent:indent];
+    }
+
+    if (valueToWrite.length == 0 && [value respondsToSelector:@selector(descriptionWithLocale:)]) {
+        // If not an NSString and doesn't respond to descriptionWithLocale:indent but does descriptionWithLocale:, use that
+        valueToWrite = [value descriptionWithLocale:locale];
+    }
+
+    if (valueToWrite.length == 0) {
+        // If all else fails, use description
+        valueToWrite = [value description];
+    }
+
+    return valueToWrite;
+}

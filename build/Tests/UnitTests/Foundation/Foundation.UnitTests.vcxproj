@@ -216,6 +216,7 @@
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSRangeTests.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSDictionaryTests.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSInvocationTests.mm" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSInvocationOperationTests.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSRegularExpressionTests.m" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSSortDescriptorTests.m" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSLockTests.m" />
@@ -258,6 +259,7 @@
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSProcessInfoTests.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSProgressTests.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSPropertyListSerializationTests.mm" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSProxyTests.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSSetTests.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSStringTests.m" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSTimeZoneTests.m" />
@@ -306,6 +308,7 @@
     <ClangCompile Include="$(StarboardBasePath)\tests\UnitTests\Foundation\NSURLSessionTests.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\UnitTests\Foundation\NSRunLoopTests.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\UnitTests\Foundation\NSIndexPathTests.mm" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSNullTests.mm" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\..\..\tests\unittests\Foundation\NSFileManagerUT.txt">

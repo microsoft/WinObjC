@@ -30,6 +30,7 @@
 
 #pragma once
 
+#import "UIKitExport.h"
 #import <Foundation/Foundation.h>
 
 extern NSString* const UIMenuControllerWillShowMenuNotification;
@@ -40,6 +41,7 @@ extern NSString* const UIMenuControllerMenuFrameDidChangeNotification;
 
 @class UIView, UIWindow;
 
+UIKIT_EXPORT_CLASS
 @interface UIMenuController : NSObject {
 @private
     NSArray* _menuItems;
@@ -56,7 +58,7 @@ extern NSString* const UIMenuControllerMenuFrameDidChangeNotification;
 - (void)setMenuVisible:(BOOL)menuVisible animated:(BOOL)animated;
 - (void)setTargetRect:(CGRect)targetRect
                inView:(UIView*)targetView; // if targetRect is CGRectNull, the menu will appear wherever the mouse cursor was at the time
-                                           // this method was called
+// this method was called
 - (void)update;
 
 @property (nonatomic, getter=isMenuVisible) BOOL menuVisible;

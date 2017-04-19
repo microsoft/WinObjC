@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -23,6 +23,7 @@
 
 #import "UIViewInternal.h"
 #import "UITouchInternal.h"
+#import "UIWindowInternal.h"
 #import "RingBuffer.h"
 
 #import "StarboardXaml/DisplayProperties.h"
@@ -222,10 +223,9 @@ static void recordTouchVelocity(RingBuffer<TouchRecord, 50>& touchHistory, CGPoi
     location.y = _touchY;
 
     if (viewAddr != 0) {
-        id window = [((UIView*)(viewAddr))_getWindowInternal];
-
+        UIWindow* window = [viewAddr window];
         if (window != nil) {
-            ret = [window convertPoint:location fromView:window toView:viewAddr];
+            ret = [window _convertPoint:location fromView:window toView:viewAddr];
         } else {
             CGRect rect = { 0 };
             rect = [viewAddr frame];
@@ -253,7 +253,7 @@ static void recordTouchVelocity(RingBuffer<TouchRecord, 50>& touchHistory, CGPoi
 
     UIWindow* window = [viewAddr window];
     if (window != nil) {
-        ret = [window convertPoint:location fromView:window toView:viewAddr];
+        ret = [window _convertPoint:location fromView:window toView:viewAddr];
     } else {
         CGRect rect = { 0 };
         rect = [viewAddr frame];

@@ -171,53 +171,79 @@ public:
 template <size_t FailureThreshold>
 template <typename LP, typename RP>
 Pixel PixelComparisonModeExact<FailureThreshold>::ComparePixels(const LP& background, const LP& bp, const RP& cp, size_t& npxchg) {
-        Pixel gp{};
-        if (!(bp == cp)) {
-            ++npxchg;
-            if (cp == background) {
-                // Pixel is in EXPECTED but not ACTUAL
-                gp.r = gp.a = 255;
-            } else if (bp == background) {
-                // Pixel is in ACTUAL but not EXPECTED
-                gp.g = gp.a = 255;
-            } else {
-                // Pixel is in BOTH but DIFFERENT
-                gp.r = gp.g = gp.a = 255;
-            }
+    Pixel gp{};
+    if (!(bp == cp)) {
+        ++npxchg;
+        if (cp == background) {
+            // Pixel is in EXPECTED but not ACTUAL
+            gp.r = gp.a = 255;
+        } else if (bp == background) {
+            // Pixel is in ACTUAL but not EXPECTED
+            gp.g = gp.a = 255;
         } else {
-            gp.r = gp.g = gp.b = 0;
-            gp.a = 255;
+            // Pixel is in BOTH but DIFFERENT
+            gp.r = gp.g = gp.a = 255;
         }
+    } else {
+        gp.r = gp.g = gp.b = 0;
+        gp.a = 255;
+    }
 
-        return gp;
+    return gp;
 }
-
 
 template <size_t FailureThreshold>
 template <typename LP, typename RP>
 Pixel PixelComparisonModeMask<FailureThreshold>::ComparePixels(const LP& background, const LP& bp, const RP& cp, size_t& npxchg) {
-        Pixel gp{};
-        if (!(bp == cp)) {
-            ++npxchg;
-            if (cp == background) {
-                // Pixel is in EXPECTED but not ACTUAL
-                gp.r = gp.a = 255;
-            } else if (bp == background) {
-                // Pixel is in ACTUAL but not EXPECTED
-                gp.g = gp.a = 255;
-            } else {
-                // Pixel is in BOTH but DIFFERENT
-                // Only comparing as mask so counts as match
-                gp.r = gp.g = gp.b = 0;
-                gp.a = 255;
-                --npxchg;
-            }
+    Pixel gp{};
+    if (!(bp == cp)) {
+        ++npxchg;
+        if (cp == background) {
+            // Pixel is in EXPECTED but not ACTUAL
+            gp.r = gp.a = 255;
+        } else if (bp == background) {
+            // Pixel is in ACTUAL but not EXPECTED
+            gp.g = gp.a = 255;
         } else {
+            // Pixel is in BOTH but DIFFERENT
+            // Only comparing as mask so counts as match
             gp.r = gp.g = gp.b = 0;
             gp.a = 255;
+            --npxchg;
         }
+    } else {
+        gp.r = gp.g = gp.b = 0;
+        gp.a = 255;
+    }
 
-        return gp;
+    return gp;
+}
+
+template <size_t FailureThreshold>
+template <typename LP, typename RP>
+Pixel PixelComparisonModeDifferenceLimen<FailureThreshold>::ComparePixels(const LP& background,
+                                                                          const LP& bp,
+                                                                          const RP& cp,
+                                                                          size_t& npxchg) {
+    Pixel gp{};
+    if (!(bp.near(cp))) {
+        ++npxchg;
+        if (cp == background) {
+            // Pixel is in EXPECTED but not ACTUAL
+            gp.r = gp.a = 255;
+        } else if (bp == background) {
+            // Pixel is in ACTUAL but not EXPECTED
+            gp.g = gp.a = 255;
+        } else {
+            // Pixel is in BOTH but DIFFERENT
+            gp.r = gp.g = gp.a = 255;
+        }
+    } else {
+        gp.r = gp.g = gp.b = 0;
+        gp.a = 255;
+    }
+
+    return gp;
 }
 
 template <typename PixelComparisonMode>
@@ -271,14 +297,15 @@ ImageDelta PixelByPixelImageComparator<PixelComparisonMode>::CompareImages(CGIma
                                                          kCGRenderingIntentDefault) };
 
     return {
-        (npxchg < PixelComparisonMode::Threshold ? ImageComparisonResult::Same : ImageComparisonResult::Different), npxchg, deltaImage.get(),
+        (npxchg < PixelComparisonMode::Threshold ? ImageComparisonResult::Same : ImageComparisonResult::Different),
+        npxchg,
+        deltaImage.get(),
     };
 }
 
 // Force templates so they compile
 template class PixelByPixelImageComparator<>;
 template class PixelByPixelImageComparator<PixelComparisonModeMask<>>;
-template class PixelByPixelImageComparator<PixelComparisonModeMask<2300>>;
-template class PixelByPixelImageComparator<PixelComparisonModeMask<1024>>;
-template class PixelByPixelImageComparator<PixelComparisonModeMask<512>>;
 template class PixelByPixelImageComparator<PixelComparisonModeMask<64>>;
+template class PixelByPixelImageComparator<PixelComparisonModeDifferenceLimen<>>;
+template class PixelByPixelImageComparator<PixelComparisonModeDifferenceLimen<100>>;

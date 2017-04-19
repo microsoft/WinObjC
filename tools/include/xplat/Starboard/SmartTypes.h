@@ -356,7 +356,8 @@ private:
     T* ptr;
 
 public:
-    AutoCFRef(T* ptr): ptr(ptr) { }
+    AutoCFRef(T* ptr) : ptr(ptr) {
+    }
 
     operator TWrapped*() const {
         return ptr->releaseAndGetAddressOf();
@@ -400,12 +401,11 @@ public:
         TLifetimeTraits::store(_addressof(), static_cast<CFTypeRef>(val));
     }
 
-    explicit AutoCF(TakeOwnershipT, const T& val): _val(val) {
+    explicit AutoCF(TakeOwnershipT, const T& val) : _val(val) {
     }
 
     template <typename TOtherLifetime>
-    AutoCF(const AutoCF<T, TOtherLifetime>& other)
-        : _val(nullptr) {
+    AutoCF(const AutoCF<T, TOtherLifetime>& other) : _val(nullptr) {
         TLifetimeTraits::store(_addressof(), static_cast<CFTypeRef>(other._val));
     }
 
@@ -535,18 +535,18 @@ public:
 // unique_cf was once defined to be a std::unique_ptr<T, decltype(CFRelease)>.
 // This compatibility definition mimics the common use cases for the unique_ptr version of unique_cf using AutoCF.
 template <typename T>
-class unique_cf: public AutoCF<T, CFLifetimeRetain> {
+class unique_cf : public AutoCF<T, CFLifetimeRetain> {
 public:
-    unique_cf(): AutoCF<T, CFLifetimeRetain>() {
+    unique_cf() : AutoCF<T, CFLifetimeRetain>() {
     }
 
     // The default unary T constructor for unique_ptr/cf takes full ownership of the passed-in value,
     // but the same constructor on AutoCF takes shared ownership. AutoCF's move constructor, however,
     // takes full ownership.
-    unique_cf(T val): AutoCF<T, CFLifetimeRetain>(TakeOwnership, val) {
+    unique_cf(T val) : AutoCF<T, CFLifetimeRetain>(TakeOwnership, val) {
     }
 
-    unique_cf(unique_cf<T>&& other): AutoCF<T, CFLifetimeRetain>(std::move(other)) {
+    unique_cf(unique_cf<T>&& other) : AutoCF<T, CFLifetimeRetain>(std::move(other)) {
     }
 
     void reset(T val = nullptr) {

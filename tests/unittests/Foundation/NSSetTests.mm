@@ -149,3 +149,82 @@ TEST(NSMutableSet, ShouldThrowWhenTryingToInsertNil) {
     EXPECT_ANY_THROW([set addObject:nil]);
     EXPECT_EQ(0, [set count]);
 }
+
+// Cannot be certain of order of elements so only validating output that MUST exist
+// Reference platform seems to have a bug getting the description of nested NSSets so disabling on OSX
+OSX_DISABLED_TEST(NSSet, Description) {
+    NSSet* emptySet = [NSSet set];
+    EXPECT_OBJCEQ(@"{(\n)}", emptySet.description);
+    NSSet* nestedSet = [NSSet setWithObjects:[NSSet setWithObjects:@1, @[ @2, @"3", [NSSet setWithObject:@4] ], @5, nil], @"6", nil];
+
+    NSString* description = nestedSet.description;
+
+    // We can be certain what the description will begin and end with
+    EXPECT_TRUE([description hasPrefix:@"{(\n    "]);
+    EXPECT_TRUE([description hasSuffix:@"\n)}"]);
+
+    // But we cannot be sure the order of elements, so just check that they exist with the correct indentation
+    EXPECT_TRUE([description containsString:@"        {(\n        "]);
+    EXPECT_TRUE([description containsString:@"        1"]);
+    EXPECT_TRUE([description containsString:@"                (\n            "]);
+    EXPECT_TRUE([description containsString:@"            2"]);
+    EXPECT_TRUE([description containsString:@"            3"]);
+    EXPECT_TRUE([description containsString:@"                        {(\n                4\n            )}"]);
+    EXPECT_TRUE([description containsString:@"        5"]);
+    EXPECT_TRUE([description containsString:@"    )}"]);
+    EXPECT_TRUE([description containsString:@"    6"]);
+}
+
+TEST(NSSet, MakeObjectsPerformSelector) {
+    NSSet* set = [NSSet setWithObjects:@[ @1, @2, @3 ], [NSSet setWithObjects:@4, @5, nil], @[ @6 ], nil];
+    __block NSMutableSet* otherSet = [NSMutableSet set];
+    [set makeObjectsPerformSelector:@selector(enumerateObjectsUsingBlock:)
+                         withObject:^(id obj, BOOL* stop) {
+                             [otherSet addObject:obj];
+                         }];
+
+    EXPECT_EQ(6, otherSet.count);
+    EXPECT_TRUE([otherSet containsObject:@1]);
+    EXPECT_TRUE([otherSet containsObject:@2]);
+    EXPECT_TRUE([otherSet containsObject:@3]);
+    EXPECT_TRUE([otherSet containsObject:@4]);
+    EXPECT_TRUE([otherSet containsObject:@5]);
+    EXPECT_TRUE([otherSet containsObject:@6]);
+}
+
+// Reference platform is not guaranteed to run concurrently so this can fail
+// Still keep to guarantee properly support concurrency
+OSX_DISABLED_TEST(NSSet, ObjectsWithOptionsPassingTest) {
+    NSSet* set = [NSSet setWithObjects:@1, @2, @3, @4, @5, nil];
+
+    // Verify that the NSEnumerationConcurrent option executes the blocks concurrently
+    // The blocks will increment waitingCount and wait for the signal unless it is the last element,
+    // in which case it will signal the other blocks to continue and they all decrement waitingCount
+    // so all blocks should be run concurrently, otherwise waitingCount will not return to 0
+    __block NSCondition* condition = [[NSCondition new] autorelease];
+    __block unsigned waitingCount = 0;
+    NSSet* matching = [set objectsWithOptions:NSEnumerationConcurrent
+                                  passingTest:^BOOL(id obj, BOOL* stop) {
+                                      [condition lock];
+                                      if (++waitingCount < 5) {
+                                          [condition wait];
+                                      }
+
+                                      --waitingCount;
+                                      [condition signal];
+                                      [condition unlock];
+                                      return [obj unsignedIntegerValue] % 2 == 0 ? YES : NO;
+                                  }];
+
+    ASSERT_EQ(0, waitingCount);
+
+    NSSet* defaultMatching = [set objectsWithOptions:0
+                                         passingTest:^BOOL(id obj, BOOL* stop) {
+                                             return [obj unsignedIntegerValue] % 2 == 0 ? YES : NO;
+                                         }];
+
+    EXPECT_EQ(2, matching.count);
+    EXPECT_TRUE([matching containsObject:@2]);
+    EXPECT_TRUE([matching containsObject:@4]);
+    EXPECT_OBJCEQ(matching, defaultMatching);
+}

@@ -91,8 +91,8 @@ namespace WSS = winrt::Windows::Storage::Streams;
             [weakSelf _handleMediaElementMediaFailed:sender args:e];
         });
 
-        // We utilize the internal popup UIWindow, just to make sure we're always in the Xaml scene graph.
-        [[[UIApplication sharedApplication] _popupWindow] addSubview:_hiddenView];
+        // Add ourselves to the keyWindow even though we're hidden, just to make sure we're always in the Xaml scene graph.
+        [[[UIApplication sharedApplication] keyWindow] addSubview:_hiddenView];
     }
 
     return self;

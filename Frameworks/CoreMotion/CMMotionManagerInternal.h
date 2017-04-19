@@ -16,8 +16,9 @@
 //******************************************************************************
 #pragma once
 
-#import "UWP/WindowsFoundation.h"
-#import "UWP/WindowsDevicesSensors.h"
+#include "COMIncludes.h"
+#import <winrt/Windows.Devices.Sensors.h>
+#include "COMIncludes_End.h"
 
 @interface CMAccelerometerData ()
 - (instancetype)initWithValues:(double)x y:(double)y z:(double)z time:(double)time;
@@ -44,5 +45,6 @@
 @end
 
 @interface CMMotionManager ()
-+ (CMAttitude*)toAttitude:(WDSSensorRotationMatrix*)rm quaternion:(WDSSensorQuaternion*)q;
++ (CMAttitude*)toAttitude:(const winrt::Windows::Devices::Sensors::SensorRotationMatrix&)rm
+               quaternion:(const winrt::Windows::Devices::Sensors::SensorQuaternion&)q;
 @end

@@ -21,6 +21,7 @@
 #import <UWP/WindowsApplicationModelActivation.h>
 
 @interface UIApplication (internal)
+// TODO: #2443 Remove _popupWindow (and all references to it) when we move UIAlertView over to Xaml
 - (UIWindow*)_popupWindow;
 - (void)_sendActiveStatus:(BOOL)isActive;
 - (void)_sendToBackground;
@@ -43,15 +44,7 @@
 - (void)_setHostScrenWidth:(float)width height:(float)height scale:(float)scale xDpi:(float)xdpi yDpi:(float)yDpi;
 @end
 
-@interface UIApplication ()
-- (UIView*)_popupLayer;
-- (void)_setInternalOrientation:(UIInterfaceOrientation)orientation;
-- (id)_keyboardChanged;
-- (id)_evaluateKeyboard;
-@end
-
 // UIApplicationMainInit is declared here instead of UIApplicationMainInternal.h because it uses NS* types and cannot be defined in
 // in a file that gets included in C++/CX sources.
-UIKIT_EXPORT int UIApplicationMainInit(
-    NSString* pClassName, NSString* dClassName, UIInterfaceOrientation defaultOrientation, int activationType, id activationArg);
+void _UIApplicationMainInit(NSString* principalClassName, NSString* delegateClassName, int activationType, id activationArg);
 void _UIApplicationShutdown();

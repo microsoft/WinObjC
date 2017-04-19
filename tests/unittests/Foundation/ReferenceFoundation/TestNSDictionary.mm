@@ -33,16 +33,16 @@ TEST(NSDictionary, BasicConstruction) {
 }
 
 // The below tests are intentionally commented out, in line with the Swift tests
-TEST(NSDictionary, Description) {
-    // Disabled due to [SR-251]
-    // Assertion disabled since it fails on linux targets due to heterogenious collection conversion failure
-    /*
-    NSDictionary* d1 = @{ @"foo": @"bar", @"baz": @"qux"};
-    ASSERT_OBJCEQ(d1.description, @"{\n    baz = qux;\n    foo = bar;\n}");
-    NSDictionary* d2 = @{@"1" : @{@"1" : @{@"1" : @"1"}}};
-    ASSERT_OBJCEQ(d2.description, @"{\n    1 =     {\n        1 =         {\n            1 = 1;\n        };\n    };\n}");
-    */
-}
+// TEST(NSDictionary, Description) {
+// Disabled due to [SR-251]
+// Assertion disabled since it fails on linux targets due to heterogenious collection conversion failure
+/*
+NSDictionary* d1 = @{ @"foo": @"bar", @"baz": @"qux"};
+ASSERT_OBJCEQ(d1.description, @"{\n    baz = qux;\n    foo = bar;\n}");
+NSDictionary* d2 = @{@"1" : @{@"1" : @{@"1" : @"1"}}};
+ASSERT_OBJCEQ(d2.description, @"{\n    1 =     {\n        1 =         {\n            1 = 1;\n        };\n    };\n}");
+*/
+//}
 
 TEST(NSDictionary, HeterogeneousConstruction) {
     //        NSDictionary* dict2 = @{

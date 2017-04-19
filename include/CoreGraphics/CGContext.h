@@ -193,11 +193,11 @@ COREGRAPHICS_EXPORT void CGContextStrokeEllipseInRect(CGContextRef c, CGRect rec
 COREGRAPHICS_EXPORT void CGContextStrokeLineSegments(CGContextRef c, const CGPoint* points, size_t count);
 COREGRAPHICS_EXPORT bool CGContextIsPathEmpty(CGContextRef c);
 
-COREGRAPHICS_EXPORT CGPoint CGContextGetPathCurrentPoint(CGContextRef c) STUB_METHOD;
+COREGRAPHICS_EXPORT CGPoint CGContextGetPathCurrentPoint(CGContextRef c);
 
 COREGRAPHICS_EXPORT CGRect CGContextGetPathBoundingBox(CGContextRef c);
 
-COREGRAPHICS_EXPORT bool CGContextPathContainsPoint(CGContextRef c, CGPoint point, CGPathDrawingMode mode) STUB_METHOD;
+COREGRAPHICS_EXPORT bool CGContextPathContainsPoint(CGContextRef c, CGPoint point, CGPathDrawingMode mode);
 
 COREGRAPHICS_EXPORT void CGContextClip(CGContextRef c);
 COREGRAPHICS_EXPORT void CGContextEOClip(CGContextRef c);
@@ -276,7 +276,7 @@ COREGRAPHICS_EXPORT void CGContextSetFontSize(CGContextRef c, CGFloat size);
 COREGRAPHICS_EXPORT void CGContextSetTextDrawingMode(CGContextRef c, CGTextDrawingMode mode);
 COREGRAPHICS_EXPORT void CGContextSetTextMatrix(CGContextRef c, CGAffineTransform t);
 COREGRAPHICS_EXPORT void CGContextSetTextPosition(CGContextRef c, CGFloat x, CGFloat y);
-COREGRAPHICS_EXPORT void CGContextShowText(CGContextRef c, const char* string, size_t length) STUB_METHOD;
+COREGRAPHICS_EXPORT void CGContextShowText(CGContextRef c, const char* string, size_t length);
 
 COREGRAPHICS_EXPORT void CGContextShowTextAtPoint(CGContextRef c, CGFloat x, CGFloat y, const char* string, size_t length);
 

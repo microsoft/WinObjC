@@ -24,7 +24,7 @@ static NSURL* __GetURLFromPathRelativeToModuleDirectory(NSString* relativePath) 
 }
 #endif // WINOBJC
 
-TEXT_DRAW_TEST_F(CTFrame, BasicDrawingTest, WhiteBackgroundTest<PixelByPixelImageComparator<PixelComparisonModeMask<>>>) {
+TEXT_DRAW_TEST_F(CTFrame, BasicDrawingTest, WhiteBackgroundTest<>) {
     CGContextRef context = GetDrawingContext();
     CGRect bounds = GetDrawingBounds();
 
@@ -63,7 +63,7 @@ TEXT_DRAW_TEST_F(CTFrame, BasicDrawingTest, WhiteBackgroundTest<PixelByPixelImag
     CTFrameDraw(frame.get(), context);
 }
 
-TEXT_DRAW_TEST_F(CTFrame, BasicUIKitMimicDrawingTest, UIKitMimicTest<PixelByPixelImageComparator<PixelComparisonModeMask<>>>) {
+TEXT_DRAW_TEST_F(CTFrame, BasicUIKitMimicDrawingTest, UIKitMimicTest<>) {
     CGContextRef context = GetDrawingContext();
     CGRect bounds = GetDrawingBounds();
 
@@ -102,7 +102,7 @@ TEXT_DRAW_TEST_F(CTFrame, BasicUIKitMimicDrawingTest, UIKitMimicTest<PixelByPixe
     CTFrameDraw(frame.get(), context);
 }
 
-TEXT_DRAW_TEST_F(CTFrame, BasicUnicodeTest, WhiteBackgroundTest<PixelByPixelImageComparator<PixelComparisonModeMask<>>>) {
+TEXT_DRAW_TEST_F(CTFrame, BasicUnicodeTest, WhiteBackgroundTest<>) {
     CGContextRef context = GetDrawingContext();
     CGRect bounds = GetDrawingBounds();
 
@@ -143,7 +143,7 @@ TEXT_DRAW_TEST_F(CTFrame, BasicUnicodeTest, WhiteBackgroundTest<PixelByPixelImag
     CTFrameDraw(frame.get(), context);
 }
 
-class CTFrame : public WhiteBackgroundTest<PixelByPixelImageComparator<PixelComparisonModeMask<64>>>,
+class CTFrame : public WhiteBackgroundTest<>,
                 public ::testing::WithParamInterface<::testing::tuple<CTTextAlignment, CTLineBreakMode, CTWritingDirection, CGFloat>> {
     CFStringRef CreateOutputFilename() {
         CTTextAlignment alignment = ::testing::get<0>(GetParam());
@@ -235,7 +235,7 @@ INSTANTIATE_TEST_CASE_P(TestAlignmentLineBreakMode,
                                            ::testing::ValuesIn(c_writingDirections),
                                            ::testing::ValuesIn(c_fontSizes)));
 
-class Transform : public WhiteBackgroundTest<PixelByPixelImageComparator<PixelComparisonModeMask<1024>>>,
+class Transform : public WhiteBackgroundTest<>,
                   public ::testing::WithParamInterface<::testing::tuple<CGAffineTransform, CGAffineTransform>> {};
 
 TEXT_DRAW_TEST_P(Transform, TestMatrices) {
@@ -290,7 +290,7 @@ INSTANTIATE_TEST_CASE_P(TestDrawingTextWithTransformedMatrices,
                         Transform,
                         ::testing::Combine(::testing::ValuesIn(c_transforms), ::testing::ValuesIn(c_transforms)));
 
-class UIKitTransform : public UIKitMimicTest<PixelByPixelImageComparator<PixelComparisonModeMask<>>>,
+class UIKitTransform : public UIKitMimicTest<PixelByPixelImageComparator<PixelComparisonModeDifferenceLimen<>>>,
                        public ::testing::WithParamInterface<::testing::tuple<CGAffineTransform, CGAffineTransform>> {};
 
 TEXT_DRAW_TEST_P(UIKitTransform, TestMatrices) {
@@ -333,8 +333,7 @@ INSTANTIATE_TEST_CASE_P(TestDrawingUITransforms,
                         UIKitTransform,
                         ::testing::Combine(::testing::ValuesIn(c_transforms), ::testing::ValuesIn(c_transforms)));
 
-class ExtraKerning : public WhiteBackgroundTest<PixelByPixelImageComparator<PixelComparisonModeMask<>>>,
-                     public ::testing::WithParamInterface<CGFloat> {
+class ExtraKerning : public WhiteBackgroundTest<>, public ::testing::WithParamInterface<CGFloat> {
     CFStringRef CreateOutputFilename() {
         CGFloat extraKerning = GetParam();
         return CFStringCreateWithFormat(nullptr, nullptr, CFSTR("TestImage.ExtraKerning.%.02f.png"), extraKerning);
@@ -371,8 +370,7 @@ TEXT_DRAW_TEST_P(ExtraKerning, TestExtraKerning) {
 static constexpr CGFloat c_extraKernings[] = { -1.0, 1.0, 5.25, 25.75 };
 INSTANTIATE_TEST_CASE_P(TestDrawingTextInExtraKerning, ExtraKerning, ::testing::ValuesIn(c_extraKernings));
 
-class LineHeightMultiple : public WhiteBackgroundTest<PixelByPixelImageComparator<PixelComparisonModeMask<>>>,
-                           public ::testing::WithParamInterface<CGFloat> {
+class LineHeightMultiple : public WhiteBackgroundTest<>, public ::testing::WithParamInterface<CGFloat> {
     CFStringRef CreateOutputFilename() {
         CGFloat lineHeightMultiple = GetParam();
         return CFStringCreateWithFormat(nullptr, nullptr, CFSTR("TestImage.LineHeightMultiple.%.02f.png"), lineHeightMultiple);
@@ -410,7 +408,7 @@ TEXT_DRAW_TEST_P(LineHeightMultiple, TestLineHeightMultiple) {
 static constexpr CGFloat c_lineHeightMultiples[] = { -1.0, .75, 1.25 };
 INSTANTIATE_TEST_CASE_P(TestDrawingTextInLineHeightMultiple, LineHeightMultiple, ::testing::ValuesIn(c_lineHeightMultiples));
 
-TEXT_DRAW_TEST_F(CTRun, BasicDrawingTest, WhiteBackgroundTest<PixelByPixelImageComparator<PixelComparisonModeMask<>>>) {
+TEXT_DRAW_TEST_F(CTRun, BasicDrawingTest, WhiteBackgroundTest<>) {
     CGContextRef context = GetDrawingContext();
     CGRect bounds = GetDrawingBounds();
 
@@ -438,7 +436,7 @@ TEXT_DRAW_TEST_F(CTRun, BasicDrawingTest, WhiteBackgroundTest<PixelByPixelImageC
     CTLineDraw(line.get(), context);
 }
 
-TEXT_DRAW_TEST_F(CTLine, BasicDrawingTest, WhiteBackgroundTest<PixelByPixelImageComparator<PixelComparisonModeMask<>>>) {
+TEXT_DRAW_TEST_F(CTLine, BasicDrawingTest, WhiteBackgroundTest<>) {
     CGContextRef context = GetDrawingContext();
     CGRect bounds = GetDrawingBounds();
 
@@ -468,8 +466,7 @@ TEXT_DRAW_TEST_F(CTLine, BasicDrawingTest, WhiteBackgroundTest<PixelByPixelImage
     CTRunDraw(run, context, {});
 }
 
-class Fonts : public WhiteBackgroundTest<PixelByPixelImageComparator<PixelComparisonModeMask<2300>>>,
-              public ::testing::WithParamInterface<CFStringRef> {
+class Fonts : public WhiteBackgroundTest<>, public ::testing::WithParamInterface<CFStringRef> {
     CFStringRef CreateOutputFilename() {
         CFStringRef fontName = GetParam();
         return CFStringCreateWithFormat(nullptr, nullptr, CFSTR("TestImage.Fonts.%@.png"), fontName);
@@ -506,7 +503,7 @@ static CFStringRef c_fontNames[] = { CFSTR("Arial"), CFSTR("Times New Roman"), C
 INSTANTIATE_TEST_CASE_P(TestDrawingTextInFonts, Fonts, ::testing::ValuesIn(c_fontNames));
 
 #ifdef WINOBJC
-TEXT_DRAW_TEST_F(CTFontManager, DrawWithCustomFont, WhiteBackgroundTest<PixelByPixelImageComparator<PixelComparisonModeMask<512>>>) {
+TEXT_DRAW_TEST_F(CTFontManager, DrawWithCustomFont, WhiteBackgroundTest<>) {
     CGContextRef context = GetDrawingContext();
     CGRect bounds = GetDrawingBounds();
 
@@ -553,7 +550,7 @@ TEXT_DRAW_TEST_F(CTFontManager, DrawWithCustomFont, WhiteBackgroundTest<PixelByP
 }
 #endif // WINOBJC
 
-TEXT_DRAW_TEST_F(CTFont, DrawGlyphs, WhiteBackgroundTest<PixelByPixelImageComparator<PixelComparisonModeMask<64>>>) {
+TEXT_DRAW_TEST_F(CTFont, DrawGlyphs, WhiteBackgroundTest<>) {
     CGContextRef context = GetDrawingContext();
     CGRect bounds = GetDrawingBounds();
 
@@ -568,8 +565,7 @@ TEXT_DRAW_TEST_F(CTFont, DrawGlyphs, WhiteBackgroundTest<PixelByPixelImageCompar
     CTFontDrawGlyphs(font.get(), glyphs, positions, 4, context);
 }
 
-class TextDrawingMode : public WhiteBackgroundTest<PixelByPixelImageComparator<PixelComparisonModeMask<>>>,
-                        public ::testing::WithParamInterface<::testing::tuple<CGTextDrawingMode, CGFloat>> {
+class TextDrawingMode : public WhiteBackgroundTest<>, public ::testing::WithParamInterface<::testing::tuple<CGTextDrawingMode, CGFloat>> {
     CFStringRef CreateOutputFilename() {
         CGTextDrawingMode textDrawingMode = ::testing::get<0>(GetParam());
         CGFloat textRotation = ::testing::get<1>(GetParam());
@@ -621,8 +617,7 @@ INSTANTIATE_TEST_CASE_P(TextDrawing,
                         TextDrawingMode,
                         ::testing::Combine(::testing::ValuesIn(c_textDrawingModes), ::testing::ValuesIn(c_rotations)));
 
-class RTLText : public WhiteBackgroundTest<PixelByPixelImageComparator<PixelComparisonModeMask<>>>,
-                public ::testing::WithParamInterface<CGFloat> {
+class RTLText : public WhiteBackgroundTest<>, public ::testing::WithParamInterface<CGFloat> {
     CFStringRef CreateOutputFilename() {
         CGFloat degrees = GetParam();
         return CFStringCreateWithFormat(nullptr, nullptr, CFSTR("TestImage.RTLText.Rotated.%.0f.png"), degrees);

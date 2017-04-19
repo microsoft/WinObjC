@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -14,220 +14,319 @@
 //
 //******************************************************************************
 
-#import <StubReturn.h>
 #import <Foundation/NSProxy.h>
+#import <Starboard/SmartTypes.h>
+
+#import <objc/objc-arc.h>
+
+#define RAISE_NSPROXY_ABSTRACT_FUNCTION_EXCEPTION \
+    [NSException raise:NSInvalidArgumentException \
+                format:@"%hs was called directly. It must be overridden in a subclass.", __PRETTY_FUNCTION__]
 
 @implementation NSProxy
+
+#pragma region NSProxy member functions
+
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
 + (id)alloc {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return [self allocWithZone:nil];
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
 + (id)allocWithZone:(NSZone*)zone {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return class_createInstance(self, 0);
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
 - (void)dealloc {
-    UNIMPLEMENTED();
+    object_dispose(self);
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
 - (void)finalize {
-    UNIMPLEMENTED();
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
+ @Notes  Must be overridden in a subclass
 */
 - (void)forwardInvocation:(NSInvocation*)anInvocation {
-    UNIMPLEMENTED();
+    RAISE_NSPROXY_ABSTRACT_FUNCTION_EXCEPTION;
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
+ @Notes  Must be overridden in a subclass
 */
 - (NSMethodSignature*)methodSignatureForSelector:(SEL)aSelector {
-    UNIMPLEMENTED();
-    return StubReturn();
+    RAISE_NSPROXY_ABSTRACT_FUNCTION_EXCEPTION;
+    return nil;
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
 + (BOOL)respondsToSelector:(SEL)aSelector {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return class_respondsToSelector(self, aSelector);
 }
 
+// clang format doesn't play well with 'class' here, so turn it off
+// clang-format off
+
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
-+ (Class) class {
-    UNIMPLEMENTED();
-    return StubReturn();
++ (Class)class {
+    return self;
 }
 
-    /**
-     @Status Stub
-     @Notes
-    */
-    - (Class) class {
-    UNIMPLEMENTED();
-    return StubReturn();
+
+/**
+ @Status Interoperable
+*/
++ (Class)superclass {
+    return class_getSuperclass(self);
 }
 
-    /**
-     @Status Stub
-     @Notes
-    */
-    - (BOOL)isEqual : (id)anObject {
-    UNIMPLEMENTED();
-    return StubReturn();
+// clang-format on
+
+/**
+ @Status Interoperable
+*/
+
+- (NSString*)description {
+    return [NSString stringWithFormat:@"<%@: %p>", NSStringFromClass([self class]), self];
 }
 
 /**
- @Status Stub
+ @Status Interoperable
+*/
+- (NSString*)debugDescription {
+    return [self description];
+}
+
+#pragma endregion
+
+#pragma region NSObject protocol functions
+
+// clang format doesn't play well with 'class' here, so turn it off
+// clang-format off
+
+/**
+ @Status Interoperable
+ @Notes
+*/
+- (Class)class {
+    return object_getClass(self);
+}
+
+/**
+ @Status Interoperable
+ @Notes
+*/
+- (Class)superclass {
+    return class_getSuperclass([self class]);
+}
+
+// clang-format on
+
+/**
+ @Status Interoperable
+ @Notes
+*/
+- (BOOL)isEqual:(id)anObject {
+    return self == anObject;
+}
+
+/**
+ @Status Interoperable
+*/
+- (NSUInteger)hash {
+    return reinterpret_cast<NSUInteger>(self);
+}
+
+/**
+ @Status Interoperable
  @Notes
 */
 - (instancetype)self {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return self;
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
 - (BOOL)isKindOfClass:(Class)aClass {
-    UNIMPLEMENTED();
-    return StubReturn();
+    Class forwardClass = static_cast<Class>([self performSelector:@selector(class)]);
+    return [forwardClass isSubclassOfClass:aClass];
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
 - (BOOL)isMemberOfClass:(Class)aClass {
-    UNIMPLEMENTED();
-    return StubReturn();
+    Class forwardClass = static_cast<Class>([self performSelector:@selector(class)]);
+    return aClass == forwardClass;
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
 - (BOOL)respondsToSelector:(SEL)aSelector {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return [self methodSignatureForSelector:aSelector] != nil;
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
 - (BOOL)conformsToProtocol:(Protocol*)aProtocol {
-    UNIMPLEMENTED();
-    return StubReturn();
+    Class forwardClass = static_cast<Class>([self performSelector:@selector(class)]);
+    return class_conformsToProtocol(forwardClass, aProtocol);
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
 - (id)performSelector:(SEL)aSelector {
-    UNIMPLEMENTED();
-    return StubReturn();
+    NSInvocation* invocation = [NSInvocation invocationWithMethodSignature:[self methodSignatureForSelector:aSelector]];
+    invocation.selector = aSelector;
+    [self forwardInvocation:invocation];
+
+    id ret;
+    [invocation getReturnValue:&ret];
+    return ret;
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
 - (id)performSelector:(SEL)aSelector withObject:(id)anObject {
-    UNIMPLEMENTED();
-    return StubReturn();
+    NSInvocation* invocation = [NSInvocation invocationWithMethodSignature:[self methodSignatureForSelector:aSelector]];
+    invocation.selector = aSelector;
+    [invocation setArgument:anObject atIndex:2];
+    [self forwardInvocation:invocation];
+
+    id ret;
+    [invocation getReturnValue:&ret];
+    return ret;
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
 - (id)performSelector:(SEL)aSelector withObject:(id)anObject withObject:(id)anotherObject {
-    UNIMPLEMENTED();
-    return StubReturn();
+    NSInvocation* invocation = [NSInvocation invocationWithMethodSignature:[self methodSignatureForSelector:aSelector]];
+    invocation.selector = aSelector;
+    [invocation setArgument:anObject atIndex:2];
+    [invocation setArgument:anotherObject atIndex:3];
+    [self forwardInvocation:invocation];
+
+    id ret;
+    [invocation getReturnValue:&ret];
+    return ret;
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
 - (BOOL)isProxy {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return YES;
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
 - (instancetype)retain {
-    UNIMPLEMENTED();
-    return StubReturn();
+    intptr_t* refCount = ((intptr_t*)self) - 1;
+    // Note: this should be an atomic read, so that a sufficiently clever
+    // compiler doesn't notice that there's no happens-before relationship
+    // here.
+    if (*refCount >= 0) {
+        __sync_add_and_fetch(refCount, 1);
+    }
+    return self;
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
 - (oneway void)release {
-    UNIMPLEMENTED();
+    intptr_t* refCount = ((intptr_t*)self) - 1;
+    // We allow refcounts to run into the negative, but should only
+    // deallocate once.
+    if (__sync_sub_and_fetch(refCount, 1) == -1) {
+        objc_delete_weak_refs(self);
+        [self dealloc];
+    }
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
 - (instancetype)autorelease {
-    UNIMPLEMENTED();
-    return StubReturn();
+    [NSAutoreleasePool addObject:self];
+    return self;
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
 - (NSUInteger)retainCount {
-    UNIMPLEMENTED();
-    return StubReturn();
+    // account for the implicit retain on object creation
+    return *(((intptr_t*)self) - 1) + 1;
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
+ @Notes Zones are not supported.
 */
 - (NSZone*)zone {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return nil;
+}
+
+#pragma endregion
+
+/**
+ *  _ARCCompliantRetainRelease signals to the runtime (libobjc2) that we are ARC-compliant.
+ *
+ *  When an ARC-compliant class is used with ARC code, it falls into the libobjc2 fast path:
+ *  the runtime automatically increments the refcount without consulting the object, and
+ *  calls dealloc when it crosses below 0.
+ *
+ *  The fast path is only engaged if retain, autorelease, and release are implemented at
+ *  the same inheritance level as _ARCCompliantRetainRelease. Subclasses overriding this behaviour
+ *  opt out of the fast path, and must implement both retain and release.
+ *
+ *  To actually be ARC compliant, we need to store our refcount sizeof(intptr_t) bytes before
+ *  self->isa, and mimic the runtime's behaviour for direct invocations of retain/release.
+ */
+- (void)_ARCCompliantRetainRelease {
 }
 
 @end

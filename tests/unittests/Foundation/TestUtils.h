@@ -19,8 +19,8 @@
 #import <functional>
 #include <memory>
 
-#define _CONCAT(x, y) x##y
-#define CONCAT(x, y) _CONCAT(x, y)
+#define _CONCAT_IMPL(x, y) x##y
+#define CONCAT(x, y) _CONCAT_IMPL(x, y)
 
 #define _SCOPE_GUARD(STATEMENT) std::unique_ptr<void, std::function<void(void*)>> CONCAT(_closeScope_, __LINE__)((void*)0x1, STATEMENT)
 

@@ -48,35 +48,20 @@ inline void _SafeRelease(T** p) {
 
 CFAttributedStringRef _CTTypesetterGetAttributedString(CTTypesetterRef typesetter);
 
-@interface _CTRun : NSObject {
-@public
-    StrongId<NSMutableDictionary<NSString*, id>> _attributes;
-    CFRange _range;
-    StrongId<NSString> _stringFragment;
-    DWRITE_GLYPH_RUN _dwriteGlyphRun;
-    std::vector<CFIndex> _stringIndices;
-    CGFloat _relativeXOffset;
-    CGFloat _relativeYOffset;
-    std::vector<CGSize> _glyphAdvances;
-    std::vector<CGPoint> _glyphOrigins;
-    CGAffineTransform _textMatrix;
-}
-@end
-
 @interface _CTLine : NSObject {
 @public
     CFRange _strRange;
     CGFloat _relativeXOffset;
     CGFloat _width;
     NSUInteger _glyphCount;
-    StrongId<NSMutableArray<_CTRun*>> _runs;
+    woc::StrongCF<CFMutableArrayRef> _runs;
     CGFloat _ascent, _descent, _leading;
 }
 @end
 
 #pragma region CTFrame
 struct __CTFrame : CoreFoundation::CppBase<__CTFrame> {
-    __CTFrame() : _lines(CFArrayCreateMutable(kCFAllocatorDefault, 0, &kCFTypeArrayCallBacks)) {
+    __CTFrame() : _lines(woc::TakeOwnership, CFArrayCreateMutable(kCFAllocatorDefault, 0, &kCFTypeArrayCallBacks)) {
     }
 
     CGRect _frameRect;
@@ -87,6 +72,40 @@ struct __CTFrame : CoreFoundation::CppBase<__CTFrame> {
 };
 
 #pragma endregion CTFrame
+
+#pragma region CTRun
+struct __CTRun : CoreFoundation::CppBase<__CTRun> {
+    __CTRun()
+        : _attributes(woc::TakeOwnership,
+                      CFDictionaryCreateMutable(kCFAllocatorSystemDefault,
+                                                0,
+                                                &kCFCopyStringDictionaryKeyCallBacks,
+                                                &kCFTypeDictionaryValueCallBacks)),
+          _textMatrix(CGAffineTransformIdentity) {
+    }
+
+    ~__CTRun() {
+        _SafeRelease(&_dwriteGlyphRun.fontFace);
+        delete[] _dwriteGlyphRun.glyphIndices;
+        delete[] _dwriteGlyphRun.glyphAdvances;
+        delete[] _dwriteGlyphRun.glyphOffsets;
+    }
+
+    woc::StrongCF<CFMutableDictionaryRef> _attributes;
+    CFRange _range;
+    woc::StrongCF<CFStringRef> _stringFragment;
+    DWRITE_GLYPH_RUN _dwriteGlyphRun;
+    std::vector<CFIndex> _stringIndices;
+    CGFloat _relativeXOffset;
+    CGFloat _relativeYOffset;
+    std::vector<CGSize> _glyphAdvances;
+    std::vector<CGPoint> _glyphOrigins;
+    CGAffineTransform _textMatrix;
+};
+
+CTRunRef _CTRunCreate();
+
+#pragma endregion CTRun
 
 // Private helper methods for UIKit
 CORETEXT_EXPORT CGSize _CTFrameGetSize(CTFrameRef frame);

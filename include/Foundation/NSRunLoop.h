@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 // Copyright (c) 2006-2007 Christopher J. W. Lloyd
 //
 // This code is licensed under the MIT License (MIT).
@@ -27,24 +27,26 @@
 @class NSPort;
 @class NSArray;
 
-FOUNDATION_EXPORT NSString* const NSDefaultRunLoopMode;
-FOUNDATION_EXPORT NSString* const NSRunLoopCommonModes;
+typedef NSString* NSRunLoopMode;
+
+FOUNDATION_EXPORT const NSRunLoopMode const NSDefaultRunLoopMode;
+FOUNDATION_EXPORT const NSRunLoopMode const NSRunLoopCommonModes;
 
 FOUNDATION_EXPORT_CLASS
 @interface NSRunLoop : NSObject
 
 + (NSRunLoop*)currentRunLoop;
-@property (readonly, copy) NSString* currentMode;
-- (NSDate*)limitDateForMode:(NSString*)mode;
+@property (readonly, copy) NSRunLoopMode currentMode;
+- (NSDate*)limitDateForMode:(NSRunLoopMode)mode;
 + (NSRunLoop*)mainRunLoop;
 - (CFRunLoopRef)getCFRunLoop;
-- (void)addTimer:(NSTimer*)aTimer forMode:(NSString*)mode;
-- (void)addPort:(NSPort*)aPort forMode:(NSString*)mode;
-- (void)removePort:(NSPort*)aPort forMode:(NSString*)mode STUB_METHOD;
+- (void)addTimer:(NSTimer*)aTimer forMode:(NSRunLoopMode)mode;
+- (void)addPort:(NSPort*)aPort forMode:(NSRunLoopMode)mode;
+- (void)removePort:(NSPort*)aPort forMode:(NSRunLoopMode)mode STUB_METHOD;
 - (void)run;
-- (BOOL)runMode:(NSString*)mode beforeDate:(NSDate*)limitDate;
+- (BOOL)runMode:(NSRunLoopMode)mode beforeDate:(NSDate*)limitDate;
 - (void)runUntilDate:(NSDate*)limitDate;
-- (void)acceptInputForMode:(NSString*)mode beforeDate:(NSDate*)limitDate;
+- (void)acceptInputForMode:(NSRunLoopMode)mode beforeDate:(NSDate*)limitDate;
 - (void)performSelector:(SEL)aSelector target:(id)target argument:(id)anArgument order:(NSUInteger)order modes:(NSArray*)modes;
 - (void)cancelPerformSelector:(SEL)aSelector target:(id)target argument:(id)arg;
 @end

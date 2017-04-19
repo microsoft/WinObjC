@@ -51,13 +51,13 @@ FOUNDATION_EXPORT_CLASS
 - (BOOL)containsObject:(ObjectType)anObject;
 - (NSSet<ObjectType>*)filteredSetUsingPredicate:(NSPredicate*)predicate;
 - (void)makeObjectsPerformSelector:(SEL)aSelector;
-- (void)makeObjectsPerformSelector:(SEL)aSelector withObject:(id)argument STUB_METHOD;
+- (void)makeObjectsPerformSelector:(SEL)aSelector withObject:(id)argument;
 - (ObjectType)member:(ObjectType)object;
 - (NSEnumerator<ObjectType>*)objectEnumerator;
 - (void)enumerateObjectsUsingBlock:(void (^)(ObjectType, BOOL*))block;
 - (void)enumerateObjectsWithOptions:(NSEnumerationOptions)opts usingBlock:(void (^)(ObjectType, BOOL*))block;
 - (NSSet<ObjectType>*)objectsPassingTest:(BOOL (^)(ObjectType, BOOL*))predicate;
-- (NSSet<ObjectType>*)objectsWithOptions:(NSEnumerationOptions)opts passingTest:(BOOL (^)(ObjectType, BOOL*))predicate STUB_METHOD;
+- (NSSet<ObjectType>*)objectsWithOptions:(NSEnumerationOptions)opts passingTest:(BOOL (^)(ObjectType, BOOL*))predicate;
 - (BOOL)isSubsetOfSet:(NSSet<ObjectType>*)otherSet;
 - (BOOL)intersectsSet:(NSSet<ObjectType>*)otherSet;
 - (BOOL)isEqualToSet:(NSSet<ObjectType>*)otherSet;
@@ -65,5 +65,5 @@ FOUNDATION_EXPORT_CLASS
 - (void)setValue:(id)value forKey:(NSString*)key;
 - (NSArray<ObjectType>*)sortedArrayUsingDescriptors:(NSArray<NSSortDescriptor*>*)sortDescriptors;
 @property (readonly, copy) NSString* description;
-- (NSString*)descriptionWithLocale:(id)locale STUB_METHOD;
+- (NSString*)descriptionWithLocale:(id)locale;
 @end

@@ -680,6 +680,15 @@ static CGRect calculateContentRect(UIButton* self, CGSize size, CGRect contentRe
 
 /**
  @Status NotInPlan
+ @Notes TintColor is not a feature currently supported by Xaml.
+*/
+- (UIColor*)tintColor {
+    UNIMPLEMENTED_WITH_MSG("TintColor is not a feature currently supported by Xaml.");
+    return StubReturn();
+}
+
+/**
+ @Status NotInPlan
  @Notes Text shadows are not currently supported by Xaml.
 */
 - (void)setTitleShadowColor:(UIColor*)color forState:(UIControlState)state {
@@ -700,6 +709,31 @@ static CGRect calculateContentRect(UIButton* self, CGSize size, CGRect contentRe
  @Notes Text shadows are not currently supported by Xaml.
 */
 - (UIColor*)currentTitleShadowColor {
+    UNIMPLEMENTED_WITH_MSG("Text shadows are not currently supported by Xaml.");
+    return StubReturn();
+}
+
+/**
+ @Status NotInPlan
+ @Notes Text shadows are not currently supported by Xaml.
+*/
+- (void)setReversesTitleShadowWhenHighlighted:(BOOL)reverses {
+    UNIMPLEMENTED_WITH_MSG("Text shadows are not currently supported by Xaml.");
+}
+
+/**
+ @Status NotInPlan
+ @Notes Text shadows are not currently supported by Xaml.
+*/
+- (void)setTitleShadowOffset:(CGSize)offset {
+    UNIMPLEMENTED_WITH_MSG("Text shadows are not currently supported by Xaml.");
+}
+
+/**
+ @Status NotInPlan
+ @Notes Text shadows are not currently supported by Xaml.
+*/
+- (CGSize)titleShadowOffset {
     UNIMPLEMENTED_WITH_MSG("Text shadows are not currently supported by Xaml.");
     return StubReturn();
 }
@@ -968,14 +1002,6 @@ static ComPtr<IInspectable> _currentInspectableBorderBackgroundBrush(UIButton* s
     return ret;
 }
 
-/**
- @Status NotInPlan
- @Notes Text shadows are not currently supported by Xaml.
-*/
-- (void)setReversesTitleShadowWhenHighlighted:(BOOL)reverses {
-    UNIMPLEMENTED_WITH_MSG("Text shadows are not currently supported by Xaml.");
-}
-
 static ComPtr<IInspectable> _currentInspectableImage(UIButton* self) {
     if (self->_states[self->_curState].inspectableImage) {
         return self->_states[self->_curState].inspectableImage;
@@ -1070,6 +1096,15 @@ static ComPtr<IInspectable> _currentInspectableImage(UIButton* self) {
 */
 - (void)setAttributedTitle:(NSAttributedString*)title forState:(UIControlState)state {
     UNIMPLEMENTED_WITH_MSG("Attributed text is not easily supported by Xaml.");
+}
+
+/**
+ @Status NotInPlan
+ @Notes Attributed text is not easily supported by Xaml.
+*/
+- (NSAttributedString*)currentAttributedTitle {
+    UNIMPLEMENTED_WITH_MSG("Attributed text is not easily supported by Xaml.");
+    return StubReturn();
 }
 
 /**

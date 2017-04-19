@@ -1,4 +1,5 @@
 /* Copyright (c) 2006-2007 Christopher J. W. Lloyd
+   Copyright (c) Microsoft. All rights reserved.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
 documentation files (the "Software"), to deal in the Software without restriction, including without limitation the
@@ -19,141 +20,210 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 #import "Foundation/NSMutableData.h"
 #import "Foundation/NSError.h"
 #import "Foundation/NSRunLoop.h"
-#import "NSURLConnectionState.h"
 #import "Foundation/NSURLConnection.h"
 #import "LoggingNative.h"
 #import "NSURLProtocolInternal.h"
 
+#import <algorithm>
+#import <vector>
+
 static const wchar_t* TAG = L"NSURLConnection";
 
-@implementation NSURLConnection
+// Private helper function that returns a NSURLProtocol object capable of handling a NSURLRequest
+// Returns nil if one cannot be created
+static NSURLProtocol* __protocolForRequest(NSURLRequest* request, id<NSURLProtocolClient> client) {
+    Class cls = [NSURLProtocol _URLProtocolClassForRequest:request];
+    if (!cls || ![cls canInitWithRequest:request]) {
+        return nil;
+    }
+
+    return
+        [[[cls alloc] initWithRequest:request cachedResponse:[[NSURLCache sharedURLCache] cachedResponseForRequest:request] client:client]
+            autorelease];
+}
+
+// Private class that acts as a helper for sendAsynchronousRequest: (and by extension, sendSynchronousRequest:)
+// Forwards response, data, and error to a completion handler, which is executed on a specified queue.
+@interface _NSURLConnection_DataDelegate : NSObject <NSURLConnectionDataDelegate>
++ (instancetype)delegateWithQueue:(NSOperationQueue*)queue handler:(void (^)(NSURLResponse*, NSData*, NSError*))handler;
+- (instancetype)initWithQueue:(NSOperationQueue*)queue handler:(void (^)(NSURLResponse*, NSData*, NSError*))handler;
+@end
+
+@implementation _NSURLConnection_DataDelegate {
+@private
+    StrongId<NSOperationQueue> _operationQueue;
+    StrongId<void (^)(NSURLResponse*, NSData*, NSError*)> _completionHandler;
+
+    StrongId<NSURLResponse> _response;
+    StrongId<NSMutableData> _data;
+}
+
++ (instancetype)delegateWithQueue:(NSOperationQueue*)queue handler:(void (^)(NSURLResponse*, NSData*, NSError*))handler {
+    return [[[_NSURLConnection_DataDelegate alloc] initWithQueue:queue handler:handler] autorelease];
+}
+
+- (instancetype)initWithQueue:(NSOperationQueue*)queue handler:(void (^)(NSURLResponse*, NSData*, NSError*))handler {
+    if (self = [super init]) {
+        _operationQueue = queue;
+        _completionHandler = handler;
+    }
+    return self;
+}
+
+- (void)connection:(NSURLConnection*)connection didFailWithError:(NSError*)error {
+    [_operationQueue addOperationWithBlock:^void() {
+        _completionHandler(_response.get(), nil, error);
+    }];
+}
+
+- (void)connection:(NSURLConnection*)connection didReceiveResponse:(NSURLResponse*)response {
+    // We get some of these for each redirect. Only capture the final one.
+    _response = response;
+    if (!_data || [_data length] > 0) {
+        _data.attach([NSMutableData new]);
+    }
+}
+
+- (void)connection:(NSURLConnection*)connection didReceiveData:(NSData*)data {
+    [_data appendData:data];
+}
+
+- (void)connectionDidFinishLoading:(NSURLConnection*)connection {
+    [_operationQueue addOperationWithBlock:^void() {
+        _completionHandler(_response.get(), _data.get(), nil);
+    }];
+}
+
+@end
+
+// Actual NSURLConnection implementation
+@implementation NSURLConnection {
+@private
+    StrongId<NSObject<NSURLConnectionDelegate>> _delegate;
+
+    std::vector<std::pair<StrongId<NSRunLoop>, StrongId<NSRunLoopMode>>> _scheduledRunLoops;
+    // TODO #2469: Cannot currently schedule on more than one runloop
+
+    StrongId<NSOperationQueue> _delegateQueue; // Lazily initialized
+
+    StrongId<NSURLResponse> _response;
+    NSURLCacheStoragePolicy _storagePolicy;
+    StrongId<NSURLProtocol> _protocol;
+
+    bool _started;
+}
 
 /**
  @Status Interoperable
 */
-+ (BOOL)canHandleRequest:(id)request {
-    return ([NSURLProtocol _URLProtocolClassForRequest:request] != nil) ? YES : NO;
-}
-
-/**
- @Status Caveat
- @Notes queue parameter not supported
-*/
-+ (void)sendAsynchronousRequest:(id)request
-                          queue:(id)queue
-              completionHandler:(void (^)(NSURLResponse*, NSData*, NSError*))completionHandler {
-    TraceVerbose(TAG, L"sendAsynchronousRequest not fully supported");
-
-    id response, error;
-    id data = [self sendSynchronousRequest:request returningResponse:&response error:&error];
-
-    completionHandler(response, data, error);
++ (BOOL)canHandleRequest:(NSURLRequest*)request {
+    return [[NSURLProtocol _URLProtocolClassForRequest:request] canInitWithRequest:request];
 }
 
 /**
  @Status Caveat
  @Notes NSError returned is not detailed
 */
-+ (NSData*)sendSynchronousRequest:(id)request returningResponse:(NSURLResponse**)responsep error:(NSError**)errorp {
-    NSURLConnectionState* state = [[[NSURLConnectionState alloc] init] autorelease];
-    NSURLConnection* connection = [[self alloc] initWithRequest:request delegate:state startImmediately:FALSE];
-
-    if (connection == nil) {
-        if (errorp) {
-            *errorp = [NSError errorWithDomain:@"NSURLErrorDomain" code:50 userInfo:nil];
-        }
-
++ (NSData*)sendSynchronousRequest:(NSURLRequest*)request
+                returningResponse:(NSURLResponse* _Nullable*)response
+                            error:(NSError* _Nullable*)error {
+    if (!request) {
         return nil;
     }
 
-    id mode = @"NSURLConnectionRequestMode";
+    __block NSData* data = nil;
+    __block bool finished = false;
+    __block NSCondition* condition = [[NSCondition new] autorelease];
+    NSOperationQueue* queue = [[NSOperationQueue new] autorelease];
 
-    [connection scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:mode];
-    [connection start];
+    [self sendAsynchronousRequest:request
+                            queue:queue
+                completionHandler:^void(NSURLResponse* innerResponse, NSData* innerData, NSError* innerError) {
+                    if (response) {
+                        *response = [innerResponse retain];
+                    }
 
-    [state receiveAllDataInMode:mode];
-    [connection unscheduleFromRunLoop:[NSRunLoop currentRunLoop] forMode:mode];
+                    if (error) {
+                        *error = [innerError retain];
+                    }
 
-    id result = state.receivedData;
+                    data = [innerData retain];
 
-    [connection cancel];
+                    [condition lock];
+                    finished = true;
+                    [condition signal];
+                    [condition unlock];
+                }];
 
-    if (errorp) {
-        *errorp = state.error;
+    [condition lock];
+    while (!finished) {
+        [condition wait];
+    }
+    [condition unlock];
+
+    // autorelease outside the block for safety in release timing
+    if (response) {
+        [*response autorelease];
     }
 
-    if (responsep) {
-        *responsep = state.response;
+    if (error) {
+        [*error autorelease];
     }
 
-    [connection release];
-
-    return result;
+    return [data autorelease];
 }
 
 /**
  @Status Interoperable
 */
-+ (id)connectionWithRequest:(id)request delegate:(id)delegate {
++ (instancetype)connectionWithRequest:(NSURLRequest*)request delegate:(id)delegate {
     return [[[self alloc] initWithRequest:request delegate:delegate] autorelease];
 }
 
 /**
  @Status Interoperable
 */
-- (id)initWithRequest:(id)request delegate:(id)delegate startImmediately:(BOOL)startLoading {
-    if (self = [super init]) {
-        @try {
-            [self _setRequest:request];
-        } @catch (NSException* exception) {
-            [self release];
-            return nil;
-        }
-
-        _delegate = [delegate retain];
-
-        if (startLoading) {
-            [self start];
-        }
-    }
-    return self;
-}
-
-- (BOOL)_setRequest:(NSURLRequest*)request {
-    NSURLRequest* copiedRequest = [[request copy] autorelease];
-
-    id cls = [NSURLProtocol _URLProtocolClassForRequest:copiedRequest];
-    if (!cls || ![cls canInitWithRequest:copiedRequest]) {
-        return NO;
-    }
-
-    _protocol = [[cls alloc] initWithRequest:copiedRequest
-                              cachedResponse:[[NSURLCache sharedURLCache] cachedResponseForRequest:copiedRequest]
-                                      client:self];
-    if (!_protocol) {
-        return NO;
-    }
-
-    _request = [copiedRequest retain];
-
-    return YES;
-}
-
-/**
- @Status Interoperable
-*/
-- (id)initWithRequest:(id)request delegate:(id)delegate {
+- (instancetype)initWithRequest:(NSURLRequest*)request delegate:(id)delegate {
     return [self initWithRequest:request delegate:delegate startImmediately:YES];
 }
 
 /**
  @Status Interoperable
 */
+- (instancetype)initWithRequest:(NSURLRequest*)request delegate:(id)delegate startImmediately:(BOOL)startImmediately {
+    if (self = [super init]) {
+        _originalRequest = [request copy];
+        _currentRequest = [_originalRequest copy];
+        _delegate = delegate;
+
+        if (startImmediately) {
+            [self start];
+        }
+    }
+    return self;
+}
+
+/**
+ @Status Interoperable
+*/
++ (void)sendAsynchronousRequest:(NSURLRequest*)request
+                          queue:(NSOperationQueue*)queue
+              completionHandler:(void (^)(NSURLResponse*, NSData*, NSError*))handler {
+    if (request) {
+        NSURLConnection* connection = [[[self alloc] initWithRequest:request
+                                                            delegate:[_NSURLConnection_DataDelegate delegateWithQueue:queue handler:handler]
+                                                    startImmediately:NO] autorelease];
+        [connection setDelegateQueue:queue];
+        [connection start];
+    }
+}
+
+/**
+ @Status Interoperable
+*/
 - (void)dealloc {
-    [_request release];
-    [_protocol release];
-    [_delegate release];
-    [_response release];
+    [_originalRequest release];
+    [_currentRequest release];
     [super dealloc];
 }
 
@@ -161,26 +231,122 @@ static const wchar_t* TAG = L"NSURLConnection";
  @Status Interoperable
 */
 - (void)start {
-    if (!_didRetain) {
-        [self retain];
-        _didRetain = TRUE;
+    @synchronized(self) {
+        if (_started) {
+            TraceError(TAG, L"[NSURLConnection start] called on a connection that was already started.");
+            return;
+        }
+
+        _started = true;
+
+        NSURLProtocol* protocol = __protocolForRequest(_currentRequest, self);
+        if (!protocol) {
+            TraceError(TAG, L"[NSURLConnection start] could not create a NSURLProtocol for its NSURLRequest.");
+            return;
+        }
+        _protocol = protocol;
+
+        if (_delegateQueue) {
+            [_delegateQueue addOperationWithBlock:^void() {
+                [_protocol startLoading];
+            }];
+
+        } else if (_scheduledRunLoops.size() == 1) {
+            // TODO #2469: Cannot currently schedule on more than one runloop
+            for (auto pair : _scheduledRunLoops) {
+                [pair.first performSelector:@selector(startLoading) target:_protocol argument:nil order:0 modes:@[ pair.second.get() ]];
+            }
+
+        } else {
+            // Run on the current run loop in the default mode
+            [[NSRunLoop currentRunLoop] performSelector:@selector(startLoading)
+                                                 target:_protocol
+                                               argument:nil
+                                                  order:0
+                                                  modes:@[ NSDefaultRunLoopMode ]];
+        }
+    }
+}
+
+/**
+ @Status Caveat
+ @Notes  TODO #2469: Cannot currently schedule on more than one runloop
+                 Callbacks do not currently occur on scheduled runloop
+*/
+- (void)scheduleInRunLoop:(NSRunLoop*)aRunLoop forMode:(NSRunLoopMode)mode {
+    @synchronized(self) {
+        if (_started) {
+            TraceError(TAG, L"[NSURLConnection scheduleInRunLoop:] called on a connection that already started.");
+            return;
+        }
+
+        if (_delegateQueue) {
+            [NSException raise:NSInternalInconsistencyException
+                        format:@"A connection cannot be scheduled with both an operation queue and a run loop."];
+        }
+
+        if (_scheduledRunLoops.size() >= 1) {
+            TraceError(TAG, L"NSURLConnection: Scheduling on more than one run loop is currently not supported.");
+            return;
+        }
+
+        _scheduledRunLoops.emplace_back(aRunLoop, mode);
+    }
+}
+
+/**
+ @Status Caveat
+ @Notes  TODO #2469: Callbacks do not currently occur on delegate queue
+*/
+- (void)setDelegateQueue:(NSOperationQueue*)queue {
+    @synchronized(self) {
+        if (_started) {
+            TraceError(TAG, L"[NSURLConnection setDelegateQueue:] called on a connection that already started.");
+            return;
+        }
+
+        if (_scheduledRunLoops.size() > 0) {
+            [NSException raise:NSInternalInconsistencyException
+                        format:@"A connection cannot be scheduled with both an operation queue and a run loop."];
+        }
+
+        if (_delegateQueue) {
+            TraceError(TAG, L"[NSURLConnection setDelegateQueue:] called on a connection that already had a delegate queue; ignoring.");
+            return;
+        }
+
+        _delegateQueue = queue;
+    }
+}
+
+/**
+ @Status Caveat
+ @Notes  TODO #2469: Cannot currently schedule on more than one runloop
+*/
+- (void)unscheduleFromRunLoop:(NSRunLoop*)aRunLoop forMode:(NSRunLoopMode)mode {
+    @synchronized(self) {
+        auto it = std::find_if(_scheduledRunLoops.begin(),
+                               _scheduledRunLoops.end(),
+                               [aRunLoop](const std::pair<StrongId<NSRunLoop>, StrongId<NSRunLoopMode>>& pair) {
+                                   return aRunLoop == pair.first;
+                               });
+        if (it != _scheduledRunLoops.end()) {
+            _scheduledRunLoops.erase(it);
+            return;
+        }
     }
 
-    [_protocol startLoading];
+    TraceError(TAG, L"unscheduleFromRunLoop: specified run loop and mode were not found");
 }
 
 /**
  @Status Interoperable
 */
-- (void)scheduleInRunLoop:(id)runLoop forMode:(id)mode {
-    _scheduled = YES;
-}
-
-/**
- @Status Interoperable
-*/
-- (void)unscheduleFromRunLoop:(id)runLoop forMode:(id)mode {
-    _scheduled = NO;
+- (void)cancel {
+    @synchronized(self) {
+        [_protocol stopLoading];
+        _protocol = nil;
+    }
 }
 
 /**
@@ -194,29 +360,26 @@ static const wchar_t* TAG = L"NSURLConnection";
         [_delegate connection:self didFailWithError:error];
     }
 
-    if (_didRetain && !_didRelease) {
-        _didRelease = TRUE;
-        [self autorelease];
-    }
-    [_delegate autorelease];
+    _protocol = nil;
     _delegate = nil;
 }
 
 /**
  @Status Interoperable
 */
-- (void)URLProtocol:(id)urlProtocol didReceiveResponse:(id)response cacheStoragePolicy:(NSURLCacheStoragePolicy)policy {
+- (void)URLProtocol:(id)urlProtocol didReceiveResponse:(NSURLResponse*)response cacheStoragePolicy:(NSURLCacheStoragePolicy)policy {
     /*
     if ( [response respondsToSelector:@selector(statusCode)] && [response statusCode] != 200 ) {
     [_delegate setError:[NSError errorWithDomain:@"Bad response code" code:[response statusCode] userInfo:nil]];
     }
     */
 
-    _response = [response retain];
+    _response = response;
     _storagePolicy = policy;
 
     if ([_delegate respondsToSelector:@selector(connection:willCacheResponse:)]) {
-        [_delegate connection:self willCacheResponse:response];
+        // TODO #2469: This is currently incorrect, these are not the same thing
+        [_delegate connection:self willCacheResponse:static_cast<NSCachedURLResponse*>(response)];
     }
     if ([_delegate respondsToSelector:@selector(connection:didReceiveResponse:)]) {
         [_delegate connection:self didReceiveResponse:response];
@@ -256,24 +419,8 @@ static const wchar_t* TAG = L"NSURLConnection";
         [_delegate performSelector:@selector(connectionDidFinishLoading:) withObject:self];
     }
 
-    if (_didRetain && !_didRelease) {
-        _didRelease = TRUE;
-        [self autorelease];
-    }
-    [_delegate autorelease];
+    _protocol = nil;
     _delegate = nil;
-}
-
-/**
- @Status Interoperable
-*/
-- (void)cancel {
-    [_protocol stopLoading];
-
-    if (_didRetain && !_didRelease) {
-        _didRelease = TRUE;
-        [self autorelease];
-    }
 }
 
 /**
@@ -296,28 +443,21 @@ static const wchar_t* TAG = L"NSURLConnection";
     if ([_delegate respondsToSelector:@selector(connection:willSendRequest:redirectResponse:)]) {
         newRequest = [_delegate connection:self willSendRequest:request redirectResponse:response];
     }
-    [_protocol release];
     _protocol = nil;
 
     if (!newRequest) {
         [self cancel];
         return;
     }
-    [self _setRequest:newRequest]; // regenerates _protocol
 
+    NSURLProtocol* protocol = __protocolForRequest(request, self);
+    if (!protocol) {
+        TraceError(TAG, L"NSURLConnection was redirected to a new request, but could not create a NSURLProtocol for the new request.");
+        return;
+    }
+    _protocol = protocol;
+    _currentRequest = newRequest;
     [_protocol startLoading];
-}
-
-- (id)_protocol {
-    return _protocol;
-}
-
-/**
- @Status Stub
- @Notes
-*/
-- (void)setDelegateQueue:(NSOperationQueue*)queue {
-    UNIMPLEMENTED();
 }
 
 /**

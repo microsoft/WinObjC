@@ -36,7 +36,7 @@ extern "C" void objc_autoreleasePoolPop(void*);
 std::wstring _CFStringToWString(CFStringRef string) {
     const UniChar* characters16 = CFStringGetCharactersPtr(string);
     if (characters16) {
-        return {characters16, characters16 + CFStringGetLength(string)};
+        return { characters16, characters16 + CFStringGetLength(string) };
     }
 
     static std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
@@ -241,15 +241,10 @@ template class UIKitMimicTest<>;
 template class ::testing::DrawTest<PixelByPixelImageComparator<PixelComparisonModeMask<>>>;
 template class WhiteBackgroundTest<PixelByPixelImageComparator<PixelComparisonModeMask<>>>;
 template class UIKitMimicTest<PixelByPixelImageComparator<PixelComparisonModeMask<>>>;
-template class ::testing::DrawTest<PixelByPixelImageComparator<PixelComparisonModeMask<2300>>>;
-template class ::testing::DrawTest<PixelByPixelImageComparator<PixelComparisonModeMask<1024>>>;
-template class ::testing::DrawTest<PixelByPixelImageComparator<PixelComparisonModeMask<512>>>;
 template class ::testing::DrawTest<PixelByPixelImageComparator<PixelComparisonModeMask<64>>>;
-template class WhiteBackgroundTest<PixelByPixelImageComparator<PixelComparisonModeMask<2300>>>;
-template class WhiteBackgroundTest<PixelByPixelImageComparator<PixelComparisonModeMask<1024>>>;
-template class WhiteBackgroundTest<PixelByPixelImageComparator<PixelComparisonModeMask<512>>>;
 template class WhiteBackgroundTest<PixelByPixelImageComparator<PixelComparisonModeMask<64>>>;
-template class UIKitMimicTest<PixelByPixelImageComparator<PixelComparisonModeMask<2300>>>;
-template class UIKitMimicTest<PixelByPixelImageComparator<PixelComparisonModeMask<1024>>>;
-template class UIKitMimicTest<PixelByPixelImageComparator<PixelComparisonModeMask<512>>>;
 template class UIKitMimicTest<PixelByPixelImageComparator<PixelComparisonModeMask<64>>>;
+template class ::testing::DrawTest<PixelByPixelImageComparator<PixelComparisonModeDifferenceLimen<>>>;
+template class WhiteBackgroundTest<PixelByPixelImageComparator<PixelComparisonModeDifferenceLimen<>>>;
+template class UIKitMimicTest<PixelByPixelImageComparator<PixelComparisonModeDifferenceLimen<>>>;
+template class UIKitMimicTest<PixelByPixelImageComparator<PixelComparisonModeDifferenceLimen<100>>>;

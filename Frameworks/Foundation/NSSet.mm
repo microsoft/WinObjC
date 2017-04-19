@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -27,7 +27,13 @@
 #include "Starboard.h"
 #include "StubReturn.h"
 #include "VAListHelper.h"
+#import "NSKeyValueObserving-Internal.h"
 #import <_NSKeyValueCodingAggregateFunctions.h>
+
+@interface NSSet ()
+// Public interface for NSSet does not have this method, but is necessary for proper formatting with nested collections
+- (NSString*)descriptionWithLocale:(id)locale indent:(NSUInteger)level;
+@end
 
 @implementation NSSet
 
@@ -98,7 +104,7 @@ BASE_CLASS_REQUIRED_IMPLS(NSSet, NSSetPrototype, CFSetGetTypeID);
 /**
  @Status Interoperable
 */
-- (instancetype)initWithObjects:(id*)objects count:(unsigned)count {
+- (instancetype)initWithObjects:(id _Nonnull const*)objects count:(NSUInteger)count {
     // Derived classes are required to implement this initializer.
     return NSInvalidAbstractInvocationReturn();
 }
@@ -276,7 +282,7 @@ BASE_CLASS_REQUIRED_IMPLS(NSSet, NSSetPrototype, CFSetGetTypeID);
 /**
  @Status Interoperable
 */
-- (unsigned)countByEnumeratingWithState:(NSFastEnumerationState*)state objects:(id*)stackBuf count:(unsigned)maxCount {
+- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState*)state objects:(id _Nullable*)stackBuf count:(NSUInteger)maxCount {
     if (state->state == 0) {
         state->mutationsPtr = (unsigned long*)&state->extra[1];
         state->extra[0] = (unsigned long)[self objectEnumerator];
@@ -388,24 +394,11 @@ BASE_CLASS_REQUIRED_IMPLS(NSSet, NSSetPrototype, CFSetGetTypeID);
 }
 
 /**
- @Status Caveat
- @Notes options parameter not supported
+ @Status Interoperable
+ @Notes NSEnumerationReverse is undefined on reference platform so we will ignore it
 */
 - (void)enumerateObjectsWithOptions:(NSEnumerationOptions)options usingBlock:(void (^)(id, BOOL*))block {
-    if (options & NSEnumerationReverse) {
-        assert(0);
-    } else {
-        BOOL stop = FALSE;
-        int i = 0;
-
-        for (id curObj in self) {
-            block(curObj, &stop);
-            i++;
-            if (stop) {
-                break;
-            }
-        }
-    }
+    _enumerateWithBlock(self, options, block);
 }
 
 /**
@@ -450,12 +443,10 @@ BASE_CLASS_REQUIRED_IMPLS(NSSet, NSSetPrototype, CFSetGetTypeID);
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 + (BOOL)supportsSecureCoding {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return YES;
 }
 
 /**
@@ -481,35 +472,35 @@ BASE_CLASS_REQUIRED_IMPLS(NSSet, NSSetPrototype, CFSetGetTypeID);
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 - (void)makeObjectsPerformSelector:(SEL)aSelector withObject:(id)argument {
-    UNIMPLEMENTED();
+    for (id element in self) {
+        [element performSelector:aSelector withObject:argument];
+    }
 }
 
 /**
  @Status Interoperable
 */
 - (NSSet*)objectsPassingTest:(BOOL (^)(id, BOOL*))predicate {
-    NSMutableSet* ret = [NSMutableSet setWithCapacity:0];
-
-    [self enumerateObjectsUsingBlock:^void(id obj, BOOL* stop) {
-        if (predicate(obj, stop)) {
-            [ret addObject:obj];
-        }
-    }];
-
-    return ret;
+    return [self objectsWithOptions:0 passingTest:predicate];
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 - (NSSet*)objectsWithOptions:(NSEnumerationOptions)opts passingTest:(BOOL (^)(id, BOOL*))predicate {
-    UNIMPLEMENTED();
-    return StubReturn();
+    __block NSMutableSet* ret = [NSMutableSet setWithCapacity:[self count]];
+
+    [self enumerateObjectsWithOptions:opts
+                           usingBlock:^void(id obj, BOOL* stop) {
+                               if (predicate(obj, stop)) {
+                                   [ret addObject:obj];
+                               }
+                           }];
+
+    return ret;
 }
 
 /**
@@ -554,12 +545,68 @@ BASE_CLASS_REQUIRED_IMPLS(NSSet, NSSetPrototype, CFSetGetTypeID);
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 - (NSString*)descriptionWithLocale:(id)locale {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return [self descriptionWithLocale:locale indent:0];
+}
+
+/**
+ @Status Interoperable
+*/
+- (NSString*)description {
+    return [self descriptionWithLocale:nil indent:0];
+}
+
+- (NSString*)descriptionWithLocale:(id)locale indent:(NSUInteger)level {
+    NSMutableString* ret = [NSMutableString string];
+    if (level != 0) {
+        [ret appendFormat:[NSString stringWithFormat:@"%%%us", sc_indentSpaces * level], " "];
+    }
+
+    [ret appendString:@"{(\n"];
+
+    {
+        ++level;
+        auto deferPop = wil::ScopeExit([&level]() { --level; });
+        for (id val in self) {
+            [ret appendFormat:[NSString stringWithFormat:@"%%%us%%@,\n", sc_indentSpaces * level],
+                              " ",
+                              _descriptionForCollectionElement(val, locale, level)];
+        }
+
+        if ([self count] > 0) {
+            [ret deleteCharactersInRange:{[ret length] - 2, 1 }];
+        }
+    }
+
+    if (level != 0) {
+        [ret appendFormat:[NSString stringWithFormat:@"%%%us", sc_indentSpaces * level], " "];
+    }
+
+    [ret appendString:@")}"];
+    return ret;
+}
+
+/**
+ @Status Interoperable
+*/
+- (void)addObserver:(id)observer forKeyPath:(NSString*)keyPath options:(NSKeyValueObservingOptions)options context:(void*)context {
+    NS_COLLECTION_THROW_ILLEGAL_KVO(keyPath);
+}
+
+/**
+ @Status Interoperable
+*/
+- (void)removeObserver:(id)observer forKeyPath:(NSString*)keyPath context:(void*)context {
+    NS_COLLECTION_THROW_ILLEGAL_KVO(keyPath);
+}
+
+/**
+ @Status Interoperable
+*/
+- (void)removeObserver:(id)observer forKeyPath:(NSString*)keyPath {
+    NS_COLLECTION_THROW_ILLEGAL_KVO(keyPath);
 }
 
 @end

@@ -20,6 +20,7 @@
 #import <UIKit/UIGestureRecognizerSubclass.h>
 
 #import "UIGestureRecognizerInternal.h"
+#import "UIWindowInternal.h"
 
 @implementation UIPinchGestureRecognizer {
     struct TrackingTouch {
@@ -219,8 +220,8 @@ static void deleteAllTouches(UIPinchGestureRecognizer* self) {
 - (CGPoint)locationInView:(UIView*)viewAddr {
     CGPoint pos1, pos2;
 
-    pos1 = [[viewAddr window] convertPoint:_touches[0]._lastTouchPos fromView:nil toView:viewAddr];
-    pos2 = [[viewAddr window] convertPoint:_touches[1]._lastTouchPos fromView:nil toView:viewAddr];
+    pos1 = [[viewAddr window] _convertPoint:_touches[0]._lastTouchPos fromView:nil toView:viewAddr];
+    pos2 = [[viewAddr window] _convertPoint:_touches[1]._lastTouchPos fromView:nil toView:viewAddr];
 
     CGPoint ret;
     ret = (pos1 + pos2) / 2.0f;

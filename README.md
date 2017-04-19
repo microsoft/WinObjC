@@ -1,22 +1,28 @@
 # Welcome to the Windows Bridge for iOS Project
 The Windows Bridge for iOS (also referred to as WinObjC) is a Microsoft open-source project that provides an Objective-C development environment for Visual Studio and support for iOS APIs. The bridge allows you to create Universal Windows Platform (UWP) apps that will run on many Windows devices by re-using your Objective-C code and iOS APIs alongside Windows 10 features like Cortana and Windows Notifications.
 
+[license-badge]: https://img.shields.io/github/license/microsoft/winobjc.svg?style=flat-square
+[license-link]: https://github.com/Microsoft/WinObjC/blob/master/license.txt
+[![license][license-badge]][license-link]
+
 [develop-build-badge]:        https://img.shields.io/vso/build/winobjc/03960378-fe55-4577-a8cc-1a874f7cf008/109.svg?style=flat-square
+[master-build-badge]:        https://img.shields.io/badge/build-passing-brightgreen.svg?style=flat-square
 [github-rel]:                 https://github.com/Microsoft/WinObjC/releases/latest
-[github-rel-badge]:           https://img.shields.io/github/tag/microsoft/winobjc.svg?style=flat-square
+[github-rel-badge]:           https://img.shields.io/github/tag/microsoft/winobjc.svg?style=flat-square&label=release&colorB=007ec6
 [choco]:                      https://chocolatey.org/packages/winobjc-tools
-[choco-badge]:                https://img.shields.io/chocolatey/v/winobjc-tools.svg?style=flat-square                 
+[choco-badge]:                https://img.shields.io/chocolatey/v/winobjc-tools.svg?style=flat-square&colorB=007ec6                 
 [choco-badge-pre]:            https://img.shields.io/chocolatey/vpre/winobjc-tools.svg?style=flat-square
 [nuget-frmwrk]:               https://www.nuget.org/packages/WinObjC.Frameworks
-[nuget-frmwrk-badge]:         https://img.shields.io/nuget/v/WinObjC.Frameworks.svg?style=flat-square
+[nuget-frmwrk-badge]:         https://img.shields.io/nuget/v/WinObjC.Frameworks.svg?style=flat-square&colorB=007ec6
 [nuget-frmwrk-badge-pre]:     https://img.shields.io/nuget/vpre/WinObjC.Frameworks.svg?style=flat-square
 [nuget-lang]:                 https://www.nuget.org/packages/WinObjC.Language
-[nuget-lang-badge]:           https://img.shields.io/nuget/v/WinObjC.Language.svg?style=flat-square
+[nuget-lang-badge]:           https://img.shields.io/nuget/v/WinObjC.Language.svg?style=flat-square&colorB=007ec6
 [nuget-lang-badge-pre]:       https://img.shields.io/nuget/vpre/WinObjC.Language.svg?style=flat-square
 
+## Build and Release Status
 |                      |           Stable (master)                        |            Pre-release (develop)          |
 | -------------------: | :----------------------------------------------: | :---------------------------------------: |
-|           **Build**  |                  -                               |       ![VSTS][develop-build-badge]        |
+|           **Build**  |       ![VSTS][master-build-badge]                |       ![VSTS][develop-build-badge]        |
 |  **GitHub Release**  |[![Github Release][github-rel-badge]][github-rel] |               -                           |
 |    **winobjc-tools** |     [![Tools][choco-badge]][choco]               |   [![Tools][choco-badge-pre]][choco]      |
 | **WinObjC.Language** |[![Language][nuget-lang-badge]][nuget-lang]       |[![Language][nuget-lang-badge-pre]][nuget-lang]   |
@@ -29,6 +35,8 @@ To use the bridge you'll need:
 
   
    Ensure the following individual components are selected during installation. Selecting the Universal Windows Platform development workflow should give most of the below 
+   
+   **NOTE:** Please also install the **Mobile development with .NET** workflow option (Xamarin Tools) due to a bug in Nugetizer (See [Issue 5026](https://github.com/NuGet/Home/issues/5026))
 
    <details><summary><b>(Click to Expand)</b></summary><p>
 

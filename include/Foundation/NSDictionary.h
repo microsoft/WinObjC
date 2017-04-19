@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 // Copyright (c) 2006-2007 Christopher J. W. Lloyd
 //
 // This code is licensed under the MIT License (MIT).
@@ -51,7 +51,7 @@ FOUNDATION_EXPORT_CLASS
 - (instancetype)initWithObjects:(NSArray<ObjectType>*)objects forKeys:(NSArray<id<NSCopying>>*)keys;
 - (instancetype)initWithObjects:(const ObjectType _Nonnull[])objects forKeys:(const id<NSCopying> _Nonnull[])keys count:(NSUInteger)count;
 - (instancetype)initWithObjectsAndKeys:(ObjectType)firstObject, ...;
-+ (id)sharedKeySetForKeys:(NSArray<id<NSCopying>>*)keys STUB_METHOD;
++ (id)sharedKeySetForKeys:(NSArray<id<NSCopying>>*)keys NOTINPLAN_METHOD;
 @property (readonly) NSUInteger count;
 - (BOOL)isEqualToDictionary:(NSDictionary<KeyType, ObjectType>*)otherDictionary;
 @property (readonly, copy) NSArray<KeyType>* allKeys;
@@ -69,33 +69,14 @@ FOUNDATION_EXPORT_CLASS
 - (NSArray<KeyType>*)keysSortedByValueUsingSelector:(SEL)comparator;
 - (NSArray<KeyType>*)keysSortedByValueUsingComparator:(NSComparator)cmptr;
 - (NSArray<KeyType>*)keysSortedByValueWithOptions:(NSSortOptions)opts usingComparator:(NSComparator)cmptr;
-- (NSSet<KeyType>*)keysOfEntriesPassingTest:(BOOL (^)(KeyType, ObjectType, BOOL*))predicate STUB_METHOD;
-- (NSSet<KeyType>*)keysOfEntriesWithOptions:(NSEnumerationOptions)opts
-                                passingTest:(BOOL (^)(KeyType, ObjectType, BOOL*))predicate STUB_METHOD;
+- (NSSet<KeyType>*)keysOfEntriesPassingTest:(BOOL (^)(KeyType, ObjectType, BOOL*))predicate;
+- (NSSet<KeyType>*)keysOfEntriesWithOptions:(NSEnumerationOptions)opts passingTest:(BOOL (^)(KeyType, ObjectType, BOOL*))predicate;
 - (BOOL)writeToFile:(NSString*)path atomically:(BOOL)flag;
-- (BOOL)writeToURL:(NSURL*)aURL atomically:(BOOL)flag STUB_METHOD;
+- (BOOL)writeToURL:(NSURL*)aURL atomically:(BOOL)flag;
 @property (readonly, copy) NSString* description;
+- (NSString*)descriptionWithLocale:(id)locale;
+- (NSString*)descriptionWithLocale:(id)locale indent:(NSUInteger)level;
 @property (readonly, copy) NSString* descriptionInStringsFileFormat;
-- (NSString*)descriptionWithLocale:(id)locale STUB_METHOD;
-- (NSString*)descriptionWithLocale:(id)locale indent:(NSUInteger)level STUB_METHOD;
-
-/* NSFileManager Extensions */
-- (NSDate*)fileCreationDate;
-- (BOOL)fileExtensionHidden STUB_METHOD;
-- (NSNumber*)fileGroupOwnerAccountID STUB_METHOD;
-- (NSString*)fileGroupOwnerAccountName STUB_METHOD;
-- (OSType)fileHFSCreatorCode STUB_METHOD;
-- (OSType)fileHFSTypeCode STUB_METHOD;
-- (BOOL)fileIsAppendOnly STUB_METHOD;
-- (BOOL)fileIsImmutable STUB_METHOD;
-- (NSDate*)fileModificationDate;
-- (NSNumber*)fileOwnerAccountID STUB_METHOD;
-- (NSString*)fileOwnerAccountName STUB_METHOD;
-- (NSUInteger)filePosixPermissions STUB_METHOD;
-- (unsigned long long)fileSize;
-- (NSUInteger)fileSystemFileNumber STUB_METHOD;
-- (NSInteger)fileSystemNumber STUB_METHOD;
-- (NSString*)fileType;
 @end
 
 #define NSDictionaryOfVariableBindings(...) _NSDictionaryOfVariableBindings(@"" #__VA_ARGS__, __VA_ARGS__, nil)

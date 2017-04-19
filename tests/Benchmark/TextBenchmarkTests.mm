@@ -69,7 +69,7 @@ class CTFramesetterCreateFrameTest : public CTFramesetterBase {
     woc::StrongCF<CGMutablePathRef> m_path;
 
 public:
-    CTFramesetterCreateFrameTest(CGSize size) : CTFramesetterBase(size), m_path(woc::MakeStrongCF(CGPathCreateMutable())) {
+    CTFramesetterCreateFrameTest(CGSize size) : CTFramesetterBase(size), m_path(woc::TakeOwnership, CGPathCreateMutable()) {
         CGPathAddRect(m_path, nullptr, CGRect{ CGPointZero, size });
     }
 
@@ -404,7 +404,8 @@ BENCHMARK_F(CoreText, CTRunDrawRotated);
 
 class ShowGlyphsBase : public TextBenchmarkBase {
 public:
-    ShowGlyphsBase() : m_glyphs(std::extent<decltype(sc_chars)>::value), m_font(woc::MakeStrongCF(CGFontCreateWithFontName(CFSTR("Arial")))) {
+    ShowGlyphsBase()
+        : m_glyphs(std::extent<decltype(sc_chars)>::value), m_font(woc::TakeOwnership, CGFontCreateWithFontName(CFSTR("Arial"))) {
         CGContextSetFont(m_context, m_font);
         CGContextSetFontSize(m_context, 20);
 
@@ -561,7 +562,8 @@ class CTFontGetGlyphsTest : public ::benchmark::BenchmarkCaseBase {
     std::vector<CGGlyph> m_glyphs;
 
 public:
-    CTFontGetGlyphsTest() : m_font(woc::MakeStrongCF(CTFontCreateWithName(CFSTR("Arial"), 25, nullptr))), m_glyphs(std::extent<decltype(sc_chars)>::value) {
+    CTFontGetGlyphsTest()
+        : m_font(woc::TakeOwnership, CTFontCreateWithName(CFSTR("Arial"), 25, nullptr)), m_glyphs(std::extent<decltype(sc_chars)>::value) {
     }
     inline void Run() {
         CTFontGetGlyphsForCharacters(m_font, sc_chars, m_glyphs.data(), m_glyphs.size());

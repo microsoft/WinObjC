@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -167,12 +167,11 @@
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Caveat
+ @Notes Ignores input keyset and returns an empty NSMutableDictionary* without any optimization
 */
 + (NSMutableDictionary*)dictionaryWithSharedKeySet:(id)keyset {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return [NSMutableDictionary dictionary];
 }
 
 @end

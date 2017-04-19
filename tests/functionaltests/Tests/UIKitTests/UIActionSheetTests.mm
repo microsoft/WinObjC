@@ -14,7 +14,7 @@
 //
 //******************************************************************************
 #include <TestFramework.h>
-#import <UIKit/UIActionSheet.h>
+#import <UIKit/UIKit.h>
 #import "UIViewInternal.h"
 
 #include <COMIncludes.h>
@@ -87,6 +87,21 @@ public:
 
             NSInteger otherIndex = [actionSheet firstOtherButtonIndex];
             ASSERT_TRUE(otherIndex == -1);
+        });
+    }
+
+    TEST_METHOD(Show) {
+        FrameworkHelper::RunOnUIThread([]() {
+            StrongId<UIActionSheet> actionSheet;
+
+            actionSheet.attach([[UIActionSheet alloc] initWithTitle:@"Title"
+                                                           delegate:nil
+                                                  cancelButtonTitle:@"Cancel"
+                                             destructiveButtonTitle:@"OK"
+                                                  otherButtonTitles:nil]);
+
+            UIView* mainView = UIApplication.sharedApplication.keyWindow.rootViewController.view;
+            [actionSheet showInView:mainView];
         });
     }
 };

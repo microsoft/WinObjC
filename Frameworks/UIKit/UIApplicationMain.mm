@@ -20,6 +20,7 @@
 #import <UIKit/UIDevice.h>
 #import <UIKit/UIFont.h>
 #import <UIKit/UINib.h>
+#import <UIKit/UIScreen.h>
 #import <UIKit/UIStoryboard.h>
 #import <UIKit/UIViewController.h>
 
@@ -49,7 +50,6 @@
 #import "LoggingNative.h"
 #import <MainDispatcher.h>
 #import "StarboardXaml/DisplayProperties.h"
-#import <UWP/WindowsApplicationModelActivation.h>
 
 static const wchar_t* TAG = L"UIApplicationMain";
 
@@ -67,10 +67,10 @@ using namespace Microsoft::WRL;
 
 void UIBecomeInactive() {
     UIApplication* app = [UIApplication sharedApplication];
-    id<UIApplicationDelegate> curDelegate = [app delegate];
+    id<UIApplicationDelegate> appDelegate = [app delegate];
 
-    if ([curDelegate respondsToSelector:@selector(applicationWillResignActive:)]) {
-        [curDelegate applicationWillResignActive:app];
+    if ([appDelegate respondsToSelector:@selector(applicationWillResignActive:)]) {
+        [appDelegate applicationWillResignActive:app];
     }
 
     // Drain global dispatch queue before ceding control.
@@ -120,19 +120,9 @@ UIInterfaceOrientation UIOrientationFromString(UIInterfaceOrientation curOrienta
 }
 
 UIDeviceOrientation newDeviceOrientation = UIDeviceOrientationUnknown;
-
-BOOL _doShutdown = FALSE;
-volatile bool g_uiMainRunning = false;
 static NSAutoreleasePoolWarn* outerPool;
 
-/**
- @Public No
-*/
-int UIApplicationMainInit(NSString* principalClassName,
-                          NSString* delegateClassName,
-                          UIInterfaceOrientation defaultOrientation,
-                          int activationType,
-                          id activationArg) {
+void _UIApplicationMainInit(NSString* principalClassName, NSString* delegateClassName, int activationType, id activationArg) {
     // Make sure we reference classes we need:
     void ForceInclusion();
     ForceInclusion();
@@ -146,16 +136,16 @@ int UIApplicationMainInit(NSString* principalClassName,
     UIApplication* uiApplication;
 
     // Register fonts listed in app's Info.plist, from the app's bundle
-    // This needs to happen before [UIApplication new]/[objc_getClass(pClassName) new] below,
-    // as they may attempt to use fonts from the app's bundle
+    // This needs to happen before we instantiate the UIApplication instance below,
+    // as it may attempt to use fonts from the app's bundle.
     if (infoDict) {
         NSArray* fonts = [infoDict objectForKey:@"UIAppFonts"];
-        if (fonts != nil) {
+        if (fonts) {
             NSMutableArray* fontURLs = [NSMutableArray array];
             for (NSString* curFontName in fonts) {
                 // curFontName contains extension, so pass in nil
                 NSURL* url = [[NSBundle mainBundle] URLForResource:curFontName withExtension:nil];
-                if (url != nil) {
+                if (url) {
                     [fontURLs addObject:url];
                 }
             }
@@ -164,46 +154,41 @@ int UIApplicationMainInit(NSString* principalClassName,
         }
     }
 
-    if (principalClassName == nil) {
+    // If no principalClassName was specified, try to grab one from the infoDict
+    if (!principalClassName) {
         principalClassName = [infoDict objectForKey:@"NSPrincipalClass"];
     }
 
-    if (principalClassName != nil) {
-        char* pClassName = (char*)[principalClassName UTF8String];
-        uiApplication = [objc_getClass(pClassName) new];
+    // If a principalClassName (custom UIApplication type) was specified, instantiate it.
+    if (principalClassName) {
+        uiApplication = [NSClassFromString(principalClassName) new];
     } else {
         uiApplication = [UIApplication new];
     }
 
-    id<UIApplicationDelegate> delegateApp;
-
-    if (delegateClassName != nil) {
-        char* pClassName = (char*)[delegateClassName UTF8String];
-        delegateApp = [objc_getClass(pClassName) new];
+    // If a delegateClassName (custom UIApplicationDelegate type) was specified, 
+    // instantiate it and assign it to the UIApplication instance.
+    id<UIApplicationDelegate> appDelegate;
+    if (delegateClassName) {
+        appDelegate = [NSClassFromString(delegateClassName) new];
+        [uiApplication setDelegate:appDelegate];
     } else {
-        delegateApp = [uiApplication delegate];
+        // Else use the default provided by the UIApplication instance
+        appDelegate = [uiApplication delegate];
     }
 
-    [uiApplication setDelegate:delegateApp];
-    idretain rootController(nil);
-
+    // Load nib/storyboard info
+    StrongId<UIViewController> rootController;
     if (infoDict) {
-        if (defaultOrientation != UIInterfaceOrientationUnknown) {
-            [uiApplication setStatusBarOrientation:defaultOrientation];
-            [uiApplication _setInternalOrientation:defaultOrientation];
-        }
-
         NSNumber* statusBarHidden = [infoDict objectForKey:@"UIStatusBarHidden"];
-        int hideStatusBar = 0;
-        if (statusBarHidden != nil) {
+        if (statusBarHidden) {
             if ([statusBarHidden intValue] != 0) {
-                hideStatusBar = 1;
+                [uiApplication setStatusBarHidden:YES];
             }
         }
-        [uiApplication setStatusBarHidden:hideStatusBar];
 
+        // Do we have a main nib/xib file (vs. a storyboard file)?
         NSString* mainNibFile;
-
         if (DisplayProperties::IsTablet()) {
             mainNibFile = [infoDict objectForKey:@"NSMainNibFile~ipad"];
             if (mainNibFile == nil) {
@@ -213,13 +198,13 @@ int UIApplicationMainInit(NSString* principalClassName,
             mainNibFile = [infoDict objectForKey:@"NSMainNibFile"];
         }
 
-        if (mainNibFile != nil) {
+        if (mainNibFile) {
+            // It looks like we're launching a Xib application
             NSString* nibPath = [[NSBundle mainBundle] pathForResource:mainNibFile ofType:@"nib"];
-            if (nibPath != nil) {
+            if (nibPath) {
                 NSArray* obj =
                     [[[UINib nibWithNibName:nibPath bundle:[NSBundle mainBundle]] instantiateWithOwner:uiApplication options:nil] retain];
                 int count = [obj count];
-
                 for (int i = 0; i < count; i++) {
                     NSObject* curObj = [obj objectAtIndex:i];
 
@@ -230,6 +215,7 @@ int UIApplicationMainInit(NSString* principalClassName,
                 }
             }
         } else {
+            // Are we launching a storyboard application?
             NSString* storyBoardName = nil;
             if (DisplayProperties::IsTablet()) {
                 storyBoardName = [infoDict objectForKey:@"UIMainStoryboardFile~ipad"];
@@ -239,10 +225,10 @@ int UIApplicationMainInit(NSString* principalClassName,
                 storyBoardName = [infoDict objectForKey:@"UIMainStoryboardFile"];
             }
 
-            if (storyBoardName != nil) {
+            if (storyBoardName) {
                 UIStoryboard* storyBoard = [UIStoryboard storyboardWithName:storyBoardName bundle:[NSBundle mainBundle]];
                 UIViewController* viewController = [storyBoard instantiateInitialViewController];
-                if (viewController != nil) {
+                if (viewController) {
                     [viewController _setResizeToScreen:1];
                     rootController = viewController;
                 }
@@ -250,11 +236,7 @@ int UIApplicationMainInit(NSString* principalClassName,
         }
     }
 
-    id<UIApplicationDelegate> curDelegate = [uiApplication delegate];
-    if (curDelegate == nil) {
-        [uiApplication setDelegate:static_cast<id<UIApplicationDelegate>>(uiApplication)];
-    }
-
+    // Populate launch options
     NSMutableDictionary* launchOption = [NSMutableDictionary dictionary];
     switch (activationType) {
         case ActivationTypeToast:
@@ -273,36 +255,44 @@ int UIApplicationMainInit(NSString* principalClassName,
             break;
     }
 
-    if ([curDelegate respondsToSelector:@selector(application:willFinishLaunchingWithOptions:)]) {
-        [curDelegate application:uiApplication willFinishLaunchingWithOptions:launchOption];
+    // If we're a storyboard application, and the storyboard specified a root ViewController, set it here
+    if (rootController) {
+        // Give the app delegate UIWindow if it doesn't provide its own
+        UIWindow* window = appDelegate.window;
+        if (!window) {
+            [appDelegate setWindow:[[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]]];
+        }
+
+        // Set the window's root ViewController
+        [appDelegate.window setRootViewController:rootController];
     }
 
-    if ([curDelegate respondsToSelector:@selector(application:didFinishLaunchingWithOptions:)]) {
-        [curDelegate application:uiApplication didFinishLaunchingWithOptions:launchOption];
-    } else if ([curDelegate respondsToSelector:@selector(applicationDidFinishLaunching:)]) {
-        [curDelegate applicationDidFinishLaunching:uiApplication];
+    // Fire the launch events
+    if ([appDelegate respondsToSelector:@selector(application:willFinishLaunchingWithOptions:)]) {
+        [appDelegate application:uiApplication willFinishLaunchingWithOptions:launchOption];
+    }
+
+    if ([appDelegate respondsToSelector:@selector(application:didFinishLaunchingWithOptions:)]) {
+        [appDelegate application:uiApplication didFinishLaunchingWithOptions:launchOption];
+    } else if ([appDelegate respondsToSelector:@selector(applicationDidFinishLaunching:)]) {
+        [appDelegate applicationDidFinishLaunching:uiApplication];
     }
     [[NSNotificationCenter defaultCenter] postNotificationName:@"UIApplicationDidFinishLaunchingNotification"
                                                         object:uiApplication
                                                       userInfo:launchOption];
 
-    if (rootController != nil) {
-        [[uiApplication _popupWindow] setRootViewController:rootController];
-        [rootController _doResizeToScreen];
-        rootController = nil;
-    }
-
+    // Initialize orientation
+    // TODO: #2438 Sort out orientation; map more closely to WinRT/Xaml orientation constructs
     [[UIDevice currentDevice] performSelectorOnMainThread:@selector(_setOrientation:) withObject:0 waitUntilDone:FALSE];
     [[UIDevice currentDevice] performSelectorOnMainThread:@selector(_setInitialOrientation) withObject:0 waitUntilDone:FALSE];
-    g_uiMainRunning = true;
 
     if (newDeviceOrientation != 0) {
         [[UIDevice currentDevice] performSelectorOnMainThread:@selector(submitRotation) withObject:nil waitUntilDone:FALSE];
     }
 
-    //  Make windows visible
+    // Make all windows visible
+    // Note: It's unclear whether or not this matches reference platform behavior.
     NSArray* windows = [[UIApplication sharedApplication] windows];
-
     int windowCount = [windows count];
     for (int i = 0; i < windowCount; i++) {
         UIWindow* curWindow = [windows objectAtIndex:i];
@@ -310,8 +300,6 @@ int UIApplicationMainInit(NSString* principalClassName,
     }
 
     [pool release];
-
-    return 0;
 }
 
 void _UIApplicationShutdown() {

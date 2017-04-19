@@ -58,7 +58,6 @@ OBJCUWPWINDOWSUIXAMLRESOURCESEXPORT
 #endif
 + (WUXRCustomXamlResourceLoader*)current;
 + (void)setCurrent:(WUXRCustomXamlResourceLoader*)value;
-- (RTObject*)getResource:(NSString *)resourceId objectType:(NSString *)objectType propertyName:(NSString *)propertyName propertyType:(NSString *)propertyType;
 @end
 
 #endif // __WUXRCustomXamlResourceLoader_DEFINED__

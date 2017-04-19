@@ -16,9 +16,11 @@
 
 #pragma once
 
+#import "UIKitExport.h"
 #import <Foundation/NSObject.h>
 #import <UIKit/UIView.h>
 
+UIKIT_EXPORT_CLASS
 @interface UIPrintFormatter : NSObject <NSCopying>
 
 @property (nonatomic) NSInteger startPage;

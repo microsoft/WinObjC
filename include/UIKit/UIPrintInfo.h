@@ -16,6 +16,7 @@
 
 #pragma once
 
+#import "UIKitExport.h"
 #import <Foundation/NSObject.h>
 
 typedef enum {
@@ -25,6 +26,7 @@ typedef enum {
     UIPrintInfoOutputPhotoGrayscale
 } UIPrintInfoOutputType;
 
+UIKIT_EXPORT_CLASS
 @interface UIPrintInfo : NSObject <NSCopying, NSCoding>
 
 @property (nonatomic, copy) NSString* jobName;

@@ -1,5 +1,5 @@
 /* Copyright (c) 2006-2007 Christopher J. W. Lloyd
-   Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+   Copyright (c) Microsoft. All rights reserved.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
 documentation files (the "Software"), to deal in the Software without restriction, including without limitation the
@@ -37,13 +37,13 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 
 static const wchar_t* TAG = L"NSRunLoop";
 
-extern "C" NSString* const NSDefaultRunLoopMode = @"kCFRunLoopDefaultMode";
-extern "C" NSString* const NSRunLoopCommonModes = @"kCFRunLoopCommonModes";
+extern "C" NSRunLoopMode const NSDefaultRunLoopMode = @"kCFRunLoopDefaultMode";
+extern "C" NSRunLoopMode const NSRunLoopCommonModes = @"kCFRunLoopCommonModes";
 
 @interface NSRunLoop () {
     NSMutableDictionary* _modes;
     NSMutableArray* _commonModes;
-    NSString* _currentMode;
+    NSRunLoopMode _currentMode;
     NSMutableArray* _continue;
     NSMutableArray* _orderedPerforms;
     NSRecursiveLock* _orderedLock;
@@ -51,7 +51,7 @@ extern "C" NSString* const NSRunLoopCommonModes = @"kCFRunLoopCommonModes";
     bool _isShutdown;
     pthread_mutex_t _modeLock;
 }
-@property (readwrite, copy) NSString* currentMode;
+@property (readwrite, copy) NSRunLoopMode currentMode;
 @end
 
 static void DispatchMainRunLoopWakeup(void* arg) {
@@ -114,7 +114,7 @@ static void DispatchMainRunLoopWakeup(void* arg) {
     [super dealloc];
 }
 
-- (NSRunLoopState*)_stateForMode:(NSString*)mode {
+- (NSRunLoopState*)_stateForMode:(NSRunLoopMode)mode {
     pthread_mutex_lock(&_modeLock);
 
     NSRunLoopState* state = [_modes objectForKey:mode];
@@ -175,7 +175,7 @@ static void DispatchMainRunLoopWakeup(void* arg) {
 /**
  @Status Interoperable
 */
-- (NSDate*)limitDateForMode:(NSString*)mode {
+- (NSDate*)limitDateForMode:(NSRunLoopMode)mode {
     NSRunLoopState* state = [self _stateForMode:mode];
 
     if (![mode isEqualToString:_currentMode]) {
@@ -211,7 +211,7 @@ static void DispatchMainRunLoopWakeup(void* arg) {
 /**
  @Status Interoperable
 */
-- (void)acceptInputForMode:(NSString*)mode beforeDate:(NSDate*)date {
+- (void)acceptInputForMode:(NSRunLoopMode)mode beforeDate:(NSDate*)date {
     NSRunLoopState* state = [self _stateForMode:mode];
 
     if ([[NSNotificationQueue defaultQueue] hasIdleNotificationsInMode:mode]) {
@@ -226,7 +226,7 @@ static void DispatchMainRunLoopWakeup(void* arg) {
 
     NSEnumerator* stateKeys = [_modes keyEnumerator];
     NSEnumerator* stateVals = [_modes objectEnumerator];
-    NSString* mode = [stateKeys nextObject];
+    NSRunLoopMode mode = [stateKeys nextObject];
     NSRunLoopState* modeState = [stateVals nextObject];
 
     while (mode != nil && modeState != nil) {
@@ -244,7 +244,7 @@ static void DispatchMainRunLoopWakeup(void* arg) {
 /**
  @Status Interoperable
 */
-- (BOOL)runMode:(NSString*)mode beforeDate:(NSDate*)date {
+- (BOOL)runMode:(NSRunLoopMode)mode beforeDate:(NSDate*)date {
     if (self != [NSRunLoop currentRunLoop]) {
         TraceWarning(TAG, L"Warning: attempted running alternate runloop - running current runloop for 1s instead!");
         date = [NSDate dateWithTimeIntervalSinceNow:1.0];
@@ -299,7 +299,7 @@ static void DispatchMainRunLoopWakeup(void* arg) {
 /**
  @Status Interoperable
 */
-- (void)addTimer:(NSTimer*)timer forMode:(NSString*)mode {
+- (void)addTimer:(NSTimer*)timer forMode:(NSRunLoopMode)mode {
     NSArray* modeStates = [self _statesForMode:mode];
 
     for (NSRunLoopState* curMode in modeStates) {
@@ -318,7 +318,7 @@ static void DispatchMainRunLoopWakeup(void* arg) {
     NSMutableArray* result = [[NSMutableArray alloc] init];
 
     for (unsigned int i = 0; i < [modes count]; i++) {
-        NSString* check = [modes objectAtIndex:i];
+        NSRunLoopMode check = [modes objectAtIndex:i];
 
         if ([check isEqualToString:NSRunLoopCommonModes]) {
             [result addObjectsFromArray:_commonModes];
@@ -405,18 +405,18 @@ static void DispatchMainRunLoopWakeup(void* arg) {
  @Status Stub
  @Notes
 */
-- (void)removePort:(NSPort*)aPort forMode:(NSString*)mode {
+- (void)removePort:(NSPort*)aPort forMode:(NSRunLoopMode)mode {
     UNIMPLEMENTED();
 }
 @end
 
 @implementation NSRunLoop (Internal)
 
-- (NSArray*)_statesForMode:(NSString*)mode {
+- (NSArray*)_statesForMode:(NSRunLoopMode)mode {
     NSMutableArray* result = [NSMutableArray array];
 
     if ([mode isEqualToString:NSRunLoopCommonModes]) {
-        for (NSString* common in _commonModes) {
+        for (NSRunLoopMode common in _commonModes) {
             [result addObject:[self _stateForMode:common]];
         }
     } else {
@@ -426,7 +426,7 @@ static void DispatchMainRunLoopWakeup(void* arg) {
     return result;
 }
 
-- (void)_addInputSource:(NSInputSource*)source forMode:(NSString*)mode {
+- (void)_addInputSource:(NSInputSource*)source forMode:(NSRunLoopMode)mode {
     NSArray* modeStates = [self _statesForMode:mode];
 
     for (NSRunLoopState* curMode in modeStates) {
@@ -434,7 +434,7 @@ static void DispatchMainRunLoopWakeup(void* arg) {
     }
 }
 
-- (void)_removeInputSource:(NSInputSource*)source forMode:(NSString*)mode {
+- (void)_removeInputSource:(NSInputSource*)source forMode:(NSRunLoopMode)mode {
     NSArray* modeStates = [self _statesForMode:mode];
 
     for (NSRunLoopState* curMode in modeStates) {
@@ -442,7 +442,7 @@ static void DispatchMainRunLoopWakeup(void* arg) {
     }
 }
 
-- (void)_addObserver:(NSObject*)observer forMode:(NSString*)mode {
+- (void)_addObserver:(NSObject*)observer forMode:(NSRunLoopMode)mode {
     NSArray* modeStates = [self _statesForMode:mode];
 
     for (NSRunLoopState* curMode in modeStates) {
@@ -450,7 +450,7 @@ static void DispatchMainRunLoopWakeup(void* arg) {
     }
 }
 
-- (void)_removeObserver:(NSObject*)observer forMode:(NSString*)mode {
+- (void)_removeObserver:(NSObject*)observer forMode:(NSRunLoopMode)mode {
     NSArray* modeStates = [self _statesForMode:mode];
 
     for (NSRunLoopState* curMode in modeStates) {
@@ -480,7 +480,7 @@ static void DispatchMainRunLoopWakeup(void* arg) {
     [[self _stateForMode:_currentMode] wakeUp];
 }
 
-- (void)removeTimer:(NSTimer*)timer forMode:(NSString*)mode {
+- (void)removeTimer:(NSTimer*)timer forMode:(NSRunLoopMode)mode {
     NSArray* modeStates = [self _statesForMode:mode];
 
     for (NSRunLoopState* curMode in modeStates) {

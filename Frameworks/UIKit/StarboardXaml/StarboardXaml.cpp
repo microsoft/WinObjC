@@ -19,8 +19,6 @@
 #include "ApplicationMain.h"
 #include "StringConversion.h"
 #include "Windows.UI.Xaml.h"
-
-#include "ApplicationCompositor.h"
 #include "XamlCompositor.h"
 #include "StringHelpers.h"
 #include <LoggingNative.h>
@@ -238,8 +236,12 @@ void DoApplicationLaunch(ActivationType activationType, Platform::Object^ activa
         Xaml::Window::Current->Activate();
     }
 
-    auto startupRect = Xaml::Window::Current->Bounds;
-    RunApplicationMain(g_principalClassName, g_delegateClassName, startupRect.Width, startupRect.Height, activationType, activationArg);
+    // Convert Object^ to IInspectable* so it can be passed into Objective C
+    RunApplicationMain(
+        Strings::WideToNarrow(g_principalClassName->Data()).c_str(),
+        Strings::WideToNarrow(g_delegateClassName->Data()).c_str(),
+        activationType,
+        reinterpret_cast<IInspectable*>(activationArg));
 
     _appEvents = ref new AppEventListener();
     _appEvents->_RegisterEventHandlers();

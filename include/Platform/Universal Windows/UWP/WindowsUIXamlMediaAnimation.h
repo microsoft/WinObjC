@@ -400,8 +400,6 @@ OBJCUWPWINDOWSUIXAMLEXPORT
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
-- (NSString *)getNavigationStateCore;
-- (void)setNavigationStateCore:(NSString *)navigationState;
 @end
 
 #endif // __WUXMANavigationTransitionInfo_DEFINED__

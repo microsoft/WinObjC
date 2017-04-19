@@ -464,3 +464,13 @@ TEST(KVO, NSArrayObserveElements) {
     [observeeArray[1] addObjectToManualArray:@"object3"];
     EXPECT_EQ(4, observer.hits);
 }
+
+TEST(KVO, NSSetShouldNotBeObservable) {
+    NSSet* test = [NSSet setWithObjects:@1, @2, @3, nil];
+    _NSFoundationTestKVOObserver* observer = [[_NSFoundationTestKVOObserver new] autorelease];
+    EXPECT_ANY_THROW([test addObserver:observer forKeyPath:@"count" options:0 context:nullptr]);
+
+    // These would throw anyways because there should be no observer for the key path, but test anyways
+    EXPECT_ANY_THROW([test removeObserver:observer forKeyPath:@"count"]);
+    EXPECT_ANY_THROW([test removeObserver:observer forKeyPath:@"count" context:nullptr]);
+}

@@ -138,7 +138,6 @@
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSURLAuthenticationChallenge.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSURLCache.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSURLConnection.mm" />
-    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSURLConnectionState.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSURLProtocol.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSURLProtocol_file.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSURLProtocol_WinHTTP.mm" />
@@ -271,7 +270,6 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSSelectSet.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSSocket.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSSSLHandler.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSURLConnectionState.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSURLProtocol_file.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\include\BridgeHelpers.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSCFString.h" />
@@ -370,5 +368,5 @@
     <Message Condition="'@(ARMASM)' != '' and '%(ARMASM.ExcludedFromBuild)' != 'true'" Importance="High" Text="Assembling %(ARMASM.Identity)..." />
     <Exec Condition="'@(ARMASM)' != '' and '%(ARMASM.ExcludedFromBuild)' != 'true'" Command="armasm.exe -16 -g &quot;%(ARMASM.FullPath)&quot; -o &quot;%(ARMASM.ObjectFileName)&quot;" />
   </Target>
-  <Import Project="$(StarboardBasePath)\common\winobjc.packagereference.override.targets" Condition="Exists('$(StarboardBasePath)\common\winobjc.packagereference.override.targets')"/>
+  <Import Project="$(StarboardBasePath)\common\winobjc.packagereference.override.targets" Condition="Exists('$(StarboardBasePath)\common\winobjc.packagereference.override.targets')" />
 </Project>

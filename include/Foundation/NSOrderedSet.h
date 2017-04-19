@@ -70,17 +70,17 @@ FOUNDATION_EXPORT_CLASS
 - (NSUInteger)indexOfObject:(ObjectType)object
               inSortedRange:(NSRange)range
                     options:(NSBinarySearchingOptions)opts
-            usingComparator:(NSComparator)cmp STUB_METHOD;
+            usingComparator:(NSComparator)cmp;
 - (NSUInteger)indexOfObjectAtIndexes:(NSIndexSet*)indexSet
                              options:(NSEnumerationOptions)opts
-                         passingTest:(BOOL (^)(ObjectType, NSUInteger, BOOL*))predicate STUB_METHOD;
-- (NSUInteger)indexOfObjectPassingTest:(BOOL (^)(ObjectType, NSUInteger, BOOL*))predicate STUB_METHOD;
+                         passingTest:(BOOL (^)(ObjectType, NSUInteger, BOOL*))predicate;
+- (NSUInteger)indexOfObjectPassingTest:(BOOL (^)(ObjectType, NSUInteger, BOOL*))predicate;
 - (NSUInteger)indexOfObjectWithOptions:(NSEnumerationOptions)opts
                            passingTest:(BOOL (^)(ObjectType, NSUInteger, BOOL*))predicate STUB_METHOD;
 - (NSIndexSet*)indexesOfObjectsAtIndexes:(NSIndexSet*)indexSet
                                  options:(NSEnumerationOptions)opts
-                             passingTest:(BOOL (^)(ObjectType, NSUInteger, BOOL*))predicate STUB_METHOD;
-- (NSIndexSet*)indexesOfObjectsPassingTest:(BOOL (^)(ObjectType, NSUInteger, BOOL*))predicate STUB_METHOD;
+                             passingTest:(BOOL (^)(ObjectType, NSUInteger, BOOL*))predicate;
+- (NSIndexSet*)indexesOfObjectsPassingTest:(BOOL (^)(ObjectType, NSUInteger, BOOL*))predicate;
 - (NSIndexSet*)indexesOfObjectsWithOptions:(NSEnumerationOptions)opts passingTest:(BOOL (^)(id, NSUInteger, BOOL*))predicate STUB_METHOD;
 - (NSEnumerator<ObjectType>*)objectEnumerator;
 - (NSEnumerator<ObjectType>*)reverseObjectEnumerator;
@@ -100,7 +100,7 @@ FOUNDATION_EXPORT_CLASS
 - (BOOL)isSubsetOfOrderedSet:(NSOrderedSet<ObjectType>*)other;
 - (BOOL)isSubsetOfSet:(NSSet<ObjectType>*)set;
 - (NSArray<ObjectType>*)sortedArrayUsingDescriptors:(NSArray<NSSortDescriptor*>*)sortDescriptors;
-- (NSArray<ObjectType>*)sortedArrayUsingComparator:(NSComparator)cmptr STUB_METHOD;
+- (NSArray<ObjectType>*)sortedArrayUsingComparator:(NSComparator)cmptr;
 - (NSArray<ObjectType>*)sortedArrayWithOptions:(NSSortOptions)opts usingComparator:(NSComparator)cmptr STUB_METHOD;
 - (NSOrderedSet<ObjectType>*)filteredOrderedSetUsingPredicate:(NSPredicate*)predicate STUB_METHOD;
 @property (readonly, copy) NSString* description STUB_PROPERTY;

@@ -210,8 +210,7 @@ TEST(NSFileManager, MoveFileViaURL) {
 }
 
 TEST(NSFileManager, DirectoryWithUTF16Chars) {
-    wchar_t* specialFolder = L"oÖo winobjc";
-    NSString* directoryName = [NSString stringWithCharacters:(const unichar*)specialFolder length:wcslen(specialFolder) * sizeof(wchar_t)];
+    NSString* directoryName = @"oÖo winobjc";
     NSString* testPath = getPathToFile(directoryName);
 
     EXPECT_TRUE([[NSFileManager defaultManager] createDirectoryAtPath:testPath attributes:nil]);

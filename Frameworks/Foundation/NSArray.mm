@@ -934,58 +934,33 @@ static CFComparisonResult _CFComparatorFunctionFromComparator(const void* val1, 
  @Status Interoperable
 */
 - (NSString*)descriptionWithLocale:(id)locale indent:(NSUInteger)level {
-    NSMutableString* s = [NSMutableString string];
-    NSString* indentStr = @"    ";
-    for (unsigned int i = 0; i < level; ++i) {
-        [s appendString:indentStr];
+    NSMutableString* ret = [NSMutableString string];
+    if (level != 0) {
+        [ret appendFormat:[NSString stringWithFormat:@"%%%us", sc_indentSpaces * level], " "];
     }
 
-    [s appendString:@"(\n"];
+    [ret appendString:@"(\n"];
 
     {
         ++level;
         auto deferPop = wil::ScopeExit([&level]() { --level; });
         for (id val in self) {
-            for (unsigned int i = 0; i < level; ++i) {
-                [s appendString:indentStr];
-            }
-
-            // Documentation states order to determine what values are printed
-            NSString* valToWrite = nil;
-            if ([val isKindOfClass:[NSString class]]) {
-                // If val is an NSString, use it directly
-                valToWrite = val;
-            }
-
-            if (valToWrite.length == 0 && [val respondsToSelector:@selector(descriptionWithLocale:indent:)]) {
-                // If val is not a string but responds to descriptionWithLocale:indent, use that value
-                valToWrite = [val descriptionWithLocale:locale indent:level];
-            }
-
-            if (valToWrite.length == 0 && [val respondsToSelector:@selector(descriptionWithLocale:)]) {
-                // If not an NSString and doesn't respond to descriptionWithLocale:indent but does descriptionWithLocale:, use that
-                valToWrite = [val descriptionWithLocale:locale];
-            }
-
-            if (valToWrite.length == 0) {
-                // If all else fails, use description
-                valToWrite = [val description];
-            }
-
-            [s appendFormat:@"%@,\n", valToWrite];
+            [ret appendFormat:[NSString stringWithFormat:@"%%%us%%@,\n", sc_indentSpaces * level],
+                              " ",
+                              _descriptionForCollectionElement(val, locale, level)];
         }
 
         if ([self count] > 0) {
-            [s deleteCharactersInRange:{[s length] - 2, 1 }];
+            [ret deleteCharactersInRange:{[ret length] - 2, 1 }];
         }
     }
 
-    for (unsigned int i = 0; i < level; ++i) {
-        [s appendString:indentStr];
+    if (level != 0) {
+        [ret appendFormat:[NSString stringWithFormat:@"%%%us", sc_indentSpaces * level], " "];
     }
 
-    [s appendString:@")"];
-    return s;
+    [ret appendString:@")"];
+    return ret;
 }
 
 /**

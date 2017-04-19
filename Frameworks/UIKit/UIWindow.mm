@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -16,6 +16,7 @@
 
 #import "Starboard.h"
 #import <StubReturn.h>
+#import "AssertARCEnabled.h"
 
 #import <UIKit/UIApplication.h>
 #import <UIKit/UIScreen.h>
@@ -72,84 +73,41 @@ const UIWindowLevel UIWindowLevelStatusBar = 1000.0f;
 
 @implementation UIWindow {
 @private
-    idretaintype(UIResponder) _rootViewController;
+    StrongId<UIViewController> _rootViewController;
     UIWindowLevel _windowLevel;
+    BOOL _sizeUIWindowToFit;
 }
 
-/**
- @Status Interoperable
-*/
-- (CGRect)convertRect:(CGRect)rect fromWindow:(UIWindow*)window {
-    CGRect ret;
-
-    memcpy(&ret, &rect, sizeof(CGRect));
-
-    return ret;
-}
-
-/**
- @Status Stub
-*/
-- (CGRect)convertRect:(CGRect)toConvert fromView:(UIView*)fromView toView:(UIView*)toView {
-    UNIMPLEMENTED();
-    return StubReturn();
-}
-
-/**
- @Status Interoperable
-*/
-- (CGPoint)convertPoint:(CGPoint)point fromView:(UIView*)fromView toView:(UIView*)toView {
-    return [CALayer convertPoint:point fromLayer:[fromView layer] toLayer:[toView layer]];
-}
-
-/**
- @Status Stub
-*/
-- (CGPoint)convertPoint:(CGPoint)toConvert fromLayer:(CALayer*)fromView toLayer:(CALayer*)toView {
-    UNIMPLEMENTED();
-    return StubReturn();
-}
-
-static void initInternal(UIWindow* self, CGRect pos) {
+-(void)_initUIWindow {
+    // Configure the root Window to be a transparent 'root' layer
     CALayer* ourLayer = [self layer];
     [ourLayer setOpaque:FALSE];
     [ourLayer _setRootLayer:TRUE];
-
     [CATransaction _addSublayerToTop:ourLayer];
     [ourLayer _layerProxy]->SetTopMost();
 
+    // Configure the Window level and size
     [self setWindowLevel:UIWindowLevelNormal];
     [self setSizeUIWindowToFit:[[UIApplication displayMode] sizeUIWindowToFit]];
 
-    [[UIApplication sharedApplication] _popupWindow];
-}
-
-- (void)_destroy {
-    [CATransaction _removeLayer:[self layer]];
-    [static_cast<NSMutableArray*>([[UIApplication sharedApplication] windows]) removeObject:self];
-    [self resignKeyWindow];
+    // Add ourself to the sharedApplication's windows collection
+    [static_cast<NSMutableArray*>([[UIApplication sharedApplication] windows]) addObject:self];
 }
 
 /**
  @Status Interoperable
 */
-- (UIWindow*)initWithFrame:(CGRect)pos {
-    [static_cast<NSMutableArray*>([[UIApplication sharedApplication] windows]) addObject:self];
-
-    if (![[UIApplication sharedApplication] keyWindow]) {
-        [self makeKeyWindow];
-    }
-
+- (instancetype)initWithFrame:(CGRect)pos {
     //  We are ourself, a view
-    [super initWithFrame:pos];
+    if (self = [super initWithFrame:pos]) {
+        [self _initUIWindow];
 
-    initInternal((UIWindow*)self, pos);
-
-    return self;
-}
-
-- (UIWindow*)_initWithContentRect:(CGRect)pos {
-    [self initWithFrame:pos];
+        // Become the key window if there isn't one already
+        // Note: It's unclear whether or not this matches reference platform behavior.
+        if (![[UIApplication sharedApplication] keyWindow]) {
+            [self makeKeyWindow];
+        }
+    }
 
     return self;
 }
@@ -158,31 +116,17 @@ static void initInternal(UIWindow* self, CGRect pos) {
  @Status Caveat
  @Notes May not be fully implemented
 */
-- (NSObject*)initWithCoder:(NSCoder*)coder {
-    [static_cast<NSMutableArray*>([[UIApplication sharedApplication] windows]) addObject:self];
-
-    id ret = [super initWithCoder:coder];
-
-    CGRect frame;
-    frame = [self frame];
-
-#ifdef RUN_NATIVE_RESOLUTION
-    frame.size.width = DisplayProperties::ScreenWidth();
-    frame.size.height = DisplayProperties::ScreenHeight();
-    [super setFrame:frame];
-#else
-    if (frame.size.height == 480.0f && DisplayProperties::ScreenHeight() == 568.0f) {
-        frame.size.height = DisplayProperties::ScreenHeight();
-        [super setFrame:frame];
+- (instancetype)initWithCoder:(NSCoder*)coder {
+    if (self = [super initWithCoder:coder]) {
+        // Set our frame before initializing, since initializing does a resize to fit the application window
+        [super setFrame:[[UIScreen mainScreen] bounds]];
+        [self _initUIWindow];
     }
-#endif
-
-    initInternal((UIWindow*)self, frame);
 
     return self;
 }
 
-- (NSObject*)_getWindowInternal {
+- (UIWindow*)_getWindowInternal {
     return self;
 }
 
@@ -281,8 +225,8 @@ static void initInternal(UIWindow* self, CGRect pos) {
 /**
  @Status Interoperable
 */
-- (UIResponder*)rootViewController {
-    return (UIResponder*)_rootViewController;
+- (UIViewController*)rootViewController {
+    return _rootViewController;
 }
 
 /**
@@ -311,6 +255,21 @@ static void initInternal(UIWindow* self, CGRect pos) {
     }
 }
 
+/**
+ Microsoft Extension
+*/
+- (BOOL)sizeUIWindowToFit {
+    return _sizeUIWindowToFit;
+}
+
+/**
+ Microsoft Extension
+*/
+- (void)setSizeUIWindowToFit:(BOOL)shouldSize {
+    _sizeUIWindowToFit = shouldSize;
+}
+
+// TODO: #2440 Remove this seemingly-unnecessary private method (why not call the public setRootViewController?)
 - (void)_setRootViewController:(UIViewController*)controller {
     _rootViewController = controller;
     if (controller) {
@@ -360,10 +319,20 @@ static void initInternal(UIWindow* self, CGRect pos) {
 }
 
 /**
- @Status Stub
+ @Status NotInPlan
+ @Notes Multi-screen apps can be built using WinRT APIs.
 */
 - (void)setScreen:(UIScreen*)screen {
-    UNIMPLEMENTED();
+    UNIMPLEMENTED_WITH_MSG("Multi-screen apps can be built using WinRT APIs.");
+}
+
+/**
+ @Status NotInPlan
+ @Notes Multi-screen apps can be built using WinRT APIs.
+*/
+- (UIScreen*)screen {
+    UNIMPLEMENTED_WITH_MSG("Multi-screen apps can be built using WinRT APIs.");
+    return StubReturn();
 }
 
 /**
@@ -372,8 +341,6 @@ static void initInternal(UIWindow* self, CGRect pos) {
 - (void)dealloc {
     [CATransaction _removeLayer:[self layer]];
     [static_cast<NSMutableArray*>([[UIApplication sharedApplication] windows]) removeObject:self];
-
-    [super dealloc];
 }
 
 /**
@@ -395,7 +362,7 @@ static void initInternal(UIWindow* self, CGRect pos) {
 /**
  @Status Stub
 */
-- (CGRect)convertRect:(CGRect)rect toWindow:(UIWindow*)window {
+-(CGRect)convertRect:(CGRect)rect toWindow:(UIWindow*)window {
     UNIMPLEMENTED();
     return StubReturn();
 }
@@ -403,8 +370,22 @@ static void initInternal(UIWindow* self, CGRect pos) {
 /**
  @Status Stub
 */
-- (void)sendEvent:(UIEvent*)event {
+- (CGRect)convertRect:(CGRect)rect fromWindow:(UIWindow*)window {
     UNIMPLEMENTED();
+    return StubReturn();
+}
+
+// TODO: #2440 Remove this unnecessary method in favor of properly implementing UIView point/rect conversion
+- (CGPoint)_convertPoint:(CGPoint)point fromView:(UIView*)fromView toView:(UIView*)toView {
+    return [CALayer convertPoint:point fromLayer:[fromView layer] toLayer:[toView layer]];
+}
+
+/**
+ @Status NotInPlan
+ @Notes Application-level events are not delivered in this manner on Windows.
+*/
+- (void)sendEvent:(UIEvent*)event {
+    UNIMPLEMENTED_WITH_MSG("Application-level events are not delivered in this manner on Windows.");
 }
 
 @end

@@ -57,6 +57,8 @@ static wchar_t TAG[] = L"NSOperation";
 
     std::atomic<NSOperationQueuePriority> _queuePriority;
     std::atomic<BOOL> _inQueue;
+
+    bool _observingSelfIsFinished;
 }
 
 @synthesize cancelled = _cancelled;
@@ -143,6 +145,7 @@ static const NSString* NSOperationContext = @"context";
         _dependencies.attach([NSMutableSet new]);
         _ready = YES;
         [self addObserver:self forKeyPath:@"isFinished" options:0 context:(void*)NSOperationContext];
+        _observingSelfIsFinished = true;
     }
 
     return self;
@@ -344,14 +347,14 @@ static const NSString* NSOperationContext = @"context";
  @Status Interoperable
 */
 - (void)dealloc {
-    { // _dependenciesLock scope
-        std::lock_guard<std::recursive_mutex> lock(_dependenciesLock);
-        for (NSOperation* op in (NSSet*)_dependencies) {
-            [op removeObserver:self forKeyPath:@"isFinished" context:(void*)NSOperationContext];
-        }
+    for (NSOperation* op in (NSSet*)_dependencies) {
+        [op removeObserver:self forKeyPath:@"isFinished" context:(void*)NSOperationContext];
     }
 
-    [self removeObserver:self forKeyPath:@"isFinished" context:(void*)NSOperationContext];
+    if (_observingSelfIsFinished) {
+        [self removeObserver:self forKeyPath:@"isFinished" context:(void*)NSOperationContext];
+    }
+
     [super dealloc];
 }
 
