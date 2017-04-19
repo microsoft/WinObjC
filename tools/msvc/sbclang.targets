@@ -284,7 +284,6 @@
     <Exec
       Condition="'@(Midl->'%(MetadataFileName)')' != ''"
       Command="mdmerge.exe -i &quot;@(MergeWinmdInputDir)&quot; -o &quot;$(OutputPath.TrimEnd('\'))&quot; -n:1 -partial -metadata_dir &quot;$(TargetPlatformWinMDLocation)\Windows.Foundation.FoundationContract\1.0.0.0&quot; -metadata_dir &quot;$(TargetPlatformWinMDLocation)\Windows.Foundation.UniversalApiContract\1.0.0.0&quot;" />
-
   </Target>
   
   <PropertyGroup>
