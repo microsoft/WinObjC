@@ -500,18 +500,13 @@ TEXT_DRAW_TEST_P(Fonts, TestFonts) {
 }
 
 // Segoe UI is noticeably different on ARM, but we still want to test other fonts so only remove Segoe
-#ifdef WINOBJC_DISABLE_TESTS
 static CFStringRef c_fontNames[] = { CFSTR("Arial"), CFSTR("Times New Roman"), CFSTR("Wingdings") };
-#else
-static CFStringRef c_fontNames[] = { CFSTR("Arial"), CFSTR("Times New Roman"), CFSTR("Wingdings"), CFSTR("Segoe UI") };
-#endif
 INSTANTIATE_TEST_CASE_P(TestDrawingTextInFonts, Fonts, ::testing::ValuesIn(c_fontNames));
 
 #ifdef WINOBJC
 
 // The fall-through font for WinObjC is Segoe, so we can't run this on ARM
-#ifndef WINOBJC_DISABLE_TESTS
-TEXT_DRAW_TEST_F(CTFontManager, DrawWithCustomFont, WhiteBackgroundTest<>) {
+ARM_DISABLED_TEXT_DRAW_TEST_F(CTFontManager, DrawWithCustomFont, WhiteBackgroundTest<>) {
     CGContextRef context = GetDrawingContext();
     CGRect bounds = GetDrawingBounds();
 
@@ -556,13 +551,10 @@ TEXT_DRAW_TEST_F(CTFontManager, DrawWithCustomFont, WhiteBackgroundTest<>) {
     CTFrameDraw(frame.get(), context);
     CTFontManagerUnregisterFontsForURL((__bridge CFURLRef)testFileURL, kCTFontManagerScopeSession, nullptr);
 }
-#endif // !WINOBJC_DISABLE_TESTS
 #endif // WINOBJC
 
 // Segoe UI is noticeably different on ARM so disable this for ARM
-#ifndef WINOBJC_DISABLE_TESTS
-
-TEXT_DRAW_TEST_F(CTFont, DrawGlyphs, WhiteBackgroundTest<>) {
+ARM_DISABLED_TEXT_DRAW_TEST_F(CTFont, DrawGlyphs, WhiteBackgroundTest<>) {
     CGContextRef context = GetDrawingContext();
     CGRect bounds = GetDrawingBounds();
 
@@ -576,8 +568,6 @@ TEXT_DRAW_TEST_F(CTFont, DrawGlyphs, WhiteBackgroundTest<>) {
     CGPoint positions[4] = { { 0, 0 }, { 10, 10 }, { 25, 25 }, { 65, 15 } };
     CTFontDrawGlyphs(font.get(), glyphs, positions, 4, context);
 }
-
-#endif // !WINOBJC_DISABLE_TESTS
 
 class TextDrawingMode : public WhiteBackgroundTest<>, public ::testing::WithParamInterface<::testing::tuple<CGTextDrawingMode, CGFloat>> {
     CFStringRef CreateOutputFilename() {
