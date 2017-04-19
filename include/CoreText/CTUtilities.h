@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -16,8 +16,7 @@
 #pragma once
 
 #import <CoreText/CoreTextExport.h>
-
-#include <stdint.h>
+#import <stdint.h>
 
 CORETEXT_EXPORT uint32_t CTGetCoreTextVersion();
 
