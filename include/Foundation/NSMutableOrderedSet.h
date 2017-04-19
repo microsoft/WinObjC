@@ -27,7 +27,7 @@
 
 FOUNDATION_EXPORT_CLASS
 @interface NSMutableOrderedSet <ObjectType> : NSOrderedSet <NSCopying, NSFastEnumeration, NSMutableCopying, NSSecureCoding>
-+ (instancetype)orderedSetWithCapacity:(NSUInteger)numItems STUB_METHOD;
++(instancetype)orderedSetWithCapacity : (NSUInteger)numItems STUB_METHOD;
 - (instancetype)initWithCapacity:(NSUInteger)numItems STUB_METHOD;
 - (instancetype)init;
 - (void)addObject:(ObjectType)object;
@@ -36,7 +36,7 @@ FOUNDATION_EXPORT_CLASS
 - (void)insertObject:(ObjectType)object atIndex:(NSUInteger)idx;
 - (void)setObject:(ObjectType)object atIndexedSubscript:(NSUInteger)idx STUB_METHOD;
 - (void)insertObjects:(NSArray<ObjectType>*)objects atIndexes:(NSIndexSet*)indexes STUB_METHOD;
-- (void)removeObject:(ObjectType)object STUB_METHOD;
+- (void)removeObject:(ObjectType)object;
 - (void)removeObjectAtIndex:(NSUInteger)idx STUB_METHOD;
 - (void)removeObjectsAtIndexes:(NSIndexSet*)indexes STUB_METHOD;
 - (void)removeObjectsInArray:(NSArray<ObjectType>*)array STUB_METHOD;
@@ -55,8 +55,8 @@ FOUNDATION_EXPORT_CLASS
 - (void)sortRange:(NSRange)range options:(NSSortOptions)opts usingComparator:(NSComparator)cmptr STUB_METHOD;
 - (void)intersectOrderedSet:(NSOrderedSet<ObjectType>*)other STUB_METHOD;
 - (void)intersectSet:(NSSet<ObjectType>*)other STUB_METHOD;
-- (void)minusOrderedSet:(NSOrderedSet<ObjectType>*)other STUB_METHOD;
+- (void)minusOrderedSet:(NSOrderedSet<ObjectType>*)other;
 - (void)minusSet:(NSSet<ObjectType>*)other STUB_METHOD;
-- (void)unionOrderedSet:(NSOrderedSet<ObjectType>*)other STUB_METHOD;
+- (void)unionOrderedSet:(NSOrderedSet<ObjectType>*)other;
 - (void)unionSet:(NSSet<ObjectType>*)other STUB_METHOD;
 @end

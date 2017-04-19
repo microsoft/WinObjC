@@ -360,3 +360,34 @@ TEST(NSMutableOrderedSet, oneWayArray) {
 
     ASSERT_ANY_THROW([((NSMutableArray*)arrayObjs) addObject:@"test"]);
 }
+
+TEST(NSMutableOrderedSet, unionOrderedSet) {
+    NSMutableOrderedSet* orderedSet1 = [NSMutableOrderedSet orderedSetWithObjects:@"Tesla", @"Benz", @"BMW", @"Acura", @"Acura", nil];
+    NSMutableOrderedSet* orderedSet2 = [NSMutableOrderedSet orderedSetWithObjects:@"GM", @"Elio", nil];
+    ASSERT_NE(nil, orderedSet1);
+    ASSERT_NE(nil, orderedSet2);
+
+    [orderedSet1 unionOrderedSet:orderedSet2];
+    ASSERT_NE(nil, orderedSet1);
+    ASSERT_NE(nil, orderedSet2);
+    ASSERT_EQ(6, [orderedSet1 count]);
+}
+
+TEST(NSMutableOrderedSet, removeObject) {
+    NSMutableOrderedSet* orderedSet = [NSMutableOrderedSet orderedSetWithObjects:@"Tesla", @"Benz", @"BMW", @"Acura", nil];
+    ASSERT_NE(nil, orderedSet);
+    [orderedSet removeObject:@"Tesla"];
+    ASSERT_EQ(3, [orderedSet count]);
+    ASSERT_FALSE([orderedSet containsObject:@"Tesla"]);
+}
+
+TEST(NSMutableOrderedSet, minusOrderedSet) {
+    NSMutableOrderedSet* orderedSet = [NSMutableOrderedSet orderedSetWithObjects:@"Tesla", @"Benz", @"BMW", @"Acura", nil];
+    NSMutableOrderedSet* orderedSetToRemove = [NSMutableOrderedSet orderedSetWithObjects:@"BMW", @"Acura", nil];
+    ASSERT_NE(nil, orderedSet);
+    ASSERT_NE(nil, orderedSetToRemove);
+    [orderedSet minusOrderedSet:orderedSetToRemove];
+    ASSERT_EQ(2, [orderedSet count]);
+    ASSERT_FALSE([orderedSet containsObject:@"BMW"]);
+    ASSERT_FALSE([orderedSet containsObject:@"Acura"]);
+}
