@@ -16,8 +16,12 @@
 #pragma once
 
 #import <UIKit/UIApplication.h>
-#import <Foundation/NSURL.h>
-#import <UWP/InteropBase.h>
+
+#include "COMIncludes.h"
+#import <inspectable.h>
+#include "COMIncludes_End.h"
+
+@class WMSSpeechRecognitionResult, WFUri, WAAFileActivatedEventArgs;
 
 @interface UIApplication (internal)
 // TODO: #2443 Remove _popupWindow (and all references to it) when we move UIAlertView over to Xaml
@@ -30,9 +34,9 @@
 - (void)_sendSuspendEvent;
 - (void)_sendResumeEvent;
 - (void)_sendToastActionReceivedEvent:(NSDictionary*)toastAction;
-- (void)_sendVoiceCommandReceivedEvent:(RTObject*)result;
-- (void)_sendProtocolReceivedEvent:(NSURL*)protocolUri source:(NSString*)source;
-- (void)_sendFileReceivedEvent:(RTObject*)result;
+- (void)_sendVoiceCommandReceivedEvent:(WMSSpeechRecognitionResult*)result;
+- (void)_sendProtocolReceivedEvent:(WFUri*)protocolUri source:(NSString*)source;
+- (void)_sendFileReceivedEvent:(WAAFileActivatedEventArgs*)result;
 @end
 
 @interface WOCDisplayMode (internal)
@@ -47,3 +51,5 @@
 // in a file that gets included in C++/CX sources.
 void _UIApplicationMainInit(NSString* principalClassName, NSString* delegateClassName, int activationType, id activationArg);
 void _UIApplicationShutdown();
+
+id _createProjectionObject(const char* cls, IInspectable* source, const char* description);

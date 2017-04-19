@@ -99,19 +99,24 @@ void RunApplicationMain(const char* principalName, const char* delegateName, Act
             activationArgument = toastAction;
             break;
         }
-        case ActivationTypeProtocol: {
-            WF::Uri uri = objcwinrt::from_insp<WF::Uri>(activationArg);
-            activationArgument = [NSURL URLWithString:objcwinrt::string(uri.AbsoluteUri())];
+        case ActivationTypeProtocol:
+            activationArgument = _createProjectionObject("WFUri", activationArg, "protocol activation");
             break;
-        }
+
         case ActivationTypeVoiceCommand:
-        case ActivationTypeFile: {
-                WF::IInspectable inspectable = objcwinrt::from_insp<WF::IInspectable>(activationArg);
-                activationArgument = objcwinrt::to_rtobj(inspectable);
-                break;
-        }
+            activationArgument = _createProjectionObject("WMSSpeechRecognitionResult", activationArg, "voice commands");
+            break;
+
+        case ActivationTypeFile:
+            activationArgument = _createProjectionObject("WAAFileActivatedEventArgs", activationArg, "file activation");
+            break;
+
         default:
             break;
+    }
+
+    if (!activationArgument) {
+        activationType = ActivationTypeNone;
     }
 
     // Grab window dimensions from CPP/WinRT and initialize our display accordingly

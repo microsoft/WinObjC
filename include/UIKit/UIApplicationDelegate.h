@@ -42,7 +42,7 @@
 */
 
 @class NSString, UIApplication, NSDictionary, NSCoder, UIViewController, NSArray, UIUserNotificationSettings, UILocalNotification, NSData,
-    NSError, NSUserActivity, UIApplicationShortcutItem, NSURL, UIWindow, RTObject;
+    NSError, NSUserActivity, UIApplicationShortcutItem, NSURL, UIWindow, WMSSpeechRecognitionResult, WFUri, WAAFileActivatedEventArgs;
 
 UIKIT_EXPORT NSString* const UIApplicationLaunchOptionsURLKey;
 UIKIT_EXPORT NSString* const UIApplicationLaunchOptionsSourceApplicationKey;
@@ -129,9 +129,9 @@ UIKIT_EXPORT NSString* const UIApplicationLaunchOptionsToastActionUserInputKey;
              completionHandler:(void (^)(void))completionHandler;
 - (void)application:(UIApplication*)application didReceiveRemoteNotification:(NSDictionary*)userInfo;
 - (void)application:(UIApplication*)application didReceiveToastAction:(NSDictionary*)action;
-- (void)application:(UIApplication*)application didReceiveVoiceCommand:(RTObject*)result;
-- (void)application:(UIApplication*)application didReceiveFile:(RTObject*)result;
-- (void)application:(UIApplication*)application didReceiveProtocol:(NSURL*)uri;
+- (void)application:(UIApplication*)application didReceiveVoiceCommand:(WMSSpeechRecognitionResult*)result;
+- (void)application:(UIApplication*)application didReceiveFile:(WAAFileActivatedEventArgs*)result;
+- (void)application:(UIApplication*)application didReceiveProtocol:(WFUri*)uri;
 - (void)application:(UIApplication*)application
     handleActionWithIdentifier:(NSString*)identifier
           forLocalNotification:(UILocalNotification*)notification

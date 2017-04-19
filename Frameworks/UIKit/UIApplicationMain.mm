@@ -57,7 +57,6 @@ static const wchar_t* TAG = L"UIApplicationMain";
 
 using namespace Microsoft::WRL;
 using namespace winrt::Windows::ApplicationModel;
-namespace WF = winrt::Windows::Foundation;
 
 @interface NSAutoreleasePoolWarn : NSAutoreleasePool
 @end
@@ -356,15 +355,19 @@ extern "C" void UIApplicationMainHandleWindowVisibilityChangeEvent(bool isVisibl
 }
 
 extern "C" void UIApplicationMainHandleVoiceCommandEvent(IInspectable* voiceCommandResult) {
-    WF::IInspectable inspectable = objcwinrt::from_insp<WF::IInspectable>(voiceCommandResult);
-    RTObject* result = objcwinrt::to_rtobj(inspectable);
+    id result = _createProjectionObject("WMSSpeechRecognitionResult", voiceCommandResult, "voice commands");
 
-    [[UIApplication sharedApplication] _sendVoiceCommandReceivedEvent:result];
+    if (result) {
+        [[UIApplication sharedApplication] _sendVoiceCommandReceivedEvent:result];
+    }
 }
 
-extern "C" void UIApplicationMainHandleFileEvent(IInspectable* result) {
-    WF::IInspectable inspectable = objcwinrt::from_insp<WF::IInspectable>(result);
-    [[UIApplication sharedApplication] _sendFileReceivedEvent:objcwinrt::to_rtobj(inspectable)];
+extern "C" void UIApplicationMainHandleFileEvent(IInspectable* fileResult) {
+    id result = _createProjectionObject("WAAFileActivatedEventArgs", fileResult, "file activation");
+
+    if (result) {
+        [[UIApplication sharedApplication] _sendFileReceivedEvent:result];
+    }
 }
 
 static NSString* _bundleIdFromPackageFamilyName(const wchar_t* packageFamily) {
@@ -391,10 +394,27 @@ static NSString* _bundleIdFromPackageFamilyName(const wchar_t* packageFamily) {
 }
 
 extern "C" void UIApplicationMainHandleProtocolEvent(IInspectable* protocolUri, const wchar_t* sourceApplication) {
-    WF::Uri uri = objcwinrt::from_insp<WF::Uri>(protocolUri);
-    NSURL* url = [NSURL URLWithString:objcwinrt::string(uri.AbsoluteUri())];
+    id result = _createProjectionObject("WFUri", protocolUri, "protocol activation");
 
-    NSString* source = _bundleIdFromPackageFamilyName(sourceApplication);
+    if (result) {
+        NSString* source = _bundleIdFromPackageFamilyName(sourceApplication);
 
-    [[UIApplication sharedApplication] _sendProtocolReceivedEvent:url source:source];
+        [[UIApplication sharedApplication] _sendProtocolReceivedEvent:result source:source];
+    }
+}
+
+id _createProjectionObject(const char* className, IInspectable* source, const char* description) {
+    // We can't refer to projection classes directly, because we don't want UIKit to have any link-time
+    // dependencies on the projections. However, we can try to load the classes dynamically.
+
+    id result = nil;
+    id cls = objc_getClass(className);
+
+    if (cls) {
+        result = objc_msgSend(cls, @selector(createWith:), source);
+    } else {
+        TraceWarning(TAG, L"%hs class not registered - link with WinObjC UWP library to receive %hs", className, description);
+    }
+
+    return result;
 }
