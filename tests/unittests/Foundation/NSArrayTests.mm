@@ -202,6 +202,7 @@ TEST(NSArray, Enumerate) {
                                     waitingCount--;
                                     [condition signal];
                                     [condition unlock];
+                                    ASSERT_EQ(index, [object integerValue]);
                                 }];
 
     ASSERT_EQ(0, waitingCount);

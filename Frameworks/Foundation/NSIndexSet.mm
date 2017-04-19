@@ -367,7 +367,9 @@ static constexpr NSRange sc_unlimitedRange{ 0, LONG_MAX };
                           options:options
                        usingBlock:^(NSUInteger index, BOOL* stop) {
                            if (predicate(index, stop)) {
-                               [ret addIndex:index];
+                               @synchronized(ret) {
+                                   [ret addIndex:index];
+                               }
                            }
                        }];
 
