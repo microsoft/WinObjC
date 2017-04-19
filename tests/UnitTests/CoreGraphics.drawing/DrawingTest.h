@@ -118,6 +118,13 @@ protected:
 #define TEXT_DRAW_TEST(test_case_name, test_name) DRAW_TEST_F(test_case_name, test_name, ::testing::DrawTest<>)
 #define TEXT_DRAW_TEST_F(test_case_name, test_name, test_fixture) DRAW_TEST_F(test_case_name, test_name, test_fixture)
 
+#ifdef WINOBJC_DISABLE_TESTS
+#define ARM_DISABLED_TEXT_DRAW_TEST_F(test_case_name, test_name, test_fixture) \
+    DISABLED_DRAW_TEST_F(test_case_name, DISABLED_##test_name, test_fixture)
+#else
+#define ARM_DISABLED_TEXT_DRAW_TEST_F(test_case_name, test_name, test_fixture) TEXT_DRAW_TEST_F(test_case_name, test_name, test_fixture)
+#endif
+
 #define DISABLED_TEXT_DRAW_TEST(test_case_name, test_name) TEXT_DRAW_TEST(test_case_name, DISABLED_##test_name)
 #define DISABLED_TEXT_DRAW_TEST_F(test_case_name, test_name, test_fixture) \
     TEXT_DRAW_TEST_F(test_case_name, DISABLED_##test_name, test_fixture)
