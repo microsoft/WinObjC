@@ -16,15 +16,45 @@
 
 #import <CoreText/CTLine.h>
 #import <StubReturn.h>
-#import "NSStringInternal.h"
 #import "CoreTextInternal.h"
 #import "CGContextInternal.h"
 #import "DWriteWrapper_CoreText.h"
 #import <CoreText/CTTypesetter.h>
+#import <CoreFoundation/CFString.h>
 
+#include <memory>
 #import <algorithm>
 #import <numeric>
+#import <cwchar>
 #import <vector>
+
+static CFStringRef __CTCreateReversedString(CFStringRef string) {
+    if (string == nullptr) {
+        return nullptr;
+    }
+
+    CFIndex length = CFStringGetLength(string);
+    CFIndex usedBufLen;
+    CFStringGetBytes(string, CFRangeMake(0, length), kCFStringEncodingUTF16, 0, false, nullptr, length, &usedBufLen);
+
+    if (length < 2) {
+        return CFStringCreateCopy(kCFAllocatorDefault, string);
+    }
+
+    CFIndex bufLen = (usedBufLen / sizeof(UniChar));
+    std::unique_ptr<UniChar[]> characters(new UniChar[bufLen + 1]);
+    characters[bufLen] = L'\0';
+
+    CFStringGetBytes(
+        string, CFRangeMake(0, length), kCFStringEncodingUTF16, 0, false, reinterpret_cast<UInt8*>(characters.get()), usedBufLen, nullptr);
+
+    wchar_t* result = _wcsrev(reinterpret_cast<wchar_t*>(characters.get()));
+    if (result == nullptr) {
+        return nullptr;
+    }
+
+    return CFStringCreateWithCharactersNoCopy(kCFAllocatorDefault, characters.release(), bufLen, nullptr);
+}
 
 static NSMutableAttributedString* _getTruncatedStringFromSourceLine(CTLineRef line,
                                                                     CTLineTruncationType truncationType,
@@ -187,8 +217,9 @@ static NSMutableAttributedString* _getTruncatedStringFromSourceLine(CTLineRef so
         CFDictionaryRef attribs = CTRunGetAttributes(run);
 
         if (truncationType == kCTLineTruncationStart) {
-            NSString* reverse = [runString _reverseString];
-            NSAttributedString* string = [[NSAttributedString alloc] initWithString:reverse attributes:(NSDictionary*)attribs];
+            auto reverse = woc::MakeStrongCF<CFStringRef>(__CTCreateReversedString(static_cast<CFStringRef>(runString)));
+            NSAttributedString* string =
+                [[NSAttributedString alloc] initWithString:static_cast<NSString*>(reverse.get()) attributes:(NSDictionary*)attribs];
             [ret insertAttributedString:string atIndex:0];
             [string release];
         } else if (truncationType == kCTLineTruncationEnd) {
