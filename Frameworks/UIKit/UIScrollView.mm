@@ -965,10 +965,14 @@ static void changeContentOffset(UIScrollView* self, CGPoint offset, BOOL animate
 */
 - (void)setShowsVerticalScrollIndicator:(BOOL)show {
     if (show) {
-        _scrollViewer.VerticalScrollBarVisibility(Controls::ScrollBarVisibility::Auto);
+        if (self.isScrollEnabled) {
+            _scrollViewer.VerticalScrollBarVisibility(Controls::ScrollBarVisibility::Auto);
+        }
         _previousVerticalScrollBarVisibility = Controls::ScrollBarVisibility::Auto;
     } else {
-        _scrollViewer.VerticalScrollBarVisibility(Controls::ScrollBarVisibility::Hidden);
+        if (self.isScrollEnabled) {
+            _scrollViewer.VerticalScrollBarVisibility(Controls::ScrollBarVisibility::Hidden);
+        }
         _previousVerticalScrollBarVisibility = Controls::ScrollBarVisibility::Hidden;
     }
 }
