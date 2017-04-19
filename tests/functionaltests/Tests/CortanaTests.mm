@@ -138,7 +138,7 @@ MOCK_CLASS(MockProtocolActivatedEventArgs,
 
 - (BOOL)application:(UIApplication*)application willFinishLaunchingWithOptions:(NSDictionary*)launchOptions {
     EXPECT_NE(nullptr, launchOptions[UIApplicationLaunchOptionsVoiceCommandKey]);
-    WMSSpeechRecognitionResult* result = launchOptions[UIApplicationLaunchOptionsVoiceCommandKey];
+    WMSSpeechRecognitionResult* result = rt_dynamic_cast<WMSSpeechRecognitionResult>(launchOptions[UIApplicationLaunchOptionsVoiceCommandKey]);
     EXPECT_OBJCEQ(@"CORTANA_TEST", result.text);
     [_methodsCalled setObject:@(YES) forKey:NSStringFromSelector(_cmd)];
     return true;
@@ -146,16 +146,16 @@ MOCK_CLASS(MockProtocolActivatedEventArgs,
 
 - (BOOL)application:(UIApplication*)application didFinishLaunchingWithOptions:(NSDictionary*)launchOptions {
     EXPECT_NE(nullptr, launchOptions[UIApplicationLaunchOptionsVoiceCommandKey]);
-    WMSSpeechRecognitionResult* result = launchOptions[UIApplicationLaunchOptionsVoiceCommandKey];
+    WMSSpeechRecognitionResult* result = rt_dynamic_cast<WMSSpeechRecognitionResult>(launchOptions[UIApplicationLaunchOptionsVoiceCommandKey]);
     EXPECT_OBJCEQ(@"CORTANA_TEST", result.text);
     [_methodsCalled setObject:@(YES) forKey:NSStringFromSelector(_cmd)];
     return true;
 }
 
-- (void)application:(UIApplication*)application didReceiveVoiceCommand:(WMSSpeechRecognitionResult*)result {
+- (void)application:(UIApplication*)application didReceiveVoiceCommand:(RTObject*)result {
     // Delegate method should only be called once
     EXPECT_EQ([[self methodsCalled] objectForKey:NSStringFromSelector(_cmd)], nil);
-    EXPECT_OBJCEQ(@"CORTANA_TEST", result.text);
+    EXPECT_OBJCEQ(@"CORTANA_TEST", rt_dynamic_cast<WMSSpeechRecognitionResult>(result).text);
     [_methodsCalled setObject:@(YES) forKey:NSStringFromSelector(_cmd)];
     return;
 }
@@ -176,24 +176,24 @@ MOCK_CLASS(MockProtocolActivatedEventArgs,
 
 - (BOOL)application:(UIApplication*)application willFinishLaunchingWithOptions:(NSDictionary*)launchOptions {
     EXPECT_NE(nullptr, launchOptions[UIApplicationLaunchOptionsProtocolKey]);
-    WFUri* uri = launchOptions[UIApplicationLaunchOptionsProtocolKey];
-    EXPECT_OBJCEQ(@"CORTANA_TEST", uri.toString);
+    NSURL* url = launchOptions[UIApplicationLaunchOptionsProtocolKey];
+    EXPECT_OBJCEQ(@"CORTANA_TEST", url.absoluteString);
     [_methodsCalled setObject:@(YES) forKey:NSStringFromSelector(_cmd)];
     return true;
 }
 
 - (BOOL)application:(UIApplication*)application didFinishLaunchingWithOptions:(NSDictionary*)launchOptions {
     EXPECT_NE(nullptr, launchOptions[UIApplicationLaunchOptionsProtocolKey]);
-    WFUri* uri = launchOptions[UIApplicationLaunchOptionsProtocolKey];
-    EXPECT_OBJCEQ(@"CORTANA_TEST", uri.toString);
+    NSURL* url = launchOptions[UIApplicationLaunchOptionsProtocolKey];
+    EXPECT_OBJCEQ(@"CORTANA_TEST", url.absoluteString);
     [_methodsCalled setObject:@(YES) forKey:NSStringFromSelector(_cmd)];
     return true;
 }
 
-- (void)application:(UIApplication*)application didReceiveProtocol:(WFUri*)uri {
+- (void)application:(UIApplication*)application didReceiveProtocol:(NSURL*)url {
     // Delegate method should only be called once
     EXPECT_EQ([[self methodsCalled] objectForKey:NSStringFromSelector(_cmd)], nil);
-    EXPECT_OBJCEQ(@"CORTANA_TEST", uri.toString);
+    EXPECT_OBJCEQ(@"CORTANA_TEST", url.absoluteString);
     [_methodsCalled setObject:@(YES) forKey:NSStringFromSelector(_cmd)];
     return;
 }
@@ -271,6 +271,13 @@ public:
             // Create mocked data to pass into application
             auto fakeUri = Make<MockUri>();
             fakeUri->SetToString([](HSTRING* text) {
+                Wrappers::HString value;
+                value.Set(L"CORTANA_TEST");
+                *text = value.Detach();
+                return S_OK;
+            });
+
+            fakeUri->Setget_AbsoluteUri([](HSTRING* text) {
                 Wrappers::HString value;
                 value.Set(L"CORTANA_TEST");
                 *text = value.Detach();

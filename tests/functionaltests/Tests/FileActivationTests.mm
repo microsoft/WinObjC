@@ -99,7 +99,7 @@ MOCK_CLASS(MockStorageItem, public RuntimeClass<RuntimeClassFlags<WinRtClassicCo
 
 - (BOOL)application:(UIApplication*)application willFinishLaunchingWithOptions:(NSDictionary*)launchOptions {
     EXPECT_NE(nullptr, launchOptions[UIApplicationLaunchOptionsFileKey]);
-    WAAFileActivatedEventArgs* result = launchOptions[UIApplicationLaunchOptionsFileKey];
+    WAAFileActivatedEventArgs* result = rt_dynamic_cast<WAAFileActivatedEventArgs>(launchOptions[UIApplicationLaunchOptionsFileKey]);
     EXPECT_EQ(1, result.files.count);
 
     // TODO 1091: dynamic cast shouldn't be necessary but returned projected type is incorrect.
@@ -110,7 +110,7 @@ MOCK_CLASS(MockStorageItem, public RuntimeClass<RuntimeClassFlags<WinRtClassicCo
 
 - (BOOL)application:(UIApplication*)application didFinishLaunchingWithOptions:(NSDictionary*)launchOptions {
     EXPECT_NE(nullptr, launchOptions[UIApplicationLaunchOptionsFileKey]);
-    WAAFileActivatedEventArgs* result = launchOptions[UIApplicationLaunchOptionsFileKey];
+    WAAFileActivatedEventArgs* result = rt_dynamic_cast<WAAFileActivatedEventArgs>(launchOptions[UIApplicationLaunchOptionsFileKey]);
     EXPECT_EQ(1, result.files.count);
 
     // TODO 1091: dynamic cast shouldn't be necessary but returned projected type is incorrect.
@@ -119,13 +119,15 @@ MOCK_CLASS(MockStorageItem, public RuntimeClass<RuntimeClassFlags<WinRtClassicCo
     return true;
 }
 
-- (void)application:(UIApplication*)application didReceiveFile:(WAAFileActivatedEventArgs*)result {
+- (void)application:(UIApplication*)application didReceiveFile:(RTObject*)result {
+    WAAFileActivatedEventArgs* args = rt_dynamic_cast<WAAFileActivatedEventArgs>(result);
+
     // Delegate method should only be called once
     EXPECT_EQ([[self methodsCalled] objectForKey:NSStringFromSelector(_cmd)], nil);
-    EXPECT_EQ(1, result.files.count);
+    EXPECT_EQ(1, args.files.count);
 
     // TODO 1091: dynamic cast shouldn't be necessary but returned projected type is incorrect.
-    EXPECT_OBJCEQ(@"FILEACTIVATED_TEST", [rt_dynamic_cast<WSIStorageItem>(result.files[0]) name]);
+    EXPECT_OBJCEQ(@"FILEACTIVATED_TEST", [rt_dynamic_cast<WSIStorageItem>(args.files[0]) name]);
     [_methodsCalled setObject:@(YES) forKey:NSStringFromSelector(_cmd)];
     return;
 }
