@@ -279,10 +279,8 @@ CGAffineTransform CTRunGetTextMatrix(CTRunRef run) {
 }
 
 /**
- @Status NotInPlan
- @Notes this would require us to move to using bridged type implementation, seems of little value at this point
+ @Status Interoperable
 */
 CFTypeID CTRunGetTypeID() {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return __CTRun::GetTypeID();
 }
