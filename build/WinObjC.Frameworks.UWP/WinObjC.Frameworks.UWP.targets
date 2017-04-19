@@ -7,15 +7,15 @@
 
          NOTE: It is important that this information is added at the end in the .targets instead of in the .props so that consumers don't
          accidentally stomp it and get really confused. This is contrary to a configurable type property that a consumer may want / need to adjust. 
-         To depend on this package means the consumer gets these these things.  -->
+         To depend on this package means the consumer gets these things.  -->
 
     <ItemGroup Condition="'$(ConfigurationType)' != 'StaticLibrary'">
 
-      <_LibsFromPackage Include="$(MSBuildThisFileDirectory)\lib\$(TargetOsAndVersion)\$(PlatformTarget)\*.dll"/>    
-      <_LibsFromPackage Include="$(MSBuildThisFileDirectory)\lib\$(TargetOsAndVersion)\$(PlatformTarget)\$(Configuration)\*.dll"/>
+      <_DllsFromPackage Include="$(MSBuildThisFileDirectory)\lib\$(TargetOsAndVersion)\$(PlatformTarget)\*.dll"/>    
+      <_DllsFromPackage Include="$(MSBuildThisFileDirectory)\lib\$(TargetOsAndVersion)\$(PlatformTarget)\$(Configuration)\*.dll"/>
 
-      <_LibsFromPackage Include="$(MSBuildThisFileDirectory)\deps\prebuilt\$(TargetOsAndVersion)\$(PlatformTarget)\*.dll"/>
-      <_LibsFromPackage Include="$(MSBuildThisFileDirectory)\deps\prebuilt\$(TargetOsAndVersion)\$(PlatformTarget)\$(Configuration)\*.dll"/>
+      <_DllsFromPackage Include="$(MSBuildThisFileDirectory)\deps\prebuilt\$(TargetOsAndVersion)\$(PlatformTarget)\*.dll"/>
+      <_DllsFromPackage Include="$(MSBuildThisFileDirectory)\deps\prebuilt\$(TargetOsAndVersion)\$(PlatformTarget)\$(Configuration)\*.dll"/>
 
     </ItemGroup>
 
@@ -24,16 +24,17 @@
           <InternalSystemIncludePaths>$(MSBuildThisFileDirectory)\include\;%(InternalSystemIncludePaths);</InternalSystemIncludePaths>
         </ClangCompile>
 
-        <!-- Add in the link bits only if its a "final" linked product likea  dll or exe -->
-        <Link Condition="'$(ConfigurationType)' != 'StaticLibrary'">
+        <Link>
           <AdditionalLibraryDirectories>$(MSBuildThisFileDirectory)\lib\$(TargetOsAndVersion)\$(PlatformTarget)\;$(MSBuildThisFileDirectory)\lib\$(TargetOsAndVersion)\$(PlatformTarget)\$(Configuration)\;$(MSBuildThisFileDirectory)\deps\prebuilt\$(TargetOsAndVersion)\$(PlatformTarget)\;$(MSBuildThisFileDirectory)\deps\prebuilt\$(TargetOsAndVersion)\$(PlatformTarget)\$(Configuration)\;%(AdditionalLibraryDirectories);</AdditionalLibraryDirectories>
         </Link>
     </ItemDefinitionGroup>
 
-  <!-- TODO: This should use XMLPoke or similar to dynamically figure out where the important bits are packaged to.-->
+  
   <ItemGroup Condition="'$(ConfigurationType)' != 'StaticLibrary'">
 
-    <ReferenceCopyLocalPaths Include="@(_LibsFromPackage)"/>
+    <ReferenceCopyLocalPaths Include="@(_DllsFromPackage)">
+      <IsWinObjC>true</IsWinObjC>
+    </ReferenceCopyLocalPaths>
 
   </ItemGroup>
 </Project>

@@ -44,7 +44,6 @@
     <LinkWithStarboard>false</LinkWithStarboard>
     <LinkWithMobileCoreServices>false</LinkWithMobileCoreServices>
     <LinkWithCFNetwork>false</LinkWithCFNetwork>
-    <StarboardLinkObjCRuntime>false</StarboardLinkObjCRuntime>
   </PropertyGroup>
   <ImportGroup Label="ExtensionSettings">
     <Import Project="$(StarboardBasePath)\msvc\sdk-build.props" />
