@@ -108,13 +108,14 @@ void CTFrameDraw(CTFrameRef frame, CGContextRef ctx) {
 
         CGPoint relativePosition = frame->_lineOrigins[i];
 
-        for (size_t j = 0; j < [line->_runs count]; ++j) {
-            _CTRun* curRun = [line->_runs objectAtIndex:j];
+        CFIndex len = CFArrayGetCount(line->_runs);
+        for (size_t j = 0; j < len; ++j) {
+            __CTRun* curRun = const_cast<__CTRun*>(static_cast<CTRunRef>(CFArrayGetValueAtIndex(line->_runs, j)));
             if (j > 0) {
                 // Adjusts x position relative to the last run drawn
                 relativePosition.x += curRun->_relativeXOffset;
             }
-            runs.emplace_back(GlyphRunData{ &curRun->_dwriteGlyphRun, relativePosition, (CFDictionaryRef)curRun->_attributes.get() });
+            runs.emplace_back(GlyphRunData{ &curRun->_dwriteGlyphRun, relativePosition, curRun->_attributes });
         }
     }
 
