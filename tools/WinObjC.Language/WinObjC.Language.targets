@@ -43,7 +43,7 @@
 
     <!-- At the language level, there are some includes that could be consumed from Cl C++ like libobjc2/libdispatch headers -->
     <ClCompile>
-      <AdditionalIncludeDirectories>$(MSBuildThisFileDirectory)\include\;$(MSBuildThisFileDirectory)\deps\prebuilt\include\;$(MSBuildThisFileDirectory)\include\xplat;%(InternalSystemIncludePaths);</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(MSBuildThisFileDirectory)\include\;$(MSBuildThisFileDirectory)\deps\prebuilt\include\;$(MSBuildThisFileDirectory)\include\xplat;%(InternalSystemIncludePaths);%(AdditionalIncludeDirectories);</AdditionalIncludeDirectories>
     </ClCompile>
 
     <Link>
