@@ -386,18 +386,6 @@
   <PropertyGroup>
     <CleanDependsOn>$(CleanDependsOn);CleanSBResources;</CleanDependsOn>
   </PropertyGroup>
-  <ItemDefinitionGroup>
-      <SBResourceClean></SBResourceClean>
-  </ItemDefinitionGroup>
-  <Target
-    Name="ComputeCleanSBResources" >
-    <!-- Since we're not linking while we're cleaning, there's no easy way to compute the required libraries,
-         so for the sake of Clean, we link to them all. -->
-    <ItemGroup>
-      <SBResourceClean Include ="$(StarboardPrebuiltLibsDir)\*.dll"/>
-      <SBResourceClean Include ="$(StarboardLibDirs)\*.dll"/>
-    </ItemGroup>
-  </Target>
 
   <Target
     Name="RemoveDirIfEmpty"
@@ -417,7 +405,7 @@
 
   <Target
     Name="CleanSBResources"
-    DependsOnTargets="ComputeCleanSBResources;$(SBResourceComputeTargets)" >
+    DependsOnTargets="$(SBResourceComputeTargets)" >
 
     <!-- Delete intermediates -->
     <RemoveDir Directories="@(StoryboardCompile->Metadata('IntermediateFile')->ClearMetadata())" />
@@ -428,11 +416,11 @@
     <Delete Files="@(SBInfoPlistCopy->Metadata('IntermediateFile')->ClearMetadata())" />
 
     <ItemGroup>
-      <RemoveDirIfEmpty Condition="'$(AppContainerApplication)' != 'true'" Include="@(SBResourceClean->Metadata('OutputFile')->DirectoryName()->Distinct())" />
+      <RemoveDirIfEmpty Include="@(SBResourceCopy->Metadata('OutputFile')->DirectoryName()->Distinct())" />
     </ItemGroup>
 
     <!-- Delete assets -->
-    <Delete Condition="'$(AppContainerApplication)' != 'true'" Files="@(SBResourceClean->Metadata('OutputFile')->ClearMetadata())" />
+    <Delete Files="@(SBResourceCopy->Metadata('OutputFile')->ClearMetadata())" />
   </Target>
 
   <Target

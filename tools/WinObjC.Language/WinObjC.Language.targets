@@ -6,4 +6,69 @@
   <ImportGroup>
     <Import Project="$(MsBuildThisFileDirectory)msvc\starboard-sdk.targets" Condition="Exists('$(MsBuildThisFileDirectory)msvc\starboard-sdk.targets')" />
   </ImportGroup>
+
+  <!-- Make sure that the output artifacts are included in the build. This means adding include paths and link libraries for it.
+
+     NOTE: It is important that this information is added at the end in the .targets instead of in the .props so that consumers don't
+     accidentally stomp it and get really confused. This is contrary to a configurable type property that a consumer may want / need to adjust. 
+     To depend on this package means the consumer gets these things.  -->
+
+  <ItemGroup Condition="'$(ConfigurationType)' != 'StaticLibrary'">
+    <_ReferencesFromPackage Include="$(MSBuildThisFileDirectory)\lib\$(TargetOsAndVersion)\$(PlatformTarget)\*.winmd"/>    
+    <_ReferencesFromPackage Include="$(MSBuildThisFileDirectory)\lib\$(TargetOsAndVersion)\$(PlatformTarget)\$(Configuration)\*.winmd"/>
+
+    <_ReferencesFromPackage Include="$(MSBuildThisFileDirectory)\deps\prebuilt\$(TargetOsAndVersion)\$(PlatformTarget)\*.winmd"/>
+    <_ReferencesFromPackage Include="$(MSBuildThisFileDirectory)\deps\prebuilt\$(TargetOsAndVersion)\$(PlatformTarget)\$(Configuration)\*.winmd"/>
+
+    <_DllsFromPackage Include="$(MSBuildThisFileDirectory)\lib\$(TargetOsAndVersion)\$(PlatformTarget)\*.dll"/>    
+    <_DllsFromPackage Include="$(MSBuildThisFileDirectory)\lib\$(TargetOsAndVersion)\$(PlatformTarget)\$(Configuration)\*.dll"/>
+
+    <_DllsFromPackage Include="$(MSBuildThisFileDirectory)\deps\prebuilt\$(TargetOsAndVersion)\$(PlatformTarget)\*.dll"/>
+    <_DllsFromPackage Include="$(MSBuildThisFileDirectory)\deps\prebuilt\$(TargetOsAndVersion)\$(PlatformTarget)\$(Configuration)\*.dll"/>
+
+    <_LibsFromPackage Include="$(MSBuildThisFileDirectory)\lib\$(TargetOsAndVersion)\$(PlatformTarget)\*.lib"/>    
+    <_LibsFromPackage Include="$(MSBuildThisFileDirectory)\lib\$(TargetOsAndVersion)\$(PlatformTarget)\$(Configuration)\*.lib"/>
+
+    <_LibsFromPackage Include="$(MSBuildThisFileDirectory)\deps\prebuilt\$(TargetOsAndVersion)\$(PlatformTarget)\*.lib"/>    
+    <_LibsFromPackage Include="$(MSBuildThisFileDirectory)\deps\prebuilt\$(TargetOsAndVersion)\$(PlatformTarget)\$(Configuration)\*.lib"/>
+
+    <_PriFilesFromPackage Include="$(MSBuildThisFileDirectory)\lib\$(TargetOsAndVersion)\$(PlatformTarget)\*.pri"/>    
+    <_PriFilesFromPackage Include="$(MSBuildThisFileDirectory)\lib\$(TargetOsAndVersion)\$(PlatformTarget)\$(Configuration)\*.pri"/>
+  </ItemGroup>
+
+  <ItemDefinitionGroup>
+    <ClangCompile>
+      <InternalSystemIncludePaths>$(MSBuildThisFileDirectory)\include\;$(MSBuildThisFileDirectory)\deps\prebuilt\include\;$(MSBuildThisFileDirectory)\include\xplat;%(InternalSystemIncludePaths);</InternalSystemIncludePaths>
+    </ClangCompile>
+
+    <!-- At the language level, there are some includes that could be consumed from Cl C++ like libobjc2/libdispatch headers -->
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(MSBuildThisFileDirectory)\include\;$(MSBuildThisFileDirectory)\deps\prebuilt\include\;$(MSBuildThisFileDirectory)\include\xplat;%(InternalSystemIncludePaths);%(AdditionalIncludeDirectories);</AdditionalIncludeDirectories>
+    </ClCompile>
+
+    <Link>
+      <AdditionalLibraryDirectories>$(MSBuildThisFileDirectory)\lib\$(TargetOsAndVersion)\$(PlatformTarget)\;$(MSBuildThisFileDirectory)\lib\$(TargetOsAndVersion)\$(PlatformTarget)\$(Configuration)\;$(MSBuildThisFileDirectory)\deps\prebuilt\$(TargetOsAndVersion)\$(PlatformTarget)\;$(MSBuildThisFileDirectory)\deps\prebuilt\$(TargetOsAndVersion)\$(PlatformTarget)\$(Configuration)\;%(AdditionalLibraryDirectories);</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+
+   
+  <ItemGroup Condition="'$(ConfigurationType)' != 'StaticLibrary'">
+    
+    <Reference Include="@(_ReferencesFromPackage)">
+      <Implementation>%(Filename).dll</Implementation>
+    </Reference>
+
+    <ReferenceCopyLocalPaths Include="@(_DllsFromPackage)">
+      <IsWinObjC>true</IsWinObjC>
+    </ReferenceCopyLocalPaths>
+
+    <!-- Ensure that all packaged .pri files are added to the resources.pri of the compiled application -->
+    <_PackagingOutputsOutsideLayout Include="@(_PriFilesFromPackage)">
+      <OutputGroup>WinObjC</OutputGroup>
+      <ProjectName>WinObjC</ProjectName>
+    </_PackagingOutputsOutsideLayout>
+
+    <Link Include="@(_LibsFromPackage)"/>
+
+  </ItemGroup>
 </Project>

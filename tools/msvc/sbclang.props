@@ -35,24 +35,15 @@
       <RuntimeLibrary Condition="'%(ClangCompile.RuntimeLibrary)' == ''">MultiThreadedDLL</RuntimeLibrary>
       <ReadTLogFile Condition="'%(ClangCompile.ReadTLogFile)' == ''">$(TLogLocation)clang.read.1.tlog</ReadTLogFile>
       <WOCStdlib Condition="'%(ClangCompile.WOCStdlib)' == ''">true</WOCStdlib>
-      <InternalSystemIncludePaths Condition="'%(ClangCompile.InternalSystemIncludePaths)' == ''">%(InternalSystemIncludePaths);$(IncludePath);$(StarboardSdkRoot)\deps\prebuilt\include\;$(StarboardSdkRoot)\include\;</InternalSystemIncludePaths>
+      <InternalSystemIncludePaths>%(InternalSystemIncludePaths);$(IncludePath);</InternalSystemIncludePaths>
       <InternalForceIncludes Condition="'%(ClangCompile.InternalSystemIncludes)' == ''"> </InternalForceIncludes>
       <SystemHeaderDeps Condition="'%(ClangCompile.SystemHeaderDeps)' == ''">false</SystemHeaderDeps>
       <MaxClangProcesses Condition="'%(ClangCompile.MaxClangProcesses)' == ''">-1</MaxClangProcesses>
     </ClangCompile>
-
-    <ClCompile>
-      <AdditionalIncludeDirectories>$(StarboardSdkRoot)\include\;$(StarboardSdkRoot)\include\xplat;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-    </ClCompile>
   </ItemDefinitionGroup>
 
   <PropertyGroup Label="SBAdditionalLibraries">
-    <StarboardIncludeDefaultLibs Condition="'$(StarboardIncludeDefaultLibs)' == ''">true</StarboardIncludeDefaultLibs>
-    <StarboardDefaultLibs Condition="'$(StarboardIncludeDefaultLibs)' == 'true'">libdispatch.lib;WOCStdLib.lib;IwNewLib.lib;WinObjCRT.lib;</StarboardDefaultLibs>
-    <StarboardLinkObjCRuntime Condition="'$(StarboardLinkObjCRuntime)' == ''">true</StarboardLinkObjCRuntime>
-    <StarboardObjCRuntimeLib>libobjc2.lib</StarboardObjCRuntimeLib>
     <StarboardLinkWholeArchive Condition="'$(StarboardLinkWholeArchive)' == ''">false</StarboardLinkWholeArchive>
-    <CopyStarboardLibraries Condition="'$(CopyStarboardLibraries)' == '' And '$(ConfigurationType)' == 'Application'">true</CopyStarboardLibraries>
   </PropertyGroup>
   
   <!-- This need to be an absolute path, so we can successfully filter duplicates -->
