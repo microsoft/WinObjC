@@ -23,6 +23,7 @@
 #import "UXTestHelpers.h"
 #import "CppWinRTHelpers.h"
 #import "UIKitControls/UIScrollViewController.h"
+#import "CoreGraphics/CGGeometry.h"
 
 #include "COMIncludes.h"
 #import <winrt/Windows.UI.Xaml.Controls.h>
@@ -216,10 +217,10 @@ public:
             ASSERT_TRUE(scrollViewer.VerticalScrollBarVisibility() == Controls::ScrollBarVisibility::Auto &&
                         scrollViewer.HorizontalScrollBarVisibility() == Controls::ScrollBarVisibility::Auto);
 
-            // turn off scrolling
+            // turn off scrolling, make sure scrollbar are hidden
             scrollView.scrollEnabled = NO;
-            ASSERT_TRUE(scrollViewer.VerticalScrollBarVisibility() == Controls::ScrollBarVisibility::Disabled &&
-                        scrollViewer.HorizontalScrollBarVisibility() == Controls::ScrollBarVisibility::Disabled);
+            ASSERT_TRUE(scrollViewer.VerticalScrollBarVisibility() == Controls::ScrollBarVisibility::Hidden &&
+                        scrollViewer.HorizontalScrollBarVisibility() == Controls::ScrollBarVisibility::Hidden);
 
             // turn back on
             scrollView.scrollEnabled = YES;
@@ -235,10 +236,10 @@ public:
             ASSERT_TRUE(scrollViewer.VerticalScrollBarVisibility() == Controls::ScrollBarVisibility::Hidden &&
                         scrollViewer.HorizontalScrollBarVisibility() == Controls::ScrollBarVisibility::Hidden);
 
-            // turn off scrolling, make sure scrollbar are disabled
+            // turn off scrolling, make sure scrollbar are hidden
             scrollView.scrollEnabled = NO;
-            ASSERT_TRUE(scrollViewer.VerticalScrollBarVisibility() == Controls::ScrollBarVisibility::Disabled &&
-                        scrollViewer.HorizontalScrollBarVisibility() == Controls::ScrollBarVisibility::Disabled);
+            ASSERT_TRUE(scrollViewer.VerticalScrollBarVisibility() == Controls::ScrollBarVisibility::Hidden &&
+                        scrollViewer.HorizontalScrollBarVisibility() == Controls::ScrollBarVisibility::Hidden);
 
             // turn back on, make sure scrollbar are still hidden
             scrollView.scrollEnabled = YES;
@@ -353,7 +354,7 @@ public:
     }
 
     // Test to verify that Issue #2471 is fixed (UIScrollView programmatic scroll methods do not work if .scrollEnabled = NO)
-    TEST_METHOD(UIScrollView_VerifyProgrammaticScrollingEnabledWhenUserScrollIsDisabled) {
+    TEST_METHOD(UIScrollView_VerifyContentOffsetScrollingWhenUserScrollIsDisabled) {
         StrongId<UIScrollViewController> scrollViewVC;
         scrollViewVC.attach([[UIScrollViewController alloc] init]);
         UXTestAPI::ViewControllerPresenter testHelper(scrollViewVC, 2);
@@ -418,6 +419,77 @@ public:
 
             EXPECT_TRUE(scrollViewer.HorizontalOffset() == 120);
             EXPECT_TRUE(scrollViewer.VerticalOffset() == 0);
+        });
+    }
+
+    // Test to verify that Issue #2471 is fixed (UIScrollView programmatic scroll methods do not work if .scrollEnabled = NO)
+    TEST_METHOD(UIScrollView_VerifyscrollRectToVisibleWhenUserScrollIsDisabled) {
+        StrongId<UIScrollViewController> scrollViewVC;
+        scrollViewVC.attach([[UIScrollViewController alloc] init]);
+        UXTestAPI::ViewControllerPresenter testHelper(scrollViewVC, 2);
+
+        UIScrollView* scrollView = [scrollViewVC scrollView];
+
+        dispatch_sync(dispatch_get_main_queue(), ^{
+            // get the backing xaml element
+            FrameworkElement xamlScrollView = [scrollView _winrtXamlElement];
+            Microsoft::WRL::ComPtr<IInspectable> inspectable(XamlScrollViewGetScrollViewer(objcwinrt::to_insp(xamlScrollView)));
+            auto scrollViewer = objcwinrt::from_insp<Controls::ScrollViewer>(inspectable);
+            ASSERT_TRUE(scrollViewer);
+
+            // scrollEnabled = No
+            scrollView.scrollEnabled = NO;
+            scrollView.showsHorizontalScrollIndicator = YES;
+            scrollView.showsVerticalScrollIndicator = YES;
+            // Verify at zero offset
+            ASSERT_TRUE(scrollView.contentOffset == CGPointZero);
+            ASSERT_TRUE(scrollViewer.HorizontalOffset() == 0);
+            ASSERT_TRUE(scrollViewer.VerticalOffset() == 0);
+
+            CGRect targetRect1 = CGRectMake(0, 230, 1, 1);
+            [scrollView scrollRectToVisible:targetRect1 animated:NO];
+            LOG_INFO("expected contentOffset {%f, %f}, actual on xaml {%f, %f}",
+                     scrollView.contentOffset.x,
+                     scrollView.contentOffset.y,
+                     scrollViewer.HorizontalOffset(),
+                     scrollViewer.VerticalOffset());
+
+            EXPECT_TRUE(scrollViewer.HorizontalOffset() == 0);
+            EXPECT_TRUE(scrollViewer.VerticalOffset() == 31);
+
+            // scrollEnabled = No and Scrollbars not visible
+            scrollView.scrollEnabled = NO;
+            scrollView.showsHorizontalScrollIndicator = NO;
+            scrollView.showsVerticalScrollIndicator = NO;
+
+            // move x 10 more pixels previously this would fail to change the offset
+            targetRect1.origin.y = 240;
+            [scrollView scrollRectToVisible:targetRect1 animated:NO];
+            LOG_INFO("expected contentOffset {%f, %f}, actual on xaml {%f, %f}",
+                     scrollView.contentOffset.x,
+                     scrollView.contentOffset.y,
+                     scrollViewer.HorizontalOffset(),
+                     scrollViewer.VerticalOffset());
+
+            EXPECT_TRUE(scrollViewer.HorizontalOffset() == 0);
+            EXPECT_TRUE(scrollViewer.VerticalOffset() == 41);
+
+            // scrollEnabled = Yes and Scrollbars not visible
+            scrollView.scrollEnabled = YES;
+            scrollView.showsHorizontalScrollIndicator = NO;
+            scrollView.showsVerticalScrollIndicator = NO;
+
+            // move x 10 more pixels this worked before and should continue to update offset
+            targetRect1.origin.y = 250;
+            [scrollView scrollRectToVisible:targetRect1 animated:NO];
+            LOG_INFO("expected contentOffset {%f, %f}, actual on xaml {%f, %f}",
+                     scrollView.contentOffset.x,
+                     scrollView.contentOffset.y,
+                     scrollViewer.HorizontalOffset(),
+                     scrollViewer.VerticalOffset());
+
+            EXPECT_TRUE(scrollViewer.HorizontalOffset() == 0);
+            EXPECT_TRUE(scrollViewer.VerticalOffset() == 51);
         });
     }
 };
