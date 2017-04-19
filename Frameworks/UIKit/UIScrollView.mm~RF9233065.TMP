@@ -607,8 +607,8 @@ const float UIScrollViewDecelerationRateFast = StubConstant();
 }
 
 - (void)_setScrollEnabled:(BOOL)enable {
-    // Setting ScrollMode to Disabled and ScrollBarVisibility to Hidden allows the ScrollViewer to be programmatically scrolled
-    // but doesn't let the user scroll it which replicates the iOS behavior.
+	//Setting ScrollMode to Disabled and ScrollBarVisibility to Hidden allows the ScrollViewer to be programmatically scrolled
+	//but doesn't let the user scroll it which replicates the iOS behavior.
     _scrollViewer.HorizontalScrollBarVisibility(enable ? _previousHorizontalScrollBarVisibility : Controls::ScrollBarVisibility::Hidden);
     _scrollViewer.HorizontalScrollMode(enable ? Controls::ScrollMode::Enabled : Controls::ScrollMode::Disabled);
 
