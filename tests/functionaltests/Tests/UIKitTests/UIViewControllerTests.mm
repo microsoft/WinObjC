@@ -230,7 +230,9 @@ protected:
 
             UIWindow* currentWindow = GetCurrentWindow();
 
-            StrongId<ModalEventsTestViewController> presenting;
+            // Avoid capture of |presenting| in block to ensure presentViewController mechanism keeps it alive.
+            __block StrongId<ModalEventsTestViewController> presenting;
+
             presenting.attach([[ModalEventsTestViewController alloc] init]);
 
             // Assume rootViewController is top-most.
@@ -312,7 +314,8 @@ static constexpr UIModalPresentationStyle c_presentationStyles[] = { UIModalPres
 
 static constexpr WOCOperationMode c_operationModes[] = { WOCOperationModePhone, WOCOperationModeTablet };
 
-static constexpr BOOL c_animationModes[] = { YES, NO };
+// TODO: Add animated=YES option upon resolution of issue #2576.
+static constexpr BOOL c_animationModes[] = { NO };
 
 INSTANTIATE_TEST_CASE_P(PresentDismiss,
                         UIViewControllerModalTest,
