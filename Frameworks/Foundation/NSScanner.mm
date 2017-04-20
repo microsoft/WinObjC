@@ -1,5 +1,5 @@
 /* Copyright (c) 2006-2007 Christopher J. W. Lloyd
-   Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+   Copyright (c) Microsoft. All rights reserved.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
 documentation files (the "Software"), to deal in the Software without restriction, including without limitation the
@@ -25,39 +25,45 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // See http://swift.org/CONTRIBUTORS.txt for the list of Swift project authors
 //
 
-#include "Starboard.h"
-#include "StubReturn.h"
-#include "Foundation/NSString.h"
-#include "Foundation/NSCharacterSet.h"
-#include "Foundation/NSScanner.h"
-#include <limits.h>
+#import <Foundation/NSScanner.h>
+#import <Foundation/NSCharacterSet.h>
+#import <Foundation/NSDecimalNumber.h>
+#import <Foundation/NSString.h>
 
-#include "unicode/uniset.h"
+#import <Starboard.h>
 
-typedef unsigned short unichar;
+#import <cctype>
+#import <limits>
+#import <vector>
 
 @implementation NSScanner
 
 /**
  @Status Interoperable
 */
-+ (instancetype)scannerWithString:(id)str {
-    NSScanner* ret = [self alloc];
-
-    return [[ret initWithString:str] autorelease];
++ (instancetype)scannerWithString:(NSString* _Nonnull)string {
+    return [[[self alloc] initWithString:string] autorelease];
 }
 
 /**
  @Status Interoperable
 */
-- (instancetype)initWithString:(id)string {
-    self = [self init];
-    _string = [string copy];
-    _location = 0;
-    _len = [_string length];
-    _skipSet = [[NSCharacterSet whitespaceAndNewlineCharacterSet] retain];
-    _isCaseSensitive = NO;
-    _locale = nil;
++ (instancetype)localizedScannerWithString:(NSString* _Nonnull)string {
+    NSScanner* ret = [self scannerWithString:string];
+    ret.locale = [NSLocale currentLocale];
+    return ret;
+}
+
+/**
+ @Status Interoperable
+*/
+- (instancetype)initWithString:(NSString* _Nonnull)string {
+    if (self = [super init]) {
+        _string = [string copy];
+
+        // Don't need to copy here as whitespaceAndNewlineCharacterSet is a copy property
+        _charactersToBeSkipped = [[NSCharacterSet whitespaceAndNewlineCharacterSet] retain];
+    }
 
     return self;
 }
@@ -65,83 +71,42 @@ typedef unsigned short unichar;
 /**
  @Status Interoperable
 */
-- (NSString*)string {
-    return _string;
-}
-
-/**
- @Status Interoperable
-*/
 - (void)dealloc {
     [_string release];
-    [_skipSet release];
+    [_charactersToBeSkipped release];
     [_locale release];
+
     [super dealloc];
 }
 
 /**
  @Status Interoperable
 */
-- (NSCharacterSet*)charactersToBeSkipped {
-    return _skipSet;
+- (id)copyWithZone:(NSZone*)zone {
+    NSScanner* ret = [[[self class] alloc] initWithString:_string];
+    ret->_scanLocation = _scanLocation;
+    ret->_caseSensitive = _caseSensitive;
+    ret->_charactersToBeSkipped = [_charactersToBeSkipped copy];
+    ret->_locale = [_locale copy];
+
+    return ret;
 }
 
-/**
- @Status Interoperable
-*/
-- (BOOL)caseSensitive {
-    return _isCaseSensitive;
-}
+// Helper function that returns the index of the next character not in charactersToBeSkipped
+// Returns string length if no unskippable characters are found
+- (NSUInteger)_indexOfNextUnskippedCharacter {
+    const NSUInteger length = _string.length;
+    NSUInteger ret = _scanLocation;
 
-/**
- @Status Interoperable
-*/
-- (void)setCharactersToBeSkipped:(id)set {
-    if (set != _skipSet) {
-        set = [set retain];
-        [_skipSet release];
-        _skipSet = set;
-    }
-}
-
-/**
- @Status Interoperable
-*/
-- (void)setCaseSensitive:(BOOL)flag {
-    _isCaseSensitive = flag;
-}
-
-/**
- @Status Interoperable
-*/
-- (BOOL)isAtEnd {
-    NSUInteger length = [_string length];
-    NSUInteger currentLocation = _location;
-
-    for (; currentLocation < length; currentLocation++) {
-        if ([_skipSet characterIsMember:[_string characterAtIndex:currentLocation]] == TRUE) {
-            continue;
-        } else {
-            return FALSE;
+    if (_charactersToBeSkipped) {
+        for (; ret < length; ++ret) {
+            if (![_charactersToBeSkipped characterIsMember:(unichar)[_string characterAtIndex:ret]]) {
+                return ret;
+            }
         }
     }
 
-    return TRUE;
-}
-
-/**
- @Status Interoperable
-*/
-- (NSUInteger)scanLocation {
-    // return _location < _len ? _location : _len - 1;
-    return _location;
-}
-
-/**
- @Status Interoperable
-*/
-- (void)setScanLocation:(NSUInteger)pos {
-    _location = pos;
+    return length;
 }
 
 /**
@@ -152,7 +117,7 @@ typedef unsigned short unichar;
 
     // This assumes sizeof(long long) >= sizeof(int).
     if (![self scanLongLong:&scanValue]) {
-        return FALSE;
+        return NO;
     } else if (valuep) {
         if (scanValue > INT_MAX) {
             *valuep = INT_MAX;
@@ -163,7 +128,7 @@ typedef unsigned short unichar;
         }
     }
 
-    return TRUE;
+    return YES;
 }
 
 /**
@@ -174,7 +139,7 @@ typedef unsigned short unichar;
 
     // This assumes sizeof(long long) >= sizeof(int).
     if (![self scanLongLong:&scanValue]) {
-        return FALSE;
+        return NO;
     } else if (valuep) {
         if (scanValue > LONG_MAX) {
             *valuep = LONG_MAX;
@@ -185,45 +150,43 @@ typedef unsigned short unichar;
         }
     }
 
-    return TRUE;
+    return YES;
 }
 
 /**
  @Status Interoperable
 */
 - (BOOL)scanLongLong:(long long*)valuep {
-#define long_long_MAX 0x7fffffffffffffffLL
-#define long_long_MIN (-0x7fffffffffffffffLL - 1)
-
-    NSUInteger length;
     int sign = 1;
-    BOOL hasSign = FALSE;
+    BOOL hasSign = NO;
     long long value = 0;
-    BOOL hasValue = FALSE;
-    BOOL hasOverflow = FALSE;
+    BOOL hasValue = NO;
+    BOOL hasOverflow = NO;
 
-    for (length = (NSUInteger)[_string length]; _location < length; _location++) {
-        unichar unicode = (unichar)[_string characterAtIndex:_location];
+    const long long longLongMax = std::numeric_limits<long long>::max();
 
-        if (!hasValue && [_skipSet characterIsMember:unicode])
-            continue;
-        else if (!hasSign && unicode == '-') {
+    const NSUInteger length = _string.length;
+    NSUInteger i = [self _indexOfNextUnskippedCharacter];
+    for (; i < length; ++i) {
+        unichar unicode = (unichar)[_string characterAtIndex:i];
+
+        if (!hasSign && unicode == '-') {
             sign = -1;
-            hasSign = TRUE;
+            hasSign = YES;
         } else if (!hasSign && unicode == '+') {
             sign = 1;
-            hasSign = TRUE;
+            hasSign = YES;
         } else if (unicode >= '0' && unicode <= '9') {
             if (!hasOverflow) {
                 int c = unicode - '0';
 
                 // Inspired by http://www.math.utoledo.edu/~dbastos/overflow.html
-                if ((long_long_MAX - c) / 10 < value)
-                    hasOverflow = TRUE;
+                if ((longLongMax - c) / 10 < value)
+                    hasOverflow = YES;
                 else
                     value = (value * 10) + c;
-                hasSign = TRUE;
-                hasValue = TRUE;
+                hasSign = YES;
+                hasValue = YES;
             }
         } else
             break;
@@ -232,21 +195,24 @@ typedef unsigned short unichar;
     if (hasOverflow) {
         if (valuep) {
             if (sign > 0) {
-                *valuep = long_long_MAX;
+                *valuep = longLongMax;
             } else {
-                *valuep = long_long_MIN;
+                *valuep = std::numeric_limits<long long>::min();
             }
         }
 
-        return TRUE;
+        _scanLocation = i;
+        return YES;
     } else if (hasValue) {
         if (valuep) {
             *valuep = sign * value;
         }
-        return TRUE;
+
+        _scanLocation = i;
+        return YES;
     }
 
-    return FALSE;
+    return NO;
 }
 
 /**
@@ -268,25 +234,56 @@ typedef unsigned short unichar;
  @Status Interoperable
 */
 - (BOOL)scanDouble:(double*)valuep {
-    char* pScanStart = (char*)[_string UTF8String];
-    char* pScanEnd = NULL;
+    NSUInteger startLocation = [self _indexOfNextUnskippedCharacter];
+    const NSUInteger length = _string.length;
+    if (startLocation >= length) {
+        return NO;
+    }
 
-    pScanStart += _location;
+    char* pScan = (char*)[_string UTF8String] + startLocation;
 
-    double val = strtod(pScanStart, &pScanEnd);
-    assert(pScanEnd != NULL);
+    // strtod automatically takes care of spaces (needs to be explicitly specified in charactersToBeSkipped),
+    // and only expects '.' as a decimal separator
+    // copy a scannable range of the string to a new buffer, adjusting for these constraints
+    char decimalSeparator;
+    if ((!_locale) ||
+        (![[_locale objectForKey:NSLocaleDecimalSeparator] getCString:&decimalSeparator maxLength:1 encoding:NSASCIIStringEncoding])) {
+        decimalSeparator = '.';
+    }
 
-    _location += pScanEnd - pScanStart;
+    std::vector<char> charsToScan;
+    charsToScan.reserve(_string.length - startLocation);
+    for (NSUInteger i = startLocation; i < length; ++i, ++pScan) {
+        if ((*pScan >= '0') && (*pScan <= '9')) {
+            charsToScan.push_back(*pScan);
+
+        } else if (*pScan == decimalSeparator) {
+            // Add a decimal separator that strtod will accept
+            charsToScan.push_back('.');
+
+        } else {
+            break;
+        }
+    }
+
+    if (charsToScan.size() == 0) {
+        return NO;
+    }
+
+    char* pScanEnd = nullptr;
+    double val = strtod(charsToScan.data(), &pScanEnd);
+
+    if ((!pScanEnd) || (pScanEnd == charsToScan.data())) {
+        return NO;
+    }
+
+    _scanLocation = startLocation + (pScanEnd - charsToScan.data());
 
     if (valuep) {
         *valuep = val;
     }
 
-    if ((pScanEnd - pScanStart) == 0) {
-        return FALSE;
-    }
-
-    return TRUE;
+    return YES;
 }
 
 /**
@@ -294,36 +291,36 @@ typedef unsigned short unichar;
 */
 - (BOOL)scanHexInt:(unsigned*)valuep {
     enum {
-        STATE_SPACE,
+        STATE_START,
         STATE_ZERO,
         STATE_HEX,
-    } state = STATE_SPACE;
+    } state = STATE_START;
     unsigned value = 0;
-    BOOL hasValue = FALSE;
-    BOOL overflow = FALSE;
+    BOOL hasValue = NO;
+    BOOL overflow = NO;
 
-    for (; _location < [_string length]; _location++) {
-        unichar unicode = (unichar)[_string characterAtIndex:_location];
+    const NSUInteger length = _string.length;
+    NSUInteger i = [self _indexOfNextUnskippedCharacter];
+    for (; i < length; ++i) {
+        unichar unicode = (unichar)[_string characterAtIndex:i];
 
         switch (state) {
-            case STATE_SPACE:
-                if ([_skipSet characterIsMember:unicode])
-                    state = STATE_SPACE;
-                else if (unicode == '0') {
+            case STATE_START:
+                if (unicode == '0') {
                     state = STATE_ZERO;
-                    hasValue = TRUE;
+                    hasValue = YES;
                 } else if (unicode >= '1' && unicode <= '9') {
                     value = value * 16 + (unicode - '0');
                     state = STATE_HEX;
-                    hasValue = TRUE;
+                    hasValue = YES;
                 } else if (unicode >= 'a' && unicode <= 'f') {
                     value = value * 16 + (unicode - 'a') + 10;
                     state = STATE_HEX;
-                    hasValue = TRUE;
+                    hasValue = YES;
                 } else if (unicode >= 'A' && unicode <= 'F') {
                     value = value * 16 + (unicode - 'A') + 10;
                     state = STATE_HEX;
-                    hasValue = TRUE;
+                    hasValue = YES;
                 } else
                     return NO;
                 break;
@@ -337,33 +334,29 @@ typedef unsigned short unichar;
             case STATE_HEX:
                 if (unicode >= '0' && unicode <= '9') {
                     if (!overflow) {
-                        unsigned check = value * 16 + (unicode - '0');
-                        if (check >= value)
-                            value = check;
-                        else {
-                            value = -1;
+                        if (0xF0000000 & value) {
+                            value = std::numeric_limits<unsigned int>::max();
                             overflow = YES;
+                        } else {
+                            value = value * 16 + (unicode - '0');
                         }
                     }
                 } else if (unicode >= 'a' && unicode <= 'f') {
                     if (!overflow) {
-                        unsigned check = value * 16 + (unicode - 'a') + 10;
-                        if (check >= value)
-                            value = check;
-                        else {
-                            value = -1;
+                        if (0xF0000000 & value) {
+                            value = std::numeric_limits<unsigned int>::max();
                             overflow = YES;
+                        } else {
+                            value = value * 16 + (unicode - 'a') + 10;
                         }
                     }
                 } else if (unicode >= 'A' && unicode <= 'F') {
                     if (!overflow) {
-                        unsigned check = value * 16 + (unicode - 'A') + 10;
-
-                        if (check >= value)
-                            value = check;
-                        else {
-                            value = -1;
+                        if (0xF0000000 & value) {
+                            value = std::numeric_limits<unsigned int>::max();
                             overflow = YES;
+                        } else {
+                            value = value * 16 + (unicode - 'A') + 10;
                         }
                     }
                 } else {
@@ -371,6 +364,7 @@ typedef unsigned short unichar;
                         *valuep = value;
                     }
 
+                    _scanLocation = i;
                     return YES;
                 }
                 break;
@@ -382,6 +376,7 @@ typedef unsigned short unichar;
             *valuep = value;
         }
 
+        _scanLocation = i;
         return YES;
     }
 
@@ -393,22 +388,22 @@ typedef unsigned short unichar;
 */
 - (BOOL)scanHexLongLong:(unsigned long long*)valuep {
     enum {
-        STATE_SPACE,
+        STATE_START,
         STATE_ZERO,
         STATE_HEX,
-    } state = STATE_SPACE;
+    } state = STATE_START;
     unsigned long long value = 0;
     BOOL hasValue = NO;
     BOOL overflow = NO;
 
-    for (; _location < [_string length]; _location++) {
-        unichar unicode = (unichar)[_string characterAtIndex:_location];
+    const NSUInteger length = _string.length;
+    NSUInteger i = [self _indexOfNextUnskippedCharacter];
+    for (; i < length; ++i) {
+        unichar unicode = (unichar)[_string characterAtIndex:i];
 
         switch (state) {
-            case STATE_SPACE:
-                if ([_skipSet characterIsMember:unicode])
-                    state = STATE_SPACE;
-                else if (unicode == '0') {
+            case STATE_START:
+                if (unicode == '0') {
                     state = STATE_ZERO;
                     hasValue = YES;
                 } else if (unicode >= '1' && unicode <= '9') {
@@ -436,33 +431,29 @@ typedef unsigned short unichar;
             case STATE_HEX:
                 if (unicode >= '0' && unicode <= '9') {
                     if (!overflow) {
-                        unsigned check = (unsigned)(value * 16 + (unicode - '0'));
-                        if (check >= value)
-                            value = check;
-                        else {
-                            value = -1;
+                        if (0xF000000000000000 & value) {
+                            value = std::numeric_limits<unsigned long long>::max();
                             overflow = YES;
+                        } else {
+                            value = value * 16 + (unicode - '0');
                         }
                     }
                 } else if (unicode >= 'a' && unicode <= 'f') {
                     if (!overflow) {
-                        unsigned check = (unsigned)(value * 16 + (unicode - 'a') + 10);
-                        if (check >= value)
-                            value = check;
-                        else {
-                            value = -1;
+                        if (0xF000000000000000 & value) {
+                            value = std::numeric_limits<unsigned long long>::max();
                             overflow = YES;
+                        } else {
+                            value = value * 16 + (unicode - 'a') + 10;
                         }
                     }
                 } else if (unicode >= 'A' && unicode <= 'F') {
                     if (!overflow) {
-                        unsigned check = (unsigned)(value * 16 + (unicode - 'A') + 10);
-
-                        if (check >= value)
-                            value = check;
-                        else {
-                            value = -1;
+                        if (0xF000000000000000 & value) {
+                            value = std::numeric_limits<unsigned long long>::max();
                             overflow = YES;
+                        } else {
+                            value = value * 16 + (unicode - 'A') + 10;
                         }
                     }
                 } else {
@@ -470,6 +461,7 @@ typedef unsigned short unichar;
                         *valuep = value;
                     }
 
+                    _scanLocation = i;
                     return YES;
                 }
                 break;
@@ -481,6 +473,7 @@ typedef unsigned short unichar;
             *valuep = value;
         }
 
+        _scanLocation = i;
         return YES;
     }
     return NO;
@@ -489,32 +482,29 @@ typedef unsigned short unichar;
 /**
  @Status Interoperable
 */
-- (BOOL)scanString:(id)string intoString:(NSString**)stringp {
-    unsigned int length = [_string length];
-    DWORD compareOption = 0;
-    NSRange range;
-
-    range.location = 0;
-    range.length = [string length];
-    int oldLocation = _location;
-
-    BOOL result = NO;
-
-    if (!_isCaseSensitive) {
-        compareOption = 1; // NSCaseInsensitiveSearch
+- (BOOL)scanString:(NSString* _Nonnull)string intoString:(NSString* _Nullable*)stringp {
+    if (string.length == 0) {
+        return NO;
     }
 
-    for (; _location < length; _location++) {
-        unichar unicode = (unichar)[_string characterAtIndex:_location];
-        range.location = _location;
-        if ((_len - _location) < [string length]) {
+    NSStringCompareOptions compareOption = 0;
+    NSRange range = { 0, string.length };
+    BOOL result = NO;
+
+    if (!_caseSensitive) {
+        compareOption = NSCaseInsensitiveSearch;
+    }
+
+    const NSUInteger length = _string.length;
+    NSUInteger i = [self _indexOfNextUnskippedCharacter];
+    for (; i < length; ++i) {
+        unichar unicode = (unichar)[_string characterAtIndex:i];
+        range.location = i;
+        if ((length - i) < [string length]) {
             result = NO;
             break;
         }
 
-        if ([_skipSet characterIsMember:unicode] == YES) {
-            continue;
-        }
         if ([_string compare:string
                      options:static_cast<NSStringCompareOptions>(compareOption)
                        range:NSMakeRange(range.location, range.length)] == 0) {
@@ -522,7 +512,7 @@ typedef unsigned short unichar;
                 *stringp = string;
             }
 
-            _location += [string length];
+            i += [string length];
 
             result = YES;
             break;
@@ -532,8 +522,8 @@ typedef unsigned short unichar;
         }
     }
 
-    if (result == NO) {
-        _location = oldLocation;
+    if (result) {
+        _scanLocation = i;
     }
 
     return result;
@@ -542,30 +532,22 @@ typedef unsigned short unichar;
 /**
  @Status Interoperable
 */
-- (BOOL)scanUpToString:(NSString*)string intoString:(NSString**)intoString {
-    int oldLocation = _location;
+- (BOOL)scanUpToString:(NSString* _Nonnull)string intoString:(NSString* _Nullable*)intoString {
+    const NSUInteger length = _string.length;
+    const NSStringCompareOptions compareOption = _caseSensitive ? NSCaseInsensitiveSearch : 0;
+    const NSUInteger start = [self _indexOfNextUnskippedCharacter];
 
-    int length = [_string length];
-    NSStringCompareOptions compareOption = _isCaseSensitive ? NSCaseInsensitiveSearch : 0;
-
-    if (_skipSet != nil) {
-        // skip ahead to first valid character forward in the string.
-        NSCharacterSet* invSkipSet = [_skipSet invertedSet];
-        NSRange range = [_string rangeOfCharacterFromSet:invSkipSet options:0 range:NSMakeRange(oldLocation, length - oldLocation)];
-        oldLocation = range.length > 0 ? range.location : length;
-    }
-
-    NSRange foundRange = [_string rangeOfString:string options:compareOption range:NSMakeRange(oldLocation, length - oldLocation)];
+    NSRange foundRange = [_string rangeOfString:string options:compareOption range:NSMakeRange(start, length - start)];
     if (foundRange.length == 0) {
         foundRange.location = length;
     }
 
-    if (oldLocation != foundRange.location) {
+    if (start != foundRange.location) {
         if (intoString) {
-            *intoString = [_string substringWithRange:NSMakeRange(oldLocation, foundRange.location - oldLocation)];
+            *intoString = [_string substringWithRange:NSMakeRange(start, foundRange.location - start)];
         }
 
-        _location = foundRange.location;
+        _scanLocation = foundRange.location;
         return YES;
     }
 
@@ -575,101 +557,250 @@ typedef unsigned short unichar;
 /**
  @Status Interoperable
 */
-- (BOOL)scanCharactersFromSet:(id)charset intoString:(NSString**)stringp {
-    unsigned int length = (unsigned int)[_string length];
-    unichar* result = (unichar*)malloc(length * sizeof(unichar));
-    int resultLength = 0;
-    BOOL scanStarted = NO;
+- (BOOL)scanCharactersFromSet:(NSCharacterSet* _Nonnull)charset intoString:(NSString* _Nullable*)stringp {
+    const NSUInteger length = _string.length;
+    NSUInteger i = [self _indexOfNextUnskippedCharacter];
 
-    for (; _location < length; _location++) {
-        unichar unicode = (unichar)[_string characterAtIndex:_location];
+    std::vector<unichar> result;
+    result.reserve(length - i);
+    for (; i < length; ++i) {
+        unichar unicode = (unichar)[_string characterAtIndex:i];
 
-        if ([_skipSet characterIsMember:unicode] && (scanStarted == NO)) {
-            // do nothing
+        if ([charset characterIsMember:unicode]) {
+            result.push_back(unicode);
         } else {
-            if ([charset characterIsMember:unicode]) {
-                scanStarted = YES;
-                result[resultLength++] = unicode;
-            } else {
-                break; // used to be "return NO";
-            }
+            break;
         }
     }
 
-    if (scanStarted) {
+    if (result.size() > 0) {
         if (stringp) {
-            *stringp = [NSString stringWithCharacters:result length:resultLength];
+            *stringp = [NSString stringWithCharacters:result.data() length:result.size()];
         }
+
+        _scanLocation = i;
+        return YES;
     }
 
-    free(result);
-
-    return scanStarted;
+    return NO;
 }
 
 /**
  @Status Interoperable
 */
-- (BOOL)scanUpToCharactersFromSet:(id)charset intoString:(NSString**)stringp {
-    unsigned int length = (unsigned int)[_string length];
-    unichar* result = (unichar*)malloc(length * sizeof(unichar));
-    int resultLength = 0;
-    BOOL scanStarted = NO;
-    int oldLocation = _location;
+- (BOOL)scanUpToCharactersFromSet:(NSCharacterSet* _Nonnull)charset intoString:(NSString* _Nullable*)stringp {
+    const NSUInteger length = _string.length;
+    NSUInteger i = [self _indexOfNextUnskippedCharacter];
 
-    for (; _location < length; _location++) {
-        unichar unicode = (unichar)[_string characterAtIndex:_location];
+    std::vector<unichar> result;
+    result.reserve(length - i);
+    for (; i < length; ++i) {
+        unichar unicode = (unichar)[_string characterAtIndex:i];
 
-        if ([_skipSet characterIsMember:unicode] && scanStarted == NO)
-            continue;
-        else if ([charset characterIsMember:unicode])
+        if ([charset characterIsMember:unicode]) {
             break;
-        else {
-            scanStarted = YES;
-            result[resultLength++] = unicode;
+        } else {
+            result.push_back(unicode);
         }
     }
 
-    if (resultLength > 0) {
+    if (result.size() > 0) {
         if (stringp) {
-            *stringp = [NSString stringWithCharacters:result length:resultLength];
+            *stringp = [NSString stringWithCharacters:result.data() length:result.size()];
         }
 
-        free(result);
+        _scanLocation = i;
         return YES;
-    } else {
-        _location = oldLocation;
-
-        free(result);
-        return NO;
     }
+
+    return NO;
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
 - (BOOL)scanDecimal:(NSDecimal*)decimalValue {
-    UNIMPLEMENTED();
-    return StubReturn();
+    // TODO #2369: This could probably be made more precise if it scanned directly from string -> NSDecimalNumber
+    // but WinObjC does not have [NSDecimalNumber decimalNumberWithString:] yet
+    double doubleValue;
+    if (![self scanDouble:&doubleValue]) {
+        return NO;
+    }
+
+    if (decimalValue) {
+        *decimalValue = [[NSDecimalNumber numberWithDouble:doubleValue] decimalValue];
+    }
+
+    return YES;
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
 - (BOOL)scanHexDouble:(double*)result {
-    UNIMPLEMENTED();
-    return StubReturn();
+    enum {
+        STATE_START,
+        STATE_SIGN,
+        STATE_ZERO,
+        STATE_MANTISSA,
+        STATE_P,
+        STATE_EXPONENT,
+    } state = STATE_START;
+
+    bool mantissaIsNegative = false;
+    bool exponentIsNegative = false;
+    bool scannedPeriod = false;
+    bool hasValue = false;
+
+    double mantissa = 0;
+    int exponent = 0;
+
+    // Once a '.' has been scanned, this /= 16 every character, so that each base-16 decimal digit is appropriately placed
+    // ie: 1.1ae = 1 + (1 * (mantissaDigitPlace /= 16)) + (a * (mantissaDigitPlace /= 16)) + (e * (mantissaDigitPlace /= 16))
+    double mantissaDigitPlace = 1;
+
+    const NSUInteger length = _string.length;
+    NSUInteger i = [self _indexOfNextUnskippedCharacter];
+    for (; i < length; ++i) {
+        unichar unicode = (unichar)[_string characterAtIndex:i];
+
+        switch (state) {
+            case STATE_START:
+                if (unicode == '-') {
+                    state = STATE_SIGN;
+                    mantissaIsNegative = true;
+                } else if (unicode == '+') {
+                    state = STATE_SIGN;
+                } else if (unicode == '0') {
+                    state = STATE_ZERO;
+                } else {
+                    return NO;
+                }
+                break;
+
+            case STATE_SIGN:
+                if (unicode == '0') {
+                    state = STATE_ZERO;
+                } else {
+                    return NO;
+                }
+                break;
+
+            case STATE_ZERO:
+                if (unicode == 'x' || unicode == 'X') {
+                    state = STATE_MANTISSA;
+                } else {
+                    return NO;
+                }
+                break;
+
+            case STATE_MANTISSA:
+                if (unicode == '.') {
+                    if (!scannedPeriod) {
+                        scannedPeriod = true;
+                    } else {
+                        goto done_scanning_hex_double; // Stop scanning once a second period has been scanned
+                    }
+
+                } else if (unicode >= '0' && unicode <= '9') {
+                    if (scannedPeriod) {
+                        mantissa += (mantissaDigitPlace /= 16) * (unicode - '0');
+                    } else {
+                        mantissa = (mantissa * 16) + (unicode - '0');
+                    }
+                    hasValue = true;
+
+                } else if (unicode >= 'a' && unicode <= 'f') {
+                    if (scannedPeriod) {
+                        mantissa += (mantissaDigitPlace /= 16) * (unicode - 'a' + 10);
+                    } else {
+                        mantissa = (mantissa * 16) + (unicode - 'a' + 10);
+                    }
+                    hasValue = true;
+
+                } else if (unicode >= 'A' && unicode <= 'F') {
+                    if (scannedPeriod) {
+                        mantissa += (mantissaDigitPlace /= 16) * (unicode - 'A' + 10);
+                    } else {
+                        mantissa = (mantissa * 16) + (unicode - 'A' + 10);
+                    }
+                    hasValue = true;
+
+                } else if (unicode == 'p' || unicode == 'P') {
+                    state = STATE_P;
+
+                } else {
+                    goto done_scanning_hex_double;
+                }
+                break;
+
+            case STATE_P:
+                if (!hasValue) {
+                    goto done_scanning_hex_double;
+                }
+                if (unicode == '-') {
+                    state = STATE_EXPONENT;
+                    exponentIsNegative = true;
+
+                } else if (unicode == '+') {
+                    state = STATE_EXPONENT;
+
+                } else if (unicode >= '0' && unicode <= '9') {
+                    exponent = (unicode - '0');
+                    state = STATE_EXPONENT;
+
+                } else {
+                    goto done_scanning_hex_double;
+                }
+                break;
+
+            case STATE_EXPONENT:
+                if (unicode >= '0' && unicode <= '9') {
+                    // can stop calculating the change to the exponent once this is false, and let ldexp return 0 or HUGE_VAL
+                    if (exponent <= (exponentIsNegative ? 1023 : 1024)) {
+                        exponent = exponent * 10 + (unicode - '0');
+                    }
+
+                } else {
+                    goto done_scanning_hex_double;
+                }
+                break;
+        }
+    }
+
+done_scanning_hex_double:; // Allows breaking out of the loop from inside the switch
+    if (hasValue) {
+        if (result) {
+            if (exponentIsNegative) {
+                exponent *= -1;
+            }
+
+            *result = mantissaIsNegative ? -ldexp(mantissa, exponent) : ldexp(mantissa, exponent);
+        }
+
+        _scanLocation = i;
+        return YES;
+    }
+
+    return NO;
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
 - (BOOL)scanHexFloat:(float*)result {
-    UNIMPLEMENTED();
-    return StubReturn();
+    double doubleValue;
+    if (![self scanHexDouble:&doubleValue]) {
+        return NO;
+    }
+
+    if (result) {
+        *result = static_cast<float>(doubleValue);
+    }
+    return YES;
 }
 
 /**
@@ -677,16 +808,32 @@ typedef unsigned short unichar;
  @Notes
 */
 - (BOOL)scanUnsignedLongLong:(unsigned long long*)pValue {
-    const char* pScanStart = (char*)[_string UTF8String];
-    char* pScanEnd = nullptr;
+    NSUInteger startLocation = [self _indexOfNextUnskippedCharacter];
+    if (startLocation >= _string.length) {
+        return NO;
+    }
 
     // Scan the string for a base ten positive integer starting at the internally stored position
-    pScanStart += _location;
-    unsigned long long val = strtoull(pScanStart, &pScanEnd, 10);
+    const char* pScanStart = (char*)[_string UTF8String] + startLocation;
+    char* pScanEnd = nullptr;
+
+    // Reject any negative numbers
+    long long signedVal = strtoll(pScanStart, &pScanEnd, 10);
+    if (signedVal < 0) {
+        return NO;
+    }
+
+    // Scan again in unsigned if the number was too big to fit in a signed long long
+    unsigned long long val;
+    if (signedVal == std::numeric_limits<long long>::max()) {
+        val = strtoull(pScanStart, &pScanEnd, 10);
+    } else {
+        val = static_cast<unsigned long long>(signedVal);
+    }
     FAIL_FAST_IF(!pScanEnd);
 
     // Increment internal position state by the length of the number
-    _location += pScanEnd - pScanStart;
+    _scanLocation = startLocation + (pScanEnd - pScanStart);
 
     if (pValue) {
         *pValue = val;
@@ -701,21 +848,23 @@ typedef unsigned short unichar;
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
-+ (id)localizedScannerWithString:(NSString*)aString {
-    UNIMPLEMENTED();
-    return StubReturn();
-}
+- (BOOL)isAtEnd {
+    @synchronized(self) {
+        NSUInteger length = [_string length];
+        NSUInteger currentLocation = _scanLocation;
 
-/**
- @Status Stub
- @Notes
-*/
-- (id)copyWithZone:(NSZone*)zone {
-    UNIMPLEMENTED();
-    return StubReturn();
+        for (; currentLocation < length; currentLocation++) {
+            if ([_charactersToBeSkipped characterIsMember:[_string characterAtIndex:currentLocation]] == YES) {
+                continue;
+            } else {
+                return NO;
+            }
+        }
+
+        return YES;
+    }
 }
 
 @end
