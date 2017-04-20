@@ -690,8 +690,8 @@ TEXT_DRAW_TEST_F(CTDrawing, CGPathTranslation, WhiteBackgroundTest<>) {
     CGRect bounds = GetDrawingBounds();
 
     // Creates path with current rectangle
-    woc::unique_cf<CGMutablePathRef> path{ CGPathCreateMutable() };
-    CGPathAddRect(path.get(), nullptr, { { 25, 50 }, bounds.size });
+    woc::AutoCF<CGMutablePathRef> path{ woc::TakeOwnership, CGPathCreateMutable() };
+    CGPathAddRect(path, nullptr, { { 25, 50 }, bounds.size });
 
     CGAffineTransform textMatrix = CGContextGetTextMatrix(context);
     CGContextSetTextMatrix(context, CGAffineTransformRotate(textMatrix, 45 * M_PI / 180.0));
@@ -703,10 +703,11 @@ TEXT_DRAW_TEST_F(CTDrawing, CGPathTranslation, WhiteBackgroundTest<>) {
     setting[0].valueSize = sizeof(CTTextAlignment);
     setting[0].value = &alignment;
 
-    woc::unique_cf<CTParagraphStyleRef> paragraphStyle{ CTParagraphStyleCreate(setting, std::extent<decltype(setting)>::value) };
-    woc::unique_cf<CTFontRef> myCFFont{ CTFontCreateWithName(CFSTR("Arial"), 20, nullptr) };
+    woc::AutoCF<CTParagraphStyleRef> paragraphStyle{ woc::TakeOwnership,
+                                                     CTParagraphStyleCreate(setting, std::extent<decltype(setting)>::value) };
+    woc::AutoCF<CTFontRef> myCFFont{ woc::TakeOwnership, CTFontCreateWithName(CFSTR("Arial"), 20, nullptr) };
 
     CFStringRef keys[2] = { kCTFontAttributeName, kCTParagraphStyleAttributeName };
-    CFTypeRef values[2] = { myCFFont.get(), paragraphStyle.get() };
-    __DrawLoremIpsum(context, path.get(), keys, values);
+    CFTypeRef values[2] = { myCFFont, paragraphStyle };
+    __DrawLoremIpsum(context, path, keys, values);
 }

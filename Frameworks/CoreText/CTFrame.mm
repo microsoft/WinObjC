@@ -125,6 +125,7 @@ void CTFrameDraw(CTFrameRef frame, CGContextRef ctx) {
         CGContextTranslateCTM(ctx, 0, boundingRect.size.height);
 
         // Invert Text Matrix and CTM so glyphs are drawn in correct orientation and position
+        // And set text position to be inverted path position
         CGAffineTransform textMatrix = CGContextGetTextMatrix(ctx);
         CGContextSetTextMatrix(
             ctx,
