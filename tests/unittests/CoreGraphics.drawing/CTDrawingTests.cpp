@@ -684,3 +684,29 @@ TEXT_DRAW_TEST_P(RTLText, DrawRTLText) {
 }
 
 INSTANTIATE_TEST_CASE_P(RTLTextDrawing, RTLText, ::testing::ValuesIn(c_rotations));
+
+TEXT_DRAW_TEST_F(CTDrawing, CGPathTranslation, WhiteBackgroundTest<>) {
+    CGContextRef context = GetDrawingContext();
+    CGRect bounds = GetDrawingBounds();
+
+    // Creates path with current rectangle
+    woc::unique_cf<CGMutablePathRef> path{ CGPathCreateMutable() };
+    CGPathAddRect(path.get(), nullptr, { { 25, 50 }, bounds.size });
+
+    CGAffineTransform textMatrix = CGContextGetTextMatrix(context);
+    CGContextSetTextMatrix(context, CGAffineTransformRotate(textMatrix, 45 * M_PI / 180.0));
+    CGContextScaleCTM(context, 1.1, 1.3);
+    // Create style setting to match given alignment
+    CTParagraphStyleSetting setting[1];
+    CTTextAlignment alignment = kCTLeftTextAlignment;
+    setting[0].spec = kCTParagraphStyleSpecifierAlignment;
+    setting[0].valueSize = sizeof(CTTextAlignment);
+    setting[0].value = &alignment;
+
+    woc::unique_cf<CTParagraphStyleRef> paragraphStyle{ CTParagraphStyleCreate(setting, std::extent<decltype(setting)>::value) };
+    woc::unique_cf<CTFontRef> myCFFont{ CTFontCreateWithName(CFSTR("Arial"), 20, nullptr) };
+
+    CFStringRef keys[2] = { kCTFontAttributeName, kCTParagraphStyleAttributeName };
+    CFTypeRef values[2] = { myCFFont.get(), paragraphStyle.get() };
+    __DrawLoremIpsum(context, path.get(), keys, values);
+}
