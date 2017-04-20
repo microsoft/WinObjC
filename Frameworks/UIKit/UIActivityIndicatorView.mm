@@ -22,8 +22,10 @@
 #import <UIKit/UIActivityIndicatorView.h>
 #import <UIKit/UIColor.h>
 
-#import "XamlUtilities.h"
+
 #import "CppWinRTHelpers.h"
+#import "UIViewInternal.h"
+#import "XamlUtilities.h"
 
 #include "COMIncludes.h"
 #import <winrt/Windows.UI.Xaml.Controls.h>
@@ -226,13 +228,15 @@ static const int c_largeSquareLength = 37;
  @Status Interoperable
 */
 - (void)startAnimating {
-    if (_isAnimating) {
-        return;
-    }
+    RunSynchronouslyOnMainThread(^{
+        if (_isAnimating) {
+            return;
+        }
 
-    _isAnimating = YES;
-    [self setHidden:NO];
-    _progressRing.IsActive(true);
+        _isAnimating = YES;
+        [self setHidden:NO];
+        _progressRing.IsActive(true);
+    });
 }
 
 /**
@@ -240,14 +244,16 @@ static const int c_largeSquareLength = 37;
  @Notes Same issue as setHidesWhenStopped.
 */
 - (void)stopAnimating {
-    if (_isAnimating) {
-        _isAnimating = NO;
-    }
+    RunSynchronouslyOnMainThread(^{
+        if (_isAnimating) {
+            _isAnimating = NO;
+        }
 
-    _progressRing.IsActive(false);
-    if (_hidesWhenStopped) {
-        [self setHidden:YES];
-    }
+        _progressRing.IsActive(false);
+        if (_hidesWhenStopped) {
+            [self setHidden:YES];
+        }
+    });
 }
 
 /**
