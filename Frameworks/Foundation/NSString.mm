@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -2200,25 +2200,4 @@ static std::vector<NSStringEncoding> _getNSStringEncodings() {
 
     return result;
 }
-
-- (NSString*)_reverseString {
-    NSUInteger length = [self length];
-    if (length < 2) {
-        return self;
-    }
-
-    std::vector<char> characters(length + 1);
-    [self getCString:&characters[0] maxLength:length];
-    for (int i = 0; i < length / 2; ++i) {
-        char character = characters[length - i - 1];
-        characters[length - i - 1] = characters[i];
-        characters[i] = character;
-    }
-    characters[length] = '\0';
-
-    NSString* ret = [[[NSString alloc] initWithCString:&characters[0]] autorelease];
-
-    return ret;
-}
-
 @end
