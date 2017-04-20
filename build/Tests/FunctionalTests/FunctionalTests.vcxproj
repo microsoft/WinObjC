@@ -356,8 +356,8 @@
   </ItemGroup>
   <ItemGroup>
     <ReferenceCopyLocalPaths Include="$(MSBuildThisFileDirectory)..\..\..\samples\XAMLCatalog\XAMLCatalog\Images\*" />
-    <ReferenceCopyLocalPaths Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\Tests\$(PlatformTarget)\NSURL.AppxManifest.xml" />
-    <ReferenceCopyLocalPaths Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\Tests\AssetsLibraryTests\$(PlatformTarget)\AssetsLibrary.AppxManifest.xml" />
+    <ReferenceCopyLocalPaths Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\Tests\NSURL.AppxManifest.xml" />
+    <ReferenceCopyLocalPaths Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\Tests\AssetsLibraryTests\AssetsLibrary.AppxManifest.xml" />
     <ReferenceCopyLocalPaths Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\Tests\UIKitTests\Assets\uilabel-ios.xml" />
   </ItemGroup>
   <Target Name="CopyContent" AfterTargets="Build">
