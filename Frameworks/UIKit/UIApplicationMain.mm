@@ -34,6 +34,7 @@
 
 #include <COMIncludes.h>
 #import <windows.foundation.h>
+#import <winrt/Windows.ApplicationModel.h>
 #include <COMIncludes_End.h>
 
 #import <StringHelpers.h>
@@ -50,10 +51,12 @@
 #import "LoggingNative.h"
 #import <MainDispatcher.h>
 #import "StarboardXaml/DisplayProperties.h"
+#import "CppWinRTHelpers.h"
 
 static const wchar_t* TAG = L"UIApplicationMain";
 
 using namespace Microsoft::WRL;
+using namespace winrt::Windows::ApplicationModel;
 
 @interface NSAutoreleasePoolWarn : NSAutoreleasePool
 @end
@@ -238,6 +241,13 @@ void _UIApplicationMainInit(NSString* principalClassName, NSString* delegateClas
 
     // Populate launch options
     NSMutableDictionary* launchOption = [NSMutableDictionary dictionary];
+
+    if (!activationArg) {
+        // If no activation argument provided, possibly because projections aren't loaded,
+        // populate the launch options with null just to let the app know they're missing something
+        activationArg = [NSNull null];
+    }
+
     switch (activationType) {
         case ActivationTypeToast:
             [launchOption setValue:activationArg forKey:UIApplicationLaunchOptionsToastActionKey];
@@ -336,7 +346,7 @@ extern "C" void UIApplicationMainHandleToastActionEvent(HSTRING toastArgument, I
     THROW_NS_IF_FAILED(comPtr.As(&map));
 
     NSMutableDictionary* userInput = nil;
-    THROW_NS_IF_FAILED(Collections::WRLToNSCollection(map, &userInput));
+    THROW_NS_IF_FAILED(::Collections::WRLToNSCollection(map, &userInput));
 
     NSDictionary* toastAction =
         @{ UIApplicationLaunchOptionsToastActionArgumentKey : argument, UIApplicationLaunchOptionsToastActionUserInputKey : userInput };
@@ -352,12 +362,15 @@ extern "C" void UIApplicationMainHandleWindowVisibilityChangeEvent(bool isVisibl
 }
 
 extern "C" void UIApplicationMainHandleVoiceCommandEvent(IInspectable* voiceCommandResult) {
-    WMSSpeechRecognitionResult* result = [WMSSpeechRecognitionResult createWith:voiceCommandResult];
+    id result = _createProjectionObject("WMSSpeechRecognitionResult", voiceCommandResult, "voice commands");
+
     [[UIApplication sharedApplication] _sendVoiceCommandReceivedEvent:result];
 }
 
-extern "C" void UIApplicationMainHandleFileEvent(IInspectable* result) {
-    [[UIApplication sharedApplication] _sendFileReceivedEvent:[WAAFileActivatedEventArgs createWith:result]];
+extern "C" void UIApplicationMainHandleFileEvent(IInspectable* fileResult) {
+    id result = _createProjectionObject("WAAFileActivatedEventArgs", fileResult, "file activation");
+
+    [[UIApplication sharedApplication] _sendFileReceivedEvent:result];
 }
 
 static NSString* _bundleIdFromPackageFamilyName(const wchar_t* packageFamily) {
@@ -366,7 +379,7 @@ static NSString* _bundleIdFromPackageFamilyName(const wchar_t* packageFamily) {
                                                        length:wcslen(packageFamily) * sizeof(wchar_t)
                                                      encoding:NSUnicodeStringEncoding] autorelease];
 
-    NSString* thisFamily = [[[WAPackage current] id] familyName];
+    NSString* thisFamily = objcwinrt::string(Package::Current().Id().FamilyName());
 
     if ([sourceFamily isEqualToString:thisFamily]) {
         // The activation is coming from inside our own application. The only
@@ -384,8 +397,26 @@ static NSString* _bundleIdFromPackageFamilyName(const wchar_t* packageFamily) {
 }
 
 extern "C" void UIApplicationMainHandleProtocolEvent(IInspectable* protocolUri, const wchar_t* sourceApplication) {
-    WFUri* protocolResult = [WFUri createWith:protocolUri];
+    id result = _createProjectionObject("WFUri", protocolUri, "protocol activation");
     NSString* source = _bundleIdFromPackageFamilyName(sourceApplication);
 
-    [[UIApplication sharedApplication] _sendProtocolReceivedEvent:protocolResult source:source];
+    [[UIApplication sharedApplication] _sendProtocolReceivedEvent:result source:source];
+}
+
+id _createProjectionObject(const char* className, IInspectable* source, const char* description) {
+    // We can't refer to projection classes directly, because we don't want UIKit to have any link-time
+    // dependencies on the projections. However, we can try to load the classes dynamically.
+
+    id result = nil;
+    id cls = objc_getClass(className);
+
+    if (cls) {
+        // objc_msgSend is declared as a varargs function but is not really one
+        auto msgSend = reinterpret_cast<id (*)(id, SEL, IInspectable*)>(objc_msgSend);
+        result = msgSend(cls, @selector(createWith:), source);
+    } else {
+        TraceWarning(TAG, L"%hs class not registered - link with WinObjC UWP library to receive %hs", className, description);
+    }
+
+    return result;
 }

@@ -16,9 +16,12 @@
 #pragma once
 
 #import <UIKit/UIApplication.h>
-#import <UWP/WindowsFoundation.h>
-#import <UWP/WindowsMediaSpeechRecognition.h>
-#import <UWP/WindowsApplicationModelActivation.h>
+
+#include "COMIncludes.h"
+#import <inspectable.h>
+#include "COMIncludes_End.h"
+
+@class WMSSpeechRecognitionResult, WFUri, WAAFileActivatedEventArgs;
 
 @interface UIApplication (internal)
 // TODO: #2443 Remove _popupWindow (and all references to it) when we move UIAlertView over to Xaml
@@ -48,3 +51,5 @@
 // in a file that gets included in C++/CX sources.
 void _UIApplicationMainInit(NSString* principalClassName, NSString* delegateClassName, int activationType, id activationArg);
 void _UIApplicationShutdown();
+
+id _createProjectionObject(const char* cls, IInspectable* source, const char* description);

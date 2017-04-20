@@ -18,9 +18,8 @@
 
 #include <COMIncludes.h>
 #import "ApplicationMain.h"
-#import <windows.foundation.h>
-#import <windows.applicationmodel.activation.h>
-#import "winrt/Windows.Storage.h"
+#import <winrt/Windows.Storage.h>
+#import <winrt/Windows.ApplicationModel.Activation.h>
 #import <winrt/Windows.UI.Xaml.h>
 #include <COMIncludes_End.h>
 
@@ -42,10 +41,13 @@
 #import <UIApplicationInternal.h>
 #import <MainDispatcher.h>
 #import <_UIPopupViewController.h>
+#import "CppWinRTHelpers.h"
 
 using namespace Microsoft::WRL;
 using namespace winrt::Windows::UI::Xaml;
+using namespace winrt::Windows::ApplicationModel::Activation;
 namespace WF = winrt::Windows::Foundation;
+namespace WFC = winrt::Windows::Foundation::Collections;
 
 void _SetTemporaryFolder(const wchar_t* folder) {
     NSSetTemporaryDirectory([NSString stringWithCharacters:reinterpret_cast<const unichar*>(folder) length:wcslen(folder)]);
@@ -79,38 +81,42 @@ void RunApplicationMain(const char* principalName, const char* delegateName, Act
     id activationArgument = nil;
 
     // Populate Objective C equivalent of activation argument
-    if (activationType == ActivationTypeToast) {
-        WAAToastNotificationActivatedEventArgs* toastArgument = [WAAToastNotificationActivatedEventArgs createWith:activationArg];
+    switch (activationType) {
+        case ActivationTypeToast: {
+            auto toastArgument = objcwinrt::from_insp<ToastNotificationActivatedEventArgs>(activationArg);
 
-        // Convert to NSDictionary with NSStrings
-        ComPtr<IInspectable> comPtr = activationArg;
-        ComPtr<ABI::Windows::ApplicationModel::Activation::IToastNotificationActivatedEventArgs> args;
-        THROW_NS_IF_FAILED(comPtr.As(&args));
+            // Convert to NSDictionary with NSStrings
+            WFC::IPropertySet map = toastArgument.UserInput();
+            auto mapAbi = reinterpret_cast<ABI::Windows::Foundation::Collections::IPropertySet*>(winrt::get_abi(map));
 
-        ComPtr<ABI::Windows::Foundation::Collections::IPropertySet> map;
-        THROW_NS_IF_FAILED(args->get_UserInput(&map));
+            NSMutableDictionary* userInput = nil;
+            THROW_NS_IF_FAILED(::Collections::WRLToNSCollection(mapAbi, &userInput));
 
-        NSMutableDictionary* userInput = nil;
-        THROW_NS_IF_FAILED(Collections::WRLToNSCollection(map, &userInput));
+            NSDictionary* toastAction = @{
+                UIApplicationLaunchOptionsToastActionArgumentKey:objcwinrt::string(toastArgument.Argument()),
+                UIApplicationLaunchOptionsToastActionUserInputKey:userInput
+            };
+            activationArgument = toastAction;
+            break;
+        }
+        case ActivationTypeProtocol:
+            activationArgument = _createProjectionObject("WFUri", activationArg, "protocol activation");
+            break;
 
-        NSDictionary* toastAction = @{
-            UIApplicationLaunchOptionsToastActionArgumentKey:toastArgument.argument,
-            UIApplicationLaunchOptionsToastActionUserInputKey:userInput
-        };
-        activationArgument = toastAction;
-    } else if (activationType == ActivationTypeVoiceCommand) {
-        WMSSpeechRecognitionResult* result = [WMSSpeechRecognitionResult createWith:(IInspectable*)activationArg];
-        activationArgument = result;
-    } else if (activationType == ActivationTypeProtocol) {
-        WFUri* uri = [WFUri createWith:(IInspectable*)activationArg];
-        activationArgument = uri;
-    } else if (activationType == ActivationTypeFile) {
-        WAAFileActivatedEventArgs* activatedEventArgs = [WAAFileActivatedEventArgs createWith:activationArg];
-        activationArgument = activatedEventArgs;
+        case ActivationTypeVoiceCommand:
+            activationArgument = _createProjectionObject("WMSSpeechRecognitionResult", activationArg, "voice commands");
+            break;
+
+        case ActivationTypeFile:
+            activationArgument = _createProjectionObject("WAAFileActivatedEventArgs", activationArg, "file activation");
+            break;
+
+        default:
+            break;
     }
 
     // Grab window dimensions from CPP/WinRT and initialize our display accordingly
-    auto windowBounds = winrt::Windows::UI::Xaml::Window::Current().Bounds();
+    auto windowBounds = Window::Current().Bounds();
     WOCDisplayMode* displayMode = [UIApplication displayMode];
     [displayMode _setWindowSize:CGSizeMake(windowBounds.Width, windowBounds.Height)];
 

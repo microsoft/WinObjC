@@ -42,8 +42,7 @@
 */
 
 @class NSString, UIApplication, NSDictionary, NSCoder, UIViewController, NSArray, UIUserNotificationSettings, UILocalNotification, NSData,
-    NSError, NSUserActivity, UIApplicationShortcutItem, NSURL, UIWindow, WFCValueSet, WMSSpeechRecognitionResult, WFUri,
-    WAAFileActivatedEventArgs;
+    NSError, NSUserActivity, UIApplicationShortcutItem, NSURL, UIWindow, WMSSpeechRecognitionResult, WFUri, WAAFileActivatedEventArgs;
 
 UIKIT_EXPORT NSString* const UIApplicationLaunchOptionsURLKey;
 UIKIT_EXPORT NSString* const UIApplicationLaunchOptionsSourceApplicationKey;
