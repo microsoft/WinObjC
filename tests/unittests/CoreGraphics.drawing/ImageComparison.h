@@ -18,6 +18,7 @@
 
 #include <CoreGraphics/CGImage.h>
 #include <Starboard/SmartTypes.h>
+#include <cstdlib>
 
 enum class ImageComparisonResult : unsigned int { Unknown = 0, Incomparable, Different, Same };
 
@@ -34,7 +35,7 @@ struct Pixel {
         return !(*this == o);
     }
     bool near(const Pixel& o) const {
-        return (abs(r - o.r) + abs(g - o.g) + abs(b - o.b) + abs(a - o.a)) < sc_visualThreshold;
+        return (std::abs(r - o.r) + std::abs(g - o.g) + std::abs(b - o.b) + std::abs(a - o.a)) < sc_visualThreshold;
     }
 };
 
