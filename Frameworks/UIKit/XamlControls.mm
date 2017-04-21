@@ -51,7 +51,6 @@ void HookButtonPointerEvents(const Controls::Button& button,
                              const Input::PointerEventHandler& pointerReleasedHook,
                              const Input::PointerEventHandler& pointerCanceledHook,
                              const Input::PointerEventHandler& pointerCaptureLostHook) {
-
     XamlHookButtonPointerEvents(objcwinrt::to_insp(button),
                                 pointerPressedHook ? Make<WUXIPointerEventHandler_shim>(pointerPressedHook) : nullptr,
                                 pointerMovedHook ? Make<WUXIPointerEventHandler_shim>(pointerMovedHook) : nullptr,
@@ -116,6 +115,193 @@ Controls::Grid CreateLabel() {
 Controls::TextBlock GetLabelTextBlock(const Controls::Grid& labelGrid) {
     ComPtr<IInspectable> inspectable(XamlGetLabelTextBlock(objcwinrt::to_insp(labelGrid)));
     return objcwinrt::from_insp<Controls::TextBlock>(inspectable);
+}
+
+////////////////////////////////////////////////////////////////////////////////////
+// TextField
+////////////////////////////////////////////////////////////////////////////////////
+FrameworkElement CreateTextField() {
+    Microsoft::WRL::ComPtr<IInspectable> inspectable;
+    XamlCreateTextField(&inspectable);
+    return objcwinrt::from_insp<FrameworkElement>(inspectable);
+}
+
+Controls::Canvas GetTextFieldSubLayerCanvas(const FrameworkElement& textField) {
+    Microsoft::WRL::ComPtr<IInspectable> inspectable(XamlGetTextFieldSubLayerCanvas(objcwinrt::to_insp(textField)));
+    return objcwinrt::from_insp<Controls::Canvas>(inspectable);
+}
+
+Controls::TextBox GetTextFieldTextBox(const FrameworkElement& textField) {
+    Microsoft::WRL::ComPtr<IInspectable> inspectable(XamlGetTextFieldTextBox(objcwinrt::to_insp(textField)));
+    return objcwinrt::from_insp<Controls::TextBox>(inspectable);
+}
+
+Controls::PasswordBox GetTextFieldPasswordBox(const FrameworkElement& textField) {
+    Microsoft::WRL::ComPtr<IInspectable> inspectable(XamlGetTextFieldPasswordBox(objcwinrt::to_insp(textField)));
+    return objcwinrt::from_insp<Controls::PasswordBox>(inspectable);
+}
+
+void SetTextFieldSecureTextEntryValue(const FrameworkElement& textField, bool secureTextEntry) {
+    XamlSetTextFieldSecureTextEntryValue(objcwinrt::to_insp(textField), secureTextEntry);
+}
+
+bool GetTextFieldSecureTextEntryValue(const FrameworkElement& textField) {
+    return XamlGetTextFieldSecureTextEntryValue(objcwinrt::to_insp(textField));
+}
+
+void SetTextFieldText(const winrt::Windows::UI::Xaml::FrameworkElement& textField, NSString* text) {
+    auto textToSet = Strings::NarrowToWide<std::wstring>([text UTF8String]);
+    XamlSetTextFieldText(objcwinrt::to_insp(textField), textToSet);
+}
+
+NSString* GetTextFieldText(const winrt::Windows::UI::Xaml::FrameworkElement& textField) {
+    ComPtr<IInspectable> inspPropVal(XamlGetTextFieldText(objcwinrt::to_insp(textField)));
+    return XamlUtilities::NSStringFromPropertyValue(inspPropVal);
+}
+
+void SetTextFieldPlaceholder(const winrt::Windows::UI::Xaml::FrameworkElement& textField, NSString* placeholder) {
+    auto placeholderText = Strings::NarrowToWide<std::wstring>([placeholder UTF8String]);
+    XamlSetTextFieldPlaceholder(objcwinrt::to_insp(textField), placeholderText);
+}
+
+NSString* GetTextFieldPlaceholder(const winrt::Windows::UI::Xaml::FrameworkElement& textField) {
+    ComPtr<IInspectable> inspPropVal(XamlGetTextFieldPlaceholder(objcwinrt::to_insp(textField)));
+    return XamlUtilities::NSStringFromPropertyValue(inspPropVal);
+}
+
+void SetTextFieldInputScope(const winrt::Windows::UI::Xaml::FrameworkElement& textField,
+                            UIKeyboardType keyboardType,
+                            BOOL secureTextEntry) {
+    auto inputSCope = XamlUtilities::ConvertKeyboardTypeToInputScope(keyboardType, secureTextEntry);
+    XamlSetTextFieldInputScope(objcwinrt::to_insp(textField), objcwinrt::to_insp(inputSCope));
+}
+
+void SetTextFieldEnabled(const winrt::Windows::UI::Xaml::FrameworkElement& inspectableTextField, BOOL enabled) {
+    XamlSetTextFieldEnabled(objcwinrt::to_insp(inspectableTextField), enabled);
+}
+
+bool GetTextFieldEnabled(const winrt::Windows::UI::Xaml::FrameworkElement& inspectableTextField) {
+    return XamlGetTextFieldEnabled(objcwinrt::to_insp(inspectableTextField));
+}
+
+void TextFieldKillFocus(const winrt::Windows::UI::Xaml::FrameworkElement& inspectableTextField) {
+    XamlTextFieldKillFocus(objcwinrt::to_insp(inspectableTextField));
+}
+
+void TextFieldSetFocus(const winrt::Windows::UI::Xaml::FrameworkElement& inspectableTextField) {
+    XamlTextFieldSetFocus(objcwinrt::to_insp(inspectableTextField));
+}
+
+void SetTextFieldTextColor(const winrt::Windows::UI::Xaml::FrameworkElement& inspectableTextField, UIColor* textColor) {
+    auto convertedColor = XamlUtilities::ConvertUIColorToWUColor(textColor);
+    Media::SolidColorBrush brush(convertedColor);
+    XamlSetTextFieldTextColor(objcwinrt::to_insp(inspectableTextField), objcwinrt::to_insp(brush));
+}
+
+UIColor* GetTextFieldTextColor(const winrt::Windows::UI::Xaml::FrameworkElement& inspectableTextField) {
+    auto foregroundBrush =
+        objcwinrt::from_insp<Media::SolidColorBrush>(XamlGetTextFieldTextColor(objcwinrt::to_insp(inspectableTextField)));
+    if (foregroundBrush) {
+        return XamlUtilities::ConvertWUColorToUIColor(foregroundBrush.Color());
+    }
+
+    return nil;
+}
+
+void SetTextFieldBackgroundColor(const winrt::Windows::UI::Xaml::FrameworkElement& inspectableTextField, UIColor* backgroundColor) {
+    auto convertedColor = XamlUtilities::ConvertUIColorToWUColor(backgroundColor);
+    Media::SolidColorBrush brush(convertedColor);
+    XamlSetTextFieldBackgroundColor(objcwinrt::to_insp(inspectableTextField), objcwinrt::to_insp(brush));
+}
+
+UIColor* GetTextFieldBackgroundColor(const winrt::Windows::UI::Xaml::FrameworkElement& inspectableTextField) {
+    auto foregroundBrush =
+        objcwinrt::from_insp<Media::SolidColorBrush>(XamlGetTextFieldBackgroundColor(objcwinrt::to_insp(inspectableTextField)));
+    if (foregroundBrush) {
+        return XamlUtilities::ConvertWUColorToUIColor(foregroundBrush.Color());
+    }
+
+    return nil;
+}
+
+void SetTextFieldBackgroundImage(const winrt::Windows::UI::Xaml::FrameworkElement& inspectableTextField, UIImage* backgroundImage) {
+    CGImageRef cgImg = [backgroundImage CGImage];
+    if (cgImg == NULL) {
+        return;
+    }
+
+    Microsoft::WRL::ComPtr<IInspectable> inspectableNode(DisplayTexture::GetBitmapForCGImage(cgImg));
+    auto bitmapImageSource = objcwinrt::from_insp<Media::Imaging::BitmapSource>(inspectableNode);
+    Media::ImageBrush imageBrush;
+    imageBrush.ImageSource(bitmapImageSource);
+
+    XamlSetTextFieldBackgroundImage(objcwinrt::to_insp(inspectableTextField), objcwinrt::to_insp(imageBrush));
+}
+
+void SetTextFieldTextAlignment(const winrt::Windows::UI::Xaml::FrameworkElement& inspectableTextField, UITextAlignment alignment) {
+    auto textAlignment = XamlUtilities::ConvertUITextAlignmentToWXTextAlignment(alignment);
+    XamlSetTextFieldTextAlignment(objcwinrt::to_insp(inspectableTextField), (int)textAlignment);
+}
+
+UITextAlignment GetTextFieldTextAlignment(const winrt::Windows::UI::Xaml::FrameworkElement& inspectableTextField) {
+    auto textAlignment = XamlGetTextFieldTextAlignment(objcwinrt::to_insp(inspectableTextField));
+    return XamlUtilities::ConvertWXTextAlignmentToUITextAlignment(static_cast<winrt::Windows::UI::Xaml::TextAlignment>(textAlignment));
+}
+
+bool GetTextFieldEditingState(const winrt::Windows::UI::Xaml::FrameworkElement& inspectableTextField) {
+    return XamlGetTextFieldEditing(objcwinrt::to_insp(inspectableTextField));
+}
+
+bool TextFieldBecomeFirstResponder(const winrt::Windows::UI::Xaml::FrameworkElement& inspectableTextField) {
+    return XamlTextFieldBecomeFirstResponder(objcwinrt::to_insp(inspectableTextField));
+}
+
+void TextFieldRegisterEventHandlers(const winrt::Windows::UI::Xaml::FrameworkElement& inspectableTextField,
+                                    const RoutedEventHandler& textChangedHandler,
+                                    const RoutedEventHandler& gotFocusHandler,
+                                    const RoutedEventHandler& lostFocusHanlder,
+                                    const RoutedEventHandler& enterKeyDownHandler) {
+    XamlTextFieldRegisterEventHandlers(objcwinrt::to_insp(inspectableTextField),
+                                       textChangedHandler ? Make<WUXRoutedEventHandler_shim>(textChangedHandler) : nullptr,
+                                       gotFocusHandler ? Make<WUXRoutedEventHandler_shim>(gotFocusHandler) : nullptr,
+                                       lostFocusHanlder ? Make<WUXRoutedEventHandler_shim>(lostFocusHanlder) : nullptr,
+                                       enterKeyDownHandler ? Make<WUXRoutedEventHandler_shim>(enterKeyDownHandler) : nullptr);
+}
+
+void TextFieldUnregisterEventHandlers(const winrt::Windows::UI::Xaml::FrameworkElement& inspectableTextField) {
+    XamlTextFieldUnregisterEventHandlers(objcwinrt::to_insp(inspectableTextField));
+}
+
+void SetTextFieldVerticalTextAlignment(const winrt::Windows::UI::Xaml::FrameworkElement& inspectableTextField, int verticalTextAlignment) {
+    XamlSetTextFieldVerticalTextAlignment(objcwinrt::to_insp(inspectableTextField), verticalTextAlignment);
+}
+
+int GetTextFieldVerticalTextAlignment(const winrt::Windows::UI::Xaml::FrameworkElement& inspectableTextField) {
+    return static_cast<UITextBorderStyle>(XamlGetTextFieldVerticalTextAlignment(objcwinrt::to_insp(inspectableTextField)));
+}
+
+// Set the UIKit::Xaml::TextField's Border property
+void SetTextFieldBorderStyle(const winrt::Windows::UI::Xaml::FrameworkElement& inspectableTextField, UITextBorderStyle borderStyle) {
+    XamlSetTextFieldBorderStyle(objcwinrt::to_insp(inspectableTextField), static_cast<int>(borderStyle));
+}
+
+// Get the UIKit::Xaml::TextField's Border property
+UITextBorderStyle GetTextFieldBorderStyle(const winrt::Windows::UI::Xaml::FrameworkElement& inspectableTextField) {
+    return static_cast<UITextBorderStyle>(XamlGetTextFieldBorderStyle(objcwinrt::to_insp(inspectableTextField)));
+}
+
+void TextFieldApplyFont(const winrt::Windows::UI::Xaml::FrameworkElement& inspectableTextField,
+                        NSString* fontFmailyname,
+                        DWRITE_FONT_STRETCH fontStrech,
+                        DWRITE_FONT_STYLE fontStyle,
+                        double fontSize,
+                        DWRITE_FONT_WEIGHT fontWeight) {
+    XamlTextFieldApplyFont(objcwinrt::to_insp(inspectableTextField),
+                           Strings::NarrowToWide<std::wstring>([fontFmailyname UTF8String]),
+                           static_cast<int>(fontStrech),
+                           static_cast<int>(fontStyle),
+                           fontSize,
+                           static_cast<int>(fontWeight));
 }
 
 ////////////////////////////////////////////////////////////////////////////////////

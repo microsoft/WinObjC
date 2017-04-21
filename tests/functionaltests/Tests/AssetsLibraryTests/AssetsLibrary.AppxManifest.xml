@@ -32,7 +32,7 @@
       <InProcessServer>
         <Path>UIKit.Xaml.dll</Path>
         <ActivatableClass ActivatableClassId="UIKit.Xaml.ContentDialog" ThreadingModel="both" />
-        <ActivatableClass ActivatableClassId="UIKit.Xaml.TextBox" ThreadingModel="both" />
+        <ActivatableClass ActivatableClassId="UIKit.Xaml.TextField" ThreadingModel="both" />
         <ActivatableClass ActivatableClassId="UIKit.Xaml.ScrollViewer" ThreadingModel="both" />
         <ActivatableClass ActivatableClassId="UIKit.Xaml.Private.CoreAnimation.Layer" ThreadingModel="both" />
         <ActivatableClass ActivatableClassId="UIKit.Xaml.UIKit_Xaml_XamlTypeInfo.XamlMetaDataProvider" ThreadingModel="both" />

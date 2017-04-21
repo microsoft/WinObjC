@@ -67,14 +67,14 @@ UIKIT_EXPORT_CLASS
 
 // Accessing the Text Attributes
 @property (nonatomic, copy) NSString* text;
-@property (nonatomic, copy) NSAttributedString* attributedText STUB_PROPERTY;
+@property (nonatomic, copy) NSAttributedString* attributedText NOTINPLAN_PROPERTY;
 @property (nonatomic, copy) NSString* placeholder;
-@property (nonatomic, copy) NSAttributedString* attributedPlaceholder STUB_PROPERTY;
-@property (nonatomic, copy) NSDictionary* defaultTextAttributes STUB_PROPERTY;
+@property (nonatomic, copy) NSAttributedString* attributedPlaceholder NOTINPLAN_PROPERTY;
+@property (nonatomic, copy) NSDictionary* defaultTextAttributes NOTINPLAN_PROPERTY;
 @property (nonatomic, strong) UIFont* font;
 @property (nonatomic, strong) UIColor* textColor;
 @property (nonatomic) NSTextAlignment textAlignment;
-@property (nonatomic, copy) NSDictionary* typingAttributes STUB_PROPERTY;
+@property (nonatomic, copy) NSDictionary* typingAttributes NOTINPLAN_PROPERTY;
 
 // Sizing the Text Field’s Text
 @property (nonatomic) BOOL adjustsFontSizeToFitWidth;
@@ -84,7 +84,7 @@ UIKIT_EXPORT_CLASS
 @property (nonatomic, readonly, getter=isEditing) BOOL editing;
 @property (nonatomic) BOOL clearsOnBeginEditing STUB_PROPERTY;
 @property (nonatomic) BOOL clearsOnInsertion STUB_PROPERTY;
-@property (nonatomic) BOOL allowsEditingTextAttributes STUB_PROPERTY;
+@property (nonatomic) BOOL allowsEditingTextAttributes NOTINPLAN_PROPERTY;
 
 // Setting the View’s Background Appearance
 @property (nonatomic) UITextBorderStyle borderStyle;
@@ -102,33 +102,33 @@ UIKIT_EXPORT_CLASS
 @property (nonatomic, weak) id<UITextFieldDelegate> delegate;
 
 // Drawing and positioning Overrides
-- (CGRect)textRectForBounds:(CGRect)bounds STUB_METHOD;
-- (void)drawTextInRect:(CGRect)rect STUB_METHOD;
-- (CGRect)placeholderRectForBounds:(CGRect)bounds STUB_METHOD;
-- (void)drawPlaceholderInRect:(CGRect)rect STUB_METHOD;
-- (CGRect)borderRectForBounds:(CGRect)bounds STUB_METHOD;
-- (CGRect)editingRectForBounds:(CGRect)bounds STUB_METHOD;
-- (CGRect)clearButtonRectForBounds:(CGRect)bounds STUB_METHOD;
-- (CGRect)leftViewRectForBounds:(CGRect)bounds STUB_METHOD;
-- (CGRect)rightViewRectForBounds:(CGRect)bounds STUB_METHOD;
+- (CGRect)textRectForBounds:(CGRect)bounds NOTINPLAN_METHOD;
+- (void)drawTextInRect:(CGRect)rect NOTINPLAN_METHOD;
+- (CGRect)placeholderRectForBounds:(CGRect)bounds NOTINPLAN_METHOD;
+- (void)drawPlaceholderInRect:(CGRect)rect NOTINPLAN_METHOD;
+- (CGRect)borderRectForBounds:(CGRect)bounds NOTINPLAN_METHOD;
+- (CGRect)editingRectForBounds:(CGRect)bounds NOTINPLAN_METHOD;
+- (CGRect)clearButtonRectForBounds:(CGRect)bounds NOTINPLAN_METHOD;
+- (CGRect)leftViewRectForBounds:(CGRect)bounds NOTINPLAN_METHOD;
+- (CGRect)rightViewRectForBounds:(CGRect)bounds NOTINPLAN_METHOD;
 
 // Replacing the System Input Views
 @property (readwrite, strong) UIView* inputView STUB_PROPERTY;
 @property (readwrite, strong) UIView* inputAccessoryView STUB_PROPERTY;
 
 // UITextInputTraits protocol defined properties,  Managing the Keyboard Behavior
-@property (nonatomic) UITextAutocapitalizationType autocapitalizationType STUB_PROPERTY;
+@property (nonatomic) UITextAutocapitalizationType autocapitalizationType NOTINPLAN_PROPERTY;
 @property (nonatomic) UITextAutocorrectionType autocorrectionType;
 @property (nonatomic) UITextSpellCheckingType spellCheckingType;
 @property (nonatomic) BOOL enablesReturnKeyAutomatically;
-@property (nonatomic) UIKeyboardAppearance keyboardAppearance STUB_PROPERTY;
+@property (nonatomic) UIKeyboardAppearance keyboardAppearance NOTINPLAN_PROPERTY;
 @property (nonatomic) UIKeyboardType keyboardType;
-@property (nonatomic) UIReturnKeyType returnKeyType STUB_PROPERTY;
+@property (nonatomic) UIReturnKeyType returnKeyType NOTINPLAN_PROPERTY;
 @property (nonatomic, getter=isSecureTextEntry) BOOL secureTextEntry;
 
 // UITextInput protocol properties
-@property (nonatomic, readonly) UITextPosition* beginningOfDocument STUB_PROPERTY;
-@property (nonatomic, readonly) UITextPosition* endOfDocument STUB_PROPERTY;
-@property (readwrite, copy) UITextRange* selectedTextRange STUB_PROPERTY;
+@property (nonatomic, readonly) UITextPosition* beginningOfDocument NOTINPLAN_PROPERTY;
+@property (nonatomic, readonly) UITextPosition* endOfDocument NOTINPLAN_PROPERTY;
+@property (readwrite, copy) UITextRange* selectedTextRange NOTINPLAN_PROPERTY;
 
 @end
