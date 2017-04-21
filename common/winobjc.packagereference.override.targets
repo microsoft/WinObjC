@@ -128,4 +128,9 @@
     </ProjectReference>
   </ItemGroup>
 
+  <!-- Check _WinObjCVersioningTargetsImported as a lazy way to avoid double imports. This isn't fool proof but most consumers add this override targets
+       at the very bottom so other sources that may import the versioning targets should have already happened. Its not the end of the world to double import
+       but msbuild will give out a warning.
+  -->
+  <Import Project="$(MSBuildThisFileDirectory)\winobjc.versioning.common.targets" Condition="'$(_WinObjCVersioningTargetsImported)' == ''"/>
 </Project>
