@@ -98,11 +98,11 @@
 }
 
 /**
- @Status Stub
- @Notes
+@Status Interoperable
 */
 - (void)removeObject:(id)object {
-    UNIMPLEMENTED();
+    [_arrayContainer removeObject:object];
+    [_setContainer removeObject:object];
 }
 
 /**
@@ -250,11 +250,11 @@
 }
 
 /**
- @Status Stub
- @Notes
+@Status Interoperable
 */
 - (void)minusOrderedSet:(NSOrderedSet*)other {
-    UNIMPLEMENTED();
+    [_setContainer minusSet:other->_setContainer];
+    [_arrayContainer removeObjectsInArray:other->_arrayContainer];
 }
 
 /**
@@ -266,11 +266,11 @@
 }
 
 /**
- @Status Stub
- @Notes
+@Status Interoperable
 */
 - (void)unionOrderedSet:(NSOrderedSet*)other {
-    UNIMPLEMENTED();
+    [_setContainer unionSet:other->_setContainer];
+    [_arrayContainer addObjectsFromArray:other->_arrayContainer];
 }
 
 /**
