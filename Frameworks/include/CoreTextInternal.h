@@ -18,7 +18,7 @@
 #import <CoreText/CoreText.h>
 #import <CoreText/CTParagraphStyle.h>
 #import <CFCppBase.h>
-#import "Starboard.h"
+#import <Starboard.h>
 #include <COMIncludes.h>
 #import <DWrite.h>
 #import <wrl/client.h>
@@ -48,16 +48,35 @@ inline void _SafeRelease(T** p) {
 
 CFAttributedStringRef _CTTypesetterGetAttributedString(CTTypesetterRef typesetter);
 
-@interface _CTLine : NSObject {
-@public
+#pragma region CTLine
+struct __CTLine : CoreFoundation::CppBase<__CTLine> {
+    __CTLine() : _runs(woc::TakeOwnership, CFArrayCreateMutable(kCFAllocatorDefault, 0, &kCFTypeArrayCallBacks)) {
+    }
+
+    __CTLine(const __CTLine& other)
+        : _strRange(other._strRange),
+          _width(other._width),
+          _ascent(other._ascent),
+          _descent(other._descent),
+          _leading(other._leading),
+          _glyphCount(other._glyphCount),
+          _relativeXOffset(other._relativeXOffset),
+          _runs(woc::TakeOwnership, CFArrayCreateMutableCopy(kCFAllocatorDefault, 0, other._runs)) {
+    }
+
     CFRange _strRange;
     CGFloat _relativeXOffset;
     CGFloat _width;
-    NSUInteger _glyphCount;
+    CFIndex _glyphCount;
     woc::StrongCF<CFMutableArrayRef> _runs;
-    CGFloat _ascent, _descent, _leading;
-}
-@end
+    CGFloat _ascent;
+    CGFloat _descent;
+    CGFloat _leading;
+};
+
+CTLineRef _CTLineCreate();
+
+#pragma endregion CTLine
 
 #pragma region CTFrame
 struct __CTFrame : CoreFoundation::CppBase<__CTFrame> {
