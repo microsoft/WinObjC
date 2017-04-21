@@ -49,7 +49,12 @@ static void parsePlist(const String& plistPath, VCProject& proj) {
     StringSet registeredUrlSchemes;
 
     boost::any plist;
-    readPlist(plistPath.c_str(), plist);
+    try {
+        readPlist(plistPath.c_str(), plist);
+    } catch (const std::exception& e) {
+        SBLog::error() << e.what() << std::endl;
+        exit(EXIT_FAILURE);
+    }
 
     dictionary_type* dict = any_cast<dictionary_type>(&plist);
     if (dict == nullptr) {
