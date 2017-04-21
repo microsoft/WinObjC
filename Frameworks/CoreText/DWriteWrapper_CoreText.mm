@@ -393,14 +393,14 @@ public:
  *
  * @return Unmutable array of _CTLine objects created with the requested parameters.
  */
-static _CTLine* _DWriteGetLine(CFAttributedStringRef string) {
+static CTLineRef _DWriteCreateLine(CFAttributedStringRef string) {
     CFRange range = CFRangeMake(0, CFAttributedStringGetLength(string));
     CTFrameRef frame = _DWriteGetFrame(string, range, CGRectMake(0, 0, FLT_MAX, FLT_MAX));
     if (CFArrayGetCount(frame->_lines) > 0) {
-        return [static_cast<_CTLine*>(CFArrayGetValueAtIndex(frame->_lines, 0)) retain];
+        return static_cast<CTLineRef>(CFRetain(CFArrayGetValueAtIndex(frame->_lines, 0)));
     }
 
-    return [_CTLine new];
+    return _CTLineCreate();
 }
 
 /**
@@ -445,7 +445,7 @@ static CTFrameRef _DWriteGetFrame(CFAttributedStringRef string, CFRange range, C
     float prevYPosForDraw = 0;
 
     while (i < numOfGlyphRuns) {
-        _CTLine* line = [[_CTLine new] autorelease];
+        auto line = woc::MakeStrongCF<__CTLine*>(const_cast<__CTLine*>(_CTLineCreate()));
 
         auto runs = woc::MakeStrongCF<CFMutableArrayRef>(CFArrayCreateMutable(kCFAllocatorDefault, 0, &kCFTypeArrayCallBacks));
         uint32_t stringRange = 0;

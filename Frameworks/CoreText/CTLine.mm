@@ -142,7 +142,7 @@ static CFMutableAttributedStringRef __CTLineGetTruncatedStringFromSourceLine(CTL
 */
 CTLineRef CTLineCreateWithAttributedString(CFAttributedStringRef string) {
     RETURN_NULL_IF(!string);
-    return _DWriteGetLine(string);
+    return _DWriteCreateLine(string);
 }
 
 /**
