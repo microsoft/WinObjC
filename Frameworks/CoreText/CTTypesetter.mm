@@ -103,7 +103,8 @@ CFIndex CTTypesetterSuggestLineBreakWithOffset(CTTypesetterRef typesetter, CFInd
                                        CGRectMake(offset, 0, width, FLT_MAX));
 
     if (CFArrayGetCount(frame->_lines) > 0) {
-        return static_cast<_CTLine*>(CFArrayGetValueAtIndex(frame->_lines, 0))->_strRange.length;
+        CTLineRef line = static_cast<CTLineRef>(CFArrayGetValueAtIndex(frame->_lines, 0));
+        return line->_strRange.length;
     }
 
     return 0;
