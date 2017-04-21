@@ -17,9 +17,7 @@
 #import <CoreText/CTTypesetter.h>
 #import <StubReturn.h>
 #import "CoreTextInternal.h"
-#import "UIFontInternal.h"
 #import "DWriteWrapper_CoreText.h"
-#import <Foundation/NSAttributedString.h>
 #import <algorithm>
 #import <CFCppBase.h>
 #import "LoggingNative.h"
@@ -100,9 +98,9 @@ CFIndex CTTypesetterSuggestLineBreak(CTTypesetterRef typesetter, CFIndex startIn
  @Status Interoperable
 */
 CFIndex CTTypesetterSuggestLineBreakWithOffset(CTTypesetterRef typesetter, CFIndex index, double width, double offset) {
-      CTFrameRef frame = _DWriteGetFrame(typesetter->AttributedString(),
-                                      CFRangeMake(index, CFAttributedStringGetLength(typesetter->AttributedString()) - index),
-                                      CGRectMake(offset, 0, width, FLT_MAX));
+    CTFrameRef frame = _DWriteGetFrame(typesetter->AttributedString(),
+                                       CFRangeMake(index, CFAttributedStringGetLength(typesetter->AttributedString()) - index),
+                                       CGRectMake(offset, 0, width, FLT_MAX));
 
     if (CFArrayGetCount(frame->_lines) > 0) {
         return static_cast<_CTLine*>(CFArrayGetValueAtIndex(frame->_lines, 0))->_strRange.length;
