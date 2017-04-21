@@ -34,17 +34,16 @@ SBHeadersBuildPhase::SBHeadersBuildPhase(const PBXHeadersBuildPhase* phase, cons
 
 void SBHeadersBuildPhase::writeVCProjectFiles(VCProject& proj) const {
     TargetProductType productType = m_parentTarget.getProductType();
-    if (productType != TargetStaticLib) {
-        return;
-    }
 
     // Process public headers
-    const BuildSettings& projBS = m_parentTarget.getProject().getBuildSettings();
-    const BuildFileList& buildFiles = m_phase->getBuildFileList();
-    for (size_t i = 0; i < buildFiles.size(); i++) {
-        if (buildFiles[i]->getAttributes() & ATTR_PUBLIC) {
-            VCItemHint itemHint = { "ClInclude", "", "Public Headers" };
-            addBuildFileToVS(buildFiles[i], proj, projBS, &itemHint);
+    if (productType == TargetStaticLib && m_phase) {
+        const BuildSettings& projBS = m_parentTarget.getProject().getBuildSettings();
+        const BuildFileList& buildFiles = m_phase->getBuildFileList();
+        for (size_t i = 0; i < buildFiles.size(); i++) {
+            if (buildFiles[i]->getAttributes() & ATTR_PUBLIC) {
+                VCItemHint itemHint = { "ClInclude", "", "Public Headers" };
+                addBuildFileToVS(buildFiles[i], proj, projBS, &itemHint);
+            }
         }
     }
 }

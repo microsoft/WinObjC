@@ -81,7 +81,7 @@ void SBFrameworksBuildPhase::writeVCProjectFiles(VCProject& proj) const {
     // We don't support linking with frameworks when building bundles
     TargetProductType productType = m_parentTarget.getProductType();
     if (productType == TargetBundle) {
-        if (!m_phase->getBuildFileList().empty()) {
+        if (m_phase && !m_phase->getBuildFileList().empty()) {
             SBLog::warning() << "Ignoring all frameworks in \"" << m_parentTarget.getName() << "\" bundle target." << std::endl;
             TELEMETRY_EVENT(L"VSImporterLinkingFrameworksWithBundles");
         }
