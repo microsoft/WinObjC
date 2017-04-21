@@ -23,7 +23,7 @@
 
 static const double c_floatingPtTolerance = 0.00001;
 
-// Helper template function that calls a scan_______ function specified by the selector and does the nececssary casts
+// Helper template function that calls a scan_______ function specified by the selector and does the necessary casts
 template <typename T>
 static BOOL performScan(NSScanner* scanner, SEL sel, T* resultPtr) {
     return ((BOOL(*)(NSScanner*, SEL, T*))objc_msgSend)(scanner, sel, resultPtr);
@@ -290,7 +290,7 @@ static void testScanHexFloatingPoint(SEL sel) {
     NSScanner* scanner = [NSScanner
         scannerWithString:
             @"::badinput :0x1p-10 0X1p-10 0x 0x3 0x33 0x00 0xp-10 ::1p-10 0xp-10 0x1.fffP+20 0x1.fffP20 0x1...fffP+20 -0x1.cafeP-100 "
-            @"--0x1.cafeP-100 +0x1.cafeP-100 0x1.cafeP-2047 -0x1.cafeP+2048 0x1.cafeP+2048"];
+            @"--0x1.cafeP-100 +0x1.cafeP-100 0x1.cafeP-2047 -0x1.cafeP+2048 0x1.cafeP+2048 0x1.cafeP+1000 0x1.23456789aabbccddeeffp+3"];
     scanner.charactersToBeSkipped = [NSCharacterSet characterSetWithCharactersInString:@": "];
     NSUInteger expectedScanLocation = 0;
     TFloatingPoint result;
@@ -399,35 +399,34 @@ static void testScanHexFloatingPoint(SEL sel) {
     ASSERT_TRUE(performScan(scanner, sel, &result));
     EXPECT_EQ(HUGE_VAL, result);
     EXPECT_EQ(expectedScanLocation += 15, scanner.scanLocation);
+    EXPECT_FALSE(scanner.atEnd);
+
+    // Should only overflow on float but not double
+    ASSERT_TRUE(performScan(scanner, sel, &result));
+    EXPECT_EQ((sizeof(TFloatingPoint) > 4) ? 0x1.cafeP+1000 : HUGE_VAL, result);
+    EXPECT_EQ(expectedScanLocation += 15, scanner.scanLocation);
+    EXPECT_FALSE(scanner.atEnd);
+
+    // If the mantissa has too many bits to be represented, scanning should cut off the latter bits
+    float expectedFloat = 0x1.234567p+3; // Declare as float here so it doesn't get instantiated as a double
+
+    ASSERT_TRUE(performScan(scanner, sel, &result));
+    EXPECT_EQ((sizeof(TFloatingPoint) > 4) ? 0x1.23456789aabbccp+3 : expectedFloat, result);
     EXPECT_TRUE(scanner.atEnd);
 }
 
 TEST(NSScanner, ScanHexDouble) {
     testScanHexFloatingPoint<double>(@selector(scanHexDouble:));
-
-    // If the mantissa has too many bits to be represented, scanning should cut off the latter bits
-    NSScanner* scanner = [NSScanner scannerWithString:@"0x1.23456789aabbccddeeffp+3"];
-    double result;
-    ASSERT_TRUE([scanner scanHexDouble:&result]);
-    EXPECT_EQ(0x1.23456789aabbccp+3, result);
-    EXPECT_TRUE(scanner.atEnd);
 }
 
 TEST(NSScanner, ScanHexFloat) {
     testScanHexFloatingPoint<float>(@selector(scanHexFloat:));
-
-    // If the mantissa has too many bits to be represented, scanning should cut off the latter bits
-    NSScanner* scanner = [NSScanner scannerWithString:@"0x1.23456789aabbccddeeffp+3"];
-    float result;
-    float expected = 0x1.234567p+3; // Declare as float here so it doesn't get instantiated as a double
-    ASSERT_TRUE([scanner scanHexFloat:&result]);
-    EXPECT_EQ(expected, result);
-    EXPECT_TRUE(scanner.atEnd);
 }
 
 template <typename TIntegral>
 static void testScanHexIntegral(SEL sel) {
-    NSScanner* scanner = [NSScanner scannerWithString:@":123 :DEADBEEF 0xDEADBEEF 0Xdeadbeef 0xEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE"];
+    NSScanner* scanner =
+        [NSScanner scannerWithString:@":123 :DEADBEEF 0xDEADBEEF 0Xdeadbeef 0xEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE 0xEEEEEEEEEE"];
     scanner.charactersToBeSkipped = [NSCharacterSet characterSetWithCharactersInString:@": "];
     NSUInteger expectedScanLocation = 0;
     TIntegral result;
@@ -457,6 +456,12 @@ static void testScanHexIntegral(SEL sel) {
     ASSERT_TRUE(performScan(scanner, sel, &result));
     EXPECT_EQ(std::numeric_limits<TIntegral>::max(), result);
     EXPECT_EQ(expectedScanLocation += 40, scanner.scanLocation);
+    EXPECT_FALSE(scanner.atEnd);
+
+    // Should not overflow on >32 bit type
+    ASSERT_TRUE(performScan(scanner, sel, &result));
+    EXPECT_EQ(sizeof(TIntegral) > 4 ? 0xEEEEEEEEEE : std::numeric_limits<TIntegral>::max(), result);
+    EXPECT_EQ(expectedScanLocation += 13, scanner.scanLocation);
     EXPECT_TRUE(scanner.atEnd);
 }
 
@@ -470,7 +475,8 @@ TEST(NSScanner, ScanHexLongLong) {
 
 template <typename TSignedIntegral>
 static void testScanSignedIntegral(SEL sel) {
-    NSScanner* scanner = [NSScanner scannerWithString:@":123 :-123 +123 123-124 0xDEADBEEF 20000000000000000000 -20000000000000000000"];
+    NSScanner* scanner =
+        [NSScanner scannerWithString:@":123 :-123 +123 123-124 0xDEADBEEF 20000000000000000000 -20000000000000000000  2147483700"];
     scanner.charactersToBeSkipped = [NSCharacterSet characterSetWithCharactersInString:@": "];
     NSUInteger expectedScanLocation = 0;
     TSignedIntegral result;
@@ -524,6 +530,12 @@ static void testScanSignedIntegral(SEL sel) {
     ASSERT_TRUE(performScan(scanner, sel, &result));
     EXPECT_EQ(std::numeric_limits<TSignedIntegral>::min(), result);
     EXPECT_EQ(expectedScanLocation += 22, scanner.scanLocation);
+    EXPECT_FALSE(scanner.atEnd);
+
+    // Should not overflow on the >32 bit types
+    ASSERT_TRUE(performScan(scanner, sel, &result));
+    EXPECT_EQ((sizeof(TSignedIntegral) > 4) ? 2147483700LL : std::numeric_limits<TSignedIntegral>::max(), result);
+    EXPECT_EQ(expectedScanLocation += 12, scanner.scanLocation);
     EXPECT_TRUE(scanner.atEnd);
 }
 
