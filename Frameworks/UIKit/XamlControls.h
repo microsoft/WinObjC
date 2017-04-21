@@ -68,6 +68,14 @@ public:
 #endif // __has_feature(objc_arc)
 
 ////////////////////////////////////////////////////////////////////////////////////
+// ProgressRing
+////////////////////////////////////////////////////////////////////////////////////
+winrt::Windows::UI::Xaml::Controls::Grid CreateProgressRing();
+winrt::Windows::UI::Xaml::Controls::ProgressRing XamlGetInternalProgressRing(const winrt::Windows::UI::Xaml::Controls::Grid& progressRingInspectable);
+bool GetProgressRingIsActiveValue(const winrt::Windows::UI::Xaml::FrameworkElement& progressRingInspectable);
+void SetProgressRingIsActiveValue(const winrt::Windows::UI::Xaml::FrameworkElement& progressRingInspectable, bool isActive);
+
+////////////////////////////////////////////////////////////////////////////////////
 // Button
 ////////////////////////////////////////////////////////////////////////////////////
 winrt::Windows::UI::Xaml::Controls::Button CreateButton();

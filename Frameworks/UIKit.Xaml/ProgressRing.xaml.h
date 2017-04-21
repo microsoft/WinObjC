@@ -21,17 +21,35 @@
 #include "ObjCXamlControls.h"
 
 namespace UIKit {
-namespace Xaml {
+	namespace Xaml {
 
-[Windows::Foundation::Metadata::WebHostHidden]
-public ref class ProgressRing sealed {
-public:
-    ProgressRing();
+		[Windows::Foundation::Metadata::WebHostHidden]
+		public ref class ProgressRing sealed {
+		public:
+			ProgressRing();
 
-private:
-    // TODO: Add support for padding and other missing properties, and to expose them as needed to UIKit.
-};
+			// TODO: This should be renamed to eliminate the naming prefix once the DependencyProperty is fixed
+			property Platform::Boolean ProgressRing_IsActive {
+				Platform::Boolean get() {
+					return (Platform::Boolean)GetValue(s_isActiveProperty);
+				}
+				void set(Platform::Boolean value) {
+					SetValue(s_isActiveProperty, value);
+				}
+			}
 
-} /* Xaml*/
+		internal:
+			property Windows::UI::Xaml::Controls::ProgressRing^ InternalProgressRing {
+				Windows::UI::Xaml::Controls::ProgressRing^ get();
+			}
+
+			static void _RegisterDependencyProperties();
+
+		private:
+			static Windows::UI::Xaml::DependencyProperty^ s_isActiveProperty;
+			static Platform::Boolean s_dependencyPropertiesRegistered;
+		};
+
+	} /* Xaml*/
 } /* UIKit*/
 // clang-format on

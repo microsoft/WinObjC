@@ -26,6 +26,28 @@ using namespace winrt::Windows::UI::Xaml;
 namespace XamlControls {
 
 ////////////////////////////////////////////////////////////////////////////////////
+// ProgressRing
+////////////////////////////////////////////////////////////////////////////////////
+Controls::Grid CreateProgressRing() {
+    ComPtr<IInspectable> inspectable;
+    XamlCreateProgressRing(&inspectable);
+    return objcwinrt::from_insp<Controls::Grid>(inspectable);
+}
+
+Controls::ProgressRing XamlGetInternalProgressRing(const Controls::Grid& progressRingControl) {
+    ComPtr<IInspectable> inspectable(XamlGetInternalProgressRing(objcwinrt::to_insp(progressRingControl)));
+    return objcwinrt::from_insp<Controls::ProgressRing>(inspectable);
+}
+
+bool GetProgressRingIsActiveValue(const FrameworkElement& progressRingControl) {
+    return XamlGetProgressRingIsActiveValue(objcwinrt::to_insp(progressRingControl));
+}
+
+void SetProgressRingIsActiveValue(const FrameworkElement& progressRingControl, bool isActive) {
+    XamlSetProgressRingIsActiveValue(objcwinrt::to_insp(progressRingControl), isActive);
+}
+
+////////////////////////////////////////////////////////////////////////////////////
 // Button
 ////////////////////////////////////////////////////////////////////////////////////
 Controls::Button CreateButton() {

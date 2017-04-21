@@ -86,6 +86,15 @@ UIKIT_XAML_EXPORT IInspectable* XamlGetFrameworkElementSublayerCanvasProperty(co
 // Returns a UIKit::ProgressRing as an IInspectable
 UIKIT_XAML_EXPORT void XamlCreateProgressRing(IInspectable** created);
 
+// Retrieves the UIKit::Xaml::ProgressRing's backing ProgressRing as an IInspetable
+UIKIT_XAML_EXPORT IInspectable* XamlGetInternalProgressRing(const Microsoft::WRL::ComPtr<IInspectable>& progressRingInspectable);
+
+// Retrieves the IsActive property value, denoting if the ProgressRing is currently animating
+UIKIT_XAML_EXPORT bool XamlGetProgressRingIsActiveValue(const Microsoft::WRL::ComPtr<IInspectable>& progressRingInspectable);
+
+// Sets the IsActive property value to start or stop animation of the ProgressRing
+UIKIT_XAML_EXPORT void XamlSetProgressRingIsActiveValue(const Microsoft::WRL::ComPtr<IInspectable>& progressRingInspectable, bool isActive);
+
 ////////////////////////////////////////////////////////////////////////////////////
 // ScrollView.xaml.cpp
 ////////////////////////////////////////////////////////////////////////////////////

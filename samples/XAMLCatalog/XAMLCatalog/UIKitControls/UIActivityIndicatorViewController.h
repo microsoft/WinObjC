@@ -14,8 +14,31 @@
 //
 //******************************************************************************
 
-#import "MenuTableViewController.h"
+#import <UIKit/UIKit.h>
 
-@interface UIActivityIndicatorViewController : MenuTableViewController
+@interface UIActivityIndicatorViewController : UIViewController <UIPickerViewDelegate, UIPickerViewDataSource>
+@property (nonatomic) UIActivityIndicatorView* indicator;
 
+@property (nonatomic) UIButton* animateIndicatorButton;
+
+@property (nonatomic) UILabel* hideIndicatorLabel;
+@property (nonatomic) UISwitch* hideStoppedIndicatorSwitch;
+
+@property (nonatomic) UILabel* redLabel;
+@property (nonatomic) UILabel* redValueLabel;
+@property (nonatomic) UISlider* redSlider;
+
+@property (nonatomic) UILabel* greenLabel;
+@property (nonatomic) UILabel* greenValueLabel;
+@property (nonatomic) UISlider* greenSlider;
+
+@property (nonatomic) UILabel* blueLabel;
+@property (nonatomic) UILabel* blueValueLabel;
+@property (nonatomic) UISlider* blueSlider;
+
+@property (nonatomic) UILabel* alphaLabel;
+@property (nonatomic) UILabel* alphaValueLabel;
+@property (nonatomic) UISlider* alphaSlider;
+
+@property (nonatomic) UIPickerView* indicatorStylePicker;
 @end
