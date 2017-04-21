@@ -659,7 +659,13 @@
     DependsOnTargets="$(ComputeLinkInputsTargets)"
     BeforeTargets="CreateWinMD">
 
-    <PropertyGroup Condition="'@(ClCompile)' != ''">
+    <ItemGroup>
+      <ClCompile Include="tmp" Condition="'@(ClCompile)'==''">
+       <DeleteSoon>true</DeleteSoon>
+      </ClCompile>
+    </ItemGroup>
+
+    <PropertyGroup>
       <ClCompileCRTs>@(ClCompile->Metadata('RuntimeLibrary')->Distinct()->ClearMetadata())</ClCompileCRTs>
       <AdditionalOptionsToUse Condition="$(ClCompileCRTs.ToLower().Contains('multithreadeddll'))">/nodefaultlib:vccorlib /nodefaultlib:msvcrt winobjcrt.lib vccorlib.lib msvcrt.lib </AdditionalOptionsToUse>
       <AdditionalOptionsToUse Condition="$(ClCompileCRTs.ToLower().Contains('multithreadeddebugdll'))">/nodefaultlib:vccorlibd /nodefaultlib:msvcrtd winobjcrt.lib vccorlibd.lib msvcrtd.lib </AdditionalOptionsToUse>
@@ -670,6 +676,8 @@
         <AdditionalOptions Condition="$(AdditionalOptionsToUse) != ''">$(AdditionalOptionsToUse) %(Link.AdditionalOptions)</AdditionalOptions>
         <AdjustedAdditionalOptions>true</AdjustedAdditionalOptions>
       </Link>
+
+      <ClCompile Remove="@(ClCompile)" Condition="'%(ClCompile.DeleteSoon)'=='true'" />
     </ItemGroup>
 
   </Target>
@@ -688,7 +696,13 @@
     DependsOnTargets="$(FixAdditionalOptionsLinkDependsOn)"
     BeforeTargets="Link">
 
-    <PropertyGroup Condition="'@(ClCompile)' != ''">
+    <ItemGroup>
+      <ClCompile Include="tmp" Condition="'@(ClCompile)'==''">
+       <DeleteSoon>true</DeleteSoon>
+      </ClCompile>
+    </ItemGroup>
+
+    <PropertyGroup>
       <ClCompileCRTs>@(ClCompile->Metadata('RuntimeLibrary')->Distinct()->ClearMetadata())</ClCompileCRTs>
       <AdditionalOptionsToUse Condition="$(ClCompileCRTs.ToLower().Contains('multithreadeddll'))">/nodefaultlib:vccorlib /nodefaultlib:msvcrt winobjcrt.lib vccorlib.lib msvcrt.lib </AdditionalOptionsToUse>
       <AdditionalOptionsToUse Condition="$(ClCompileCRTs.ToLower().Contains('multithreadeddebugdll'))">/nodefaultlib:vccorlibd /nodefaultlib:msvcrtd winobjcrt.lib vccorlibd.lib msvcrtd.lib </AdditionalOptionsToUse>
@@ -699,6 +713,8 @@
         <AdditionalOptions Condition="$(AdditionalOptionsToUse) != ''">$(AdditionalOptionsToUse) %(Link.AdditionalOptions)</AdditionalOptions>
         <AdjustedAdditionalOptions>true</AdjustedAdditionalOptions>
       </Link>
+
+      <ClCompile Remove="@(ClCompile)" Condition="'%(ClCompile.DeleteSoon)'=='true'" />
     </ItemGroup>
 
   </Target>
