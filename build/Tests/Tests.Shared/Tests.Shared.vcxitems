@@ -35,8 +35,12 @@
     <ProjectCapability Include="SourceItemsFromImports" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)\..\..\..\tests\functionaltests\Tests\$(PlatformTarget)\Default.AppxManifest.xml" />
+  </ItemGroup>
+  <ItemGroup>
     <ReferenceCopyLocalPaths Include="$(MSBuildThisFileDirectory)..\..\..\deps\prebuilt\$(TargetOsAndVersion)\$(PlatformTarget)\*.dll" />
     <ReferenceCopyLocalPaths Include="$(MSBuildThisFileDirectory)\..\..\..\Frameworks\CoreFoundation\CharacterSets\*" />
+    <ReferenceCopyLocalPaths Include="$(MSBuildThisFileDirectory)\..\..\..\tests\functionaltests\Tests\Default.AppxManifest.xml" />
     <ReferenceCopyLocalPaths Include="$(MSBuildThisFileDirectory)\..\..\..\tests\ContainerCRTDeps\$(ProcessorArchitecture)\*.dll" />
   </ItemGroup>
   <ItemGroup>

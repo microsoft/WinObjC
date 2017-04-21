@@ -1,6 +1,0 @@
-LIBRARY WinObjCRT
-    EXPORTS
-        IwMalloc
-        IwFree
-        IwRealloc
-        IwCalloc

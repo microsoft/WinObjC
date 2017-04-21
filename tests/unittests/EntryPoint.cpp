@@ -64,6 +64,7 @@ Wrappers::HString GetAppDataPath() {
 #ifdef WIN32
 BEGIN_MODULE()
 MODULE_PROPERTY(L"RunAs", L"UAP")
+MODULE_PROPERTY(L"UAP:AppXManifest", L"Default.AppxManifest.xml")
 END_MODULE()
 
 MODULE_SETUP(ModuleSetup) {

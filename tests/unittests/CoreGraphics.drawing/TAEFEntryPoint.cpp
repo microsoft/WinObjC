@@ -81,7 +81,9 @@ private:
 
 public:
     TAEFDrawingTestConfigImpl()
-        : _mode(DrawingTestMode::Compare), _outputPath(__OutputDirectory()), _comparisonPath(GetCurrentTestDirectory() + "/data/reference") {
+        : _mode(DrawingTestMode::Compare),
+          _outputPath(__OutputDirectory()),
+          _comparisonPath(GetCurrentTestDirectory() + "/data/reference") {
         static std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
 
         WEX::Common::String outputPath;
@@ -128,6 +130,7 @@ std::shared_ptr<DrawingTestConfigImpl> _configImpl;
 
 BEGIN_MODULE()
 MODULE_PROPERTY(L"RunAs", L"UAP")
+MODULE_PROPERTY(L"UAP:AppXManifest", L"Default.AppxManifest.xml")
 END_MODULE()
 
 MODULE_SETUP(ModuleSetup) {

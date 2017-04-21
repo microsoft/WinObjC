@@ -164,6 +164,7 @@ std::shared_ptr<BenchmarkPublisher> BenchmarkPublisherFactory::GetPublisher() {
 
 BEGIN_MODULE()
 MODULE_PROPERTY(L"RunAs", L"UAP")
+MODULE_PROPERTY(L"UAP:AppXManifest", L"Default.AppxManifest.xml")
 END_MODULE()
 
 MODULE_SETUP(ModuleSetup) {

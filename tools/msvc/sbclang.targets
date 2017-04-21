@@ -391,12 +391,6 @@
       <StarboardCRTConfig>Release</StarboardCRTConfig>
       <StarboardCRTConfig Condition="'$(StarboardCRT)' == 'MultiThreadedDebugDLL'">Debug</StarboardCRTConfig>
     </PropertyGroup>
-
-    <!-- Print which WinObjC libraries will be used, when copying dependent libraries -->
-    <Message
-      Condition="'$(UseStarboardSourceSdk)' == 'true'"
-      Importance="High"
-      Text="Using $(StarboardCRTConfig) WinObjC libraries due to $(StarboardCRT) CRT." />
   </Target>
 
   <!-- In cases when the project doesn't contain any explicit ClCompile items, adding this file
@@ -667,8 +661,8 @@
 
     <PropertyGroup Condition="'@(ClCompile)' != ''">
       <ClCompileCRTs>@(ClCompile->Metadata('RuntimeLibrary')->Distinct()->ClearMetadata())</ClCompileCRTs>
-      <AdditionalOptionsToUse Condition="$(ClCompileCRTs.ToLower().Contains('multithreadeddll'))">/nodefaultlib:vccorlib /nodefaultlib:msvcrt vccorlib.lib msvcrt.lib </AdditionalOptionsToUse>
-      <AdditionalOptionsToUse Condition="$(ClCompileCRTs.ToLower().Contains('multithreadeddebugdll'))">/nodefaultlib:vccorlibd /nodefaultlib:msvcrtd vccorlibd.lib msvcrtd.lib </AdditionalOptionsToUse>
+      <AdditionalOptionsToUse Condition="$(ClCompileCRTs.ToLower().Contains('multithreadeddll'))">/nodefaultlib:vccorlib /nodefaultlib:msvcrt winobjcrt.lib vccorlib.lib msvcrt.lib </AdditionalOptionsToUse>
+      <AdditionalOptionsToUse Condition="$(ClCompileCRTs.ToLower().Contains('multithreadeddebugdll'))">/nodefaultlib:vccorlibd /nodefaultlib:msvcrtd winobjcrt.lib vccorlibd.lib msvcrtd.lib </AdditionalOptionsToUse>
     </PropertyGroup>
 
     <ItemGroup>
@@ -696,8 +690,8 @@
 
     <PropertyGroup Condition="'@(ClCompile)' != ''">
       <ClCompileCRTs>@(ClCompile->Metadata('RuntimeLibrary')->Distinct()->ClearMetadata())</ClCompileCRTs>
-      <AdditionalOptionsToUse Condition="$(ClCompileCRTs.ToLower().Contains('multithreadeddll'))">/nodefaultlib:vccorlib /nodefaultlib:msvcrt vccorlib.lib msvcrt.lib </AdditionalOptionsToUse>
-      <AdditionalOptionsToUse Condition="$(ClCompileCRTs.ToLower().Contains('multithreadeddebugdll'))">/nodefaultlib:vccorlibd /nodefaultlib:msvcrtd vccorlibd.lib msvcrtd.lib </AdditionalOptionsToUse>
+      <AdditionalOptionsToUse Condition="$(ClCompileCRTs.ToLower().Contains('multithreadeddll'))">/nodefaultlib:vccorlib /nodefaultlib:msvcrt winobjcrt.lib vccorlib.lib msvcrt.lib </AdditionalOptionsToUse>
+      <AdditionalOptionsToUse Condition="$(ClCompileCRTs.ToLower().Contains('multithreadeddebugdll'))">/nodefaultlib:vccorlibd /nodefaultlib:msvcrtd winobjcrt.lib vccorlibd.lib msvcrtd.lib </AdditionalOptionsToUse>
     </PropertyGroup>
 
     <ItemGroup>
