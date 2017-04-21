@@ -27,13 +27,7 @@
 #import <DWrite_3.h>
 #import <wrl/client.h>
 #include <COMIncludes_End.h>
-
-#import <Foundation/NSObject.h>
-#import <Foundation/NSArray.h>
-#import <Foundation/NSString.h>
 #import <vector>
-
-#define NSMakeRangeFromCF(cfr) NSMakeRange(cfr.location == kCFNotFound ? NSNotFound : cfr.location, cfr.length)
 
 // Based off DWRITE_GLYPH_RUN_DESCRIPTION structure
 struct _DWriteGlyphRunDescription {
