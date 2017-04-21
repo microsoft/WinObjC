@@ -38,7 +38,7 @@ CFRange CTFrameGetStringRange(CTFrameRef frame) {
     CFIndex len = CFArrayGetCount(frame->_lines);
 
     for (CFIndex index = 0; index < len; ++index) {
-        _CTLine* line = static_cast<_CTLine*>(CFArrayGetValueAtIndex(frame->_lines, index));
+        CTLineRef line = static_cast<CTLineRef>(CFArrayGetValueAtIndex(frame->_lines, index));
         count += line->_strRange.length;
     }
 
@@ -54,7 +54,7 @@ CFRange CTFrameGetVisibleStringRange(CTFrameRef frame) {
     CFIndex count = 0;
     for (size_t index = 0; index < frame->_lineOrigins.size(); ++index) {
         if (frame->_lineOrigins[index].y < frame->_frameRect.size.height) {
-            _CTLine* line = static_cast<_CTLine*>(CFArrayGetValueAtIndex(frame->_lines, index));
+            CTLineRef line = static_cast<CTLineRef>(CFArrayGetValueAtIndex(frame->_lines, index));
             count += line->_strRange.length;
         }
     }
@@ -104,13 +104,12 @@ void CTFrameDraw(CTFrameRef frame, CGContextRef ctx) {
     std::vector<GlyphRunData> runs;
 
     for (size_t i = 0; i < frame->_lineOrigins.size() && (frame->_lineOrigins[i].y < frame->_frameRect.size.height); ++i) {
-        _CTLine* line = static_cast<_CTLine*>(CFArrayGetValueAtIndex(frame->_lines, i));
+        CTLineRef line = static_cast<CTLineRef>(CFArrayGetValueAtIndex(frame->_lines, i));
 
         CGPoint relativePosition = frame->_lineOrigins[i];
-
         CFIndex len = CFArrayGetCount(line->_runs);
         for (size_t j = 0; j < len; ++j) {
-            __CTRun* curRun = const_cast<__CTRun*>(static_cast<CTRunRef>(CFArrayGetValueAtIndex(line->_runs, j)));
+            __CTRun* curRun = static_cast<__CTRun*>(const_cast<void*>(CFArrayGetValueAtIndex(line->_runs, j)));
             if (j > 0) {
                 // Adjusts x position relative to the last run drawn
                 relativePosition.x += curRun->_relativeXOffset;

@@ -103,7 +103,7 @@ CTFrameRef CTFramesetterCreateFrame(CTFramesetterRef framesetter, CFRange range,
         (lineBreakMode == kCTLineBreakByClipping || lineBreakMode == kCTLineBreakByTruncatingHead ||
          lineBreakMode == kCTLineBreakByTruncatingTail || lineBreakMode == kCTLineBreakByTruncatingMiddle)) {
         for (size_t i = 0; i < ret->_lineOrigins.size(); ++i) {
-            _CTLine* line = static_cast<_CTLine*>(CFArrayGetValueAtIndex(ret->_lines, i));
+            CTLineRef line = static_cast<CTLineRef>(CFArrayGetValueAtIndex(ret->_lines, i));
             if (line->_width > frameRect.size.width) {
                 ret->_lineOrigins[i].x -= line->_relativeXOffset;
             }
