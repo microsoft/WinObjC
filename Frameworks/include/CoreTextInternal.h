@@ -64,14 +64,16 @@ struct __CTLine : CoreFoundation::CppBase<__CTLine> {
           _runs(woc::TakeOwnership, CFArrayCreateMutableCopy(kCFAllocatorDefault, 0, other._runs)) {
     }
 
+    double GetTypographicBounds(CGFloat* ascent, CGFloat* descent, CGFloat* leading) const;
+
     CFRange _strRange;
     CGFloat _relativeXOffset;
     CGFloat _width;
     CFIndex _glyphCount;
     woc::StrongCF<CFMutableArrayRef> _runs;
-    CGFloat _ascent;
-    CGFloat _descent;
-    CGFloat _leading;
+    mutable CGFloat _ascent;
+    mutable CGFloat _descent;
+    mutable CGFloat _leading;
 };
 
 CTLineRef _CTLineCreate();

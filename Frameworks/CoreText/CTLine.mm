@@ -298,39 +298,41 @@ CGRect CTLineGetImageBounds(CTLineRef line, CGContextRef context) {
     return { CGContextGetTextPosition(context), { width, ascent - descent } };
 }
 
-/**
- @Status Interoperable
-*/
-double CTLineGetTypographicBounds(CTLineRef lineRef, CGFloat* ascent, CGFloat* descent, CGFloat* leading) {
-    _CTLine* line = static_cast<_CTLine*>(lineRef);
-
-    __CTLine* line = const_cast<__CTLine*>(lineRef);
-    RETURN_RESULT_IF((!line) || (CFArrayGetCount(line->_runs) == 0), 0);
+double __CTLine::GetTypographicBounds(CGFloat* ascent, CGFloat* descent, CGFloat* leading) const {
+    RETURN_RESULT_IF((CFArrayGetCount(_runs) == 0), 0);
 
     // Created with impossible values -FLT_MAX which signify they need to be populated
-    if ((line->_ascent == -FLT_MAX || line->_descent == -FLT_MAX || line->_leading == -FLT_MAX) && (ascent || descent || leading)) {
-        CFIndex count = CFArrayGetCount(line->_runs);
+    if ((_ascent == -FLT_MAX || _descent == -FLT_MAX || _leading == -FLT_MAX) && (ascent || descent || leading)) {
+        CFIndex count = CFArrayGetCount(_runs);
         for (CFIndex i = 0; i < count; ++i) {
-            CTRunRef run = static_cast<CTRunRef>(CFArrayGetValueAtIndex(line->_runs, i));
+            CTRunRef run = static_cast<CTRunRef>(CFArrayGetValueAtIndex(_runs, i));
             CGFloat newAscent, newDescent, newLeading;
             CTRunGetTypographicBounds(run, { 0, 0 }, &newAscent, &newDescent, &newLeading);
-            line->_ascent = std::max(line->_ascent, newAscent);
-            line->_descent = std::max(line->_descent, newDescent);
-            line->_leading = std::max(line->_leading, newLeading);
+            _ascent = std::max(_ascent, newAscent);
+            _descent = std::max(_descent, newDescent);
+            _leading = std::max(_leading, newLeading);
         }
     }
 
     if (ascent) {
-        *ascent = line->_ascent;
+        *ascent = _ascent;
     }
     if (descent) {
-        *descent = line->_descent;
+        *descent = _descent;
     }
     if (leading) {
-        *leading = line->_leading;
+        *leading = _leading;
     }
 
-    return line->_width;
+    return _width;
+}
+
+/**
+ @Status Interoperable
+*/
+double CTLineGetTypographicBounds(CTLineRef line, CGFloat* ascent, CGFloat* descent, CGFloat* leading) {
+    RETURN_RESULT_IF((!line), 0);
+    return line->GetTypographicBounds(ascent, descent, leading);
 }
 
 /**
