@@ -47,7 +47,7 @@ bool _CloneDWriteGlyphRun(_In_ DWRITE_GLYPH_RUN const* src, _Outptr_ DWRITE_GLYP
 
 CGSize _DWriteGetFrameSize(CFAttributedStringRef string, CFRange range, CGSize maxSize, CFRange* fitRange);
 CTFrameRef _DWriteGetFrame(CFAttributedStringRef string, CFRange range, CGRect frameSize);
-_CTLine* _DWriteGetLine(CFAttributedStringRef string);
+CTLineRef _DWriteCreateLine(CFAttributedStringRef string);
 
 // DWriteWrapper functions relating to CTFont, CTFontDescriptor
 CFNumberRef _CFNumberCreateFromSymbolicTraits(CTFontSymbolicTraits symbolicTraits);
