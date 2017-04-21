@@ -159,7 +159,7 @@
 
   <Target Name="FixUpAppxManifest"
           BeforeTargets="_ValidateAppxManifest"
-          DependsOnTargets="_GenerateCurrentprojectAppxManifest"
+          DependsOnTargets="_GenerateCurrentProjectAppxManifest"
           Condition="'$(AppxPackage)' == 'true' And Exists('$(FinalAppxManifestName)')">
 
     <!-- Take care of package version. Use Trimmed Version since appxmanifests hilariously don't like leading 0s  -->
