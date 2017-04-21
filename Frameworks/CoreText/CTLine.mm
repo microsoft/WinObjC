@@ -176,7 +176,7 @@ CTLineRef CTLineCreateTruncatedLine(CTLineRef sourceLine, double width, CTLineTr
     }
 
     // get an CFMutableAttributedString string from truncationToken by looping across its runs and extracting the run attribuets.
-    CFMutableAttributedStringRef stringFromToken = CFAttributedStringCreateMutable(kCFAllocatorDefault, 0);
+    auto stringFromToken = woc::MakeStrongCF<CFMutableAttributedStringRef>(CFAttributedStringCreateMutable(kCFAllocatorDefault, 0));
     CFArrayRef tokenRuns = CTLineGetGlyphRuns(truncationToken);
     if (tokenRuns != nil) {
         CFIndex numberOfRuns = CFArrayGetCount(tokenRuns);
@@ -216,7 +216,6 @@ CTLineRef CTLineCreateTruncatedLine(CTLineRef sourceLine, double width, CTLineTr
         default:
             return nil;
     }
-    CFRelease(stringFromToken);
     return CTLineCreateWithAttributedString(static_cast<CFAttributedStringRef>(finalString));
 }
 
