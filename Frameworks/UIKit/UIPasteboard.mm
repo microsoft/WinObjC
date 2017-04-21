@@ -65,7 +65,7 @@ UIPasteboard* generalPasteboard;
 NSMutableDictionary* globalPasteboards;
 static pthread_mutex_t globalPasteboardsLock = PTHREAD_MUTEX_INITIALIZER;
 
-DataPackageView _getClipboardContent() {
+static DataPackageView _getClipboardContent() {
     try {
         return Clipboard::GetContent();
     } catch (const winrt::hresult_error& exception) {
