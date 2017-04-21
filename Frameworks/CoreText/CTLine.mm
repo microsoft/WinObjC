@@ -428,10 +428,8 @@ CGRect CTLineGetBoundsWithOptions(CTLineRef line, CTLineBoundsOptions options) {
 }
 
 /**
- @Status NotInPlan
- @Notes this would require us to move to using bridged type implementation, seems of little value at this point
+ @Status Interoperable
 */
 CFTypeID CTLineGetTypeID() {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return __CTLine::GetTypeID();
 }
