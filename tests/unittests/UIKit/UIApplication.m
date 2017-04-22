@@ -25,7 +25,7 @@ using namespace winrt::Windows::System;
 namespace WF = winrt::Windows::Foundation;
 
 // Mock launcher allowing us to spoof launchUriAsync and queryUriSupportAsync behavior
-@interface MockWSLauncher : RTObject
+@interface MockWSLauncher : NSObject
 
 // Mock methods
 + (void)launchUriAsync:(const WF::Uri&)uri success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
