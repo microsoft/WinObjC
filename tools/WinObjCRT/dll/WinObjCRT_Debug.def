@@ -64,3 +64,15 @@ LIBRARY WinObjCRT
         _wgetcwd
         _wgetdcwd
         _wtempnam
+        _callnewh
+        _calloc_base
+        _free_base
+        _get_heap_handle
+        _heapchk
+        _heapmin
+        _heapwalk
+        _malloc_base
+        _query_new_handler
+        _query_new_mode
+        _realloc_base
+        _set_new_mode
