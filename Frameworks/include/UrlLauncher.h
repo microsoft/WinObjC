@@ -14,13 +14,7 @@
 //
 //******************************************************************************
 
-#include <COMIncludes.h>
-#import <WRL/client.h>
-#include <COMIncludes_End.h>
-
-#include "UWP/WindowsSystem.h"
-
-using namespace Microsoft::WRL;
+#import <Foundation/Foundation.h>
 
 // Packages launcher and url together, allowing us to specify a custom launcher to be used when testing _openURL
 @interface UrlLauncher : NSObject

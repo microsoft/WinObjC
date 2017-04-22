@@ -17,8 +17,67 @@
 #import "UrlLauncher.h"
 #import "Starboard.h"
 #import "NSLogging.h"
+#import "CppWinRTHelpers.h"
+
+#include "COMIncludes.h"
+#import <winrt/Windows.System.h>
+#include "COMIncludes_End.h"
+
+using namespace winrt::Windows::System;
+namespace WF = winrt::Windows::Foundation;
 
 static const wchar_t* TAG = L"UrlLauncher";
+
+// A thin wrapper around Windows::System::Launcher
+@interface _DefaultLauncher : NSObject
++ (void)launchUriAsync:(const WF::Uri&)uri success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
++ (void)queryUriSupportAsync:(const WF::Uri&)uri
+      launchQuerySupportType:(LaunchQuerySupportType)type
+                     success:(void (^)(LaunchQuerySupportStatus))success
+                     failure:(void (^)(NSError*))failure;
+@end
+
+@implementation _DefaultLauncher
++ (void)launchUriAsync:(const WF::Uri&)uri success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure {
+    void (^successBlock)(BOOL) = [success copy];
+    void (^failureBlock)(NSError*) = [failure copy];
+
+    WF::IAsyncOperation<bool> async = Launcher::LaunchUriAsync(uri);
+
+    async.Completed(objcwinrt::callback([successBlock, failureBlock] (const WF::IAsyncOperation<bool>& op, WF::AsyncStatus status) {
+        if (status == WF::AsyncStatus::Completed) {
+            successBlock(op.GetResults());
+        } else {
+            failureBlock(objcwinrt::to_nserror(op, status));
+        }
+
+        [successBlock release];
+        [failureBlock release];
+    }));
+}
+
++ (void)queryUriSupportAsync:(const WF::Uri&)uri
+      launchQuerySupportType:(LaunchQuerySupportType)type
+                     success:(void (^)(LaunchQuerySupportStatus))success
+                     failure:(void (^)(NSError*))failure {
+
+    void (^successBlock)(LaunchQuerySupportStatus) = [success copy];
+    void (^failureBlock)(NSError*) = [failure copy];
+
+    WF::IAsyncOperation<LaunchQuerySupportStatus> async = Launcher::QueryUriSupportAsync(uri, type);
+
+    async.Completed(objcwinrt::callback([successBlock, failureBlock] (const WF::IAsyncOperation<LaunchQuerySupportStatus>& op, WF::AsyncStatus status) {
+        if (status == WF::AsyncStatus::Completed) {
+            successBlock(op.GetResults());
+        } else {
+            failureBlock(objcwinrt::to_nserror(op, status));
+        }
+
+        [successBlock release];
+        [failureBlock release];
+    }));
+}
+@end
 
 @interface UrlLauncher () {
     Class _launcher;
@@ -34,7 +93,7 @@ static const wchar_t* TAG = L"UrlLauncher";
 @implementation UrlLauncher
 - (UrlLauncher*)initWithLauncher:(Class)launcher {
     if (self = [super init]) {
-        _launcher = launcher;
+        _launcher = launcher ? launcher : [_DefaultLauncher class];
         _launchCondition.attach([NSCondition new]);
         _canOpenCondition.attach([NSCondition new]);
     }
@@ -87,7 +146,7 @@ static const wchar_t* TAG = L"UrlLauncher";
 
 // Called on a separate thread to avoid UI thread contention
 - (void)_openURLHelper:(NSURL*)url {
-    WFUri* uri = [[WFUri makeUri:[url absoluteString]] autorelease];
+    WF::Uri uri(objcwinrt::string([url absoluteString]));
 
     void (^launchSuccess)(BOOL) = ^void(BOOL didHandle) {
         [_launchCondition lock];
@@ -135,11 +194,11 @@ static const wchar_t* TAG = L"UrlLauncher";
 
 // Called on a separate thread to avoid UI thread contention
 - (void)_canOpenURLHelper:(NSURL*)url {
-    WFUri* uri = [[WFUri makeUri:[url absoluteString]] autorelease];
+    WF::Uri uri(objcwinrt::string([url absoluteString]));
 
-    void (^querySuccess)(WSLaunchQuerySupportStatus) = ^void(WSLaunchQuerySupportStatus status) {
+    void (^querySuccess)(LaunchQuerySupportStatus) = ^void(LaunchQuerySupportStatus status) {
         [_canOpenCondition lock];
-        _canOpenDidSucceed = (status == WSLaunchQuerySupportStatusAvailable);
+        _canOpenDidSucceed = (status == LaunchQuerySupportStatus::Available);
         _canOpenCompleted = YES;
         [_canOpenCondition signal];
         [_canOpenCondition unlock];
@@ -154,6 +213,6 @@ static const wchar_t* TAG = L"UrlLauncher";
         NSTraceError(TAG, @"canOpenURL failed. Error: %@", queryError);
     };
 
-    [_launcher queryUriSupportAsync:uri launchQuerySupportType:WSLaunchQuerySupportTypeUri success:querySuccess failure:queryFailure];
+    [_launcher queryUriSupportAsync:uri launchQuerySupportType:LaunchQuerySupportType::Uri success:querySuccess failure:queryFailure];
 }
 @end
