@@ -33,34 +33,33 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 #import <Starboard.h>
 
 #import <cctype>
+#import <functional>
 #import <limits>
 #import <vector>
 
 // Helper function for implementing a scan function for a numeric type using a CRT function such as wcstoll
 template <typename TNumeric>
-static BOOL __scanNumeric(NSScanner* self,
+static BOOL __scanNumeric(NSScanner* scanner,
                           TNumeric* valuep,
-                          TNumeric (*localeFunc)(const wchar_t*, wchar_t**, int, _locale_t), // eg: _wcstoll_l
-                          TNumeric (*nonLocaleFunc)(const wchar_t*, wchar_t**, int), // eg: wcstoll
-                          int base,
+                          std::function<TNumeric(const wchar_t*, wchar_t**)> crtScanFunc, // Should call a crt function like wcstoll
                           bool enforceUnsigned = false) {
     // Skip past the characters in charactersToBeSkipped
-    NSUInteger start = [self _indexOfNextUnskippedCharacter];
-    if (start >= self->_stringChars.size()) {
+    NSUInteger start = [scanner _indexOfNextUnskippedCharacter];
+    if (start >= scanner->_stringChars.size()) {
         return NO;
     }
 
-    wchar_t* scanStart = reinterpret_cast<wchar_t*>(self->_stringChars.data() + start);
+    wchar_t* scanStart = reinterpret_cast<wchar_t*>(scanner->_stringChars.data() + start);
     wchar_t* scanEnd;
 
     // Early return for certain characters not in charactersToBeSkipped
     // * Whitespace can be removed from charactersToBeSkipped but still skipped by a CRT function
     // * '-' is skipped without failing in unsigned CRT functions
-    if (iswspace(*scanStart) || ((enforceUnsigned) && (*scanStart == '-'))) {
+    if (iswspace(*scanStart) || ((enforceUnsigned) && (*scanStart == L'-'))) {
         return NO;
     }
 
-    TNumeric value = self->_crtLocale ? localeFunc(scanStart, &scanEnd, base, self->_crtLocale) : nonLocaleFunc(scanStart, &scanEnd, base);
+    TNumeric value = crtScanFunc(scanStart, &scanEnd);
 
     if (!scanEnd || scanEnd == scanStart) {
         return NO;
@@ -70,44 +69,7 @@ static BOOL __scanNumeric(NSScanner* self,
         *valuep = value;
     }
 
-    self.scanLocation = start + (scanEnd - scanStart);
-    return YES;
-}
-
-// Overload of __scanNumeric for CRT functions that do not take a base parameter
-template <typename TNumeric>
-static BOOL __scanNumeric(NSScanner* self,
-                          TNumeric* valuep,
-                          TNumeric (*localeFunc)(const wchar_t*, wchar_t**, _locale_t), // eg: _wcstod_l
-                          TNumeric (*nonLocaleFunc)(const wchar_t*, wchar_t**), // eg: wcstod
-                          bool enforceUnsigned = false) {
-    // Skip past the characters in charactersToBeSkipped
-    NSUInteger start = [self _indexOfNextUnskippedCharacter];
-    if (start >= self->_stringChars.size()) {
-        return NO;
-    }
-
-    wchar_t* scanStart = reinterpret_cast<wchar_t*>(self->_stringChars.data() + start);
-    wchar_t* scanEnd;
-
-    // Early return for certain characters not in charactersToBeSkipped
-    // * Whitespace can be removed from charactersToBeSkipped but still skipped by a CRT function
-    // * '-' is skipped without failing in unsigned CRT functions
-    if (iswspace(*scanStart) || ((enforceUnsigned) && (*scanStart == '-'))) {
-        return NO;
-    }
-
-    TNumeric value = self->_crtLocale ? localeFunc(scanStart, &scanEnd, self->_crtLocale) : nonLocaleFunc(scanStart, &scanEnd);
-
-    if (!scanEnd || scanEnd == scanStart) {
-        return NO;
-    }
-
-    if (valuep) {
-        *valuep = value;
-    }
-
-    self.scanLocation = start + (scanEnd - scanStart);
+    scanner.scanLocation = start + (scanEnd - scanStart);
     return YES;
 }
 
@@ -225,71 +187,93 @@ static BOOL __scanNumeric(NSScanner* self,
  @Status Interoperable
 */
 - (BOOL)scanInt:(int*)valuep {
-    return __scanNumeric(self, reinterpret_cast<long*>(valuep), _wcstol_l, wcstol, 10);
+    std::function<long(const wchar_t*, wchar_t**)> scanFunc = [self](const wchar_t* scanStart, wchar_t** scanEnd) {
+        return _crtLocale ? _wcstol_l(scanStart, scanEnd, 10, _crtLocale) : wcstol(scanStart, scanEnd, 10);
+    };
+    return __scanNumeric(self, reinterpret_cast<long*>(valuep), scanFunc);
 }
 
 /**
  @Status Interoperable
 */
 - (BOOL)scanInteger:(NSInteger*)valuep {
-    return __scanNumeric(self, reinterpret_cast<long*>(valuep), _wcstol_l, wcstol, 10);
+    std::function<long(const wchar_t*, wchar_t**)> scanFunc = [self](const wchar_t* scanStart, wchar_t** scanEnd) {
+        return _crtLocale ? _wcstol_l(scanStart, scanEnd, 10, _crtLocale) : wcstol(scanStart, scanEnd, 10);
+    };
+    return __scanNumeric(self, reinterpret_cast<long*>(valuep), scanFunc);
 }
 
 /**
  @Status Interoperable
 */
 - (BOOL)scanLongLong:(long long*)valuep {
-    return __scanNumeric(self, valuep, _wcstoll_l, wcstoll, 10);
+    std::function<long long(const wchar_t*, wchar_t**)> scanFunc = [self](const wchar_t* scanStart, wchar_t** scanEnd) {
+        return _crtLocale ? _wcstoll_l(scanStart, scanEnd, 10, _crtLocale) : wcstoll(scanStart, scanEnd, 10);
+    };
+    return __scanNumeric(self, valuep, scanFunc);
 }
 
 /**
  @Status Interoperable
 */
 - (BOOL)scanFloat:(float*)valuep {
-    return __scanNumeric(self, valuep, _wcstof_l, wcstof);
+    std::function<float(const wchar_t*, wchar_t**)> scanFunc = [self](const wchar_t* scanStart, wchar_t** scanEnd) {
+        return _crtLocale ? _wcstof_l(scanStart, scanEnd, _crtLocale) : wcstof(scanStart, scanEnd);
+    };
+    return __scanNumeric(self, valuep, scanFunc);
 }
 
 /**
  @Status Interoperable
 */
 - (BOOL)scanDouble:(double*)valuep {
-    return __scanNumeric(self, valuep, _wcstod_l, wcstod);
+    std::function<double(const wchar_t*, wchar_t**)> scanFunc = [self](const wchar_t* scanStart, wchar_t** scanEnd) {
+        return _crtLocale ? _wcstod_l(scanStart, scanEnd, _crtLocale) : wcstod(scanStart, scanEnd);
+    };
+    return __scanNumeric(self, valuep, scanFunc);
 }
 
 /**
  @Status Interoperable
 */
 - (BOOL)scanHexInt:(unsigned int*)valuep {
-    return __scanNumeric(self, reinterpret_cast<unsigned long*>(valuep), _wcstoul_l, wcstoul, 16, true);
+    std::function<unsigned long(const wchar_t*, wchar_t**)> scanFunc = [self](const wchar_t* scanStart, wchar_t** scanEnd) {
+        return _crtLocale ? _wcstoul_l(scanStart, scanEnd, 16, _crtLocale) : wcstoul(scanStart, scanEnd, 16);
+    };
+    return __scanNumeric(self, reinterpret_cast<unsigned long*>(valuep), scanFunc, true);
 }
 
 /**
  @Status Interoperable
 */
 - (BOOL)scanHexLongLong:(unsigned long long*)valuep {
-    return __scanNumeric(self, valuep, _wcstoull_l, wcstoull, 16, true);
+    std::function<unsigned long long(const wchar_t*, wchar_t**)> scanFunc = [self](const wchar_t* scanStart, wchar_t** scanEnd) {
+        return _crtLocale ? _wcstoull_l(scanStart, scanEnd, 16, _crtLocale) : wcstoull(scanStart, scanEnd, 16);
+    };
+    return __scanNumeric(self, valuep, scanFunc, true);
 }
 
 /**
  @Status Interoperable
 */
 - (BOOL)scanString:(NSString* _Nonnull)string intoString:(NSString* _Nullable*)stringp {
-    if (string.length == 0) {
+    const NSUInteger length = string.length;
+    if (length == 0) {
         return NO;
     }
 
     NSStringCompareOptions compareOption = 0;
-    NSRange range = { 0, string.length };
+    NSRange range = { 0, length };
 
     if (!_caseSensitive) {
         compareOption = NSCaseInsensitiveSearch;
     }
 
-    const NSUInteger length = _string.length;
+    const NSUInteger selfLength = _string.length;
     NSUInteger i = [self _indexOfNextUnskippedCharacter];
-    for (; i < length; ++i) {
+    for (; i < selfLength; ++i) {
         range.location = i;
-        if ((length - i) < [string length]) {
+        if ((selfLength - i) < length) {
             return NO;
         }
 
@@ -300,7 +284,7 @@ static BOOL __scanNumeric(NSScanner* self,
                 *stringp = string;
             }
 
-            i += [string length];
+            i += length;
             break;
         } else {
             return NO;
@@ -394,13 +378,19 @@ static BOOL __scanNumeric(NSScanner* self,
 */
 - (BOOL)scanHexDouble:(double*)result {
     enum {
-        STATE_START,
         STATE_SIGN,
         STATE_ZERO,
+        STATE_X,
         STATE_MANTISSA,
-        STATE_P,
+        STATE_EXPONENT_SIGN,
         STATE_EXPONENT,
-    } state = STATE_START;
+    } state = STATE_SIGN;
+
+    const NSUInteger oldScanLocation = _scanLocation;
+
+    // Resets scanLocation once the function exits.
+    // In the success case, this is dismissed (not executed) so that scanLocation can properly advance.
+    auto resetScanLocationOnExit = wil::ScopeExit([self, oldScanLocation]() { _scanLocation = oldScanLocation; });
 
     bool mantissaIsNegative = false;
     bool exponentIsNegative = false;
@@ -415,34 +405,34 @@ static BOOL __scanNumeric(NSScanner* self,
     double mantissaDigitPlace = 1;
 
     const NSUInteger length = _string.length;
-    NSUInteger i = [self _indexOfNextUnskippedCharacter];
-    for (; i < length; ++i) {
-        unichar unicode = _stringChars[i];
+    bool done = false;
+    for (_scanLocation = [self _indexOfNextUnskippedCharacter]; (_scanLocation < length) && (!done); ++_scanLocation) {
+        unichar ch = _stringChars[_scanLocation];
 
         switch (state) {
-            case STATE_START:
-                if (unicode == '-') {
-                    state = STATE_SIGN;
-                    mantissaIsNegative = true;
-                } else if (unicode == '+') {
-                    state = STATE_SIGN;
-                } else if (unicode == '0') {
-                    state = STATE_ZERO;
-                } else {
-                    return NO;
-                }
-                break;
-
             case STATE_SIGN:
-                if (unicode == '0') {
+                if (ch == L'-') {
                     state = STATE_ZERO;
+                    mantissaIsNegative = true;
+                } else if (ch == L'+') {
+                    state = STATE_ZERO;
+                } else if (ch == L'0') {
+                    state = STATE_X;
                 } else {
                     return NO;
                 }
                 break;
 
             case STATE_ZERO:
-                if (unicode == 'x' || unicode == 'X') {
+                if (ch == L'0') {
+                    state = STATE_X;
+                } else {
+                    return NO;
+                }
+                break;
+
+            case STATE_X:
+                if (ch == L'x' || ch == L'X') {
                     state = STATE_MANTISSA;
                 } else {
                     return NO;
@@ -450,80 +440,68 @@ static BOOL __scanNumeric(NSScanner* self,
                 break;
 
             case STATE_MANTISSA:
-                if (unicode == '.') {
-                    if (!scannedPeriod) {
-                        scannedPeriod = true;
-                    } else {
-                        goto DONE_SCANNING_HEXDOUBLE; // Stop scanning once a second period has been scanned
-                    }
+                int charValue;
+                if (ch >= '0' && ch <= '9') {
+                    charValue = ch - '0';
 
-                } else if (unicode >= '0' && unicode <= '9') {
-                    if (scannedPeriod) {
-                        mantissa += (mantissaDigitPlace /= 16) * (unicode - '0');
-                    } else {
-                        mantissa = (mantissa * 16) + (unicode - '0');
-                    }
-                    hasValue = true;
+                } else if (ch >= 'a' && ch <= 'f') {
+                    charValue = ch - 'a' + 10;
 
-                } else if (unicode >= 'a' && unicode <= 'f') {
-                    if (scannedPeriod) {
-                        mantissa += (mantissaDigitPlace /= 16) * (unicode - 'a' + 10);
-                    } else {
-                        mantissa = (mantissa * 16) + (unicode - 'a' + 10);
-                    }
-                    hasValue = true;
+                } else if (ch >= 'A' && ch <= 'F') {
+                    charValue = ch - 'A' + 10;
 
-                } else if (unicode >= 'A' && unicode <= 'F') {
-                    if (scannedPeriod) {
-                        mantissa += (mantissaDigitPlace /= 16) * (unicode - 'A' + 10);
-                    } else {
-                        mantissa = (mantissa * 16) + (unicode - 'A' + 10);
-                    }
-                    hasValue = true;
+                } else if (ch == L'p' || ch == L'P') {
+                    state = STATE_EXPONENT_SIGN;
+                    continue;
 
-                } else if (unicode == 'p' || unicode == 'P') {
-                    state = STATE_P;
+                } else if ((ch == L'.') && (!scannedPeriod)) {
+                    scannedPeriod = true;
+                    continue;
 
                 } else {
-                    goto DONE_SCANNING_HEXDOUBLE;
+                    done = true;
+                    --_scanLocation;
+                    continue;
                 }
+
+                if (scannedPeriod) {
+                    mantissa += (mantissaDigitPlace /= 16) * charValue;
+                } else {
+                    mantissa = (mantissa * 16) + charValue;
+                }
+                hasValue = true;
                 break;
 
-            case STATE_P:
-                if (!hasValue) {
-                    goto DONE_SCANNING_HEXDOUBLE;
-                }
-                if (unicode == '-') {
+            case STATE_EXPONENT_SIGN:
+                if (ch == L'-') {
                     state = STATE_EXPONENT;
                     exponentIsNegative = true;
 
-                } else if (unicode == '+') {
+                } else if (ch == L'+') {
                     state = STATE_EXPONENT;
 
-                } else if (unicode >= '0' && unicode <= '9') {
-                    exponent = (unicode - '0');
+                } else if (iswdigit(ch)) {
                     state = STATE_EXPONENT;
+                    --_scanLocation;
+                    continue;
 
                 } else {
-                    goto DONE_SCANNING_HEXDOUBLE;
+                    return NO;
                 }
                 break;
 
             case STATE_EXPONENT:
-                if (unicode >= '0' && unicode <= '9') {
-                    // can stop calculating the change to the exponent once this is false, and let ldexp return 0 or HUGE_VAL
-                    if (exponent <= (exponentIsNegative ? 1023 : 1024)) {
-                        exponent = exponent * 10 + (unicode - '0');
-                    }
+                if (iswdigit(ch) && [self scanInt:&exponent]) {
+                    done = true;
+                    --_scanLocation;
 
                 } else {
-                    goto DONE_SCANNING_HEXDOUBLE;
+                    return NO;
                 }
                 break;
         }
     }
 
-DONE_SCANNING_HEXDOUBLE:; // Allows breaking out of the loop from inside the switch
     if (hasValue) {
         if (result) {
             if (exponentIsNegative) {
@@ -532,11 +510,9 @@ DONE_SCANNING_HEXDOUBLE:; // Allows breaking out of the loop from inside the swi
 
             *result = mantissaIsNegative ? -ldexp(mantissa, exponent) : ldexp(mantissa, exponent);
         }
-
-        _scanLocation = i;
+        resetScanLocationOnExit.Dismiss();
         return YES;
     }
-
     return NO;
 }
 
@@ -561,7 +537,10 @@ DONE_SCANNING_HEXDOUBLE:; // Allows breaking out of the loop from inside the swi
  @Notes
 */
 - (BOOL)scanUnsignedLongLong:(unsigned long long*)valuep {
-    return __scanNumeric(self, valuep, _wcstoull_l, wcstoull, 10, true);
+    std::function<unsigned long long(const wchar_t*, wchar_t**)> scanFunc = [self](const wchar_t* scanStart, wchar_t** scanEnd) {
+        return _crtLocale ? _wcstoull_l(scanStart, scanEnd, 10, _crtLocale) : wcstoull(scanStart, scanEnd, 10);
+    };
+    return __scanNumeric(self, valuep, scanFunc, true);
 }
 
 /**
