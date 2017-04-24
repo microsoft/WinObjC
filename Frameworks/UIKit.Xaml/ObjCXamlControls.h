@@ -95,6 +95,25 @@ UIKIT_XAML_EXPORT bool XamlGetProgressRingIsActiveValue(const Microsoft::WRL::Co
 // Sets the IsActive property value to start or stop animation of the ProgressRing
 UIKIT_XAML_EXPORT void XamlSetProgressRingIsActiveValue(const Microsoft::WRL::ComPtr<IInspectable>& progressRingInspectable, bool isActive);
 
+// Retrieves the Foreground property value, represending the color of the ProgressRing
+UIKIT_XAML_EXPORT IInspectable* XamlGetProgressRingForegroundValue(const Microsoft::WRL::ComPtr<IInspectable>& progressRingInspectable);
+
+// Sets the Foreground property value to set the color of the ProgressRing
+UIKIT_XAML_EXPORT void XamlSetProgressRingForegroundValue(const Microsoft::WRL::ComPtr<IInspectable>& progressRingInspectable,
+                                                          const Microsoft::WRL::ComPtr<IInspectable>& inspectableForegroundBrush);
+
+// Retrieves the Height property value of the ProgressRing
+UIKIT_XAML_EXPORT double XamlGetProgressRingHeightValue(const Microsoft::WRL::ComPtr<IInspectable>& progressRingInspectable);
+
+// Sets the Height property value of the ProgressRing
+UIKIT_XAML_EXPORT void XamlSetProgressRingHeightValue(const Microsoft::WRL::ComPtr<IInspectable>& progressRingInspectable, double height);
+
+// Retrieves the Width property value of the ProgressRing
+UIKIT_XAML_EXPORT double XamlGetProgressRingWidthValue(const Microsoft::WRL::ComPtr<IInspectable>& progressRingInspectable);
+
+// Sets the Width property value of the ProgressRing
+UIKIT_XAML_EXPORT void XamlSetProgressRingWidthValue(const Microsoft::WRL::ComPtr<IInspectable>& progressRingInspectable, double width);
+
 ////////////////////////////////////////////////////////////////////////////////////
 // ScrollView.xaml.cpp
 ////////////////////////////////////////////////////////////////////////////////////

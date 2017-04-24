@@ -37,6 +37,33 @@ namespace UIKit {
 					SetValue(s_isActiveProperty, value);
 				}
 			}
+			// TODO: This should be renamed to eliminate the naming prefix once the DependencyProperty is fixed
+			property Windows::UI::Xaml::Media::SolidColorBrush^ ProgressRing_Foreground {
+				Windows::UI::Xaml::Media::SolidColorBrush^ get() {
+					return (Windows::UI::Xaml::Media::SolidColorBrush^)GetValue(s_foregroundProperty);
+				}
+				void set(Windows::UI::Xaml::Media::SolidColorBrush^ value) {
+					SetValue(s_foregroundProperty, value);
+				}
+			}
+			// TODO: This should be renamed to eliminate the naming prefix once the DependencyProperty is fixed
+			property double ProgressRing_Height {
+				double get() {
+					return (double)GetValue(s_isActiveProperty);
+				}
+				void set(double value) {
+					SetValue(s_isActiveProperty, value);
+				}
+			}
+			// TODO: This should be renamed to eliminate the naming prefix once the DependencyProperty is fixed
+			property double ProgressRing_Width {
+				double get() {
+					return (double)GetValue(s_isActiveProperty);
+				}
+				void set(double value) {
+					SetValue(s_isActiveProperty, value);
+				}
+			}
 
 		internal:
 			property Windows::UI::Xaml::Controls::ProgressRing^ InternalProgressRing {
@@ -47,6 +74,9 @@ namespace UIKit {
 
 		private:
 			static Windows::UI::Xaml::DependencyProperty^ s_isActiveProperty;
+			static Windows::UI::Xaml::DependencyProperty^ s_foregroundProperty;
+			static Windows::UI::Xaml::DependencyProperty^ s_heightProperty;
+			static Windows::UI::Xaml::DependencyProperty^ s_widthProperty;
 			static Platform::Boolean s_dependencyPropertiesRegistered;
 		};
 

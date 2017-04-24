@@ -92,7 +92,7 @@ public:
         StrongId<UIActivityIndicatorViewController> activityIndicatorVC;
         activityIndicatorVC.attach([[UIActivityIndicatorViewController alloc] init]);
 
-        UXTestAPI::ViewControllerPresenter testHelper(activityIndicatorVC, 2);
+        UXTestAPI::ViewControllerPresenter testHelper(activityIndicatorVC, 5);
         UIActivityIndicatorView* indicator = [activityIndicatorVC indicator];
 
         dispatch_sync(dispatch_get_main_queue(), ^{

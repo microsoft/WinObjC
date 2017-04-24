@@ -74,6 +74,12 @@ winrt::Windows::UI::Xaml::Controls::Grid CreateProgressRing();
 winrt::Windows::UI::Xaml::Controls::ProgressRing XamlGetInternalProgressRing(const winrt::Windows::UI::Xaml::Controls::Grid& progressRingInspectable);
 bool GetProgressRingIsActiveValue(const winrt::Windows::UI::Xaml::FrameworkElement& progressRingInspectable);
 void SetProgressRingIsActiveValue(const winrt::Windows::UI::Xaml::FrameworkElement& progressRingInspectable, bool isActive);
+Media::SolidColorBrush& GetProgressRingForegroundValue(const winrt::Windows::UI::Xaml::FrameworkElement& progressRingInspectable);
+void SetProgressRingForegroundValue(const winrt::Windows::UI::Xaml::FrameworkElement& progressRingInspectable, Media::SolidColorBrush& foregroundColorBrush);
+double GetProgressRingHeightValue(const winrt::Windows::UI::Xaml::FrameworkElement& progressRingInspectable);
+void SetProgressRingHeightValue(const winrt::Windows::UI::Xaml::FrameworkElement& progressRingInspectable, double height);
+double GetProgressRingWidthValue(const winrt::Windows::UI::Xaml::FrameworkElement& progressRingInspectable);
+void SetProgressRingWidthValue(const winrt::Windows::UI::Xaml::FrameworkElement& progressRingInspectable, double width);
 
 ////////////////////////////////////////////////////////////////////////////////////
 // Button

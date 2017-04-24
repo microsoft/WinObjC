@@ -47,6 +47,31 @@ void SetProgressRingIsActiveValue(const FrameworkElement& progressRingControl, b
     XamlSetProgressRingIsActiveValue(objcwinrt::to_insp(progressRingControl), isActive);
 }
 
+Media::SolidColorBrush GetProgressRingForegroundValue(const FrameworkElement& progressRingControl) {
+    ComPtr<IInspectable> inspectable(XamlGetProgressRingForegroundValue(objcwinrt::to_insp(progressRingControl)));
+    return objcwinrt::from_insp<Media::SolidColorBrush>(inspectable);
+}
+
+void SetProgressRingForegroundValue(const FrameworkElement& progressRingControl, const Media::SolidColorBrush& foregroundColorBrush) {
+    XamlSetProgressRingForegroundValue(objcwinrt::to_insp(progressRingControl), foregroundColorBrush);
+}
+
+double GetProgressRingHeightValue(const FrameworkElement& progressRingControl) {
+    return XamlGetProgressRingHeightValue(objcwinrt::to_insp(progressRingControl));
+}
+
+void SetProgressRingHeightValue(const FrameworkElement& progressRingControl, double height) {
+    XamlSetProgressRingHeightValue(objcwinrt::to_insp(progressRingControl), height);
+}
+
+double GetProgressRingWidthValue(const FrameworkElement& progressRingControl) {
+    return XamlGetProgressRingWidthValue(objcwinrt::to_insp(progressRingControl));
+}
+
+void SetProgressRingWidthValue(const FrameworkElement& progressRingControl, double width) {
+    XamlSetProgressRingWidthValue(objcwinrt::to_insp(progressRingControl), width);
+}
+
 ////////////////////////////////////////////////////////////////////////////////////
 // Button
 ////////////////////////////////////////////////////////////////////////////////////
@@ -73,7 +98,6 @@ void HookButtonPointerEvents(const Controls::Button& button,
                              const Input::PointerEventHandler& pointerReleasedHook,
                              const Input::PointerEventHandler& pointerCanceledHook,
                              const Input::PointerEventHandler& pointerCaptureLostHook) {
-
     XamlHookButtonPointerEvents(objcwinrt::to_insp(button),
                                 pointerPressedHook ? Make<WUXIPointerEventHandler_shim>(pointerPressedHook) : nullptr,
                                 pointerMovedHook ? Make<WUXIPointerEventHandler_shim>(pointerMovedHook) : nullptr,

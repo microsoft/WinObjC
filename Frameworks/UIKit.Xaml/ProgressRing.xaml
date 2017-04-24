@@ -7,9 +7,12 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     x:Name="Root">
-    <!-- TODO: Update property name in path for IsActive binding once it has been updated in the header -->
+    <!-- TODO: Update property names in path for binding once they have been updated in the header -->
     <ProgressRing x:Name="progressRing"
-                  IsActive="{Binding ElementName=Root, Path=ProgressRing_IsActive, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                  IsActive="{Binding ElementName=Root, Path=ProgressRing_IsActive, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                  Foreground="{Binding ElementName=Root, Path=ProgresRing_Foreground, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                  Height="{Binding ElementName=Root, Path=ProgressRing_Height, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                  Width="{Binding ElementName=Root, Path=ProgressRing_Width, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
                   HorizontalAlignment="Center"
                   VerticalAlignment="Center"/>
 </Grid>
