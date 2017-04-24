@@ -109,7 +109,8 @@
  @Notes Value will not be set by NSFileManager methods
 */
 - (NSUInteger)filePosixPermissions {
-    return [[self objectForKey:NSFilePosixPermissions] unsignedIntegerValue];
+    // AND value with octal 01777 to return valid file permissions only
+    return ([[self objectForKey:NSFilePosixPermissions] unsignedIntegerValue] & 01777);
 }
 
 /**

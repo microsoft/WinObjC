@@ -362,7 +362,9 @@ TEST(NSDictionary, NSFileManagerExtensions) {
     EXPECT_OBJCEQ(now, fileAttributes.fileModificationDate);
     EXPECT_OBJCEQ(@12345, fileAttributes.fileOwnerAccountID);
     EXPECT_OBJCEQ(@"Name", fileAttributes.fileOwnerAccountName);
-    EXPECT_EQ(123456, fileAttributes.filePosixPermissions);
+
+    // Note: filePosixPermissions returns the stored value & 01777 so values are valid permissions
+    EXPECT_EQ(576, fileAttributes.filePosixPermissions);
     EXPECT_EQ(23, fileAttributes.fileSize);
     EXPECT_EQ(234, fileAttributes.fileSystemFileNumber);
     EXPECT_EQ(0, fileAttributes.fileSystemNumber);
