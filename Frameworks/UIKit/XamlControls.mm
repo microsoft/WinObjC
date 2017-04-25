@@ -26,50 +26,51 @@ using namespace winrt::Windows::UI::Xaml;
 namespace XamlControls {
 
 ////////////////////////////////////////////////////////////////////////////////////
-// ProgressRing
+// ActivityIndicatorView
 ////////////////////////////////////////////////////////////////////////////////////
-Controls::Grid CreateProgressRing() {
+Controls::Grid CreateActivityIndicatorView() {
     ComPtr<IInspectable> inspectable;
-    XamlCreateProgressRing(&inspectable);
+    XamlCreateActivityIndicatorView(&inspectable);
     return objcwinrt::from_insp<Controls::Grid>(inspectable);
 }
 
-Controls::ProgressRing XamlGetInternalProgressRing(const Controls::Grid& progressRingControl) {
-    ComPtr<IInspectable> inspectable(XamlGetInternalProgressRing(objcwinrt::to_insp(progressRingControl)));
+Controls::ProgressRing XamlGetInternalProgressRing(const Controls::Grid& activityIndicatorControl) {
+    ComPtr<IInspectable> inspectable(XamlGetInternalProgressRing(objcwinrt::to_insp(activityIndicatorControl)));
     return objcwinrt::from_insp<Controls::ProgressRing>(inspectable);
 }
 
-bool GetProgressRingIsActiveValue(const FrameworkElement& progressRingControl) {
-    return XamlGetProgressRingIsActiveValue(objcwinrt::to_insp(progressRingControl));
+bool GetActivityIndicatorViewIsActiveValue(const FrameworkElement& activityIndicatorControl) {
+    return XamlGetActivityIndicatorViewIsActiveValue(objcwinrt::to_insp(activityIndicatorControl));
 }
 
-void SetProgressRingIsActiveValue(const FrameworkElement& progressRingControl, bool isActive) {
-    XamlSetProgressRingIsActiveValue(objcwinrt::to_insp(progressRingControl), isActive);
+void SetActivityIndicatorViewIsActiveValue(const FrameworkElement& activityIndicatorControl, bool isActive) {
+    XamlSetActivityIndicatorViewIsActiveValue(objcwinrt::to_insp(activityIndicatorControl), isActive);
 }
 
-Media::SolidColorBrush GetProgressRingForegroundValue(const FrameworkElement& progressRingControl) {
-    ComPtr<IInspectable> inspectable(XamlGetProgressRingForegroundValue(objcwinrt::to_insp(progressRingControl)));
+Media::SolidColorBrush GetActivityIndicatorViewForegroundValue(const FrameworkElement& activityIndicatorControl) {
+    ComPtr<IInspectable> inspectable(XamlGetActivityIndicatorViewForegroundValue(objcwinrt::to_insp(activityIndicatorControl)));
     return objcwinrt::from_insp<Media::SolidColorBrush>(inspectable);
 }
 
-void SetProgressRingForegroundValue(const FrameworkElement& progressRingControl, const Media::SolidColorBrush& foregroundColorBrush) {
-    XamlSetProgressRingForegroundValue(objcwinrt::to_insp(progressRingControl), foregroundColorBrush);
+void SetActivityIndicatorViewForegroundValue(const FrameworkElement& activityIndicatorControl,
+                                             const Media::SolidColorBrush& foregroundColorBrush) {
+    XamlSetActivityIndicatorViewForegroundValue(objcwinrt::to_insp(activityIndicatorControl), objcwinrt::to_insp(foregroundColorBrush));
 }
 
-double GetProgressRingHeightValue(const FrameworkElement& progressRingControl) {
-    return XamlGetProgressRingHeightValue(objcwinrt::to_insp(progressRingControl));
+double GetActivityIndicatorViewHeightValue(const FrameworkElement& activityIndicatorControl) {
+    return XamlGetActivityIndicatorViewHeightValue(objcwinrt::to_insp(activityIndicatorControl));
 }
 
-void SetProgressRingHeightValue(const FrameworkElement& progressRingControl, double height) {
-    XamlSetProgressRingHeightValue(objcwinrt::to_insp(progressRingControl), height);
+void SetActivityIndicatorViewHeightValue(const FrameworkElement& activityIndicatorControl, double height) {
+    XamlSetActivityIndicatorViewHeightValue(objcwinrt::to_insp(activityIndicatorControl), height);
 }
 
-double GetProgressRingWidthValue(const FrameworkElement& progressRingControl) {
-    return XamlGetProgressRingWidthValue(objcwinrt::to_insp(progressRingControl));
+double GetActivityIndicatorViewWidthValue(const FrameworkElement& activityIndicatorControl) {
+    return XamlGetActivityIndicatorViewWidthValue(objcwinrt::to_insp(activityIndicatorControl));
 }
 
-void SetProgressRingWidthValue(const FrameworkElement& progressRingControl, double width) {
-    XamlSetProgressRingWidthValue(objcwinrt::to_insp(progressRingControl), width);
+void SetActivityIndicatorViewWidthValue(const FrameworkElement& activityIndicatorControl, double width) {
+    XamlSetActivityIndicatorViewWidthValue(objcwinrt::to_insp(activityIndicatorControl), width);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////

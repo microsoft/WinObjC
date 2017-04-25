@@ -31,10 +31,6 @@
 #import <winrt/Windows.UI.Xaml.Controls.h>
 #include "COMIncludes_End.h"
 
-// This color matches what iOS uses internally for the gray style.
-// NOTE: UIColor.grayColor differs slightly from this. Its components are W:0.5, A:1.0
-#define activityIndicatorStyleGrayColor = [UIColor colorWithWhite:0.0 alpha:0.45]
-
 using namespace winrt::Windows::UI::Xaml;
 
 static const wchar_t* TAG = L"UIActivityIndicatorView";
@@ -145,7 +141,7 @@ static const int c_largeSquareLength = 37;
  @Note Frame will not be resized smaller than the contained ProgressRing, as this would obscure it.
 */
 - (void)setFrame:(CGRect)frame {
-    if (frame.size.width < [self _width] || frame.size.height < [self _height]) {
+    if ((frame.size.width < [self _width]) || (frame.size.height < [self _height])) {
         int updatedFrameHeight = frame.size.height < [self _height] ? [self _height] : frame.size.height;
         int updatedFrameWidth = frame.size.width < [self _width] ? [self _width] : frame.size.width;
         frame = CGRectMake(frame.origin.x, frame.origin.y, updatedFrameWidth, updatedFrameHeight);
@@ -156,7 +152,6 @@ static const int c_largeSquareLength = 37;
 
 - (void)_initUIActivityIndicatorView {
     _isAnimating = NO;
-    [self setHidden:NO]; // Ensure space is reserved in the layout. See notes for setHidesWhenStopped.
     [self setHidesWhenStopped:YES];
     [self setActivityIndicatorViewStyle:UIActivityIndicatorViewStyleWhite];
     [self setUserInteractionEnabled:NO];
@@ -210,13 +205,19 @@ static const int c_largeSquareLength = 37;
             break;
         case UIActivityIndicatorViewStyleGray:
             styleSquareLength = c_normalSquareLength;
-            styleColor = activityIndicatorStyleGrayColor;
+
+            // This color matches what iOS uses internally for the gray style.
+            // NOTE: UIColor.grayColor differs slightly from this. Its components are W:0.5, A:1.0
+            styleColor = [UIColor colorWithWhite:0.0 alpha:0.45];
             break;
-        case UIActivityIndicatorViewStyleWhite: // Fallthrough intentional - always default to the white style for invalid values
+        case UIActivityIndicatorViewStyleWhite:
+        // Fallthrough intentional - always default to the white style for invalid values
         default:
             styleSquareLength = c_normalSquareLength;
             styleColor = [UIColor whiteColor];
-            _style = UIActivityIndicatorViewStyleWhite; // Explicityly set the style to white to ignore invalid values
+
+            // Explicityly set the style to white to ignore invalid values
+            _style = UIActivityIndicatorViewStyleWhite;
     }
 
     // Expand the frame size if it is not large enough to show the ProgressRing
@@ -246,7 +247,7 @@ static const int c_largeSquareLength = 37;
             _isAnimating = YES;
             [self setHidden:NO];
             [self setAlpha:1.0];
-            XamlControls::SetProgressRingIsActiveValue([self _winrtXamlElement], true);
+            XamlControls::SetActivityIndicatorViewIsActiveValue([self _winrtXamlElement], true);
         }
     });
 }
@@ -265,7 +266,7 @@ static const int c_largeSquareLength = 37;
                 [self setAlpha:0.0];
             }
 
-            XamlControls::SetProgressRingIsActiveValue([self _winrtXamlElement], false);
+            XamlControls::SetActivityIndicatorViewIsActiveValue([self _winrtXamlElement], false);
         }
     });
 }
@@ -274,7 +275,7 @@ static const int c_largeSquareLength = 37;
  @Status Interoperable
 */
 - (BOOL)isAnimating {
-    return XamlControls::GetProgressRingIsActiveValue([self _winrtXamlElement]);
+    return XamlControls::GetActivityIndicatorViewIsActiveValue([self _winrtXamlElement]);
 }
 
 /**
@@ -285,7 +286,7 @@ static const int c_largeSquareLength = 37;
 
     winrt::Windows::UI::Color convertedColor = XamlUtilities::ConvertUIColorToWUColor(color);
     Media::SolidColorBrush brush = convertedColor;
-    XamlControls::SetProgressRingForegroundValue([self _winrtXamlElement], brush);
+    XamlControls::SetActivityIndicatorViewForegroundValue([self _winrtXamlElement], brush);
 }
 
 /**
@@ -293,9 +294,9 @@ static const int c_largeSquareLength = 37;
 */
 - (UIColor*)color {
     if (!_color) {
-        Media::SolidColorBrush brush = XamlControls::GetProgressRingForegroundValue();
+        Media::SolidColorBrush brush = XamlControls::GetActivityIndicatorViewForegroundValue([self _winrtXamlElement]);
         winrt::Windows::UI::Color brushColor = brush.Color();
-        _color = ConvertWUColorToUIColor(brushColor);
+        _color = XamlUtilities::ConvertWUColorToUIColor(brushColor);
     }
     return _color;
 }
@@ -304,35 +305,35 @@ static const int c_largeSquareLength = 37;
 Microsoft Extension
 */
 + (RTObject*)createXamlElement {
-    return objcwinrt::to_rtobj(XamlControls::CreateProgressRing([self _winrtXamlElement));
+    return objcwinrt::to_rtobj(XamlControls::CreateActivityIndicatorView());
 }
 
 /**
  Gets the height underlying ProgressRing
 */
 - (double)_height {
-    return XamlControls::GetProgressRingHeightValue([self _winrtXamlElement]);
+    return XamlControls::GetActivityIndicatorViewHeightValue([self _winrtXamlElement]);
 }
 
 /**
  Sets the height underlying ProgressRing
 */
 - (void)_setHeight:(double)height {
-    XamlControls::SetProgressRingHeightValue([self _winrtXamlElement], height);
+    XamlControls::SetActivityIndicatorViewHeightValue([self _winrtXamlElement], height);
 }
 
 /**
  Gets the width underlying ProgressRing
 */
 - (double)_width {
-    return XamlControls::GetProgressRingWidthValue([self _winrtXamlElement]);
+    return XamlControls::GetActivityIndicatorViewWidthValue([self _winrtXamlElement]);
 }
 
 /**
  Sets the width underlying ProgressRing
 */
 - (void)_setWidth:(double)width {
-    XamlControls::SetProgressRingWidthValue([self _winrtXamlElement], width);
+    XamlControls::SetActivityIndicatorViewWidthValue([self _winrtXamlElement], width);
 }
 
 @end

@@ -45,6 +45,9 @@ private:
     static const int expectedNormalSize = 20;
     static const int expectedLargeSize = 37;
 
+    // Set in the XAMLCatalog UIActivitiIndicatorViewController
+    static const int expectedInitialFrameSize = 50;
+
 public:
     BEGIN_TEST_CLASS(UIKitActivityIndicatorTests)
     END_TEST_CLASS()
@@ -60,7 +63,7 @@ public:
     TEST_METHOD(CreateXamlElement) {
         FrameworkHelper::RunOnUIThread([]() {
             Microsoft::WRL::ComPtr<IInspectable> xamlElement;
-            XamlCreateProgressRing(&xamlElement);
+            XamlCreateActivityIndicatorView(&xamlElement);
             ASSERT_TRUE(xamlElement);
         });
     }
@@ -104,6 +107,7 @@ public:
             // Should not be animating initially
             ASSERT_FALSE(indicator.isAnimating);
             ASSERT_FALSE(progressRing.IsActive());
+
             // Should be visible initially
             EXPECT_EQ(winrt::Windows::UI::Xaml::Visibility::Visible, progressRing.Visibility());
             ASSERT_FALSE(indicator.hidden);
@@ -124,8 +128,8 @@ public:
             EXPECT_EQ(expectedNormalSize, progressRing.Width());
 
             // Initial element size is set in the controller
-            EXPECT_EQ(50, xamlElement.Height());
-            EXPECT_EQ(50, xamlElement.Width());
+            EXPECT_EQ(expectedInitialFrameSize, xamlElement.Height());
+            EXPECT_EQ(expectedInitialFrameSize, xamlElement.Width());
 
             // The ProgressRing should always be centered in the element
             ASSERT_TRUE(isCenteredInParent(progressRing, xamlElement));
@@ -176,6 +180,7 @@ public:
             [indicator stopAnimating];
             ASSERT_FALSE(indicator.isAnimating);
             ASSERT_FALSE(progressRing.IsActive());
+
             // Element should be still "Visible" after stopping animation, to ensure space is preserved in the layout.
             EXPECT_EQ(winrt::Windows::UI::Xaml::Visibility::Visible, xamlElement.Visibility());
             ASSERT_FALSE(indicator.hidden);
@@ -184,7 +189,10 @@ public:
         });
     }
 
-    TEST_METHOD(UIActivityIndicatorView_HidesWhenStopped_BeforeStartAnimation) {
+    /*  Sets hidesWhenStopped to NO before starting animation.
+        The control should be visible before, during, and after animation.
+    */
+    TEST_METHOD(UIActivityIndicatorView_SetHidesWhenStopped_BeforeAnimation) {
         StrongId<UIActivityIndicatorViewController> activityIndicatorVC;
         activityIndicatorVC.attach([[UIActivityIndicatorViewController alloc] init]);
 
@@ -200,6 +208,7 @@ public:
             ASSERT_FALSE(indicator.hidesWhenStopped);
             EXPECT_EQ(1.0, xamlElement.Opacity());
             EXPECT_EQ(1.0, indicator.alpha);
+
             // Visibility should not be altered
             EXPECT_EQ(xamlElement.Visibility(), winrt::Windows::UI::Xaml::Visibility::Visible);
             ASSERT_FALSE(indicator.hidden);
@@ -207,6 +216,7 @@ public:
             [indicator startAnimating];
             ASSERT_TRUE(indicator.isAnimating);
             ASSERT_TRUE(progressRing.IsActive());
+
             // Opacity and visibility should not be altered
             EXPECT_EQ(1.0, xamlElement.Opacity());
             EXPECT_EQ(1.0, indicator.alpha);
@@ -225,7 +235,10 @@ public:
         });
     }
 
-    TEST_METHOD(UIActivityIndicatorView_HidesWhenStopped_AfterStartAnimation) {
+    /*  Sets hidesWhenStopped to NO while animating.
+        The control should be visible during and after animation.
+    */
+    TEST_METHOD(UIActivityIndicatorView_SetHidesWhenStopped_DuringAnimation) {
         StrongId<UIActivityIndicatorViewController> activityIndicatorVC;
         activityIndicatorVC.attach([[UIActivityIndicatorViewController alloc] init]);
 
@@ -242,6 +255,7 @@ public:
             ASSERT_TRUE(progressRing.IsActive());
             EXPECT_EQ(1.0, xamlElement.Opacity());
             EXPECT_EQ(1.0, indicator.alpha);
+
             // Visibility should not be altered
             EXPECT_EQ(winrt::Windows::UI::Xaml::Visibility::Visible, xamlElement.Visibility());
             ASSERT_FALSE(indicator.hidden);
@@ -250,6 +264,7 @@ public:
             ASSERT_FALSE(indicator.hidesWhenStopped);
             EXPECT_EQ(1.0, xamlElement.Opacity());
             EXPECT_EQ(1.0, indicator.alpha);
+
             // Visibility should not be altered
             EXPECT_EQ(winrt::Windows::UI::Xaml::Visibility::Visible, xamlElement.Visibility());
             ASSERT_FALSE(indicator.hidden);
@@ -266,7 +281,10 @@ public:
         });
     }
 
-    TEST_METHOD(UIActivityIndicatorView_HidesWhenStopped_AfterStopAnimation) {
+    /*  Sets hidesWhenStopped to NO after animation is stopped.
+        The control should be visible during animation, and not visible after animation until hidesWhenStopped is set to NO.
+    */
+    TEST_METHOD(UIActivityIndicatorView_SetHidesWhenStopped_AfterAnimation) {
         StrongId<UIActivityIndicatorViewController> activityIndicatorVC;
         activityIndicatorVC.attach([[UIActivityIndicatorViewController alloc] init]);
 
@@ -283,6 +301,7 @@ public:
             ASSERT_TRUE(progressRing.IsActive());
             EXPECT_EQ(1.0, xamlElement.Opacity());
             EXPECT_EQ(1.0, indicator.alpha);
+
             // Visibility should not be altered
             EXPECT_EQ(winrt::Windows::UI::Xaml::Visibility::Visible, xamlElement.Visibility());
             ASSERT_FALSE(indicator.hidden);
@@ -292,6 +311,7 @@ public:
             ASSERT_FALSE(progressRing.IsActive());
             EXPECT_EQ(0.0, xamlElement.Opacity());
             EXPECT_EQ(0.0, indicator.alpha);
+
             // Visibility should not be altered
             EXPECT_EQ(winrt::Windows::UI::Xaml::Visibility::Visible, xamlElement.Visibility());
             ASSERT_FALSE(indicator.hidden);
@@ -300,17 +320,21 @@ public:
             ASSERT_FALSE(indicator.hidesWhenStopped);
             EXPECT_EQ(1.0, xamlElement.Opacity());
             EXPECT_EQ(1.0, indicator.alpha);
+
             // Visibility should not be altered
             EXPECT_EQ(winrt::Windows::UI::Xaml::Visibility::Visible, xamlElement.Visibility());
             ASSERT_FALSE(indicator.hidden);
         });
     }
 
+    /*  Sets the indicator style to UIActivityIndicatorViewStyleGray
+        The indicator color should be gray and should be set to the normal size.
+    */
     TEST_METHOD(UIActivityIndicatorView_SetGrayStyle) {
         StrongId<UIActivityIndicatorViewController> activityIndicatorVC;
         activityIndicatorVC.attach([[UIActivityIndicatorViewController alloc] init]);
 
-        UXTestAPI::ViewControllerPresenter testHelper(activityIndicatorVC);
+        UXTestAPI::ViewControllerPresenter testHelper(activityIndicatorVC, 2);
         UIActivityIndicatorView* indicator = [activityIndicatorVC indicator];
 
         dispatch_sync(dispatch_get_main_queue(), ^{
@@ -330,18 +354,21 @@ public:
             EXPECT_EQ(expectedNormalSize, progressRing.Width());
 
             // Frame size should not change
-            EXPECT_EQ(50, xamlElement.Height());
-            EXPECT_EQ(50, xamlElement.Width());
+            EXPECT_EQ(expectedInitialFrameSize, xamlElement.Height());
+            EXPECT_EQ(expectedInitialFrameSize, xamlElement.Width());
 
             ASSERT_TRUE(isCenteredInParent(progressRing, xamlElement));
         });
     }
 
+    /*  Sets the indicator style to UIActivityIndicatorViewStyleWhiteLarge
+        The indicator color should be white and should be set to the large size.
+    */
     TEST_METHOD(UIActivityIndicatorView_SetWhiteLargeStyle) {
         StrongId<UIActivityIndicatorViewController> activityIndicatorVC;
         activityIndicatorVC.attach([[UIActivityIndicatorViewController alloc] init]);
 
-        UXTestAPI::ViewControllerPresenter testHelper(activityIndicatorVC);
+        UXTestAPI::ViewControllerPresenter testHelper(activityIndicatorVC, 2);
         UIActivityIndicatorView* indicator = [activityIndicatorVC indicator];
 
         dispatch_sync(dispatch_get_main_queue(), ^{
@@ -361,18 +388,21 @@ public:
             EXPECT_EQ(expectedLargeSize, progressRing.Width());
 
             // Frame size should not change
-            EXPECT_EQ(50, xamlElement.Height());
-            EXPECT_EQ(50, xamlElement.Width());
+            EXPECT_EQ(expectedInitialFrameSize, xamlElement.Height());
+            EXPECT_EQ(expectedInitialFrameSize, xamlElement.Width());
 
             ASSERT_TRUE(isCenteredInParent(progressRing, xamlElement));
         });
     }
 
+    /*  Sets the indicator style to UIActivityIndicatorViewStyleWhiteLarge, then back to UIActivityIndicatorViewStyleWhite
+        The indicator should resize correctly from the large size down to the normal size.
+    */
     TEST_METHOD(UIActivityIndicatorView_ResizeLargeToNormal) {
         StrongId<UIActivityIndicatorViewController> activityIndicatorVC;
         activityIndicatorVC.attach([[UIActivityIndicatorViewController alloc] init]);
 
-        UXTestAPI::ViewControllerPresenter testHelper(activityIndicatorVC);
+        UXTestAPI::ViewControllerPresenter testHelper(activityIndicatorVC, 2);
         UIActivityIndicatorView* indicator = [activityIndicatorVC indicator];
 
         dispatch_sync(dispatch_get_main_queue(), ^{
@@ -386,9 +416,10 @@ public:
 
             EXPECT_EQ(expectedLargeSize, progressRing.Height());
             EXPECT_EQ(expectedLargeSize, progressRing.Width());
+
             // Frame size should not change
-            EXPECT_EQ(50, xamlElement.Height());
-            EXPECT_EQ(50, xamlElement.Width());
+            EXPECT_EQ(expectedInitialFrameSize, xamlElement.Height());
+            EXPECT_EQ(expectedInitialFrameSize, xamlElement.Width());
 
             // Change to back white style
             indicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyleWhite;
@@ -396,19 +427,27 @@ public:
 
             EXPECT_EQ(expectedNormalSize, progressRing.Height());
             EXPECT_EQ(expectedNormalSize, progressRing.Width());
+
             // Frame size should not change
-            EXPECT_EQ(50, xamlElement.Height());
-            EXPECT_EQ(50, xamlElement.Width());
+            EXPECT_EQ(expectedInitialFrameSize, xamlElement.Height());
+            EXPECT_EQ(expectedInitialFrameSize, xamlElement.Width());
 
             ASSERT_TRUE(isCenteredInParent(progressRing, xamlElement));
         });
     }
 
+    /*  Attempts to set a style that is not one of the three officially supported styles:
+            UIActivityIndicatorViewStyleWhiteLarge
+            UIActivityIndicatorViewStyleWhite
+            UIActivityIndicatorViewStyleGray
+
+        The style should default to UIActivityIndicatorViewStyleWhite.
+    */
     TEST_METHOD(UIActivityIndicatorView_SetInvalidStyle) {
         StrongId<UIActivityIndicatorViewController> activityIndicatorVC;
         activityIndicatorVC.attach([[UIActivityIndicatorViewController alloc] init]);
 
-        UXTestAPI::ViewControllerPresenter testHelper(activityIndicatorVC);
+        UXTestAPI::ViewControllerPresenter testHelper(activityIndicatorVC, 2);
         UIActivityIndicatorView* indicator = [activityIndicatorVC indicator];
 
         dispatch_sync(dispatch_get_main_queue(), ^{
@@ -426,19 +465,24 @@ public:
 
             EXPECT_EQ(expectedNormalSize, progressRing.Height());
             EXPECT_EQ(expectedNormalSize, progressRing.Width());
+
             // Frame size should not change
-            EXPECT_EQ(50, xamlElement.Height());
-            EXPECT_EQ(50, xamlElement.Width());
+            EXPECT_EQ(expectedInitialFrameSize, xamlElement.Height());
+            EXPECT_EQ(expectedInitialFrameSize, xamlElement.Width());
 
             ASSERT_TRUE(isCenteredInParent(progressRing, xamlElement));
         });
     }
 
+    /*  Attempts to resize the frame smaller than the size of the inner ProgressRing.
+        The frame should become the same size as the ProgressRing,
+        as the dimensions of the ProgressRing are its minimum sizes.
+    */
     TEST_METHOD(UIActivityIndicatorView_ChangeFrameSize_Smaller) {
         StrongId<UIActivityIndicatorViewController> activityIndicatorVC;
         activityIndicatorVC.attach([[UIActivityIndicatorViewController alloc] init]);
 
-        UXTestAPI::ViewControllerPresenter testHelper(activityIndicatorVC);
+        UXTestAPI::ViewControllerPresenter testHelper(activityIndicatorVC, 2);
         UIActivityIndicatorView* indicator = [activityIndicatorVC indicator];
 
         dispatch_sync(dispatch_get_main_queue(), ^{
@@ -448,6 +492,7 @@ public:
 
             // Attempt to shrink frame to be smaller than the ProgressRing
             [indicator setFrame:CGRectMake(indicator.frame.origin.x, indicator.frame.origin.y, 10, 10)];
+
             // Frame should not become smaller than the ProgressRing
             EXPECT_EQ(progressRing.Height(), xamlElement.Height());
             EXPECT_EQ(progressRing.Width(), xamlElement.Width());
@@ -460,11 +505,15 @@ public:
         });
     }
 
+    /*  Increase the frame size.
+        The inner ProgressRing should not change in size,
+        and should still be centered within the frame.
+    */
     TEST_METHOD(UIActivityIndicatorView_ChangeFrameSize_Larger) {
         StrongId<UIActivityIndicatorViewController> activityIndicatorVC;
         activityIndicatorVC.attach([[UIActivityIndicatorViewController alloc] init]);
 
-        UXTestAPI::ViewControllerPresenter testHelper(activityIndicatorVC);
+        UXTestAPI::ViewControllerPresenter testHelper(activityIndicatorVC, 2);
         UIActivityIndicatorView* indicator = [activityIndicatorVC indicator];
 
         dispatch_sync(dispatch_get_main_queue(), ^{
@@ -485,11 +534,14 @@ public:
         });
     }
 
+    /*  Shrinks the frame to be the same size as the ProgressRing, then sets a larger style.
+        The frame should be expanded to fit the large ProgressRing.
+    */
     TEST_METHOD(UIActivityIndicatorView_ExpandFrameToFitIndicator) {
         StrongId<UIActivityIndicatorViewController> activityIndicatorVC;
         activityIndicatorVC.attach([[UIActivityIndicatorViewController alloc] init]);
 
-        UXTestAPI::ViewControllerPresenter testHelper(activityIndicatorVC);
+        UXTestAPI::ViewControllerPresenter testHelper(activityIndicatorVC, 2);
         UIActivityIndicatorView* indicator = [activityIndicatorVC indicator];
 
         dispatch_sync(dispatch_get_main_queue(), ^{
@@ -498,28 +550,31 @@ public:
             auto progressRing = objcwinrt::from_insp<Controls::ProgressRing>(inspectable);
 
             // Shrink frame to be smaller than the ProgressRing
-            [indicator setFrame:CGRectMake(indicator.frame.origin.x, indicator.frame.origin.y, 10, 10)];
+            [indicator setFrame:CGRectMake(indicator.frame.origin.x, indicator.frame.origin.y, progressRing.Width(), progressRing.Height())];
 
             // Change to gray style
-            indicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyleGray;
-            EXPECT_EQ(UIActivityIndicatorViewStyleGray, indicator.activityIndicatorViewStyle);
+            indicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyleWhiteLarge;
+            EXPECT_EQ(UIActivityIndicatorViewStyleWhiteLarge, indicator.activityIndicatorViewStyle);
 
-            EXPECT_EQ(expectedNormalSize, progressRing.Height());
-            EXPECT_EQ(expectedNormalSize, progressRing.Width());
+            EXPECT_EQ(expectedLargeSize, progressRing.Height());
+            EXPECT_EQ(expectedLargeSize, progressRing.Width());
 
             // Frame should be expanded to fit ProgressRing
-            EXPECT_EQ(expectedNormalSize, xamlElement.Height());
-            EXPECT_EQ(expectedNormalSize, xamlElement.Width());
+            EXPECT_EQ(expectedLargeSize, xamlElement.Height());
+            EXPECT_EQ(expectedLargeSize, xamlElement.Width());
 
             ASSERT_TRUE(isCenteredInParent(progressRing, xamlElement));
         });
     }
 
+    /*  Sets a custom indicator color.
+        The color should be updated, but the value of the current style should be the same.
+    */
     TEST_METHOD(UIActivityIndicatorView_SetColor) {
         StrongId<UIActivityIndicatorViewController> activityIndicatorVC;
         activityIndicatorVC.attach([[UIActivityIndicatorViewController alloc] init]);
 
-        UXTestAPI::ViewControllerPresenter testHelper(activityIndicatorVC);
+        UXTestAPI::ViewControllerPresenter testHelper(activityIndicatorVC, 2);
         UIActivityIndicatorView* indicator = [activityIndicatorVC indicator];
 
         dispatch_sync(dispatch_get_main_queue(), ^{
@@ -541,10 +596,11 @@ public:
         });
     }
 
+    /*  Checks if the provided element is centered horizontally and vertically within the provided parent */
     BOOL isCenteredInParent(FrameworkElement element, FrameworkElement parent) {
         auto relativeOrigin = element.TransformToVisual(parent).TransformPoint({ 0, 0 });
-        Point elementCenter = { relativeOrigin.X + element.ActualWidth() / 2, relativeOrigin.Y + element.ActualHeight() / 2 };
+        Point elementCenter = { relativeOrigin.X + (element.ActualWidth() / 2), relativeOrigin.Y + (element.ActualHeight() / 2) };
         Point parentCenter = { parent.ActualWidth() / 2, parent.ActualHeight() / 2 };
-        return elementCenter.X == parentCenter.X && elementCenter.Y == parentCenter.Y;
+        return (elementCenter.X == parentCenter.X) && (elementCenter.Y == parentCenter.Y);
     }
 };

@@ -68,18 +68,27 @@ public:
 #endif // __has_feature(objc_arc)
 
 ////////////////////////////////////////////////////////////////////////////////////
-// ProgressRing
+// ActivityIndicatorView
 ////////////////////////////////////////////////////////////////////////////////////
-winrt::Windows::UI::Xaml::Controls::Grid CreateProgressRing();
-winrt::Windows::UI::Xaml::Controls::ProgressRing XamlGetInternalProgressRing(const winrt::Windows::UI::Xaml::Controls::Grid& progressRingInspectable);
-bool GetProgressRingIsActiveValue(const winrt::Windows::UI::Xaml::FrameworkElement& progressRingInspectable);
-void SetProgressRingIsActiveValue(const winrt::Windows::UI::Xaml::FrameworkElement& progressRingInspectable, bool isActive);
-Media::SolidColorBrush& GetProgressRingForegroundValue(const winrt::Windows::UI::Xaml::FrameworkElement& progressRingInspectable);
-void SetProgressRingForegroundValue(const winrt::Windows::UI::Xaml::FrameworkElement& progressRingInspectable, Media::SolidColorBrush& foregroundColorBrush);
-double GetProgressRingHeightValue(const winrt::Windows::UI::Xaml::FrameworkElement& progressRingInspectable);
-void SetProgressRingHeightValue(const winrt::Windows::UI::Xaml::FrameworkElement& progressRingInspectable, double height);
-double GetProgressRingWidthValue(const winrt::Windows::UI::Xaml::FrameworkElement& progressRingInspectable);
-void SetProgressRingWidthValue(const winrt::Windows::UI::Xaml::FrameworkElement& progressRingInspectable, double width);
+winrt::Windows::UI::Xaml::Controls::Grid CreateActivityIndicatorView();
+
+winrt::Windows::UI::Xaml::Controls::ProgressRing XamlGetInternalProgressRing(
+    const winrt::Windows::UI::Xaml::Controls::Grid& activityIndicatorInspectable);
+
+bool GetActivityIndicatorViewIsActiveValue(const winrt::Windows::UI::Xaml::FrameworkElement& activityIndicatorInspectable);
+
+void SetActivityIndicatorViewIsActiveValue(const winrt::Windows::UI::Xaml::FrameworkElement& activityIndicatorInspectable, bool isActive);
+
+winrt::Windows::UI::Xaml::Media::SolidColorBrush GetActivityIndicatorViewForegroundValue(
+    const winrt::Windows::UI::Xaml::FrameworkElement& activityIndicatorInspectable);
+
+void SetActivityIndicatorViewForegroundValue(const winrt::Windows::UI::Xaml::FrameworkElement& activityIndicatorInspectable,
+                                             const winrt::Windows::UI::Xaml::Media::SolidColorBrush& foregroundColorBrush);
+
+double GetActivityIndicatorViewHeightValue(const winrt::Windows::UI::Xaml::FrameworkElement& activityIndicatorInspectable);
+void SetActivityIndicatorViewHeightValue(const winrt::Windows::UI::Xaml::FrameworkElement& activityIndicatorInspectable, double height);
+double GetActivityIndicatorViewWidthValue(const winrt::Windows::UI::Xaml::FrameworkElement& activityIndicatorInspectable);
+void SetActivityIndicatorViewWidthValue(const winrt::Windows::UI::Xaml::FrameworkElement& activityIndicatorInspectable, double width);
 
 ////////////////////////////////////////////////////////////////////////////////////
 // Button
@@ -101,11 +110,20 @@ void HookButtonPointerEvents(const winrt::Windows::UI::Xaml::Controls::Button& b
 winrt::Windows::UI::Xaml::Controls::ContentDialog CreateContentDialog();
 
 int XamlContentDialogPressedIndex(const winrt::Windows::UI::Xaml::Controls::ContentDialog& contentDialog);
-unsigned int XamlContentDialogAddButtonWithTitle(const winrt::Windows::UI::Xaml::Controls::ContentDialog& contentDialog, NSString* buttonTitle);
-NSString* XamlContentDialogButtonTitleAtIndex(const winrt::Windows::UI::Xaml::Controls::ContentDialog& contentDialog, unsigned int buttonIndex);
+
+unsigned int XamlContentDialogAddButtonWithTitle(const winrt::Windows::UI::Xaml::Controls::ContentDialog& contentDialog,
+                                                 NSString* buttonTitle);
+
+NSString* XamlContentDialogButtonTitleAtIndex(const winrt::Windows::UI::Xaml::Controls::ContentDialog& contentDialog,
+                                              unsigned int buttonIndex);
+
 unsigned int XamlContentDialogNumberOfButtons(const winrt::Windows::UI::Xaml::Controls::ContentDialog& contentDialog);
-void XamlContentDialogSetCancelButtonIndex(const winrt::Windows::UI::Xaml::Controls::ContentDialog& contentDialog, unsigned int cancelButtonIndex);
-void XamlContentDialogSetDestructiveButtonIndex(const winrt::Windows::UI::Xaml::Controls::ContentDialog& contentDialog, unsigned int destructiveButtonIndex);
+
+void XamlContentDialogSetCancelButtonIndex(const winrt::Windows::UI::Xaml::Controls::ContentDialog& contentDialog,
+                                           unsigned int cancelButtonIndex);
+
+void XamlContentDialogSetDestructiveButtonIndex(const winrt::Windows::UI::Xaml::Controls::ContentDialog& contentDialog,
+                                                unsigned int destructiveButtonIndex);
 
 ////////////////////////////////////////////////////////////////////////////////////
 // Label
@@ -117,7 +135,10 @@ winrt::Windows::UI::Xaml::Controls::TextBlock GetLabelTextBlock(const winrt::Win
 // ScrollView
 ////////////////////////////////////////////////////////////////////////////////////
 winrt::Windows::UI::Xaml::FrameworkElement CreateScrollView();
-winrt::Windows::UI::Xaml::Controls::ScrollViewer ScrollViewGetInnerScrollViewer(const winrt::Windows::UI::Xaml::FrameworkElement& scrollView);
+
+winrt::Windows::UI::Xaml::Controls::ScrollViewer ScrollViewGetInnerScrollViewer(
+    const winrt::Windows::UI::Xaml::FrameworkElement& scrollView);
+
 winrt::Windows::UI::Xaml::Controls::Canvas ScrollViewGetSubLayerCanvas(const winrt::Windows::UI::Xaml::FrameworkElement& scrollView);
 
 ////////////////////////////////////////////////////////////////////////////////////
@@ -130,9 +151,11 @@ void SetFrameworkElementLayerProperties(const winrt::Windows::UI::Xaml::Framewor
                                         const winrt::Windows::UI::Xaml::Controls::Canvas& sublayerCanvasProperty);
 
 // Get the layerContentProperty for the specified target xaml element
-winrt::Windows::UI::Xaml::Controls::Image GetFrameworkElementLayerContentProperty(const winrt::Windows::UI::Xaml::FrameworkElement& targetElement);
+winrt::Windows::UI::Xaml::Controls::Image GetFrameworkElementLayerContentProperty(
+    const winrt::Windows::UI::Xaml::FrameworkElement& targetElement);
 
 // Get the sublayerCanvasProperty for the specified target xaml element
-winrt::Windows::UI::Xaml::Controls::Canvas GetFrameworkElementSublayerCanvasProperty(const winrt::Windows::UI::Xaml::FrameworkElement& targetElement);
+winrt::Windows::UI::Xaml::Controls::Canvas GetFrameworkElementSublayerCanvasProperty(
+    const winrt::Windows::UI::Xaml::FrameworkElement& targetElement);
 
 } // namespace XamlControls
