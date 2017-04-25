@@ -14,76 +14,96 @@
 //
 //******************************************************************************
 
+#import <vector>
+#import <algorithm>
 #include <TestFramework.h>
 #import <Foundation/Foundation.h>
 #import <CoreFoundation/CoreFoundation.h>
 #import <Security/SecItem.h>
 #import "Frameworks/Security/GenericPasswordItemHandler.h"
 
-@interface MockVault : NSObject
+#include "COMIncludes.h"
+#import <wrl/implements.h>
+#import <Windows.Security.Credentials.h>
+#include "COMIncludes_End.h"
 
-+ (instancetype)create ACTIVATOR;
-- (void)add:(WSCPasswordCredential*)credential;
-- (void)remove:(WSCPasswordCredential*)credential;
-- (WSCPasswordCredential*)retrieve:(NSString*)resource userName:(NSString*)userName;
-- (NSArray*)findAllByResource:(NSString*)resource;
-- (NSArray*)findAllByUserName:(NSString*)userName;
-- (NSArray*)retrieveAll;
-- (instancetype)init;
+using namespace Microsoft::WRL;
+using namespace winrt::Windows::Security::Credentials;
+namespace WFC = winrt::Windows::Foundation::Collections;
+namespace ABIWFC = ABI::Windows::Foundation::Collections;
+namespace ABIWSC = ABI::Windows::Security::Credentials;
+namespace RtABIWSC = winrt::ABI::Windows::Security::Credentials;
 
-@end
+class MockVault : public RuntimeClass<RuntimeClassFlags<WinRt>, ABIWSC::IPasswordVault> {
+public:
 
-@implementation MockVault {
-    NSMutableArray* credentialList;
-}
+    STDMETHODIMP Add(ABIWSC::IPasswordCredential* cred) override {
+        auto abiPtr = reinterpret_cast<RtABIWSC::IPasswordCredential*>(cred);
+        PasswordCredential credential = nullptr;
+        winrt::copy_from_abi(credential, abiPtr);
 
-+ (instancetype)create {
-    return nil;
-}
-
-- (void)add:(WSCPasswordCredential*)credential {
-    [credentialList addObject:credential];
-}
-
-- (void)remove:(WSCPasswordCredential*)credential {
-    [credentialList removeObject:credential];
-}
-
-- (WSCPasswordCredential*)retrieve:(NSString*)resource userName:(NSString*)userName {
-    return nil;
-}
-
-- (NSArray*)findAllByResource:(NSString*)resource {
-    return nil;
-}
-
-- (NSArray*)findAllByUserName:(NSString*)userName {
-    return nil;
-}
-
-- (NSArray*)retrieveAll {
-    return credentialList;
-}
-
-- (void)dealloc {
-    [credentialList release];
-    credentialList = nil;
-
-    [super dealloc];
-}
-
-- (instancetype)init {
-    if (self = [super init]) {
-        credentialList = [NSMutableArray new];
+        credentialList.push_back(credential);
+        return S_OK;
     }
-    return self;
-}
 
-@end
+    STDMETHODIMP Remove(ABIWSC::IPasswordCredential* cred) override {
+        auto abiPtr = reinterpret_cast<RtABIWSC::IPasswordCredential*>(cred);
+        PasswordCredential credential = nullptr;
+        winrt::copy_from_abi(credential, abiPtr);
+
+        auto it = std::find(credentialList.begin(), credentialList.end(), credential);
+
+        if (it != credentialList.end()) {
+            credentialList.erase(it);
+        }
+
+        return S_OK;
+    }
+
+    STDMETHODIMP Retrieve(HSTRING resource, HSTRING userName, ABIWSC::IPasswordCredential** cred) override {
+        *cred = nullptr;
+        return S_OK;
+    }
+
+    STDMETHODIMP FindAllByResource(HSTRING resource, ABIWFC::IVectorView<ABIWSC::PasswordCredential*>** credentials) override {
+        *credentials = nullptr;
+        return S_OK;
+    }
+
+    STDMETHODIMP FindAllByUserName(HSTRING userName, ABIWFC::IVectorView<ABIWSC::PasswordCredential*>** credentials) override {
+        *credentials = nullptr;
+        return S_OK;
+    }
+
+    STDMETHODIMP RetrieveAll(ABIWFC::IVectorView<ABIWSC::PasswordCredential*>** credentials) override {
+        // Convert credentialList to IVector
+        auto credVector = winrt::single_threaded_vector<PasswordCredential>(std::vector<PasswordCredential>(credentialList));
+
+        // Detach ABI pointer
+        winrt::abi<WFC::IVectorView<PasswordCredential>>* abiPtr = winrt::detach_abi(credVector.GetView());
+        *credentials = reinterpret_cast<ABIWFC::IVectorView<ABIWSC::PasswordCredential*>*>(abiPtr);
+        return S_OK;
+    }
+
+    static PasswordVault GetInstance() {
+        PasswordVault vault = nullptr;
+        ComPtr<MockVault> mockVault = Make<MockVault>();
+
+        RtABIWSC::IPasswordVault* abiPtr =
+            reinterpret_cast<RtABIWSC::IPasswordVault*>(
+                static_cast<ABIWSC::IPasswordVault*>(mockVault.Detach()));
+
+        winrt::attach_abi(vault, abiPtr);
+        return vault;
+    }
+
+private:
+    std::vector<PasswordCredential> credentialList;
+};
+
 
 TEST(Security, GenericPasswordHandler_Add) {
-    MockVault* mockVault = [MockVault new];
-    GenericPasswordItemHandler* handler = [[GenericPasswordItemHandler alloc] initWithVault:reinterpret_cast<WSCPasswordVault*>(mockVault)];
+    GenericPasswordItemHandler* handler = [[GenericPasswordItemHandler alloc] initWithVault:MockVault::GetInstance()];
 
     // First try to add the credential.
     NSString* mockPassword = @"fak3Passw0rd";
@@ -109,13 +129,11 @@ TEST(Security, GenericPasswordHandler_Add) {
     ASSERT_OBJCEQ(@"www.fakeWebService.com", [outDictionary objectForKey:(__bridge id)(kSecAttrService)]);
 
     [outDictionary release];
-    [mockVault release];
     [handler release];
 }
 
 TEST(Security, GenericPasswordHandler_AddEmpty) {
-    MockVault* mockVault = [MockVault new];
-    GenericPasswordItemHandler* handler = [[GenericPasswordItemHandler alloc] initWithVault:reinterpret_cast<WSCPasswordVault*>(mockVault)];
+    GenericPasswordItemHandler* handler = [[GenericPasswordItemHandler alloc] initWithVault:MockVault::GetInstance()];
 
     // First try to add the credential.
     NSString* mockPassword = @"fak3Passw0rd";
@@ -136,18 +154,15 @@ TEST(Security, GenericPasswordHandler_AddEmpty) {
     // Make sure that the returned attributes match what is set. NOTE: normally
     // extra read only attributes like creation time would have been added. This
     // is not possible with the current WinRT apis.
-    // Note that its a little weird that @"" doesn't come back but there is no way for us to tell.
-    ASSERT_EQ(1, [outDictionary count]);
+    ASSERT_OBJCEQ(@"", [outDictionary objectForKey:(__bridge id)(kSecAttrService)]);
     ASSERT_OBJCEQ((__bridge id)(kSecClassGenericPassword), [outDictionary objectForKey:(__bridge id)(kSecClass)]);
 
     [outDictionary release];
-    [mockVault release];
     [handler release];
 }
 
 TEST(Security, GenericPasswordHandler_Query) {
-    MockVault* mockVault = [MockVault new];
-    GenericPasswordItemHandler* handler = [[GenericPasswordItemHandler alloc] initWithVault:reinterpret_cast<WSCPasswordVault*>(mockVault)];
+    GenericPasswordItemHandler* handler = [[GenericPasswordItemHandler alloc] initWithVault:MockVault::GetInstance()];
 
     // First try to add the credentials.
     NSString* mockPassword1 = @"fak3Passw0rd1";
@@ -252,13 +267,11 @@ TEST(Security, GenericPasswordHandler_Query) {
     ASSERT_EQ(errSecItemNotFound, [handler query:attrQuery3 withResult:&outArray]);
     ASSERT_EQ(nil, outArray);
 
-    [mockVault release];
     [handler release];
 }
 
 TEST(Security, GenericPasswordHandler_Update) {
-    MockVault* mockVault = [MockVault new];
-    GenericPasswordItemHandler* handler = [[GenericPasswordItemHandler alloc] initWithVault:reinterpret_cast<WSCPasswordVault*>(mockVault)];
+    GenericPasswordItemHandler* handler = [[GenericPasswordItemHandler alloc] initWithVault:MockVault::GetInstance()];
 
     // First try to add the credential.
     NSString* mockPassword = @"fak3Passw0rd";
@@ -305,13 +318,11 @@ TEST(Security, GenericPasswordHandler_Update) {
     ASSERT_OBJCEQ(@"www.anUpdatedFakeWebService.com", [attributes objectForKey:(__bridge id)(kSecAttrService)]);
 
     [attributes release];
-    [mockVault release];
     [handler release];
 }
 
 TEST(Security, GenericPasswordHandler_Remove) {
-    MockVault* mockVault = [MockVault new];
-    GenericPasswordItemHandler* handler = [[GenericPasswordItemHandler alloc] initWithVault:reinterpret_cast<WSCPasswordVault*>(mockVault)];
+    GenericPasswordItemHandler* handler = [[GenericPasswordItemHandler alloc] initWithVault:MockVault::GetInstance()];
 
     NSString* mockPassword1 = @"fak3Passw0rd1";
     NSString* mockPassword2 = @"fak3Passw0rd2";
@@ -363,6 +374,5 @@ TEST(Security, GenericPasswordHandler_Remove) {
     ASSERT_EQ(result, errSecItemNotFound);
     ASSERT_EQ(nil, outArray);
 
-    [mockVault release];
     [handler release];
 }

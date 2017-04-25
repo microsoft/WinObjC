@@ -18,12 +18,14 @@
 
 #import "SecItemHandlerProtocol.h"
 
-#import <UWP/WindowsSecurityCredentials.h>
+#include "COMIncludes.h"
+#import <winrt/Windows.Security.Credentials.h>
+#include "COMIncludes_End.h"
 
 @interface GenericPasswordItemHandler : NSObject <SecItemHandler>
 
 - (instancetype)init;
-- (instancetype)initWithVault:(WSCPasswordVault*)vault;
+- (instancetype)initWithVault:(const winrt::Windows::Security::Credentials::PasswordVault&)vault;
 
 - (OSStatus)update:(NSDictionary*)queryDictionary
     withAttributes:(NSDictionary*)attributesToUpdate
