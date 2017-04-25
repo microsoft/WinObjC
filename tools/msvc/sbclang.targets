@@ -653,52 +653,38 @@
     <ComputeImpLibInputsTargets>$(ComputeImpLibInputsTargets);ComputeClangImpLibInputs;</ComputeImpLibInputsTargets>
   </PropertyGroup>
 
-  <!-- Fix up AdditionalOptions before the CreateWinMD target runs. -->
-  <Target
-    Name="FixAdditionalOptionsWinMD"
-    DependsOnTargets="$(ComputeLinkInputsTargets)"
-    BeforeTargets="CreateWinMD">
-
-    <PropertyGroup Condition="'@(ClCompile)' != ''">
-      <ClCompileCRTs>@(ClCompile->Metadata('RuntimeLibrary')->Distinct()->ClearMetadata())</ClCompileCRTs>
-      <AdditionalOptionsToUse Condition="$(ClCompileCRTs.ToLower().Contains('multithreadeddll'))">/nodefaultlib:vccorlib /nodefaultlib:msvcrt winobjcrt.lib vccorlib.lib msvcrt.lib </AdditionalOptionsToUse>
-      <AdditionalOptionsToUse Condition="$(ClCompileCRTs.ToLower().Contains('multithreadeddebugdll'))">/nodefaultlib:vccorlibd /nodefaultlib:msvcrtd winobjcrt.lib vccorlibd.lib msvcrtd.lib </AdditionalOptionsToUse>
-    </PropertyGroup>
-
-    <ItemGroup>
-      <Link Condition="'%(Link.AdjustedAdditionalOptions)' != 'true'">
-        <AdditionalOptions Condition="$(AdditionalOptionsToUse) != ''">$(AdditionalOptionsToUse) %(Link.AdditionalOptions)</AdditionalOptions>
-        <AdjustedAdditionalOptions>true</AdjustedAdditionalOptions>
-      </Link>
-    </ItemGroup>
-
-  </Target>
-
 
   <PropertyGroup>
-    <FixAdditionalOptionsLinkDependsOn>$(FixAdditionalOptionsLinkDependsOn);FixAdditionalOptionsWinMD;</FixAdditionalOptionsLinkDependsOn>
-    <FixAdditionalOptionsLinkDependsOn Condition="'$(WindowsAppContainer)' == 'true'">$(FixAdditionalOptionsLinkDependsOn);XamlPreLink</FixAdditionalOptionsLinkDependsOn>
+    <ComputeLinkInputsTargets>$(ComputeLinkInputsTargets);AddCRTLinkInputs;</ComputeLinkInputsTargets>
   </PropertyGroup>
 
-  <!-- The build process for XAML files adds Link item(s) in between the execution of CreateWinMD and Link targets.
-       These items need to be updated with our AdditionalOptions. Otherwise, a mismatch of
-       metadata will result in multiple invocations of link.exe due to task batching. -->
   <Target
-    Name="FixAdditionalOptionsLink"
-    DependsOnTargets="$(FixAdditionalOptionsLinkDependsOn)"
-    BeforeTargets="Link">
-
-    <PropertyGroup Condition="'@(ClCompile)' != ''">
-      <ClCompileCRTs>@(ClCompile->Metadata('RuntimeLibrary')->Distinct()->ClearMetadata())</ClCompileCRTs>
-      <AdditionalOptionsToUse Condition="$(ClCompileCRTs.ToLower().Contains('multithreadeddll'))">/nodefaultlib:vccorlib /nodefaultlib:msvcrt winobjcrt.lib vccorlib.lib msvcrt.lib </AdditionalOptionsToUse>
-      <AdditionalOptionsToUse Condition="$(ClCompileCRTs.ToLower().Contains('multithreadeddebugdll'))">/nodefaultlib:vccorlibd /nodefaultlib:msvcrtd winobjcrt.lib vccorlibd.lib msvcrtd.lib </AdditionalOptionsToUse>
-    </PropertyGroup>
+    Name="AddCRTLinkInputs">
 
     <ItemGroup>
-      <Link Condition="'%(Link.AdjustedAdditionalOptions)' != 'true'">
-        <AdditionalOptions Condition="$(AdditionalOptionsToUse) != ''">$(AdditionalOptionsToUse) %(Link.AdditionalOptions)</AdditionalOptions>
-        <AdjustedAdditionalOptions>true</AdjustedAdditionalOptions>
-      </Link>
+      <ClCompile Include="tmp" Condition="'@(ClCompile)'==''">
+       <DeleteSoon>true</DeleteSoon>
+      </ClCompile>
+    </ItemGroup>
+
+    <PropertyGroup>
+      <ClCompileCRTs>@(ClCompile->Metadata('RuntimeLibrary')->Distinct()->ClearMetadata())</ClCompileCRTs>
+    </PropertyGroup>
+
+    <ItemGroup Condition="$(ClCompileCRTs.ToLower().Contains('multithreadeddll'))">
+      <Link Include="vccorlib.lib" />
+      <Link Include="msvcrt.lib" />
+      <Link Include="ucrt.lib" />
+    </ItemGroup>
+
+    <ItemGroup Condition="$(ClCompileCRTs.ToLower().Contains('multithreadeddebugdll'))">
+      <Link Include="vccorlibd.lib" />
+      <Link Include="msvcrtd.lib" />
+      <Link Include="ucrtd.lib" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ClCompile Remove="@(ClCompile)" Condition="'%(ClCompile.DeleteSoon)'=='true'" />
     </ItemGroup>
 
   </Target>
@@ -828,6 +814,7 @@
     <Link Condition="'$(UseWinObjCCRT)' == 'true'">
       <!-- Ensure we pick up operator new from our project rather than the C runtime -->
       <ForceSymbolReferences>??2@YAPAXI@Z</ForceSymbolReferences>
+      <AdditionalOptions>/DISALLOWLIB:libucrt.lib /DISALLOWLIB:libucrtd.lib /nodefaultlib:ucrt /nodefaultlib:ucrtd /nodefaultlib:vccorlib /nodefaultlib:msvcrt /nodefaultlib:vccorlibd /nodefaultlib:msvcrtd /defaultlib:winobjcrt winobjcrt.lib %(AdditionalOptions)</AdditionalOptions>
     </Link>
   </ItemDefinitionGroup>
 

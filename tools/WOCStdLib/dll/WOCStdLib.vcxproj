@@ -19,9 +19,6 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\IwNew\lib\IwNewLib.vcxproj">
-      <Project>{b16c8766-1d05-46c0-b231-10c3aa43c19b}</Project>
-    </ProjectReference>
     <ProjectReference Include="..\..\Logging\dll\Logging.vcxproj">
       <Project>{862d36c2-cc83-4d04-b9b8-bef07f479905}</Project>
       <!-- We do not want Logging to show up in the Language pacakge! It should only be in the Logging package. -->
