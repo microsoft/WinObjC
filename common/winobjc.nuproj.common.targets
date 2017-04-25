@@ -71,4 +71,7 @@
     </ProjectReference>
   </ItemGroup>
 
+  <Target Name="AddPackageVersionTag" DependsOnTargets="CalculatePackageVersion" Condition="'$(BUILD_BUILDNUMBER)' != ''" >
+    <Message Text="##vso[build.addbuildtag]$(PackageId).$(PackageVersion)"/>
+  </Target>
 </Project>
