@@ -303,6 +303,27 @@
       <LibPathPattern>^,"([^"]*.\DLL)"</LibPathPattern>
     </PropertyGroup>
 
+    <!-- 
+         0. Before doing any actual dependency walking and removing of extra libs, check that the user hasn't added
+         any missing/non-existent ReferenceCopyLocalPaths that are WinObjC ones. If they are winobjc ones, make sure
+         that those aren't candidates to be removed as the user was explicit in the desire to copy them 
+    -->
+    <ItemGroup>
+      <_NonExistentReferenceCopyLocalPaths Include="@(ReferenceCopyLocalPaths)" Condition="!Exists('%(ReferenceCopyLocalPaths.FullPath)')" />
+      <_WinObjCReferenceCopyLocalPaths Include="@(ReferenceCopyLocalPaths)" Condition="'%(ReferenceCopyLocalPaths.IsWinObjC)' == 'true'"/>
+
+      <!-- Filter down to only the items that are also IsWinObjC and have a matching Filename -->
+      <_NonExistentReferenceCopyLocalPaths Remove="@(_NonExistentReferenceCopyLocalPaths)" Condition="'%(FileName)' == '' And '@(_WinObjCReferenceCopyLocalPaths)' != '' And '@(_NonExistentReferenceCopyLocalPaths)' != ''" />
+
+      <!-- Non existent ReferenceCopyLocalPaths cause build errors so remove them -->
+      <ReferenceCopyLocalPaths Remove="@(_NonExistentReferenceCopyLocalPaths)" />
+
+      <!-- Fixup the original WinObjC ReferenceCopyLocalPaths to not be a candidate for removal -->
+      <ReferenceCopyLocalPaths Condition="'%(FileName)' != '' And '@(ReferenceCopyLocalPaths)' != '' And '@(_NonExistentReferenceCopyLocalPaths)' != ''">
+        <IsWinObjC></IsWinObjC>
+      </ReferenceCopyLocalPaths>
+    </ItemGroup>
+
     <!-- 1. Collect items that need to be walked. This includes the main target and all refernces. -->
     <ItemGroup>
       <DepWalkerInputs Include="$(TargetPath)" />
