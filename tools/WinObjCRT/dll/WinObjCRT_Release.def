@@ -20,7 +20,6 @@ LIBRARY WinObjCRT
         _aligned_realloc_dbg = _aligned_realloc
         _aligned_recalloc_dbg = _aligned_recalloc
         _calloc_dbg = calloc
-        _dupenv_s_dbg = _dupenv_s
         _expand_dbg = _expand
         _free_dbg = free
         _fullpath_dbg = _fullpath
@@ -34,7 +33,6 @@ LIBRARY WinObjCRT
         _strdup_dbg = _strdup
         _tempnam_dbg = _tempnam
         _wcsdup_dbg = _wcsdup
-        _wdupenv_s_dbg = _wdupenv_s
         _wfullpath_dbg = _wfullpath
         _wgetcwd_dbg = _wgetcwd
         _wgetdcwd_dbg = _wgetdcwd
@@ -49,7 +47,6 @@ LIBRARY WinObjCRT
         _aligned_realloc
         _aligned_recalloc
         calloc
-        _dupenv_s
         _expand
         free
         _fullpath
@@ -63,7 +60,6 @@ LIBRARY WinObjCRT
         _strdup
         _tempnam
         _wcsdup
-        _wdupenv_s
         _wfullpath
         _wgetcwd
         _wgetdcwd
@@ -72,9 +68,7 @@ LIBRARY WinObjCRT
         _calloc_base
         _free_base
         _get_heap_handle
-        _heapchk
         _heapmin
-        _heapwalk
         _malloc_base
         _query_new_handler
         _query_new_mode
