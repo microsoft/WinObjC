@@ -42,11 +42,12 @@ using namespace winrt::Windows::UI::Xaml;
 
 class UIKitActivityIndicatorTests {
 private:
-    static const int expectedNormalSize = 20;
-    static const int expectedLargeSize = 37;
+    // These sizes match iOS and what should be used in UIActivityIndicatorView
+    static const int c_expectedNormalSize = 20;
+    static const int c_expectedLargeSize = 37;
 
     // Set in the XAMLCatalog UIActivitiIndicatorViewController
-    static const int expectedInitialFrameSize = 50;
+    static const int c_expectedInitialFrameSize = 50;
 
 public:
     BEGIN_TEST_CLASS(UIKitActivityIndicatorTests)
@@ -124,12 +125,12 @@ public:
             EXPECT_TRUE(UXTestAPI::IsRGBAEqual(solidForegroundBrush, expectedForegroundColor));
 
             // Size should match initial style
-            EXPECT_EQ(expectedNormalSize, progressRing.Height());
-            EXPECT_EQ(expectedNormalSize, progressRing.Width());
+            EXPECT_EQ(c_expectedNormalSize, progressRing.Height());
+            EXPECT_EQ(c_expectedNormalSize, progressRing.Width());
 
             // Initial element size is set in the controller
-            EXPECT_EQ(expectedInitialFrameSize, xamlElement.Height());
-            EXPECT_EQ(expectedInitialFrameSize, xamlElement.Width());
+            EXPECT_EQ(c_expectedInitialFrameSize, xamlElement.Height());
+            EXPECT_EQ(c_expectedInitialFrameSize, xamlElement.Width());
 
             // The ProgressRing should always be centered in the element
             ASSERT_TRUE(isCenteredInParent(progressRing, xamlElement));
@@ -350,12 +351,12 @@ public:
             UIColor* expectedForegroundColor = [UIColor colorWithWhite:0.0 alpha:0.45];
             EXPECT_TRUE(UXTestAPI::IsRGBAEqual(solidForegroundBrush, expectedForegroundColor));
 
-            EXPECT_EQ(expectedNormalSize, progressRing.Height());
-            EXPECT_EQ(expectedNormalSize, progressRing.Width());
+            EXPECT_EQ(c_expectedNormalSize, progressRing.Height());
+            EXPECT_EQ(c_expectedNormalSize, progressRing.Width());
 
             // Frame size should not change
-            EXPECT_EQ(expectedInitialFrameSize, xamlElement.Height());
-            EXPECT_EQ(expectedInitialFrameSize, xamlElement.Width());
+            EXPECT_EQ(c_expectedInitialFrameSize, xamlElement.Height());
+            EXPECT_EQ(c_expectedInitialFrameSize, xamlElement.Width());
 
             ASSERT_TRUE(isCenteredInParent(progressRing, xamlElement));
         });
@@ -384,12 +385,12 @@ public:
             UIColor* expectedForegroundColor = [UIColor whiteColor];
             EXPECT_TRUE(UXTestAPI::IsRGBAEqual(solidForegroundBrush, expectedForegroundColor));
 
-            EXPECT_EQ(expectedLargeSize, progressRing.Height());
-            EXPECT_EQ(expectedLargeSize, progressRing.Width());
+            EXPECT_EQ(c_expectedLargeSize, progressRing.Height());
+            EXPECT_EQ(c_expectedLargeSize, progressRing.Width());
 
             // Frame size should not change
-            EXPECT_EQ(expectedInitialFrameSize, xamlElement.Height());
-            EXPECT_EQ(expectedInitialFrameSize, xamlElement.Width());
+            EXPECT_EQ(c_expectedInitialFrameSize, xamlElement.Height());
+            EXPECT_EQ(c_expectedInitialFrameSize, xamlElement.Width());
 
             ASSERT_TRUE(isCenteredInParent(progressRing, xamlElement));
         });
@@ -414,23 +415,23 @@ public:
             indicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyleWhiteLarge;
             EXPECT_EQ(UIActivityIndicatorViewStyleWhiteLarge, indicator.activityIndicatorViewStyle);
 
-            EXPECT_EQ(expectedLargeSize, progressRing.Height());
-            EXPECT_EQ(expectedLargeSize, progressRing.Width());
+            EXPECT_EQ(c_expectedLargeSize, progressRing.Height());
+            EXPECT_EQ(c_expectedLargeSize, progressRing.Width());
 
             // Frame size should not change
-            EXPECT_EQ(expectedInitialFrameSize, xamlElement.Height());
-            EXPECT_EQ(expectedInitialFrameSize, xamlElement.Width());
+            EXPECT_EQ(c_expectedInitialFrameSize, xamlElement.Height());
+            EXPECT_EQ(c_expectedInitialFrameSize, xamlElement.Width());
 
             // Change to back white style
             indicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyleWhite;
             EXPECT_EQ(UIActivityIndicatorViewStyleWhite, indicator.activityIndicatorViewStyle);
 
-            EXPECT_EQ(expectedNormalSize, progressRing.Height());
-            EXPECT_EQ(expectedNormalSize, progressRing.Width());
+            EXPECT_EQ(c_expectedNormalSize, progressRing.Height());
+            EXPECT_EQ(c_expectedNormalSize, progressRing.Width());
 
             // Frame size should not change
-            EXPECT_EQ(expectedInitialFrameSize, xamlElement.Height());
-            EXPECT_EQ(expectedInitialFrameSize, xamlElement.Width());
+            EXPECT_EQ(c_expectedInitialFrameSize, xamlElement.Height());
+            EXPECT_EQ(c_expectedInitialFrameSize, xamlElement.Width());
 
             ASSERT_TRUE(isCenteredInParent(progressRing, xamlElement));
         });
@@ -463,20 +464,20 @@ public:
             UIColor* expectedForegroundColor = [UIColor whiteColor];
             EXPECT_TRUE(UXTestAPI::IsRGBAEqual(solidForegroundBrush, expectedForegroundColor));
 
-            EXPECT_EQ(expectedNormalSize, progressRing.Height());
-            EXPECT_EQ(expectedNormalSize, progressRing.Width());
+            EXPECT_EQ(c_expectedNormalSize, progressRing.Height());
+            EXPECT_EQ(c_expectedNormalSize, progressRing.Width());
 
             // Frame size should not change
-            EXPECT_EQ(expectedInitialFrameSize, xamlElement.Height());
-            EXPECT_EQ(expectedInitialFrameSize, xamlElement.Width());
+            EXPECT_EQ(c_expectedInitialFrameSize, xamlElement.Height());
+            EXPECT_EQ(c_expectedInitialFrameSize, xamlElement.Width());
 
             ASSERT_TRUE(isCenteredInParent(progressRing, xamlElement));
         });
     }
 
-    /*  Attempts to resize the frame smaller than the size of the inner ProgressRing.
-        The frame should become the same size as the ProgressRing,
-        as the dimensions of the ProgressRing are its minimum sizes.
+    /*  Resizes the frame smaller than the size of the inner ProgressRing.
+        The inner ProgressRing should not change in size,
+        and should be centered around the frame.
     */
     TEST_METHOD(UIActivityIndicatorView_ChangeFrameSize_Smaller) {
         StrongId<UIActivityIndicatorViewController> activityIndicatorVC;
@@ -490,16 +491,17 @@ public:
             Microsoft::WRL::ComPtr<IInspectable> inspectable(XamlGetInternalProgressRing(objcwinrt::to_insp(xamlElement)));
             auto progressRing = objcwinrt::from_insp<Controls::ProgressRing>(inspectable);
 
-            // Attempt to shrink frame to be smaller than the ProgressRing
-            [indicator setFrame:CGRectMake(indicator.frame.origin.x, indicator.frame.origin.y, 10, 10)];
+            // Choose a size smaller than the ProgressRing
+            double smallerFrameSize = progressRing.Height() / 2;
 
-            // Frame should not become smaller than the ProgressRing
-            EXPECT_EQ(progressRing.Height(), xamlElement.Height());
-            EXPECT_EQ(progressRing.Width(), xamlElement.Width());
+            // Shrink frame
+            [indicator setFrame:CGRectMake(indicator.frame.origin.x, indicator.frame.origin.y, smallerFrameSize, smallerFrameSize)];
+            EXPECT_EQ(smallerFrameSize, xamlElement.Height());
+            EXPECT_EQ(smallerFrameSize, xamlElement.Width());
 
             // ProgressRing size should not change
-            EXPECT_EQ(expectedNormalSize, progressRing.Height());
-            EXPECT_EQ(expectedNormalSize, progressRing.Width());
+            EXPECT_EQ(c_expectedNormalSize, progressRing.Height());
+            EXPECT_EQ(c_expectedNormalSize, progressRing.Width());
 
             ASSERT_TRUE(isCenteredInParent(progressRing, xamlElement));
         });
@@ -521,21 +523,24 @@ public:
             Microsoft::WRL::ComPtr<IInspectable> inspectable(XamlGetInternalProgressRing(objcwinrt::to_insp(xamlElement)));
             auto progressRing = objcwinrt::from_insp<Controls::ProgressRing>(inspectable);
 
+            // Choose a frame size larger than the initial size
+            double largerFrameSize = c_expectedInitialFrameSize * 2;
+
             // Grow frame
-            [indicator setFrame:CGRectMake(indicator.frame.origin.x, indicator.frame.origin.y, 100, 100)];
-            EXPECT_EQ(100, xamlElement.Height());
-            EXPECT_EQ(100, xamlElement.Width());
+            [indicator setFrame:CGRectMake(indicator.frame.origin.x, indicator.frame.origin.y, largerFrameSize, largerFrameSize)];
+            EXPECT_EQ(largerFrameSize, xamlElement.Height());
+            EXPECT_EQ(largerFrameSize, xamlElement.Width());
 
             // ProgressRing size should not change
-            EXPECT_EQ(expectedNormalSize, progressRing.Height());
-            EXPECT_EQ(expectedNormalSize, progressRing.Width());
+            EXPECT_EQ(c_expectedNormalSize, progressRing.Height());
+            EXPECT_EQ(c_expectedNormalSize, progressRing.Width());
 
             ASSERT_TRUE(isCenteredInParent(progressRing, xamlElement));
         });
     }
 
     /*  Shrinks the frame to be the same size as the ProgressRing, then sets a larger style.
-        The frame should be expanded to fit the large ProgressRing.
+        The frame size should not change.
     */
     TEST_METHOD(UIActivityIndicatorView_ExpandFrameToFitIndicator) {
         StrongId<UIActivityIndicatorViewController> activityIndicatorVC;
@@ -549,19 +554,19 @@ public:
             Microsoft::WRL::ComPtr<IInspectable> inspectable(XamlGetInternalProgressRing(objcwinrt::to_insp(xamlElement)));
             auto progressRing = objcwinrt::from_insp<Controls::ProgressRing>(inspectable);
 
-            // Shrink frame to be smaller than the ProgressRing
-            [indicator setFrame:CGRectMake(indicator.frame.origin.x, indicator.frame.origin.y, progressRing.Width(), progressRing.Height())];
+            // Set frame size to the ProgressRing size
+            [indicator setFrame:CGRectMake(indicator.frame.origin.x, indicator.frame.origin.y, c_expectedNormalSize, c_expectedNormalSize)];
 
-            // Change to gray style
+            // Change to white large style
             indicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyleWhiteLarge;
             EXPECT_EQ(UIActivityIndicatorViewStyleWhiteLarge, indicator.activityIndicatorViewStyle);
 
-            EXPECT_EQ(expectedLargeSize, progressRing.Height());
-            EXPECT_EQ(expectedLargeSize, progressRing.Width());
+            EXPECT_EQ(c_expectedLargeSize, progressRing.Height());
+            EXPECT_EQ(c_expectedLargeSize, progressRing.Width());
 
-            // Frame should be expanded to fit ProgressRing
-            EXPECT_EQ(expectedLargeSize, xamlElement.Height());
-            EXPECT_EQ(expectedLargeSize, xamlElement.Width());
+            // Frame size should not change
+            EXPECT_EQ(c_expectedNormalSize, xamlElement.Height());
+            EXPECT_EQ(c_expectedNormalSize, xamlElement.Width());
 
             ASSERT_TRUE(isCenteredInParent(progressRing, xamlElement));
         });

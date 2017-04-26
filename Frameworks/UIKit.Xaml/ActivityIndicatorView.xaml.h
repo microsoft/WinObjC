@@ -28,7 +28,7 @@ public ref class ActivityIndicatorView sealed {
 public:
     ActivityIndicatorView();
 
-    // TODO: These properties should be renamed to eliminate the name prefix once their corresponding Dependency Properties are fixed
+    // TODO: Properties should be renamed to eliminate the name prefix once their corresponding Dependency Properties are fixed. See #2607
     property Platform::Boolean ActivityIndicatorView_IsActive {
         Platform::Boolean get() {
             return (Platform::Boolean)GetValue(s_isActiveProperty);

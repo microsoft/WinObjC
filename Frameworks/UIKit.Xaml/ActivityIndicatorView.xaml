@@ -7,12 +7,17 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     x:Name="Root">
-    <!-- TODO: Update property names in path for binding once they have been updated in the header -->
-    <ProgressRing x:Name="progressRing"
-                  IsActive="{Binding ElementName=Root, Path=ActivityIndicatorView_IsActive, Mode=OneWay}"
-                  Foreground="{Binding ElementName=Root, Path=ActivityIndicatorView_Foreground, Mode=OneWay}"
-                  Height="{Binding ElementName=Root, Path=ActivityIndicatorView_Height, Mode=OneWay}"
-                  Width="{Binding ElementName=Root, Path=ActivityIndicatorView_Width, Mode=OneWay}"
-                  HorizontalAlignment="Center"
-                  VerticalAlignment="Center" />
+
+    <!-- TODO: Update property names in paths for binding once they have been updated in the header. See #2607 -->
+    <Canvas x:Name="indicatorCanvas"
+            Height="{Binding ElementName=Root, Path=ActivityIndicatorView_Height, Mode=OneWay}"
+            Width="{Binding ElementName=Root, Path=ActivityIndicatorView_Width, Mode=OneWay}"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center">
+        <ProgressRing x:Name="progressRing"
+                      IsActive="{Binding ElementName=Root, Path=ActivityIndicatorView_IsActive, Mode=OneWay}"
+                      Foreground="{Binding ElementName=Root, Path=ActivityIndicatorView_Foreground, Mode=OneWay}"
+                      Height="{Binding ElementName=indicatorCanvas, Path=Height, Mode=TwoWay}"
+                      Width="{Binding ElementName=indicatorCanvas, Path=Width, Mode=TwoWay}" />
+    </Canvas>
 </Grid>

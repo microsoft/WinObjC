@@ -138,15 +138,8 @@ static const int c_largeSquareLength = 37;
 
 /**
  @Status Interoperable
- @Note Frame will not be resized smaller than the contained ProgressRing, as this would obscure it.
 */
 - (void)setFrame:(CGRect)frame {
-    if ((frame.size.width < [self _width]) || (frame.size.height < [self _height])) {
-        int updatedFrameHeight = frame.size.height < [self _height] ? [self _height] : frame.size.height;
-        int updatedFrameWidth = frame.size.width < [self _width] ? [self _width] : frame.size.width;
-        frame = CGRectMake(frame.origin.x, frame.origin.y, updatedFrameWidth, updatedFrameHeight);
-    }
-
     [super setFrame:frame];
 }
 
@@ -187,10 +180,6 @@ static const int c_largeSquareLength = 37;
  to UIActivityIndicatorViewStyleWhite.
  @Note iOS accepts and defines behavior for undocumented style values for UIActivityIndicatorView. As these are undocumented by Apple, they
  are unsupported by WinObjC.
- @Note If the frame is smaller than the current size of the ProgressRing, it will be expanded to accomodate it. This may affect layouts. The
- frame will never be shrunken in size.
- @Note In iOS, the frame for UIActivityIndicatorView can be defined smaller than the indicator itself, and still render the indicator. In
- XAML, this would prevent the ProgressRing from being displayed.
 */
 - (void)setActivityIndicatorViewStyle:(UIActivityIndicatorViewStyle)style {
     _style = style;
@@ -219,11 +208,6 @@ static const int c_largeSquareLength = 37;
             // Explicityly set the style to white to ignore invalid values
             _style = UIActivityIndicatorViewStyleWhite;
     }
-
-    // Expand the frame size if it is not large enough to show the ProgressRing
-    int updatedFrameHeight = self.frame.size.height < styleSquareLength ? styleSquareLength : self.frame.size.height;
-    int updatedFrameWidth = self.frame.size.width < styleSquareLength ? styleSquareLength : self.frame.size.width;
-    self.frame = CGRectMake(self.frame.origin.x, self.frame.origin.y, updatedFrameWidth, updatedFrameHeight);
 
     [self _setHeight:styleSquareLength];
     [self _setWidth:styleSquareLength];
