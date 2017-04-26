@@ -92,6 +92,10 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
 #endif
 #endif
 
+#ifndef NS_FORMAT_FUNCTION
+#define NS_FORMAT_FUNCTION(F, A) __attribute__((format(NSString, F, A)))
+#endif
+
 #ifndef NS_FORMAT_ARGUMENT
 #ifdef __clang__
 #define NS_FORMAT_ARGUMENT(x) __attribute__((format_arg(x)))
@@ -174,8 +178,8 @@ typedef double NSTimeInterval;
 #define NSLOG_ANNOTATION
 #endif
 
-FOUNDATION_EXPORT void NSLog(NSString* format, ...) NSLOG_ANNOTATION;
-FOUNDATION_EXPORT void NSLogv(NSString* format, va_list args) NSLOG_ANNOTATION;
+FOUNDATION_EXPORT void NSLog(NSString* format, ...) NS_FORMAT_FUNCTION(1, 2) NSLOG_ANNOTATION;
+FOUNDATION_EXPORT void NSLogv(NSString* format, va_list args) NS_FORMAT_FUNCTION(1, 0) NSLOG_ANNOTATION;
 
 FOUNDATION_EXPORT const char* NSGetSizeAndAlignment(const char* type, NSUInteger* size, NSUInteger* alignment);
 
@@ -187,10 +191,6 @@ FOUNDATION_EXPORT NSString* NSStringFromClass(Class aClass);
 
 FOUNDATION_EXPORT NSString* NSStringFromProtocol(Protocol* proto) STUB_METHOD;
 FOUNDATION_EXPORT Protocol* NSProtocolFromString(NSString* namestr) STUB_METHOD;
-
-#ifndef NS_FORMAT_FUNCTION
-#define NS_FORMAT_FUNCTION(F, A)
-#endif
 
 #ifndef NS_BLOCKS_AVAILABLE
 #if __BLOCKS__

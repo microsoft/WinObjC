@@ -105,13 +105,13 @@ FOUNDATION_EXPORT_CLASS
 - (instancetype)initWithString:(NSString*)aString;
 - (instancetype)initWithCString:(const char*)nullTerminatedCString encoding:(NSStringEncoding)encoding;
 - (instancetype)initWithUTF8String:(const char*)bytes;
-- (instancetype)initWithFormat:(NSString*)format, ...;
-- (instancetype)initWithFormat:(NSString*)format arguments:(va_list)argList;
-- (instancetype)initWithFormat:(NSString*)format locale:(id)locale, ...;
-- (instancetype)initWithFormat:(NSString*)format locale:(id)locale arguments:(va_list)argList;
+- (instancetype)initWithFormat:(NSString*)format, ... NS_FORMAT_FUNCTION(1, 2);
+- (instancetype)initWithFormat:(NSString*)format arguments:(va_list)argList NS_FORMAT_FUNCTION(1, 0);
+- (instancetype)initWithFormat:(NSString*)format locale:(id)locale, ... NS_FORMAT_FUNCTION(1, 3);
+- (instancetype)initWithFormat:(NSString*)format locale:(id)locale arguments:(va_list)argList NS_FORMAT_FUNCTION(1, 0);
 - (instancetype)initWithData:(NSData*)data encoding:(NSStringEncoding)encoding;
-+ (instancetype)stringWithFormat:(NSString*)format, ...;
-+ (instancetype)localizedStringWithFormat:(NSString*)format, ...;
++ (instancetype)stringWithFormat:(NSString*)format, ... NS_FORMAT_FUNCTION(1, 2);
++ (instancetype)localizedStringWithFormat:(NSString*)format, ... NS_FORMAT_FUNCTION(1, 2);
 + (instancetype)stringWithCharacters:(const unichar*)chars length:(NSUInteger)length;
 + (instancetype)stringWithString:(NSString*)aString;
 + (instancetype)stringWithCString:(const char*)cString encoding:(NSStringEncoding)enc;
@@ -162,7 +162,7 @@ FOUNDATION_EXPORT_CLASS
          maxLength:(NSUInteger)maxLength
              range:(NSRange)aRange
     remainingRange:(NSRangePointer)leftoverRange STUB_METHOD;
-- (NSString*)stringByAppendingFormat:(NSString*)format, ...;
+- (NSString*)stringByAppendingFormat:(NSString*)format, ... NS_FORMAT_FUNCTION(1, 2);
 - (NSString*)stringByAppendingString:(NSString*)aString;
 - (NSString*)stringByPaddingToLength:(NSUInteger)newLength withString:(NSString*)padString startingAtIndex:(NSUInteger)padIndex;
 - (NSArray<NSString*>*)componentsSeparatedByString:(NSString*)separator;

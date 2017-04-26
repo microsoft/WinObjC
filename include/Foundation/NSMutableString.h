@@ -24,7 +24,7 @@ FOUNDATION_EXPORT_CLASS
 @interface NSMutableString : NSString <NSCopying, NSMutableCopying, NSSecureCoding>
 + (NSMutableString*)stringWithCapacity:(NSUInteger)capacity;
 - (NSMutableString*)initWithCapacity:(NSUInteger)capacity;
-- (void)appendFormat:(NSString*)format, ...;
+- (void)appendFormat:(NSString*)format, ... NS_FORMAT_FUNCTION(1, 2);
 - (void)appendString:(NSString*)aString;
 - (void)deleteCharactersInRange:(NSRange)aRange;
 - (void)insertString:(NSString*)aString atIndex:(NSUInteger)anIndex;
