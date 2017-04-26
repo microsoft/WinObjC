@@ -63,7 +63,7 @@
     CLLocation* location = [locations lastObject];
 
     dispatch_async(dispatch_get_main_queue(), ^{
-        [locVal setText:[NSString stringWithFormat:@"Longitude: %.3f        Latitude: %.3f        ",
+        [locVal setText:[NSString stringWithFormat:@"Latitude: %.3f        Longitude: %.3f        ",
                                                    location.coordinate.latitude, location.coordinate.longitude]];
     });
 }
@@ -102,7 +102,7 @@
 
     locVal = [[UILabel alloc] initWithFrame:CGRectMake(0, locHeight + 50.0f, 350.0f, 40.0f)];
     [locVal setBackgroundColor:[UIColor whiteColor]];
-    [locVal setText:@"Longitude: 0.000        Latitude: 0.000        "];
+    [locVal setText:@"Latitude: 0.000        Longitude: 0.000        "];
     [locVal setTextAlignment:NSTextAlignmentRight];
     [scrollView addSubview:locVal];
 }
