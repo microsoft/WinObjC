@@ -344,7 +344,7 @@ typedef NS_ENUM(NSUInteger, _NSFileOpenMode) { _NSFileOpenModeRead, _NSFileOpenM
         int writtenLen = EbrWrite(_fileDescriptor, bytes, bytesLen);
 
         if (writtenLen < 0) {
-            [NSException raise:NSFileHandleOperationException format:@"Unable to write data. errno:", bytesLen];
+            [NSException raise:NSFileHandleOperationException format:@"Unable to write data. errno: %d", writtenLen];
         }
         bytesLen = bytesLen - writtenLen;
     }

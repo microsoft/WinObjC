@@ -348,12 +348,7 @@
     if ([textField.text hasPrefix:@"{"] && [textField.text hasSuffix:@"}"]) {
         _selectedButton.contentEdgeInsets = [self getUIEdgeInsetsFromString:textField];
 
-        NSString* newFrame = [NSString stringWithFormat:@"{%f, %f, %f, %f}",
-                                                        _selectedButton.imageView.frame.origin.x,
-                                                        _selectedButton.imageView.frame.origin.y,
-                                                        _selectedButton.imageView.frame.size.width,
-                                                        _selectedButton.imageView.frame.size.height];
-        NSLog(newFrame);
+        NSLog(@"%@", NSStringFromCGRect(_selectedButton.imageView.frame));
     }
 }
 
@@ -364,12 +359,7 @@
     if ([textField.text hasPrefix:@"{"] && [textField.text hasSuffix:@"}"]) {
         _selectedButton.titleEdgeInsets = [self getUIEdgeInsetsFromString:textField];
 
-        NSString* newFrame = [NSString stringWithFormat:@"{%f, %f, %f, %f}",
-                                                        _selectedButton.titleLabel.frame.origin.x,
-                                                        _selectedButton.titleLabel.frame.origin.y,
-                                                        _selectedButton.titleLabel.frame.size.width,
-                                                        _selectedButton.titleLabel.frame.size.height];
-        NSLog(newFrame);
+        NSLog(@"%@", NSStringFromCGRect(_selectedButton.titleLabel.frame));
     }
 }
 
@@ -380,12 +370,7 @@
     if ([textField.text hasPrefix:@"{"] && [textField.text hasSuffix:@"}"]) {
         _selectedButton.imageEdgeInsets = [self getUIEdgeInsetsFromString:textField];
 
-        NSString* newFrame = [NSString stringWithFormat:@"{%f, %f, %f, %f}",
-                                                        _selectedButton.imageView.frame.origin.x,
-                                                        _selectedButton.imageView.frame.origin.y,
-                                                        _selectedButton.imageView.frame.size.width,
-                                                        _selectedButton.imageView.frame.size.height];
-        NSLog(newFrame);
+        NSLog(@"%@", NSStringFromCGRect(_selectedButton.imageView.frame));
     }
 }
 

@@ -674,7 +674,7 @@ bool KVCSetViaIvar(NSObject* self, struct objc_ivar* ivar, id value) {
     } else {
         if (runloop == nil) {
             [NSException raise:NSInvalidArgumentException
-                        format:@"Can't perform selector %2: Thread %@ has no runloop", NSStringFromSelector(_cmd), thread];
+                        format:@"Can't perform selector %@: Thread %@ has no runloop", NSStringFromSelector(_cmd), thread];
         }
 
         [runloop performSelector:selector target:self argument:obj order:0 modes:modes];

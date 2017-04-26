@@ -654,8 +654,8 @@ static void __CFLogCString(int32_t lev, const char *message, size_t length, char
         asprintf(&banner, "%04d-%02d-%02d %02d:%02d:%02d.%03d %s[%d:%llu] ", year, month, day, hour, minute, second, ms, *_CFGetProgname(), getpid(), tid);
     asprintf(&thread, "%x", pthread_mach_thread_np(pthread_self()));
 #elif DEPLOYMENT_TARGET_WINDOWS
-    // WINOBJC: use GetCurrentProcessId() instead of getpid() for Windows
-    bannerLen = asprintf(&banner, "%04d-%02d-%02d %02d:%02d:%02d.%03d %s[%d:%x] ", year, month, day, hour, minute, second, ms, *_CFGetProgname(), GetCurrentProcessId(), (unsigned int)GetCurrentThreadId());
+    // WINOBJC: use GetCurrentProcessId() with a cast (from DWORD) instead of getpid() for Windows
+    bannerLen = asprintf(&banner, "%04d-%02d-%02d %02d:%02d:%02d.%03d %s[%d:%x] ", year, month, day, hour, minute, second, ms, *_CFGetProgname(), (unsigned int)GetCurrentProcessId(), (unsigned int)GetCurrentThreadId());
     asprintf(&thread, "%x", (unsigned int)GetCurrentThreadId());
 #else
     bannerLen = asprintf(&banner, "%04d-%02d-%02d %02d:%02d:%02d.%03d %s[%d:%x] ", year, month, day, hour, minute, second, ms, *_CFGetProgname(), getpid(), (unsigned int)pthread_self());

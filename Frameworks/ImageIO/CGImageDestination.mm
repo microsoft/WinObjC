@@ -148,7 +148,7 @@ void writePropertyToFrame(PROPVARIANT* propertyToWrite, LPCWSTR path, IWICMetada
         NSString* pathNSString = [[NSString alloc] initWithBytes:path
                                                           length:wcslen(path)*sizeof(wchar_t)
                                                         encoding:NSUnicodeStringEncoding];
-        NSTraceInfo(TAG, @"Set %@ failed with status=%x\n", pathNSString, status);
+        NSTraceInfo(TAG, @"Set %@ failed with status=%lx\n", pathNSString, (unsigned long)status);
         [pathNSString release];
     }
 }
@@ -784,7 +784,7 @@ void writeTIFFProperties(IWICMetadataQueryWriter* propertyWriter,
 
             HRESULT status = imageFrame->SetResolution(tiffDPIWidth, tiffDPIHeight);
             if (!SUCCEEDED(status)) {
-                NSTraceInfo(TAG, @"Set Frame Resolution failed with status=%x\n", status);
+                NSTraceInfo(TAG, @"Set Frame Resolution failed with status=%lx\n", (unsigned long)status);
             }
 
             // Writing this in WIC does not seem to do anything, always 2 (unit of inches)
@@ -928,7 +928,7 @@ void CGImageDestinationAddImage(CGImageDestinationRef idst, CGImageRef image, CF
 
     HRESULT status = imageEncoder->CreateNewFrame(&imageBitmapFrame, propertyBag.GetAddressOf());
     if (!SUCCEEDED(status)) {
-        NSTraceInfo(TAG, @"CreateNewFrame failed with status=%x\n", status);
+        NSTraceInfo(TAG, @"CreateNewFrame failed with status=%lx\n", (unsigned long)status);
         return;
     }
 
@@ -946,7 +946,7 @@ void CGImageDestinationAddImage(CGImageDestinationRef idst, CGImageRef image, CF
         if (varValue.fltVal >= 0.0 && varValue.fltVal <= 1.0) {
             status = propertyBag->Write(1, &option, &varValue);
             if (!SUCCEEDED(status)) {
-                NSTraceInfo(TAG, @"Property Bag Write failed with status=%x\n", status);
+                NSTraceInfo(TAG, @"Property Bag Write failed with status=%lx\n", (unsigned long)status);
                 return;
             }
         } else {
@@ -956,7 +956,7 @@ void CGImageDestinationAddImage(CGImageDestinationRef idst, CGImageRef image, CF
 
     status = imageBitmapFrame->Initialize(propertyBag.Get());
     if (!SUCCEEDED(status)) {
-        NSTraceInfo(TAG, @"Frame Initialize failed with status=%x\n", status);
+        NSTraceInfo(TAG, @"Frame Initialize failed with status=%lx\n", (unsigned long)status);
         return;
     }
 
@@ -966,7 +966,7 @@ void CGImageDestinationAddImage(CGImageDestinationRef idst, CGImageRef image, CF
     // Set size and resolution of the image frame
     status = imageBitmapFrame->SetSize(imageWidth, imageHeight);
     if (!SUCCEEDED(status)) {
-        NSTraceInfo(TAG, @"Set Frame Size failed with status=%x\n", status);
+        NSTraceInfo(TAG, @"Set Frame Size failed with status=%lx\n", (unsigned long)status);
         return;
     }
 
@@ -975,7 +975,7 @@ void CGImageDestinationAddImage(CGImageDestinationRef idst, CGImageRef image, CF
     if (imageDestination.type != typeBMP) {
         status = imageBitmapFrame->GetMetadataQueryWriter(&imageFrameMetadataWriter);
         if (!SUCCEEDED(status)) {
-            NSTraceInfo(TAG, @"Get Frame Metadata Writer failed with status=%x\n", status);
+            NSTraceInfo(TAG, @"Get Frame Metadata Writer failed with status=%lx\n", (unsigned long)status);
             return;
         }
     }
@@ -984,7 +984,7 @@ void CGImageDestinationAddImage(CGImageDestinationRef idst, CGImageRef image, CF
     ComPtr<IWICBitmap> inputImage;
     status = _CGImageGetWICImageSource(image, &inputImage);
     if (!SUCCEEDED(status)) {
-        NSTraceInfo(TAG, @"_CGImageGetWICImageSource failed with status=%x\n", status);
+        NSTraceInfo(TAG, @"_CGImageGetWICImageSource failed with status=%lx\n", (unsigned long)status);
         return;
     }
 
@@ -1009,7 +1009,7 @@ void CGImageDestinationAddImage(CGImageDestinationRef idst, CGImageRef image, CF
         case typePNG:
             status = inputImage->GetPixelFormat(&formatGUID);
             if (!SUCCEEDED(status)) {
-                NSTraceInfo(TAG, @"Get Image Source Pixel Format failed with status=%x\n", status);
+                NSTraceInfo(TAG, @"Get Image Source Pixel Format failed with status=%lx\n", (unsigned long)status);
                 return;
             }
             writePNGProperties(propertyWriter, properties, imageWidth, imageHeight);
@@ -1024,26 +1024,26 @@ void CGImageDestinationAddImage(CGImageDestinationRef idst, CGImageRef image, CF
 
     status = imageBitmapFrame->SetPixelFormat(&formatGUID);
     if (!SUCCEEDED(status)) {
-        NSTraceInfo(TAG, @"Set Pixel Format failed with status=%x\n", status);
+        NSTraceInfo(TAG, @"Set Pixel Format failed with status=%lx\n", (unsigned long)status);
         return;
     }
 
     ComPtr<IWICBitmapSource> inputBitmapSource;
     status = WICConvertBitmapSource(formatGUID, inputImage.Get(), &inputBitmapSource);
     if (!SUCCEEDED(status)) {
-        NSTraceInfo(TAG, @"Convert Bitmap Source failed with status=%x\n", status);
+        NSTraceInfo(TAG, @"Convert Bitmap Source failed with status=%lx\n", (unsigned long)status);
         return;
     }
 
     status = imageBitmapFrame->WriteSource(inputBitmapSource.Get(), nullptr);
     if (!SUCCEEDED(status)) {
-        NSTraceInfo(TAG, @"Write Source failed with status=%x\n", status);
+        NSTraceInfo(TAG, @"Write Source failed with status=%lx\n", (unsigned long)status);
         return;
     }
     
     status = imageBitmapFrame->Commit();
     if (!SUCCEEDED(status)) {
-        NSTraceInfo(TAG, @"Commit Frame failed with status=%x\n", status);
+        NSTraceInfo(TAG, @"Commit Frame failed with status=%lx\n", (unsigned long)status);
         return;
     }
     imageDestination.count++;
@@ -1161,7 +1161,7 @@ bool CGImageDestinationFinalize(CGImageDestinationRef idst) {
 
     HRESULT status = imageEncoder->Commit();
     if (!SUCCEEDED(status)) {
-        NSTraceInfo(TAG, @"Encoder Commit failed with status=%x\n", status);
+        NSTraceInfo(TAG, @"Encoder Commit failed with status=%lx\n", (unsigned long)status);
         return false;
     }
 
@@ -1175,7 +1175,7 @@ bool CGImageDestinationFinalize(CGImageDestinationRef idst) {
         // Seek to beginning of stream after image data all written
         status = imageStream->Seek({0}, STREAM_SEEK_SET, nullptr);
         if (!SUCCEEDED(status)) {
-            NSTraceInfo(TAG, @"Stream Seek failed with status=%x\n", status);
+            NSTraceInfo(TAG, @"Stream Seek failed with status=%lx\n", (unsigned long)status);
             return false;
         }
 
@@ -1183,7 +1183,7 @@ bool CGImageDestinationFinalize(CGImageDestinationRef idst) {
         STATSTG streamStats;
         status = imageStream->Stat(&streamStats, STATFLAG_NONAME);
         if (!SUCCEEDED(status)) {
-            NSTraceInfo(TAG, @"Fetch stream stats failed with status=%x\n", status);
+            NSTraceInfo(TAG, @"Fetch stream stats failed with status=%lx\n", (unsigned long)status);
             return false;
         }
 
@@ -1192,7 +1192,7 @@ bool CGImageDestinationFinalize(CGImageDestinationRef idst) {
         unsigned long readBytes;
         status = imageStream->Read([dataNSPointer mutableBytes], (unsigned long)[dataNSPointer length], &readBytes);
         if (!SUCCEEDED(status)) {
-            NSTraceInfo(TAG, @"Copy Stream into MutableData stats failed with status=%x\n", status);
+            NSTraceInfo(TAG, @"Copy Stream into MutableData stats failed with status=%lx\n", (unsigned long)status);
             return false;
         }
     }

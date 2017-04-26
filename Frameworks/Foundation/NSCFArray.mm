@@ -84,7 +84,7 @@ BRIDGED_MUTABLE_CLASS_FOR_CODER(CFArrayRef, _CFArrayIsMutable, NSArray, NSMutabl
 - (id)objectAtIndex:(NSUInteger)index {
     if (index >= CFArrayGetCount((CFArrayRef)self)) {
         [NSException raise:@"Array out of bounds"
-                    format:@"objectAtIndex: index > count (%d > %d), throwing exception\n", index, CFArrayGetCount((CFArrayRef)self)];
+                    format:@"objectAtIndex: index > count (%lu > %lu), throwing exception\n", (unsigned long)index, (unsigned long)CFArrayGetCount((CFArrayRef)self)];
         return nil;
     }
     return (id)CFArrayGetValueAtIndex((CFArrayRef)self, index);

@@ -262,7 +262,7 @@ NSString* const CMErrorDomain = @"CMErrorDomain";
             if (updateInterval * c_secondToMilliseconds < _accelerometer.MinimumReportInterval()) {
                 _accelerometerUpdateInterval = _accelerometer.MinimumReportInterval() / c_secondToMilliseconds;
                 _accelerometer.ReportInterval(_accelerometer.MinimumReportInterval());
-                NSTraceInfo(TAG, @"accelerometerUpdateInterval capped to minimum supported value: %d", _accelerometerUpdateInterval);
+                NSTraceInfo(TAG, @"accelerometerUpdateInterval capped to minimum supported value: %g", _accelerometerUpdateInterval);
             } else {
                 _accelerometerUpdateInterval = updateInterval;
                 _accelerometer.ReportInterval(static_cast<unsigned int>(_accelerometerUpdateInterval * c_secondToMilliseconds));
@@ -364,7 +364,7 @@ NSString* const CMErrorDomain = @"CMErrorDomain";
             if (updateInterval * c_secondToMilliseconds < _gyrometer.MinimumReportInterval()) {
                 _gyroUpdateInterval = _gyrometer.MinimumReportInterval() / c_secondToMilliseconds;
                 _gyrometer.ReportInterval(_gyrometer.MinimumReportInterval());
-                NSTraceInfo(TAG, @"gyroUpdateInterval capped to minimum supported value: %d", _gyroUpdateInterval);
+                NSTraceInfo(TAG, @"gyroUpdateInterval capped to minimum supported value: %g", _gyroUpdateInterval);
             } else {
                 _gyroUpdateInterval = updateInterval;
                 _gyrometer.ReportInterval(static_cast<unsigned int>(_gyroUpdateInterval * c_secondToMilliseconds));
@@ -466,7 +466,7 @@ NSString* const CMErrorDomain = @"CMErrorDomain";
             if (updateInterval * c_secondToMilliseconds < _magnetometer.MinimumReportInterval()) {
                 _magnetometerUpdateInterval = _magnetometer.MinimumReportInterval() / c_secondToMilliseconds;
                 _magnetometer.ReportInterval(_magnetometer.MinimumReportInterval());
-                NSTraceInfo(TAG, @"magnetometerUpdateInterval capped to minimum supported value: %d", _magnetometerUpdateInterval);
+                NSTraceInfo(TAG, @"magnetometerUpdateInterval capped to minimum supported value: %g", _magnetometerUpdateInterval);
             } else {
                 _magnetometerUpdateInterval = updateInterval;
                 _magnetometer.ReportInterval(static_cast<unsigned int>(_magnetometerUpdateInterval * c_secondToMilliseconds));
@@ -581,7 +581,7 @@ NSString* const CMErrorDomain = @"CMErrorDomain";
             if (updateInterval * c_secondToMilliseconds < _orientation.MinimumReportInterval()) {
                 _deviceMotionUpdateInterval = _orientation.MinimumReportInterval() / c_secondToMilliseconds;
                 _orientation.ReportInterval(_orientation.MinimumReportInterval());
-                NSTraceInfo(TAG, @"deviceMotionUpdateInterval capped to minimum supported value: %d", _deviceMotionUpdateInterval);
+                NSTraceInfo(TAG, @"deviceMotionUpdateInterval capped to minimum supported value: %g", _deviceMotionUpdateInterval);
             } else {
                 _deviceMotionUpdateInterval = updateInterval;
                 _orientation.ReportInterval(static_cast<unsigned int>(self.deviceMotionUpdateInterval * c_secondToMilliseconds));

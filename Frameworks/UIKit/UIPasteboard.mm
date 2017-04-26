@@ -109,7 +109,7 @@ static DataPackageView _getClipboardContent() {
     }
 
     if (msg != nil) {
-        NSTraceError(TAG, msg);
+        NSTraceError(TAG, @"%@", msg);
     }
 }
 
