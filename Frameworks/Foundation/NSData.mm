@@ -118,7 +118,7 @@ BASE_CLASS_REQUIRED_IMPLS(NSData, NSDataPrototype, CFDataGetTypeID);
                 memcpy(dest, newLineChar, newLineLength * sizeof(wchar_t));
                 dest += newLineLength;
             }
-            
+
             if (rawLength % lineLength != 0) {
                 // finally add the remaining characters
                 memcpy(dest, source, (rawLength % lineLength) * sizeof(wchar_t));
@@ -126,10 +126,10 @@ BASE_CLASS_REQUIRED_IMPLS(NSData, NSDataPrototype, CFDataGetTypeID);
 
             return [NSString stringWithCharacters:reinterpret_cast<UniChar*>(result.get()) length:newLength];
         }
-    } 
+    }
 
     // If line length not specified, or newLineCount <= 0, none of the other options matter, just return nsEncodedString
-    return [NSString _stringWithHSTRING: encodedString.Get()];
+    return [NSString _stringWithHSTRING:encodedString.Get()];
 }
 
 /**
@@ -231,7 +231,7 @@ BASE_CLASS_REQUIRED_IMPLS(NSData, NSDataPrototype, CFDataGetTypeID);
 */
 - (instancetype)initWithBytes:(const void*)bytes length:(unsigned)length {
     // The created NSData takes ownership of freeing this
-    woc::unique_iw<uint8_t> copiedBytes(static_cast<uint8_t*>(IwMalloc(length)));
+    std::unique_ptr<uint8_t, decltype(&free)> copiedBytes(static_cast<uint8_t*>(malloc(length)), free);
     if (!copiedBytes) {
         [self release];
         return nil;

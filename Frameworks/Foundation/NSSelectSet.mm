@@ -40,17 +40,17 @@ typedef struct {
 } native_set;
 
 static native_set* native_set_new(int max) {
-    native_set* result = (native_set*)IwCalloc(1, sizeof(native_set));
+    native_set* result = (native_set*)calloc(1, sizeof(native_set));
 
     result->max = FD_SETSIZE;
-    result->fdset = (fd_set*)IwCalloc(1, sizeof(fd_set));
+    result->fdset = (fd_set*)calloc(1, sizeof(fd_set));
 
     return result;
 }
 
 static void native_set_free(native_set* set) {
-    IwFree(set->fdset);
-    IwFree(set);
+    free(set->fdset);
+    free(set);
 }
 
 static void native_set_clear(native_set* set, int descriptor) {

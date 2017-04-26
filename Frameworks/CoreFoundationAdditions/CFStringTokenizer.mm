@@ -16,7 +16,6 @@
 
 #include <CoreFoundation/CFStringTokenizer.h>
 #include <unicode/ubrk.h>
-#include <IwMalloc.h>
 #include <memory>
 #include <Starboard/SmartTypes.h>
 #include <CFInternal.h>
@@ -26,21 +25,21 @@ static const wchar_t* TAG = L"CFStringTokenizer";
 
 typedef struct __CFStringTokenizer {
     CFRuntimeBase _base;
-    woc::unique_iw<UChar> _str;
+    std::unique_ptr<UChar[]> _str;
     woc::unique_cf<CFLocaleRef> _locale;
     std::unique_ptr<UBreakIterator, decltype(&ubrk_close)> _iterator;
 } __CFStringTokenizer;
 
 static void __CFStringTokenizerInit(CFTypeRef cf) {
     __CFStringTokenizer* tokenizer = (__CFStringTokenizer*)cf;
-    new (std::addressof(tokenizer->_str)) woc::unique_iw<UChar>(nullptr);
+    new (std::addressof(tokenizer->_str)) std::unique_ptr<UChar>(nullptr);
     new (std::addressof(tokenizer->_locale)) woc::unique_cf<CFLocaleRef>(nullptr);
     new (std::addressof(tokenizer->_iterator)) std::unique_ptr<UBreakIterator, decltype(&ubrk_close)>(nullptr, ubrk_close);
 }
 
 static void __CFStringTokenizerDeallocate(CFTypeRef cf) {
     __CFStringTokenizer* tokenizer = (__CFStringTokenizer*)cf;
-    tokenizer->_str.~unique_iw();
+    tokenizer->_str.~unique_ptr();
     tokenizer->_locale.~unique_cf();
     tokenizer->_iterator.~unique_ptr();
 }
@@ -61,10 +60,9 @@ static CFTypeID __kCFStringTokenizerTypeID = _kCFRuntimeNotATypeID;
 
 CFTypeID CFStringTokenizerGetTypeID(void) {
     static dispatch_once_t initOnce = 0;
-    dispatch_once(&initOnce,
-                  ^{
-                      __kCFStringTokenizerTypeID = _CFRuntimeRegisterClass(&__CFStringTokenizerClass);
-                  });
+    dispatch_once(&initOnce, ^{
+        __kCFStringTokenizerTypeID = _CFRuntimeRegisterClass(&__CFStringTokenizerClass);
+    });
     return __kCFStringTokenizerTypeID;
 }
 
@@ -127,7 +125,7 @@ void CFStringTokenizerSetString(CFStringTokenizerRef tokenizer, CFStringRef stri
     CFStringGetBytes(string, range, kCFStringEncodingUTF16, 0, false, nullptr, 0, &numBytes);
 
     if (numBytes > 0) {
-        cfTokenizer->_str = woc::unique_iw<UChar>(static_cast<UChar*>(IwMalloc(numBytes)));
+        cfTokenizer->_str = std::unique_ptr<UChar[]>(new UChar[numBytes]);
         if (!cfTokenizer->_str.get()) {
             return;
         }

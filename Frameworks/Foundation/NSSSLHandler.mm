@@ -106,7 +106,7 @@ static void locking_function(int mode, int idx, const char* file, int line) {
     chance it and just maintain a buffer for this purpose. */
 
     _stableBufferCapacity = 8192;
-    _stableBuffer = (uint8_t*)IwMalloc(_stableBufferCapacity);
+    _stableBuffer = (uint8_t*)malloc(_stableBufferCapacity);
     _readBuffer = [[NSMutableData alloc] init];
 
     return self;
@@ -116,7 +116,7 @@ static void locking_function(int mode, int idx, const char* file, int line) {
     [_properties release];
     [_readBuffer release];
     SSL_free(_connection);
-    IwFree(_stableBuffer);
+    free(_stableBuffer);
     [super dealloc];
 }
 

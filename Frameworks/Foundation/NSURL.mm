@@ -421,7 +421,7 @@ BASE_CLASS_REQUIRED_IMPLS(NSURL, NSURLPrototype, CFURLGetTypeID);
 */
 - (const char*)fileSystemRepresentation {
     // A created NSString takes ownership over freeing this
-    std::unique_ptr<char[], decltype(&IwFree)> ret(static_cast<char*>(IwMalloc(MAX_PATH)), IwFree);
+    std::unique_ptr<char[], decltype(&free)> ret(static_cast<char*>(malloc(MAX_PATH)), free);
 
     RETURN_NULL_IF_NULL_ALLOC(ret);
 

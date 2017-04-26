@@ -22,7 +22,6 @@
 #import <UIKit/UIKit.h>
 #import "UICollectionViewData.h"
 #import "UICollectionViewLayoutAttributes+Internal.h"
-#include "IwMalloc.h"
 #import "AssertARCEnabled.h"
 #import "ErrorHandling.h"
 
@@ -83,7 +82,7 @@
 }
 
 - (void)dealloc {
-    IwFree(_sectionItemCounts);
+    free(_sectionItemCounts);
 }
 
 - (NSString*)description {
@@ -149,10 +148,11 @@
 - (NSInteger)numberOfItemsBeforeSection:(NSInteger)section {
     [self validateItemCounts];
 
-    THROW_HR_IF_FALSE_MSG(E_UNEXPECTED, section < _numSections,
-             "request for number of items in section %ld when there are only %ld sections in the collection view",
-             (long)section,
-             (long)_numSections);
+    THROW_HR_IF_FALSE_MSG(E_UNEXPECTED,
+                          section < _numSections,
+                          "request for number of items in section %ld when there are only %ld sections in the collection view",
+                          (long)section,
+                          (long)_numSections);
 
     NSInteger returnCount = 0;
     for (int i = 0; i < section; i++) {
@@ -192,10 +192,11 @@
 - (NSIndexPath*)indexPathForItemAtGlobalIndex:(NSInteger)index {
     [self validateItemCounts];
 
-    THROW_HR_IF_FALSE_MSG(E_UNEXPECTED, index < _numItems,
-             "request for index path for global index %ld when there are only %ld items in the collection view",
-             (long)index,
-             (long)_numItems);
+    THROW_HR_IF_FALSE_MSG(E_UNEXPECTED,
+                          index < _numItems,
+                          "request for index path for global index %ld when there are only %ld items in the collection view",
+                          (long)index,
+                          (long)_numItems);
 
     NSInteger section = 0;
     NSInteger countItems = 0;
@@ -251,16 +252,16 @@
     }
     if (_numSections <= 0) { // early bail-out
         _numItems = 0;
-        IwFree(_sectionItemCounts);
+        free(_sectionItemCounts);
         _sectionItemCounts = 0;
         _collectionViewDataFlags.itemCountsAreValid = YES;
         return;
     }
     // allocate space
     if (!_sectionItemCounts) {
-        _sectionItemCounts = (NSInteger*)IwMalloc((size_t)_numSections * sizeof(NSInteger));
+        _sectionItemCounts = (NSInteger*)malloc((size_t)_numSections * sizeof(NSInteger));
     } else {
-        _sectionItemCounts = (NSInteger*)IwRealloc(_sectionItemCounts, (size_t)_numSections * sizeof(NSInteger));
+        _sectionItemCounts = (NSInteger*)realloc(_sectionItemCounts, (size_t)_numSections * sizeof(NSInteger));
     }
 
     // query cells per section

@@ -490,8 +490,8 @@ static NSRange NSRangeFromCFRange(CFRange range) {
         CTRunRef curRun = (CTRunRef)CFArrayGetValueAtIndex(runs, curRunIdx);
 
         CFRange runRange = CTRunGetStringRange(curRun);
-        CGPoint* glyphPositions = (CGPoint*)IwMalloc(sizeof(CGPoint) * runRange.length);
-        CGSize* glyphSizes = (CGSize*)IwMalloc(sizeof(CGSize) * runRange.length);
+        CGPoint* glyphPositions = (CGPoint*)malloc(sizeof(CGPoint) * runRange.length);
+        CGSize* glyphSizes = (CGSize*)malloc(sizeof(CGSize) * runRange.length);
 
         CFRange indexes;
         indexes.location = 0;
@@ -526,8 +526,8 @@ static NSRange NSRangeFromCFRange(CFRange range) {
             }
         }
 
-        IwFree(glyphPositions);
-        IwFree(glyphSizes);
+        free(glyphPositions);
+        free(glyphSizes);
     }
 
     return ret;

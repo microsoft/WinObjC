@@ -446,7 +446,7 @@ BASE_CLASS_REQUIRED_IMPLS(NSString, NSStringPrototype, CFStringGetTypeID);
     // smaller than the maximum single character size.
     NSUInteger bytesToAlloc = numBytes + CFStringGetMaximumSizeForEncoding(1, CFStringConvertNSStringEncodingToEncoding(encoding));
 
-    woc::unique_iw<char> data(static_cast<char*>(IwMalloc(bytesToAlloc)));
+    std::unique_ptr<char, decltype(&free)> data(static_cast<char*>(malloc(bytesToAlloc)), free);
     [self getBytes:data.get()
              maxLength:numBytes
             usedLength:nullptr
@@ -1258,7 +1258,7 @@ BASE_CLASS_REQUIRED_IMPLS(NSString, NSStringPrototype, CFStringGetTypeID);
                  range:NSMakeRange(0, len)
         remainingRange:nullptr];
 
-    std::unique_ptr<char[], decltype(&IwFree)> data(static_cast<char*>(IwMalloc(numBytes)), IwFree);
+    std::unique_ptr<char[], decltype(&free)> data(static_cast<char*>(malloc(numBytes)), free);
     [self getBytes:data.get()
              maxLength:numBytes
             usedLength:nullptr

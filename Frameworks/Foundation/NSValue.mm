@@ -20,6 +20,8 @@
 #import <StubReturn.h>
 #import <objc/encoding.h>
 
+#include <string>
+
 static unsigned hashBytes(void* bytes, size_t len) {
     unsigned ret = 0;
     char* cur = (char*)bytes;
@@ -37,7 +39,7 @@ static unsigned hashBytes(void* bytes, size_t len) {
 @end
 
 @implementation _NSValueConcrete {
-    woc::unique_iw<const char> _objCType;
+    std::string _objCType;
     size_t _size;
     std::unique_ptr<unsigned char[]> _value;
 }
@@ -50,7 +52,7 @@ static unsigned hashBytes(void* bytes, size_t len) {
 - (NSValue*)_initWithBytes:(const void*)ptr size:(size_t)sz objCType:(const char*)ocType {
     self = [super init];
     if (self) {
-        _objCType.reset(IwStrDup(ocType));
+        _objCType.assign(ocType);
 
         _size = sz;
         _value = std::make_unique<unsigned char[]>(_size);
@@ -68,7 +70,7 @@ static unsigned hashBytes(void* bytes, size_t len) {
 }
 
 - (const char*)objCType {
-    return _objCType.get();
+    return _objCType.data();
 }
 
 // Overridden to reduce copies
@@ -76,20 +78,19 @@ static unsigned hashBytes(void* bytes, size_t len) {
     if (![other isKindOfClass:[_NSValueConcrete class]]) {
         return [super isEqualToValue:other];
     }
-    
-    return (_size == other->_size &&
-            0 == strcmp(_objCType.get(), other->_objCType.get()) &&
+
+    return (_size == other->_size && 0 == strcmp(_objCType.data(), other->_objCType.data()) &&
             0 == memcmp(_value.get(), other->_value.get(), _size));
 }
 
 // Overridden to reduce copies
 - (NSObject*)copyWithZone:(NSZone*)zone {
-    return [[NSValue allocWithZone:zone] initWithBytes:_value.get() objCType:_objCType.get()];
+    return [[NSValue allocWithZone:zone] initWithBytes:_value.get() objCType:_objCType.data()];
 }
 
 // Overridden to reduce copies
 - (void)encodeWithCoder:(NSKeyedArchiver*)coder {
-    [coder encodeObject:[NSString stringWithUTF8String:_objCType.get()] forKey:@"NSV.objCType"];
+    [coder encodeObject:[NSString stringWithUTF8String:_objCType.data()] forKey:@"NSV.objCType"];
     [coder encodeBytes:static_cast<unsigned char*>(_value.get()) length:_size forKey:@"NSV.data"];
 }
 
@@ -99,19 +100,18 @@ static unsigned hashBytes(void* bytes, size_t len) {
 }
 
 - (NSString*)description {
-    return [NSString stringWithFormat:@"<%u bytes of %s at %p>", _size, _objCType.get(), _value.get()];
+    return [NSString stringWithFormat:@"<%u bytes of %s at %p>", _size, _objCType.data(), _value.get()];
 }
 
 - (Class)classForCoder {
     return [NSValue class];
 }
 
-
 @end
 
 @implementation NSValue : NSObject
 
-+ (NSObject*)allocWithZone : (NSZone*)zone {
++ (NSObject*)allocWithZone:(NSZone*)zone {
     if (self == [NSValue class]) {
         return [_NSValueConcrete allocWithZone:zone];
     }
@@ -220,19 +220,17 @@ static unsigned hashBytes(void* bytes, size_t len) {
     if (![other isKindOfClass:[NSValue class]]) {
         return NO;
     }
-    
+
     int size = objc_sizeof_type([self objCType]);
     int otherSize = objc_sizeof_type([other objCType]);
-    
+
     std::unique_ptr<char[]> selfValue = std::make_unique<char[]>(size);
     std::unique_ptr<char[]> otherValue = std::make_unique<char[]>(otherSize);
 
     [self getValue:selfValue.get()];
     [other getValue:otherValue.get()];
 
-    return (size == otherSize &&
-            0 == strcmp([self objCType], [other objCType]) &&
-            0 == memcmp(selfValue.get(), otherValue.get(), size));
+    return (size == otherSize && 0 == strcmp([self objCType], [other objCType]) && 0 == memcmp(selfValue.get(), otherValue.get(), size));
 }
 
 /**

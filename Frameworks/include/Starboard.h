@@ -17,7 +17,6 @@
 #pragma once
 
 #include "LoggingNative.h"
-#include "IwMalloc.h"
 
 #include <StarboardExport.h>
 

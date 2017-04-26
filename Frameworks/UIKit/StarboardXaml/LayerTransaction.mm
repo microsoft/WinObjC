@@ -26,6 +26,8 @@
 
 #import <UIKit/UIApplication.h>
 
+#include <string>
+
 static const wchar_t* TAG = L"LayerTransaction";
 
 using namespace XamlCompositor::Internal;
@@ -84,7 +86,7 @@ public:
 class QueuedProperty : public ICompositorTransaction {
 public:
     std::shared_ptr<LayerProxy> _layer;
-    char* _propertyName;
+    std::string _propertyName;
     NSObject* _propertyValue;
     std::shared_ptr<IDisplayTexture> _newTexture;
     CGSize _contentsSize;
@@ -96,7 +98,7 @@ public:
                    CGSize contentsSize,
                    float contentsScale) {
         _layer = std::dynamic_pointer_cast<LayerProxy>(layer);
-        _propertyName = IwStrDup("contents");
+        _propertyName.assign("contents");
         _propertyValue = NULL;
         _newTexture = newTexture;
         _contentsScale = contentsScale;
@@ -106,19 +108,14 @@ public:
 
     QueuedProperty(const std::shared_ptr<ILayerProxy>& layer, const char* propertyName, NSObject* propertyValue) {
         _layer = std::dynamic_pointer_cast<LayerProxy>(layer);
-        _propertyName = IwStrDup(propertyName);
+        _propertyName.assign(propertyName);
         _propertyValue = [propertyValue retain];
         _newTexture = NULL;
         _applyingTexture = false;
     }
 
     ~QueuedProperty() {
-        if (_propertyName) {
-            IwFree(_propertyName);
-        }
-
         [_propertyValue release];
-        _propertyName = nullptr;
         _propertyValue = nullptr;
     }
 
@@ -126,7 +123,7 @@ public:
         if (_applyingTexture) {
             _layer->SetTexture(_newTexture, _contentsSize.width, _contentsSize.height, _contentsScale);
         } else {
-            _layer->UpdateProperty(_propertyName, _propertyValue);
+            _layer->UpdateProperty(_propertyName.data(), _propertyValue);
         }
     }
 };

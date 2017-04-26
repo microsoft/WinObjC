@@ -26,7 +26,7 @@
         [(UIView*)_cellsToBeRemoved[i] removeFromSuperview];
         [_cellsToBeRemoved[i] release];
     }
-    IwFree(_cellsToBeRemoved);
+    free(_cellsToBeRemoved);
 
     [self release];
 }

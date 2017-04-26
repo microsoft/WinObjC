@@ -360,13 +360,13 @@ CGDataProviderRef CGImageGetDataProvider(CGImageRef img) {
 
     const unsigned int stride = CGImageGetBytesPerRow(img);
     const unsigned int size = CGImageGetHeight(img) * stride;
-    woc::unique_iw<unsigned char> buffer(static_cast<unsigned char*>(IwMalloc(size)));
+    std::unique_ptr<unsigned char[]> buffer(new unsigned char[size]);
 
     RETURN_NULL_IF_FAILED(img->ImageSource()->CopyPixels(nullptr, stride, size, buffer.get()));
 
     CGDataProviderRef dataProvider =
         CGDataProviderCreateWithData(nullptr, buffer.release(), size, [](void* info, const void* data, size_t size) {
-            IwFree(const_cast<void*>(data));
+            delete[](const unsigned char*) data;
         });
     CFAutorelease(dataProvider);
     return dataProvider;

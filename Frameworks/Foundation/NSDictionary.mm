@@ -457,7 +457,7 @@ BASE_CLASS_REQUIRED_IMPLS(NSDictionary, NSDictionaryPrototype, CFDictionaryGetTy
 
     //  Grab all keys and toss 'em into an array if isEqual returns true
     unsigned numKeys = [self count];
-    id* values = (id*)IwCalloc(numKeys, sizeof(id));
+    id* values = (id*)calloc(numKeys, sizeof(id));
     unsigned numValues = 0;
 
     id curKey = [keyEnum nextObject];
@@ -474,7 +474,7 @@ BASE_CLASS_REQUIRED_IMPLS(NSDictionary, NSDictionaryPrototype, CFDictionaryGetTy
     }
 
     NSArray* ret = [NSArray arrayWithObjects:values count:numValues];
-    IwFree(values);
+    free(values);
 
     return ret;
 }
