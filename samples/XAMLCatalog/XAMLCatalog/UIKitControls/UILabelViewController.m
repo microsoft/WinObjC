@@ -355,7 +355,7 @@
                                              self.sizeThatFits.width,
                                              self.sizeThatFits.height];
 
-    NSLog(self.result);
+    NSLog(@"%@", self.result);
 
 #ifndef WINOBJC
     // on reference platform, add expected result dictionary into log array so that it can

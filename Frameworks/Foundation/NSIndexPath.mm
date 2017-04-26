@@ -185,9 +185,9 @@ static NSString* s_archiveKey = @"_NS.IP";
                     format:@"-[%s %s]: range {%lu, %lu} beyond bounds (%lu)",
                            class_getName([self class]),
                            sel_getName(_cmd),
-                           positionRange.location,
-                           positionRange.length,
-                           [self length]];
+                           (unsigned long)positionRange.location,
+                           (unsigned long)positionRange.length,
+                           (unsigned long)[self length]];
     }
 
     std::copy(_indexes.cbegin() + positionRange.location, _indexes.cbegin() + positionRange.location + positionRange.length, indexes);

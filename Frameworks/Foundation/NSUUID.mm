@@ -141,7 +141,7 @@
  @Status Interoperable
 */
 - (NSString*)UUIDString {
-    return [NSString stringWithFormat:@"%08lX-%04hX-%04hX-%02hX%02hX-%02hX%02hX%02hX%02hX%02hX%02hX",
+    return [NSString stringWithFormat:@"%08lX-%04hX-%04hX-%02hhX%02hhX-%02hhX%02hhX%02hhX%02hhX%02hhX%02hhX",
                                       _guid.Data1,
                                       _guid.Data2,
                                       _guid.Data3,

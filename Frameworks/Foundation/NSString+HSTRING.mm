@@ -68,7 +68,7 @@
     const wchar_t* buf = WindowsGetStringRawBuffer(_hs, &len);
     if (index >= len) {
         [NSException raise:NSRangeException
-                    format:@"-[NSString characterAtIndex:]: Index %lu out of bounds; string length %lu", index, len];
+                    format:@"-[NSString characterAtIndex:]: Index %lu out of bounds; string length %lu", (unsigned long)index, (unsigned long)len];
     }
     return buf[index];
 }
@@ -79,9 +79,9 @@
     if (range.length + range.location > len) {
         [NSException raise:NSRangeException
                     format:@"-[NSString getCharacters:range:]: Range {%lu, %lu} out of bounds; string length %lu",
-                           range.length,
-                           range.location,
-                           len];
+                           (unsigned long)range.length,
+                           (unsigned long)range.location,
+                           (unsigned long)len];
     }
     memcpy(buffer, buf + range.location, range.length * sizeof(wchar_t));
 }

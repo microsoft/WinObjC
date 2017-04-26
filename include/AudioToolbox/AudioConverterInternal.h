@@ -36,10 +36,10 @@
 using namespace Microsoft::WRL;
 using namespace Microsoft::WRL::Wrappers;
 
-#define RETURN_AUDIOERR_IF_FAILED_WITH_MSG(hr, msg) \
-    if (FAILED(hr)) {                               \
-        NSTraceInfo(TAG, @"%@  %@", msg, hr);       \
-        return kAudioConverterErr_UnspecifiedError; \
+#define RETURN_AUDIOERR_IF_FAILED_WITH_MSG(hr, msg)           \
+    if (FAILED(hr)) {                                         \
+        NSTraceInfo(TAG, @"%@: %lx", msg, (unsigned long)hr); \
+        return kAudioConverterErr_UnspecifiedError;           \
     }
 
 #define RETURN_NIL_IF_FAILED(hr)       \

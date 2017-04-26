@@ -181,7 +181,7 @@ static auto& _getProgressStackForCurrentThread() {
     @synchronized(child) {
         if (child->_parent) {
             [NSException raise:NSInvalidArgumentException
-                        format:@"NSProgress %x was already the child of another progress %x", child, (id)child->_parent];
+                        format:@"NSProgress %@ was already the child of another progress %@", child, child->_parent.get()];
 
         } else {
             child->_parent = self;

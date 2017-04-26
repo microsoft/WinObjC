@@ -4965,7 +4965,7 @@ NSDictionary* _createFailureInfoDict(const wil::FailureInfo& fi) {
         @"function" : [NSString stringWithUTF8String:fi.pszFunction],
         @"line" : [NSNumber numberWithInt:fi.uLineNumber],
         g_NSHResultErrorDictKey : [NSNumber numberWithInt:fi.hr],
-        NSLocalizedDescriptionKey : [NSString stringWithFormat:@"0x%x: %@", fi.hr, _NSStringFromHResult(fi.hr)],
+        NSLocalizedDescriptionKey : [NSString stringWithFormat:@"0x%lx: %@", (unsigned long)fi.hr, _NSStringFromHResult(fi.hr)],
     };
 }
 
