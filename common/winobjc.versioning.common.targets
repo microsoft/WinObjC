@@ -119,7 +119,6 @@
       <PackageAssemblyVersion_Revision Condition="'$(PackageAssemblyVersion_Revision)' == ''">0</PackageAssemblyVersion_Revision>
 
       <PackageAssemblyVersion>$(PackageVersion_Major).$(PackageVersion_Minor).$(PackageAssemblyVersion_Build).$(PackageAssemblyVersion_Revision)</PackageAssemblyVersion>
-      <PackageAssemblyVersionTrimmed>$([System.UInt64]::Parse($(PackageVersion_Major)).ToString()).$([System.UInt64]::Parse($(PackageVersion_Minor)).ToString()).$([System.UInt64]::Parse($(PackageAssemblyVersion_Build)).ToString()).$([System.UInt64]::Parse($(PackageAssemblyVersion_Revision)).ToString())</PackageAssemblyVersionTrimmed>
       <PackageAssemblyDescription>https://github.com/Microsoft/WinObjC</PackageAssemblyDescription>
       <PackageAssemblyCompany>Microsoft</PackageAssemblyCompany>
       <PackageAssemblyCopyright>Copyright (C) Microsoft. All rights reserved</PackageAssemblyCopyright>
@@ -196,13 +195,6 @@
           BeforeTargets="_ValidateAppxManifest"
           DependsOnTargets="_GenerateCurrentProjectAppxManifest"
           Condition="'$(AppxPackage)' == 'true' And Exists('$(FinalAppxManifestName)')">
-
-    <!-- Take care of package version. Use Trimmed Version since appxmanifests hilariously don't like leading 0s  -->
-    <XmlPoke XmlInputPath="$(FinalAppxManifestName)"
-             Namespaces="&lt;Namespace Prefix='appx' Uri='http://schemas.microsoft.com/appx/manifest/foundation/windows10' /&gt;
-                         &lt;Namespace Prefix='uap' Uri='http://schemas.microsoft.com/appx/manifest/uap/windows10' /&gt;"
-             Query="/appx:Package/appx:Identity/@Version"
-             Value="$(PackageAssemblyVersionTrimmed)"/>
 
     <XmlPeek XmlInputPath="$(FinalAppxManifestName)"
              Namespaces="&lt;Namespace Prefix='appx' Uri='http://schemas.microsoft.com/appx/manifest/foundation/windows10' /&gt;
