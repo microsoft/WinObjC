@@ -25,7 +25,7 @@
 // format - a "printf" style format string
 // ... - var args for printf.
 //
-void NSTraceVerbose(const wchar_t* tag, NSString* format, ...);
+void NSTraceVerbose(const wchar_t* tag, NSString* format, ...) NS_FORMAT_FUNCTION(2, 3);
 
 //
 // Trace an info message.
@@ -34,7 +34,7 @@ void NSTraceVerbose(const wchar_t* tag, NSString* format, ...);
 // format - a "printf" style format string
 // ... - var args for printf.
 //
-void NSTraceInfo(const wchar_t* tag, NSString* format, ...);
+void NSTraceInfo(const wchar_t* tag, NSString* format, ...) NS_FORMAT_FUNCTION(2, 3);
 
 //
 // Trace a warning message.
@@ -43,7 +43,7 @@ void NSTraceInfo(const wchar_t* tag, NSString* format, ...);
 // format - a "printf" style format string
 // ... - var args for printf.
 //
-void NSTraceWarning(const wchar_t* tag, NSString* format, ...);
+void NSTraceWarning(const wchar_t* tag, NSString* format, ...) NS_FORMAT_FUNCTION(2, 3);
 
 //
 // Trace an error message.
@@ -52,7 +52,7 @@ void NSTraceWarning(const wchar_t* tag, NSString* format, ...);
 // format - a "printf" style format string
 // ... - var args for printf.
 //
-void NSTraceError(const wchar_t* tag, NSString* format, ...);
+void NSTraceError(const wchar_t* tag, NSString* format, ...) NS_FORMAT_FUNCTION(2, 3);
 
 //
 // Trace a critical message.
@@ -61,4 +61,4 @@ void NSTraceError(const wchar_t* tag, NSString* format, ...);
 // format - a "printf" style format string
 // ... - var args for printf.
 //
-void NSTraceCritical(const wchar_t* tag, NSString* format, ...);
+void NSTraceCritical(const wchar_t* tag, NSString* format, ...) NS_FORMAT_FUNCTION(2, 3);

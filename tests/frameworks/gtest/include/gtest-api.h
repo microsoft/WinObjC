@@ -48,7 +48,7 @@ template<typename ... Args>
 std::vector<char> Format(const char* message, Args ... args)
 {
 #ifdef __OBJC__
-    static NSString* (*formatImp)(id,SEL,NSString*,...) = reinterpret_cast<decltype(formatImp)>(class_getMethodImplementation(object_getClass([NSString class]), @selector(stringWithFormat:)));
+    static NSString* (*formatImp)(id,SEL,NSString*,...) NS_FORMAT_FUNCTION(3, 4) = reinterpret_cast<decltype(formatImp)>(class_getMethodImplementation(object_getClass([NSString class]), @selector(stringWithFormat:)));
     NSString *string = formatImp([NSString class], @selector(stringWithFormat:), [NSString stringWithUTF8String:message], args ...);
     std::vector<char> buffer([string length] + 1);
     memcpy(buffer.data(), [string UTF8String], buffer.size() - 1);

@@ -46,8 +46,8 @@ FOUNDATION_EXPORT NSString* const NSOverflowException;
 FOUNDATION_EXPORT_CLASS
 @interface NSException : NSObject <NSCoding, NSCopying>
 + (NSException*)exceptionWithName:(NSString*)name reason:(NSString*)reason userInfo:(NSDictionary*)userInfo;
-+ (void)raise:(NSString*)name format:(NSString*)format, ...;
-+ (void)raise:(NSString*)name format:(NSString*)format arguments:(va_list)argList;
++ (void)raise:(NSString*)name format:(NSString*)format, ... NS_FORMAT_FUNCTION(2, 3);
++ (void)raise:(NSString*)name format:(NSString*)format arguments:(va_list)argList NS_FORMAT_FUNCTION(2, 0);
 - (instancetype)initWithName:(NSString*)name reason:(NSString*)reason userInfo:(NSDictionary*)userInfo;
 - (void)raise;
 @property (readonly, copy) NSString* name;
@@ -58,7 +58,7 @@ FOUNDATION_EXPORT_CLASS
 @end
 
 @interface NSException (WinObjC)
-+ (void)raiseWithLogging:(NSString*)name format:(NSString*)format, ...;
++ (void)raiseWithLogging:(NSString*)name format:(NSString*)format, ... NS_FORMAT_FUNCTION(2, 3);
 +(NSString*)_exceptionNameForHRESULT:(int)errorCode;
 +(HRESULT)_HRESULTForExceptionName:(NSString *)exceptionName;
 +(instancetype)_exceptionWithHRESULT:(int)errorCode reason : (NSString*)reason userInfo : (NSDictionary*)userInfo;

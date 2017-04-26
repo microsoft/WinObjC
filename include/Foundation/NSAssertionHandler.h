@@ -82,10 +82,10 @@ FOUNDATION_EXPORT_CLASS
                        object:(id)object
                          file:(NSString*)fileName
                    lineNumber:(NSInteger)line
-                  description:(NSString*)desc, ...;
+                  description:(NSString*)desc, ... NS_FORMAT_FUNCTION(5, 6);
 - (void)handleFailureInFunction:(NSString*)functionName
                            file:(NSString*)fileName
                      lineNumber:(NSInteger)line
-                    description:(NSString*)desc, ...;
+                    description:(NSString*)desc, ... NS_FORMAT_FUNCTION(4, 5);
 
 @end
