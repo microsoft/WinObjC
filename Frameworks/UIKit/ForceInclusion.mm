@@ -25,6 +25,7 @@
 #include "UIClassSwapper.h"
 #include "../QuartzCore/CATransaction.h"
 #include "../Foundation/NSColor.h"
+#import <UWP/InteropBase.h>
 
 extern "C" void NSObjForceinclude();
 void NSStringForceinclude();
@@ -47,6 +48,7 @@ void ForceInclusion() {
     [UISwitch class];
     [UISlider class];
     [UIProxyObject class];
+    [RTObject class];
     NSStringForceinclude();
     NSIndexPathForceInclude();
     NSValueForceinclude();
