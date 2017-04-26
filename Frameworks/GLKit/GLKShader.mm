@@ -25,6 +25,7 @@
 
 #import "ShaderInfo.h"
 #import "NSLogging.h"
+#import "AssertARCEnabled.h"
 
 static const wchar_t* TAG = L"GLKShader";
 
@@ -210,8 +211,9 @@ static GLKShaderCache* imp = nil;
  @Public No
 */
 - (id)initWith:(GLKShaderMaterialPtr)ptr {
-    [super init];
-    _mat = (ShaderMaterial*)ptr;
+    if (self = [super init]) {
+        _mat = (ShaderMaterial*)ptr;
+    }
     return self;
 }
 
@@ -274,8 +276,9 @@ static GLKShaderCache* imp = nil;
  @Public No
 */
 - (id)initWith:(GLKShaderLayoutPtr)ptr {
-    [super init];
-    _layout = (ShaderLayout*)ptr;
+    if (self = [super init]) {
+        _layout = (ShaderLayout*)ptr;
+    }
     return self;
 }
 
