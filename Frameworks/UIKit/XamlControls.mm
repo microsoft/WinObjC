@@ -169,11 +169,10 @@ NSString* GetTextFieldPlaceholder(const winrt::Windows::UI::Xaml::FrameworkEleme
     return XamlUtilities::NSStringFromPropertyValue(inspPropVal);
 }
 
-void SetTextFieldInputScope(const winrt::Windows::UI::Xaml::FrameworkElement& textField,
-                            UIKeyboardType keyboardType,
-                            BOOL secureTextEntry) {
-    auto inputSCope = XamlUtilities::ConvertKeyboardTypeToInputScope(keyboardType, secureTextEntry);
-    XamlSetTextFieldInputScope(objcwinrt::to_insp(textField), objcwinrt::to_insp(inputSCope));
+void SetTextFieldInputScope(const winrt::Windows::UI::Xaml::FrameworkElement& textField, UIKeyboardType keyboardType) {
+    auto inputSCopeNameValue =
+        XamlUtilities::ConvertKeyboardTypeToInputScopeNameValue(keyboardType, GetTextFieldSecureTextEntryValue(textField));
+    XamlSetTextFieldInputScope(objcwinrt::to_insp(textField), static_cast<int>(inputSCopeNameValue));
 }
 
 void SetTextFieldEnabled(const winrt::Windows::UI::Xaml::FrameworkElement& inspectableTextField, BOOL enabled) {
@@ -272,8 +271,10 @@ void TextFieldUnregisterEventHandlers(const winrt::Windows::UI::Xaml::FrameworkE
     XamlTextFieldUnregisterEventHandlers(objcwinrt::to_insp(inspectableTextField));
 }
 
-void SetTextFieldVerticalTextAlignment(const winrt::Windows::UI::Xaml::FrameworkElement& inspectableTextField, int verticalTextAlignment) {
-    XamlSetTextFieldVerticalTextAlignment(objcwinrt::to_insp(inspectableTextField), verticalTextAlignment);
+void SetTextFieldVerticalTextAlignment(const winrt::Windows::UI::Xaml::FrameworkElement& inspectableTextField,
+                                       UIControlContentVerticalAlignment verticalTextAlignment) {
+    auto verticalAlignment = XamlUtilities::ConvertUIControlContentVerticalAlignmentToWXVerticalAlignment(verticalTextAlignment);
+    XamlSetTextFieldVerticalTextAlignment(objcwinrt::to_insp(inspectableTextField), static_cast<int>(verticalAlignment));
 }
 
 int GetTextFieldVerticalTextAlignment(const winrt::Windows::UI::Xaml::FrameworkElement& inspectableTextField) {
@@ -291,13 +292,13 @@ UITextBorderStyle GetTextFieldBorderStyle(const winrt::Windows::UI::Xaml::Framew
 }
 
 void TextFieldApplyFont(const winrt::Windows::UI::Xaml::FrameworkElement& inspectableTextField,
-                        NSString* fontFmailyname,
+                        NSString* fontFamilyname,
                         DWRITE_FONT_STRETCH fontStrech,
                         DWRITE_FONT_STYLE fontStyle,
                         double fontSize,
                         DWRITE_FONT_WEIGHT fontWeight) {
     XamlTextFieldApplyFont(objcwinrt::to_insp(inspectableTextField),
-                           Strings::NarrowToWide<std::wstring>([fontFmailyname UTF8String]),
+                           Strings::NarrowToWide<std::wstring>([fontFamilyname UTF8String]),
                            static_cast<int>(fontStrech),
                            static_cast<int>(fontStyle),
                            fontSize,

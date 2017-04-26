@@ -73,19 +73,12 @@ public:
     {
         Platform::Boolean get()
         {
-            return (Platform::Boolean)GetValue(s_secureEntryProperty);
+            return _secureEntry;
         }
         void set(Platform::Boolean value)
         {
-            SetValue(s_secureEntryProperty, value);
-            if (SecureEntry) {
-                // switch to Secure
-                _SwitchToSecureMode();
-            }
-            else {
-                // swtich to Non-Secure
-                _SwitchToNonSecureMode();
-            }
+            _secureEntry = value;
+            _SwitchToMode(_secureEntry);
         }
     }
 
@@ -93,23 +86,29 @@ public:
     {
         Platform::String^ get()
         {
-            return (Platform::String^)GetValue(s_placeholderProperty);
+            return _placeholder;
         }
         void set(Platform::String^ value)
         {
-            SetValue(s_placeholderProperty, value);
+            if (_placeholder != value) {
+                _placeholder = value;
+                _SetPlaceHolder();
+            }
         }
     }
 
-    property Windows::UI::Xaml::Input::InputScope^ InputScope {
-        Windows::UI::Xaml::Input::InputScope^ get() 
+    property Windows::UI::Xaml::Input::InputScopeNameValue InputScopeNameValue {
+        Windows::UI::Xaml::Input::InputScopeNameValue get()
         {
-            return (Windows::UI::Xaml::Input::InputScope^)GetValue(s_inputScopeProperty);
+            return _inputScopeNameValue;
         }
 
-        void set(Windows::UI::Xaml::Input::InputScope^ value)
+        void set(Windows::UI::Xaml::Input::InputScopeNameValue value)
         {
-            SetValue(s_inputScopeProperty, value);
+            if (value != _inputScopeNameValue) {
+                _inputScopeNameValue = value;
+                _SetInputScope();
+            }
         }
     }
 
@@ -117,11 +116,12 @@ public:
     {
         Platform::Boolean get()
         {
-            return (Platform::Boolean)GetValue(s_enabledProperty);
+            return _enabled;
         }
         void set(Platform::Boolean value)
         {
-            SetValue(s_enabledProperty, value);
+            _enabled = value;
+            _SetEnabled();
         }
     }
 
@@ -129,11 +129,12 @@ public:
     {
         Windows::UI::Xaml::Media::SolidColorBrush^ get()
         {
-            return (Windows::UI::Xaml::Media::SolidColorBrush^)GetValue(s_foregroundProperty);
+            return _foreground;
         }
         void set(Windows::UI::Xaml::Media::SolidColorBrush^ value)
         {
-            SetValue(s_foregroundProperty, value);
+            _foreground = value;
+            _SetForeground();
         }
     }
 
@@ -141,11 +142,14 @@ public:
     {
         Windows::UI::Xaml::TextAlignment get()
         {
-            return (Windows::UI::Xaml::TextAlignment)GetValue(s_textAlignmentProperty);
+            return _textAlignment;
         }
         void set(Windows::UI::Xaml::TextAlignment value)
         {
-            SetValue(s_textAlignmentProperty, value);
+            if (value != _textAlignment) {
+                _textAlignment = value;
+                _SetTextAlignment();
+            }
         }
     }
 
@@ -153,11 +157,11 @@ public:
     {
         Platform::Boolean get()
         {
-            if (SecureEntry) {
-                return PasswordBox->FocusState != Windows::UI::Xaml::FocusState::Unfocused;
-            } else {
-                return TextBox->FocusState != Windows::UI::Xaml::FocusState::Unfocused;
+            if (_backingControl) {
+                return (_backingControl->FocusState != Windows::UI::Xaml::FocusState::Unfocused);
             }
+
+            return false;
         }
     }
 
@@ -165,12 +169,14 @@ public:
     {
         Windows::UI::Xaml::VerticalAlignment get()
         {
-            return (Windows::UI::Xaml::VerticalAlignment)GetValue(s_textVerticalAlignmentProperty);
+            return _textVerticalAlignment;
         }
         void set(Windows::UI::Xaml::VerticalAlignment value)
         {
-            SetValue(s_textVerticalAlignmentProperty, value);
-            _SetTextVerticalAlignment();
+            if (value != _textVerticalAlignment) {
+                _textVerticalAlignment = value;
+                _SetTextVerticalAlignment();
+            }
         }
     }
 
@@ -178,12 +184,14 @@ public:
     {
         UIKit::Xaml::TextBorderStyle get()
         {
-            return (UIKit::Xaml::TextBorderStyle)GetValue(s_borderStyleProperty);
+            return _borderStyle;
         }
         void set(UIKit::Xaml::TextBorderStyle value)
         {
-            SetValue(s_borderStyleProperty, value);
-            _SetBorderStyle();
+            if (_borderStyle != value) {
+                _borderStyle = value;
+                _SetBorderStyle();
+            }
         }
     }
 
@@ -220,15 +228,18 @@ internal:
     bool BecomeFirstResponder();
 
 private:
+    // depdency properties for two way binding
     static Windows::UI::Xaml::DependencyProperty^ s_textProperty;
-    static Windows::UI::Xaml::DependencyProperty^ s_secureEntryProperty;
-    static Windows::UI::Xaml::DependencyProperty^ s_placeholderProperty;
-    static Windows::UI::Xaml::DependencyProperty^ s_inputScopeProperty;
-    static Windows::UI::Xaml::DependencyProperty^ s_enabledProperty;
-    static Windows::UI::Xaml::DependencyProperty^ s_foregroundProperty;
-    static Windows::UI::Xaml::DependencyProperty^ s_textAlignmentProperty;
-    static Windows::UI::Xaml::DependencyProperty^ s_textVerticalAlignmentProperty;
-    static Windows::UI::Xaml::DependencyProperty^ s_borderStyleProperty;
+
+    // variables backing normal properties
+    bool _secureEntry;
+    Platform::String^ _placeholder;
+    Windows::UI::Xaml::Input::InputScopeNameValue _inputScopeNameValue;
+    bool _enabled;
+    Windows::UI::Xaml::Media::SolidColorBrush^ _foreground;
+    Windows::UI::Xaml::TextAlignment _textAlignment;
+    Windows::UI::Xaml::VerticalAlignment _textVerticalAlignment;
+    UIKit::Xaml::TextBorderStyle _borderStyle;
 
     static Platform::Boolean s_dependencyPropertiesRegistered;
     static unsigned int c_borderCornerRadius;
@@ -238,20 +249,24 @@ private:
     Microsoft::WRL::ComPtr<ABI::Windows::UI::Xaml::IRoutedEventHandler> _lostFocusHanlder;
     Microsoft::WRL::ComPtr<ABI::Windows::UI::Xaml::IRoutedEventHandler> _enterKeyDownHandler;
 
-    void _SwitchToSecureMode();
-    void _SwitchToNonSecureMode();
+    void _SwitchToMode(bool secure);
     void _SetTextVerticalAlignment();
     void _SetBorderStyle();
+    void _SetPlaceHolder();
+    void _SetInputScope();
+    void _SetEnabled();
+    void _SetForeground();
+    void _SetTextAlignment();
 
-    // Layer elements; created on demand
-    Windows::UI::Xaml::Controls::Image^ _content;
+    // Find the best inputScope given current security entry mode and inputscope
+    Windows::UI::Xaml::Input::InputScope^ _FindBestFitInputScope();
 
     // events handler for internal controls
-    void OnTextChanged(Platform::Object ^sender, Windows::UI::Xaml::Controls::TextChangedEventArgs ^e);
-    void OnPasswordChanged(Platform::Object ^sender, Windows::UI::Xaml::RoutedEventArgs ^e);
-    void OnGotFocus(Platform::Object ^sender, Windows::UI::Xaml::RoutedEventArgs ^e);
-    void OnLostFocus(Platform::Object ^sender, Windows::UI::Xaml::RoutedEventArgs ^e);
-    void OnKeyDown(Platform::Object ^sender, Windows::UI::Xaml::Input::KeyRoutedEventArgs ^e);
+    void OnTextChanged(Platform::Object^ sender, Windows::UI::Xaml::Controls::TextChangedEventArgs^ e);
+    void OnPasswordChanged(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e);
+    void OnGotFocus(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e);
+    void OnLostFocus(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e);
+    void OnKeyDown(Platform::Object^ sender, Windows::UI::Xaml::Input::KeyRoutedEventArgs^ e);
 
     // inneral backing control which is either textBox or passwordBox depending on the SecureEntry value
     Windows::UI::Xaml::Controls::Control^ _backingControl;
@@ -260,8 +275,7 @@ private:
     Windows::Foundation::EventRegistrationToken _gotFocusHandlerRegistrationToken;
     Windows::Foundation::EventRegistrationToken _lostFocusHandlerRegistrationToken;
     Windows::Foundation::EventRegistrationToken _keydownHandlerRegistrationToken;
-    void OnTextBoxLoaded(Platform::Object ^sender, Windows::UI::Xaml::RoutedEventArgs ^e);
-    void OnPasswordBoxLoaded(Platform::Object ^sender, Windows::UI::Xaml::RoutedEventArgs ^e);
+    void OnBackingControlLoaded(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e);
 };
 
 } /* Xaml*/

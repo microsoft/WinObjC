@@ -8,9 +8,9 @@
     mc:Ignorable="d"
     x:Name="Root">
     <!-- 
-        Current the backing control is dynamically created in the code
-        depeneding on the SecureEntry value, if NO, a TextBox is created
-        otherwise, a passwordBox is created. In the meantime, properties
-        binding will be set up in code when controls is loaded. 
+        Currently the backing control is dynamically created in code behind
+        if SecureEntry is NO, a TextBox is created. otherwise, a passwordBox 
+        is created as backing control. In the meantime, properties binding 
+        will be set up in code when control is loaded. 
     -->
 </Grid>

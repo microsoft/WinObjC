@@ -138,9 +138,7 @@ UIKIT_XAML_EXPORT void XamlSetTextFieldPlaceholder(const Microsoft::WRL::ComPtr<
 UIKIT_XAML_EXPORT IInspectable* XamlGetTextFieldPlaceholder(const Microsoft::WRL::ComPtr<IInspectable>& inspectableTextField);
 
 UIKIT_XAML_EXPORT void XamlSetTextFieldInputScope(const Microsoft::WRL::ComPtr<IInspectable>& inspectableTextField,
-                                                  const Microsoft::WRL::ComPtr<IInspectable>& inputScope);
-
-UIKIT_XAML_EXPORT IInspectable* XamlGetTextFieldInputScope(const Microsoft::WRL::ComPtr<IInspectable>& inspectableTextField);
+                                                  int inputSCopeNameValue);
 
 UIKIT_XAML_EXPORT void XamlSetTextFieldEnabled(const Microsoft::WRL::ComPtr<IInspectable>& inspectableTextField, bool enabled);
 
@@ -189,7 +187,7 @@ UIKIT_XAML_EXPORT void XamlSetTextFieldBorderStyle(const Microsoft::WRL::ComPtr<
 UIKIT_XAML_EXPORT int XamlGetTextFieldBorderStyle(const Microsoft::WRL::ComPtr<IInspectable>& inspectableTextField);
 
 UIKIT_XAML_EXPORT void XamlTextFieldApplyFont(const Microsoft::WRL::ComPtr<IInspectable>& inspectableTextField,
-                                              const std::wstring& fontFmailyname,
+                                              const std::wstring& fontFamilyname,
                                               int fontStrech,
                                               int fontStyle,
                                               double fontSize,

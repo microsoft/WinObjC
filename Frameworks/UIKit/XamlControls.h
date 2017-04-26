@@ -156,7 +156,7 @@ NSString* GetTextFieldText(const winrt::Windows::UI::Xaml::FrameworkElement& tex
 void SetTextFieldPlaceholder(const winrt::Windows::UI::Xaml::FrameworkElement& textField, NSString* placeholder);
 NSString* GetTextFieldPlaceholder(const winrt::Windows::UI::Xaml::FrameworkElement& textField);
 
-void SetTextFieldInputScope(const winrt::Windows::UI::Xaml::FrameworkElement& textField, UIKeyboardType keyboardType, BOOL secureTextEntry);
+void SetTextFieldInputScope(const winrt::Windows::UI::Xaml::FrameworkElement& textField, UIKeyboardType keyboardType);
 
 void SetTextFieldEnabled(const winrt::Windows::UI::Xaml::FrameworkElement& inspectableTextField, BOOL enabled);
 bool GetTextFieldEnabled(const winrt::Windows::UI::Xaml::FrameworkElement& inspectableTextField);
@@ -187,7 +187,8 @@ void TextFieldRegisterEventHandlers(const winrt::Windows::UI::Xaml::FrameworkEle
 
 void TextFieldUnregisterEventHandlers(const winrt::Windows::UI::Xaml::FrameworkElement& inspectableTextField);
 
-void SetTextFieldVerticalTextAlignment(const winrt::Windows::UI::Xaml::FrameworkElement& inspectableTextField, int verticalTextAlignment);
+void SetTextFieldVerticalTextAlignment(const winrt::Windows::UI::Xaml::FrameworkElement& inspectableTextField,
+                                       UIControlContentVerticalAlignment verticalTextAlignment);
 
 int GetTextFieldVerticalTextAlignment(const winrt::Windows::UI::Xaml::FrameworkElement& inspectableTextField);
 
@@ -196,7 +197,7 @@ void SetTextFieldBorderStyle(const winrt::Windows::UI::Xaml::FrameworkElement& i
 UITextBorderStyle GetTextFieldBorderStyle(const winrt::Windows::UI::Xaml::FrameworkElement& inspectableTextField);
 
 void TextFieldApplyFont(const winrt::Windows::UI::Xaml::FrameworkElement& inspectableTextField,
-                        NSString* fontFmailyname,
+                        NSString* fontFamilyname,
                         DWRITE_FONT_STRETCH fontStrech,
                         DWRITE_FONT_STYLE fontStyle,
                         double fontSize,

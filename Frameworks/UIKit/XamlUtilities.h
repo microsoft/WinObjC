@@ -64,10 +64,12 @@ winrt::Windows::UI::Xaml::TextAlignment ConvertUITextAlignmentToWXTextAlignment(
 UITextAlignment ConvertWXTextAlignmentToUITextAlignment(winrt::Windows::UI::Xaml::TextAlignment alignment);
 
 // Convert ios KeyboardType to Windows InputScope
-winrt::Windows::UI::Xaml::Input::InputScope ConvertKeyboardTypeToInputScope(UIKeyboardType keyboardType, BOOL secureTextMode);
+winrt::Windows::UI::Xaml::Input::InputScopeNameValue ConvertKeyboardTypeToInputScopeNameValue(UIKeyboardType keyboardType,
+                                                                                              BOOL secureTextMode);
 
 // Convert UIControlContentVerticalAlignment to Windows vertical Alignment
-winrt::Windows::UI::Xaml::VerticalAlignment ConvertUIControlContentVerticalAlignmentToWXVerticalAlignment(UIControlContentVerticalAlignment alignment);
+winrt::Windows::UI::Xaml::VerticalAlignment ConvertUIControlContentVerticalAlignmentToWXVerticalAlignment(
+    UIControlContentVerticalAlignment alignment);
 
 // Find the named template child in control template of a xaml control
 winrt::Windows::UI::Xaml::FrameworkElement FindTemplateChild(const winrt::Windows::UI::Xaml::Controls::Control& control, NSString* name);

@@ -384,6 +384,7 @@ NSString* const UITextFieldTextDidEndEditingNotification = @"UITextFieldTextDidE
 - (void)setBackground:(UIImage*)image {
     _backgroundImage = image;
 
+    // On reference platform, background image is only shown when borderStyle is not UITextBorderStyleRoundedRect
     if (self.borderStyle != UITextBorderStyleRoundedRect) {
         XamlControls::SetTextFieldBackgroundImage(_textField, _backgroundImage);
     }
@@ -680,7 +681,7 @@ NSString* const UITextFieldTextDidEndEditingNotification = @"UITextFieldTextDidE
 */
 - (void)setKeyboardType:(UIKeyboardType)type {
     _keyboardType = type;
-    XamlControls::SetTextFieldInputScope(_textField, _keyboardType, self.isSecureTextEntry);
+    XamlControls::SetTextFieldInputScope(_textField, _keyboardType);
 }
 
 /**
@@ -888,10 +889,7 @@ Microsoft Extension
 - (void)setContentVerticalAlignment:(UIControlContentVerticalAlignment)alignment {
     [super setContentVerticalAlignment:alignment];
 
-    VerticalAlignment verticalAlignment =
-        XamlUtilities::ConvertUIControlContentVerticalAlignmentToWXVerticalAlignment(self.contentVerticalAlignment);
-
-    XamlControls::SetTextFieldVerticalTextAlignment(_textField, static_cast<int>(verticalAlignment));
+    XamlControls::SetTextFieldVerticalTextAlignment(_textField, alignment);
 }
 
 //
@@ -952,7 +950,7 @@ Microsoft Extension
 }
 
 // Handler when control GotFocus
-- (void)_ProcessGotFocusEvent {
+- (void)_processGotFocusEvent {
     // when GotFocus, check delegate (if exists) to see if it allows start editing
     if ([self.delegate respondsToSelector:@selector(textFieldShouldBeginEditing:)] && ![self.delegate textFieldShouldBeginEditing:self]) {
         // delegate says NO, but we already got the focus at this point, need to kill the focus on this control
@@ -973,12 +971,10 @@ Microsoft Extension
         [self sendActionsForControlEvents:UIControlEventEditingDidBegin];
         [[NSNotificationCenter defaultCenter] postNotificationName:UITextFieldTextDidBeginEditingNotification object:self];
     });
-
-    [self _adjustFontSizeToFitWidthOrApplyCurrentFont];
 }
 
 // Handler when control LostFocus
-- (void)_ProcessLostFocusEvent {
+- (void)_processLostFocusEvent {
     // when LostFocus, check delegate (if exists) to see if it allows end Editing
     if ([self.delegate respondsToSelector:@selector(textFieldShouldEndEditing:)] && ![self.delegate textFieldShouldEndEditing:self]) {
         // delegate does not allow editing to be ended, but we already lost the focus
@@ -1001,22 +997,6 @@ Microsoft Extension
         [self sendActionsForControlEvents:UIControlEventEditingDidEnd];
         [[NSNotificationCenter defaultCenter] postNotificationName:UITextFieldTextDidEndEditingNotification object:self];
     });
-
-    [self _adjustFontSizeToFitWidthOrApplyCurrentFont];
-}
-
-// Handler when EnterKey is pressed
-- (void)_ProcessKeyDownEvent {
-    BOOL dismissKeyboard = TRUE;
-
-    // check with delegate if should resign firstResponder and dismiss the keyboard
-    if ([self.delegate respondsToSelector:@selector(textFieldShouldReturn:)]) {
-        dismissKeyboard = [self.delegate textFieldShouldReturn:self];
-    }
-
-    if (dismissKeyboard) {
-        [self resignFirstResponder];
-    }
 }
 
 // Main entrance to initialize TextField
@@ -1035,7 +1015,7 @@ Microsoft Extension
 
     XamlControls::TextFieldRegisterEventHandlers(_textField,
                                                  // Text Changed event
-                                                 objcwinrt::callback([weakSelf](const WF::IInspectable& sender, const RoutedEventArgs&) {
+                                                 [weakSelf](const WF::IInspectable& sender, const RoutedEventArgs&) {
                                                      __strong UITextField* strongSelf = weakSelf;
                                                      if (strongSelf) {
                                                          dispatch_async(dispatch_get_main_queue(), ^{
@@ -1043,39 +1023,50 @@ Microsoft Extension
                                                              [[NSNotificationCenter defaultCenter]
                                                                  postNotificationName:UITextFieldTextDidChangeNotification
                                                                                object:strongSelf];
+                                                             [strongSelf _adjustFontSizeToFitWidthOrApplyCurrentFont];
                                                          });
                                                      }
-                                                 }),
+                                                 },
 
                                                  // Got focus event
-                                                 objcwinrt::callback([weakSelf](const WF::IInspectable& sender, const RoutedEventArgs&) {
+                                                 [weakSelf](const WF::IInspectable& sender, const RoutedEventArgs&) {
                                                      __strong UITextField* strongSelf = weakSelf;
                                                      if (strongSelf) {
                                                          dispatch_async(dispatch_get_main_queue(), ^{
-                                                             [strongSelf _ProcessGotFocusEvent];
+                                                             [strongSelf _processGotFocusEvent];
                                                          });
                                                      }
-                                                 }),
+                                                 },
 
                                                  // Lost focus event
-                                                 objcwinrt::callback([weakSelf](const WF::IInspectable& sender, const RoutedEventArgs&) {
+                                                 [weakSelf](const WF::IInspectable& sender, const RoutedEventArgs&) {
                                                      __strong UITextField* strongSelf = weakSelf;
                                                      if (strongSelf) {
                                                          dispatch_async(dispatch_get_main_queue(), ^{
-                                                             [strongSelf _ProcessLostFocusEvent];
+                                                             [strongSelf _processLostFocusEvent];
                                                          });
                                                      }
-                                                 }),
+                                                 },
 
                                                  // Enter Key down event handler
-                                                 objcwinrt::callback([weakSelf](const WF::IInspectable& sender, const RoutedEventArgs&) {
+                                                 [weakSelf](const WF::IInspectable& sender, const RoutedEventArgs&) {
                                                      __strong UITextField* strongSelf = weakSelf;
                                                      if (strongSelf) {
                                                          dispatch_async(dispatch_get_main_queue(), ^{
-                                                             [strongSelf _ProcessKeyDownEvent];
+                                                             BOOL dismissKeyboard = TRUE;
+
+                                                             // check with delegate if should resign firstResponder and dismiss the keyboard
+                                                             if ([strongSelf.delegate
+                                                                     respondsToSelector:@selector(textFieldShouldReturn:)]) {
+                                                                 dismissKeyboard = [strongSelf.delegate textFieldShouldReturn:strongSelf];
+                                                             }
+
+                                                             if (dismissKeyboard) {
+                                                                 [strongSelf resignFirstResponder];
+                                                             }
                                                          });
                                                      }
-                                                 }));
+                                                 });
 }
 
 /**

@@ -32,19 +32,10 @@ namespace UIKit {
 namespace Xaml {
 
 DependencyProperty^ TextField::s_textProperty = nullptr;
-DependencyProperty^ TextField::s_secureEntryProperty = nullptr;
-DependencyProperty^ TextField::s_placeholderProperty = nullptr;
-DependencyProperty^ TextField::s_inputScopeProperty = nullptr;
-DependencyProperty^ TextField::s_enabledProperty = nullptr;
-DependencyProperty^ TextField::s_foregroundProperty = nullptr;
-DependencyProperty^ TextField::s_textAlignmentProperty = nullptr;
-DependencyProperty^ TextField::s_textVerticalAlignmentProperty = nullptr;
-DependencyProperty^ TextField::s_borderStyleProperty = nullptr;
-
 unsigned int TextField::c_borderCornerRadius = 8;
 
 Platform::Boolean TextField::s_dependencyPropertiesRegistered = false;
-// TOOD: 
+
 template <typename T>
 T TextField::FindTemplateChild(FrameworkElement^ source, Platform::String^ name) {
     T target = nullptr;
@@ -67,28 +58,43 @@ TextField::TextField() {
     InitializeComponent();
 
     // by default control is enabled
-    Enabled = true;
+    _enabled = true;
 
     // by default control is Non-secure
-    SecureEntry = false;
+    _secureEntry = false;
 
     // by default no border
-    BorderStyle = TextBorderStyle::BorderStyleNone;
+    _borderStyle = TextBorderStyle::BorderStyleNone;
 
     // by default vertical center aligned
-    VerticalAlignment = Windows::UI::Xaml::VerticalAlignment::Center;
+    _textVerticalAlignment = Windows::UI::Xaml::VerticalAlignment::Center;
+
+    // by default left aligned
+    _textAlignment = Windows::UI::Xaml::TextAlignment::Left;
+
+    // default inputScopeNameValue
+    _inputScopeNameValue = Input::InputScopeNameValue::Default;
 }
 
-void TextField::_SwitchToSecureMode() {
+void TextField::_SwitchToMode(bool secure) {
     if (_backingControl) {
-        // switch to SecureMode, check if backingControl is a textBox
-        // remove all listeners before we re-assign a password to it
-        auto textBox = dynamic_cast<Controls::TextBox^>(_backingControl);
-        if (textBox) {
-            textBox->TextChanged -= _textChangedHandlerRegistrationToken;
-            textBox->GotFocus -= _gotFocusHandlerRegistrationToken;
-            textBox->LostFocus -= _lostFocusHandlerRegistrationToken;
-            textBox->KeyDown -= _keydownHandlerRegistrationToken;
+        _backingControl->GotFocus -= _gotFocusHandlerRegistrationToken;
+        _backingControl->LostFocus -= _lostFocusHandlerRegistrationToken;
+        _backingControl->KeyDown -= _keydownHandlerRegistrationToken;
+
+        if (secure) {
+            // switch to SecureMode, unhook textChanged event
+            auto textBox = dynamic_cast<Controls::TextBox^>(_backingControl);
+            if (textBox) {
+                textBox->TextChanged -= _textChangedHandlerRegistrationToken;
+            }
+            
+        } else {
+            // switch to Non-SecureMode, unhook passwordChanged event
+            auto passwordBox = dynamic_cast<Controls::PasswordBox^>(_backingControl);
+            if (passwordBox) {
+                PasswordBox->PasswordChanged -= _textChangedHandlerRegistrationToken;
+            }
         }
 
         _textChangedHandlerRegistrationToken = {0};
@@ -96,6 +102,7 @@ void TextField::_SwitchToSecureMode() {
         _lostFocusHandlerRegistrationToken = {0};
         _keydownHandlerRegistrationToken = {0};
         
+        // removing backing control from the visual
         unsigned int index = 0;
         if (Children->IndexOf(_backingControl, &index)) {
             Children->RemoveAt(index);
@@ -104,157 +111,86 @@ void TextField::_SwitchToSecureMode() {
         _backingControl = nullptr;
     }
 
-    // assign a passowordbox to backingControl
-    _backingControl = ref new Controls::PasswordBox();
-    auto passwordBox = safe_cast<Controls::PasswordBox^>(_backingControl);
-
-    // hooking up event handlers with passwordBox
-    _textChangedHandlerRegistrationToken = passwordBox->PasswordChanged += ref new Windows::UI::Xaml::RoutedEventHandler(this, &TextField::OnPasswordChanged);
-    _gotFocusHandlerRegistrationToken = PasswordBox->GotFocus += ref new Windows::UI::Xaml::RoutedEventHandler(this, &TextField::OnGotFocus);
-    _lostFocusHandlerRegistrationToken =PasswordBox->LostFocus += ref new Windows::UI::Xaml::RoutedEventHandler(this, &UIKit::Xaml::TextField::OnLostFocus);
-    _keydownHandlerRegistrationToken = PasswordBox->KeyDown += ref new Windows::UI::Xaml::Input::KeyEventHandler(this, &UIKit::Xaml::TextField::OnKeyDown);
-
-    passwordBox->Loaded += ref new Windows::UI::Xaml::RoutedEventHandler(this, &UIKit::Xaml::TextField::OnPasswordBoxLoaded);
-
-    Children->Append(_backingControl);
-}
-
-void TextField::_SwitchToNonSecureMode() {
-    if (_backingControl) {
-        // switch to NonSecureMode, check if backingControl is a passwordbox
-        // remove all listeners before we re-assign a textBox to it
-        auto textBox = dynamic_cast<Controls::PasswordBox^>(_backingControl);
-        if (textBox) {
-            PasswordBox->PasswordChanged -= _textChangedHandlerRegistrationToken;
-            PasswordBox->GotFocus -= _gotFocusHandlerRegistrationToken;
-            PasswordBox->LostFocus -= _lostFocusHandlerRegistrationToken;
-            PasswordBox->KeyDown -= _keydownHandlerRegistrationToken;
-            _textChangedHandlerRegistrationToken = {0};
-            _gotFocusHandlerRegistrationToken = {0};
-            _lostFocusHandlerRegistrationToken = {0};
-            _keydownHandlerRegistrationToken = {0};
-        }
-
-        unsigned int index = 0;
-        if (Children->IndexOf(_backingControl, &index)) {
-            Children->RemoveAt(index);
-        }
-
-        _backingControl = nullptr;
+    if (secure) {
+        // switching to secure mode, create passowordbox as backingControl
+        _backingControl = ref new Controls::PasswordBox();
+    } else {
+        // switch to Non-secure mode, create a textbox as backingControl
+        _backingControl = ref new Controls::TextBox();
     }
 
-    // assign a passowordbox to backingControl
-    _backingControl = ref new Controls::TextBox();
-    auto textBox = safe_cast<Controls::TextBox^>(_backingControl);
-    textBox->Loaded += ref new Windows::UI::Xaml::RoutedEventHandler(this, &UIKit::Xaml::TextField::OnTextBoxLoaded);
+    _backingControl->Loaded += ref new Windows::UI::Xaml::RoutedEventHandler(this, &UIKit::Xaml::TextField::OnBackingControlLoaded); 
+    _gotFocusHandlerRegistrationToken = _backingControl->GotFocus += ref new Windows::UI::Xaml::RoutedEventHandler(this, &TextField::OnGotFocus);
+    _lostFocusHandlerRegistrationToken = _backingControl->LostFocus += ref new Windows::UI::Xaml::RoutedEventHandler(this, &UIKit::Xaml::TextField::OnLostFocus);
+    _keydownHandlerRegistrationToken = _backingControl->KeyDown += ref new Windows::UI::Xaml::Input::KeyEventHandler(this, &UIKit::Xaml::TextField::OnKeyDown);
 
-    // hooking up event handlers with passwordBox
-    _textChangedHandlerRegistrationToken = textBox->TextChanged += ref new Windows::UI::Xaml::Controls::TextChangedEventHandler(this, &TextField::OnTextChanged);
-    _gotFocusHandlerRegistrationToken = textBox->GotFocus += ref new Windows::UI::Xaml::RoutedEventHandler(this, &TextField::OnGotFocus);
-    _lostFocusHandlerRegistrationToken = textBox->LostFocus += ref new Windows::UI::Xaml::RoutedEventHandler(this, &UIKit::Xaml::TextField::OnLostFocus);
-    _keydownHandlerRegistrationToken = textBox->KeyDown += ref new Windows::UI::Xaml::Input::KeyEventHandler(this, &UIKit::Xaml::TextField::OnKeyDown);
+    if (secure) {
+        auto passwordBox = safe_cast<Controls::PasswordBox^>(_backingControl);
+        _textChangedHandlerRegistrationToken = passwordBox->PasswordChanged += ref new Windows::UI::Xaml::RoutedEventHandler(this, &TextField::OnPasswordChanged);
+        passwordBox->InputScope = _FindBestFitInputScope();
+    } else {
+        auto textBox = safe_cast<Controls::TextBox^>(_backingControl);
+        _textChangedHandlerRegistrationToken = textBox->TextChanged += ref new Windows::UI::Xaml::Controls::TextChangedEventHandler(this, &TextField::OnTextChanged);
+        textBox->InputScope = _FindBestFitInputScope();
+    }
 
+    // adding the new backing control to visual tree
     Children->Append(_backingControl);
 }
 
-void TextField::OnTextBoxLoaded(Platform::Object ^sender, Windows::UI::Xaml::RoutedEventArgs ^e)
-{
-    // setting up property bindings for textbox
-    // bind textbox's text property to TextField's Text Property
-    auto textBox = safe_cast<Controls::TextBox^>(_backingControl);
+Windows::UI::Xaml::Input::InputScope^ TextField::_FindBestFitInputScope() {
+    Input::InputScopeNameValue targetInputScopeNameValue = _inputScopeNameValue;
+    if (_secureEntry) {
+        if (_inputScopeNameValue != Input::InputScopeNameValue::Password &&  _inputScopeNameValue != Input::InputScopeNameValue::NumericPin) {
+            // passwordbox only allows these two inputScope, overwrite with password if inputScope isn't those two
+            targetInputScopeNameValue = Input::InputScopeNameValue::Password;
+        }
+    } else {
+        if (_inputScopeNameValue == Input::InputScopeNameValue::Password) {
+            // textbox does not like Password inputScope, overwrite with default
+            targetInputScopeNameValue = Input::InputScopeNameValue::Default;
+        }
+    }
 
-    Windows::UI::Xaml::Data::Binding^ binding = ref new Windows::UI::Xaml::Data::Binding();
-    binding->ElementName = "Root";
-    binding->Path = ref new Windows::UI::Xaml::PropertyPath("Text");
-    binding->Mode = Windows::UI::Xaml::Data::BindingMode::TwoWay;
-    binding->UpdateSourceTrigger = Windows::UI::Xaml::Data::UpdateSourceTrigger::PropertyChanged;
-    textBox->SetBinding(Controls::TextBox::TextProperty, binding);
-
-    // bind textbox's placeholderText property to TextField's placeholder Property
-    binding = ref new Windows::UI::Xaml::Data::Binding();
-    binding->Mode = Windows::UI::Xaml::Data::BindingMode::OneWay;
-    binding->ElementName = "Root";
-    binding->Path = ref new Windows::UI::Xaml::PropertyPath("Placeholder");
-    textBox->SetBinding(Controls::TextBox::PlaceholderTextProperty, binding);
-
-    // bind textbox's IsEnabled property to TextField's Enabled Property
-    binding = ref new Windows::UI::Xaml::Data::Binding();
-    binding->Mode = Windows::UI::Xaml::Data::BindingMode::OneWay;
-    binding->ElementName = "Root";
-    binding->Path = ref new Windows::UI::Xaml::PropertyPath("Enabled");
-    textBox->SetBinding(Controls::TextBox::IsEnabledProperty, binding);
-
-    // bind textbox's foreground property to TextField's Foreground Property
-    binding = ref new Windows::UI::Xaml::Data::Binding();
-    binding->Mode = Windows::UI::Xaml::Data::BindingMode::OneWay;
-    binding->ElementName = "Root";
-    binding->Path = ref new Windows::UI::Xaml::PropertyPath("Foreground");
-    textBox->SetBinding(Controls::TextBox::ForegroundProperty, binding);
-
-    // bind textbox's background property to TextField's Background Property
-    binding = ref new Windows::UI::Xaml::Data::Binding();
-    binding->Mode = Windows::UI::Xaml::Data::BindingMode::OneWay;
-    binding->ElementName = "Root";
-    binding->Path = ref new Windows::UI::Xaml::PropertyPath("Background");
-    textBox->SetBinding(Controls::TextBox::BackgroundProperty, binding);
-
-    // bind textbox's TextAlignment property to TextField's Alignment Property
-    binding = ref new Windows::UI::Xaml::Data::Binding();
-    binding->Mode = Windows::UI::Xaml::Data::BindingMode::OneWay;
-    binding->ElementName = "Root";
-    binding->Path = ref new Windows::UI::Xaml::PropertyPath("TextAlignment");
-    textBox->SetBinding(Controls::TextBox::TextAlignmentProperty, binding);
-
-    // bind textbox's Input property to TextField's InputScope Property
-    binding = ref new Windows::UI::Xaml::Data::Binding();
-    binding->Mode = Windows::UI::Xaml::Data::BindingMode::OneWay;
-    binding->Path = ref new Windows::UI::Xaml::PropertyPath("InputScope");
-    textBox->SetBinding(Controls::TextBox::InputScopeProperty, binding);
-
-    _SetTextVerticalAlignment();
-    _SetBorderStyle();
+    auto scopeName = ref new Windows::UI::Xaml::Input::InputScopeName();
+    scopeName->NameValue = targetInputScopeNameValue;
+    auto inputScope = ref new Windows::UI::Xaml::Input::InputScope();
+    inputScope->Names->Append(scopeName);
+    return inputScope;
 }
 
-void TextField::OnPasswordBoxLoaded(Platform::Object ^sender, Windows::UI::Xaml::RoutedEventArgs ^e)
+void TextField::OnBackingControlLoaded(Platform::Object ^sender, Windows::UI::Xaml::RoutedEventArgs ^e)
 {
-    auto passwordBox = safe_cast<Controls::PasswordBox^>(_backingControl);
+    if (_secureEntry) {
+        //  two way bind passwordbox's password property to TextField's Text Property
+        auto passwordBox = safe_cast<Controls::PasswordBox^>(_backingControl);
+        Windows::UI::Xaml::Data::Binding^ binding = ref new Windows::UI::Xaml::Data::Binding();
+        binding->Mode = Windows::UI::Xaml::Data::BindingMode::TwoWay;
+        binding->ElementName = "Root";
+        binding->Path = ref new Windows::UI::Xaml::PropertyPath("Text");
+        binding->UpdateSourceTrigger = Windows::UI::Xaml::Data::UpdateSourceTrigger::PropertyChanged;
+        passwordBox->SetBinding(Controls::PasswordBox::PasswordProperty, binding);
 
-    // setting up property bindings for passwordBox
-    // bind passwordbox's password property to TextField's Text Property
-    Windows::UI::Xaml::Data::Binding^ binding = ref new Windows::UI::Xaml::Data::Binding();
-    binding->Mode = Windows::UI::Xaml::Data::BindingMode::TwoWay;
-    binding->ElementName = "Root";
-    binding->Path = ref new Windows::UI::Xaml::PropertyPath("Text");
-    binding->UpdateSourceTrigger = Windows::UI::Xaml::Data::UpdateSourceTrigger::PropertyChanged;
-    passwordBox->SetBinding(Controls::PasswordBox::PasswordProperty, binding);
+        passwordBox->PlaceholderText = _placeholder;
+        passwordBox->InputScope = _FindBestFitInputScope();
+    } else {
+        // two way bind textbox's text property to TextField's Text Property
+        auto textBox = safe_cast<Controls::TextBox^>(_backingControl);
+        Windows::UI::Xaml::Data::Binding^ binding = ref new Windows::UI::Xaml::Data::Binding();
+        binding->ElementName = "Root";
+        binding->Path = ref new Windows::UI::Xaml::PropertyPath("Text");
+        binding->Mode = Windows::UI::Xaml::Data::BindingMode::TwoWay;
+        binding->UpdateSourceTrigger = Windows::UI::Xaml::Data::UpdateSourceTrigger::PropertyChanged;
+        textBox->SetBinding(Controls::TextBox::TextProperty, binding);
 
-    // bind passwordbox's placeholderText property to TextField's placeHolder Property
-    binding = ref new Windows::UI::Xaml::Data::Binding();
-    binding->Mode = Windows::UI::Xaml::Data::BindingMode::OneWay;
-    binding->ElementName = "Root";
-    binding->Path = ref new Windows::UI::Xaml::PropertyPath("Placeholder");
-    passwordBox->SetBinding(Controls::PasswordBox::PlaceholderTextProperty, binding);
+        textBox->PlaceholderText = _placeholder;
+        textBox->TextAlignment = _textAlignment;
+        textBox->InputScope = _FindBestFitInputScope();
+    }
 
-    // bind passwordbox's IsEnabled property to TextField's Enabled Property
-    binding = ref new Windows::UI::Xaml::Data::Binding();
-    binding->Mode = Windows::UI::Xaml::Data::BindingMode::OneWay;
-    binding->ElementName = "Root";
-    binding->Path = ref new Windows::UI::Xaml::PropertyPath("Enabled");
-    passwordBox->SetBinding(Controls::PasswordBox::IsEnabledProperty, binding);
-
-    // bind passwordbox's foreground property to TextField's Foreground Property
-    binding = ref new Windows::UI::Xaml::Data::Binding();
-    binding->Mode = Windows::UI::Xaml::Data::BindingMode::OneWay;
-    binding->ElementName = "Root";
-    binding->Path = ref new Windows::UI::Xaml::PropertyPath("Foreground");
-    passwordBox->SetBinding(Controls::PasswordBox::ForegroundProperty, binding);
-
-    // bind passwordbox's Background property to TextField's Background Property
-    binding = ref new Windows::UI::Xaml::Data::Binding();
-    binding->Mode = Windows::UI::Xaml::Data::BindingMode::OneWay;
-    binding->ElementName = "Root";
-    binding->Path = ref new Windows::UI::Xaml::PropertyPath("Background");
-    passwordBox->SetBinding(Controls::PasswordBox::BackgroundProperty, binding);
+    _backingControl->IsEnabled = _enabled;
+    _backingControl->Foreground = _foreground;
+    _backingControl->Background = Background;
 
     _SetTextVerticalAlignment();
     _SetBorderStyle();
@@ -287,46 +223,6 @@ void TextField::_RegisterDependencyProperties() {
             Platform::String::typeid,
             TextField::typeid,
             nullptr);
-
-        s_secureEntryProperty = DependencyProperty::RegisterAttached("SecureEntry",
-            Platform::Boolean::typeid,
-            TextField::typeid,
-            nullptr);
-
-        s_placeholderProperty = DependencyProperty::RegisterAttached("Placeholder",
-            Platform::String::typeid,
-            TextField::typeid,
-            nullptr);
-
-        s_inputScopeProperty = DependencyProperty::RegisterAttached("InputScope",
-            Input::InputScope::typeid,
-            TextField::typeid,
-            nullptr);
-
-        s_enabledProperty = DependencyProperty::RegisterAttached("Enabled",
-            Platform::Boolean::typeid,
-            TextField::typeid,
-            nullptr);
-
-        s_foregroundProperty = DependencyProperty::RegisterAttached("Foreground",
-            Media::SolidColorBrush::typeid,
-            TextField::typeid,
-            nullptr);
-
-        s_textAlignmentProperty = DependencyProperty::RegisterAttached("TextAlignment",
-            Windows::UI::Xaml::TextAlignment::typeid,
-            TextField::typeid,
-            nullptr);
-
-        s_textVerticalAlignmentProperty = DependencyProperty::RegisterAttached("TextVerticalAlignment",
-            Windows::UI::Xaml::VerticalAlignment::typeid,
-            TextField::typeid,
-            nullptr);
-
-        s_borderStyleProperty = DependencyProperty::RegisterAttached("BorderStyle",
-            UIKit::Xaml::TextBorderStyle::typeid,
-            TextField::typeid,
-            nullptr);
     }
 }
 
@@ -337,7 +233,7 @@ Image^ TextField::LayerContent::get() {
 
 // Accessor for our Layer content
 bool TextField::HasLayerContent::get() {
-    return _content != nullptr;
+    return false;
 }
 
 // Accessor for our SublayerCanvas
@@ -364,32 +260,27 @@ PasswordBox^ TextField::PasswordBox::get() {
 }
 
 void TextField::KillFocus() {
-    if (SecureEntry) {
-        PasswordBox->IsEnabled = false;
-        PasswordBox->IsEnabled = true;
-    } else {
-        TextBox->IsEnabled = false;
-        TextBox->IsEnabled = true;
+    // TODO: this is still a hack to kill the focus on this control
+    // Will switch to the Windows API when it is available.
+    if (_backingControl) {
+        _backingControl->IsEnabled = false;
+        _backingControl->IsEnabled = true;
     }
 }
 
 void TextField::SetFocus() {
-    if (SecureEntry) {
-        PasswordBox->Focus(FocusState::Programmatic);
-    } else {
-        TextBox->Focus(FocusState::Programmatic);
-    }
+    BecomeFirstResponder();
 }
 
 bool TextField::BecomeFirstResponder() {
-    if (SecureEntry) {
-        return PasswordBox->Focus(FocusState::Programmatic);
-    } else {
-        return TextBox->Focus(FocusState::Programmatic);
+    if (_backingControl) {
+        return _backingControl->Focus(FocusState::Programmatic);
     }
+
+    return false;
 }
 
-void TextField::OnTextChanged(Platform::Object ^sender, Windows::UI::Xaml::Controls::TextChangedEventArgs ^e)
+void TextField::OnTextChanged(Platform::Object^ sender, Windows::UI::Xaml::Controls::TextChangedEventArgs^ e)
 {
     if (_textChangedHandler) {
         _textChangedHandler->Invoke(
@@ -398,7 +289,7 @@ void TextField::OnTextChanged(Platform::Object ^sender, Windows::UI::Xaml::Contr
     }
 }
 
-void TextField::OnPasswordChanged(Platform::Object ^sender, Windows::UI::Xaml::RoutedEventArgs ^e)
+void TextField::OnPasswordChanged(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e)
 {
     if (_textChangedHandler) {
         _textChangedHandler->Invoke(
@@ -407,7 +298,7 @@ void TextField::OnPasswordChanged(Platform::Object ^sender, Windows::UI::Xaml::R
     }
 }
 
-void TextField::OnGotFocus(Platform::Object ^sender, Windows::UI::Xaml::RoutedEventArgs ^e)
+void TextField::OnGotFocus(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e)
 {
     if (_gotFocusHandler) {
         _gotFocusHandler->Invoke(
@@ -416,7 +307,7 @@ void TextField::OnGotFocus(Platform::Object ^sender, Windows::UI::Xaml::RoutedEv
     }
 }
 
-void TextField::OnLostFocus(Platform::Object ^sender, Windows::UI::Xaml::RoutedEventArgs ^e)
+void TextField::OnLostFocus(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e)
 {
     if (_lostFocusHanlder) {
         _lostFocusHanlder->Invoke(
@@ -425,45 +316,39 @@ void TextField::OnLostFocus(Platform::Object ^sender, Windows::UI::Xaml::RoutedE
     }
 }
 
-void TextField::OnKeyDown(Platform::Object ^sender, Windows::UI::Xaml::Input::KeyRoutedEventArgs ^e)
+void TextField::OnKeyDown(Platform::Object^ sender, Windows::UI::Xaml::Input::KeyRoutedEventArgs^ e)
 {
     if (_enterKeyDownHandler) {
         if (e->Key == Windows::System::VirtualKey::Enter) {
             _enterKeyDownHandler->Invoke(
                 InspectableFromObject(this).Get(),
                 ObjectToType<ABI::Windows::UI::Xaml::IRoutedEventArgs>(e).Get());
-            e->Handled = true;
-        } else {
-            e->Handled = false;
-        }
+        } 
     }
 }
 
 void TextField::ApplyFont(Platform::String^ fontFamily, FontStretch strech, FontStyle fontStyle, double fontSize, FontWeight fontWeight) {
-    if (SecureEntry) {
-        PasswordBox->FontFamily = ref new FontFamily(fontFamily);
-        PasswordBox->FontStretch = strech;
-        PasswordBox->FontStyle = fontStyle;
-        PasswordBox->FontSize = fontSize;
-        PasswordBox->FontWeight = fontWeight;
-    }
-    else {
-        TextBox->FontFamily = ref new FontFamily(fontFamily);
-        TextBox->FontStretch = strech;
-        TextBox->FontStyle = fontStyle;
-        TextBox->FontSize = fontSize;
-        TextBox->FontWeight = fontWeight;
+    if (_backingControl) {
+        _backingControl->FontFamily = ref new FontFamily(fontFamily);
+        _backingControl->FontStretch = strech;
+        _backingControl->FontStyle = fontStyle;
+        _backingControl->FontSize = fontSize;
+        _backingControl->FontWeight = fontWeight;
     }
 }
 
 void TextField::_SetTextVerticalAlignment() {
     // Set vertical aligment of both content and placeholder to the same value
-    FrameworkElement^ target = FindTemplateChild<FrameworkElement^>(_backingControl, "ContentElement");
+    // In TextBox/PasswordBox control templates, both have ContentElement and  PlaceholderTextContentPresenter
+    // to hold normal text/password content and placeholder content
+    // TextBox control template can be found at https://msdn.microsoft.com/en-us/library/windows/apps/mt299154.aspx
+    // PasswordBox control template can be found at https://msdn.microsoft.com/en-us/library/dd334412(v=vs.95).aspx
+    auto target = FindTemplateChild<FrameworkElement^>(_backingControl, "ContentElement");
     if (target) {
         target->VerticalAlignment = VerticalTextAlignment;
     }
 
-    target = FindTemplateChild<FrameworkElement^>(_backingControl, "PlaceholderTextContentPresenter");;
+    target = FindTemplateChild<FrameworkElement^>(_backingControl, "PlaceholderTextContentPresenter");
     if (target) {
         target->VerticalAlignment = VerticalTextAlignment;
     }
@@ -490,6 +375,54 @@ void TextField::_SetBorderStyle() {
             UNIMPLEMENTED_WITH_MSG("UITextBorderStyleBezel not yet supported; treated as no border.");
             _backingControl->BorderThickness = ThicknessHelper::FromUniformLength(0);
             break;
+        }
+    }
+}
+
+void TextField::_SetPlaceHolder() {
+    if (_backingControl) {
+        if (_secureEntry) {
+            auto passwordBox = safe_cast<Controls::PasswordBox^>(_backingControl);
+            passwordBox->PlaceholderText = _placeholder;
+        } else {
+            auto textBox = safe_cast<Controls::TextBox^>(_backingControl);
+            textBox->PlaceholderText = _placeholder;
+        }
+    }
+}
+
+void TextField::_SetInputScope() {
+    if (_backingControl) {
+        if (_secureEntry) {
+            auto passwordBox = safe_cast<Controls::PasswordBox^>(_backingControl);
+            passwordBox->InputScope = _FindBestFitInputScope();
+        }
+        else {
+            auto textBox = safe_cast<Controls::TextBox^>(_backingControl);
+            textBox->InputScope = _FindBestFitInputScope();
+        }
+    }
+}
+
+void TextField::_SetEnabled() {
+    if (_backingControl) {
+        _backingControl->IsEnabled = _enabled;
+    }
+}
+
+void TextField::_SetForeground() {
+    if (_backingControl) {
+        _backingControl->Foreground = _foreground;
+    }
+}
+
+void TextField::_SetTextAlignment() {
+    if (_backingControl) {
+        if (!_secureEntry) {
+            auto textBox = safe_cast<Controls::TextBox^>(_backingControl);
+            textBox->TextAlignment = _textAlignment;
+        } else {
+            UNIMPLEMENTED_WITH_MSG("XAML passwordbox currently does not allow set TextAlignment properties");
         }
     }
 }
@@ -542,9 +475,15 @@ UIKIT_XAML_EXPORT void XamlSetTextFieldText(const Microsoft::WRL::ComPtr<IInspec
     auto textField = safe_cast<UIKit::Xaml::TextField^>(reinterpret_cast<Platform::Object^>(inspectableTextField.Get()));
     textField->Text = Platform::StringReference(text.c_str());
     if (!textField->SecureEntry) {
+        // this is to set the selection to the end of of text so that
+        // to ensure when gaining focus programmatically, the caret is at
+        // the end of the field. PasswordBox didn't have API allowing
+        // us to that.
         textField->TextBox->SelectionStart = textField->Text->Length();
         textField->TextBox->SelectionLength = 0;
-    } 
+    } else {
+        UNIMPLEMENTED_WITH_MSG("XAML passwordbox currently does not allow set selection programmatically");
+    }
 }
 
 // Get the UIKit::Xaml::TextField's Text property
@@ -568,16 +507,10 @@ UIKIT_XAML_EXPORT IInspectable* XamlGetTextFieldPlaceholder(const Microsoft::WRL
 }
 
 // Set the UIKit::Xaml::TextField's InputScope property
-UIKIT_XAML_EXPORT void XamlSetTextFieldInputScope(const Microsoft::WRL::ComPtr<IInspectable>&  inspectableTextField, const Microsoft::WRL::ComPtr<IInspectable>& inputScope) {
+UIKIT_XAML_EXPORT void XamlSetTextFieldInputScope(const Microsoft::WRL::ComPtr<IInspectable>&  inspectableTextField, int inputSCopeNameValue) {
     auto textField = safe_cast<UIKit::Xaml::TextField^>(reinterpret_cast<Platform::Object^>(inspectableTextField.Get()));
-    auto inputScopeToUse = safe_cast<Input::InputScope^>(reinterpret_cast<Platform::Object^>(inputScope.Get()));
-    textField->InputScope = inputScopeToUse;
-}
-
-// Get the UIKit::Xaml::TextField's Input property
-UIKIT_XAML_EXPORT IInspectable* XamlGetTextFieldInputScope(const Microsoft::WRL::ComPtr<IInspectable>& inspectableTextField) {
-    auto textField = safe_cast<UIKit::Xaml::TextField^>(reinterpret_cast<Platform::Object^>(inspectableTextField.Get()));
-    return InspectableFromObject(textField->InputScope).Detach();
+    auto inputSCopeNameValueToUse = static_cast<Input::InputScopeNameValue>(inputSCopeNameValue);
+    textField->InputScopeNameValue = inputSCopeNameValueToUse;
 }
 
 // Set the UIKit::Xaml::TextField's Enabled property
@@ -751,9 +684,9 @@ FontWeight ConvertToFontWeight(DWRITE_FONT_WEIGHT fontWeight) {
 }
 
 // ApplyFont
-UIKIT_XAML_EXPORT void XamlTextFieldApplyFont(const Microsoft::WRL::ComPtr<IInspectable>&  inspectableTextField, const std::wstring& fontFmailyname, int fontStrech, int fontStyle, double fontSize, int fontWeight) {
+UIKIT_XAML_EXPORT void XamlTextFieldApplyFont(const Microsoft::WRL::ComPtr<IInspectable>&  inspectableTextField, const std::wstring& fontFamilyname, int fontStrech, int fontStyle, double fontSize, int fontWeight) {
     auto textField = safe_cast<UIKit::Xaml::TextField^>(reinterpret_cast<Platform::Object^>(inspectableTextField.Get()));
 
-    textField->ApplyFont(Platform::StringReference(fontFmailyname.c_str()), safe_cast<FontStretch>(fontStrech), safe_cast<FontStyle>(fontStyle), fontSize, ConvertToFontWeight(safe_cast<DWRITE_FONT_WEIGHT>(fontWeight)));
+    textField->ApplyFont(Platform::StringReference(fontFamilyname.c_str()), safe_cast<FontStretch>(fontStrech), safe_cast<FontStyle>(fontStyle), fontSize, ConvertToFontWeight(safe_cast<DWRITE_FONT_WEIGHT>(fontWeight)));
 }
 
