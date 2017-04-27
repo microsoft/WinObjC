@@ -22,6 +22,7 @@
 #import <GLKit/GLKSkyboxEffect.h>
 #import "GLKEffectInternal.h"
 #import "ShaderInfo.h"
+#import "AssertARCEnabled.h"
 
 #define NM 0.5773502691896258f // 1 / sqrtf(3)
 
@@ -63,11 +64,10 @@ const char* psSrc =
  @Status Interoperable
 */
 - (id)init {
-    [super init];
-    _textureCubeMap = [[GLKEffectPropertyTexture alloc] initWith:self];
-    _inited = FALSE;
-    _shaderInited = FALSE;
-    self.shaderName = @"StandardSkybox";
+    if (self = [super init]) {
+        _textureCubeMap = [[GLKEffectPropertyTexture alloc] initWith:self];
+        self.shaderName = @"StandardSkybox";
+    }
     return self;
 }
 
@@ -76,7 +76,6 @@ const char* psSrc =
         glDeleteBuffers(1, &_vb);
         glDeleteBuffers(1, &_ib);
     }
-    [super dealloc];
 }
 
 /**
