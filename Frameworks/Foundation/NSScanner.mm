@@ -197,10 +197,20 @@ static BOOL __scanNumeric(NSScanner* scanner,
  @Status Interoperable
 */
 - (BOOL)scanInteger:(NSInteger*)valuep {
+    long longValue;
     std::function<long(const wchar_t*, wchar_t**)> scanFunc = [self](const wchar_t* scanStart, wchar_t** scanEnd) {
         return _crtLocale ? _wcstol_l(scanStart, scanEnd, 10, _crtLocale) : wcstol(scanStart, scanEnd, 10);
     };
-    return __scanNumeric(self, reinterpret_cast<long*>(valuep), scanFunc);
+
+    if (!__scanNumeric(self, &longValue, scanFunc)) {
+        return NO;
+    }
+
+    if (valuep) {
+        *valuep = static_cast<NSInteger>(longValue);
+    }
+
+    return YES;
 }
 
 /**
