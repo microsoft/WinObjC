@@ -25,7 +25,6 @@
 #import <LoggingNative.h>
 #import "CGColorSpaceInternal.h"
 #import "CGGradientInternal.h"
-#import "UIColorInternal.h"
 
 static const wchar_t* TAG = L"CGGradient";
 
