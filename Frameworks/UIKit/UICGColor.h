@@ -19,3 +19,6 @@
 
 @interface _UIColorConcrete : UIColor
 @end
+
+@interface _UIColorConcreteConst : _UIColorConcrete
+@end

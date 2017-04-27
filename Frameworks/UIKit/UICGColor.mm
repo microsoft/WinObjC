@@ -240,3 +240,27 @@ rgb hsv2rgb(hsv in) {
 }
 
 @end
+
+// Const colors are expected to be a singleton
+@implementation _UIColorConcreteConst
+
+- (id)autorelease {
+    return self;
+}
+
+- (id)retain {
+    return self;
+}
+
+- (oneway void)release {
+}
+
+- (NSUInteger)retainCount {
+    return NSUIntegerMax;
+}
+
+- (void)dealloc {
+    [super dealloc];
+}
+
+@end
