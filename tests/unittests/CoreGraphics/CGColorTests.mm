@@ -49,6 +49,24 @@ TEST(CGColor, CGColorGetComponents) {
     CGColorSpaceRelease(clrRgb);
 }
 
+TEST(CGColor, CGGenericGray) {
+    CGFloat colors[] = { 0.5, 1 };
+
+    auto grayColorSpace = woc::MakeStrongCF<CGColorSpaceRef>(CGColorSpaceCreateDeviceGray());
+    auto col1 = woc::MakeStrongCF<CGColorRef>(CGColorCreate(grayColorSpace, colors));
+    auto col2 = woc::MakeStrongCF<CGColorRef>(CGColorCreateGenericGray(colors[0], colors[1]));
+    EXPECT_TRUE(CGColorEqualToColor(col1, col2));
+}
+
+TEST(CGColor, CGGenericRGB) {
+    CGFloat colors[] = { 1, 0, 0, 1 }; // bright red
+
+    auto rgbColorSpace = woc::MakeStrongCF<CGColorSpaceRef>(CGColorSpaceCreateDeviceRGB());
+    auto col1 = woc::MakeStrongCF<CGColorRef>(CGColorCreate(rgbColorSpace, colors));
+    auto col2 = woc::MakeStrongCF<CGColorRef>(CGColorCreateGenericRGB(colors[0], colors[1], colors[2], colors[3]));
+    EXPECT_TRUE(CGColorEqualToColor(col1, col2));
+}
+
 TEST(CGColor, CGColorEquals) {
     CGFloat colors[] = { 1, 0, 0, 1 }; // bright red
 
@@ -56,7 +74,7 @@ TEST(CGColor, CGColorEquals) {
     CGColorRef clr1 = CGColorCreate(clrRgb, colors);
     CGColorRef clr2 = CGColorCreateCopy(clr1);
     CGColorRef clr3 = CGColorCreateCopyWithAlpha(clr1, 0.9);
-    CGColorRef clr4 = CGColorCreate(clrRgb, colors);
+    CGColorRef clr4 = CGColorCreateGenericRGB(colors[0], colors[1], colors[2], colors[3]);
 
     EXPECT_EQ(CGColorSpaceGetModel(clrRgb), CGColorSpaceGetModel(CGColorGetColorSpace(clr1)));
     EXPECT_EQ(CGColorSpaceGetModel(clrRgb), CGColorSpaceGetModel(CGColorGetColorSpace(clr2)));

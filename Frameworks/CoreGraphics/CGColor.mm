@@ -235,3 +235,19 @@ CGPatternRef CGColorGetPattern(CGColorRef color) {
 CFTypeID CGColorGetTypeID() {
     return __CGColor::GetTypeID();
 }
+
+/**
+ @Status Interoperable
+*/
+CGColorRef CGColorCreateGenericRGB(CGFloat red, CGFloat green, CGFloat blue, CGFloat alpha) {
+    static const auto colorspace_rgb = woc::MakeStrongCF<CGColorSpaceRef>(CGColorSpaceCreateDeviceRGB());
+    return __CGColor::CreateInstance(kCFAllocatorDefault, colorspace_rgb, red, green, blue, alpha);
+}
+
+/**
+ @Status Interoperable
+*/
+CGColorRef CGColorCreateGenericGray(CGFloat gray, CGFloat alpha) {
+    static const auto colorspace_grayscale = woc::MakeStrongCF<CGColorSpaceRef>(CGColorSpaceCreateDeviceGray());
+    return __CGColor::CreateInstance(kCFAllocatorDefault, colorspace_grayscale, gray, gray, gray, alpha);
+}
