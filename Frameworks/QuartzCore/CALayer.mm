@@ -1,7 +1,7 @@
 //******************************************************************************
 //
 // Copyright (c) 2016 Intel Corporation. All rights reserved.
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -23,32 +23,31 @@
 #import "CGIWICBitmap.h"
 #import <CoreGraphics/D2DWrapper.h>
 
-#include "Foundation/NSMutableArray.h"
-#include "Foundation/NSMutableDictionary.h"
-#include "Foundation/NSNumber.h"
-#include "Foundation/NSValue.h"
-#include "Foundation/NSNull.h"
+#import "Foundation/NSMutableArray.h"
+#import "Foundation/NSMutableDictionary.h"
+#import "Foundation/NSNumber.h"
+#import "Foundation/NSValue.h"
+#import "Foundation/NSNull.h"
 
-#include "UIKit/UIApplication.h"
-#include "UIKit/UIColor.h"
-#include "UIColorInternal.h"
-#include "UIKit/NSValue+UIKitAdditions.h"
+#import <UIKit/UIApplication.h>
+#import "CGColorInternal.h"
+#import "UIKit/NSValue+UIKitAdditions.h"
 
-#include "QuartzCore/CALayer.h"
-#include "QuartzCore/CATransaction.h"
-#include "QuartzCore/CAEAGLLayer.h"
-#include "CAEAGLLayerInternal.h"
+#import "QuartzCore/CALayer.h"
+#import "QuartzCore/CATransaction.h"
+#import "QuartzCore/CAEAGLLayer.h"
+#import "CAEAGLLayerInternal.h"
 
-#include "CACompositor.h"
-#include "CAAnimationInternal.h"
-#include "CABasicAnimationInternal.h"
-#include "CATransactionInternal.h"
-#include "Quaternion.h"
+#import "CACompositor.h"
+#import "CAAnimationInternal.h"
+#import "CABasicAnimationInternal.h"
+#import "CATransactionInternal.h"
+#import "Quaternion.h"
 
-#include "LoggingNative.h"
-#include "NSLogging.h"
-#include "CALayerInternal.h"
-#include "CppWinRTHelpers.h"
+#import "LoggingNative.h"
+#import "NSLogging.h"
+#import "CALayerInternal.h"
+#import "CppWinRTHelpers.h"
 
 #import <objc/objc-arc.h>
 
@@ -433,7 +432,7 @@ CGContextRef CreateLayerContentsBitmapContext32(int width, int height, float sca
 
     if (priv->contents == NULL) {
         if (priv->_backgroundColor != nil) {
-            [static_cast<UIColor*>(priv->_backgroundColor) setFill];
+            CGContextSetFillColorWithColor(ctx, priv->_backgroundColor);
             CGContextFillRect(ctx, destRect);
         }
         [self drawInContext:ctx];
@@ -538,9 +537,9 @@ CGContextRef CreateLayerContentsBitmapContext32(int width, int height, float sca
                 CreateLayerContentsBitmapContext32(width, height, priv->contentsScale)) };
             _CGContextPushBeginDraw(drawContext);
 
-            if (priv->_backgroundColor != nil && (int)[static_cast<UIColor*>(priv->_backgroundColor) _type] != solidBrush) {
+            if (priv->_backgroundColor != nil && CGColorGetPattern(priv->_backgroundColor) != nullptr) {
                 CGContextSaveGState(drawContext);
-                CGContextSetFillColorWithColor(drawContext, [static_cast<UIColor*>(priv->_backgroundColor) CGColor]);
+                CGContextSetFillColorWithColor(drawContext, priv->_backgroundColor);
 
                 CGRect wholeRect = CGRectMake(0, 0, width, height);
                 CGContextFillRect(drawContext, wholeRect);
@@ -1568,9 +1567,10 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
 */
 - (void)setBackgroundColor:(CGColorRef)color {
     if (color != nil) {
-        priv->backgroundColor = *[static_cast<UIColor*>(color) _getColors];
+        const CGFloat* colorComp = CGColorGetComponents(color);
+        priv->backgroundColor = { colorComp[0], colorComp[1], colorComp[2], colorComp[3] };
     } else {
-        _ClearColorQuad(priv->backgroundColor);
+        priv->backgroundColor.Clear();
     }
 
     CGColorRef old = priv->_backgroundColor;
@@ -1581,7 +1581,7 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
     // is updated almost immediately.By setting the priv->background first,
     // we can ensure both states are kept in sync which is useful when performing
     // automated testing.
-    [CATransaction _setPropertyForLayer:self name:@"backgroundColor" value:(NSObject*)color];
+    [CATransaction _setPropertyForLayer:self name:@"backgroundColor" value:static_cast<NSObject*>(color)];
 
     [self setNeedsDisplay];
 }
@@ -1598,7 +1598,8 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
 */
 - (void)setBorderColor:(CGColorRef)color {
     // Set the border color via CATransaction
-    [CATransaction _setPropertyForLayer:self name:@"borderColor" value:(NSObject*)color];
+
+    [CATransaction _setPropertyForLayer:self name:@"borderColor" value:static_cast<NSObject*>(color)];
     [self setNeedsDisplay];
 }
 
@@ -1607,7 +1608,7 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
 */
 - (CGColorRef)borderColor {
     // Grab the current border color directly off of the layer proxy
-    return [(UIColor*)priv->_layerProxy->GetPropertyValue("borderColor") CGColor];
+    return static_cast<CGColorRef>(priv->_layerProxy->GetPropertyValue("borderColor"));
 }
 
 /**
