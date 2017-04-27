@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -17,27 +17,25 @@
 #pragma once
 
 #import <UIKit/UIColor.h>
+#import <CFCppBase.h>
+#import "CGColorInternal.h"
 #import <CoreGraphics/CoreGraphics.h>
 
 typedef struct {
-    CGFloat r;
-    CGFloat g;
-    CGFloat b;
-    CGFloat a;
-} __CGColorQuad;
+    double r; // percent
+    double g; // percent
+    double b; // percent
+} rgb;
 
-inline void _ClearColorQuad(__CGColorQuad& color) {
-    color.r = 0.0f;
-    color.g = 0.0f;
-    color.b = 0.0f;
-    color.a = 0.0f;
-}
+typedef struct {
+    double h; // angle in degrees
+    double s; // percent
+    double v; // percent
+} hsv;
 
-@interface UIColor (Internal) {
-}
-+ (UIColor*)_colorWithCGPattern:(CGPatternRef)pattern;
+hsv rgb2hsv(rgb in);
+rgb hsv2rgb(hsv in);
+
+@interface UIColor (Internal)
 + (UIColor*)_windowsTableViewCellSelectionBackgroundColor;
-- (const __CGColorQuad*)_getColors;
-- (BrushType)_type;
-@property (nonatomic, assign) CGColorSpaceRef colorSpace;
 @end
