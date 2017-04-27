@@ -54,6 +54,8 @@ NSString* const NSUnionOfArraysKeyValueOperator = @"NSUnionOfArraysKeyValueOpera
 NSString* const NSUnionOfObjectsKeyValueOperator = @"NSUnionOfObjectsKeyValueOperator";
 NSString* const NSUnionOfSetsKeyValueOperator = @"NSUnionOfSetsKeyValueOperator";
 
+static const wchar_t* TAG = L"NSObject (NSKeyValueCoding)";
+
 NSString* _NSKVCSplitKeypath(NSString* keyPath, NSString* __autoreleasing* pRemainder) {
     static woc::unique_cf<CFCharacterSetRef> dot{ CFCharacterSetCreateWithCharactersInRange(nullptr, (CFRange){ '.', 1 }) };
     CFRange result;
@@ -407,7 +409,8 @@ bool quickSet<Class>(id self, SEL setter, id value, const char* valueType) {
             return true;                                          \
         }                                                         \
         break;
-bool KVCSetViaAccessor(NSObject* self, SEL setter, id value) {
+
+bool KVCSetViaAccessor(NSObject* self, SEL setter, id value, NSString* key) {
     if (!setter) {
         return false;
     }
@@ -417,6 +420,11 @@ bool KVCSetViaAccessor(NSObject* self, SEL setter, id value) {
     // 3 arguments: self, selector, new value.
     if (sig && [sig numberOfArguments] == 3) {
         const char* valueType = [sig getArgumentTypeAtIndex:2];
+
+        if (!value && !(valueType[0] == '@' || valueType[0] == '#')) {
+            [self setNilValueForKey:key];
+            return false;
+        }
 
         switch (valueType[0]) {
             OBJC_APPLY_NUMERIC_TYPE_ENCODINGS(QUICK_SET_CASE);
@@ -439,13 +447,18 @@ bool KVCSetViaAccessor(NSObject* self, SEL setter, id value) {
     return false;
 }
 
-bool KVCSetViaIvar(NSObject* self, struct objc_ivar* ivar, id value) {
+bool KVCSetViaIvar(NSObject* self, struct objc_ivar* ivar, id value, NSString* key) {
     if (!ivar) {
         return false;
     }
 
-    uint32_t offset = ivar_getOffset(ivar);
     const char* argType = ivar_getTypeEncoding(ivar);
+    if (!value && !(argType[0] == '@' || argType[0] == '#')) {
+        [self setNilValueForKey:key];
+        return false;
+    }
+
+    uint32_t offset = ivar_getOffset(ivar);
 
     void* destination = reinterpret_cast<char*>(self) + offset;
     if (!woc::dataWithTypeFromValue(destination, argType, value)) {
@@ -457,6 +470,14 @@ bool KVCSetViaIvar(NSObject* self, struct objc_ivar* ivar, id value) {
     }
 
     return true;
+}
+
+/**
+ @Status Interoperable
+*/
+- (void)setNilValueForKey:(NSString*)key {
+    [NSException raise:NSInvalidArgumentException
+                format:@"-[%s setValue:forKey:]: Attempt to set nil for key %@", class_getName([self class]), key];
 }
 
 /**
@@ -581,30 +602,80 @@ bool KVCSetViaIvar(NSObject* self, struct objc_ivar* ivar, id value) {
     return StubReturn();
 }
 
-/**
- @Status Stub
- @Notes
-*/
-- (void)setNilValueForKey:(NSString*)key {
-    UNIMPLEMENTED();
+static SEL KVCValidatorForPropertyName(NSObject* self, const char* key) {
+    size_t len = strlen(key);
+    // For the key "example", we must construct the following buffer:
+    // _ _ _ _ _ _ _ _ _ x a m p l e _ _ _ _ _ _ _ \0
+    // and fill it with the following characters:
+    // v a l i d a t e E x a m p l e : e r r o r : \0
+    char* chars = (char*)_alloca(8 + len + 8);
+    strcpy_s(chars + 9, len, key + 1);
+    chars[0] = 'v';
+    chars[1] = 'a';
+    chars[2] = 'l';
+    chars[3] = 'i';
+    chars[4] = 'd';
+    chars[5] = 'a';
+    chars[6] = 't';
+    chars[7] = 'e';
+    chars[8] = toupper(key[0]);
+    chars[8 + len] = ':';
+    chars[8 + len + 1] = 'e';
+    chars[8 + len + 2] = 'r';
+    chars[8 + len + 3] = 'r';
+    chars[8 + len + 4] = 'o';
+    chars[8 + len + 5] = 'r';
+    chars[8 + len + 6] = ':';
+    chars[8 + len + 7] = '\0';
+    SEL sel = sel_getUid(chars);
+    return ([self respondsToSelector:sel]) ? sel : nullptr;
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
+ @Notes Invoked validate method must return BOOL
 */
 - (BOOL)validateValue:(id _Nullable*)ioValue forKey:(NSString*)key error:(NSError* _Nullable*)outError {
-    UNIMPLEMENTED();
-    return StubReturn();
+    SEL validationSelector = KVCValidatorForPropertyName(self, [key UTF8String]);
+    if (validationSelector) {
+        NSMethodSignature* sig = [self methodSignatureForSelector:validationSelector];
+        // 4 arguments: self, selector, ioValue, outError
+        if (sig.numberOfArguments == 4) {
+            // Reference platform does not check types, but will segfault when trying to return a value with size larger than BOOL
+            // And we will run into issues with values smaller than BOOL so simply ignore non-BOOL sized returns
+            if (sig.methodReturnLength == sizeof(BOOL)) {
+                return ((BOOL(*)(id, SEL, id*, NSError**))objc_msgSend)(self, validationSelector, ioValue, outError);
+            } else {
+                // But give a warning because this is stricter than the reference platform
+                TraceWarning(TAG,
+                             L"-[%s %s]: expected return type of BOOL but is actually %s",
+                             class_getName([self class]),
+                             sel_getName(validationSelector),
+                             sig.methodReturnType);
+            }
+        }
+    }
+
+    // There is no validation method, so just return YES
+    return YES;
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
+ @Notes Invoked validate method must return BOOL
 */
-- (BOOL)validateValue:(id _Nullable*)ioValue forKeyPath:(NSString*)key error:(NSError* _Nullable*)outError {
-    UNIMPLEMENTED();
-    return StubReturn();
+- (BOOL)validateValue:(id _Nullable*)ioValue forKeyPath:(NSString*)inKeyPath error:(NSError* _Nullable*)outError {
+    NSString* key = nil;
+    NSString* restOfKeypath;
+    key = _NSKVCSplitKeypath(inKeyPath, &restOfKeypath);
+
+    if (restOfKeypath) {
+        // We must recurse here, as any class may override validateValue:forKeyPath:error:
+        id val = [self valueForKey:key];
+        return [val validateValue:ioValue forKeyPath:restOfKeypath error:outError];
+    }
+
+    return [self validateValue:ioValue forKey:key error:outError];
 }
 
 @end
