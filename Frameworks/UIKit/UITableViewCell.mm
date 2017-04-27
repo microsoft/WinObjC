@@ -1090,10 +1090,11 @@ static UIView* getCurrentAccessoryView(UITableViewCell* self) {
 
 - (void)_addBottomBorder:(UITableView*)parentTable {
     if (_borderView == nil) {
-        const __CGColorQuad* color = [[parentTable backgroundColor] _getColors];
+        const CGFloat* color = CGColorGetComponents([[parentTable backgroundColor] CGColor]);
+
         UIColor* backgroundColor = nil;
 
-        if ((color == nullptr) || (color->a == 0.0f) || (color->r == 1.0f && color->g == 1.0f && color->b == 1.0f && color->a == 1.0f)) {
+        if ((color == nullptr) || (color[3] == 0.0f) || (color[0] == 1.0f && color[1] == 1.0f && color[2] == 1.0f && color[3] == 1.0f)) {
             backgroundColor = [UIColor grayColor];
         } else {
             backgroundColor = [UIColor whiteColor];
