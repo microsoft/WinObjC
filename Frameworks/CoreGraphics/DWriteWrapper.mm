@@ -142,7 +142,7 @@ CFStringRef _CFStringFromLocalizedString(IDWriteLocalizedStrings* localizedStrin
     RETURN_NULL_IF_FAILED(localizedString->GetStringLength(index, &length));
 
     // Get the string. Use length + 1 here as GetString requires room for the null terminator.
-    woc::unique_iw<wchar_t> wcharString(static_cast<wchar_t*>(IwMalloc(sizeof(wchar_t) * (length + 1))));
+    std::unique_ptr<wchar_t, decltype(&free)> wcharString(static_cast<wchar_t*>(malloc(sizeof(wchar_t) * (length + 1))), free);
     RETURN_NULL_IF_FAILED(localizedString->GetString(index, wcharString.get(), length + 1));
 
     // Strip out unnecessary null terminator

@@ -242,7 +242,6 @@ static void __CFAllocatorSystemDeallocate(void *ptr, void *info) {
 
 #else
 
-#ifndef WINOBJC
 static void *__CFAllocatorSystemAllocate(CFIndex size, CFOptionFlags hint, void *info) {
     return malloc(size);
 }
@@ -254,21 +253,6 @@ static void *__CFAllocatorSystemReallocate(void *ptr, CFIndex newsize, CFOptionF
 static void __CFAllocatorSystemDeallocate(void *ptr, void *info) {
     free(ptr);
 }
-#else
-#include <IwMalloc.h>
-// WINOBJC: Use the user code's CRT's heap management functions.
-static void *__CFAllocatorSystemAllocate(CFIndex size, CFOptionFlags hint, void *info) {
-    return IwMalloc(size);
-}
-
-static void *__CFAllocatorSystemReallocate(void *ptr, CFIndex newsize, CFOptionFlags hint, void *info) {
-    return IwRealloc(ptr, newsize);
-}
-
-static void __CFAllocatorSystemDeallocate(void *ptr, void *info) {
-    IwFree(ptr);
-}
-#endif
 #endif
 
 static void *__CFAllocatorNullAllocate(CFIndex size, CFOptionFlags hint, void *info) {

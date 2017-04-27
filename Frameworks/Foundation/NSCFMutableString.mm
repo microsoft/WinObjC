@@ -70,7 +70,7 @@ PROTOTYPE_CLASS_REQUIRED_IMPLS(NSObject)
         // to be able to append etc without also taking an external allocator for resizing. Do free the buffer now if they
         // said freeWhenDone since it is "done" at this point. NOTE: this *must* have been allocated with same heap as IwMalloc's.
         if (freeWhenDone && bytes) {
-            IwFree(bytes);
+            free(bytes);
         }
     }
     return self;
@@ -90,7 +90,7 @@ PROTOTYPE_CLASS_REQUIRED_IMPLS(NSObject)
         // to be able to append etc without also taking an external allocator for resizing. Do free the buffer now if they
         // said freeWhenDone since it is "done" at this point. NOTE: this *must* have been allocated with same heap as IwMalloc's.
         if (freeWhenDone && bytes) {
-            IwFree(bytes);
+            free(bytes);
         }
     }
     return self;

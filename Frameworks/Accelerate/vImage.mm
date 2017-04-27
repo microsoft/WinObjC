@@ -84,7 +84,7 @@ vImage_Error vImageBuffer_InitWithCGImage(
     if (result == kvImageNoError) {
         const uint32_t srcPitch = CGImageGetBytesPerRow(image);
         const uint32_t dstPitch = buffer->rowBytes;
-        const BYTE* srcData = static_cast<const BYTE *>(_CGDataProviderGetData(CGImageGetDataProvider(image)));
+        const BYTE* srcData = static_cast<const BYTE*>(_CGDataProviderGetData(CGImageGetDataProvider(image)));
         BYTE* dstData = reinterpret_cast<BYTE*>(buffer->data);
         const uint32_t bytesPerPixel = format->bitsPerPixel >> 3;
         const uint32_t bytesToCopy = width * bytesPerPixel;
@@ -145,7 +145,7 @@ CGImageRef vImageCreateCGImageFromBuffer(vImage_Buffer* buffer,
 
     if (packedWidthInBytes < buffer->rowBytes) {
         // packing needed
-        packedBuffer = IwMalloc(buffer->height * packedWidthInBytes);
+        packedBuffer = malloc(buffer->height * packedWidthInBytes);
 
         if (packedBuffer != nil) {
             packedBufferAllocated = true;
@@ -199,7 +199,7 @@ CGImageRef vImageCreateCGImageFromBuffer(vImage_Buffer* buffer,
     CGDataProviderRelease(dataProvider);
 
     if (packedBufferAllocated == true) {
-        IwFree(packedBuffer);
+        free(packedBuffer);
     }
 
     if (imageRef == nullptr) {

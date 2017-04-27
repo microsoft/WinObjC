@@ -1,10 +1,5 @@
 LIBRARY WinObjCRT
     EXPORTS
-        IwMalloc
-        IwFree
-        IwRealloc
-        IwCalloc
-
         ; Shim all of the dbg CRT symbols that would use the debug heap.
         ; In the Release version of the WinObjCRT, redirect these symbols
         ; to the release heap version. This is because the "end product"

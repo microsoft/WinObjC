@@ -55,12 +55,15 @@ NSString* const NSUnionOfObjectsKeyValueOperator = @"NSUnionOfObjectsKeyValueOpe
 NSString* const NSUnionOfSetsKeyValueOperator = @"NSUnionOfSetsKeyValueOperator";
 
 NSString* _NSKVCSplitKeypath(NSString* keyPath, NSString* __autoreleasing* pRemainder) {
-    static woc::unique_cf<CFCharacterSetRef> dot{CFCharacterSetCreateWithCharactersInRange(nullptr, (CFRange){'.', 1})};
+    static woc::unique_cf<CFCharacterSetRef> dot{ CFCharacterSetCreateWithCharactersInRange(nullptr, (CFRange){ '.', 1 }) };
     CFRange result;
     CFIndex length = CFStringGetLength((CFStringRef)keyPath);
-    if (length > 0 && CFStringFindCharacterFromSet((CFStringRef)keyPath, dot.get(), (CFRange){0, length}, 0, &result)) {
-        *pRemainder = [(NSString*)CFStringCreateWithSubstring(nullptr, (CFStringRef)keyPath, (CFRange){result.location + 1, length - (result.location + 1)}) autorelease];
-        return [(NSString*)CFStringCreateWithSubstring(nullptr, (CFStringRef)keyPath, (CFRange){0, result.location}) autorelease];
+    if (length > 0 && CFStringFindCharacterFromSet((CFStringRef)keyPath, dot.get(), (CFRange){ 0, length }, 0, &result)) {
+        *pRemainder =
+            [(NSString*)CFStringCreateWithSubstring(nullptr,
+                                                    (CFStringRef)keyPath,
+                                                    (CFRange){ result.location + 1, length - (result.location + 1) }) autorelease];
+        return [(NSString*)CFStringCreateWithSubstring(nullptr, (CFStringRef)keyPath, (CFRange){ 0, result.location }) autorelease];
     }
     *pRemainder = nil;
     return keyPath;
@@ -102,7 +105,7 @@ struct objc_ivar* KVCIvarForPropertyName(NSObject* self, const char* propName) {
     // Walk up the class hierarchy looking for matching ivars.
     for (; cls; cls = class_getSuperclass(cls)) {
         unsigned int ivarCount = 0;
-        std::unique_ptr<Ivar, std::function<void(Ivar*)>> ivars(class_copyIvarList(cls, &ivarCount), IwFree);
+        std::unique_ptr<Ivar, decltype(&free)> ivars(class_copyIvarList(cls, &ivarCount), free);
         auto foundIvar =
             std::find_if(ivars.get(), ivars.get() + ivarCount, [propName](const Ivar ivar) { return _ivarIsKVCCompliant(ivar, propName); });
         if (foundIvar != ivars.get() + ivarCount) {
@@ -149,23 +152,23 @@ SEL KVCGetterForPropertyName(NSObject* self, const char* key) {
 
 template <typename T>
 static id quickGet(id self, SEL getter) {
-    T ret = ((T (*)(id, SEL))objc_msgSend)(self, getter);
+    T ret = ((T(*)(id, SEL))objc_msgSend)(self, getter);
     return woc::ValueTransformer<T>::get(&ret);
 }
 
 template <>
 id quickGet<id>(id self, SEL getter) {
-    return ((id (*)(id, SEL))objc_msgSend)(self, getter);
+    return ((id(*)(id, SEL))objc_msgSend)(self, getter);
 }
 
 template <>
 id quickGet<Class>(id self, SEL getter) {
-    return ((id (*)(id, SEL))objc_msgSend)(self, getter);
+    return ((id(*)(id, SEL))objc_msgSend)(self, getter);
 }
 
 #define QUICK_GET_CASE(type, name, capitalizedName, encodingChar) \
-    case encodingChar: \
-        *ret = quickGet<type>(self, getter); \
+    case encodingChar:                                            \
+        *ret = quickGet<type>(self, getter);                      \
         return true;
 bool KVCGetViaAccessor(NSObject* self, SEL getter, id* ret) {
     if (!getter) {
@@ -399,10 +402,10 @@ bool quickSet<Class>(id self, SEL setter, id value, const char* valueType) {
 }
 
 #define QUICK_SET_CASE(type, name, capitalizedName, encodingChar) \
-    case encodingChar: \
-        if (quickSet<type>(self, setter, value, valueType)) { \
-            return true; \
-        } \
+    case encodingChar:                                            \
+        if (quickSet<type>(self, setter, value, valueType)) {     \
+            return true;                                          \
+        }                                                         \
         break;
 bool KVCSetViaAccessor(NSObject* self, SEL setter, id value) {
     if (!setter) {

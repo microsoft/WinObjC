@@ -57,9 +57,6 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalOptions>/ignore:4087 /ignore:4001 %(AdditionalOptions)</AdditionalOptions>
       <TreatLinkerWarningAsErrors>true</TreatLinkerWarningAsErrors>
-
-      <!-- Ensure we pick up operator new from our project rather than the C runtime -->
-      <ForceSymbolReferences>??2@YAPAXI@Z</ForceSymbolReferences>
     </Link>
   </ItemDefinitionGroup>
 

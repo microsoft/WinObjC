@@ -88,7 +88,7 @@ GLuint ShaderProgram::createProgram(Shader* vertexShader, Shader* fragmentShader
         glGetProgramiv(program, GL_INFO_LOG_LENGTH, &infoLength);
 
         if (infoLength > 1) {
-            char* infoLog = (char*)IwMalloc(sizeof(char) * infoLength);
+            char* infoLog = (char*)malloc(sizeof(char) * infoLength);
 
             glGetProgramInfoLog(program, infoLength, NULL, infoLog);
 
@@ -98,7 +98,7 @@ GLuint ShaderProgram::createProgram(Shader* vertexShader, Shader* fragmentShader
             } else {
                 LOG_MESSAGE(__FILE__, __LINE__, OpenGLESString("ERROR: Linking program ") + name + " failed:\n" + infoLog);
             }
-            IwFree(infoLog);
+            free(infoLog);
         }
 
         if (linked != 0) {
@@ -524,13 +524,13 @@ void ShaderProgram::validate() {
         glGetProgramiv(program, GL_INFO_LOG_LENGTH, &infoLength);
 
         if (infoLength > 1) {
-            char* infoLog = (char*)IwMalloc(sizeof(char) * infoLength);
+            char* infoLog = (char*)malloc(sizeof(char) * infoLength);
 
             glGetProgramInfoLog(program, infoLength, NULL, infoLog);
 
             LOG_MESSAGE(__FILE__, __LINE__, OpenGLESString("ERROR: Validation error in program ") + name + ":\n" + infoLog);
 
-            IwFree(infoLog);
+            free(infoLog);
         }
     }
 }

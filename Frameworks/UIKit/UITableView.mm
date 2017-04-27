@@ -1126,7 +1126,7 @@ static void calcCellPositions(UITableView* self) {
 
     _TableCellAnimationHelper* cleanupHelper = [_TableCellAnimationHelper new];
     cleanupHelper->_numCellsToBeRemoved = 0;
-    cleanupHelper->_cellsToBeRemoved = (id*)IwMalloc(sizeof(id) * count);
+    cleanupHelper->_cellsToBeRemoved = (id*)malloc(sizeof(id) * count);
 
     if (animationType != UITableViewRowAnimationNone) {
         [UIView setAnimationDidStopSelector:@selector(animationFinished)];
@@ -1913,7 +1913,7 @@ static void recalcTableSize(UITableView* self, bool changedWidth) {
         maxCells += curNode->childCount;
     }
     cleanupHelper->_numCellsToBeRemoved = 0;
-    cleanupHelper->_cellsToBeRemoved = (id*)IwMalloc(sizeof(id) * maxCells);
+    cleanupHelper->_cellsToBeRemoved = (id*)malloc(sizeof(id) * maxCells);
 
     if (animationType != UITableViewRowAnimationNone) {
         [UIView setAnimationDidStopSelector:@selector(animationFinished)];

@@ -45,7 +45,7 @@ bool ShaderSource::expandSource() {
 
     int additionalSourceLength = additionalSource.size();
     size_t sourceTmpSize = (sizeof(char) * n) + additionalSourceLength + 1;
-    char* sourceTmp = (char*)IwMalloc(sourceTmpSize);
+    char* sourceTmp = (char*)malloc(sourceTmpSize);
     if (sourceTmp == NULL) {
         LOG_MESSAGE(__FILE__, __LINE__, "ERROR: Cannot allocate memory.");
         return false;
@@ -56,7 +56,7 @@ bool ShaderSource::expandSource() {
 
     source = sourceTmp;
     sourceExpanded = true;
-    IwFree(sourceTmp);
+    free(sourceTmp);
 
     return true;
 }

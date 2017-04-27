@@ -18,7 +18,6 @@
 #import "CoreGraphics/CGPath.h"
 #import "CoreGraphics/CGGeometry.h"
 #import "CoreGraphics/CGContext.h"
-#import "IwMalloc.h"
 #import "StubReturn.h"
 
 static CGAffineTransform* getTransform(UIBezierPath* path);
@@ -319,7 +318,7 @@ CGAffineTransform* getTransform(UIBezierPath* path) {
 */
 - (void)dealloc {
     if (_pattern) {
-        IwFree(_pattern);
+        free(_pattern);
         _pattern = NULL;
     }
 
@@ -360,7 +359,7 @@ CGAffineTransform* getTransform(UIBezierPath* path) {
 */
 - (void)setLineDash:(const CGFloat*)pattern count:(NSInteger)count phase:(CGFloat)phase {
     if (_pattern) {
-        IwFree(_pattern);
+        free(_pattern);
         _pattern = NULL;
     }
 
@@ -369,7 +368,7 @@ CGAffineTransform* getTransform(UIBezierPath* path) {
 
     assert(sizeof(float) == sizeof(CGFloat));
     if (count > 0) {
-        _pattern = (float*)IwMalloc(sizeof(float) * count);
+        _pattern = (float*)malloc(sizeof(float) * count);
         memcpy(_pattern, pattern, sizeof(float) * count);
     }
 }

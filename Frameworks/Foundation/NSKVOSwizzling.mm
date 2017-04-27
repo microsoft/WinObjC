@@ -83,7 +83,10 @@ static inline CFMutableDictionaryRef _selectorMappingsForObject(id object) {
     @synchronized(cls) {
         CFMutableDictionaryRef selMappings = (CFMutableDictionaryRef)objc_getAssociatedObject(cls, &s_selMapKey);
         if (!selMappings) {
-            selMappings = CFDictionaryCreateMutable(kCFAllocatorDefault, 16, NULL, &kCFTypeDictionaryValueCallBacks); // no key callbacks: they're selector names.
+            selMappings = CFDictionaryCreateMutable(kCFAllocatorDefault,
+                                                    16,
+                                                    NULL,
+                                                    &kCFTypeDictionaryValueCallBacks); // no key callbacks: they're selector names.
             objc_setAssociatedObject(cls, &s_selMapKey, (id)selMappings, OBJC_ASSOCIATION_RETAIN);
             CFRelease(selMappings);
         }
@@ -94,7 +97,6 @@ static inline CFMutableDictionaryRef _selectorMappingsForObject(id object) {
 static inline NSString* _keyForSelector(id object, SEL selector) {
     return (NSString*)CFDictionaryGetValue(_selectorMappingsForObject(object), sel_getName(selector));
 }
-
 
 static inline void _associateSelectorWithKey(id object, SEL selector, NSString* key) {
     CFDictionarySetValue(_selectorMappingsForObject(object), sel_getName(selector), key);
@@ -127,7 +129,7 @@ static void notifyingVariadicSetImpl(id self, SEL _cmd, ...) {
     NSMethodSignature* sig = [self methodSignatureForSelector:_cmd];
     auto argSz = [sig getArgumentSizeAtIndex:2];
     auto nStackArgs = argSz / sizeof(unsigned);
-    unsigned* raw = static_cast<unsigned*>(IwCalloc(sizeof(unsigned), nStackArgs));
+    unsigned* raw = static_cast<unsigned*>(calloc(sizeof(unsigned), nStackArgs));
     va_list ap;
     va_start(ap, _cmd);
     for (unsigned int i = 0; i < nStackArgs; ++i) {
@@ -170,7 +172,7 @@ static void notifyingVariadicSetImpl(id self, SEL _cmd, ...) {
 
     [self didChangeValueForKey:key];
 
-    IwFree(raw);
+    free(raw);
 }
 
 static void NSKVONotifying$insertObject$inXxxAtIndex$(id self, SEL _cmd, id object, NSUInteger index) {
@@ -284,8 +286,8 @@ static void NSKVO$removeObjectForKey$(id self, SEL _cmd, NSString* key) {
 #pragma endregion
 
 #define KVO_SET_IMPL_CASE(type, name, capitalizedName, encodingChar) \
-    case encodingChar: \
-        newImpl = reinterpret_cast<IMP>(&notifyingSetImpl<type>); \
+    case encodingChar:                                               \
+        newImpl = reinterpret_cast<IMP>(&notifyingSetImpl<type>);    \
         break;
 // invariant: rawKey has already been capitalized
 static void _NSKVOEnsureSimpleKeyWillNotify(id object, NSString* key, const char* rawKey) {
@@ -332,7 +334,10 @@ static void replaceAndAssociateWithKey(id object, SEL sel, NSString* key, IMP im
         const char* selName = sel_getName(sel);
         Method method = class_getInstanceMethod(object_getClass(object), sel);
         if (!method) {
-            TraceWarning(TAG, L"Unable to find method for %hs on class %hs; perhaps it is a forward?", selName, object_getClassName(object));
+            TraceWarning(TAG,
+                         L"Unable to find method for %hs on class %hs; perhaps it is a forward?",
+                         selName,
+                         object_getClassName(object));
             return;
         }
 
@@ -367,19 +372,40 @@ static void _NSKVOEnsureCollectionWillNotify(id object, NSString* key, const cha
 
     replaceAndAssociateWithKey(object, insertOneSel, key, (IMP)NSKVONotifying$insertObject$inXxxAtIndex$);
     replaceAndAssociateWithKey(object, insertManySel, key, (IMP)NSKVONotifying$insertXxx$atIndexes$);
-    replaceAndAssociateWithKey(object, formatSelector(@"removeObjectFrom%sAtIndex:", rawKey), key, (IMP)NSKVONotifying$removeObjectFromXxxAtIndex$);
+    replaceAndAssociateWithKey(object,
+                               formatSelector(@"removeObjectFrom%sAtIndex:", rawKey),
+                               key,
+                               (IMP)NSKVONotifying$removeObjectFromXxxAtIndex$);
     replaceAndAssociateWithKey(object, formatSelector(@"remove%sAtIndexes:", rawKey), key, (IMP)NSKVONotifying$removeXxxAtIndexes$);
-    replaceAndAssociateWithKey(object, formatSelector(@"replaceObjectIn%sAtIndex:withObject:", rawKey), key, (IMP)NSKVONotifying$replaceObjectInXxxAtIndex$withObject$);
-    replaceAndAssociateWithKey(object, formatSelector(@"replace%sAtIndexes:with%s:", rawKey, rawKey), key, (IMP)NSKVONotifying$replaceXxxAtIndexes$withXxx$);
+    replaceAndAssociateWithKey(object,
+                               formatSelector(@"replaceObjectIn%sAtIndex:withObject:", rawKey),
+                               key,
+                               (IMP)NSKVONotifying$replaceObjectInXxxAtIndex$withObject$);
+    replaceAndAssociateWithKey(object,
+                               formatSelector(@"replace%sAtIndexes:with%s:", rawKey, rawKey),
+                               key,
+                               (IMP)NSKVONotifying$replaceXxxAtIndexes$withXxx$);
 }
 
 static std::unique_ptr<char[]> mutableBufferFromString(NSString* string) {
     NSUInteger lengthInBytes = 0;
     auto lengthInCharacters = string.length;
-    [string getBytes:nullptr maxLength:NSIntegerMax usedLength:&lengthInBytes encoding:NSUTF8StringEncoding options:0 range:(NSRange){0, lengthInCharacters} remainingRange:nullptr];
+    [string getBytes:nullptr
+             maxLength:NSIntegerMax
+            usedLength:&lengthInBytes
+              encoding:NSUTF8StringEncoding
+               options:0
+                 range:(NSRange) { 0, lengthInCharacters }
+        remainingRange:nullptr];
     std::unique_ptr<char[]> rawKey = std::make_unique<char[]>(lengthInBytes + 1);
-    [string getBytes:rawKey.get() maxLength:lengthInBytes usedLength:&lengthInBytes encoding:NSUTF8StringEncoding options:0 range:(NSRange){0, lengthInCharacters} remainingRange:nullptr];
-    rawKey[lengthInBytes]='\0';
+    [string getBytes:rawKey.get()
+             maxLength:lengthInBytes
+            usedLength:&lengthInBytes
+              encoding:NSUTF8StringEncoding
+               options:0
+                 range:(NSRange) { 0, lengthInCharacters }
+        remainingRange:nullptr];
+    rawKey[lengthInBytes] = '\0';
     return rawKey;
 }
 
@@ -395,7 +421,7 @@ void _NSKVOEnsureKeyWillNotify(id object, NSString* key) {
         return;
     }
 
-    std::unique_ptr<char[]> rawKey{std::move(mutableBufferFromString(key))};
+    std::unique_ptr<char[]> rawKey{ std::move(mutableBufferFromString(key)) };
     rawKey[0] = toupper(rawKey[0]);
 
     @synchronized(object) {

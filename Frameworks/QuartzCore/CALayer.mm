@@ -156,14 +156,14 @@ public:
 
     ~NodeList() {
         if (items) {
-            IwFree(items);
+            free(items);
         }
     }
 
     inline void AddNode(T* item) {
         if (count + 1 > max) {
             max += 64;
-            items = (T**)IwRealloc(items, max * sizeof(T*));
+            items = (T**)realloc(items, max * sizeof(T*));
         }
         items[count++] = item;
     }
@@ -241,9 +241,7 @@ static void DoDisplayList(CALayer* layer) {
     }
 }
 
-CAPrivateInfo::CAPrivateInfo(CALayer* self, const FrameworkElement& xamlElement)
-    : _xamlElement(nullptr), _sublayerXamlElement(nullptr) {
-
+CAPrivateInfo::CAPrivateInfo(CALayer* self, const FrameworkElement& xamlElement) : _xamlElement(nullptr), _sublayerXamlElement(nullptr) {
     memset(this, 0, sizeof(CAPrivateInfo));
     setSelf(self);
 
@@ -1471,12 +1469,12 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
 - (void)removeAllAnimations {
     if (priv->_animations) {
         int count = CFDictionaryGetCount((CFDictionaryRef)priv->_animations);
-        id* vals = (id*)IwMalloc(sizeof(id) * count);
+        id* vals = (id*)malloc(sizeof(id) * count);
         CFDictionaryGetKeysAndValues((CFDictionaryRef)priv->_animations, NULL, (const void**)vals);
         for (int i = 0; i < count; i++) {
             [vals[i] _removeAnimationsFromLayer];
         }
-        IwFree(vals);
+        free(vals);
 
         [priv->_animations removeAllObjects];
     }
@@ -2446,7 +2444,7 @@ bool _floatAlmostEqual(float a, float b) {
     Media::GeneralTransform transform = fromLayerElement.TransformToVisual(toLayerElement);
 
     // transform the points in fromLayer to point in toLayer
-    winrt::Windows::Foundation::Point pointInFromLayer { point.x, point.y };
+    winrt::Windows::Foundation::Point pointInFromLayer{ point.x, point.y };
     winrt::Windows::Foundation::Point pointInToLayer = transform.TransformPoint(pointInFromLayer);
     CGPoint ret = { pointInToLayer.X, pointInToLayer.Y };
 

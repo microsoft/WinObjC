@@ -185,7 +185,7 @@ double dSwap(double val) {
 }
 
 Byte* CAFDecoder::GetBytes(NSInputStream* stream, int len) {
-    Byte* ret = (Byte*)IwMalloc(len);
+    Byte* ret = (Byte*)malloc(len);
     [stream read:ret maxLength:len];
     return ret;
 }
@@ -251,7 +251,7 @@ void CAFDecoder::ProduceOutputPackets(NSInputStream* stream,
             std::advance(theIterator, 1);
         }
 
-        IwFree(theInputData);
+        free(theInputData);
     } else {
         //  set the return value since we're not actually doing any work
         ioOutputDataByteSize = 0;

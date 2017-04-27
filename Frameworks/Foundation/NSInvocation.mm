@@ -72,7 +72,7 @@ static constexpr unsigned int NSINVOCATION_SMALL_RETURN_VALUE_SIZE = 16;
 
         size_t promotedReturnLength = _callFrame->getReturnLength();
         if (promotedReturnLength > sizeof(_smallReturnValueOptimization)) {
-            _returnValue = IwCalloc(promotedReturnLength, 1); // promoted return length
+            _returnValue = calloc(promotedReturnLength, 1); // promoted return length
         } else {
             _returnValue = &_smallReturnValueOptimization;
         }
@@ -143,7 +143,7 @@ static constexpr unsigned int NSINVOCATION_SMALL_RETURN_VALUE_SIZE = 16;
             // Release old value:
             id oldValue = nil;
             [self getArgument:&oldValue atIndex:index];
-            [(*(id*)buf) retain];
+            [(*(id*)buf)retain];
             if (oldValue) {
                 [oldValue release];
             }
@@ -151,9 +151,9 @@ static constexpr unsigned int NSINVOCATION_SMALL_RETURN_VALUE_SIZE = 16;
             char* oldValue = nullptr;
             [self getArgument:&oldValue atIndex:index];
             if (oldValue) {
-                IwFree(oldValue);
+                free(oldValue);
             }
-            char* newValue = IwStrDup(*(char**)buf);
+            char* newValue = _strdup(*(char**)buf);
             _callFrame->storeArgument(&newValue, index);
             return;
         }
@@ -199,7 +199,7 @@ static constexpr unsigned int NSINVOCATION_SMALL_RETURN_VALUE_SIZE = 16;
                 char* arg = nullptr;
                 _callFrame->loadArgument(&arg, i);
                 if (arg) {
-                    arg = IwStrDup(arg);
+                    arg = _strdup(arg);
                     _callFrame->storeArgument(&arg, i);
                 }
             }
@@ -239,13 +239,13 @@ static constexpr unsigned int NSINVOCATION_SMALL_RETURN_VALUE_SIZE = 16;
             } else if (type[0] == '*') {
                 char* arg = nullptr;
                 [self getArgument:&arg atIndex:i];
-                IwFree(arg);
+                free(arg);
             }
         }
     }
 
     if (_returnValue != &_smallReturnValueOptimization) {
-        IwFree(_returnValue);
+        free(_returnValue);
     }
 
     [super dealloc];

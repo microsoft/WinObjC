@@ -21,12 +21,6 @@
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)\dllmain.cpp" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="$(MSBuildThisFileDirectory)..\lib\WinObjCRTLib.vcxproj">
-      <Project>{faebdba2-dff7-4944-9b13-bcc4da340804}</Project>
-      <IncludeInPackage>false</IncludeInPackage>
-    </ProjectReference>
-  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{585b4870-0d6b-43a6-8e7e-ad08f7f507b6}</ProjectGuid>
     <ProjectName>WinObjCRT</ProjectName>
@@ -55,41 +49,24 @@
     <None Include="Project.json" />
     <None Include="WinObjCRT_*.def" />
   </ItemGroup>
-
-    <Target Name="AddSingleConfigBuildOutput"  Returns="@(_PackageContentsForConfig)"> 
-      <MSBuild Projects="$(SolutionPath)"
-         Targets="GetSolutionConfigurationContents"
-         Properties="Configuration=$(Configuration);Platform=$(PlatformTarget)">
-        <Output TaskParameter="TargetOutputs" ItemName="_SolutionConfigurationContents" />
-      </MSBuild>
-
-      <Message Text="AddSingleConfigBuildOutput Platform: $(Platform)|$(Configuration)" Importance="High"/>
-
-      <MSBuild Projects="$(MSBuildProjectFile)"
-         Targets="GetPackageContents"
-         Properties="SkipGetPackageContentsForOtherConfigs=true;BuildingInsideVisualStudio=false;BuildProjectReferences=true;Configuration=$(Configuration);Platform=$(Platform);CurrentSolutionConfigurationContents=%(_SolutionConfigurationContents.Identity);GetPackageContentsDependsOn=Build;$(GetPackageContentsDependsOn);">
-        <Output TaskParameter="TargetOutputs" ItemName="_PackageContentsForConfig" />
-      </MSBuild>
-    </Target>
-
-    <Target Name="AddOtherConfigsBuiltOutput" BeforeTargets="GetPackageContents" Condition="'$(SkipGetPackageContentsForOtherConfigs)' != 'true'">
-
-      <ItemGroup>
-        <_PackTargetConfig Include="%(ProjectConfiguration.Configuration)"
-                Condition="'%(ProjectConfiguration.Configuration)' != '$(Configuration)' AND '%(ProjectConfiguration.Platform)' == '$(Platform)'" />
-      </ItemGroup>
-    
-      <MSBuild Projects="$(MSBuildProjectFile)"
-           Targets="AddSingleConfigBuildOutput"
-           Properties="Configuration=%(_PackTargetConfig.Identity)">
-        <Output TaskParameter="TargetOutputs" ItemName="_OtherPackageContents" />
-      </MSBuild>    
-
-      <ItemGroup>
-        <PackageFile Include="@(_OtherPackageContents)" />
-      </ItemGroup>
-
+  <Target Name="AddSingleConfigBuildOutput" Returns="@(_PackageContentsForConfig)">
+    <MSBuild Projects="$(SolutionPath)" Targets="GetSolutionConfigurationContents" Properties="Configuration=$(Configuration);Platform=$(PlatformTarget)">
+      <Output TaskParameter="TargetOutputs" ItemName="_SolutionConfigurationContents" />
+    </MSBuild>
+    <Message Text="AddSingleConfigBuildOutput Platform: $(Platform)|$(Configuration)" Importance="High" />
+    <MSBuild Projects="$(MSBuildProjectFile)" Targets="GetPackageContents" Properties="SkipGetPackageContentsForOtherConfigs=true;BuildingInsideVisualStudio=false;BuildProjectReferences=true;Configuration=$(Configuration);Platform=$(Platform);CurrentSolutionConfigurationContents=%(_SolutionConfigurationContents.Identity);GetPackageContentsDependsOn=Build;$(GetPackageContentsDependsOn);">
+      <Output TaskParameter="TargetOutputs" ItemName="_PackageContentsForConfig" />
+    </MSBuild>
   </Target>
-
- 
+  <Target Name="AddOtherConfigsBuiltOutput" BeforeTargets="GetPackageContents" Condition="'$(SkipGetPackageContentsForOtherConfigs)' != 'true'">
+    <ItemGroup>
+      <_PackTargetConfig Include="%(ProjectConfiguration.Configuration)" Condition="'%(ProjectConfiguration.Configuration)' != '$(Configuration)' AND '%(ProjectConfiguration.Platform)' == '$(Platform)'" />
+    </ItemGroup>
+    <MSBuild Projects="$(MSBuildProjectFile)" Targets="AddSingleConfigBuildOutput" Properties="Configuration=%(_PackTargetConfig.Identity)">
+      <Output TaskParameter="TargetOutputs" ItemName="_OtherPackageContents" />
+    </MSBuild>
+    <ItemGroup>
+      <PackageFile Include="@(_OtherPackageContents)" />
+    </ItemGroup>
+  </Target>
 </Project>

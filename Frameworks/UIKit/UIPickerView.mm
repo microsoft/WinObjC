@@ -81,7 +81,7 @@ struct RowData {
     _numRows = [_dataSource pickerView:_parent numberOfRowsInComponent:_componentNum];
 
     //  Grab rows
-    _rowData = (RowData*)IwCalloc(_numRows, sizeof(RowData));
+    _rowData = (RowData*)calloc(_numRows, sizeof(RowData));
 
     float cellHeight = _defaultRowHeight;
 
@@ -352,7 +352,7 @@ static void notifySetSelected(UIPickerSubView* self, int idx) {
             }
             curRow->_rowString = nil;
         }
-        IwFree(_rowData);
+        free(_rowData);
     }
 
     [super dealloc];
@@ -502,7 +502,7 @@ static void DestroySections(UIPickerView* self) {
             [self->_subSections[i] release];
         }
 
-        IwFree(self->_subSections);
+        free(self->_subSections);
         self->_subSections = NULL;
         self->_numSections = 0;
     }
@@ -578,7 +578,7 @@ static void layoutSubSections(UIPickerView* self) {
         } else {
             _numSections = 1;
         }
-        _subSections = (UIPickerSubView**)IwCalloc(_numSections, sizeof(id));
+        _subSections = (UIPickerSubView**)calloc(_numSections, sizeof(id));
 
         float y = 0.0f;
 

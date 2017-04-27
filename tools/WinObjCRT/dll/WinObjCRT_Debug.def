@@ -1,10 +1,5 @@
 LIBRARY WinObjCRT
     EXPORTS
-        IwMalloc
-        IwFree
-        IwRealloc
-        IwCalloc
-
         ; Shim all of the dbg CRT symbols that would use the debug heap.
         ; In the debug WinObjCRT dll this simply forwards along to imported debug symbols. 
         _aligned_free_dbg

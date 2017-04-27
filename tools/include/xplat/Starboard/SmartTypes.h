@@ -584,22 +584,6 @@ inline StrongCF<T> MakeStrongCF(T val) {
 }
 #endif
 
-#ifdef WINOBJCRT_EXPORT // Quick way to detect WinObjCRT.
-#ifdef __OBJC__
-namespace woc {
-template <typename T>
-class unique_iw : public std::unique_ptr<T, void (*)(T*)> {
-public:
-    unique_iw() : std::unique_ptr<T, void (*)(T*)>(nullptr, (void (*)(T*)) & IwFree) {
-    }
-
-    explicit unique_iw(T* val) : std::unique_ptr<T, void (*)(T*)>(val, (void (*)(T*)) & IwFree) {
-    }
-};
-}
-#endif
-#endif
-
 #else // else(!defined(__cplusplus))
 
 #if defined(__OBJC__)

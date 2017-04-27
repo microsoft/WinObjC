@@ -798,7 +798,7 @@ TEST(NSInvocation, RetainArguments) {
     [invocation getArgument:&readbackArg3 atIndex:3];
 
     EXPECT_NO_THROW([readbackArg2 self]); // Should have been retained.
-    EXPECT_NE(readbackArg3, arg3); // Should have been IwStrDup'd.
+    EXPECT_NE(readbackArg3, arg3); // Should have been _strdup'd.
 }
 
 TEST(NSInvocation, ForwardingDoesNotRetainArguments) {

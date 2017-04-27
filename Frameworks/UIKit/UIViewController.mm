@@ -400,7 +400,7 @@ NSMutableDictionary* _pageMappings;
 + (instancetype)allocWithZone:(NSZone*)zone {
     UIViewController* ret = [super allocWithZone:zone];
 
-    ret->priv = (UIViewControllerPriv*)IwCalloc(1, sizeof(UIViewControllerPriv));
+    ret->priv = (UIViewControllerPriv*)calloc(1, sizeof(UIViewControllerPriv));
     ret->priv->_curOrientation = UIInterfaceOrientationPortrait;
     ret->priv->_edgesForExtendedLayout = 0xF;
     ret->priv->_contentSizeForViewInPopover.width = 320.0f;
@@ -715,7 +715,7 @@ NSMutableDictionary* _pageMappings;
         NSString* ret = nil;
         NSString* nibPath;
 
-        char* ourClass = IwStrDup(object_getClassName(self));
+        const char* ourClass = object_getClassName(self);
         char tryClass[255];
 
         assert(strlen(ourClass) < 255);
@@ -739,8 +739,6 @@ NSMutableDictionary* _pageMappings;
             }
         }
 
-        IwFree(ourClass);
-
         return ret;
     }
 
@@ -760,7 +758,7 @@ NSMutableDictionary* _pageMappings;
 - (instancetype)initWithNibName:(NSString*)strNib bundle:(NSBundle*)bundle {
     if (self = [super init]) {
         if (!priv) {
-            priv = (UIViewControllerPriv*)IwCalloc(1, sizeof(UIViewControllerPriv));
+            priv = (UIViewControllerPriv*)calloc(1, sizeof(UIViewControllerPriv));
             priv->_curOrientation = UIInterfaceOrientationPortrait;
             priv->_contentSizeForViewInPopover.width = 320.0f;
             priv->_contentSizeForViewInPopover.height = 1100.0f;
@@ -844,7 +842,7 @@ NSMutableDictionary* _pageMappings;
             assert(0);
         }
     } else {
-        char* ourClass = IwStrDup(object_getClassName(self));
+        char* ourClass = _strdup(object_getClassName(self));
         char tryClass[255];
 
         assert(strlen(ourClass) < 255);
@@ -862,7 +860,7 @@ NSMutableDictionary* _pageMappings;
             nibPath = [[NSBundle mainBundle] pathForResource:[NSString stringWithCString:ourClass] ofType:@"nib"];
         }
 
-        IwFree(ourClass);
+        free(ourClass);
     }
 
     if (nibPath != nil) {
@@ -1829,7 +1827,7 @@ static UIInterfaceOrientation findOrientation(UIViewController* self) {
     // Walk the list of outlets and assign them to the corresponding XAML UIElement
     unsigned int propListCount = 0;
     objc_property_t* props = (objc_property_t*)class_copyPropertyList([self class], &propListCount);
-    auto freeProps = wil::ScopeExit([&]() { IwFree(props); });
+    auto freeProps = wil::ScopeExit([&]() { free(props); });
 
     for (int i = 0; i < propListCount; i++) {
         objc_property_t curProp = props[i];
@@ -2299,7 +2297,7 @@ static UIInterfaceOrientation findOrientation(UIViewController* self) {
     priv->_childViewControllers = nil;
     priv->_searchDisplayController = nil;
     priv->_modalTemplates = nil;
-    IwFree(priv);
+    free(priv);
 
     //  For safety since most people seem to forget
     [[NSNotificationCenter defaultCenter] removeObserver:self];

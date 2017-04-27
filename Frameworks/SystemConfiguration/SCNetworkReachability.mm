@@ -33,6 +33,7 @@
 #include "COMIncludes_End.h"
 
 #include <objc/objc-arc.h>
+#include <string>
 
 using namespace winrt::Windows::Networking;
 using namespace winrt::Windows::Networking::Connectivity;
@@ -111,9 +112,7 @@ static NSLock* _allReachabilityOperationsLock;
 @implementation SCNetworkReachability
 + (void)initialize {
     if (self == [SCNetworkReachability class]) {
-        NetworkInformation::NetworkStatusChanged(objcwinrt::callback([self] (const WF::IInspectable&) {
-                [self _networkStatusChanged];
-        }));
+        NetworkInformation::NetworkStatusChanged(objcwinrt::callback([self](const WF::IInspectable&) { [self _networkStatusChanged]; }));
         [self _checkGlobalReachability];
     }
 }
@@ -368,7 +367,7 @@ static NSLock* _allReachabilityOperationsLock;
 @end
 
 @interface SCNetworkReachabilityHostName : SCNetworkReachability {
-    char* _hostname;
+    std::string _hostname;
 }
 @end
 
@@ -402,7 +401,7 @@ static NSLock* _allReachabilityOperationsLock;
         HostName hostName(addressStr);
         WF::IAsyncOperation<WFC::IVectorView<EndpointPair>> async = DatagramSocket::GetEndpointPairsAsync(hostName, L"0");
 
-        async.Completed(objcwinrt::callback([self] (const WF::IAsyncOperation<WFC::IVectorView<EndpointPair>>& op, WF::AsyncStatus status) {
+        async.Completed(objcwinrt::callback([self](const WF::IAsyncOperation<WFC::IVectorView<EndpointPair>>& op, WF::AsyncStatus status) {
             if (status == WF::AsyncStatus::Completed) {
                 if (op.GetResults().Size() > 0) {
                     [self _setReachabilityFlags:_globalReachableFlags | kSCNetworkReachabilityFlagsReachable];
@@ -423,13 +422,12 @@ static NSLock* _allReachabilityOperationsLock;
 @implementation SCNetworkReachabilityHostName
 - (instancetype)initWithHostName:(const char*)hostname {
     [super init];
-    _hostname = IwStrDup(hostname);
+    _hostname.assign(hostname);
 
     return self;
 }
 
 - (void)dealloc {
-    IwFree(_hostname);
     [super dealloc];
 }
 
@@ -437,7 +435,7 @@ static NSLock* _allReachabilityOperationsLock;
     //  keep ourself around until the reachability test completes
     [self retain];
 
-    NSString* hostStr = [NSString stringWithCString:_hostname];
+    NSString* hostStr = [NSString stringWithCString:_hostname.data()];
 
     //  To extract just the host name in case we're fed an URL
     NSURL* url = [NSURL URLWithString:hostStr];
@@ -451,7 +449,7 @@ static NSLock* _allReachabilityOperationsLock;
 
     WF::IAsyncOperation<WFC::IVectorView<EndpointPair>> async = DatagramSocket::GetEndpointPairsAsync(hostName, L"0");
 
-    async.Completed(objcwinrt::callback([self] (const WF::IAsyncOperation<WFC::IVectorView<EndpointPair>>& op, WF::AsyncStatus status) {
+    async.Completed(objcwinrt::callback([self](const WF::IAsyncOperation<WFC::IVectorView<EndpointPair>>& op, WF::AsyncStatus status) {
         if (status == WF::AsyncStatus::Completed) {
             if (op.GetResults().Size() > 0) {
                 [self _setReachabilityFlags:_globalReachableFlags | kSCNetworkReachabilityFlagsReachable];
