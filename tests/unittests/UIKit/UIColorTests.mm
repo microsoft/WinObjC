@@ -17,6 +17,20 @@
 #include <TestFramework.h>
 #import <UIKit/UIColor.h>
 
+TEST(UIColorTest, ColorTests) {
+    UIColor* color = [UIColor redColor];
+    UIColor* color2 = [UIColor colorWithRed:1 green:0 blue:0 alpha:1];
+    EXPECT_OBJCEQ(color, color2);
+
+    color = [UIColor blackColor];
+    color2 = [UIColor colorWithWhite:0 alpha:1];
+    EXPECT_OBJCEQ(color, color2);
+
+    color = [UIColor blackColor];
+    color2 = [UIColor colorWithRed:0 green:0 blue:0 alpha:1];
+    EXPECT_OBJCNE(color, color2);
+}
+
 TEST(UIColorTest, NamedUIColorMethods) {
     UIColor* color = [UIColor redColor];
 
