@@ -86,6 +86,24 @@ public:
         startTests(labelVC);
     }
 
+    bool compareRGBAValues(UIColor* col1, UIColor* col2) {
+        if (col1 == nullptr && col2 == nullptr) {
+            return true;
+        }
+
+        if (!col1 || !col2) {
+            return false;
+        }
+
+        CGFloat r1, g1, b1, a1;
+        [col1 getRed:&r1 green:&g1 blue:&b1 alpha:&a1];
+
+        CGFloat r2, g2, b2, a2;
+        [col2 getRed:&r2 green:&g2 blue:&b2 alpha:&a2];
+
+        return (r1 == r2) && (g1 == g2) && (b1 == b2) && (a1 == a2);
+    }
+
     void startTests(UILabelViewController* self) {
         testId = 0;
 
@@ -329,7 +347,7 @@ public:
         });
     }
 
-#if 0  // Test temporarily broken
+#if 0 // Test temporarily broken
     TEST_METHOD(UILabel_VerifyLineBreakMode) {
         StrongId<UILabelViewController> labelVC;
         labelVC.attach([[UILabelViewController alloc] init]);
@@ -468,37 +486,37 @@ public:
 
             auto colorBrush = textBlock.Foreground().as<Media::SolidColorBrush>();
             ASSERT_TRUE(colorBrush);
-            EXPECT_OBJCEQ(UXTestAPI::ConvertWUColorToUIColor(colorBrush.Color()), label.textColor);
+            EXPECT_TRUE(compareRGBAValues(UXTestAPI::ConvertWUColorToUIColor(colorBrush.Color()), label.textColor));
 
             // verify setting color to others
             label.textColor = [UIColor redColor];
             colorBrush = textBlock.Foreground().as<Media::SolidColorBrush>();
             ASSERT_TRUE(colorBrush);
-            EXPECT_OBJCEQ(UXTestAPI::ConvertWUColorToUIColor(colorBrush.Color()), label.textColor);
+            EXPECT_TRUE(compareRGBAValues(UXTestAPI::ConvertWUColorToUIColor(colorBrush.Color()), label.textColor));
 
             label.textColor = [UIColor greenColor];
             colorBrush = textBlock.Foreground().as<Media::SolidColorBrush>();
             ASSERT_TRUE(colorBrush);
-            EXPECT_OBJCEQ(UXTestAPI::ConvertWUColorToUIColor(colorBrush.Color()), label.textColor);
+            EXPECT_TRUE(compareRGBAValues(UXTestAPI::ConvertWUColorToUIColor(colorBrush.Color()), label.textColor));
 
             // verify setting highlightedColor without changing UILabel state to highlighted state
             // the label's text color should not change
             label.highlightedTextColor = [UIColor blueColor];
             colorBrush = textBlock.Foreground().as<Media::SolidColorBrush>();
             ASSERT_TRUE(colorBrush);
-            EXPECT_OBJCEQ(UXTestAPI::ConvertWUColorToUIColor(colorBrush.Color()), label.textColor);
+            EXPECT_TRUE(compareRGBAValues(UXTestAPI::ConvertWUColorToUIColor(colorBrush.Color()), label.textColor));
 
             // now change the UILabel's state to be highlighted, and textblock's foreground should be using highlightedTextColor
             label.highlighted = YES;
             colorBrush = textBlock.Foreground().as<Media::SolidColorBrush>();
             ASSERT_TRUE(colorBrush);
-            EXPECT_OBJCEQ(UXTestAPI::ConvertWUColorToUIColor(colorBrush.Color()), label.highlightedTextColor);
+            EXPECT_TRUE(compareRGBAValues(UXTestAPI::ConvertWUColorToUIColor(colorBrush.Color()), label.highlightedTextColor));
 
             // now change the UILabel's state to be normal, verify textBlock's forground return to use original textColor
             label.highlighted = NO;
             colorBrush = textBlock.Foreground().as<Media::SolidColorBrush>();
             ASSERT_TRUE(colorBrush);
-            EXPECT_OBJCEQ(UXTestAPI::ConvertWUColorToUIColor(colorBrush.Color()), label.textColor);
+            EXPECT_TRUE(compareRGBAValues(UXTestAPI::ConvertWUColorToUIColor(colorBrush.Color()), label.textColor));
         });
     }
 
