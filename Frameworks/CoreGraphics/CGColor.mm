@@ -228,3 +228,10 @@ CGPatternRef CGColorGetPattern(CGColorRef color) {
     RETURN_NULL_IF(!color);
     return color->Pattern();
 }
+
+/**
+ @Status Interoperable
+*/
+CFTypeID CGColorGetTypeID() {
+    return __CGColor::GetTypeID();
+}
