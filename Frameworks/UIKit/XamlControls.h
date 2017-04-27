@@ -85,9 +85,7 @@ winrt::Windows::UI::Xaml::Media::SolidColorBrush GetActivityIndicatorViewForegro
 void SetActivityIndicatorViewForegroundValue(const winrt::Windows::UI::Xaml::FrameworkElement& activityIndicatorInspectable,
                                              const winrt::Windows::UI::Xaml::Media::SolidColorBrush& foregroundColorBrush);
 
-double GetActivityIndicatorViewHeightValue(const winrt::Windows::UI::Xaml::FrameworkElement& activityIndicatorInspectable);
 void SetActivityIndicatorViewHeightValue(const winrt::Windows::UI::Xaml::FrameworkElement& activityIndicatorInspectable, double height);
-double GetActivityIndicatorViewWidthValue(const winrt::Windows::UI::Xaml::FrameworkElement& activityIndicatorInspectable);
 void SetActivityIndicatorViewWidthValue(const winrt::Windows::UI::Xaml::FrameworkElement& activityIndicatorInspectable, double width);
 
 ////////////////////////////////////////////////////////////////////////////////////

@@ -209,8 +209,8 @@ static const int c_largeSquareLength = 37;
             _style = UIActivityIndicatorViewStyleWhite;
     }
 
-    [self _setHeight:styleSquareLength];
-    [self _setWidth:styleSquareLength];
+    XamlControls::SetActivityIndicatorViewHeightValue([self _winrtXamlElement], styleSquareLength);
+    XamlControls::SetActivityIndicatorViewWidthValue([self _winrtXamlElement], styleSquareLength);
 
     [self setColor:styleColor];
 }
@@ -290,34 +290,6 @@ Microsoft Extension
 */
 + (RTObject*)createXamlElement {
     return objcwinrt::to_rtobj(XamlControls::CreateActivityIndicatorView());
-}
-
-/**
- Gets the height underlying ProgressRing
-*/
-- (double)_height {
-    return XamlControls::GetActivityIndicatorViewHeightValue([self _winrtXamlElement]);
-}
-
-/**
- Sets the height underlying ProgressRing
-*/
-- (void)_setHeight:(double)height {
-    XamlControls::SetActivityIndicatorViewHeightValue([self _winrtXamlElement], height);
-}
-
-/**
- Gets the width underlying ProgressRing
-*/
-- (double)_width {
-    return XamlControls::GetActivityIndicatorViewWidthValue([self _winrtXamlElement]);
-}
-
-/**
- Sets the width underlying ProgressRing
-*/
-- (void)_setWidth:(double)width {
-    XamlControls::SetActivityIndicatorViewWidthValue([self _winrtXamlElement], width);
 }
 
 @end

@@ -110,19 +110,9 @@ UIKIT_XAML_EXPORT void XamlSetActivityIndicatorViewForegroundValue(
     activityIndicator->ActivityIndicatorView_Foreground = color;
 }
 
-UIKIT_XAML_EXPORT double XamlGetActivityIndicatorViewHeightValue(const Microsoft::WRL::ComPtr<IInspectable>& activityIndicatorInspectable) {
-    auto activityIndicator = safe_cast<UIKit::Xaml::ActivityIndicatorView^>(reinterpret_cast<Platform::Object^>(activityIndicatorInspectable.Get()));
-    return activityIndicator->ActivityIndicatorView_Height;
-}
-
 UIKIT_XAML_EXPORT void XamlSetActivityIndicatorViewHeightValue(const Microsoft::WRL::ComPtr<IInspectable>& activityIndicatorInspectable, double height) {
     auto activityIndicator = safe_cast<UIKit::Xaml::ActivityIndicatorView^>(reinterpret_cast<Platform::Object^>(activityIndicatorInspectable.Get()));
     activityIndicator->ActivityIndicatorView_Height = height;
-}
-
-UIKIT_XAML_EXPORT double XamlGetActivityIndicatorViewWidthValue(const Microsoft::WRL::ComPtr<IInspectable>& activityIndicatorInspectable) {
-    auto activityIndicator = safe_cast<UIKit::Xaml::ActivityIndicatorView^>(reinterpret_cast<Platform::Object^>(activityIndicatorInspectable.Get()));
-    return activityIndicator->ActivityIndicatorView_Width;
 }
 
 UIKIT_XAML_EXPORT void XamlSetActivityIndicatorViewWidthValue(const Microsoft::WRL::ComPtr<IInspectable>& activityIndicatorInspectable, double width) {

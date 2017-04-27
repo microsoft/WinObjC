@@ -8,16 +8,23 @@
     mc:Ignorable="d"
     x:Name="Root">
 
-    <!-- TODO: Update property names in paths for binding once they have been updated in the header. See #2607 -->
+    <!-- NOTE:
+         This Canvas is required to allow the ProgressRing to extend beyond the bounds of this Grid without clipping.
+         In iOS, it is possible for the frame of the UIActivityIndicatorView to be smaller than the indicator it contains, without clipping.
+         In XAML, the Grid clips its contents by default, with no option to disable this behavior. A Canvas does not clip its contents, and
+         also is not clipped by its parents (in this case a Grid).
+    -->
     <Canvas x:Name="indicatorCanvas"
-            Height="{Binding ElementName=Root, Path=ActivityIndicatorView_Height, Mode=OneWay}"
-            Width="{Binding ElementName=Root, Path=ActivityIndicatorView_Width, Mode=OneWay}"
+            Height="{x:Bind progressRing.Height, Mode=OneWay}"
+            Width="{x:Bind progressRing.Width, Mode=OneWay}"
             HorizontalAlignment="Center"
             VerticalAlignment="Center">
+
+        <!-- TODO: Update property names in paths for binding once they have been updated in the header. See #2607 -->
         <ProgressRing x:Name="progressRing"
                       IsActive="{Binding ElementName=Root, Path=ActivityIndicatorView_IsActive, Mode=OneWay}"
                       Foreground="{Binding ElementName=Root, Path=ActivityIndicatorView_Foreground, Mode=OneWay}"
-                      Height="{Binding ElementName=indicatorCanvas, Path=Height, Mode=TwoWay}"
-                      Width="{Binding ElementName=indicatorCanvas, Path=Width, Mode=TwoWay}" />
+                      Height="{Binding ElementName=Root, Path=ActivityIndicatorView_Height, Mode=OneWay}"
+                      Width="{Binding ElementName=Root, Path=ActivityIndicatorView_Width, Mode=OneWay}"/>
     </Canvas>
 </Grid>

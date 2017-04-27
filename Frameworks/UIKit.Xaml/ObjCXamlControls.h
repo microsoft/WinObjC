@@ -104,15 +104,9 @@ UIKIT_XAML_EXPORT IInspectable* XamlGetActivityIndicatorViewForegroundValue(
 UIKIT_XAML_EXPORT void XamlSetActivityIndicatorViewForegroundValue(const Microsoft::WRL::ComPtr<IInspectable>& activityIndicatorInspectable,
                                                                    const Microsoft::WRL::ComPtr<IInspectable>& inspectableForegroundBrush);
 
-// Retrieves the Height property value of the ActivityIndicatorView
-UIKIT_XAML_EXPORT double XamlGetActivityIndicatorViewHeightValue(const Microsoft::WRL::ComPtr<IInspectable>& activityIndicatorInspectable);
-
 // Sets the Height property value of the ActivityIndicatorView
 UIKIT_XAML_EXPORT void XamlSetActivityIndicatorViewHeightValue(const Microsoft::WRL::ComPtr<IInspectable>& activityIndicatorInspectable,
                                                                double height);
-
-// Retrieves the Width property value of the ActivityIndicatorView
-UIKIT_XAML_EXPORT double XamlGetActivityIndicatorViewWidthValue(const Microsoft::WRL::ComPtr<IInspectable>& activityIndicatorInspectable);
 
 // Sets the Width property value of the ActivityIndicatorView
 UIKIT_XAML_EXPORT void XamlSetActivityIndicatorViewWidthValue(const Microsoft::WRL::ComPtr<IInspectable>& activityIndicatorInspectable,

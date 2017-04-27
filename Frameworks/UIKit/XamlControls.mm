@@ -57,16 +57,8 @@ void SetActivityIndicatorViewForegroundValue(const FrameworkElement& activityInd
     XamlSetActivityIndicatorViewForegroundValue(objcwinrt::to_insp(activityIndicatorControl), objcwinrt::to_insp(foregroundColorBrush));
 }
 
-double GetActivityIndicatorViewHeightValue(const FrameworkElement& activityIndicatorControl) {
-    return XamlGetActivityIndicatorViewHeightValue(objcwinrt::to_insp(activityIndicatorControl));
-}
-
 void SetActivityIndicatorViewHeightValue(const FrameworkElement& activityIndicatorControl, double height) {
     XamlSetActivityIndicatorViewHeightValue(objcwinrt::to_insp(activityIndicatorControl), height);
-}
-
-double GetActivityIndicatorViewWidthValue(const FrameworkElement& activityIndicatorControl) {
-    return XamlGetActivityIndicatorViewWidthValue(objcwinrt::to_insp(activityIndicatorControl));
 }
 
 void SetActivityIndicatorViewWidthValue(const FrameworkElement& activityIndicatorControl, double width) {
