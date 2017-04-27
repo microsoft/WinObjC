@@ -146,7 +146,7 @@ static void setBackground(UINavigationBar* self) {
 
     [super initWithFrame:pos];
 
-    [[self layer] setBackgroundColor:(CGColorRef)[UIColor whiteColor]];
+    [[self layer] setBackgroundColor:CGColorGetConstantColor(kCGColorWhite)];
     _font = [UIFont boldSystemFontOfSize:18];
     (_backButton)
         .attach([[UIBarButtonItem alloc] initWithTitle:@"Back" style:UIBarButtonItemStylePlain target:self action:@selector(backClicked)]);
@@ -653,7 +653,7 @@ static void setTitleLabelAttributes(UINavigationBar* self) {
     size.height = 10.0f;
     UIGraphicsBeginImageContextWithOptions(size, 1, 2.0f);
     CGContextRef ctx = UIGraphicsGetCurrentContext();
-    CGContextSetFillColorWithColor(ctx, (CGColorRef)(UIColor*)_barTintColor);
+    CGContextSetFillColorWithColor(ctx, [(UIColor*)_barTintColor CGColor]);
     CGRect rct = { 0, 0, 0, 0 };
     rct.size = size;
     CGContextFillRect(ctx, rct);
