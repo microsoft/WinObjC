@@ -54,10 +54,10 @@ FOUNDATION_EXPORT NSString* const NSUnionOfSetsKeyValueOperator;
 - (NSMutableOrderedSet*)mutableOrderedSetValueForKeyPath:(NSString*)keyPath STUB_METHOD;
 - (void)setValue:(id)value forKeyPath:(NSString*)keyPath;
 - (void)setValuesForKeysWithDictionary:(NSDictionary*)keyedValues;
-- (void)setNilValueForKey:(NSString*)key STUB_METHOD;
+- (void)setNilValueForKey:(NSString*)key;
 - (void)setValue:(id)value forKey:(NSString*)key;
 - (void)setValue:(id)value forUndefinedKey:(NSString*)key;
 + (BOOL)accessInstanceVariablesDirectly;
-- (BOOL)validateValue:(inout id _Nullable*)ioValue forKey:(NSString*)key error:(out NSError* _Nullable*)outError STUB_METHOD;
-- (BOOL)validateValue:(inout id _Nullable*)ioValue forKeyPath:(NSString*)key error:(out NSError* _Nullable*)outError STUB_METHOD;
+- (BOOL)validateValue:(inout id _Nullable*)ioValue forKey:(NSString*)key error:(out NSError* _Nullable*)outError;
+- (BOOL)validateValue:(inout id _Nullable*)ioValue forKeyPath:(NSString*)key error:(out NSError* _Nullable*)outError;
 @end

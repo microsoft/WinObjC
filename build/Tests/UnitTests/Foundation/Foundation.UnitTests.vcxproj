@@ -307,6 +307,7 @@
     <ClangCompile Include="$(StarboardBasePath)\tests\UnitTests\Foundation\NSRunLoopTests.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\UnitTests\Foundation\NSIndexPathTests.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSNullTests.mm" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\UnitTests\Foundation\NSObject_NSKeyValueValidation.mm" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\..\..\tests\unittests\Foundation\NSFileManagerUT.txt">
