@@ -77,6 +77,8 @@ LIBRARY CoreGraphics
         CGColorGetConstantColor
         CGColorCreateGenericRGB
         CGColorCreateGenericGray
+        CGColorCreateGenericCMYK
+        CGColorCreateCopyByMatchingToColorSpace
 
         ; CGColorSpace Reference.mm
         kCGColorSpaceGenericGray DATA
