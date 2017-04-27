@@ -42,3 +42,10 @@ COREGRAPHICS_EXPORT CGPatternRef CGColorGetPattern(CGColorRef color);
 COREGRAPHICS_EXPORT CFTypeID CGColorGetTypeID();
 COREGRAPHICS_EXPORT CGColorRef CGColorCreateGenericRGB(CGFloat red, CGFloat green, CGFloat blue, CGFloat alpha);
 COREGRAPHICS_EXPORT CGColorRef CGColorCreateGenericGray(CGFloat gray, CGFloat alpha);
+// TODO #2614: Support the newly added apis
+COREGRAPHICS_EXPORT CGColorRef CGColorCreateGenericCMYK(CGFloat cyan, CGFloat magenta, CGFloat yellow, CGFloat black, CGFloat alpha)
+    STUB_METHOD;
+COREGRAPHICS_EXPORT CGColorRef CGColorCreateCopyByMatchingToColorSpace(CGColorSpaceRef,
+                                                                       CGColorRenderingIntent intent,
+                                                                       CGColorRef color,
+                                                                       CFDictionaryRef options) STUB_METHOD;

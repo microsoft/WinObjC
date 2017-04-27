@@ -251,3 +251,22 @@ CGColorRef CGColorCreateGenericGray(CGFloat gray, CGFloat alpha) {
     static const auto colorspace_grayscale = woc::MakeStrongCF<CGColorSpaceRef>(CGColorSpaceCreateDeviceGray());
     return __CGColor::CreateInstance(kCFAllocatorDefault, colorspace_grayscale, gray, gray, gray, alpha);
 }
+
+/**
+ @Status Stub
+*/
+CGColorRef CGColorCreateGenericCMYK(CGFloat cyan, CGFloat magenta, CGFloat yellow, CGFloat black, CGFloat alpha) {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+CGColorRef CGColorCreateCopyByMatchingToColorSpace(CGColorSpaceRef,
+                                                   CGColorRenderingIntent intent,
+                                                   CGColorRef color,
+                                                   CFDictionaryRef options) {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
