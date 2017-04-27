@@ -85,10 +85,12 @@ void* LayerProxy::GetPropertyValue(const char* name) {
         return [NSValue valueWithCATransform3D:trans];
     } else if (strcmp(name, "borderColor") == 0) {
         LayerColor color = _GetBorderColor();
-        return [UIColor colorWithRed:color.r green:color.g blue:color.b alpha:color.a];
+        CGColorRef colorRef = CGColorCreateGenericRGB(color.r, color.g, color.b, color.a);
+        CFAutorelease(colorRef);
+        return static_cast<void*>(colorRef);
     } else if (strcmp(name, "borderWidth") == 0) {
         return [NSNumber numberWithFloat:_GetBorderWidth()];
-    } 
+    }
 
     FAIL_FAST_HR(E_NOTIMPL);
     return nil;
@@ -174,22 +176,22 @@ void LayerProxy::UpdateProperty(const char* name, void* value) {
     } else if (strcmp(name, "backgroundColor") == 0) {
         LayerColor layerColor;
         if (newValue) {
-            const __CGColorQuad* color = [(UIColor*)newValue _getColors];
-            layerColor.r = color->r;
-            layerColor.g = color->g;
-            layerColor.b = color->b;
-            layerColor.a = color->a;
+            const CGFloat* color = CGColorGetComponents(static_cast<CGColorRef>(newValue));
+            layerColor.r = color[0];
+            layerColor.g = color[1];
+            layerColor.b = color[2];
+            layerColor.a = color[3];
         }
 
         _SetBackgroundColor(layerColor);
     } else if (strcmp(name, "borderColor") == 0) {
         LayerColor layerColor;
         if (newValue) {
-            const __CGColorQuad* color = [(UIColor*)newValue _getColors];
-            layerColor.r = color->r;
-            layerColor.g = color->g;
-            layerColor.b = color->b;
-            layerColor.a = color->a;
+            const CGFloat* color = CGColorGetComponents(static_cast<CGColorRef>(newValue));
+            layerColor.r = color[0];
+            layerColor.g = color[1];
+            layerColor.b = color[2];
+            layerColor.a = color[3];
         }
 
         _SetBorderColor(layerColor);
