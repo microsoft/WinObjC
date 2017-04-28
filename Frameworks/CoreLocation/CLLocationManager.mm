@@ -70,7 +70,7 @@ static void _requestExtendedExecutionAsync() {
         } else if (status == WF::AsyncStatus::Canceled) {
             NSTraceError(TAG, @"Extended execution request was canceled");
         } else {
-            NSTraceError(TAG, @"Requesting extended execution failed with error %08x", op.ErrorCode());
+            NSTraceError(TAG, @"Requesting extended execution failed with error %08lx", (unsigned long)op.ErrorCode());
         }
     }));
 }
@@ -81,13 +81,13 @@ static void _requestExtendedExecutionAsync() {
  */
 static void _handleExtendedExecutionRevokedEvent(ExtendedExecutionRevokedReason reason) {
     std::lock_guard<std::mutex> lock(s_extendedExecutionMutex);
-    NSTraceInfo(TAG, @"Requesting extended execution revoked with reason %ld!", reason);
+    NSTraceInfo(TAG, @"Requesting extended execution revoked with reason %lu!", (unsigned long)reason);
     if (s_extendedExecutionRequestCount != 0) {
         // Request back again for extended execution.
         // ExtendedExecutionRevokedReason::Resumed will happen everytime the app is resumed to the foreground during an active
         // execution sessions. Only log a warning when the revoke reason is not ExtendedExecutionRevokedReason::Resumed.
         if (reason != ExtendedExecutionRevokedReason::Resumed) {
-            NSTraceWarning(TAG, @"Requesting extended execution revoked when request count was %ld!", s_extendedExecutionRequestCount);
+            NSTraceWarning(TAG, @"Requesting extended execution revoked when request count was %lu!", (unsigned long)s_extendedExecutionRequestCount);
         }
         _requestExtendedExecutionAsync();
     }

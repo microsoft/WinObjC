@@ -25,6 +25,7 @@
 #import "ShaderGen.h"
 #import "ShaderProg.h"
 #import "NSLogging.h"
+#import "AssertARCEnabled.h"
 
 #include <algorithm>
 
@@ -522,13 +523,12 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
 
         NSTraceVerbose(TAG, @"For shader named: %@", self.shaderName);
         NSTraceVerbose(TAG, @"---[ VERTEX SHADER ]------------------------------------------------------------");
-        NSTraceVerbose(TAG, p.vertexShader);
+        NSTraceVerbose(TAG, @"%@", p.vertexShader);
         NSTraceVerbose(TAG, @"---[ PIXEL SHADER ]-------------------------------------------------------------");
-        NSTraceVerbose(TAG, p.pixelShader);
+        NSTraceVerbose(TAG, @"%@", p.pixelShader);
         self.shader = [[GLKShaderCache get] addShaderNamed:self.shaderName source:p];
         if (self.shader == nil) {
             NSTraceError(TAG, @"There was a problem generating a shader for material %@", self.shaderName);
-            [p release];
             return FALSE;
         }
     }

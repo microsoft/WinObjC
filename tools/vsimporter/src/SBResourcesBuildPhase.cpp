@@ -49,7 +49,12 @@ static void parsePlist(const String& plistPath, VCProject& proj) {
     StringSet registeredUrlSchemes;
 
     boost::any plist;
-    readPlist(plistPath.c_str(), plist);
+    try {
+        readPlist(plistPath.c_str(), plist);
+    } catch (const std::exception& e) {
+        SBLog::error() << e.what() << std::endl;
+        exit(EXIT_FAILURE);
+    }
 
     dictionary_type* dict = any_cast<dictionary_type>(&plist);
     if (dict == nullptr) {
@@ -126,25 +131,28 @@ void SBResourcesBuildPhase::writeVCProjectFiles(VCProject& proj) const {
     }
 
     // Process build files
-    const BuildSettings& projBS = m_parentTarget.getProject().getBuildSettings();
-    const BuildFileList& buildFiles = m_phase->getBuildFileList();
-    sbAssertWithTelemetry(buildFiles.size() == m_buildFileTargets.size(), "Inconsistent number of Resource build files");
-    for (size_t i = 0; i < buildFiles.size(); i++) {
-        // Construct a path for Bundle build products, relative to the SolutionDir,
-        // instead of using the Xcode path
-        String pathOverride;
-        if (m_buildFileTargets[i]) {
-            String productFileName = sb_basename(buildFiles[i]->getFile()->getFullPath());
-            String productFileType = buildFiles[i]->getFile()->getFileType();
-            if (productFileType == "wrapper.cfbundle") {
-                pathOverride = "$(SolutionDir)$(Configuration)\\" + productFileName;
-            } else {
-                SBLog::warning() << "Unexpected build product in ResourceBuildPhase: " << productFileName << std::endl;
+    if (m_phase) {
+        const BuildSettings& projBS = m_parentTarget.getProject().getBuildSettings();
+        const BuildFileList& buildFiles = m_phase->getBuildFileList();
+        sbAssertWithTelemetry(buildFiles.size() == m_buildFileTargets.size(), "Inconsistent number of Resource build files");
+        for (size_t i = 0; i < buildFiles.size(); i++) {
+            // Construct a path for Bundle build products, relative to the SolutionDir,
+            // instead of using the Xcode path
+            String pathOverride;
+            if (m_buildFileTargets[i]) {
+                String productFileName = sb_basename(buildFiles[i]->getFile()->getFullPath());
+                String productFileType = buildFiles[i]->getFile()->getFileType();
+                if (productFileType == "wrapper.cfbundle") {
+                    pathOverride = "$(SolutionDir)$(Configuration)\\" + productFileName;
+                }
+                else {
+                    SBLog::warning() << "Unexpected build product in ResourceBuildPhase: " << productFileName << std::endl;
+                }
             }
-        }
 
-        VCItemHint itemHint = { "SBResourceCopy", pathOverride, "" };
-        addBuildFileToVS(buildFiles[i], proj, projBS, &itemHint);
+            VCItemHint itemHint = { "SBResourceCopy", pathOverride, "" };
+            addBuildFileToVS(buildFiles[i], proj, projBS, &itemHint);
+        }
     }
 
     // Process all Info.plist files

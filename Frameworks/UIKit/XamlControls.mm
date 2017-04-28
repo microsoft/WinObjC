@@ -26,6 +26,46 @@ using namespace winrt::Windows::UI::Xaml;
 namespace XamlControls {
 
 ////////////////////////////////////////////////////////////////////////////////////
+// ActivityIndicatorView
+////////////////////////////////////////////////////////////////////////////////////
+Controls::Grid CreateActivityIndicatorView() {
+    ComPtr<IInspectable> inspectable;
+    XamlCreateActivityIndicatorView(&inspectable);
+    return objcwinrt::from_insp<Controls::Grid>(inspectable);
+}
+
+Controls::ProgressRing XamlGetInternalProgressRing(const Controls::Grid& activityIndicatorControl) {
+    ComPtr<IInspectable> inspectable(XamlGetInternalProgressRing(objcwinrt::to_insp(activityIndicatorControl)));
+    return objcwinrt::from_insp<Controls::ProgressRing>(inspectable);
+}
+
+bool GetActivityIndicatorViewIsActiveValue(const FrameworkElement& activityIndicatorControl) {
+    return XamlGetActivityIndicatorViewIsActiveValue(objcwinrt::to_insp(activityIndicatorControl));
+}
+
+void SetActivityIndicatorViewIsActiveValue(const FrameworkElement& activityIndicatorControl, bool isActive) {
+    XamlSetActivityIndicatorViewIsActiveValue(objcwinrt::to_insp(activityIndicatorControl), isActive);
+}
+
+Media::SolidColorBrush GetActivityIndicatorViewForegroundValue(const FrameworkElement& activityIndicatorControl) {
+    ComPtr<IInspectable> inspectable(XamlGetActivityIndicatorViewForegroundValue(objcwinrt::to_insp(activityIndicatorControl)));
+    return objcwinrt::from_insp<Media::SolidColorBrush>(inspectable);
+}
+
+void SetActivityIndicatorViewForegroundValue(const FrameworkElement& activityIndicatorControl,
+                                             const Media::SolidColorBrush& foregroundColorBrush) {
+    XamlSetActivityIndicatorViewForegroundValue(objcwinrt::to_insp(activityIndicatorControl), objcwinrt::to_insp(foregroundColorBrush));
+}
+
+void SetActivityIndicatorViewHeightValue(const FrameworkElement& activityIndicatorControl, double height) {
+    XamlSetActivityIndicatorViewHeightValue(objcwinrt::to_insp(activityIndicatorControl), height);
+}
+
+void SetActivityIndicatorViewWidthValue(const FrameworkElement& activityIndicatorControl, double width) {
+    XamlSetActivityIndicatorViewWidthValue(objcwinrt::to_insp(activityIndicatorControl), width);
+}
+
+////////////////////////////////////////////////////////////////////////////////////
 // Button
 ////////////////////////////////////////////////////////////////////////////////////
 Controls::Button CreateButton() {

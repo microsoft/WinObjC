@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -13,23 +13,28 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+#pragma once
 
-#include <cstdlib>
+#include <CoreGraphics/CGColor.h>
 
-extern "C" {
-void* IwMalloc(size_t size) {
-    return std::malloc(size);
-}
+struct __CGColorQuad {
+    CGFloat r;
+    CGFloat g;
+    CGFloat b;
+    CGFloat a;
 
-void* IwRealloc(void* ptr, size_t size) {
-    return std::realloc(ptr, size);
-}
+    bool operator==(const __CGColorQuad& other) const {
+        return (r == other.r) && (g == other.g) && (b == other.b) && (a == other.a);
+    }
 
-void IwFree(void* ptr) {
-    std::free(ptr);
-}
+    void Clear() {
+        r = g = b = a = 0.0f;
+    }
 
-void* IwCalloc(size_t num, size_t size) {
-    return std::calloc(num, size);
-}
-}
+    void SetColorComponents(CGFloat red, CGFloat green, CGFloat blue, CGFloat alpha) {
+        r = red;
+        g = green;
+        b = blue;
+        a = alpha;
+    }
+};

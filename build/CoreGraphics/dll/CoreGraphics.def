@@ -55,6 +55,7 @@ LIBRARY CoreGraphics
         _DWriteRegisterFontsWithDatas
         _DWriteUnregisterFontsWithDatas
         _DWriteGetAllFonts
+        
 
         ; CGColor.mm
         kCGColorBlack DATA
@@ -74,6 +75,10 @@ LIBRARY CoreGraphics
         CGColorGetPattern
         CGColorGetTypeID
         CGColorGetConstantColor
+        CGColorCreateGenericRGB
+        CGColorCreateGenericGray
+        CGColorCreateGenericCMYK
+        CGColorCreateCopyByMatchingToColorSpace
 
         ; CGColorSpace Reference.mm
         kCGColorSpaceGenericGray DATA

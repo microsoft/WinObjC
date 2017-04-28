@@ -22,14 +22,20 @@
 
 #import "NSLogging.h"
 
-#import "UWP/WindowsApplicationModelDataTransfer.h"
 #import "CGImageInternal.h"
 #import "MobileCoreServices/UTType.h"
+#import "CppWinRTHelpers.h"
 
 #include <COMIncludes.h>
 #import <windows.storage.streams.h>
+#import <winrt/Windows.ApplicationModel.DataTransfer.h>
+#import <winrt/Windows.Storage.Streams.h>
 #import "RawBuffer.h"
 #include <COMIncludes_End.h>
+
+using namespace winrt::Windows::ApplicationModel::DataTransfer;
+namespace WSS = winrt::Windows::Storage::Streams;
+namespace WF = winrt::Windows::Foundation;
 
 static const wchar_t* TAG = L"UIPasteboard";
 NSString* const UIPasteboardNameGeneral = @"UIPasteboardNameGeneral";
@@ -59,15 +65,15 @@ UIPasteboard* generalPasteboard;
 NSMutableDictionary* globalPasteboards;
 static pthread_mutex_t globalPasteboardsLock = PTHREAD_MUTEX_INITIALIZER;
 
-WADDataPackageView* _getClipboardContent() {
-    @try {
-        return [WADClipboard getContent];
-    } @catch (NSException* exception) {
-        if ([exception _hresult] == E_ACCESSDENIED) {
-            return nil;
+static DataPackageView _getClipboardContent() {
+    try {
+        return Clipboard::GetContent();
+    } catch (const winrt::hresult_error& exception) {
+        if (exception.code() == E_ACCESSDENIED) {
+            return nullptr;
         }
 
-        @throw;
+        throw;
     }
 }
 
@@ -103,7 +109,7 @@ WADDataPackageView* _getClipboardContent() {
     }
 
     if (msg != nil) {
-        NSTraceError(TAG, msg);
+        NSTraceError(TAG, @"%@", msg);
     }
 }
 
@@ -156,17 +162,17 @@ WADDataPackageView* _getClipboardContent() {
  @Notes only NSString, NSURL and UIImage are supported.
 */
 - (NSArray<NSString*>*)pasteboardTypes {
-    WADDataPackageView* wasDataPackageView = _getClipboardContent();
+    DataPackageView dataPackageView = _getClipboardContent();
 
     NSMutableArray<NSString*>* types = [NSMutableArray arrayWithCapacity:3];
 
-    if ([wasDataPackageView contains:[WADStandardDataFormats text]]) {
+    if (dataPackageView.Contains(StandardDataFormats::Text())) {
         [types addObject:(NSString*)kUTTypeText];
     }
-    if ([wasDataPackageView contains:[WADStandardDataFormats bitmap]]) {
+    if (dataPackageView.Contains(StandardDataFormats::Bitmap())) {
         [types addObject:(NSString*)kUTTypeImage];
     }
-    if ([wasDataPackageView contains:[WADStandardDataFormats uri]]) {
+    if (dataPackageView.Contains(StandardDataFormats::Uri())) {
         [types addObject:(NSString*)kUTTypeURL];
     }
 
@@ -178,22 +184,22 @@ WADDataPackageView* _getClipboardContent() {
  @Notes only NSString, NSURL and UIImage are supported.
 */
 - (BOOL)containsPasteboardTypes:(NSArray*)pasteboardTypes {
-    WADDataPackageView* wasDataPackageView = _getClipboardContent();
+    DataPackageView dataPackageView = _getClipboardContent();
     BOOL result = NO;
 
     for (NSString* type in pasteboardTypes) {
         if ([type isEqualToString:(NSString*)kUTTypeText]) {
-            if ([wasDataPackageView contains:[WADStandardDataFormats text]]) {
+            if (dataPackageView.Contains(StandardDataFormats::Text())) {
                 result = YES;
                 break;
             }
         } else if ([type isEqualToString:(NSString*)kUTTypeImage]) {
-            if ([wasDataPackageView contains:[WADStandardDataFormats bitmap]]) {
+            if (dataPackageView.Contains(StandardDataFormats::Bitmap())) {
                 result = YES;
                 break;
             }
         } else if ([type isEqualToString:(NSString*)kUTTypeURL]) {
-            if ([wasDataPackageView contains:[WADStandardDataFormats uri]]) {
+            if (dataPackageView.Contains(StandardDataFormats::Uri())) {
                 result = YES;
                 break;
             }
@@ -210,15 +216,15 @@ WADDataPackageView* _getClipboardContent() {
  @Notes only support one item due to platform limit.
  */
 - (NSArray<NSDictionary<NSString*, id>*>*)items {
-    WADDataPackageView* dataPackageView = _getClipboardContent();
+    DataPackageView dataPackageView = _getClipboardContent();
 
     int supportedTypes = 0;
-    for (NSString* format in dataPackageView.availableFormats) {
-        if ([format isEqualToString:[WADStandardDataFormats text]]) {
+    for (const winrt::hstring& format : dataPackageView.AvailableFormats()) {
+        if (format == StandardDataFormats::Text()) {
             supportedTypes++;
-        } else if ([format isEqualToString:[WADStandardDataFormats bitmap]]) {
+        } else if (format == StandardDataFormats::Bitmap()) {
             supportedTypes++;
-        } else if ([format isEqualToString:[WADStandardDataFormats uri]]) {
+        } else if (format == StandardDataFormats::Uri()) {
             supportedTypes++;
         }
     }
@@ -231,15 +237,15 @@ WADDataPackageView* _getClipboardContent() {
     }
 
     NSMutableDictionary* ret = [NSMutableDictionary dictionaryWithCapacity:supportedTypes];
-    if ([dataPackageView contains:[WADStandardDataFormats text]]) {
+    if (dataPackageView.Contains(StandardDataFormats::Text())) {
         [ret setValue:[UIPasteboard _getStringFromDataPackageView:dataPackageView] forKey:(NSString*)kUTTypeText];
     }
 
-    if ([dataPackageView contains:[WADStandardDataFormats bitmap]]) {
+    if (dataPackageView.Contains(StandardDataFormats::Bitmap())) {
         [ret setValue:[UIPasteboard _getImageFromDataPackageView:dataPackageView] forKey:(NSString*)kUTTypeImage];
     }
 
-    if ([dataPackageView contains:[WADStandardDataFormats uri]]) {
+    if (dataPackageView.Contains(StandardDataFormats::Uri())) {
         [ret setValue:[UIPasteboard _getURLFromDataPackageView:dataPackageView] forKey:(NSString*)kUTTypeURL];
     }
 
@@ -263,9 +269,8 @@ WADDataPackageView* _getClipboardContent() {
             UNIMPLEMENTED_WITH_MSG("Only support first item in items, the rest is ignored");
         }
 
-        StrongId<WADDataPackage> dataPackage;
-        dataPackage.attach([WADDataPackage make]);
-        [dataPackage setRequestedOperation:WADDataPackageOperationCopy];
+        DataPackage dataPackage;
+        dataPackage.RequestedOperation(DataPackageOperation::Copy);
         __block BOOL dataSet = NO;
 
         // enumerate each format and copy the supported one to clipboard
@@ -293,12 +298,12 @@ WADDataPackageView* _getClipboardContent() {
         }];
 
         if (dataSet) {
-            [WADClipboard setContent:dataPackage];
-            [WADClipboard flush];
+            Clipboard::SetContent(dataPackage);
+            Clipboard::Flush();
         }
     } else {
         // assigning items to nil or an empty array clears the pasteboard
-        [WADClipboard clear];
+        Clipboard::Clear();
     }
 }
 
@@ -315,7 +320,6 @@ WADDataPackageView* _getClipboardContent() {
  @Notes only NSString and UIImage (only PNG format) are supported.
 */
 - (NSData*)dataForPasteboardType:(NSString*)pasteboardType {
-    WADDataPackageView* wasDataPackageView = _getClipboardContent();
     NSData* data = nil;
 
     if ([pasteboardType isEqualToString:(NSString*)kUTTypeText]) {
@@ -326,7 +330,7 @@ WADDataPackageView* _getClipboardContent() {
     } else if ([pasteboardType isEqualToString:(NSString*)kUTTypeImage]) {
         UIImage* imageData = [UIPasteboard _getImageFromClipboard];
         if (imageData != nil) {
-            // After UIImageJPEGRepresentation is implemented, should consider both PND and JPEG
+            // After UIImageJPEGRepresentation is implemented, should consider both PNG and JPEG
             data = UIImagePNGRepresentation(imageData);
         }
     }
@@ -354,47 +358,38 @@ WADDataPackageView* _getClipboardContent() {
     }
 
     if (data && pasteboardType) {
-        // only set data when both data and pasteType are avaiable
-        StrongId<WADDataPackage> dataPackage;
-        dataPackage.attach([WADDataPackage make]);
-        [dataPackage setRequestedOperation:WADDataPackageOperationCopy];
+        // only set data when both data and pasteType are available
+        DataPackage dataPackage;
+        dataPackage.RequestedOperation(DataPackageOperation::Copy);
         [UIPasteboard _setData:pasteboardType withData:data on:dataPackage];
-        [WADClipboard setContent:dataPackage];
-        [WADClipboard flush];
+        Clipboard::SetContent(dataPackage);
+        Clipboard::Flush();
     }
 }
 
-+ (WSSInMemoryRandomAccessStream*)_populateStream:(WSSInMemoryRandomAccessStream*)stream withData:(const void*)data withLength:(int)length {
-    StrongId<WSSDataWriter> dataWriter;
-    dataWriter.attach([WSSDataWriter makeDataWriter:[stream getOutputStreamAt:0]]);
++ (void)_populateStream:(const WSS::InMemoryRandomAccessStream&)stream withData:(const void*)data withLength:(int)length {
+    WSS::DataWriter dataWriter(stream.GetOutputStreamAt(0));
     ComPtr<IBuffer> buffer;
-    IBuffer* rawBuffer = nullptr;
     HRESULT result;
 
-    result = BufferFromRawData(&rawBuffer, (unsigned char*)data, length);
+    result = BufferFromRawData(&buffer, (unsigned char*)data, length);
 
     if (FAILED(result)) {
         THROW_NS_HR_MSG(result, "Internal error: Failed to create IBuffer from NSData.");
     }
 
-    buffer.Attach(rawBuffer);
+    WSS::IBuffer wssBuffer = nullptr;
+    winrt::attach_abi(wssBuffer, reinterpret_cast<winrt::ABI::Windows::Storage::Streams::IBuffer*>(buffer.Detach()));
 
     // WARNING: If someone deletes UIPasteboard before the StoreAsync is completed, _data may be released
     // causing IBuffer to segfault. Although UIPasteboard should live forever once created.
 
-    // TODO: subclassed IAsyncOperation<T>s don't get generated correctly in ObjCUWP yet, when that happens it'll
-    // open up StoreAsync.
-
-    IDataWriter* writer = (__bridge IDataWriter*)[dataWriter comObj].Get();
-    ComPtr<IAsyncOperation<UInt32>> comp;
-    writer->WriteBuffer(buffer.Get());
-    writer->StoreAsync(&comp);
-    return stream;
+    dataWriter.WriteBuffer(wssBuffer);
+    (void)dataWriter.StoreAsync();
 }
 
-+ (WSSInMemoryRandomAccessStream*)_grabStreamFromUIImage:(UIImage*)image {
-    StrongId<WSSInMemoryRandomAccessStream> stream;
-    stream.attach([WSSInMemoryRandomAccessStream make]);
++ (WSS::InMemoryRandomAccessStream)_grabStreamFromUIImage:(UIImage*)image {
+    WSS::InMemoryRandomAccessStream stream;
     NSData* data = UIImagePNGRepresentation(image);
     [UIPasteboard _populateStream:stream withData:[data bytes] withLength:[data length]];
     return stream;
@@ -403,9 +398,10 @@ WADDataPackageView* _getClipboardContent() {
 // try to set data for a given type on datapackage
 // return YES when data has been set on datapackage successfully, NO otherwise.
 //
-+ (BOOL)_setData:(NSString*)type withData:(NSData*)data on:(WADDataPackage*)package {
++ (BOOL)_setData:(NSString*)type withData:(NSData*)data on:(const DataPackage&)package {
     if ([type isEqualToString:(NSString*)kUTTypeText]) {
-        [package setText:[[[NSString alloc] initWithData:data encoding:NSUnicodeStringEncoding] autorelease]];
+        NSString* text = [[[NSString alloc] initWithData:data encoding:NSUnicodeStringEncoding] autorelease];
+        package.SetText(objcwinrt::string(text));
         return YES;
     } else if ([type isEqualToString:(NSString*)kUTTypeImage] || [type isEqualToString:(NSString*)kUTTypePNG] ||
                [type isEqualToString:(NSString*)kUTTypeJPEG]) {
@@ -415,9 +411,9 @@ WADDataPackageView* _getClipboardContent() {
 
         // grab the image and unpack it and repack it.
         UIImage* uiImage = [UIImage imageWithData:data];
-        WSSRandomAccessStreamReference* randomAccessStreamReference =
-            [WSSRandomAccessStreamReference createFromStream:[UIPasteboard _grabStreamFromUIImage:uiImage]];
-        [package setBitmap:randomAccessStreamReference];
+        WSS::RandomAccessStreamReference randomAccessStreamReference =
+            WSS::RandomAccessStreamReference::CreateFromStream([UIPasteboard _grabStreamFromUIImage:uiImage]);
+        package.SetBitmap(randomAccessStreamReference);
         return YES;
     } else if ([type isEqualToString:(NSString*)kUTTypeURL]) {
         // make sure it is a valid NSURL
@@ -428,9 +424,8 @@ WADDataPackageView* _getClipboardContent() {
         }
 
         // convert to WFURI
-        StrongId<WFUri> uri;
-        uri.attach([WFUri makeUri:url.absoluteString]);
-        [package setUri:uri];
+        WF::Uri uri(objcwinrt::string(url.absoluteString));
+        package.SetUri(uri);
         return YES;
     } else {
         UNIMPLEMENTED_WITH_MSG("Type %@ is not supported yet", [type UTF8String]);
@@ -527,22 +522,24 @@ WADDataPackageView* _getClipboardContent() {
     }
 }
 
-+ (NSString*)_getStringFromDataPackageView:(WADDataPackageView*)dataPackageView {
-    __block NSString* stringData = nil;
-    if ([dataPackageView contains:[WADStandardDataFormats text]]) {
++ (NSString*)_getStringFromDataPackageView:(const DataPackageView&)dataPackageView {
+    NSString* stringData = nil;
+    if (dataPackageView.Contains(StandardDataFormats::Text())) {
         dispatch_group_t group = dispatch_group_create();
         dispatch_group_enter(group);
 
-        [dataPackageView getTextAsyncWithSuccess:^void(NSString* success) {
-            stringData = [success retain];
+        WF::IAsyncOperation<winrt::hstring> async = dataPackageView.GetTextAsync();
+
+        async.Completed(objcwinrt::callback([&stringData, group] (const WF::IAsyncOperation<winrt::hstring>& op, WF::AsyncStatus status) {
+            if (status == WF::AsyncStatus::Completed) {
+                stringData = [objcwinrt::string(op.GetResults()) retain];
+            } else {
+                NSError* failure = objcwinrt::to_nserror(op, status);
+                [UIPasteboard _failureWhileHandingItemToClipboard:failure withMsg:@"string GetTextAsync failed"];
+            }
 
             dispatch_group_leave(group);
-        }
-            failure:^void(NSError* failure) {
-                [UIPasteboard _failureWhileHandingItemToClipboard:failure withMsg:@"string getTextAsyncWithSuccess failed"];
-
-                dispatch_group_leave(group);
-            }];
+        }));
 
         dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
         dispatch_release(group);
@@ -552,22 +549,21 @@ WADDataPackageView* _getClipboardContent() {
 }
 
 + (NSString*)_getStringFromClipboard {
-    WADDataPackageView* wasDataPackageView = _getClipboardContent();
-    return [UIPasteboard _getStringFromDataPackageView:wasDataPackageView];
+    DataPackageView dataPackageView = _getClipboardContent();
+    return [UIPasteboard _getStringFromDataPackageView:dataPackageView];
 }
 
-+ (void)_setString:(NSString*)stringData onDataPackage:(WADDataPackage*)dataPackage {
++ (void)_setString:(NSString*)stringData onDataPackage:(const DataPackage&)dataPackage {
     NSData* data = [stringData dataUsingEncoding:NSUnicodeStringEncoding];
     [UIPasteboard _setData:(NSString*)kUTTypeText withData:data on:dataPackage];
 }
 
 + (void)_setStringToClipboard:(NSString*)stringData {
-    StrongId<WADDataPackage> dataPackage;
-    dataPackage.attach([WADDataPackage make]);
-    [dataPackage setRequestedOperation:WADDataPackageOperationCopy];
+    DataPackage dataPackage;
+    dataPackage.RequestedOperation(DataPackageOperation::Copy);
     [UIPasteboard _setString:stringData onDataPackage:dataPackage];
-    [WADClipboard setContent:dataPackage];
-    [WADClipboard flush];
+    Clipboard::SetContent(dataPackage);
+    Clipboard::Flush();
 }
 
 /**
@@ -598,68 +594,72 @@ WADDataPackageView* _getClipboardContent() {
     }
 }
 
-+ (UIImage*)_getImageFromDataPackageView:(WADDataPackageView*)dataPackageView {
-    __block UIImage* imageData = nil;
++ (UIImage*)_getImageFromDataPackageView:(const DataPackageView&)dataPackageView {
+    UIImage* imageData = nil;
 
-    if ([dataPackageView contains:[WADStandardDataFormats bitmap]]) {
+    if (dataPackageView.Contains(StandardDataFormats::Bitmap())) {
         dispatch_group_t group = dispatch_group_create();
         dispatch_group_enter(group);
 
-        [dataPackageView getBitmapAsyncWithSuccess:^void(WSSRandomAccessStreamReference* randomAccessStreamReference) {
+        WF::IAsyncOperation<WSS::RandomAccessStreamReference> async = dataPackageView.GetBitmapAsync();
 
-            [randomAccessStreamReference openReadAsyncWithSuccess:^void(RTObject<WSSIRandomAccessStreamWithContentType>* content) {
+        async.Completed(objcwinrt::callback([&imageData, group] (const WF::IAsyncOperation<WSS::RandomAccessStreamReference>& op, WF::AsyncStatus status) {
+            if (status == WF::AsyncStatus::Completed) {
+                WSS::RandomAccessStreamReference stream = op.GetResults();
+                WF::IAsyncOperation<WSS::IRandomAccessStreamWithContentType> async = stream.OpenReadAsync();
 
-                StrongId<WSSBuffer> buffer;
-                buffer.attach([WSSBuffer make:content.size]);
+                async.Completed(objcwinrt::callback([&imageData, group] (const WF::IAsyncOperation<WSS::IRandomAccessStreamWithContentType>& op, WF::AsyncStatus status) {
+                    if (status == WF::AsyncStatus::Completed) {
+                        WSS::IRandomAccessStreamWithContentType content = op.GetResults();
+                        WSS::Buffer buffer(content.Size());
 
-                [content readAsync:buffer
-                    count:content.size
-                    options:WSSInputStreamOptionsNone
-                    success:^void(RTObject<WSSIBuffer>* success) {
-                        // Get the data out of the com object.
-                        ComPtr<IInspectable> insp = [success comObj];
-                        ComPtr<IBufferByteAccess> bufferByteAccess;
-                        HRESULT result = insp.As(&bufferByteAccess);
-                        if (FAILED(result)) {
-                            THROW_NS_HR_MSG(result, "Internal error: Failed to create IBuffer from NSData.");
-                        }
+                        WF::IAsyncOperationWithProgress<WSS::IBuffer, unsigned int> async = content.ReadAsync(buffer, content.Size(), WSS::InputStreamOptions::None);
 
-                        // Retrieve the buffer data.
-                        byte* pixels = nullptr;
-                        int length = success.length;
-                        result = bufferByteAccess->Buffer(&pixels);
-                        if (FAILED(result)) {
-                            THROW_NS_HR_MSG(result, "Internal error: Failed to create IBuffer from NSData.");
-                        }
+                        async.Completed(objcwinrt::callback([&imageData, group] (const WF::IAsyncOperationWithProgress<WSS::IBuffer, unsigned int>& op, WF::AsyncStatus status) {
+                            if (status == WF::AsyncStatus::Completed) {
+                                // Get the data out of the com object.
+                                WSS::IBuffer success = op.GetResults();
+                                ComPtr<IInspectable> insp = objcwinrt::to_insp(success);
+                                ComPtr<IBufferByteAccess> bufferByteAccess;
+                                HRESULT result = insp.As(&bufferByteAccess);
+                                if (FAILED(result)) {
+                                    THROW_NS_HR_MSG(result, "Internal error: Failed to create IBuffer from NSData.");
+                                }
 
-                        NSData* data = [NSData dataWithBytes:pixels length:length];
-                        imageData = [[UIImage imageWithData:data] retain];
+                                // Retrieve the buffer data.
+                                byte* pixels = nullptr;
+                                int length = success.Length();
+                                result = bufferByteAccess->Buffer(&pixels);
+                                if (FAILED(result)) {
+                                    THROW_NS_HR_MSG(result, "Internal error: Failed to create IBuffer from NSData.");
+                                }
+
+                                NSData* data = [NSData dataWithBytes:pixels length:length];
+                                imageData = [[UIImage imageWithData:data] retain];
+                            } else {
+                                NSError* readError = objcwinrt::to_nserror(op, status);
+                                [UIPasteboard _failureWhileHandingItemToClipboard:readError
+                                                                          withMsg:@"_getImageFromClipboard ReadAsync:buffer failed"];
+                            }
+
+                            dispatch_group_leave(group);
+                        }));
+                    } else {
+                        NSError* openError = objcwinrt::to_nserror(op, status);
+                        [UIPasteboard _failureWhileHandingItemToClipboard:openError
+                                                                  withMsg:@"_getImageFromClipboard OpenReadAsync failed"];
 
                         dispatch_group_leave(group);
                     }
-                    progress:nullptr
-                    failure:^void(NSError* readError) {
-                        [UIPasteboard _failureWhileHandingItemToClipboard:readError
-                                                                  withMsg:@"_getImageFromClipboard readAsync:buffer failed"];
-
-                        dispatch_group_leave(group);
-                    }];
-
-            }
-                failure:^void(NSError* openError) {
-                    [UIPasteboard _failureWhileHandingItemToClipboard:openError
-                                                              withMsg:@"_getImageFromClipboard openReadAsyncWithSuccess failed"];
-
-                    dispatch_group_leave(group);
-                }];
-
-        }
-            failure:^void(NSError* failure) {
+                }));
+            } else {
+                NSError* failure = objcwinrt::to_nserror(op, status);
                 [UIPasteboard _failureWhileHandingItemToClipboard:failure
-                                                          withMsg:@"_getImageFromClipboard getBitmapAsyncWithSuccess failed"];
+                                                          withMsg:@"_getImageFromClipboard GetBitmapAsync failed"];
 
                 dispatch_group_leave(group);
-            }];
+            }
+        }));
 
         dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
         dispatch_release(group);
@@ -669,23 +669,22 @@ WADDataPackageView* _getClipboardContent() {
 }
 
 + (UIImage*)_getImageFromClipboard {
-    WADDataPackageView* wasDataPackageView = _getClipboardContent();
-    return [UIPasteboard _getImageFromDataPackageView:wasDataPackageView];
+    DataPackageView dataPackageView = _getClipboardContent();
+    return [UIPasteboard _getImageFromDataPackageView:dataPackageView];
 }
 
-+ (void)_setImage:(UIImage*)imageData onDataPackage:(WADDataPackage*)dataPackage {
-    WSSRandomAccessStreamReference* randomAccessStreamReference =
-        [WSSRandomAccessStreamReference createFromStream:[UIPasteboard _grabStreamFromUIImage:imageData]];
-    [dataPackage setBitmap:randomAccessStreamReference];
++ (void)_setImage:(UIImage*)imageData onDataPackage:(const DataPackage&)dataPackage {
+    WSS::RandomAccessStreamReference randomAccessStreamReference =
+        WSS::RandomAccessStreamReference::CreateFromStream([UIPasteboard _grabStreamFromUIImage:imageData]);
+    dataPackage.SetBitmap(randomAccessStreamReference);
 }
 
 + (void)_setImageToClipboard:(UIImage*)imageData {
-    StrongId<WADDataPackage> dataPackage;
-    dataPackage.attach([WADDataPackage make]);
-    [dataPackage setRequestedOperation:WADDataPackageOperationCopy];
+    DataPackage dataPackage;
+    dataPackage.RequestedOperation(DataPackageOperation::Copy);
     [UIPasteboard _setImage:imageData onDataPackage:dataPackage];
-    [WADClipboard setContent:dataPackage];
-    [WADClipboard flush];
+    Clipboard::SetContent(dataPackage);
+    Clipboard::Flush();
 }
 
 /**
@@ -716,37 +715,40 @@ WADDataPackageView* _getClipboardContent() {
     }
 }
 
-+ (NSURL*)_getURLFromDataPackageView:(WADDataPackageView*)dataPackageView {
-    __block NSURL* URLData = nil;
-    if ([dataPackageView contains:[WADStandardDataFormats uri]]) {
++ (NSURL*)_getURLFromDataPackageView:(const DataPackageView&)dataPackageView {
+    NSURL* URLData = nil;
+    if (dataPackageView.Contains(StandardDataFormats::Uri())) {
         dispatch_group_t group = dispatch_group_create();
         dispatch_group_enter(group);
 
-        [dataPackageView getUriAsyncWithSuccess:^void(WFUri* data) {
-            NSString* temp = data.absoluteUri;
-            if (temp == nil || temp.length == 0) {
-                temp = data.displayUri;
-            }
-            if (temp == nil || temp.length == 0) {
-                temp = data.absoluteCanonicalUri;
-            }
-            if (temp == nil || temp.length == 0) {
-                temp = [data toString];
-            }
+        WF::IAsyncOperation<WF::Uri> async = dataPackageView.GetUriAsync();
 
-            if (temp != nil) {
-                URLData = [[NSURL URLWithString:temp] retain];
+        async.Completed(objcwinrt::callback([&URLData, group] (const WF::IAsyncOperation<WF::Uri>& op, WF::AsyncStatus status) {
+            if (status == WF::AsyncStatus::Completed) {
+                WF::Uri data = op.GetResults();
+                winrt::hstring temp = data.AbsoluteUri();
+                if (temp.empty()) {
+                    temp = data.DisplayUri();
+                }
+                if (temp.empty()) {
+                    temp = data.AbsoluteCanonicalUri();
+                }
+                if (temp.empty()) {
+                    temp = data.ToString();
+                }
+
+                if (!temp.empty()) {
+                    URLData = [[NSURL URLWithString:objcwinrt::string(temp)] retain];
+                } else {
+                    TraceError(TAG, L"Error cannot understand WFUri data");
+                }
             } else {
-                TraceError(TAG, L"Error cannot understand WFUri data");
+                NSError* failure = objcwinrt::to_nserror(op, status);
+                [UIPasteboard _failureWhileHandingItemToClipboard:failure withMsg:@"_getURLFromClipboard GetUriAsync failed"];
             }
 
             dispatch_group_leave(group);
-        }
-            failure:^void(NSError* failure) {
-                [UIPasteboard _failureWhileHandingItemToClipboard:failure withMsg:@"_getURLFromClipboard getBitmapAsyncWithSuccess failed"];
-
-                dispatch_group_leave(group);
-            }];
+        }));
 
         dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
         dispatch_release(group);
@@ -756,23 +758,21 @@ WADDataPackageView* _getClipboardContent() {
 }
 
 + (NSURL*)_getURLFromClipboard {
-    WADDataPackageView* wasDataPackageView = _getClipboardContent();
-    return [UIPasteboard _getURLFromDataPackageView:wasDataPackageView];
+    DataPackageView dataPackageView = _getClipboardContent();
+    return [UIPasteboard _getURLFromDataPackageView:dataPackageView];
 }
 
-+ (void)_setURL:(NSURL*)URLData onDataPackage:(WADDataPackage*)dataPackage {
-    StrongId<WFUri> uri;
-    uri.attach([WFUri makeUri:URLData.absoluteString]);
-    [dataPackage setUri:uri];
++ (void)_setURL:(NSURL*)URLData onDataPackage:(const DataPackage&)dataPackage {
+    WF::Uri uri(objcwinrt::string(URLData.absoluteString));
+    dataPackage.SetUri(uri);
 }
 
 + (void)_setURLToClipboard:(NSURL*)URLData {
-    StrongId<WADDataPackage> dataPackage;
-    dataPackage.attach([WADDataPackage make]);
-    [dataPackage setRequestedOperation:WADDataPackageOperationCopy];
+    DataPackage dataPackage;
+    dataPackage.RequestedOperation(DataPackageOperation::Copy);
     [UIPasteboard _setURL:URLData onDataPackage:dataPackage];
-    [WADClipboard setContent:dataPackage];
-    [WADClipboard flush];
+    Clipboard::SetContent(dataPackage);
+    Clipboard::Flush();
 }
 
 @end

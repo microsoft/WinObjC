@@ -1882,7 +1882,7 @@ size_t CGImageSourceGetCount(CGImageSourceRef isrc) {
     imageQueryInterface.pIID = &IID_IWICImagingFactory;
     HRESULT status = CoCreateInstanceFromApp(CLSID_WICImagingFactory, nullptr, CLSCTX_INPROC_SERVER, nullptr, 1, &imageQueryInterface);
     if (!SUCCEEDED(status)) {
-        NSTraceInfo(TAG, @"CoCreateInstanceFromApp failed with status=%x\n", status);
+        NSTraceInfo(TAG, @"CoCreateInstanceFromApp failed with status=%lx\n", (unsigned long)status);
         return 0;
     }
 
@@ -1890,7 +1890,7 @@ size_t CGImageSourceGetCount(CGImageSourceRef isrc) {
     ComPtr<IWICStream> imageStream;
     status = imageFactory->CreateStream(&imageStream);
     if (!SUCCEEDED(status)) {
-        NSTraceInfo(TAG, @"IWICImagingFactory::CreateStream failed with status=%x\n", status);
+        NSTraceInfo(TAG, @"IWICImagingFactory::CreateStream failed with status=%lx\n", (unsigned long)status);
         return 0;
     }
 
@@ -1898,21 +1898,21 @@ size_t CGImageSourceGetCount(CGImageSourceRef isrc) {
     int imageLength = [imageData length];
     status = imageStream->InitializeFromMemory(imageByteArray, imageLength);
     if (!SUCCEEDED(status)) {
-        NSTraceInfo(TAG, @"IWICStream::InitializeFromMemory failed with status=%x\n", status);
+        NSTraceInfo(TAG, @"IWICStream::InitializeFromMemory failed with status=%lx\n", (unsigned long)status);
         return 0;
     }
 
     ComPtr<IWICBitmapDecoder> imageDecoder;
     status = imageFactory->CreateDecoderFromStream(imageStream.Get(), nullptr, WICDecodeMetadataCacheOnDemand, &imageDecoder);
     if (!SUCCEEDED(status)) {
-        NSTraceInfo(TAG, @"IWICImagingFactory::CreateDecoderFromStream failed with status=%x\n", status);
+        NSTraceInfo(TAG, @"IWICImagingFactory::CreateDecoderFromStream failed with status=%lx\n", (unsigned long)status);
         return 0;
     }
 
     size_t frameCount = 0;
     status = imageDecoder->GetFrameCount(&frameCount);
     if (!SUCCEEDED(status)) {
-        NSTraceInfo(TAG, @"IWICBitmapDecoder::GetFrameCount failed with status=%x\n", status);
+        NSTraceInfo(TAG, @"IWICBitmapDecoder::GetFrameCount failed with status=%lx\n", (unsigned long)status);
     }
 
     return frameCount;

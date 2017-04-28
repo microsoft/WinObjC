@@ -114,13 +114,13 @@ BASE_CLASS_REQUIRED_IMPLS(NSSet, NSSetPrototype, CFSetGetTypeID);
 */
 - (instancetype)initWithArray:(NSArray*)array {
     NSUInteger count = [array count];
-    id* objects = (id*)IwMalloc(count * sizeof(id));
+    id* objects = (id*)malloc(count * sizeof(id));
 
     [array getObjects:objects];
 
     NSSet* ret = [self initWithObjects:objects count:count];
 
-    IwFree(objects);
+    free(objects);
     return ret;
 }
 
@@ -136,7 +136,7 @@ BASE_CLASS_REQUIRED_IMPLS(NSSet, NSSetPrototype, CFSetGetTypeID);
 */
 - (instancetype)initWithSet:(NSSet*)set copyItems:(BOOL)flag {
     NSUInteger count = [set count];
-    id* objects = (id*)IwMalloc(count * sizeof(id));
+    id* objects = (id*)malloc(count * sizeof(id));
     NSUInteger i = 0;
     id obj;
 
@@ -154,7 +154,7 @@ BASE_CLASS_REQUIRED_IMPLS(NSSet, NSSetPrototype, CFSetGetTypeID);
         }
     }
 
-    IwFree(objects);
+    free(objects);
 
     return ret;
 }
@@ -172,7 +172,7 @@ BASE_CLASS_REQUIRED_IMPLS(NSSet, NSSetPrototype, CFSetGetTypeID);
 
     if (count >= max) {
         max += 64;
-        objs = (id*)IwRealloc(objs, max * sizeof(id));
+        objs = (id*)realloc(objs, max * sizeof(id));
     }
 
     objs[count++] = first;
@@ -182,7 +182,7 @@ BASE_CLASS_REQUIRED_IMPLS(NSSet, NSSetPrototype, CFSetGetTypeID);
     while (curVal != NULL) {
         if (count >= max) {
             max += 64;
-            objs = (id*)IwRealloc(objs, max * sizeof(id));
+            objs = (id*)realloc(objs, max * sizeof(id));
         }
 
         objs[count++] = curVal;
@@ -193,7 +193,7 @@ BASE_CLASS_REQUIRED_IMPLS(NSSet, NSSetPrototype, CFSetGetTypeID);
     va_end(pReader);
 
     NSSet* ret = [self initWithObjects:objs count:count];
-    IwFree(objs);
+    free(objs);
 
     return ret;
 }

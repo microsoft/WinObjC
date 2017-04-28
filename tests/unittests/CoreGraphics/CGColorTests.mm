@@ -18,11 +18,6 @@
 #import <CoreGraphics/CoreGraphics.h>
 #import <vector>
 
-// TODO #2243: Remove the UIKit dependency
-#if WINOBJC
-#include <UIKit/UIColor.h>
-#endif
-
 #define EXPECT_EQ_COMPONENTS(a, b) \
     EXPECT_EQ((a)[0], (b)[0]);     \
     EXPECT_EQ((a)[1], (b)[1]);     \
@@ -30,9 +25,6 @@
     EXPECT_EQ((a)[3], (b)[3])
 
 TEST(CGColor, CGColorGetComponents) {
-#if WINOBJC
-    [UIColor class];
-#endif
     CGFloat colors[] = { 1, 0, 0, 1 }; // bright red
 
     CGColorSpaceRef clrRgb = CGColorSpaceCreateDeviceRGB();
@@ -57,18 +49,32 @@ TEST(CGColor, CGColorGetComponents) {
     CGColorSpaceRelease(clrRgb);
 }
 
-TEST(CGColor, CGColorEquals) {
-#if WINOBJC
-    [UIColor class];
-#endif
+TEST(CGColor, CGGenericGray) {
+    CGFloat colors[] = { 0.5, 1 };
 
+    auto grayColorSpace = woc::MakeStrongCF<CGColorSpaceRef>(CGColorSpaceCreateDeviceGray());
+    auto col1 = woc::MakeStrongCF<CGColorRef>(CGColorCreate(grayColorSpace, colors));
+    auto col2 = woc::MakeStrongCF<CGColorRef>(CGColorCreateGenericGray(colors[0], colors[1]));
+    EXPECT_TRUE(CGColorEqualToColor(col1, col2));
+}
+
+TEST(CGColor, CGGenericRGB) {
+    CGFloat colors[] = { 1, 0, 0, 1 }; // bright red
+
+    auto rgbColorSpace = woc::MakeStrongCF<CGColorSpaceRef>(CGColorSpaceCreateDeviceRGB());
+    auto col1 = woc::MakeStrongCF<CGColorRef>(CGColorCreate(rgbColorSpace, colors));
+    auto col2 = woc::MakeStrongCF<CGColorRef>(CGColorCreateGenericRGB(colors[0], colors[1], colors[2], colors[3]));
+    EXPECT_TRUE(CGColorEqualToColor(col1, col2));
+}
+
+TEST(CGColor, CGColorEquals) {
     CGFloat colors[] = { 1, 0, 0, 1 }; // bright red
 
     CGColorSpaceRef clrRgb = CGColorSpaceCreateDeviceRGB();
     CGColorRef clr1 = CGColorCreate(clrRgb, colors);
     CGColorRef clr2 = CGColorCreateCopy(clr1);
     CGColorRef clr3 = CGColorCreateCopyWithAlpha(clr1, 0.9);
-    CGColorRef clr4 = CGColorCreate(clrRgb, colors);
+    CGColorRef clr4 = CGColorCreateGenericRGB(colors[0], colors[1], colors[2], colors[3]);
 
     EXPECT_EQ(CGColorSpaceGetModel(clrRgb), CGColorSpaceGetModel(CGColorGetColorSpace(clr1)));
     EXPECT_EQ(CGColorSpaceGetModel(clrRgb), CGColorSpaceGetModel(CGColorGetColorSpace(clr2)));
@@ -93,9 +99,6 @@ TEST(CGColor, CGColorEquals) {
 }
 
 TEST(CGColor, GetColorSpace) {
-#if WINOBJC
-    [UIColor class];
-#endif
     CGFloat colors[] = { 1, 0, 0, 1 }; // bright red
 
     CGColorSpaceRef clrRgb = CGColorSpaceCreateDeviceRGB();
@@ -117,9 +120,6 @@ TEST(CGColor, GetColorSpace) {
 }
 
 TEST(CGColor, GetConstantColor) {
-#if WINOBJC
-    [UIColor class];
-#endif
     auto grayColorSpace = woc::MakeStrongCF<CGColorSpaceRef>(CGColorSpaceCreateDeviceGray());
 
     CFStringRef colors[] = { kCGColorWhite, kCGColorBlack, kCGColorClear };
@@ -132,9 +132,6 @@ TEST(CGColor, GetConstantColor) {
 }
 
 TEST(CGColor, CGColorSpaceCreateIndexed) {
-#if WINOBJC
-    [UIColor class];
-#endif
     auto rgbColorSpace = woc::MakeStrongCF<CGColorSpaceRef>(CGColorSpaceCreateDeviceRGB());
 
     static const unsigned char tableVal[] = { 255, 255, 255, 0, 0, 0, 212, 255, 154 };

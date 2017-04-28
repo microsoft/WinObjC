@@ -38,7 +38,7 @@
         <ActivatableClass ActivatableClassId="UIKit.Xaml.Private.CoreAnimation.Layer" ThreadingModel="both" />
         <ActivatableClass ActivatableClassId="UIKit.Xaml.UIKit_Xaml_XamlTypeInfo.XamlMetaDataProvider" ThreadingModel="both" />
         <ActivatableClass ActivatableClassId="UIKit.Xaml.Slider" ThreadingModel="both" />
-        <ActivatableClass ActivatableClassId="UIKit.Xaml.ProgressRing" ThreadingModel="both" />
+        <ActivatableClass ActivatableClassId="UIKit.Xaml.ActivityIndicatorView" ThreadingModel="both" />
         <ActivatableClass ActivatableClassId="UIKit.Xaml.Item" ThreadingModel="both" />
         <ActivatableClass ActivatableClassId="UIKit.Xaml.Button" ThreadingModel="both" />
         <ActivatableClass ActivatableClassId="UIKit.Xaml.Label" ThreadingModel="both" />

@@ -80,11 +80,37 @@ UIKIT_XAML_EXPORT IInspectable* XamlGetFrameworkElementLayerContentProperty(cons
 UIKIT_XAML_EXPORT IInspectable* XamlGetFrameworkElementSublayerCanvasProperty(const Microsoft::WRL::ComPtr<IInspectable>& targetElement);
 
 ////////////////////////////////////////////////////////////////////////////////////
-// ProgressRing.xaml.cpp
+// ActivityIndicatorView.xaml.cpp
 ////////////////////////////////////////////////////////////////////////////////////
 
-// Returns a UIKit::ProgressRing as an IInspectable
-UIKIT_XAML_EXPORT void XamlCreateProgressRing(IInspectable** created);
+// Returns a UIKit::Xaml::ActivityIndicatorView as an IInspectable
+UIKIT_XAML_EXPORT void XamlCreateActivityIndicatorView(IInspectable** created);
+
+// Retrieves the UIKit::Xaml::ActivityIndicatorView's backing ProgressRing as an IInspetable
+UIKIT_XAML_EXPORT IInspectable* XamlGetInternalProgressRing(const Microsoft::WRL::ComPtr<IInspectable>& activityIndicatorInspectable);
+
+// Retrieves the IsActive property value, denoting if the ActivityIndicatorView is currently animating
+UIKIT_XAML_EXPORT bool XamlGetActivityIndicatorViewIsActiveValue(const Microsoft::WRL::ComPtr<IInspectable>& activityIndicatorInspectable);
+
+// Sets the IsActive property value to start or stop animation of the ActivityIndicatorView
+UIKIT_XAML_EXPORT void XamlSetActivityIndicatorViewIsActiveValue(const Microsoft::WRL::ComPtr<IInspectable>& activityIndicatorInspectable,
+                                                                 bool isActive);
+
+// Retrieves the Foreground property value, represending the color of the ActivityIndicatorView
+UIKIT_XAML_EXPORT IInspectable* XamlGetActivityIndicatorViewForegroundValue(
+    const Microsoft::WRL::ComPtr<IInspectable>& activityIndicatorInspectable);
+
+// Sets the Foreground property value to set the color of the ActivityIndicatorView
+UIKIT_XAML_EXPORT void XamlSetActivityIndicatorViewForegroundValue(const Microsoft::WRL::ComPtr<IInspectable>& activityIndicatorInspectable,
+                                                                   const Microsoft::WRL::ComPtr<IInspectable>& inspectableForegroundBrush);
+
+// Sets the Height property value of the ActivityIndicatorView
+UIKIT_XAML_EXPORT void XamlSetActivityIndicatorViewHeightValue(const Microsoft::WRL::ComPtr<IInspectable>& activityIndicatorInspectable,
+                                                               double height);
+
+// Sets the Width property value of the ActivityIndicatorView
+UIKIT_XAML_EXPORT void XamlSetActivityIndicatorViewWidthValue(const Microsoft::WRL::ComPtr<IInspectable>& activityIndicatorInspectable,
+                                                              double width);
 
 ////////////////////////////////////////////////////////////////////////////////////
 // ScrollView.xaml.cpp

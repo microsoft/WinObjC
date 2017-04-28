@@ -15,7 +15,6 @@
 //******************************************************************************
 
 #import "NSInvocationInternal.h"
-#import <IwMalloc.h>
 
 #import <Starboard/SmartTypes.h>
 #import <objc/runtime.h>
@@ -192,11 +191,11 @@ _NSInvocationCallFrame::_NSInvocationCallFrame(NSMethodSignature* methodSignatur
     length = std::max(length, g_gprLength + g_sfprLength);
 
     _length = length;
-    _buffer = static_cast<uint8_t*>(IwCalloc(length, 1));
+    _buffer = static_cast<uint8_t*>(calloc(length, 1));
 }
 
 _NSInvocationCallFrame::~_NSInvocationCallFrame() {
-    IwFree(_buffer);
+    free(_buffer);
 }
 
 _NSInvocationAllocationExtent _NSInvocationCallFrame::_allocateStackWords(size_t count, size_t alignment) {

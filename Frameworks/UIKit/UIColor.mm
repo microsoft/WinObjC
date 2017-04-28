@@ -1,7 +1,7 @@
 //******************************************************************************
 //
 // Copyright (c) 2016 Intel Corporation. All rights reserved.
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -17,7 +17,7 @@
 
 #import <StubReturn.h>
 #import <Starboard.h>
-
+#import <NSRaise.h>
 #import <UIKit/UIColor.h>
 #import <UIKit/UIGraphics.h>
 #import <UIKit/UIImage.h>
@@ -33,618 +33,139 @@
 #import "CGContextInternal.h"
 #import "CGPatternInternal.h"
 #import "UIColorInternal.h"
+#import "UICGColor.h"
 
 #import <math.h>
 #import <LoggingNative.h>
+#import <BridgeHelpers.h>
+#import "CGColorInternal.h"
 
 static const wchar_t* TAG = L"UIColor";
 
-@interface _UICachedColor : UIColor
-@end
-
-@implementation _UICachedColor
-
-// All instances of UIColor that are created using the named methods, for eg: + (UIColor *)purpleColor, + (UIColor *)brownColor etc, are
-// singletons on reference platform and calling release/autorelease/retain does not actually do anything and the retainCount returns
-// NSUIntegerMax.
+@implementation UIColor
 
 /**
-@Status Interoperable
+ @Status Interoperable
 */
-- (id)autorelease {
-    return self;
-}
-
-/**
-@Status Interoperable
-*/
-- (id)copyWithZone:(NSZone*)zone {
-    return self;
-}
-
-/**
-@Status Interoperable
-*/
-- (id)retain {
-    return self;
-}
-
-/**
-@Status Interoperable
-*/
-- (oneway void)release {
-}
-
-/**
-@Status Interoperable
-*/
-- (NSUInteger)retainCount {
-    // denotes an object that cannot be released
-    return NSUIntegerMax;
-}
-
-/**
-@Status Interoperable
-*/
-- (void)dealloc {
-    [super dealloc];
-}
-
-@end
-
-typedef struct {
-    double r; // percent
-    double g; // percent
-    double b; // percent
-} rgb;
-
-typedef struct {
-    double h; // angle in degrees
-    double s; // percent
-    double v; // percent
-} hsv;
-
-static hsv rgb2hsv(rgb in);
-static rgb hsv2rgb(hsv in);
-
-#if defined(WIN32) || defined(WINPHONE)
-int isnan(double x) {
-    return x != x;
-}
-#ifndef NAN
-static const unsigned long __nan[2] = { 0xffffffff, 0x7fffffff };
-#define NAN (*(const float*)__nan)
-#endif
-#endif
-
-hsv rgb2hsv(rgb in) {
-    hsv out;
-    double min, max, delta;
-
-    min = in.r < in.g ? in.r : in.g;
-    min = min < in.b ? min : in.b;
-
-    max = in.r > in.g ? in.r : in.g;
-    max = max > in.b ? max : in.b;
-
-    out.v = max; // v
-    delta = max - min;
-    if (max > 0.0) {
-        out.s = (delta / max); // s
-    } else {
-        // r = g = b = 0                        // s = 0, v is undefined
-        out.s = 0.0;
-        out.h = NAN; // its now undefined
-        return out;
-    }
-    if (in.r >= max) { // > is bogus, just keeps compilor happy
-        out.h = (in.g - in.b) / delta; // between yellow & magenta
-    } else if (in.g >= max) {
-        out.h = 2.0 + (in.b - in.r) / delta; // between cyan & yellow
-    } else {
-        out.h = 4.0 + (in.r - in.g) / delta; // between magenta & cyan
++ (NSObject*)allocWithZone:(NSZone*)zone {
+    if (self == [UIColor class]) {
+        return [_UIColorConcrete allocWithZone:zone];
     }
 
-    out.h *= 60.0; // degrees
-
-    if (out.h < 0.0) {
-        out.h += 360.0;
-    }
-
-    return out;
-}
-
-rgb hsv2rgb(hsv in) {
-    double hh, p, q, t, ff;
-    long i;
-    rgb out;
-
-    if (in.s <= 0.0) { // < is bogus, just shuts up warnings
-        if (isnan(in.h)) { // in.h == NAN
-            out.r = in.v;
-            out.g = in.v;
-            out.b = in.v;
-            return out;
-        }
-        // error - should never happen
-        out.r = 0.0;
-        out.g = 0.0;
-        out.b = 0.0;
-        return out;
-    }
-    hh = in.h;
-    if (hh >= 360.0) {
-        hh = 0.0;
-    }
-    hh /= 60.0;
-    i = (long)hh;
-    ff = hh - i;
-    p = in.v * (1.0 - in.s);
-    q = in.v * (1.0 - (in.s * ff));
-    t = in.v * (1.0 - (in.s * (1.0 - ff)));
-
-    switch (i) {
-        case 0:
-            out.r = in.v;
-            out.g = t;
-            out.b = p;
-            break;
-        case 1:
-            out.r = q;
-            out.g = in.v;
-            out.b = p;
-            break;
-        case 2:
-            out.r = p;
-            out.g = in.v;
-            out.b = t;
-            break;
-
-        case 3:
-            out.r = p;
-            out.g = q;
-            out.b = in.v;
-            break;
-        case 4:
-            out.r = t;
-            out.g = p;
-            out.b = in.v;
-            break;
-        case 5:
-        default:
-            out.r = in.v;
-            out.g = p;
-            out.b = q;
-            break;
-    }
-    return out;
-}
-
-@implementation UIColor {
-@public
-    enum BrushType _type;
-    StrongId<UIImage> _image;
-    woc::StrongCF<CGPatternRef> _pattern;
-    __CGColorQuad _components;
-    // Note: This should be part of the CGColor struct
-    woc::StrongCF<CGColorSpaceRef> _colorSpace;
+    return [super allocWithZone:zone];
 }
 
 /**
  @Status Interoperable
 */
-- (instancetype)copyWithZone:(NSZone*)zone {
-    return [self retain];
-}
-
-/**
- @Status Caveat
- @Notes May not be fully implemented
-*/
-- (instancetype)initWithCoder:(NSCoder*)coder {
-    _type = solidBrush;
-
-    NSString* pattern = [coder decodeObjectForKey:@"UIPatternSelector"];
-    if (pattern == nil) {
-        pattern = [coder decodeObjectForKey:@"UISystemColorName"];
-    }
-    if (pattern != nil) {
-        const char* pPattern = [pattern UTF8String];
-        TraceVerbose(TAG, L"Selecting pattern %hs", pPattern);
-
-        return [[[self class] performSelector:NSSelectorFromString(pattern)] retain];
-    } else {
-        if ([coder containsValueForKey:@"UIWhite"]) {
-            const CGFloat uiWhite = [coder decodeFloatForKey:@"UIWhite"];
-            _components.r = uiWhite;
-            _components.g = uiWhite;
-            _components.b = uiWhite;
-        } else {
-            _components.r = [coder decodeFloatForKey:@"UIRed"];
-            _components.g = [coder decodeFloatForKey:@"UIGreen"];
-            _components.b = [coder decodeFloatForKey:@"UIBlue"];
-        }
-        if ([coder containsValueForKey:@"UIAlpha"]) {
-            _components.a = [coder decodeFloatForKey:@"UIAlpha"];
-        } else {
-            _components.a = 1.0f;
-        }
-
-        return self;
-    }
++ (UIColor*)colorWithRed:(CGFloat)r green:(CGFloat)g blue:(CGFloat)b alpha:(CGFloat)a {
+    return [[[self alloc] initWithRed:r green:g blue:b alpha:a] autorelease];
 }
 
 /**
  @Status Interoperable
 */
-- (void)encodeWithCoder:(NSCoder*)coder {
-    assert(_type == solidBrush);
-
-    [coder encodeFloat:_components.r forKey:@"UIRed"];
-    [coder encodeFloat:_components.g forKey:@"UIGreen"];
-    [coder encodeFloat:_components.b forKey:@"UIBlue"];
-    [coder encodeFloat:_components.a forKey:@"UIAlpha"];
++ (UIColor*)colorWithHue:(CGFloat)h saturation:(CGFloat)s brightness:(CGFloat)v alpha:(CGFloat)a {
+    return [[[self alloc] initWithHue:h saturation:s brightness:v alpha:a] autorelease];
 }
 
 /**
  @Status Interoperable
 */
-+ (UIColor*)grayColor {
-    static UIColor* color = [_UICachedColor colorWithRed:0.5f green:0.5f blue:0.5f alpha:1.0f];
-    return color;
-}
-
-/**
- @Status Interoperable
-*/
-+ (UIColor*)cyanColor {
-    static UIColor* color = [_UICachedColor colorWithRed:0.0f green:1.0f blue:1.0f alpha:1.0f];
-    return color;
-}
-
-/**
- @Status Interoperable
-*/
-+ (UIColor*)magentaColor {
-    static UIColor* color = [_UICachedColor colorWithRed:1.0f green:0.0f blue:1.0f alpha:1.0f];
-    return color;
-}
-
-/**
- @Status Interoperable
-*/
-+ (UIColor*)lightGrayColor {
-    static UIColor* color = [_UICachedColor colorWithRed:0.75f green:0.75f blue:0.75f alpha:1.0f];
-    return color;
-}
-
-/**
- @Status Interoperable
-*/
-+ (UIColor*)darkGrayColor {
-    static UIColor* color = [_UICachedColor colorWithRed:0.25f green:0.25f blue:0.25f alpha:1.0f];
-    return color;
-}
-
-/**
- @Status Interoperable
-*/
-+ (UIColor*)clearColor {
-    static UIColor* color = [_UICachedColor colorWithRed:0.0f green:0.0f blue:0.0f alpha:0.0f];
-    return color;
-}
-
-/**
- @Status Interoperable
-*/
-+ (UIColor*)blackColor {
-    static UIColor* color = [_UICachedColor colorWithRed:0.0f green:0.0f blue:0.0f alpha:1.0f];
-    return color;
-}
-
-/**
- @Status Interoperable
-*/
-+ (UIColor*)redColor {
-    static UIColor* color = [_UICachedColor colorWithRed:1.0f green:0.0f blue:0.0f alpha:1.0f];
-    return color;
-}
-
-/**
- @Status Interoperable
-*/
-+ (UIColor*)blueColor {
-    static UIColor* color = [_UICachedColor colorWithRed:0.0f green:0.0f blue:1.0f alpha:1.0f];
-    return color;
-}
-
-/**
- @Status Interoperable
-*/
-+ (UIColor*)cornflowerBlueColor {
-    static UIColor* color = [_UICachedColor colorWithRed:0.0f green:0.737f blue:0.949f alpha:1.0f];
-    return color;
-}
-
-/**
- @Status Interoperable
-*/
-+ (UIColor*)whiteColor {
-    static UIColor* color = [_UICachedColor colorWithRed:1.0f green:1.0f blue:1.0f alpha:1.0f];
-    return color;
-}
-
-/**
- @Status Interoperable
-*/
-+ (UIColor*)yellowColor {
-    static UIColor* color = [_UICachedColor colorWithRed:1.0f green:1.0f blue:0.0f alpha:1.0f];
-    return color;
-}
-
-/**
- @Status Interoperable
-*/
-+ (UIColor*)brownColor {
-    static UIColor* color = [_UICachedColor colorWithRed:0.65f green:0.35f blue:0.0f alpha:1.0f];
-    return color;
-}
-
-/**
- @Status Interoperable
-*/
-+ (UIColor*)greenColor {
-    static UIColor* color = [_UICachedColor colorWithRed:0.0f green:1.0f blue:0.0f alpha:1.0f];
-    return color;
-}
-
-/**
- @Status Interoperable
-*/
-+ (UIColor*)orangeColor {
-    static UIColor* color = [_UICachedColor colorWithRed:1.0f green:0.5f blue:0.0f alpha:1.0f];
-    return color;
-}
-
-/**
- @Status Interoperable
-*/
-+ (UIColor*)purpleColor {
-    static UIColor* color = [_UICachedColor colorWithRed:0.7f green:0.2f blue:0.9f alpha:1.0f];
-    return color;
-}
-
-/**
- @Status Interoperable
-*/
-+ (UIColor*)lightTextColor {
-    static UIColor* color = [_UICachedColor colorWithRed:0.75f green:0.75f blue:0.75f alpha:1.0f];
-    return color;
-}
-
-/**
- @Status Interoperable
-*/
-+ (UIColor*)darkTextColor {
-    static UIColor* color = [_UICachedColor colorWithRed:0.0f green:0.0f blue:0.0f alpha:1.0f];
-    return color;
-}
-
-/**
- @Status Interoperable
-*/
-- (CGColorRef)CGColor {
-    return (CGColorRef)self;
-}
-
-/**
- @Status Interoperable
-*/
-+ (UIColor*)colorWithRed:(float)r green:(float)g blue:(float)b alpha:(float)a {
-    UIColor* ret = [self alloc];
-    ret->_components.r = r;
-    ret->_components.g = g;
-    ret->_components.b = b;
-    ret->_components.a = a;
-    ret->_type = solidBrush;
-
-    return [ret autorelease];
-}
-
-/**
- @Status Interoperable
-*/
-+ (UIColor*)colorWithHue:(float)h saturation:(float)s brightness:(float)v alpha:(float)a {
-    UIColor* ret = [self alloc];
-
-    return [[ret initWithHue:h saturation:s brightness:v alpha:a] autorelease];
-}
-
-/**
- @Status Interoperable
-*/
-- (UIColor*)initWithHue:(float)h saturation:(float)s brightness:(float)v alpha:(float)a {
-    hsv in;
-    rgb out;
-
-    in.h = h * 360.0f;
-    in.s = s;
-    in.v = v;
-
-    out = hsv2rgb(in);
-
-    _components.r = (float)out.r;
-    _components.g = (float)out.g;
-    _components.b = (float)out.b;
-    _components.a = (float)a;
-    _type = solidBrush;
-
-    return self;
-}
-
-/**
- @Status Interoperable
-*/
-- (UIColor*)initWithRed:(float)r green:(float)g blue:(float)b alpha:(float)a {
-    _components.r = r;
-    _components.g = g;
-    _components.b = b;
-    _components.a = a;
-    _type = solidBrush;
-    return self;
-}
-
-/**
- @Status Interoperable
-*/
-- (UIColor*)initWithPatternImage:(UIImage*)image {
-    CGRect bounds = { 0 };
-
-    bounds.size = [image size];
-    CGAffineTransform m;
-
-    CGImageRef pImg = (CGImageRef)[image CGImage];
-
-    if (pImg == NULL) {
-        return nil;
-    }
-
-    _pattern = _CGPatternCreateFromImage(pImg);
-    _image = image;
-    _type = cgPatternBrush;
-
-    _components.r = 0.0f;
-    _components.g = 0.0f;
-    _components.b = 0.0f;
-    _components.a = 0.0f;
-
-    return self;
-}
-
-/**
- @Status Interoperable
-*/
-+ (UIColor*)colorWithWhite:(float)gray alpha:(float)alpha {
-    return [self colorWithRed:gray green:gray blue:gray alpha:alpha];
-}
-
-/**
- @Status Interoperable
-*/
-- (UIColor*)initWithWhite:(float)gray alpha:(float)alpha {
-    return [self initWithRed:gray green:gray blue:gray alpha:alpha];
++ (UIColor*)colorWithWhite:(CGFloat)gray alpha:(CGFloat)alpha {
+    return [[[self alloc] initWithWhite:gray alpha:alpha] autorelease];
 }
 
 /**
  @Status Interoperable
 */
 + (UIColor*)colorWithPatternImage:(UIImage*)image {
-    UIColor* ret = [self alloc];
-
-    return [[ret initWithPatternImage:image] autorelease];
-}
-
-+ (UIColor*)_colorWithCGPattern:(CGPatternRef)pattern {
-    UIColor* ret = [self alloc];
-
-    ret->_type = cgPatternBrush;
-    ret->_pattern = pattern;
-
-    return [ret autorelease];
-}
-
-/**
- @Status Interoperable
-*/
-- (UIColor*)colorWithAlphaComponent:(float)alpha {
-    return [UIColor colorWithRed:_components.r green:_components.g blue:_components.b alpha:alpha];
-}
-
-+ (UIColor*)colorWithColor:(UIColor*)copyclr {
-    if (copyclr == nil) {
-        return nil;
-    }
-
-    UIColor* ret = [self alloc];
-
-    ret->_type = copyclr->_type;
-    ret->_pattern = copyclr->_pattern;
-    ret->_components.r = copyclr->_components.r;
-    ret->_components.g = copyclr->_components.g;
-    ret->_components.b = copyclr->_components.b;
-    ret->_components.a = copyclr->_components.a;
-
-    return [ret autorelease];
+    return [[[self alloc] initWithPatternImage:image] autorelease];
 }
 
 /**
  @Status Interoperable
 */
 + (UIColor*)colorWithCGColor:(CGColorRef)clr {
-    UIColor* copyclr = (id)clr;
-    if (copyclr == nil) {
-        return nil;
-    }
-
-    UIColor* ret = [self alloc];
-
-    ret->_type = copyclr->_type;
-    ret->_pattern = copyclr->_pattern;
-    ret->_components.r = copyclr->_components.r;
-    ret->_components.g = copyclr->_components.g;
-    ret->_components.b = copyclr->_components.b;
-    ret->_components.a = copyclr->_components.a;
-
-    return [ret autorelease];
+    return [[[self alloc] initWithCGColor:clr] autorelease];
 }
 
-- (const __CGColorQuad*)_getColors {
-    return &_components;
+/**
+ @Status Interoperable
+*/
+- (CGColorRef)CGColor {
+    return NSInvalidAbstractInvocationReturn();
 }
 
-- (CGColorSpaceRef)colorSpace {
-    return _colorSpace;
+/**
+ @Status Stub
+*/
+- (instancetype)initWithCGColor:(CGColorRef)cgColor {
+    return NSInvalidAbstractInvocationReturn();
 }
 
-- (void)setColorSpace:(CGColorSpaceRef)colorSpace {
-    _colorSpace = colorSpace;
+/**
+ @Status Interoperable
+*/
+- (instancetype)initWithHue:(CGFloat)h saturation:(CGFloat)s brightness:(CGFloat)v alpha:(CGFloat)a {
+    return NSInvalidAbstractInvocationReturn();
+}
+
+/**
+ @Status Interoperable
+*/
+- (instancetype)initWithRed:(CGFloat)r green:(CGFloat)g blue:(CGFloat)b alpha:(CGFloat)a {
+    return NSInvalidAbstractInvocationReturn();
+}
+
+/**
+ @Status Interoperable
+*/
+- (instancetype)initWithWhite:(CGFloat)gray alpha:(CGFloat)alpha {
+    return NSInvalidAbstractInvocationReturn();
+}
+
+/**
+ @Status Interoperable
+*/
+- (instancetype)initWithPatternImage:(UIImage*)image {
+    return NSInvalidAbstractInvocationReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (instancetype)initWithCIColor:(CIColor*)ciColor {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Interoperable
+*/
+- (UIColor*)colorWithAlphaComponent:(CGFloat)alpha {
+    return NSInvalidAbstractInvocationReturn();
 }
 
 /**
  @Status Interoperable
 */
 - (void)set {
-    //  Set current context color
-    if (UIGraphicsGetCurrentContext()) {
-        CGContextSetFillColorWithColor(UIGraphicsGetCurrentContext(), (CGColorRef)self);
-        CGContextSetStrokeColorWithColor(UIGraphicsGetCurrentContext(), (CGColorRef)self);
-    } else {
-        TraceVerbose(TAG, L"UIColor::set - context not set");
-    }
-}
-
-- (BrushType)_type {
-    return _type;
+    NSInvalidAbstractInvocation();
 }
 
 /**
  @Status Interoperable
 */
 - (void)setFill {
-    //  Set current context color
-    if (UIGraphicsGetCurrentContext()) {
-        CGContextSetFillColorWithColor(UIGraphicsGetCurrentContext(), (CGColorRef)self);
-    } else {
-        TraceVerbose(TAG, L"UIColor::setFill - context not set");
-    }
+    NSInvalidAbstractInvocation();
 }
 
 /**
  @Status Interoperable
 */
 - (void)setStroke {
-    //  Set current context color
-    CGContextSetStrokeColorWithColor(UIGraphicsGetCurrentContext(), (CGColorRef)self);
+    NSInvalidAbstractInvocation();
 }
 
 /**
@@ -675,9 +196,6 @@ rgb hsv2rgb(hsv in) {
     return [self colorWithRed:0.95f green:0.95f blue:0.95f alpha:1.0f];
 }
 
-/**
- @Status Stub
-*/
 + (UIColor*)_windowsTableViewCellSelectionBackgroundColor {
     return [self colorWithRed:0.63 green:0.79 blue:0.89 alpha:1.0];
 }
@@ -693,27 +211,53 @@ rgb hsv2rgb(hsv in) {
 /**
  @Status Interoperable
 */
-- (BOOL)getHue:(float*)h saturation:(float*)s brightness:(float*)v alpha:(float*)a {
+- (BOOL)getHue:(CGFloat*)h saturation:(CGFloat*)s brightness:(CGFloat*)v alpha:(CGFloat*)a {
+    CGColorRef cgColor = [self CGColor];
+    RETURN_RESULT_IF(!cgColor, NO);
+
+    const CGFloat* components = CGColorGetComponents(cgColor);
+    RETURN_RESULT_IF(components == nullptr, NO);
+
     hsv out;
     rgb in;
 
-    in.r = _components.r;
-    in.b = _components.b;
-    in.g = _components.g;
+    in.r = components[0];
+    in.b = components[1];
+    in.g = components[2];
 
     out = rgb2hsv(in);
 
     if (h) {
-        *h = (float)(out.h / 360.0);
+        *h = (CGFloat)(out.h / 360.0);
     }
     if (s) {
-        *s = (float)out.s;
+        *s = (CGFloat)out.s;
     }
     if (v) {
-        *v = (float)out.v;
+        *v = (CGFloat)out.v;
     }
     if (a) {
-        *a = _components.a;
+        *a = components[3];
+    }
+
+    return YES;
+}
+
+/**
+@Status Caveat
+@Notes only supports grayscale colorspace
+*/
+- (BOOL)getWhite:(CGFloat*)white alpha:(CGFloat*)alpha {
+    CGColorRef cgColor = [self CGColor];
+    RETURN_RESULT_IF(!cgColor, NO);
+
+    const CGFloat* components = CGColorGetComponents(cgColor);
+    RETURN_RESULT_IF(components == nullptr, NO);
+    if (white) {
+        *white = components[0];
+    }
+    if (alpha) {
+        *alpha = components[3];
     }
 
     return YES;
@@ -722,18 +266,23 @@ rgb hsv2rgb(hsv in) {
 /**
  @Status Interoperable
 */
-- (BOOL)getRed:(float*)r green:(float*)g blue:(float*)b alpha:(float*)a {
+- (BOOL)getRed:(CGFloat*)r green:(CGFloat*)g blue:(CGFloat*)b alpha:(CGFloat*)a {
+    CGColorRef cgColor = [self CGColor];
+    RETURN_RESULT_IF(!cgColor, NO);
+
+    const CGFloat* components = CGColorGetComponents(cgColor);
+    RETURN_RESULT_IF(components == nullptr, NO);
     if (r) {
-        *r = _components.r;
+        *r = components[0];
     }
     if (g) {
-        *g = _components.g;
+        *g = components[1];
     }
     if (b) {
-        *b = _components.b;
+        *b = components[2];
     }
     if (a) {
-        *a = _components.a;
+        *a = components[3];
     }
 
     return YES;
@@ -747,36 +296,17 @@ rgb hsv2rgb(hsv in) {
         return NO;
     }
 
-    if (_type == other->_type && _image == other->_image && _pattern == other->_pattern && _components.r == other->_components.r &&
-        _components.g == other->_components.g && _components.b == other->_components.b) {
+    CGColorRef cgColor = [self CGColor];
+    CGColorRef otherCGColor = [other CGColor];
+    if (cgColor == otherCGColor) {
         return YES;
-    } else {
-        return NO;
     }
-}
 
-/**
- @Status Stub
-*/
-- (BOOL)getWhite:(CGFloat*)white alpha:(CGFloat*)alpha {
-    UNIMPLEMENTED();
-    return StubReturn();
-}
+    if (CFEqual(cgColor, otherCGColor)) {
+        return YES;
+    }
 
-/**
- @Status Stub
-*/
-- (UIColor*)initWithCGColor:(CGColorRef)cgColor {
-    UNIMPLEMENTED();
-    return StubReturn();
-}
-
-/**
- @Status Stub
-*/
-- (UIColor*)initWithCIColor:(CIColor*)ciColor {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return NO;
 }
 
 /**
@@ -804,6 +334,13 @@ rgb hsv2rgb(hsv in) {
 }
 
 /**
+ @Status Interoperable
+*/
+- (instancetype)copyWithZone:(NSZone*)zone {
+    return [self retain];
+}
+
+/**
  @Status Stub
 */
 + (BOOL)supportsSecureCoding {
@@ -811,12 +348,169 @@ rgb hsv2rgb(hsv in) {
     return StubReturn();
 }
 
-@end
-
-DWORD _UIColorPatternFill(UIColor* color, CGContextRef ctx) {
-    CGRect bounds = { 0 };
-
-    bounds.size = [color->_image size];
-    CGContextDrawImage(ctx, bounds, static_cast<CGImageRef>([color->_image CGImage]));
-    return 0;
+/**
+ @Status Stub
+*/
+- (instancetype)initWithCoder:(NSCoder*)coder {
+    return StubReturn();
 }
+
+/**
+ @Status Stub
+*/
+- (void)encodeWithCoder:(NSCoder*)coder {
+}
+
+#pragma region PreDefinedColor
+
+/**
+@Status Interoperable
+*/
++ (UIColor*)blackColor {
+    static StrongId<UIColor> color{ [_UIColorConcreteConst colorWithWhite:0.0f alpha:1.0f] };
+    return color;
+}
+
+/**
+@Status Interoperable
+*/
++ (UIColor*)blueColor {
+    static StrongId<UIColor> color{ [_UIColorConcreteConst colorWithRed:0.0f green:0.0f blue:1.0f alpha:1.0f] };
+    return color;
+}
+
+/**
+@Status Interoperable
+*/
++ (UIColor*)brownColor {
+    static StrongId<UIColor> color{ [_UIColorConcreteConst colorWithRed:0.65f green:0.35f blue:0.0f alpha:1.0f] };
+    return color;
+}
+
+/**
+@Status Interoperable
+*/
++ (UIColor*)clearColor {
+    static StrongId<UIColor> color{ [_UIColorConcreteConst colorWithWhite:0.0f alpha:0.0f] };
+    return color;
+}
+
+/**
+@Status Interoperable
+*/
++ (UIColor*)cyanColor {
+    static StrongId<UIColor> color{ [_UIColorConcreteConst colorWithRed:0.0f green:1.0f blue:1.0f alpha:1.0f] };
+    return color;
+}
+
+/**
+@Status Interoperable
+*/
++ (UIColor*)darkGrayColor {
+    static StrongId<UIColor> color{ [_UIColorConcreteConst colorWithRed:0.25f green:0.25f blue:0.25f alpha:1.0f] };
+    return color;
+}
+
+/**
+@Status Interoperable
+*/
++ (UIColor*)greenColor {
+    static StrongId<UIColor> color{ [_UIColorConcreteConst colorWithRed:0.0f green:1.0f blue:0.0f alpha:1.0f] };
+    return color;
+}
+
+/**
+@Status Interoperable
+*/
++ (UIColor*)lightGrayColor {
+    static StrongId<UIColor> color{ [_UIColorConcreteConst colorWithRed:0.75f green:0.75f blue:0.75f alpha:1.0f] };
+    return color;
+}
+
+/**
+@Status Interoperable
+*/
++ (UIColor*)magentaColor {
+    static StrongId<UIColor> color{ [_UIColorConcreteConst colorWithRed:1.0f green:0.0f blue:1.0f alpha:1.0f] };
+    return color;
+}
+
+/**
+@Status Interoperable
+*/
++ (UIColor*)orangeColor {
+    static StrongId<UIColor> color{ [_UIColorConcreteConst colorWithRed:1.0f green:0.5f blue:0.0f alpha:1.0f] };
+    return color;
+}
+
+/**
+@Status Interoperable
+*/
++ (UIColor*)purpleColor {
+    static StrongId<UIColor> color{ [_UIColorConcreteConst colorWithRed:0.7f green:0.2f blue:0.9f alpha:1.0f] };
+    return color;
+}
+
+/**
+@Status Interoperable
+*/
++ (UIColor*)redColor {
+    static StrongId<UIColor> color{ [_UIColorConcreteConst colorWithRed:1.0f green:0.0f blue:0.0f alpha:1.0f] };
+    return color;
+}
+
+/**
+@Status Interoperable
+*/
++ (UIColor*)whiteColor {
+    static StrongId<UIColor> color{ [_UIColorConcreteConst colorWithWhite:1.0f alpha:1.0f] };
+    return color;
+}
+
+/**
+@Status Interoperable
+*/
++ (UIColor*)yellowColor {
+    static StrongId<UIColor> color{ [_UIColorConcreteConst colorWithRed:1.0f green:1.0f blue:0.0f alpha:1.0f] };
+    return color;
+}
+
+/**
+@Status Interoperable
+*/
++ (UIColor*)cornflowerBlueColor {
+    static StrongId<UIColor> color{ [_UIColorConcreteConst colorWithRed:0.0f green:0.737f blue:0.949f alpha:1.0f] };
+    return color;
+}
+
+/**
+@Status Interoperable
+*/
++ (UIColor*)grayColor {
+    static StrongId<UIColor> color{ [_UIColorConcreteConst colorWithWhite:0.5f alpha:1.0f] };
+    return color;
+}
+
+#pragma endregion PreDefinedColor
+
+#pragma region SystemColor
+
+/**
+@Status Interoperable
+*/
++ (UIColor*)lightTextColor {
+    static StrongId<UIColor> color{ [_UIColorConcreteConst colorWithWhite:0.75f alpha:1.0f] };
+    return color;
+}
+
+/**
+@Status Interoperable
+*/
++ (UIColor*)darkTextColor {
+    static StrongId<UIColor> color{ [_UIColorConcreteConst colorWithWhite:0.0f alpha:1.0f] };
+    return color;
+}
+
+#pragma endregion SystemColor
+
+@end

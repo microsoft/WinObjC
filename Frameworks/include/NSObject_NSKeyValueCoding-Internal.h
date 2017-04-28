@@ -24,5 +24,5 @@ SEL KVCGetterForPropertyName(NSObject* self, const char* key);
 bool KVCGetViaAccessor(NSObject* self, SEL getter, id* ret);
 bool KVCGetViaIvar(id self, struct objc_ivar* ivar, id* ret);
 SEL KVCSetterForPropertyName(NSObject* self, const char* key);
-bool KVCSetViaAccessor(NSObject* self, SEL setter, id value);
-bool KVCSetViaIvar(NSObject* self, struct objc_ivar* ivar, id value);
+bool KVCSetViaAccessor(NSObject* self, SEL setter, id value, NSString* key = nil);
+bool KVCSetViaIvar(NSObject* self, struct objc_ivar* ivar, id value, NSString* key = nil);

@@ -158,7 +158,7 @@ CGColorSpaceRef CGColorSpaceCreateWithName(CFStringRef name) {
 @Status Interoperable
 */
 CGColorSpaceModel CGColorSpaceGetModel(CGColorSpaceRef colorSpace) {
-    RETURN_RESULT_IF_NULL(colorSpace, kCGColorSpaceModelRGB);
+    RETURN_RESULT_IF_NULL(colorSpace, kCGColorSpaceModelUnknown);
     return colorSpace->ColorSpaceModel();
 }
 

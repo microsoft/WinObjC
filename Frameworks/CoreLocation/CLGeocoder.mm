@@ -81,11 +81,11 @@ void createResultsArray(const MapLocationFinderResult& results, NSMutableArray* 
 
         NSString* placemarkName;
         if (!currentAddress.StreetNumber().empty() && !currentAddress.Street().empty()) {
-            placemarkName = [NSString stringWithFormat:@"%S %S", currentAddress.StreetNumber().c_str(), currentAddress.Street().c_str()];
+            placemarkName = [NSString stringWithFormat:@"%S %S", (const unichar*)currentAddress.StreetNumber().c_str(), (const unichar*)currentAddress.Street().c_str()];
         } else if (!currentAddress.Street().empty()) {
             placemarkName = objcwinrt::string(currentAddress.Street());
         } else if (!currentAddress.Town().empty() && !currentAddress.Region().empty()) {
-            placemarkName = [NSString stringWithFormat:@"%S, %S", currentAddress.Town().c_str(), currentAddress.Region().c_str()];
+            placemarkName = [NSString stringWithFormat:@"%S, %S", (const unichar*)currentAddress.Town().c_str(), (const unichar*)currentAddress.Region().c_str()];
         } else if (!currentAddress.Town().empty()) {
             placemarkName = objcwinrt::string(currentAddress.Town());
         } else {

@@ -15,7 +15,6 @@
 //******************************************************************************
 
 #import "NSInvocationInternal.h"
-#import <IwMalloc.h>
 
 #import <objc/runtime.h>
 #import <objc/encoding.h>
@@ -116,11 +115,11 @@ _NSInvocationCallFrame::_NSInvocationCallFrame(NSMethodSignature* methodSignatur
         _allocationExtents[i] = std::move(_allocateArgument([_methodSignature getArgumentTypeAtIndex:i]));
     }
 
-    _buffer = static_cast<uint8_t*>(IwCalloc(_offset, 1));
+    _buffer = static_cast<uint8_t*>(calloc(_offset, 1));
 };
 
 _NSInvocationCallFrame::~_NSInvocationCallFrame() {
-    IwFree(_buffer);
+    free(_buffer);
 }
 
 /* private */

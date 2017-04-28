@@ -84,7 +84,7 @@ PROTOTYPE_CLASS_REQUIRED_IMPLS(NSCFData)
     // NSMutableData is documented to free the bytes immediately, if specified, unlike the immutable version,
     // which frees when the object is dealloc'd
     if (freeWhenDone) {
-        IwFree(bytes);
+        free(bytes);
     }
 
     return reinterpret_cast<NSMutableDataPrototype*>(data);

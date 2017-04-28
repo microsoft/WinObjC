@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 // Copyright (c) 2006-2007 Christopher J. W. Lloyd
 //
 // This code is licensed under the MIT License (MIT).
@@ -25,37 +25,29 @@
 @class NSCharacterSet;
 
 FOUNDATION_EXPORT_CLASS
-@interface NSScanner : NSObject <NSCopying> {
-    NSString* _string;
-    NSUInteger _location;
-    NSUInteger _len;
-    NSCharacterSet* _skipSet;
-    BOOL _isCaseSensitive;
-    NSLocale* _locale;
-}
-
-+ (instancetype)scannerWithString:(NSString*)aString;
-+ (id)localizedScannerWithString:(NSString*)aString STUB_METHOD;
-- (instancetype)initWithString:(NSString*)aString;
+@interface NSScanner : NSObject <NSCopying>
++ (instancetype)scannerWithString:(NSString* _Nonnull)aString;
++ (id)localizedScannerWithString:(NSString* _Nonnull)aString;
+- (instancetype)initWithString:(NSString* _Nonnull)aString;
 @property (readonly, copy) NSString* string;
 @property NSUInteger scanLocation;
 @property BOOL caseSensitive;
 @property (copy) NSCharacterSet* charactersToBeSkipped;
-@property (retain) id locale STUB_PROPERTY;
-- (BOOL)scanCharactersFromSet:(NSCharacterSet*)scanSet intoString:(NSString* _Nullable*)stringValue;
-- (BOOL)scanUpToCharactersFromSet:(NSCharacterSet*)stopSet intoString:(NSString* _Nullable*)stringValue;
-- (BOOL)scanDecimal:(NSDecimal*)decimalValue STUB_METHOD;
+@property (retain) NSLocale* locale;
+- (BOOL)scanCharactersFromSet:(NSCharacterSet* _Nonnull)scanSet intoString:(NSString* _Nullable*)stringValue;
+- (BOOL)scanUpToCharactersFromSet:(NSCharacterSet* _Nonnull)stopSet intoString:(NSString* _Nullable*)stringValue;
+- (BOOL)scanDecimal:(NSDecimal*)decimalValue;
 - (BOOL)scanDouble:(double*)doubleValue;
 - (BOOL)scanFloat:(float*)floatValue;
-- (BOOL)scanHexDouble:(double*)result STUB_METHOD;
-- (BOOL)scanHexFloat:(float*)result STUB_METHOD;
+- (BOOL)scanHexDouble:(double*)result;
+- (BOOL)scanHexFloat:(float*)result;
 - (BOOL)scanHexInt:(unsigned int*)intValue;
 - (BOOL)scanHexLongLong:(unsigned long long*)result;
 - (BOOL)scanInteger:(NSInteger*)value;
 - (BOOL)scanInt:(int*)intValue;
 - (BOOL)scanLongLong:(long long*)longLongValue;
-- (BOOL)scanString:(NSString*)string intoString:(NSString* _Nullable*)stringValue;
+- (BOOL)scanString:(NSString* _Nonnull)string intoString:(NSString* _Nullable*)stringValue;
 - (BOOL)scanUnsignedLongLong:(unsigned long long*)unsignedLongLongValue;
-- (BOOL)scanUpToString:(NSString*)stopString intoString:(NSString* _Nullable*)stringValue;
+- (BOOL)scanUpToString:(NSString* _Nonnull)stopString intoString:(NSString* _Nullable*)stringValue;
 @property (readonly, getter=isAtEnd) BOOL atEnd;
 @end

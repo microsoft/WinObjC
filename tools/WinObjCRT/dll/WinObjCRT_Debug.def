@@ -1,10 +1,5 @@
 LIBRARY WinObjCRT
     EXPORTS
-        IwMalloc
-        IwFree
-        IwRealloc
-        IwCalloc
-
         ; Shim all of the dbg CRT symbols that would use the debug heap.
         ; In the debug WinObjCRT dll this simply forwards along to imported debug symbols. 
         _aligned_free_dbg
@@ -16,7 +11,6 @@ LIBRARY WinObjCRT
         _aligned_realloc_dbg
         _aligned_recalloc_dbg
         _calloc_dbg
-        _dupenv_s_dbg
         _expand_dbg
         _free_dbg
         _fullpath_dbg
@@ -30,7 +24,6 @@ LIBRARY WinObjCRT
         _strdup_dbg
         _tempnam_dbg
         _wcsdup_dbg
-        _wdupenv_s_dbg
         _wfullpath_dbg
         _wgetcwd_dbg
         _wgetdcwd_dbg
@@ -45,7 +38,6 @@ LIBRARY WinObjCRT
         _aligned_realloc
         _aligned_recalloc
         calloc
-        _dupenv_s
         _expand
         free
         _fullpath
@@ -59,8 +51,17 @@ LIBRARY WinObjCRT
         _strdup
         _tempnam
         _wcsdup
-        _wdupenv_s
         _wfullpath
         _wgetcwd
         _wgetdcwd
         _wtempnam
+        _callnewh
+        _calloc_base
+        _free_base
+        _get_heap_handle
+        _heapmin
+        _malloc_base
+        _query_new_handler
+        _query_new_mode
+        _realloc_base
+        _set_new_mode

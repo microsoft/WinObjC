@@ -107,7 +107,7 @@ void _TestPixelFormat(const CGRect bounds, const CGBitmapInfo info, DWORD expect
     const CGFloat color[] = { 1.0, 0.5, 0.0, 1.0 };
     const CGFloat bgColor[] = { 0.0, 0.0, 0.5, 1.0 };
 
-    woc::unique_iw<uint8_t> data(static_cast<uint8_t*>(IwMalloc(width * height * 4)));
+    std::unique_ptr<uint8_t[]> data(new uint8_t[width * height * 4]);
     CGContextRef context = CGBitmapContextCreate(data.get(),
                                                  width,
                                                  height,
@@ -151,8 +151,8 @@ DISABLED_TEST(CGBitmapContext, VerifyPixelFormatBGRA) {
                      );
 }
 
-#define EXPECT_ARRAY_EQ(expected, actual, size) \
-    for (int i = 0; i < (size); ++i) { \
+#define EXPECT_ARRAY_EQ(expected, actual, size)                       \
+    for (int i = 0; i < (size); ++i) {                                \
         EXPECT_EQ((expected)[i], (actual)[i]) << i << " of " << size; \
     }
 
@@ -168,7 +168,8 @@ TEST(CGBitmapContext, BitmapInfoAPIs_Gray) {
 TEST(CGBitmapContext, BitmapInfoAPIs_RGB) {
     CGColorSpaceRef rgbColorSpace = CGColorSpaceCreateDeviceRGB();
 
-    CGContextRef context = CGBitmapContextCreate(nullptr, 120, 20, 8, 480, rgbColorSpace, kCGImageAlphaPremultipliedLast | kCGBitmapByteOrder32Big);
+    CGContextRef context =
+        CGBitmapContextCreate(nullptr, 120, 20, 8, 480, rgbColorSpace, kCGImageAlphaPremultipliedLast | kCGBitmapByteOrder32Big);
 
     EXPECT_EQ(CGBitmapContextGetBitsPerComponent(context), 8);
     EXPECT_EQ(CGBitmapContextGetBitsPerPixel(context), 32);
@@ -187,7 +188,8 @@ TEST(CGBitmapContext, Rendering) {
 
     //                 R     G  B  A
     BYTE result[4] = { 0xff, 0, 0, 0xff };
-    woc::unique_cf<CGContextRef> context(CGBitmapContextCreate(nullptr, 1, 1, 8, 4, rgbColorSpace.get(), kCGImageAlphaPremultipliedLast | kCGBitmapByteOrder32Big));
+    woc::unique_cf<CGContextRef> context(
+        CGBitmapContextCreate(nullptr, 1, 1, 8, 4, rgbColorSpace.get(), kCGImageAlphaPremultipliedLast | kCGBitmapByteOrder32Big));
 
     EXPECT_EQ(CGBitmapContextGetBitsPerComponent(context.get()), 8);
     EXPECT_EQ(CGBitmapContextGetBitsPerPixel(context.get()), 32);
@@ -294,12 +296,14 @@ TEST(CGBitmapContext, BadStrides) {
     auto colorSpace = woc::MakeStrongCF<CGColorSpaceRef>(CGColorSpaceCreateDeviceRGB());
 
     {
-        auto context = woc::MakeStrongCF<CGContextRef>(CGBitmapContextCreateWithData(&data, 1, 1, 8, 0, colorSpace, kCGImageAlphaLast, nullptr, nullptr));
+        auto context = woc::MakeStrongCF<CGContextRef>(
+            CGBitmapContextCreateWithData(&data, 1, 1, 8, 0, colorSpace, kCGImageAlphaLast, nullptr, nullptr));
         ASSERT_EQ(nullptr, context);
     }
 
     {
-        auto context = woc::MakeStrongCF<CGContextRef>(CGBitmapContextCreateWithData(&data, 1, 1, 8, 1, colorSpace, kCGImageAlphaLast, nullptr, nullptr));
+        auto context = woc::MakeStrongCF<CGContextRef>(
+            CGBitmapContextCreateWithData(&data, 1, 1, 8, 1, colorSpace, kCGImageAlphaLast, nullptr, nullptr));
         ASSERT_EQ(nullptr, context);
     }
 }
@@ -309,21 +313,24 @@ TEST(CGBitmapContext, MismatchedConfigurationValues) {
 
     {
         // Provided 1 byte per row, but using 3-component + alpha = 32bpp (4 byte/pixel)
-        auto context = woc::MakeStrongCF<CGContextRef>(CGBitmapContextCreateWithData(nullptr, 1, 1, 8, 1, colorSpace, kCGImageAlphaLast, nullptr, nullptr));
+        auto context = woc::MakeStrongCF<CGContextRef>(
+            CGBitmapContextCreateWithData(nullptr, 1, 1, 8, 1, colorSpace, kCGImageAlphaLast, nullptr, nullptr));
         ASSERT_EQ(nullptr, context);
     }
 
     {
         // Provided 2 bytes per row, requested 32bpp, but using 3-component no alpha = 24bpp (3 byte/pixel)
         // Context imputes format to be 32, but provided values should not match.
-        auto context = woc::MakeStrongCF<CGContextRef>(CGBitmapContextCreateWithData(nullptr, 1, 1, 8, 2, colorSpace, kCGImageAlphaNone | kCGBitmapByteOrder32Big, nullptr, nullptr));
+        auto context = woc::MakeStrongCF<CGContextRef>(
+            CGBitmapContextCreateWithData(nullptr, 1, 1, 8, 2, colorSpace, kCGImageAlphaNone | kCGBitmapByteOrder32Big, nullptr, nullptr));
         ASSERT_EQ(nullptr, context);
     }
 }
 
 TEST(CGBitmapContext, ImputeStrideRGBA) {
     auto colorSpace = woc::MakeStrongCF<CGColorSpaceRef>(CGColorSpaceCreateDeviceRGB());
-    auto context = woc::MakeStrongCF<CGContextRef>(CGBitmapContextCreateWithData(nullptr, 1, 1, 8, 0, colorSpace, kCGImageAlphaPremultipliedLast, nullptr, nullptr));
+    auto context = woc::MakeStrongCF<CGContextRef>(
+        CGBitmapContextCreateWithData(nullptr, 1, 1, 8, 0, colorSpace, kCGImageAlphaPremultipliedLast, nullptr, nullptr));
     ASSERT_NE(nullptr, context);
     EXPECT_EQ(32, CGBitmapContextGetBitsPerPixel(context));
     EXPECT_LE(4, CGBitmapContextGetBytesPerRow(context)); // 4 <= stride

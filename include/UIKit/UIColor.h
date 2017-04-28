@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2011, The Iconfactory. All rights reserved.
- * Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+ * Copyright (c) Microsoft. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -33,15 +33,14 @@
 #import <Foundation/Foundation.h>
 #import <CoreGraphics/CGColor.h>
 #import <UIKit/UIKitExport.h>
+#import <UIKit/UIImage.h>
 
-@class UIImage, CIColor;
-
-enum BrushType { solidBrush, patternBrush, cgPatternBrush };
+@class CIColor;
 
 UIKIT_EXPORT_CLASS
 @interface UIColor : NSObject <NSCopying, NSObject, NSSecureCoding>
 
-@property (nonatomic, readonly) CGColorRef CGColor;
+@property (nonatomic, readonly) CGColorRef CGColor NS_RETURNS_INNER_POINTER;
 @property (readonly, nonatomic) CIColor* CIColor STUB_PROPERTY;
 
 + (UIColor*)blackColor;

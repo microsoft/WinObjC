@@ -27,13 +27,7 @@
 #import <DWrite_3.h>
 #import <wrl/client.h>
 #include <COMIncludes_End.h>
-
-#import <Foundation/NSObject.h>
-#import <Foundation/NSArray.h>
-#import <Foundation/NSString.h>
 #import <vector>
-
-#define NSMakeRangeFromCF(cfr) NSMakeRange(cfr.location == kCFNotFound ? NSNotFound : cfr.location, cfr.length)
 
 // Based off DWRITE_GLYPH_RUN_DESCRIPTION structure
 struct _DWriteGlyphRunDescription {
@@ -53,7 +47,7 @@ bool _CloneDWriteGlyphRun(_In_ DWRITE_GLYPH_RUN const* src, _Outptr_ DWRITE_GLYP
 
 CGSize _DWriteGetFrameSize(CFAttributedStringRef string, CFRange range, CGSize maxSize, CFRange* fitRange);
 CTFrameRef _DWriteGetFrame(CFAttributedStringRef string, CFRange range, CGRect frameSize);
-_CTLine* _DWriteGetLine(CFAttributedStringRef string);
+CTLineRef _DWriteCreateLine(CFAttributedStringRef string);
 
 // DWriteWrapper functions relating to CTFont, CTFontDescriptor
 CFNumberRef _CFNumberCreateFromSymbolicTraits(CTFontSymbolicTraits symbolicTraits);

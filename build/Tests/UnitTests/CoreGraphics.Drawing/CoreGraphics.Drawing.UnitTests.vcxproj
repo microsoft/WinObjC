@@ -40,9 +40,6 @@
     <ProjectReference Include="..\..\..\ImageIO\dll\ImageIO.vcxproj">
       <Project>{81B44F5A-DA8C-4699-BB4D-2C6DA20DD324}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\UIKit\dll\UIKit.vcxproj">
-       <Project>{43D2CFE5-0711-4E61-8F5C-F8D3B65D3A49}</Project>
-    </ProjectReference>
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{DE51CDE9-F326-49B6-8C5B-35D5B091878C}</ProjectGuid>
@@ -52,9 +49,9 @@
     <ApplicationType>Windows Store</ApplicationType>
     <AppContainerApplication>true</AppContainerApplication>
     <ApplicationTypeRevision>10.0</ApplicationTypeRevision>
-    <TargetPlatformVersion>10.0.10586.0</TargetPlatformVersion>
+    <TargetPlatformVersion>10.0.14393.0</TargetPlatformVersion>
     <TargetPlatformMinVersion>10.0.10586.0</TargetPlatformMinVersion>
-    <WindowsTargetPlatformVersion>10.0.10586.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.14393.0</WindowsTargetPlatformVersion>
     <WindowsTargetPlatformMinVersion>10.0.10586.0</WindowsTargetPlatformMinVersion>
     <StarboardBasePath>..\..\..\..</StarboardBasePath>
   </PropertyGroup>

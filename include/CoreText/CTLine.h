@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -19,7 +19,6 @@
 
 #import <CoreFoundation/CFArray.h>
 #import <CoreFoundation/CFAttributedString.h>
-
 #import <CoreGraphics/CGContext.h>
 #import <CoreGraphics/CGGeometry.h>
 
@@ -56,4 +55,4 @@ CORETEXT_EXPORT double CTLineGetTypographicBounds(CTLineRef line, CGFloat* ascen
 CORETEXT_EXPORT double CTLineGetTrailingWhitespaceWidth(CTLineRef line) STUB_METHOD;
 CORETEXT_EXPORT CFIndex CTLineGetStringIndexForPosition(CTLineRef line, CGPoint position);
 CORETEXT_EXPORT CGFloat CTLineGetOffsetForStringIndex(CTLineRef line, CFIndex charIndex, CGFloat* secondaryOffset);
-CORETEXT_EXPORT CFTypeID CTLineGetTypeID() NOTINPLAN_METHOD;
+CORETEXT_EXPORT CFTypeID CTLineGetTypeID();

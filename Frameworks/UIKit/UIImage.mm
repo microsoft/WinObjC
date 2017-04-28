@@ -283,14 +283,14 @@ static inline CGImageRef getImage(UIImage* uiImage) {
 
         if (strrchr(path, '.') != NULL && DisplayProperties::ScreenScale() > 1.5f) {
             size_t newStrSize = strlen(path) + 10;
-            char* newStr = (char*)IwMalloc(newStrSize);
+            char* newStr = (char*)malloc(newStrSize);
             const char* pathEnd = strrchr(path, '.');
             memcpy(newStr, path, pathEnd - path);
             newStr[pathEnd - path] = 0;
             strcat_s(newStr, newStrSize, "@2x");
             strcat_s(newStr, newStrSize, pathEnd);
 
-            pathStr = IwStrDup(newStr);
+            pathStr = _strdup(newStr);
 
             if (EbrAccess(pathStr, 0) == -1) {
                 id pathFind =
@@ -299,22 +299,22 @@ static inline CGImageRef getImage(UIImage* uiImage) {
                 if (pathFind != nil) {
                     path = (char*)[pathFind UTF8String];
                     if (pathStr) {
-                        IwFree(pathStr);
+                        free(pathStr);
                     }
-                    pathStr = IwStrDup(path);
+                    pathStr = _strdup(path);
                     found = true;
                 }
             } else {
                 found = true;
             }
-            IwFree(newStr);
+            free(newStr);
         }
 
         if (!found) {
             if (pathStr) {
-                IwFree(pathStr);
+                free(pathStr);
             }
-            pathStr = IwStrDup(path);
+            pathStr = _strdup(path);
 
             if (EbrAccess(pathStr, 0) == -1) {
                 NSString* pathFind = [bundle pathForResource:pathAddr ofType:nil inDirectory:nil forLocalization:@"English"];
@@ -322,9 +322,9 @@ static inline CGImageRef getImage(UIImage* uiImage) {
                 if (pathFind != nil) {
                     path = [pathFind UTF8String];
                     if (pathStr) {
-                        IwFree(pathStr);
+                        free(pathStr);
                     }
-                    pathStr = IwStrDup(path);
+                    pathStr = _strdup(path);
                 }
             }
         }
@@ -336,9 +336,9 @@ static inline CGImageRef getImage(UIImage* uiImage) {
             if (pathFind != nil) {
                 path = [pathFind UTF8String];
                 if (pathStr) {
-                    IwFree(pathStr);
+                    free(pathStr);
                 }
-                pathStr = IwStrDup(path);
+                pathStr = _strdup(path);
                 found = true;
             } else {
                 pathFind = [bundle pathForResource:pathAddr ofType:@"png" inDirectory:nil forLocalization:@"English"];
@@ -346,9 +346,9 @@ static inline CGImageRef getImage(UIImage* uiImage) {
                 if (pathFind != nil) {
                     path = [pathFind UTF8String];
                     if (pathStr) {
-                        IwFree(pathStr);
+                        free(pathStr);
                     }
-                    pathStr = IwStrDup(path);
+                    pathStr = _strdup(path);
                     found = true;
                 }
             }
@@ -365,7 +365,7 @@ static inline CGImageRef getImage(UIImage* uiImage) {
 
         if (cachedImage) {
             if (pathStr) {
-                IwFree(pathStr);
+                free(pathStr);
             }
             m_pImage = cachedImage->m_pImage;
             _cacheImage = cachedImage;
@@ -404,7 +404,7 @@ static inline CGImageRef getImage(UIImage* uiImage) {
         _cacheImage = [UIImage cacheImage:self withName:[NSString stringWithUTF8String:pathStr]];
 
         if (pathStr) {
-            IwFree(pathStr);
+            free(pathStr);
         }
     }
     return self;

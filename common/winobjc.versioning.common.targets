@@ -6,6 +6,7 @@
     <UpdateAssemblyInfo>false</UpdateAssemblyInfo>
     <WriteVersionInfoToBuildLog>false</WriteVersionInfoToBuildLog>
     <_WinObjCVersioningTargetsImported>true</_WinObjCVersioningTargetsImported>
+    <GitVersionPath Condition="Exists('$(MSBuildThisFileDirectory)\..\.git')">$(MSBuildThisFileDirectory)\..\</GitVersionPath>
   </PropertyGroup>
 
   <!--
@@ -30,16 +31,15 @@
       <PackageVersion_PreReleaseFormat Condition="'$(PackageVersion_PreReleaseFormat)' == ''">{PackageVersion_PreReleaseLabel}-{PackageVersion_Timestamp}</PackageVersion_PreReleaseFormat>
     </PropertyGroup>
 
-    <Error Condition="'$(GitVersion_BranchName)' == ''"
-           Text="Cannot determine git branch. Please make sure GitVersionTask is listed as a nuget dependency for this project and that git.exe is part of the PATH environment variable." />
+    <Error Condition="'$(GitVersion_BranchName)' == '' And '$(PackageVersionOverride)' == ''"
+           Text="Cannot calculate version. Please make sure either PackageVersionOverride is set or GitVersionTask is listed as a nuget dependency for this project and that git.exe is part of the PATH environment variable." />
 
     <Warning Condition="'$(SolutionPath)' == ''"
            Text="Cannot determine solution build time. Package version dependencies may be inconsistent as a result. Please make sure to build using .sln file." />
 
+
+    <!-- Common properties needed to either check the build numbner or to calculate the version -->
     <PropertyGroup Condition="'$(PackageVersionOverride)' == ''">
-      <PackageTimestamp Condition="'$(PackageTimestamp)' == '' And Exists('$(SolutionDir)$(SolutionName).timestamp')">$([System.IO.File]::GetLastWriteTime($(SolutionDir)$(SolutionName).timestamp).ToUniversalTime().ToString(yyyyMMddHHmmss))</PackageTimestamp>      
-      <PackageTimestamp Condition="'$(PackageTimestamp)' == ''">$([System.DateTime]::Now.ToUniversalTime().ToString(yyyyMMddHHmmss))</PackageTimestamp>
-      
       <PackageVersion_Major>$(GitVersion_Major)</PackageVersion_Major>
       <PackageVersion_Minor>$(GitVersion_Minor)</PackageVersion_Minor>
       
@@ -47,20 +47,21 @@
       <PackageVersion_Patch Condition="'$(PackageVersion_Patch)' == '' And '$(GitVersion_PreReleaseLabel)' != ''">$(GitVersion_Patch)</PackageVersion_Patch>
 
       <PackageVersion_PreReleaseLabel>$(GitVersion_PreReleaseLabel)</PackageVersion_PreReleaseLabel>
-      <PackageVersion_Timestamp>$(PackageTimestamp)</PackageVersion_Timestamp>
-
-      <!-- Replace PreReleaseFormat msbuild property names with positional String.Format args.
-
-           NOTE: If additional property replacements are needed, they must show up here. 
-           An extra cool improvement would be to figure out how to delay property expansion until this point to pass the format directly.  -->
-      <PackageVersion_PreReleaseFormat>$(PackageVersion_PreReleaseFormat.Replace('PackageVersion_Timestamp', '0'))</PackageVersion_PreReleaseFormat>
-      <PackageVersion_PreReleaseFormat>$(PackageVersion_PreReleaseFormat.Replace('PackageVersion_PreReleaseLabel', '1'))</PackageVersion_PreReleaseFormat>
-
-      <PackageVersion_PreRelease Condition="'$(PackageVersion_PreRelease)' == '' And '$(PackageVersion_PreReleaseLabel)' != ''">-$([System.String]::Format('$(PackageVersion_PreReleaseFormat)', $(PackageVersion_Timestamp), $(PackageVersion_PreReleaseLabel)))</PackageVersion_PreRelease>
-
-      <PackageVersion>$(PackageVersion_Major).$(PackageVersion_Minor).$(PackageVersion_Patch)$(PackageVersion_PreRelease)</PackageVersion>
     </PropertyGroup>
 
+    <!-- 
+     Three places to get version information: 
+     1. From an already modified BuildNumber from the build server.
+     2. From the PackageVersionOverride property. Use it as is.
+     3. Calculate it from the tags and build variables.
+    -->
+
+    <!-- Use already converted build number as package version -->
+    <PropertyGroup Condition="'$(PackageVersionOverride)' == '' And $(BUILD_BUILDNUMBER.StartsWith('$(PackageVersion_Major).$(PackageVersion_Minor).$(PackageVersion_Patch)'))">
+      <PackageVersionOverride>$(BUILD_BUILDNUMBER)</PackageVersionOverride>
+    </PropertyGroup>
+
+    <!-- Use PackageVersionOverride if available-->
     <PropertyGroup Condition="'$(PackageVersionOverride)' != ''">
 
       <!-- 
@@ -78,9 +79,36 @@
       <PackageVersion_Major>$([System.Text.RegularExpressions.Regex]::Match($(PackageVersionOverride), $(_PackageVersionRegex)).Groups['MAJOR'].Value)</PackageVersion_Major>
       <PackageVersion_Minor>$([System.Text.RegularExpressions.Regex]::Match($(PackageVersionOverride), $(_PackageVersionRegex)).Groups['MINOR'].Value)</PackageVersion_Minor>
       <PackageVersion_Patch>$([System.Text.RegularExpressions.Regex]::Match($(PackageVersionOverride), $(_PackageVersionRegex)).Groups['PATCH'].Value)</PackageVersion_Patch>
-      <PackageVersion_PreReleaseLabel>$([System.Text.RegularExpressions.Regex]::Match($(PackageVersionOverride), $(_PackageVersionRegex)).Groups['LABEL'].Value)</PackageVersion_PreReleaseLabel>
+      <PackageVersion_PreRelease>$([System.Text.RegularExpressions.Regex]::Match($(PackageVersionOverride), $(_PackageVersionRegex)).Groups['LABEL'].Value)</PackageVersion_PreRelease>
     </PropertyGroup>
 
+    <!-- Last up, use calculated values. -->
+    <PropertyGroup Condition="'$(PackageVersionOverride)' == ''">
+      <!-- 
+         Three places to get a build timestamp: 
+         1. Off of the build number for a build server build (Before its been modified to be the package version)
+         2. From a timestamp file created at the beginning of a local build (see NuprojInitializer.msbuildproj)
+         3. From the current time.
+       -->
+      <PackageTimestamp Condition="'$(PackageTimestamp)' == '' And '$(BUILD_BUILDNUMBER)' != '' And !$(BUILD_BUILDNUMBER.StartsWith('$(PackageVersion_Major).$(PackageVersion_Minor).$(PackageVersion_Patch)'))">$(BUILD_BUILDNUMBER)</PackageTimestamp>
+      <PackageTimestamp Condition="'$(PackageTimestamp)' == '' And Exists('$(SolutionDir)$(SolutionName).timestamp')">$([System.IO.File]::GetLastWriteTime($(SolutionDir)$(SolutionName).timestamp).ToUniversalTime().ToString(yyyyMMddHHmmss))</PackageTimestamp>      
+      <PackageTimestamp Condition="'$(PackageTimestamp)' == ''">$([System.DateTime]::Now.ToUniversalTime().ToString(yyyyMMddHHmmss))</PackageTimestamp>
+      <PackageVersion_Timestamp>$(PackageTimestamp)</PackageVersion_Timestamp>
+
+      <!-- Replace PreReleaseFormat msbuild property names with positional String.Format args.
+
+           NOTE: If additional property replacements are needed, they must show up here. 
+           An extra cool improvement would be to figure out how to delay property expansion until this point to pass the format directly.  -->
+      <PackageVersion_PreReleaseFormat>$(PackageVersion_PreReleaseFormat.Replace('PackageVersion_Timestamp', '0'))</PackageVersion_PreReleaseFormat>
+      <PackageVersion_PreReleaseFormat>$(PackageVersion_PreReleaseFormat.Replace('PackageVersion_PreReleaseLabel', '1'))</PackageVersion_PreReleaseFormat>
+
+      <PackageVersion_PreRelease Condition="'$(PackageVersion_PreRelease)' == '' And '$(PackageVersion_PreReleaseLabel)' != ''">-$([System.String]::Format('$(PackageVersion_PreReleaseFormat)', $(PackageVersion_Timestamp), $(PackageVersion_PreReleaseLabel)))</PackageVersion_PreRelease>
+
+      <PackageVersion>$(PackageVersion_Major).$(PackageVersion_Minor).$(PackageVersion_Patch)$(PackageVersion_PreRelease)</PackageVersion>
+      
+    </PropertyGroup>
+
+    <!-- Awesome, the PackageVersion has been calculated and now it can sliced differently / more metadata can be tacked on for the various ways the version is used -->
     <PropertyGroup Condition="$([System.UInt64]::Parse($(PackageVersion_Patch))) &gt; $([MSBuild]::Subtract($([System.UInt16]::MaxValue), '1'))">
       <PackageAssemblyVersion_Build>$(PackageVersion_Patch.Substring(0,4))</PackageAssemblyVersion_Build>
       <PackageAssemblyVersion_Revision>$(PackageVersion_Patch.Substring(4))</PackageAssemblyVersion_Revision>
@@ -91,13 +119,19 @@
       <PackageAssemblyVersion_Revision Condition="'$(PackageAssemblyVersion_Revision)' == ''">0</PackageAssemblyVersion_Revision>
 
       <PackageAssemblyVersion>$(PackageVersion_Major).$(PackageVersion_Minor).$(PackageAssemblyVersion_Build).$(PackageAssemblyVersion_Revision)</PackageAssemblyVersion>
-      <PackageAssemblyVersionTrimmed>$([System.UInt64]::Parse($(PackageVersion_Major)).ToString()).$([System.UInt64]::Parse($(PackageVersion_Minor)).ToString()).$([System.UInt64]::Parse($(PackageAssemblyVersion_Build)).ToString()).$([System.UInt64]::Parse($(PackageAssemblyVersion_Revision)).ToString())</PackageAssemblyVersionTrimmed>
-      <PackageAssemblyInformationalVersion>$(PackageVersion)+$(GitVersion_FullBuildMetaData)</PackageAssemblyInformationalVersion>
       <PackageAssemblyDescription>https://github.com/Microsoft/WinObjC</PackageAssemblyDescription>
       <PackageAssemblyCompany>Microsoft</PackageAssemblyCompany>
       <PackageAssemblyCopyright>Copyright (C) Microsoft. All rights reserved</PackageAssemblyCopyright>
       <PackageAssemblyProduct>Objective-C for Windows v$(PackageVersion)</PackageAssemblyProduct>
     </PropertyGroup>
+
+    <PropertyGroup>
+      <PackageAssemblyInformationalVersion Condition="'$(PackageAssemblyInformationalVersion)' == '' And '$(GitVersion_FullBuildMetaData)' != ''">$(PackageVersion)+$(GitVersion_FullBuildMetaData)</PackageAssemblyInformationalVersion>
+      <PackageAssemblyInformationalVersion Condition="'$(PackageAssemblyInformationalVersion)' == '' And '$(BUILD_SOURCEBRANCH)' != ''">$(PackageVersion)+Branch.$(BUILD_SOURCEBRANCH).Sha.$(BUILD_SOURCEVERSION)</PackageAssemblyInformationalVersion>
+      <PackageAssemblyInformationalVersion Condition="'$(PackageAssemblyInformationalVersion)' == ''">$(PackageVersion)</PackageAssemblyInformationalVersion>
+    </PropertyGroup>
+
+    <Message Text="##vso[build.updatebuildnumber]$(PackageVersion)" Condition="'$(BUILD_BUILDNUMBER)' != '' And '$(BUILD_BUILDNUMBER)' != '$(PackageVersion)'"/>
   </Target>
 
   <!--
@@ -161,13 +195,6 @@
           BeforeTargets="_ValidateAppxManifest"
           DependsOnTargets="_GenerateCurrentProjectAppxManifest"
           Condition="'$(AppxPackage)' == 'true' And Exists('$(FinalAppxManifestName)')">
-
-    <!-- Take care of package version. Use Trimmed Version since appxmanifests hilariously don't like leading 0s  -->
-    <XmlPoke XmlInputPath="$(FinalAppxManifestName)"
-             Namespaces="&lt;Namespace Prefix='appx' Uri='http://schemas.microsoft.com/appx/manifest/foundation/windows10' /&gt;
-                         &lt;Namespace Prefix='uap' Uri='http://schemas.microsoft.com/appx/manifest/uap/windows10' /&gt;"
-             Query="/appx:Package/appx:Identity/@Version"
-             Value="$(PackageAssemblyVersionTrimmed)"/>
 
     <XmlPeek XmlInputPath="$(FinalAppxManifestName)"
              Namespaces="&lt;Namespace Prefix='appx' Uri='http://schemas.microsoft.com/appx/manifest/foundation/windows10' /&gt;
@@ -282,5 +309,66 @@
        to adjust the Restore process. If it were a normal NuGet dependency, it also would need restored which means it
        couldn't adjust the restore process itself as it would already be too late. -->
   <Import Project="$(MSBuildThisFileDirectory)\gitversiontask\4.0.0-beta0011\build\GitVersionTask.targets" Condition="'$(GitVersion_Task_targets_Imported)' == ''"/>
+
+  <!-- Inline tasks (and targets) to make sure GitVersion only runs one at a time. This is an improvement that should 
+         probably be contributed back (see https://github.com/GitTools/GitVersion/issues/1031) -->
+
+  <UsingTask  
+    TaskName="LockGitVersion"  
+    TaskFactory="CodeTaskFactory"  
+    AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.v12.0.dll" >  
+    <ParameterGroup>
+      <SolutionPath ParameterType="System.String" Required="true" />
+      <Unlock ParameterType="System.Boolean" Required="true" />
+    </ParameterGroup>
+    <Task>
+      <Reference Include="System" />
+      <Reference Include="System.Threading" />
+      <Code Type="Class" Language="cs">
+        <![CDATA[
+        
+          using System;
+          using System.Threading;
+          using Microsoft.Build.Framework;
+          using Microsoft.Build.Utilities;
+          
+          public class LockGitVersion : Task
+          {
+              static ThreadLocal<Mutex> mutex = new ThreadLocal<Mutex>();
+
+              [Required]
+              public string SolutionPath { get; set;}
+
+              [Required]
+              public bool Unlock { get; set;}
+
+              public override bool Execute()
+              {
+
+                  if (!Unlock) {
+                      mutex.Value = new Mutex(false, SolutionPath.Replace("\\", "."));
+                      try {
+                        mutex.Value.WaitOne();
+                      } catch (AbandonedMutexException e) {
+                      }
+                  } else {
+                      mutex.Value.ReleaseMutex();
+                  }
+
+                  return true;
+              }
+          }
+        ]]>
+      </Code>
+    </Task>
+  </UsingTask>
+
+  <Target Name="_GetVersion_Lock" BeforeTargets="GetVersion" >
+    <LockGitVersion Condition="'$(SolutionDir)' != ''" SolutionPath="$(SolutionDir)$(SolutionName)" Unlock="false"/>
+  </Target>
+
+  <Target Name="_GetVersion_Unlock" AfterTargets="GetVersion" >
+    <LockGitVersion Condition="'$(SolutionDir)' != ''" SolutionPath="$(SolutionDir)$(SolutionName)" Unlock="true"/>
+  </Target>
 
 </Project>

@@ -103,6 +103,27 @@ public:
 #endif // __has_feature(objc_arc)
 
 ////////////////////////////////////////////////////////////////////////////////////
+// ActivityIndicatorView
+////////////////////////////////////////////////////////////////////////////////////
+winrt::Windows::UI::Xaml::Controls::Grid CreateActivityIndicatorView();
+
+winrt::Windows::UI::Xaml::Controls::ProgressRing XamlGetInternalProgressRing(
+    const winrt::Windows::UI::Xaml::Controls::Grid& activityIndicatorInspectable);
+
+bool GetActivityIndicatorViewIsActiveValue(const winrt::Windows::UI::Xaml::FrameworkElement& activityIndicatorInspectable);
+
+void SetActivityIndicatorViewIsActiveValue(const winrt::Windows::UI::Xaml::FrameworkElement& activityIndicatorInspectable, bool isActive);
+
+winrt::Windows::UI::Xaml::Media::SolidColorBrush GetActivityIndicatorViewForegroundValue(
+    const winrt::Windows::UI::Xaml::FrameworkElement& activityIndicatorInspectable);
+
+void SetActivityIndicatorViewForegroundValue(const winrt::Windows::UI::Xaml::FrameworkElement& activityIndicatorInspectable,
+                                             const winrt::Windows::UI::Xaml::Media::SolidColorBrush& foregroundColorBrush);
+
+void SetActivityIndicatorViewHeightValue(const winrt::Windows::UI::Xaml::FrameworkElement& activityIndicatorInspectable, double height);
+void SetActivityIndicatorViewWidthValue(const winrt::Windows::UI::Xaml::FrameworkElement& activityIndicatorInspectable, double width);
+
+////////////////////////////////////////////////////////////////////////////////////
 // Button
 ////////////////////////////////////////////////////////////////////////////////////
 winrt::Windows::UI::Xaml::Controls::Button CreateButton();
@@ -122,13 +143,18 @@ void HookButtonPointerEvents(const winrt::Windows::UI::Xaml::Controls::Button& b
 winrt::Windows::UI::Xaml::Controls::ContentDialog CreateContentDialog();
 
 int XamlContentDialogPressedIndex(const winrt::Windows::UI::Xaml::Controls::ContentDialog& contentDialog);
+
 unsigned int XamlContentDialogAddButtonWithTitle(const winrt::Windows::UI::Xaml::Controls::ContentDialog& contentDialog,
                                                  NSString* buttonTitle);
+
 NSString* XamlContentDialogButtonTitleAtIndex(const winrt::Windows::UI::Xaml::Controls::ContentDialog& contentDialog,
                                               unsigned int buttonIndex);
+
 unsigned int XamlContentDialogNumberOfButtons(const winrt::Windows::UI::Xaml::Controls::ContentDialog& contentDialog);
+
 void XamlContentDialogSetCancelButtonIndex(const winrt::Windows::UI::Xaml::Controls::ContentDialog& contentDialog,
                                            unsigned int cancelButtonIndex);
+
 void XamlContentDialogSetDestructiveButtonIndex(const winrt::Windows::UI::Xaml::Controls::ContentDialog& contentDialog,
                                                 unsigned int destructiveButtonIndex);
 
@@ -205,8 +231,10 @@ void TextFieldApplyFont(const winrt::Windows::UI::Xaml::FrameworkElement& inspec
 // ScrollView
 ////////////////////////////////////////////////////////////////////////////////////
 winrt::Windows::UI::Xaml::FrameworkElement CreateScrollView();
+
 winrt::Windows::UI::Xaml::Controls::ScrollViewer ScrollViewGetInnerScrollViewer(
     const winrt::Windows::UI::Xaml::FrameworkElement& scrollView);
+
 winrt::Windows::UI::Xaml::Controls::Canvas ScrollViewGetSubLayerCanvas(const winrt::Windows::UI::Xaml::FrameworkElement& scrollView);
 
 ////////////////////////////////////////////////////////////////////////////////////

@@ -102,7 +102,7 @@
         if ([other member:curObj] == nil) {
             if (removeObjectsCount >= removeObjectsCapacity) {
                 removeObjectsCapacity += 128;
-                removeObjects = (id*)IwRealloc(removeObjects, sizeof(id*) * removeObjectsCapacity);
+                removeObjects = (id*)realloc(removeObjects, sizeof(id*) * removeObjectsCapacity);
             }
             removeObjects[removeObjectsCount++] = curObj;
         }
@@ -111,7 +111,7 @@
     for (int i = 0; i < removeObjectsCount; i++) {
         [self removeObject:removeObjects[i]];
     }
-    IwFree(removeObjects);
+    free(removeObjects);
 }
 
 /**

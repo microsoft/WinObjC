@@ -145,8 +145,8 @@
       <DependentUpon>Layer.xaml</DependentUpon>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit.Xaml\pch.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit.Xaml\ProgressRing.xaml.h">
-      <DependentUpon>ProgressRing.xaml</DependentUpon>
+    <ClInclude Include="..\..\..\Frameworks\UIKit.Xaml\ActivityIndicatorView.xaml.h">
+      <DependentUpon>ActivityIndicatorView.xaml</DependentUpon>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit.Xaml\ScrollView.xaml.h">
       <DependentUpon>ScrollView.xaml</DependentUpon>
@@ -179,8 +179,8 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit.Xaml\Layer.xaml.cpp">
       <DependentUpon>Layer.xaml</DependentUpon>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit.Xaml\ProgressRing.xaml.cpp">
-      <DependentUpon>ProgressRing.xaml</DependentUpon>
+    <ClCompile Include="..\..\..\Frameworks\UIKit.Xaml\ActivityIndicatorView.xaml.cpp">
+      <DependentUpon>ActivityIndicatorView.xaml</DependentUpon>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit.Xaml\ScrollView.xaml.cpp">
       <DependentUpon>ScrollView.xaml</DependentUpon>
@@ -205,7 +205,7 @@
     <Page Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit.Xaml\Layer.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit.Xaml\ProgressRing.xaml">
+    <Page Include="..\..\..\Frameworks\UIKit.Xaml\ActivityIndicatorView.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit.Xaml\ScrollView.xaml">
@@ -235,5 +235,5 @@
       </ReferenceCopyLocalPaths>
     </ItemGroup>
   </Target>
-  <Import Project="$(StarboardBasePath)\common\winobjc.packagereference.override.targets" Condition="Exists('$(StarboardBasePath)\common\winobjc.packagereference.override.targets')"/>
+  <Import Project="$(StarboardBasePath)\common\winobjc.packagereference.override.targets" Condition="Exists('$(StarboardBasePath)\common\winobjc.packagereference.override.targets')" />
 </Project>

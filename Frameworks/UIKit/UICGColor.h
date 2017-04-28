@@ -1,4 +1,4 @@
-﻿//******************************************************************************
+//******************************************************************************
 //
 // Copyright (c) Microsoft. All rights reserved.
 //
@@ -13,25 +13,12 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
-// clang-format does not like C++/CX
-// clang-format off
 #pragma once
 
-#include "ProgressRing.g.h"
-#include "ObjCXamlControls.h"
+#import <UIKit/UIColor.h>
 
-namespace UIKit {
-namespace Xaml {
+@interface _UIColorConcrete : UIColor
+@end
 
-[Windows::Foundation::Metadata::WebHostHidden]
-public ref class ProgressRing sealed {
-public:
-    ProgressRing();
-
-private:
-    // TODO: Add support for padding and other missing properties, and to expose them as needed to UIKit.
-};
-
-} /* Xaml*/
-} /* UIKit*/
-// clang-format on
+@interface _UIColorConcreteConst : _UIColorConcrete
+@end

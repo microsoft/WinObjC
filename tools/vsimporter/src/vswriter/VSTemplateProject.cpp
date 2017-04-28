@@ -169,6 +169,7 @@ static std::vector<String> getCacheFolders(const String& entitlementsPath) {
         pDict = boost::any_cast<Plist::dictionary_type>(&pAny);
     } catch (const std::exception& e) {
         SBLog::error() << e.what() << std::endl;
+        exit(EXIT_FAILURE);
     }
 
     if (pDict) {
