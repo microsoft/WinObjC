@@ -22,10 +22,10 @@
 #import <UIKit/UIActivityIndicatorView.h>
 #import <UIKit/UIColor.h>
 
-
-#import "CppWinRTHelpers.h"
 #import "UIViewInternal.h"
+#import "XamlControls.h"
 #import "XamlUtilities.h"
+#import "CppWinRTHelpers.h"
 
 #include "COMIncludes.h"
 #import <winrt/Windows.UI.Xaml.Controls.h>
@@ -33,6 +33,9 @@
 
 using namespace winrt::Windows::UI::Xaml;
 
+static const wchar_t* TAG = L"UIActivityIndicatorView";
+
+// NOTE: These sizes match what iOS uses natively
 static const int c_normalSquareLength = 20;
 static const int c_largeSquareLength = 37;
 
@@ -42,9 +45,6 @@ static const int c_largeSquareLength = 37;
     BOOL _startAnimating;
 
     StrongId<UIColor> _color;
-    TrivialDefaultConstructor<Controls::ProgressRing> _progressRing;
-    StrongId<UIView> _subView;
-
     UIActivityIndicatorViewStyle _style;
 }
 
@@ -54,7 +54,7 @@ static const int c_largeSquareLength = 37;
 */
 - (instancetype)initWithCoder:(NSCoder*)coder {
     if (self = [super initWithCoder:coder]) {
-        [self _initUIActivityIndicatorView:nil];
+        [self _initUIActivityIndicatorView];
 
         if ([coder containsValueForKey:@"UIHidesWhenStopped"]) {
             [self setHidesWhenStopped:[coder decodeInt32ForKey:@"UIHidesWhenStopped"]];
@@ -84,7 +84,7 @@ static const int c_largeSquareLength = 37;
 }
 
 /**
- @Status Stub
+ @Status NotInPlan
  @Notes
 */
 - (void)encodeWithCoder:(NSCoder*)coder {
@@ -107,7 +107,7 @@ static const int c_largeSquareLength = 37;
 */
 - (instancetype)initWithActivityIndicatorStyle:(UIActivityIndicatorViewStyle)style {
     if (self = [super initWithFrame:CGRectZero]) {
-        [self _initUIActivityIndicatorView:nil];
+        [self _initUIActivityIndicatorView];
         [self setActivityIndicatorViewStyle:style];
     }
 
@@ -119,7 +119,7 @@ static const int c_largeSquareLength = 37;
 */
 - (instancetype)initWithFrame:(CGRect)frame {
     if (self = [super initWithFrame:frame]) {
-        [self _initUIActivityIndicatorView:nil];
+        [self _initUIActivityIndicatorView];
     }
 
     return self;
@@ -129,10 +129,8 @@ static const int c_largeSquareLength = 37;
  Microsoft Extension
 */
 - (instancetype)initWithFrame:(CGRect)frame xamlElement:(RTObject*)xamlElement {
-    // TODO: We're passing nil to initWithFrame:xamlElement: because we have to *contain* a _subview for padding/layout.
-    // Note: Pass 'xamlElement' instead, once we move to a *single* backing Xaml element for UIActivityIndicatorView.
-    if (self = [super initWithFrame:frame xamlElement:nil]) {
-        [self _initUIActivityIndicatorView:xamlElement];
+    if (self = [super initWithFrame:frame xamlElement:xamlElement]) {
+        [self _initUIActivityIndicatorView];
     }
 
     return self;
@@ -143,26 +141,9 @@ static const int c_largeSquareLength = 37;
 */
 - (void)setFrame:(CGRect)frame {
     [super setFrame:frame];
-
-    _subView.center = { self.center.x - self.frame.origin.x, self.center.y - self.frame.origin.y };
 }
 
-- (void)_initUIActivityIndicatorView:(RTObject*)xamlElement {
-    if (xamlElement != nil) {
-        _progressRing = objcwinrt::from_rtobj<Controls::ProgressRing>(xamlElement);
-    }
-
-    if (!_progressRing) {
-        _progressRing = Controls::ProgressRing();
-    }
-
-    // TODO: We should move this over to a single Xaml element which we return from a createXamlElement implementation.
-    //       Which would also mean that we'd just reach into [self xamlElement] to get the backing _progressRing,
-    //       and we would no longer have a _subview.
-    _subView = [[UIView alloc] initWithFrame:CGRectZero
-                                 xamlElement:(xamlElement ? xamlElement : objcwinrt::to_rtobj(_progressRing))];
-
-    [self addSubview:_subView];
+- (void)_initUIActivityIndicatorView {
     _isAnimating = NO;
     [self setHidesWhenStopped:YES];
     [self setActivityIndicatorViewStyle:UIActivityIndicatorViewStyleWhite];
@@ -171,15 +152,18 @@ static const int c_largeSquareLength = 37;
 
 /**
  @Status Caveat
- @Notes In iOS , when hideWhenStopped = False and isAnimating = False, it will show a pause UIAcivityIndicatorView. But, XAML don't have an
- API to show a pause Progress Ring.
+ @Notes In iOS, when hideWhenStopped = False and isAnimating = False, it will show a paused UIAcivityIndicatorView. But, XAML doesn't have
+ an API to show a paused ProgressRing.
  @Notes So when isAnimating = False, WinObjC can't show anything, but space is reserved.
-*/
+ @Notes UIActivityIndicatorView.hidden will not be set to YES from within this view. UWP XAML does not support a Visibility of Hidden, only
+ Collapsed (which would not reserve space in the layout).
+ @Notes Instead of hiding the view, its alpha will be set to 0.0 to emulate this behavior while allowing space to be reserved in the layout.
+ */
 - (void)setHidesWhenStopped:(BOOL)shouldhide {
     _hidesWhenStopped = shouldhide;
 
-    if (_hidesWhenStopped && !_isAnimating) {
-        [self setHidden:YES];
+    if (!_isAnimating) {
+        self.alpha = _hidesWhenStopped ? 0.0 : 1.0;
     }
 }
 
@@ -192,29 +176,43 @@ static const int c_largeSquareLength = 37;
 
 /**
  @Status Interoperable
+ @Note Any value other than the officially documented UIActivityIndicatorViewStyle values will be ignored, and the style will default back
+ to UIActivityIndicatorViewStyleWhite.
+ @Note iOS accepts and defines behavior for undocumented style values for UIActivityIndicatorView. As these are undocumented by Apple, they
+ are unsupported by WinObjC.
 */
 - (void)setActivityIndicatorViewStyle:(UIActivityIndicatorViewStyle)style {
     _style = style;
 
-    int squareLength = 0;
-    if (style == UIActivityIndicatorViewStyleWhite || style == UIActivityIndicatorViewStyleGray) {
-        squareLength = c_normalSquareLength;
-    } else if (style == UIActivityIndicatorViewStyleWhiteLarge) {
-        squareLength = c_largeSquareLength;
+    int styleSquareLength;
+    UIColor* styleColor;
+
+    switch (style) {
+        case UIActivityIndicatorViewStyleWhiteLarge:
+            styleSquareLength = c_largeSquareLength;
+            styleColor = [UIColor whiteColor];
+            break;
+        case UIActivityIndicatorViewStyleGray:
+            styleSquareLength = c_normalSquareLength;
+
+            // This color matches what iOS uses internally for the gray style.
+            // NOTE: UIColor.grayColor differs slightly from this. Its components are W:0.5, A:1.0
+            styleColor = [UIColor colorWithWhite:0.0 alpha:0.45];
+            break;
+        case UIActivityIndicatorViewStyleWhite:
+        // Fallthrough intentional - always default to the white style for invalid values
+        default:
+            styleSquareLength = c_normalSquareLength;
+            styleColor = [UIColor whiteColor];
+
+            // Explicityly set the style to white to ignore invalid values
+            _style = UIActivityIndicatorViewStyleWhite;
     }
 
-    float tempWidth = (self.frame.size.width > squareLength) ? self.frame.size.width : squareLength;
-    float tempHeight = (self.frame.size.height > squareLength) ? self.frame.size.height : squareLength;
+    XamlControls::SetActivityIndicatorViewHeightValue([self _winrtXamlElement], styleSquareLength);
+    XamlControls::SetActivityIndicatorViewWidthValue([self _winrtXamlElement], styleSquareLength);
 
-    self.frame = CGRectMake(self.frame.origin.x, self.frame.origin.y, tempWidth, tempHeight);
-    _subView.frame = CGRectMake(0, 0, squareLength, squareLength);
-    _subView.center = { self.center.x - self.frame.origin.x, self.center.y - self.frame.origin.y };
-
-    if (style == UIActivityIndicatorViewStyleGray) {
-        [self setColor:[UIColor blackColor]];
-    } else if (style == UIActivityIndicatorViewStyleWhite || style == UIActivityIndicatorViewStyleWhiteLarge) {
-        [self setColor:[UIColor whiteColor]];
-    }
+    [self setColor:styleColor];
 }
 
 /**
@@ -229,13 +227,12 @@ static const int c_largeSquareLength = 37;
 */
 - (void)startAnimating {
     RunSynchronouslyOnMainThread(^{
-        if (_isAnimating) {
-            return;
+        if (!_isAnimating) {
+            _isAnimating = YES;
+            [self setHidden:NO];
+            [self setAlpha:1.0];
+            XamlControls::SetActivityIndicatorViewIsActiveValue([self _winrtXamlElement], true);
         }
-
-        _isAnimating = YES;
-        [self setHidden:NO];
-        _progressRing.IsActive(true);
     });
 }
 
@@ -247,11 +244,13 @@ static const int c_largeSquareLength = 37;
     RunSynchronouslyOnMainThread(^{
         if (_isAnimating) {
             _isAnimating = NO;
-        }
 
-        _progressRing.IsActive(false);
-        if (_hidesWhenStopped) {
-            [self setHidden:YES];
+            if (_hidesWhenStopped) {
+                // Make our view transparent, rather than hidden, to ensure space is reserved in the layout.
+                [self setAlpha:0.0];
+            }
+
+            XamlControls::SetActivityIndicatorViewIsActiveValue([self _winrtXamlElement], false);
         }
     });
 }
@@ -260,7 +259,7 @@ static const int c_largeSquareLength = 37;
  @Status Interoperable
 */
 - (BOOL)isAnimating {
-    return _isAnimating;
+    return XamlControls::GetActivityIndicatorViewIsActiveValue([self _winrtXamlElement]);
 }
 
 /**
@@ -271,14 +270,26 @@ static const int c_largeSquareLength = 37;
 
     winrt::Windows::UI::Color convertedColor = XamlUtilities::ConvertUIColorToWUColor(color);
     Media::SolidColorBrush brush = convertedColor;
-    _progressRing.Foreground(brush);
+    XamlControls::SetActivityIndicatorViewForegroundValue([self _winrtXamlElement], brush);
 }
 
 /**
  @Status Interoperable
 */
 - (UIColor*)color {
+    if (!_color) {
+        Media::SolidColorBrush brush = XamlControls::GetActivityIndicatorViewForegroundValue([self _winrtXamlElement]);
+        winrt::Windows::UI::Color brushColor = brush.Color();
+        _color = XamlUtilities::ConvertWUColorToUIColor(brushColor);
+    }
     return _color;
+}
+
+/**
+Microsoft Extension
+*/
++ (RTObject*)createXamlElement {
+    return objcwinrt::to_rtobj(XamlControls::CreateActivityIndicatorView());
 }
 
 @end
