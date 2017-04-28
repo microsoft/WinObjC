@@ -25,6 +25,8 @@
 #import "UITouchInternal.h"
 #import "UIWindowInternal.h"
 #import "RingBuffer.h"
+#import "CACompositor.h"
+#import "CALayerInternal.h"
 
 #import "StarboardXaml/DisplayProperties.h"
 
@@ -225,7 +227,14 @@ static void recordTouchVelocity(RingBuffer<TouchRecord, 50>& touchHistory, CGPoi
     if (viewAddr != 0) {
         UIWindow* window = [viewAddr window];
         if (window != nil) {
-            ret = [window _convertPoint:location fromView:window toView:viewAddr];
+            CALayer* windowLayer = [window layer];
+
+            if (GetCACompositor()->IsRunningAsFramework()) {
+                // In framework mode the parent UIWindow's layer is not visible
+                windowLayer = nil;
+            }
+
+            ret = [CALayer convertPoint:location fromLayer:windowLayer toLayer:[viewAddr layer]];
         } else {
             CGRect rect = { 0 };
             rect = [viewAddr frame];

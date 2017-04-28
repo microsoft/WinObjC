@@ -2423,23 +2423,30 @@ bool _floatAlmostEqual(float a, float b) {
         return point;
     }
 
-    if (!fromLayer) {
-        // get the top most layer for the current layer hierarchy
+    UIElement fromLayerElement = nullptr;
+    UIElement toLayerElement = nullptr;
+
+    if (fromLayer) {
+        // Get the backing sublayer xaml UIElement for fromLayer
+        // We use the sublayer element to support proper point conversion within a scrolled view.
+        fromLayerElement = [fromLayer _getSublayerXamlElement];
+    } else if (GetCACompositor()->IsRunningAsFramework()) {
+        // In framework mode we don't own the topmost layer
+        fromLayerElement = Window::Current().Content();
+    } else {
+        // Get the topmost layer for the current layer hierarchy
         fromLayer = _findSuperLayerForLayer(toLayer);
+        fromLayerElement = [fromLayer _getSublayerXamlElement];
     }
 
-    if (!toLayer) {
-        // get the top most layer for the current layer hierarchy
+    if (toLayer) {
+        toLayerElement = [toLayer _getSublayerXamlElement];
+    } else if (GetCACompositor()->IsRunningAsFramework()) {
+        toLayerElement = Window::Current().Content();
+    } else {
         toLayer = _findSuperLayerForLayer(fromLayer);
+        toLayerElement = [toLayer _getSublayerXamlElement];
     }
-
-    // Get the backing sublayer xaml UIElement for fromLayer
-    // We use the sublayer element to support proper point conversion within a scrolled view.
-    UIElement fromLayerElement = [fromLayer _getSublayerXamlElement];
-
-    // Get the backing sublayer xaml UIElement for toLayer
-    // We use the sublayer element to support proper point conversion within a scrolled view.
-    UIElement toLayerElement = [toLayer _getSublayerXamlElement];
 
     // set up transform from xaml elment in fromLayer to xaml element in toLayer
     Media::GeneralTransform transform = fromLayerElement.TransformToVisual(toLayerElement);
@@ -2449,7 +2456,7 @@ bool _floatAlmostEqual(float a, float b) {
     winrt::Windows::Foundation::Point pointInToLayer = transform.TransformPoint(pointInFromLayer);
     CGPoint ret = { pointInToLayer.X, pointInToLayer.Y };
 
-    if (DEBUG_VERBOSE) {
+    if (DEBUG_VERBOSE && fromLayer && toLayer) {
         // How does our new convertPoint logic compare to the legacy logic?
         CGPoint legacyPoint = _legacyConvertPoint(point, fromLayer, toLayer);
         if (!_floatAlmostEqual(ret.x, legacyPoint.x) || !_floatAlmostEqual(ret.y, legacyPoint.y)) {
@@ -2477,23 +2484,30 @@ bool _floatAlmostEqual(float a, float b) {
         return pos;
     }
 
-    if (!fromLayer) {
-        // get the top most layer for the current layer hierarchy
+    UIElement fromLayerElement = nullptr;
+    UIElement toLayerElement = nullptr;
+
+    if (fromLayer) {
+        // Get the backing sublayer xaml UIElement for fromLayer
+        // We use the sublayer element to support proper point conversion within a scrolled view.
+        fromLayerElement = [fromLayer _getSublayerXamlElement];
+    } else if (GetCACompositor()->IsRunningAsFramework()) {
+        // In framework mode we don't own the topmost layer
+        fromLayerElement = Window::Current().Content();
+    } else {
+        // Get the topmost layer for the current layer hierarchy
         fromLayer = _findSuperLayerForLayer(toLayer);
+        fromLayerElement = [fromLayer _getSublayerXamlElement];
     }
 
-    if (!toLayer) {
-        // get the top most layer for the current layer hierarchy
+    if (toLayer) {
+        toLayerElement = [toLayer _getSublayerXamlElement];
+    } else if (GetCACompositor()->IsRunningAsFramework()) {
+        toLayerElement = Window::Current().Content();
+    } else {
         toLayer = _findSuperLayerForLayer(fromLayer);
+        toLayerElement = [toLayer _getSublayerXamlElement];
     }
-
-    // Get the backing sublayer xaml UIElement for fromLayer
-    // We use the sublayer element to support proper point conversion within a scrolled view.
-    UIElement fromLayerElement = [fromLayer _getSublayerXamlElement];
-
-    // Get the backing sublayer xaml UIElement for toLayer
-    // We use the sublayer element to support proper point conversion within a scrolled view.
-    UIElement toLayerElement = [toLayer _getSublayerXamlElement];
 
     // set up transform from xaml elment in fromLayer to xaml element in toLayer
     Media::GeneralTransform transform = fromLayerElement.TransformToVisual(toLayerElement);

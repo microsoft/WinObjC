@@ -268,7 +268,10 @@ static std::string _printViewhierarchy(UIView* leafView) {
 
     // Get the point value in this view's parent UIWindow's coordinates
     UIElement owningWindowElement = nullptr;
-    if (owningWindow != nil) {
+    if (GetCACompositor()->IsRunningAsFramework()) {
+        // In framework mode there's no meaningful parent UIWindow
+        owningWindowElement = Window::Current().Content();
+    } else if (owningWindow != nil) {
         owningWindowElement = owningWindow.layer._xamlElement;
     }
 
