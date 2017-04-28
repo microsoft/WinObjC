@@ -90,10 +90,8 @@ public:
         }
         void set(Platform::String^ value)
         {
-            if (_placeholder != value) {
-                _placeholder = value;
-                _SetPlaceHolder();
-            }
+            _placeholder = value;
+            _SetPlaceHolder();
         }
     }
 
@@ -105,10 +103,8 @@ public:
 
         void set(Windows::UI::Xaml::Input::InputScopeNameValue value)
         {
-            if (value != _inputScopeNameValue) {
-                _inputScopeNameValue = value;
-                _SetInputScope();
-            }
+            _inputScopeNameValue = value;
+            _SetInputScope();
         }
     }
 
@@ -146,10 +142,8 @@ public:
         }
         void set(Windows::UI::Xaml::TextAlignment value)
         {
-            if (value != _textAlignment) {
-                _textAlignment = value;
-                _SetTextAlignment();
-            }
+            _textAlignment = value;
+            _SetTextAlignment();
         }
     }
 
@@ -173,10 +167,8 @@ public:
         }
         void set(Windows::UI::Xaml::VerticalAlignment value)
         {
-            if (value != _textVerticalAlignment) {
-                _textVerticalAlignment = value;
-                _SetTextVerticalAlignment();
-            }
+            _textVerticalAlignment = value;
+            _SetTextVerticalAlignment();
         }
     }
 
@@ -188,10 +180,8 @@ public:
         }
         void set(UIKit::Xaml::TextBorderStyle value)
         {
-            if (_borderStyle != value) {
-                _borderStyle = value;
-                _SetBorderStyle();
-            }
+            _borderStyle = value;
+            _SetBorderStyle();
         }
     }
 
@@ -220,9 +210,6 @@ internal:
 
     // programatically kills the focus on this control
     void KillFocus();
-
-    // programatically set focus on this control
-    void SetFocus();
 
     // programatically setting focus on this control
     bool BecomeFirstResponder();

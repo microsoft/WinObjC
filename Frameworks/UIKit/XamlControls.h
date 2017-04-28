@@ -162,7 +162,7 @@ void SetTextFieldEnabled(const winrt::Windows::UI::Xaml::FrameworkElement& inspe
 bool GetTextFieldEnabled(const winrt::Windows::UI::Xaml::FrameworkElement& inspectableTextField);
 
 void TextFieldKillFocus(const winrt::Windows::UI::Xaml::FrameworkElement& inspectableTextField);
-void TextFieldSetFocus(const winrt::Windows::UI::Xaml::FrameworkElement& inspectableTextField);
+bool TextFieldBecomeFirstResponder(const winrt::Windows::UI::Xaml::FrameworkElement& inspectableTextField);
 
 void SetTextFieldTextColor(const winrt::Windows::UI::Xaml::FrameworkElement& inspectableTextField, UIColor* color);
 UIColor* GetTextFieldTextColor(const winrt::Windows::UI::Xaml::FrameworkElement& inspectableTextField);
@@ -176,8 +176,6 @@ void SetTextFieldTextAlignment(const winrt::Windows::UI::Xaml::FrameworkElement&
 UITextAlignment GetTextFieldTextAlignment(const winrt::Windows::UI::Xaml::FrameworkElement& inspectableTextField);
 
 bool GetTextFieldEditingState(const winrt::Windows::UI::Xaml::FrameworkElement& inspectableTextField);
-
-bool TextFieldBecomeFirstResponder(const winrt::Windows::UI::Xaml::FrameworkElement& inspectableTextField);
 
 void TextFieldRegisterEventHandlers(const winrt::Windows::UI::Xaml::FrameworkElement& inspectableTextField,
                                     const winrt::Windows::UI::Xaml::RoutedEventHandler& textChangedHandler,

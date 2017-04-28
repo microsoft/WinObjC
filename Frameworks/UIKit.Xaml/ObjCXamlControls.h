@@ -138,15 +138,13 @@ UIKIT_XAML_EXPORT void XamlSetTextFieldPlaceholder(const Microsoft::WRL::ComPtr<
 UIKIT_XAML_EXPORT IInspectable* XamlGetTextFieldPlaceholder(const Microsoft::WRL::ComPtr<IInspectable>& inspectableTextField);
 
 UIKIT_XAML_EXPORT void XamlSetTextFieldInputScope(const Microsoft::WRL::ComPtr<IInspectable>& inspectableTextField,
-                                                  int inputSCopeNameValue);
+                                                  int inputScopeNameValue);
 
 UIKIT_XAML_EXPORT void XamlSetTextFieldEnabled(const Microsoft::WRL::ComPtr<IInspectable>& inspectableTextField, bool enabled);
 
 UIKIT_XAML_EXPORT bool XamlGetTextFieldEnabled(const Microsoft::WRL::ComPtr<IInspectable>& inspectableTextField);
 
 UIKIT_XAML_EXPORT void XamlTextFieldKillFocus(const Microsoft::WRL::ComPtr<IInspectable>& inspectableTextField);
-
-UIKIT_XAML_EXPORT void XamlTextFieldSetFocus(const Microsoft::WRL::ComPtr<IInspectable>& inspectableTextField);
 
 UIKIT_XAML_EXPORT void XamlSetTextFieldTextColor(const Microsoft::WRL::ComPtr<IInspectable>& inspectableTextField,
                                                  const Microsoft::WRL::ComPtr<IInspectable>& foreground);

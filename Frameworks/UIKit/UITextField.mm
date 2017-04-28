@@ -980,7 +980,9 @@ Microsoft Extension
         // delegate does not allow editing to be ended, but we already lost the focus
         // we need re-setting the focus back. it will trigger GotFocusEvent again on this control
         // and then it will update the firstResponder status as YES
-        XamlControls::TextFieldSetFocus(_textField);
+        if (!XamlControls::TextFieldBecomeFirstResponder(_textField)) {
+            TraceWarning(TAG, L"Failed to setFocus on TextField");
+        }
         return;
     }
 

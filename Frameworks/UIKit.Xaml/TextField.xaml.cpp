@@ -268,10 +268,6 @@ void TextField::KillFocus() {
     }
 }
 
-void TextField::SetFocus() {
-    BecomeFirstResponder();
-}
-
 bool TextField::BecomeFirstResponder() {
     if (_backingControl) {
         return _backingControl->Focus(FocusState::Programmatic);
@@ -476,9 +472,8 @@ UIKIT_XAML_EXPORT void XamlSetTextFieldText(const Microsoft::WRL::ComPtr<IInspec
     textField->Text = Platform::StringReference(text.c_str());
     if (!textField->SecureEntry) {
         // this is to set the selection to the end of of text so that
-        // to ensure when gaining focus programmatically, the caret is at
-        // the end of the field. PasswordBox didn't have API allowing
-        // us to that.
+        // to ensure when user tap into TextBox, the caret is at
+        // the end of the TextBox. 
         textField->TextBox->SelectionStart = textField->Text->Length();
         textField->TextBox->SelectionLength = 0;
     } else {
@@ -507,10 +502,10 @@ UIKIT_XAML_EXPORT IInspectable* XamlGetTextFieldPlaceholder(const Microsoft::WRL
 }
 
 // Set the UIKit::Xaml::TextField's InputScope property
-UIKIT_XAML_EXPORT void XamlSetTextFieldInputScope(const Microsoft::WRL::ComPtr<IInspectable>&  inspectableTextField, int inputSCopeNameValue) {
+UIKIT_XAML_EXPORT void XamlSetTextFieldInputScope(const Microsoft::WRL::ComPtr<IInspectable>&  inspectableTextField, int inputScopeNameValue) {
     auto textField = safe_cast<UIKit::Xaml::TextField^>(reinterpret_cast<Platform::Object^>(inspectableTextField.Get()));
-    auto inputSCopeNameValueToUse = static_cast<Input::InputScopeNameValue>(inputSCopeNameValue);
-    textField->InputScopeNameValue = inputSCopeNameValueToUse;
+    auto inputScopeNameValueToUse = static_cast<Input::InputScopeNameValue>(inputScopeNameValue);
+    textField->InputScopeNameValue = inputScopeNameValueToUse;
 }
 
 // Set the UIKit::Xaml::TextField's Enabled property
@@ -529,12 +524,6 @@ UIKIT_XAML_EXPORT bool XamlGetTextFieldEnabled(const Microsoft::WRL::ComPtr<IIns
 UIKIT_XAML_EXPORT void XamlTextFieldKillFocus(const Microsoft::WRL::ComPtr<IInspectable>& inspectableTextField) {
     auto textField = safe_cast<UIKit::Xaml::TextField^>(reinterpret_cast<Platform::Object^>(inspectableTextField.Get()));
     textField->KillFocus();
-}
-
-// Set focus on TextField
-UIKIT_XAML_EXPORT void XamlTextFieldSetFocus(const Microsoft::WRL::ComPtr<IInspectable>& inspectableTextField) {
-    auto textField = safe_cast<UIKit::Xaml::TextField^>(reinterpret_cast<Platform::Object^>(inspectableTextField.Get()));
-    textField->SetFocus();
 }
 
 // Set the UIKit::Xaml::TextField's textColor property

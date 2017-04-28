@@ -170,9 +170,9 @@ NSString* GetTextFieldPlaceholder(const winrt::Windows::UI::Xaml::FrameworkEleme
 }
 
 void SetTextFieldInputScope(const winrt::Windows::UI::Xaml::FrameworkElement& textField, UIKeyboardType keyboardType) {
-    auto inputSCopeNameValue =
+    auto inputScopeNameValue =
         XamlUtilities::ConvertKeyboardTypeToInputScopeNameValue(keyboardType, GetTextFieldSecureTextEntryValue(textField));
-    XamlSetTextFieldInputScope(objcwinrt::to_insp(textField), static_cast<int>(inputSCopeNameValue));
+    XamlSetTextFieldInputScope(objcwinrt::to_insp(textField), static_cast<int>(inputScopeNameValue));
 }
 
 void SetTextFieldEnabled(const winrt::Windows::UI::Xaml::FrameworkElement& inspectableTextField, BOOL enabled) {
@@ -185,10 +185,6 @@ bool GetTextFieldEnabled(const winrt::Windows::UI::Xaml::FrameworkElement& inspe
 
 void TextFieldKillFocus(const winrt::Windows::UI::Xaml::FrameworkElement& inspectableTextField) {
     XamlTextFieldKillFocus(objcwinrt::to_insp(inspectableTextField));
-}
-
-void TextFieldSetFocus(const winrt::Windows::UI::Xaml::FrameworkElement& inspectableTextField) {
-    XamlTextFieldSetFocus(objcwinrt::to_insp(inspectableTextField));
 }
 
 void SetTextFieldTextColor(const winrt::Windows::UI::Xaml::FrameworkElement& inspectableTextField, UIColor* textColor) {
