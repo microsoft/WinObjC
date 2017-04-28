@@ -28,6 +28,7 @@
 #import <UIKit/UILabel.h>
 #import <UIKit/UIScreen.h>
 #import <UIKit/UIView.h>
+#import <UIKit/UIWindow.h>
 
 #import <Foundation/NSString.h>
 #import <Foundation/NSMutableArray.h>
@@ -396,6 +397,32 @@ static void hideAlert(UIAlertView* self, int index, BOOL animated) {
     return alertPriv->_isVisible;
 }
 
+- (void) _handleRotation {
+    // We need to offset the 'presentationTransform' used in WOCDispalyMode, because we always want to render alerts vertically.
+    // TODO: We'll remove this when we switch UIAlertView over to a Xaml ContentDialog, since rotation will be handled for us.
+    const float c_angleToRadian = kPi / 180.0;
+    switch ([[UIApplication displayMode] presentationTransform]) {
+        case UIInterfaceOrientationLandscapeRight:
+            [self setTransform:CGAffineTransformMakeRotation(-static_cast<float>(DisplayProperties::ScreenRotation90Clockwise) * c_angleToRadian)];
+            break;
+
+        case UIInterfaceOrientationPortrait:
+            [self setTransform:CGAffineTransformMakeTranslation(0.0f, 0.0f)];
+            break;
+
+        case UIInterfaceOrientationLandscapeLeft:
+            [self setTransform:CGAffineTransformMakeRotation(-static_cast<float>(DisplayProperties::ScreenRotation90CounterClockwise) * c_angleToRadian)];
+            break;
+
+        case UIInterfaceOrientationPortraitUpsideDown:
+            [self setTransform:CGAffineTransformMakeRotation(-static_cast<float>(DisplayProperties::ScreenRotation180) * c_angleToRadian)];
+            break;
+
+        default:
+            break;
+    }
+}
+
 /**
  @Status Interoperable
 */
@@ -549,6 +576,9 @@ static void hideAlert(UIAlertView* self, int index, BOOL animated) {
     frame.size.width = boxWidth;
     frame.size.height = curHeight;
     [self initWithFrame:frame];
+
+    // Make sure we're not rotated even if WOCDisplayMode rotates the presentation surface
+    [self _handleRotation];
 
     id image;
     image = [[UIImage imageNamed:@"/img/alert-background@2x.png"] stretchableImageWithLeftCapWidth:25 topCapHeight:30];
