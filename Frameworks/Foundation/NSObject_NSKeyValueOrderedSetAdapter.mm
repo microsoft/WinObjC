@@ -16,28 +16,22 @@
 
 #import <Foundation/Foundation.h>
 #import <Starboard.h>
-#import <objc/objc.h>
-#import <string>
-#import <memory>
-#import <vector>
 #import <Starboard/String.h>
+#import <Starboard/SmartTypes.h>
 
-#import <NSObject_NSKeyValueCoding-Internal.h>
+#import "NSObject_NSKeyValueCoding-Internal.h"
 
 /*
-* KVC Array Adapters
+* KVC Ordered Set Adapters
 *
-* On the reference platform, valueForKey:@"xx" will return a NSArray-workalike if you implement
-* countOfXx and objectInXxAtIndex:.
-*
-* mutableArrayValueForKey:@"xx" will ALWAYS return an NSArray-workalike. It'll do the following things:
+* mutableOrderedSetValueForKey:@"xx" will ALWAYS return an NSOrderedSet-workalike. It'll do the following things:
 * - Preferentially use countOfXx and objectInXxAtIndex: for accessors.
 * - Preferentially use insertObject:inXxAtIndex: and -removeObjectFromXxAtIndex: for mutators.
 * - If these don't exist, accessors and mutators are proxied through to the following:
 *     - The getters getXx, xx, and isXx.
 *     - The instance Variables _xx or xx.
 *     - valueForKey:@"xx"
-* - If we used an ivar or valueForKey:, values of nil become empty arrays, @[].
+* - If we used an ivar or valueForKey:, values of nil become empty NSOrderedSets.
 * - If we used a getter, a mutable copy of the object we get back is made.
 * - The mutation is attempted.
 *     - If we used an ivar, this will fail for immutable members.
@@ -53,30 +47,29 @@
 *
 * No caching is done, as, on the reference platform
 *
-* NSMutableArray* array = [object mutableArrayValueForKey:@"xx"];
-* [object setValue:@[@1024] forKey:@"xx"];
+* NSMutableOrderedSet* orderedSet = [object mutableOrderedSetValueForKey:@"xx"];
+* [object setValue:[NSSet orderedSetWithObject:@1024] forKey:@"xx"];
 *
-* [[array objectAtIndex:0] isEqual:@(1024)];
+* [orderedSet containsObject:@1024];
 *
 * holds true.
 */
-
 namespace {
-struct ProxyArray {
-    ProxyArray(id target, NSString* key, objc_ivar* ivar)
-        : _target(target), _ivar(ivar), _treatNilValueAsEmptyArray(false), _targetSelectors() {
+struct ProxyOrderedSet {
+    ProxyOrderedSet(id target, NSString* key, objc_ivar* ivar)
+        : _target(target), _ivar(ivar), _treatNilValueAsEmptyOrderedSet(false), _targetSelectors() {
         _key.attach([key copy]);
         const char* rawKey = [key UTF8String];
 
         // These four selectors, countOfKey, objectInKeyAtIndex, keyAtIndexes:, getKey:range:,
-        // are used to back the proxy array.
+        // are used to back the proxy orderedSet.
         setIfResponds(target, woc::string::format("countOf%c%s", toupper(rawKey[0]), &rawKey[1]), &_targetSelectors.count);
         setIfResponds(target, woc::string::format("objectIn%c%sAtIndex:", toupper(rawKey[0]), &rawKey[1]), &_targetSelectors.objectIn);
         setIfResponds(target, woc::string::format("%sAtIndexes:", rawKey), &_targetSelectors.objectsAt);
         setIfResponds(target, woc::string::format("get%c%s:range:", toupper(rawKey[0]), &rawKey[1]), &_targetSelectors.getRange);
 
         // The mutation selectors insert, remove, and replace (with Key substituted where necessary)
-        // are used to back the mutation-related methods on NSMutableArray.
+        // are used to back the mutation-related methods on NSMutableOrderedSet.
         setIfResponds(target,
                       woc::string::format("insertObject:in%c%sAtIndex:", toupper(rawKey[0]), &rawKey[1]),
                       &_targetSelectors.insertAtOne);
@@ -96,8 +89,8 @@ struct ProxyArray {
         _targetSelectors.set = KVCSetterForPropertyName(target, rawKey);
 
         // Per the reference platform: If there's no setter (we're falling back to setValue:forKey:)
-        // we have to treat nil values as empty arrays so that the user can mutate them.
-        _treatNilValueAsEmptyArray = !_targetSelectors.set;
+        // we have to treat nil values as empty orderedSets so that the user can mutate them.
+        _treatNilValueAsEmptyOrderedSet = !_targetSelectors.set;
     }
 
     /* Implementations of methods called by the Objective-C side */
@@ -112,7 +105,7 @@ struct ProxyArray {
         if (_targetSelectors.objectIn) {
             return _call<id>(_target, _targetSelectors.objectIn, index);
         } else if (_targetSelectors.objectsAt) {
-            return [_call<NSArray*>(_target, _targetSelectors.objectsAt, [NSIndexSet indexSetWithIndex:index]) firstObject];
+            return [_call<NSOrderedSet*>(_target, _targetSelectors.objectsAt, [NSIndexSet indexSetWithIndex:index]) firstObject];
         }
         return [_get(_target, _targetSelectors.get, _ivar, _key) objectAtIndex:index];
     }
@@ -161,6 +154,30 @@ struct ProxyArray {
             [_target willChange:NSKeyValueChangeRemoval valuesAtIndexes:indexes forKey:_key];
 
             _getMutateAndSet(@selector(removeObjectAtIndex:), index);
+
+            [_target didChange:NSKeyValueChangeRemoval valuesAtIndexes:indexes forKey:_key];
+        }
+    }
+
+    void insertObjectsAtIndexes(NSArray* objects, NSIndexSet* indexes) {
+        if (_targetSelectors.insertAtMany) {
+            _call<void>(_target, _targetSelectors.insertAtMany, objects, indexes);
+        } else {
+            [_target willChange:NSKeyValueChangeInsertion valuesAtIndexes:indexes forKey:_key];
+
+            _getMutateAndSet(@selector(insertObjects:atIndexes:), objects, indexes);
+
+            [_target didChange:NSKeyValueChangeInsertion valuesAtIndexes:indexes forKey:_key];
+        }
+    }
+
+    void removeObjectsAtIndexes(NSIndexSet* indexes) {
+        if (_targetSelectors.removeAtMany) {
+            _call<void>(_target, _targetSelectors.removeAtMany, indexes);
+        } else {
+            [_target willChange:NSKeyValueChangeRemoval valuesAtIndexes:indexes forKey:_key];
+
+            _getMutateAndSet(@selector(removeObjectAtIndexes:), indexes);
 
             [_target didChange:NSKeyValueChangeRemoval valuesAtIndexes:indexes forKey:_key];
         }
@@ -237,23 +254,23 @@ private:
         SEL set;
     } _targetSelectors;
     objc_ivar* _ivar;
-    bool _treatNilValueAsEmptyArray;
+    bool _treatNilValueAsEmptyOrderedSet;
 
     // Private helper to mimic reference platform behavior for missing methods
     template <typename... Args>
     void _getMutateAndSet(SEL cmd, Args... args) {
         id currentValue = _get(_target, _targetSelectors.get, _ivar, _key);
 
-        if (!currentValue && !_treatNilValueAsEmptyArray) {
+        if (!currentValue && !_treatNilValueAsEmptyOrderedSet) {
             [NSException
                  raise:NSInvalidArgumentException
-                format:@"-[_NSKeyProxyArray %s]: value for key %@ on object %p is nil", sel_getName(cmd), _key.get(), _target.get()];
+                format:@"-[_NSKeyProxyOrderedSet %s]: value for key %@ on object %p is nil", sel_getName(cmd), _key.get(), _target.get()];
         }
 
         if (currentValue && !_ivar) {
             currentValue = [[currentValue mutableCopy] autorelease];
-        } else if (!currentValue && _treatNilValueAsEmptyArray) {
-            currentValue = [NSMutableArray array];
+        } else if (!currentValue && _treatNilValueAsEmptyOrderedSet) {
+            currentValue = [NSMutableOrderedSet orderedSet];
         }
 
         auto imp = objc_msg_lookup(currentValue, cmd);
@@ -263,108 +280,74 @@ private:
 };
 }
 
-@interface _NSKeyProxyArray () {
-    std::shared_ptr<ProxyArray> _proxyArray;
+@interface _NSMutableKeyProxyOrderedSet () {
+    std::shared_ptr<ProxyOrderedSet> _proxyOrderedSet;
 }
+- (id)_initWithProxyOrderedSet:(std::shared_ptr<ProxyOrderedSet>)proxyOrderedSet;
 @end
 
-@interface _NSMutableKeyProxyArray () {
-    std::shared_ptr<ProxyArray> _proxyArray;
-}
-- (id)_initWithProxyArray:(std::shared_ptr<ProxyArray>)proxyArray;
-@end
-
-@implementation _NSKeyProxyArray
-+ (instancetype)proxyArrayForObject:(id)object key:(NSString*)key ivar:(struct objc_ivar*)ivar {
+@implementation _NSMutableKeyProxyOrderedSet
++ (instancetype)proxyOrderedSetForObject:(id)object key:(NSString*)key ivar:(struct objc_ivar*)ivar {
     return [[[self alloc] initWithObject:object key:key ivar:ivar] autorelease];
 }
 
 - (id)initWithObject:(id)object key:(NSString*)key ivar:(struct objc_ivar*)ivar {
     if (self = [super init]) {
-        _proxyArray = std::make_shared<ProxyArray>(object, key, ivar);
+        _proxyOrderedSet = std::make_shared<ProxyOrderedSet>(object, key, ivar);
+    }
+    return self;
+}
+
+- (id)_initWithProxyOrderedSet:(std::shared_ptr<ProxyOrderedSet>)proxyOrderedSet {
+    if (self = [super init]) {
+        _proxyOrderedSet = std::move(proxyOrderedSet);
     }
     return self;
 }
 
 - (NSUInteger)count {
-    return _proxyArray->count();
+    return _proxyOrderedSet->count();
 }
 
 - (id)objectAtIndex:(NSUInteger)index {
-    return _proxyArray->objectAtIndex(index);
+    return _proxyOrderedSet->objectAtIndex(index);
 }
 
 - (NSArray*)objectsAtIndexes:(NSIndexSet*)indexes {
-    return _proxyArray->objectsAtIndexes(indexes);
+    return _proxyOrderedSet->objectsAtIndexes(indexes);
 }
 
 - (void)getObjects:(id[])objects range:(NSRange)range {
-    return _proxyArray->getObjectsRange(objects, range);
-}
-
-- (_NSMutableKeyProxyArray*)_mutableProxy {
-    return [[[_NSMutableKeyProxyArray alloc] _initWithProxyArray:_proxyArray] autorelease];
-}
-
-- (NSMutableArray*)mutableCopy {
-    return [self _mutableProxy];
-}
-@end
-
-@implementation _NSMutableKeyProxyArray
-+ (instancetype)proxyArrayForObject:(id)object key:(NSString*)key ivar:(struct objc_ivar*)ivar {
-    return [[[self alloc] initWithObject:object key:key ivar:ivar] autorelease];
-}
-
-- (id)initWithObject:(id)object key:(NSString*)key ivar:(struct objc_ivar*)ivar {
-    if (self = [super init]) {
-        _proxyArray = std::make_shared<ProxyArray>(object, key, ivar);
-    }
-    return self;
-}
-
-- (id)_initWithProxyArray:(std::shared_ptr<ProxyArray>)proxyArray {
-    if (self = [super init]) {
-        _proxyArray = std::move(proxyArray);
-    }
-    return self;
-}
-
-- (NSUInteger)count {
-    return _proxyArray->count();
-}
-
-- (id)objectAtIndex:(NSUInteger)index {
-    return _proxyArray->objectAtIndex(index);
-}
-
-- (NSArray*)objectsAtIndexes:(NSIndexSet*)indexes {
-    return _proxyArray->objectsAtIndexes(indexes);
-}
-
-- (void)getObjects:(id[])objects range:(NSRange)range {
-    return _proxyArray->getObjectsRange(objects, range);
+    return _proxyOrderedSet->getObjectsRange(objects, range);
 }
 
 // mutable methods
 - (void)insertObject:(id)object atIndex:(NSUInteger)index {
-    _proxyArray->insertObjectAtIndex(object, index);
+    _proxyOrderedSet->insertObjectAtIndex(object, index);
 }
 
 - (void)removeObjectAtIndex:(NSUInteger)index {
-    _proxyArray->removeObjectAtIndex(index);
+    _proxyOrderedSet->removeObjectAtIndex(index);
+}
+
+- (void)insertObjects:(NSArray*)objects atIndexes:(NSIndexSet*)indexes {
+    _proxyOrderedSet->insertObjectsAtIndexes(objects, indexes);
+}
+
+- (void)removeObjectsAtIndexes:(NSIndexSet*)indexes {
+    _proxyOrderedSet->removeObjectsAtIndexes(indexes);
 }
 
 - (void)addObject:(id)object {
-    _proxyArray->addObject(object);
+    _proxyOrderedSet->addObject(object);
 }
 
 - (void)removeLastObject {
-    _proxyArray->removeLastObject();
+    _proxyOrderedSet->removeLastObject();
 }
 
 - (void)replaceObjectAtIndex:(NSUInteger)index withObject:(id)object {
-    _proxyArray->replaceObjectAtIndexWithObject(index, object);
+    _proxyOrderedSet->replaceObjectAtIndexWithObject(index, object);
 }
 
 @end
