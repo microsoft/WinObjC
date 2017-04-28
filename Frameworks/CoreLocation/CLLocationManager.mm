@@ -65,7 +65,7 @@ static void _requestExtendedExecutionAsync() {
             if (result == ExtendedExecutionResult::Allowed) {
                 NSTraceInfo(TAG, @"Requesting extended execution succeeded.");
             } else {
-                NSTraceError(TAG, @"Requesting extended execution failed with result %ld!", result);
+                NSTraceError(TAG, @"Requesting extended execution failed with result %d!", result);
             }
         } else if (status == WF::AsyncStatus::Canceled) {
             NSTraceError(TAG, @"Extended execution request was canceled");
@@ -327,7 +327,7 @@ static const std::chrono::seconds c_timeoutInSeconds(15);
                                                                      userInfo:nil]];
                 }
             } else {
-                NSTraceInfo(TAG, @"Location authorization error: %08x, status: %u", op.ErrorCode(), (unsigned)status);
+                NSTraceInfo(TAG, @"Location authorization error: %08lx, status: %u", (unsigned long)op.ErrorCode(), (unsigned)status);
                 FAIL_FAST_MSG("Unexpected failure while authorizing location.");
             }
         }));
@@ -513,7 +513,7 @@ static const std::chrono::seconds c_timeoutInSeconds(15);
             // We purposely do not update the location from here as we already have a PositionChange event registered
             // in this code path and updating the location from here would just be a duplicate.
         } else {
-            NSTraceInfo(TAG, @"Get geoposition update failed with error: %08x, status: %u", op.ErrorCode(), (unsigned)status);
+            NSTraceInfo(TAG, @"Get geoposition update failed with error: %08lx, status: %u", (unsigned long)op.ErrorCode(), (unsigned)status);
             [self _handleLocationUpdateError:[NSError errorWithDomain:(NSString*)c_CLLocationManagerErrorDomain
                                                                  code:kCLErrorNetwork
                                                              userInfo:nil]];
@@ -536,7 +536,7 @@ static const std::chrono::seconds c_timeoutInSeconds(15);
             NSTraceInfo(TAG, @"Get single geoposition update succeeded.");
             [self _handleLocationUpdate:op.GetResults()];
         } else {
-            NSTraceInfo(TAG, @"Get single geoposition update failed with error: %08x, status: %u", op.ErrorCode(), (unsigned)status);
+            NSTraceInfo(TAG, @"Get single geoposition update failed with error: %08lx, status: %u", (unsigned long)op.ErrorCode(), (unsigned)status);
             [self _handleLocationUpdateError:[NSError errorWithDomain:(NSString*)c_CLLocationManagerErrorDomain
                                                                  code:kCLErrorNetwork
                                                              userInfo:nil]];
