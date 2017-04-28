@@ -133,11 +133,89 @@ UIKIT_XAML_EXPORT IInspectable* XamlScrollViewGetSubLayerCanvas(const Microsoft:
 UIKIT_XAML_EXPORT void XamlCreateSlider(IInspectable** created);
 
 ////////////////////////////////////////////////////////////////////////////////////
-// TextBox.xaml.cpp
+// TextField.xaml.cpp
 ////////////////////////////////////////////////////////////////////////////////////
 
-// Returns a UIKit::TextBox as an IInspectable
-UIKIT_XAML_EXPORT void XamlCreateTextBox(IInspectable** created);
+// Returns a UIKit::Xaml::TextField as an IInspectable
+UIKIT_XAML_EXPORT void XamlCreateTextField(IInspectable** created);
+
+// Returns the UIKit::Xaml::TextField's backing Canvas as an IInspectable
+UIKIT_XAML_EXPORT IInspectable* XamlGetTextFieldSubLayerCanvas(const Microsoft::WRL::ComPtr<IInspectable>& inspectableTextField);
+
+// Retrieves the UIKit::Xaml::TextField's backing TextBox as an IInspectable
+UIKIT_XAML_EXPORT IInspectable* XamlGetTextFieldTextBox(const Microsoft::WRL::ComPtr<IInspectable>& inspectableTextField);
+
+// Retrieves the UIKit::Xaml::TextField's backing PasswordBox as an IInspectable
+UIKIT_XAML_EXPORT IInspectable* XamlGetTextFieldPasswordBox(const Microsoft::WRL::ComPtr<IInspectable>& inspectableTextField);
+
+// Toggle the secure text entry value allowing the switch to either the TextBox or PasswordBox backing element
+UIKIT_XAML_EXPORT void XamlSetTextFieldSecureTextEntryValue(const Microsoft::WRL::ComPtr<IInspectable>& inspectableTextField,
+                                                            bool secureTextEntry);
+
+UIKIT_XAML_EXPORT bool XamlGetTextFieldSecureTextEntryValue(const Microsoft::WRL::ComPtr<IInspectable>& inspectableTextField);
+
+UIKIT_XAML_EXPORT void XamlSetTextFieldText(const Microsoft::WRL::ComPtr<IInspectable>& inspectableTextField, const std::wstring& text);
+
+UIKIT_XAML_EXPORT IInspectable* XamlGetTextFieldText(const Microsoft::WRL::ComPtr<IInspectable>& inspectableTextField);
+
+UIKIT_XAML_EXPORT void XamlSetTextFieldPlaceholder(const Microsoft::WRL::ComPtr<IInspectable>& inspectableTextField,
+                                                   const std::wstring& text);
+
+UIKIT_XAML_EXPORT IInspectable* XamlGetTextFieldPlaceholder(const Microsoft::WRL::ComPtr<IInspectable>& inspectableTextField);
+
+UIKIT_XAML_EXPORT void XamlSetTextFieldInputScope(const Microsoft::WRL::ComPtr<IInspectable>& inspectableTextField,
+                                                  int inputScopeNameValue);
+
+UIKIT_XAML_EXPORT void XamlSetTextFieldEnabled(const Microsoft::WRL::ComPtr<IInspectable>& inspectableTextField, bool enabled);
+
+UIKIT_XAML_EXPORT bool XamlGetTextFieldEnabled(const Microsoft::WRL::ComPtr<IInspectable>& inspectableTextField);
+
+UIKIT_XAML_EXPORT void XamlTextFieldKillFocus(const Microsoft::WRL::ComPtr<IInspectable>& inspectableTextField);
+
+UIKIT_XAML_EXPORT void XamlSetTextFieldTextColor(const Microsoft::WRL::ComPtr<IInspectable>& inspectableTextField,
+                                                 const Microsoft::WRL::ComPtr<IInspectable>& foreground);
+
+UIKIT_XAML_EXPORT IInspectable* XamlGetTextFieldTextColor(const Microsoft::WRL::ComPtr<IInspectable>& inspectableTextField);
+
+UIKIT_XAML_EXPORT void XamlSetTextFieldBackgroundColor(const Microsoft::WRL::ComPtr<IInspectable>& inspectableTextField,
+                                                       const Microsoft::WRL::ComPtr<IInspectable>& backgroundColorBrush);
+
+UIKIT_XAML_EXPORT IInspectable* XamlGetTextFieldBackgroundColor(const Microsoft::WRL::ComPtr<IInspectable>& inspectableTextField);
+
+UIKIT_XAML_EXPORT void XamlSetTextFieldBackgroundImage(const Microsoft::WRL::ComPtr<IInspectable>& inspectableTextField,
+                                                       const Microsoft::WRL::ComPtr<IInspectable>& backgroundImageBrush);
+
+UIKIT_XAML_EXPORT void XamlSetTextFieldTextAlignment(const Microsoft::WRL::ComPtr<IInspectable>& inspectableTextField, int textAlignment);
+
+UIKIT_XAML_EXPORT int XamlGetTextFieldTextAlignment(const Microsoft::WRL::ComPtr<IInspectable>& inspectableTextField);
+
+UIKIT_XAML_EXPORT bool XamlGetTextFieldEditing(const Microsoft::WRL::ComPtr<IInspectable>& inspectableTextField);
+
+UIKIT_XAML_EXPORT bool XamlTextFieldBecomeFirstResponder(const Microsoft::WRL::ComPtr<IInspectable>& inspectableTextField);
+
+UIKIT_XAML_EXPORT void XamlTextFieldRegisterEventHandlers(const Microsoft::WRL::ComPtr<IInspectable>& inspectableTextField,
+                                                          const Microsoft::WRL::ComPtr<IInspectable>& textChangedHandler,
+                                                          const Microsoft::WRL::ComPtr<IInspectable>& gotFocusHandler,
+                                                          const Microsoft::WRL::ComPtr<IInspectable>& lostFocusHanlder,
+                                                          const Microsoft::WRL::ComPtr<IInspectable>& enterKeyDownHandler);
+
+UIKIT_XAML_EXPORT void XamlTextFieldUnregisterEventHandlers(const Microsoft::WRL::ComPtr<IInspectable>& inspectableTextField);
+
+UIKIT_XAML_EXPORT void XamlSetTextFieldVerticalTextAlignment(const Microsoft::WRL::ComPtr<IInspectable>& inspectableTextField,
+                                                             int verticalTextAlignment);
+
+UIKIT_XAML_EXPORT int XamlGetTextFieldVerticalTextAlignment(const Microsoft::WRL::ComPtr<IInspectable>& inspectableTextField);
+
+UIKIT_XAML_EXPORT void XamlSetTextFieldBorderStyle(const Microsoft::WRL::ComPtr<IInspectable>& inspectableTextField, int borderStyle);
+
+UIKIT_XAML_EXPORT int XamlGetTextFieldBorderStyle(const Microsoft::WRL::ComPtr<IInspectable>& inspectableTextField);
+
+UIKIT_XAML_EXPORT void XamlTextFieldApplyFont(const Microsoft::WRL::ComPtr<IInspectable>& inspectableTextField,
+                                              const std::wstring& fontFamilyname,
+                                              int fontStrech,
+                                              int fontStyle,
+                                              double fontSize,
+                                              int fontWeight);
 
 ////////////////////////////////////////////////////////////////////////////////////
 // ContentDialog.xaml.cpp

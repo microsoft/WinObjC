@@ -50,7 +50,7 @@ public:
         FrameworkHelper::RunOnUIThread([]() {
             // TODO: Switch to UIKit.Xaml projections when they're available.
             Microsoft::WRL::ComPtr<IInspectable> xamlElement;
-            XamlCreateTextBox(&xamlElement);
+            XamlCreateTextField(&xamlElement);
             ASSERT_TRUE(xamlElement);
         });
     }

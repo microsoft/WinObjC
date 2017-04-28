@@ -123,70 +123,53 @@ UITextAlignment XamlUtilities::ConvertWXTextAlignmentToUITextAlignment(WX::TextA
     return UITextAlignmentLeft;
 }
 
-WX::Input::InputScope XamlUtilities::ConvertKeyboardTypeToInputScope(UIKeyboardType keyboardType, BOOL secureTextMode) {
-    WX::Input::InputScopeName inputScopeName;
-    inputScopeName.NameValue(WX::Input::InputScopeNameValue::Default);
-
+WX::Input::InputScopeNameValue XamlUtilities::ConvertKeyboardTypeToInputScopeNameValue(UIKeyboardType keyboardType, BOOL secureTextMode) {
     if (secureTextMode) {
         // passwordBox only supports NumbericPin and Password inputscope
         if (keyboardType == UIKeyboardTypeNumberPad) {
-            inputScopeName.NameValue(WX::Input::InputScopeNameValue::NumericPin);
+            return WX::Input::InputScopeNameValue::NumericPin;
         } else {
-            inputScopeName.NameValue(WX::Input::InputScopeNameValue::Password);
+            return WX::Input::InputScopeNameValue::Password;
         }
     } else {
         // normal textmode supports a lot more keyboardType
         switch (keyboardType) {
             case UIKeyboardTypeDefault:
-                inputScopeName.NameValue(WX::Input::InputScopeNameValue::Default);
-                break;
+                return WX::Input::InputScopeNameValue::Default;
 
             case UIKeyboardTypeASCIICapable:
-                inputScopeName.NameValue(WX::Input::InputScopeNameValue::Default);
-                break;
+                return WX::Input::InputScopeNameValue::Default;
 
             case UIKeyboardTypeNumbersAndPunctuation:
-                inputScopeName.NameValue(WX::Input::InputScopeNameValue::Digits);
-                break;
+                return WX::Input::InputScopeNameValue::Digits;
 
             case UIKeyboardTypeURL:
-                inputScopeName.NameValue(WX::Input::InputScopeNameValue::Url);
-                break;
+                return WX::Input::InputScopeNameValue::Url;
 
             case UIKeyboardTypeNumberPad:
-                inputScopeName.NameValue(WX::Input::InputScopeNameValue::Digits);
-                break;
+                return WX::Input::InputScopeNameValue::Digits;
 
             case UIKeyboardTypePhonePad:
-                inputScopeName.NameValue(WX::Input::InputScopeNameValue::TelephoneNumber);
-                break;
+                return WX::Input::InputScopeNameValue::TelephoneNumber;
 
             case UIKeyboardTypeNamePhonePad:
-                inputScopeName.NameValue(WX::Input::InputScopeNameValue::NameOrPhoneNumber);
-                break;
+                return WX::Input::InputScopeNameValue::NameOrPhoneNumber;
 
             case UIKeyboardTypeEmailAddress:
-                inputScopeName.NameValue(WX::Input::InputScopeNameValue::EmailNameOrAddress);
-                break;
+                return WX::Input::InputScopeNameValue::EmailNameOrAddress;
 
             case UIKeyboardTypeDecimalPad:
-                inputScopeName.NameValue(WX::Input::InputScopeNameValue::Number);
-                break;
+                return WX::Input::InputScopeNameValue::Number;
 
             case UIKeyboardTypeTwitter:
-                inputScopeName.NameValue(WX::Input::InputScopeNameValue::Default);
-                break;
+                return WX::Input::InputScopeNameValue::Default;
 
             case UIKeyboardTypeWebSearch:
-                inputScopeName.NameValue(WX::Input::InputScopeNameValue::Search);
-                break;
+                return WX::Input::InputScopeNameValue::Search;
         }
     }
 
-    WX::Input::InputScope inputScope;
-    inputScope.Names().Append(inputScopeName);
-
-    return inputScope;
+    return WX::Input::InputScopeNameValue::Default;
 }
 
 WX::VerticalAlignment XamlUtilities::ConvertUIControlContentVerticalAlignmentToWXVerticalAlignment(
@@ -280,7 +263,7 @@ ComPtr<ABI::Windows::UI::Xaml::Markup::IXamlType> XamlUtilities::ReturnXamlType(
 
     if (!xamlMetaProvider) {
         auto inspApplicationCurrent = objcwinrt::to_insp(WX::Application::Current());
-        (void) inspApplicationCurrent->QueryInterface(IID_PPV_ARGS(&xamlMetaProvider));
+        (void)inspApplicationCurrent->QueryInterface(IID_PPV_ARGS(&xamlMetaProvider));
     }
 
     ComPtr<ABI::Windows::UI::Xaml::Markup::IXamlType> xamlType;
@@ -303,7 +286,7 @@ UIView* XamlUtilities::GenerateUIKitControlFromXamlType(const WF::IInspectable& 
     UIView* control = nil;
 
     // TODO: For prototyping, this will suffice but it would be better to consolidate with Xib2Xaml in the long term
-    std::vector<std::pair<IID, id>> xamlSupportedControls {
+    std::vector<std::pair<IID, id>> xamlSupportedControls{
         { __uuidof(winrt::ABI::default_interface<winrt::abi<WX::Controls::TextBlock>>), [UILabel class] },
         { __uuidof(winrt::ABI::default_interface<winrt::abi<WX::Controls::TextBox>>), [UITextField class] },
         { __uuidof(winrt::ABI::default_interface<winrt::abi<WX::Controls::Button>>), [UIButton class] },
@@ -315,7 +298,8 @@ UIView* XamlUtilities::GenerateUIKitControlFromXamlType(const WF::IInspectable& 
     for (auto&& xamlControl : xamlSupportedControls) {
         WX::FrameworkElement xamlElement = nullptr;
 
-        if (SUCCEEDED(winrt::get_abi(xamlObject)->QueryInterface(xamlControl.first, reinterpret_cast<void**>(winrt::put_abi(xamlElement))))) {
+        if (SUCCEEDED(
+                winrt::get_abi(xamlObject)->QueryInterface(xamlControl.first, reinterpret_cast<void**>(winrt::put_abi(xamlElement))))) {
             Class controlClass = xamlControl.second;
             control = [[controlClass alloc] initWithFrame:CGRectZero xamlElement:objcwinrt::to_rtobj(xamlElement)];
             break;

@@ -154,8 +154,8 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit.Xaml\Slider.xaml.h">
       <DependentUpon>Slider.xaml</DependentUpon>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit.Xaml\TextBox.xaml.h">
-      <DependentUpon>TextBox.xaml</DependentUpon>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit.Xaml\TextField.xaml.h">
+      <DependentUpon>TextField.xaml</DependentUpon>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit.Xaml\ContentDialog.xaml.h">
       <DependentUpon>ContentDialog.xaml</DependentUpon>
@@ -188,8 +188,8 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit.Xaml\Slider.xaml.cpp">
       <DependentUpon>Slider.xaml</DependentUpon>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit.Xaml\TextBox.xaml.cpp">
-      <DependentUpon>TextBox.xaml</DependentUpon>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit.Xaml\TextField.xaml.cpp">
+      <DependentUpon>TextField.xaml</DependentUpon>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit.Xaml\ContentDialog.xaml.cpp">
       <DependentUpon>ContentDialog.xaml</DependentUpon>
@@ -214,7 +214,7 @@
     <Page Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit.Xaml\Slider.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit.Xaml\TextBox.xaml">
+    <Page Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit.Xaml\TextField.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit.Xaml\ContentDialog.xaml">

@@ -17,6 +17,7 @@
 
 #import "Starboard.h"
 #include <COMIncludes.h>
+#import <DWrite_3.h>
 #import <WRLHelpers.h>
 #import <ErrorHandling.h>
 #import <RawBuffer.h>
@@ -30,6 +31,13 @@
 #import <winrt/Windows.UI.Xaml.Controls.h>
 #import <winrt/Windows.UI.Xaml.Input.h>
 #include <COMIncludes_end.h>
+
+#import "UIKit/UITextInputTraits.h"
+#import "UIkit/UIKitTypes.h"
+#import "UIKit/UIColor.h"
+#import "UIkit/UIImage.h"
+#import "UIkit/UITextField.h"
+#import "StarboardXaml/DisplayTexture.h"
 
 namespace XamlControls {
 
@@ -56,6 +64,33 @@ public:
 
         winrt::Windows::UI::Xaml::Input::PointerRoutedEventArgs args = nullptr;
         winrt::copy_from_abi(args, reinterpret_cast<winrt::ABI::Windows::UI::Xaml::Input::IPointerRoutedEventArgs*>(arg1));
+
+        NSAutoreleasePool* p = [NSAutoreleasePool new];
+        _handler(sender, args);
+        [p release];
+
+        return 0;
+    }
+};
+
+class WUXRoutedEventHandler_shim
+    : public Microsoft::WRL::RuntimeClass<Microsoft::WRL::RuntimeClassFlags<Microsoft::WRL::WinRtClassicComMix>,
+                                          ABI::Windows::UI::Xaml::IRoutedEventHandler> {
+    winrt::Windows::UI::Xaml::RoutedEventHandler _handler;
+
+public:
+    WUXRoutedEventHandler_shim(const winrt::Windows::UI::Xaml::RoutedEventHandler& handler) : _handler(handler) {
+    }
+    virtual HRESULT STDMETHODCALLTYPE GetTrustLevel(TrustLevel* trustLevel) override {
+        *trustLevel = BaseTrust;
+        return S_OK;
+    }
+    HRESULT STDMETHODCALLTYPE Invoke(IInspectable* arg0, ABI::Windows::UI::Xaml::IRoutedEventArgs* arg1) override {
+        winrt::Windows::Foundation::IInspectable sender = nullptr;
+        winrt::copy_from_abi(sender, reinterpret_cast<winrt::ABI::Windows::Foundation::IInspectable*>(arg0));
+
+        winrt::Windows::UI::Xaml::RoutedEventArgs args = nullptr;
+        winrt::copy_from_abi(args, reinterpret_cast<winrt::ABI::Windows::UI::Xaml::IRoutedEventArgs*>(arg1));
 
         NSAutoreleasePool* p = [NSAutoreleasePool new];
         _handler(sender, args);
@@ -128,6 +163,69 @@ void XamlContentDialogSetDestructiveButtonIndex(const winrt::Windows::UI::Xaml::
 ////////////////////////////////////////////////////////////////////////////////////
 winrt::Windows::UI::Xaml::Controls::Grid CreateLabel();
 winrt::Windows::UI::Xaml::Controls::TextBlock GetLabelTextBlock(const winrt::Windows::UI::Xaml::Controls::Grid& labelGrid);
+
+////////////////////////////////////////////////////////////////////////////////////
+// TextField
+////////////////////////////////////////////////////////////////////////////////////
+winrt::Windows::UI::Xaml::FrameworkElement CreateTextField();
+winrt::Windows::UI::Xaml::Controls::Canvas GetTextFieldSubLayerCanvas(const winrt::Windows::UI::Xaml::FrameworkElement& textField);
+winrt::Windows::UI::Xaml::Controls::TextBox GetTextFieldTextBox(const winrt::Windows::UI::Xaml::FrameworkElement& textField);
+winrt::Windows::UI::Xaml::Controls::PasswordBox GetTextFieldPasswordBox(const winrt::Windows::UI::Xaml::FrameworkElement& textField);
+
+// setter and getter for properties
+void SetTextFieldSecureTextEntryValue(const winrt::Windows::UI::Xaml::FrameworkElement& textField, bool secureTextEntry);
+bool GetTextFieldSecureTextEntryValue(const winrt::Windows::UI::Xaml::FrameworkElement& textField);
+
+void SetTextFieldText(const winrt::Windows::UI::Xaml::FrameworkElement& textField, NSString* buttonTitle);
+NSString* GetTextFieldText(const winrt::Windows::UI::Xaml::FrameworkElement& textField);
+
+void SetTextFieldPlaceholder(const winrt::Windows::UI::Xaml::FrameworkElement& textField, NSString* placeholder);
+NSString* GetTextFieldPlaceholder(const winrt::Windows::UI::Xaml::FrameworkElement& textField);
+
+void SetTextFieldInputScope(const winrt::Windows::UI::Xaml::FrameworkElement& textField, UIKeyboardType keyboardType);
+
+void SetTextFieldEnabled(const winrt::Windows::UI::Xaml::FrameworkElement& inspectableTextField, BOOL enabled);
+bool GetTextFieldEnabled(const winrt::Windows::UI::Xaml::FrameworkElement& inspectableTextField);
+
+void TextFieldKillFocus(const winrt::Windows::UI::Xaml::FrameworkElement& inspectableTextField);
+bool TextFieldBecomeFirstResponder(const winrt::Windows::UI::Xaml::FrameworkElement& inspectableTextField);
+
+void SetTextFieldTextColor(const winrt::Windows::UI::Xaml::FrameworkElement& inspectableTextField, UIColor* color);
+UIColor* GetTextFieldTextColor(const winrt::Windows::UI::Xaml::FrameworkElement& inspectableTextField);
+
+void SetTextFieldBackgroundColor(const winrt::Windows::UI::Xaml::FrameworkElement& inspectableTextField, UIColor* backgroundColor);
+UIColor* GetTextFieldBackgroundColor(const winrt::Windows::UI::Xaml::FrameworkElement& inspectableTextField);
+
+void SetTextFieldBackgroundImage(const winrt::Windows::UI::Xaml::FrameworkElement& inspectableTextField, UIImage* backgroundImage);
+
+void SetTextFieldTextAlignment(const winrt::Windows::UI::Xaml::FrameworkElement& inspectableTextField, UITextAlignment alignment);
+UITextAlignment GetTextFieldTextAlignment(const winrt::Windows::UI::Xaml::FrameworkElement& inspectableTextField);
+
+bool GetTextFieldEditingState(const winrt::Windows::UI::Xaml::FrameworkElement& inspectableTextField);
+
+void TextFieldRegisterEventHandlers(const winrt::Windows::UI::Xaml::FrameworkElement& inspectableTextField,
+                                    const winrt::Windows::UI::Xaml::RoutedEventHandler& textChangedHandler,
+                                    const winrt::Windows::UI::Xaml::RoutedEventHandler& gotFocusHandler,
+                                    const winrt::Windows::UI::Xaml::RoutedEventHandler& lostFocusHanlder,
+                                    const winrt::Windows::UI::Xaml::RoutedEventHandler& enterKeyDownHandler);
+
+void TextFieldUnregisterEventHandlers(const winrt::Windows::UI::Xaml::FrameworkElement& inspectableTextField);
+
+void SetTextFieldVerticalTextAlignment(const winrt::Windows::UI::Xaml::FrameworkElement& inspectableTextField,
+                                       UIControlContentVerticalAlignment verticalTextAlignment);
+
+int GetTextFieldVerticalTextAlignment(const winrt::Windows::UI::Xaml::FrameworkElement& inspectableTextField);
+
+void SetTextFieldBorderStyle(const winrt::Windows::UI::Xaml::FrameworkElement& inspectableTextField, UITextBorderStyle borderStyle);
+
+UITextBorderStyle GetTextFieldBorderStyle(const winrt::Windows::UI::Xaml::FrameworkElement& inspectableTextField);
+
+void TextFieldApplyFont(const winrt::Windows::UI::Xaml::FrameworkElement& inspectableTextField,
+                        NSString* fontFamilyname,
+                        DWRITE_FONT_STRETCH fontStrech,
+                        DWRITE_FONT_STYLE fontStyle,
+                        double fontSize,
+                        DWRITE_FONT_WEIGHT fontWeight);
 
 ////////////////////////////////////////////////////////////////////////////////////
 // ScrollView

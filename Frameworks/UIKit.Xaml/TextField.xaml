@@ -1,0 +1,16 @@
+﻿<Grid
+    x:Class="UIKit.Xaml.TextField"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:UIKit.Xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    x:Name="Root">
+    <!-- 
+        Currently the backing control is dynamically created in code behind
+        if SecureEntry is NO, a TextBox is created. otherwise, a passwordBox 
+        is created as backing control. In the meantime, properties binding 
+        will be set up in code when control is loaded. 
+    -->
+</Grid>
