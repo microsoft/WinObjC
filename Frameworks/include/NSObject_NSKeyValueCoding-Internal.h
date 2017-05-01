@@ -80,39 +80,38 @@ struct ProxyOrderedBase {
 
         // These four selectors, countOfKey, objectInKeyAtIndex, keyAtIndexes:, getKey:range:,
         // are used to back the proxy orderedSet.
-        setIfResponds(target, std::string("countOf").append(std::string{ toupper(rawKey[0]) }).append(rawKey + 1), &_targetSelectors.count);
+        setIfResponds(target, std::string("countOf").append(1, toupper(rawKey[0])).append(rawKey + 1), &_targetSelectors.count);
         setIfResponds(target,
-                      std::string("objectIn").append(std::string{ toupper(rawKey[0]) }).append(rawKey + 1).append("AtIndex:"),
+                      std::string("objectIn").append(1, toupper(rawKey[0])).append(rawKey + 1).append("AtIndex:"),
                       &_targetSelectors.objectIn);
         setIfResponds(target, std::string(rawKey).append("AtIndexes:"), &_targetSelectors.objectsAt);
         setIfResponds(target,
-                      std::string("get").append(std::string{ toupper(rawKey[0]) }).append(rawKey + 1).append(":range:"),
+                      std::string("get").append(1, toupper(rawKey[0])).append(rawKey + 1).append(":range:"),
                       &_targetSelectors.getRange);
 
         // The mutation selectors insert, remove, and replace (with Key substituted where necessary)
         // are used to back the mutation-related methods on NSMutableOrderedSet.
         setIfResponds(target,
-                      std::string("insertObject:in").append(std::string{ toupper(rawKey[0]) }).append(rawKey + 1).append("AtIndex:"),
+                      std::string("insertObject:in").append(1, toupper(rawKey[0])).append(rawKey + 1).append("AtIndex:"),
                       &_targetSelectors.insertAtOne);
         setIfResponds(target,
-                      std::string("removeObjectFrom").append(std::string{ toupper(rawKey[0]) }).append(rawKey + 1).append("AtIndex:"),
+                      std::string("removeObjectFrom").append(1, toupper(rawKey[0])).append(rawKey + 1).append("AtIndex:"),
                       &_targetSelectors.removeAtOne);
         setIfResponds(target,
-                      std::string("insert").append(std::string{ toupper(rawKey[0]) }).append(rawKey + 1).append(":atIndexes:"),
+                      std::string("insert").append(1, toupper(rawKey[0])).append(rawKey + 1).append(":atIndexes:"),
                       &_targetSelectors.insertAtMany);
         setIfResponds(target,
-                      std::string("remove").append(std::string{ toupper(rawKey[0]) }).append(rawKey + 1).append("AtIndexes:"),
+                      std::string("remove").append(1, toupper(rawKey[0])).append(rawKey + 1).append("AtIndexes:"),
                       &_targetSelectors.removeAtMany);
-        setIfResponds(
-            target,
-            std::string("replaceObjectIn").append(std::string{ toupper(rawKey[0]) }).append(rawKey + 1).append("AtIndex:withObject"),
-            &_targetSelectors.replaceOne);
+        setIfResponds(target,
+                      std::string("replaceObjectIn").append(1, toupper(rawKey[0])).append(rawKey + 1).append("AtIndex:withObject"),
+                      &_targetSelectors.replaceOne);
         setIfResponds(target,
                       std::string("replace")
-                          .append(std::string{ toupper(rawKey[0]) })
+                          .append(1, toupper(rawKey[0]))
                           .append(rawKey + 1)
                           .append("AtIndexes:with")
-                          .append(std::string{ toupper(rawKey[0]) })
+                          .append(1, toupper(rawKey[0]))
                           .append(rawKey + 1)
                           .append(":"),
                       &_targetSelectors.replaceMany);

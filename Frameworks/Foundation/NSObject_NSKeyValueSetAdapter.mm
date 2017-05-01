@@ -66,19 +66,29 @@ struct ProxySet {
         const char* rawKey = [key UTF8String];
 
         // Required selectors count, objectEnumerator, and member: to back proxy set
-        setIfResponds(target, woc::string::format("countOf%c%s", toupper(rawKey[0]), &rawKey[1]), &_targetSelectors.count);
-        setIfResponds(target, woc::string::format("enumeratorOf%c%s", toupper(rawKey[0]), &rawKey[1]), &_targetSelectors.enumeratorOf);
-        setIfResponds(target, woc::string::format("memberOf%c%s:", toupper(rawKey[0]), &rawKey[1]), &_targetSelectors.memberOf);
+        setIfResponds(target, std::string("countOf").append(1, toupper(rawKey[0])).append(rawKey + 1), &_targetSelectors.count);
+        setIfResponds(target, std::string("enumeratorOf").append(1, toupper(rawKey[0])).append(rawKey + 1), &_targetSelectors.enumeratorOf);
+        setIfResponds(target,
+                      std::string("memberOf").append(1, toupper(rawKey[0])).append(rawKey + 1).append(":"),
+                      &_targetSelectors.memberOf);
 
         // Required selectors addObject:, removeObject:, unionSet:, and minusSet: to back mutable proxy set
-        setIfResponds(target, woc::string::format("add%c%sObject:", toupper(rawKey[0]), &rawKey[1]), &_targetSelectors.addObject);
-        setIfResponds(target, woc::string::format("remove%c%sObject:", toupper(rawKey[0]), &rawKey[1]), &_targetSelectors.removeObject);
-        setIfResponds(target, woc::string::format("add%c%s:", toupper(rawKey[0]), &rawKey[1]), &_targetSelectors.unionSet);
-        setIfResponds(target, woc::string::format("remove%c%s:", toupper(rawKey[0]), &rawKey[1]), &_targetSelectors.minusSet);
+        setIfResponds(target,
+                      std::string("add").append(1, toupper(rawKey[0])).append(rawKey + 1).append("Object:"),
+                      &_targetSelectors.addObject);
+        setIfResponds(target,
+                      std::string("remove").append(1, toupper(rawKey[0])).append(rawKey + 1).append("Object:"),
+                      &_targetSelectors.removeObject);
+        setIfResponds(target, std::string("add").append(1, toupper(rawKey[0])).append(rawKey + 1).append(":"), &_targetSelectors.unionSet);
+        setIfResponds(target,
+                      std::string("remove").append(1, toupper(rawKey[0])).append(rawKey + 1).append(":"),
+                      &_targetSelectors.minusSet);
 
         // Optional selectors that will be used if available
-        setIfResponds(target, woc::string::format("intersect%c%s:", toupper(rawKey[0]), &rawKey[1]), &_targetSelectors.intersect);
-        setIfResponds(target, woc::string::format("set%c%s:", toupper(rawKey[0]), &rawKey[1]), &_targetSelectors.setSet);
+        setIfResponds(target,
+                      std::string("intersect").append(1, toupper(rawKey[0])).append(rawKey + 1).append(":"),
+                      &_targetSelectors.intersectSet);
+        setIfResponds(target, std::string("set").append(1, toupper(rawKey[0])).append(rawKey + 1).append(":"), &_targetSelectors.setSet);
 
         _targetSelectors.get = KVCGetterForPropertyName(target, rawKey);
         _targetSelectors.set = KVCSetterForPropertyName(target, rawKey);
@@ -149,8 +159,8 @@ struct ProxySet {
     }
 
     void intersectSet(NSSet* set) {
-        if (_targetSelectors.intersect) {
-            _call<void>(_target, _targetSelectors.intersect, set);
+        if (_targetSelectors.intersectSet) {
+            _call<void>(_target, _targetSelectors.intersectSet, set);
         } else {
             // TODO #2641:: call will/didChangeValueForKey:withSetMutation
             getMutateAndSet(@selector(intersectSet:), set);
@@ -184,7 +194,7 @@ private:
         SEL removeObject;
         SEL minusSet;
         // optional
-        SEL intersect;
+        SEL intersectSet;
         SEL setSet;
 
         /* Brute Force Mutator */
