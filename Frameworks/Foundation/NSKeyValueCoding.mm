@@ -256,9 +256,9 @@ static bool tryGetArrayAdapter(id self, const char* key, id* ret) {
 }
 
 static bool tryGetSetAdapter(id self, const char* key, id* ret) {
-    auto countSelectorString(woc::string::format("countOf%c%s", toupper(key[0]), key + 1));
-    auto enumeratorOfSelectorString(woc::string::format("enumeratorOf%c%s", toupper(key[0]), key + 1));
-    auto memberOfSelectorString(woc::string::format("memberOf%c%s:", toupper(key[0]), key + 1));
+    std::string countSelectorString = std::string("countOf").append(std::string{ toupper(key[0]) }).append(key + 1);
+    std::string enumeratorOfSelectorString = std::string("enumeratorOf").append(std::string{ toupper(key[0]) }).append(key + 1);
+    std::string memberOfSelectorString = std::string("memberOf").append(std::string{ toupper(key[0]) }).append(key + 1).append(":");
 
     SEL countSelector = sel_registerName(countSelectorString.c_str());
     SEL enumeratorOfSelector = sel_registerName(enumeratorOfSelectorString.c_str());
