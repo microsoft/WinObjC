@@ -214,21 +214,33 @@ TEST(NSObject, KVCMutableSetAdapters_RemoveObject) {
     EXPECT_TRUE([test fakeMutableRemoved]);
 }
 
-class KVCMutableSetAdapters : public ::testing::TestWithParam<::testing::tuple<SEL, SEL>> {};
-
-TEST_P(KVCMutableSetAdapters, ModifySet) {
+TEST(NSObject, KVCMutableSetAdapters_UnionSet) {
     auto test = [TestSetAdapterObject test];
     NSMutableSet* fakeCollection = [test mutableSetValueForKey:@"fakeMutableCollection"];
-    [fakeCollection performSelector:(::testing::get<0>(GetParam())) withObject:[NSSet setWithObject:@"TEST"]];
-    EXPECT_TRUE((BOOL(*)(id, SEL))objc_msgSend(fakeCollection, (::testing::get<1>(GetParam()))));
+    [fakeCollection unionSet:[NSSet setWithObject:@"TEST"]];
+    EXPECT_TRUE([test fakeMutableUnioned]);
 }
 
-INSTANTIATE_TEST_CASE_P(NSObject,
-                        KVCMutableSetAdapters,
-                        ::testing::Values(::testing::make_tuple(@selector(unionSet:), @selector(fakeMutableUnioned)),
-                                          ::testing::make_tuple(@selector(minusSet:), @selector(fakeMutableMinused)),
-                                          ::testing::make_tuple(@selector(intersectSet:), @selector(fakeMutableIntersected)),
-                                          ::testing::make_tuple(@selector(setSet:), @selector(fakeMutableSetCalled))));
+TEST(NSObject, KVCMutableSetAdapters_MinusSet) {
+    auto test = [TestSetAdapterObject test];
+    NSMutableSet* fakeCollection = [test mutableSetValueForKey:@"fakeMutableCollection"];
+    [fakeCollection minusSet:[NSSet setWithObject:@"TEST"]];
+    EXPECT_TRUE([test fakeMutableMinused]);
+}
+
+TEST(NSObject, KVCMutableSetAdapters_IntersectSet) {
+    auto test = [TestSetAdapterObject test];
+    NSMutableSet* fakeCollection = [test mutableSetValueForKey:@"fakeMutableCollection"];
+    [fakeCollection intersectSet:[NSSet setWithObject:@"TEST"]];
+    EXPECT_TRUE([test fakeMutableIntersected]);
+}
+
+TEST(NSObject, KVCMutableSetAdapters_SetSet) {
+    auto test = [TestSetAdapterObject test];
+    NSMutableSet* fakeCollection = [test mutableSetValueForKey:@"fakeMutableCollection"];
+    [fakeCollection setSet:[NSSet setWithObject:@"TEST"]];
+    EXPECT_TRUE([test fakeMutableSetCalled]);
+}
 
 TEST(NSObject, KVCSetMutableAdapters_ImmutableWithBasicAccessors) {
     TestSetAdapterObject* testObject = [TestSetAdapterObject test];
