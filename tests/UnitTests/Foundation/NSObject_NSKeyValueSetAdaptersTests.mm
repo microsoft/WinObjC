@@ -220,7 +220,7 @@ TEST_P(KVCMutableSetAdapters, ModifySet) {
     auto test = [TestSetAdapterObject test];
     NSMutableSet* fakeCollection = [test mutableSetValueForKey:@"fakeMutableCollection"];
     [fakeCollection performSelector:(::testing::get<0>(GetParam())) withObject:[NSSet setWithObject:@"TEST"]];
-    EXPECT_TRUE((BOOL)[test performSelector:(::testing::get<1>(GetParam()))]);
+    EXPECT_TRUE((BOOL(*)(id, SEL))objc_msgSend(fakeCollection, (::testing::get<1>(GetParam()))));
 }
 
 INSTANTIATE_TEST_CASE_P(NSObject,
