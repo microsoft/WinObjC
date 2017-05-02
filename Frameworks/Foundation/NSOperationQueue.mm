@@ -23,6 +23,7 @@
 #import "Starboard.h"
 
 #import <atomic>
+#import <map>
 #import <mutex>
 #import <queue>
 
@@ -51,22 +52,16 @@ static inline long _QOSClassForNSQualityOfService(NSQualityOfService quality) {
     }
 }
 
-// Private helper that compares two NSOperations and orders the higher-priority one first
-static NSInteger _compareOperationPriority(NSOperation* op1, NSOperation* op2, void* context) {
-    NSOperationQueuePriority pri1 = op1.queuePriority;
-    NSOperationQueuePriority pri2 = op2.queuePriority;
-    if (pri1 > pri2) {
-        return NSOrderedAscending;
-    } else if (pri1 < pri2) {
-        return NSOrderedDescending;
-    }
-    return NSOrderedSame;
-}
-
 // STL compare for NSOperation*, sorting by queuePriority, putting the greatest priority first
-struct _NSOperation_ComparePrioritySTL {
+// If queue priorities are equal, put the lower queueIndex first
+struct _NSOperation_CompareSTL {
     bool operator()(NSOperation* lhs, NSOperation* rhs) {
-        return lhs.queuePriority < rhs.queuePriority;
+        const NSOperationQueuePriority priLhs = lhs.queuePriority;
+        const NSOperationQueuePriority priRhs = rhs.queuePriority;
+        if (priLhs != priRhs) {
+            return priLhs < priRhs;
+        }
+        return [lhs _queueIndex] > [rhs _queueIndex];
     }
 };
 
@@ -138,8 +133,10 @@ static char _NSOperationQueue_IsReadyContext;
     // 2) delayed due to the queue's suspension, or due to hitting maxConcurrentOperations
     // 3) sorted according to queuePriority, with highest priority first
     // Non-ready operations are handled separately
-    std::priority_queue<NSOperation*, std::vector<NSOperation*>, _NSOperation_ComparePrioritySTL> _queuedOperations;
+    std::priority_queue<NSOperation*, std::vector<NSOperation*>, _NSOperation_CompareSTL> _queuedOperations;
     std::recursive_mutex _concurrentOperationCountLock; // Protects _currentConcurrentOperationCount and _queuedOperations
+
+    std::atomic<unsigned int> _operationIndex;
 }
 
 - (BOOL)_belowMaxConcurrentOperations;
@@ -254,6 +251,8 @@ static char _NSOperationQueue_IsReadyContext;
         } else {
             [self _setDispatchQueueUsingQualityOfService];
         }
+
+        _operationIndex = 0;
     }
     return self;
 }
@@ -335,7 +334,7 @@ static char _NSOperationQueue_IsReadyContext;
                                          userInfo:nil];
         }
 
-        if (!op._markInQueue) {
+        if (![op _canAddToQueueAsIndex:++_operationIndex]) {
             @throw [NSException exceptionWithName:NSInvalidArgumentException
                                            reason:@"operation is already in an operation queue"
                                          userInfo:nil];
@@ -362,18 +361,23 @@ static char _NSOperationQueue_IsReadyContext;
  @Status Interoperable
 */
 - (void)addOperations:(NSArray<NSOperation*>*)ops waitUntilFinished:(BOOL)wait {
-    NSArray<NSOperation*>* sortedOps = [ops sortedArrayUsingFunction:_compareOperationPriority context:nullptr];
+    // Sort ops by queue priority and add order
+    std::multimap<NSOperationQueuePriority, NSOperation*, std::greater<NSOperationQueuePriority>> sortedOps;
+    for (NSOperation* operation in ops) {
+        sortedOps.emplace(operation.queuePriority, operation);
+    }
+
     [self willChangeValueForKey:@"operations"];
     [self willChangeValueForKey:@"operationCount"];
-    for (NSOperation* operation in sortedOps) {
-        [self addOperation:operation];
+    for (auto it : sortedOps) {
+        [self addOperation:it.second];
     }
     [self didChangeValueForKey:@"operationCount"];
     [self didChangeValueForKey:@"operations"];
 
     if (wait) {
-        for (NSOperation* operation in sortedOps) {
-            [operation waitUntilFinished];
+        for (auto it : sortedOps) {
+            [it.second waitUntilFinished];
         }
     }
 }
