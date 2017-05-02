@@ -256,6 +256,9 @@ struct ProxyOrderedBase {
         }
     }
 
+protected:
+    virtual id _getEmptyContainer() = 0;
+
 private:
     StrongId<NSObject> _target;
     StrongId<NSString> _key;
@@ -301,7 +304,7 @@ private:
         if (currentValue && !_ivar) {
             currentValue = [[currentValue mutableCopy] autorelease];
         } else if (!currentValue && _treatNilValueAsEmptyOrderedSet) {
-            currentValue = [NSMutableOrderedSet orderedSet];
+            currentValue = _getEmptyContainer();
         }
 
         auto imp = objc_msg_lookup(currentValue, cmd);

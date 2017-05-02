@@ -53,15 +53,27 @@
 * holds true.
 */
 
+namespace {
+struct ProxyArray : public ProxyOrderedBase {
+    ProxyArray(id target, NSString* key, objc_ivar* ivar) : ProxyOrderedBase(target, key, ivar) {
+    }
+
+protected:
+    virtual id _getEmptyContainer() override {
+        return [NSMutableArray array];
+    }
+};
+}
+
 @interface _NSKeyProxyArray () {
-    std::shared_ptr<ProxyOrderedBase> _proxyArray;
+    std::shared_ptr<ProxyArray> _proxyArray;
 }
 @end
 
 @interface _NSMutableKeyProxyArray () {
-    std::shared_ptr<ProxyOrderedBase> _proxyArray;
+    std::shared_ptr<ProxyArray> _proxyArray;
 }
-- (id)_initWithProxyArray:(std::shared_ptr<ProxyOrderedBase>)proxyArray;
+- (id)_initWithProxyArray:(std::shared_ptr<ProxyArray>)proxyArray;
 @end
 
 @implementation _NSKeyProxyArray
@@ -71,7 +83,7 @@
 
 - (id)initWithObject:(id)object key:(NSString*)key ivar:(struct objc_ivar*)ivar {
     if (self = [super init]) {
-        _proxyArray = std::make_shared<ProxyOrderedBase>(object, key, ivar);
+        _proxyArray = std::make_shared<ProxyArray>(object, key, ivar);
     }
     return self;
 }
@@ -108,12 +120,12 @@
 
 - (id)initWithObject:(id)object key:(NSString*)key ivar:(struct objc_ivar*)ivar {
     if (self = [super init]) {
-        _proxyArray = std::make_shared<ProxyOrderedBase>(object, key, ivar);
+        _proxyArray = std::make_shared<ProxyArray>(object, key, ivar);
     }
     return self;
 }
 
-- (id)_initWithProxyArray:(std::shared_ptr<ProxyOrderedBase>)proxyArray {
+- (id)_initWithProxyArray:(std::shared_ptr<ProxyArray>)proxyArray {
     if (self = [super init]) {
         _proxyArray = std::move(proxyArray);
     }

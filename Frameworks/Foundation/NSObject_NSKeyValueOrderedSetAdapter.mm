@@ -50,10 +50,22 @@
 * holds true.
 */
 
-@interface _NSMutableKeyProxyOrderedSet () {
-    std::shared_ptr<ProxyOrderedBase> _proxyOrderedSet;
+namespace {
+struct ProxyOrderedSet : public ProxyOrderedBase {
+    ProxyOrderedSet(id target, NSString* key, objc_ivar* ivar) : ProxyOrderedBase(target, key, ivar) {
+    }
+
+protected:
+    virtual id _getEmptyContainer() override {
+        return [NSMutableOrderedSet orderedSet];
+    }
+};
 }
-- (id)_initWithProxyOrderedSet:(std::shared_ptr<ProxyOrderedBase>)proxyOrderedSet;
+
+@interface _NSMutableKeyProxyOrderedSet () {
+    std::shared_ptr<ProxyOrderedSet> _proxyOrderedSet;
+}
+- (id)_initWithProxyOrderedSet:(std::shared_ptr<ProxyOrderedSet>)proxyOrderedSet;
 @end
 
 @implementation _NSMutableKeyProxyOrderedSet
@@ -63,12 +75,12 @@
 
 - (id)initWithObject:(id)object key:(NSString*)key ivar:(struct objc_ivar*)ivar {
     if (self = [super init]) {
-        _proxyOrderedSet = std::make_shared<ProxyOrderedBase>(object, key, ivar);
+        _proxyOrderedSet = std::make_shared<ProxyOrderedSet>(object, key, ivar);
     }
     return self;
 }
 
-- (id)_initWithProxyOrderedSet:(std::shared_ptr<ProxyOrderedBase>)proxyOrderedSet {
+- (id)_initWithProxyOrderedSet:(std::shared_ptr<ProxyOrderedSet>)proxyOrderedSet {
     if (self = [super init]) {
         _proxyOrderedSet = std::move(proxyOrderedSet);
     }
