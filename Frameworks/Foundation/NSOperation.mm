@@ -56,7 +56,9 @@ static wchar_t TAG[] = L"NSOperation";
     std::recursive_mutex _completionBlockLock; // guards _completionBlock
 
     std::atomic<NSOperationQueuePriority> _queuePriority;
-    std::atomic<BOOL> _inQueue;
+
+    bool _inQueue;
+    unsigned int _queueIndex;
 
     bool _observingSelfIsFinished;
 }
@@ -146,6 +148,8 @@ static const NSString* NSOperationContext = @"context";
         _ready = YES;
         [self addObserver:self forKeyPath:@"isFinished" options:0 context:(void*)NSOperationContext];
         _observingSelfIsFinished = true;
+
+        _queuePriority = NSOperationQueuePriorityNormal;
     }
 
     return self;
@@ -387,8 +391,21 @@ static const NSString* NSOperationContext = @"context";
     }
 }
 
-- (BOOL)_markInQueue {
-    return !_inQueue.fetch_or(YES); // only returns true for the first caller
+- (unsigned int)_queueIndex {
+    @synchronized(self) {
+        return _queueIndex;
+    }
+}
+
+- (BOOL)_canAddToQueueAsIndex:(unsigned int)queueIndex {
+    @synchronized(self) {
+        if (!_inQueue) {
+            _inQueue = true;
+            _queueIndex = queueIndex;
+            return YES;
+        }
+        return NO;
+    }
 }
 
 @end
