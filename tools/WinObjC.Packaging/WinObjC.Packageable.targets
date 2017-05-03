@@ -78,7 +78,8 @@
         <PackagePath>$(PackageResourcesBasePath)\%(Filename)%(Extension)</PackagePath>
       </PackageFile>
       <!-- Package up .pri files associated with any .winmds -->
-      <PackageFile Include="$(ProjectPriFullPath)" Condition="Exists('$(ProjectPriFullPath)') and Exists('@(WinMDFullPath)')">
+      <_PriFileNames Include="$(ProjectPriFullPath)" />
+      <PackageFile Include="@(_PriFileNames)" Condition="Exists('%(FullPath)') and Exists('$(_WinMDFilePath)')">
         <PackagePath>$(PackageContentBasePath)\%(Filename)%(Extension)</PackagePath>
       </PackageFile>
 
