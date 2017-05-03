@@ -143,8 +143,12 @@ rgb hsv2rgb(hsv in) {
 
 #pragma region Inits
 
-@implementation _UIColorConcrete {
-    woc::StrongCF<CGColorRef> _cgColor;
+@implementation UICGColorPrototype
+
+PROTOTYPE_CLASS_REQUIRED_IMPLS(_UIColorConcrete)
+
+- (instancetype)init {
+    return [self initWithRed:0 green:0 blue:0 alpha:0];
 }
 
 - (instancetype)initWithHue:(CGFloat)h saturation:(CGFloat)s brightness:(CGFloat)v alpha:(CGFloat)a {
@@ -161,56 +165,36 @@ rgb hsv2rgb(hsv in) {
 }
 
 - (instancetype)initWithRed:(CGFloat)r green:(CGFloat)g blue:(CGFloat)b alpha:(CGFloat)a {
-    if (self = [super init]) {
-        _cgColor.attach(CGColorCreateGenericRGB(r, g, b, a));
-    }
-
-    return self;
+    return reinterpret_cast<UICGColorPrototype*>(CGColorCreateGenericRGB(r, g, b, a));
 }
 
 - (instancetype)initWithWhite:(CGFloat)gray alpha:(CGFloat)alpha {
-    if (self = [super init]) {
-        _cgColor.attach(CGColorCreateGenericGray(gray, alpha));
-    }
-
-    return self;
+    return reinterpret_cast<UICGColorPrototype*>(CGColorCreateGenericGray(gray, alpha));
 }
 
 - (instancetype)initWithPatternImage:(UIImage*)image {
     CGImageRef img = static_cast<CGImageRef>([image CGImage]);
-    if (img == nullptr) {
-        [self release];
-        return nil;
-    }
-
-    if (self = [super init]) {
-        auto pattern = woc::MakeStrongCF<CGPatternRef>(_CGPatternCreateFromImage(img));
-        _cgColor.attach(CGColorCreateWithPattern(CGImageGetColorSpace(img), pattern, nullptr));
-    }
-
-    return self;
+    auto pattern = woc::MakeStrongCF<CGPatternRef>(_CGPatternCreateFromImage(img));
+    return reinterpret_cast<UICGColorPrototype*>(CGColorCreateWithPattern(CGImageGetColorSpace(img), pattern, nullptr));
 }
 
 - (instancetype)initWithCGColor:(CGColorRef)cgColor {
-    if (cgColor == nullptr) {
-        [self release];
-        return nil;
-    }
-
-    if (self = [super init]) {
-        _cgColor = cgColor;
-    }
-
-    return self;
+    return reinterpret_cast<UICGColorPrototype*>(CGColorCreateCopy(cgColor));
 }
+
+@end
+
+@implementation _UIColorConcrete
+
+BRIDGED_CLASS_REQUIRED_IMPLS(CGColorRef, CGColorGetTypeID, UIColor, _UIColorConcrete)
 
 #pragma endregion Inits
 
 - (void)set {
     //  Set current context color
     if (UIGraphicsGetCurrentContext()) {
-        CGContextSetFillColorWithColor(UIGraphicsGetCurrentContext(), _cgColor);
-        CGContextSetStrokeColorWithColor(UIGraphicsGetCurrentContext(), _cgColor);
+        CGContextSetFillColorWithColor(UIGraphicsGetCurrentContext(), reinterpret_cast<CGColorRef>(self));
+        CGContextSetStrokeColorWithColor(UIGraphicsGetCurrentContext(), reinterpret_cast<CGColorRef>(self));
     } else {
         TraceVerbose(TAG, L"UIColor::set - context not set");
     }
@@ -219,7 +203,7 @@ rgb hsv2rgb(hsv in) {
 - (void)setFill {
     //  Set current context color
     if (UIGraphicsGetCurrentContext()) {
-        CGContextSetFillColorWithColor(UIGraphicsGetCurrentContext(), _cgColor);
+        CGContextSetFillColorWithColor(UIGraphicsGetCurrentContext(), reinterpret_cast<CGColorRef>(self));
     } else {
         TraceVerbose(TAG, L"UIColor::setFill - context not set");
     }
@@ -227,22 +211,26 @@ rgb hsv2rgb(hsv in) {
 
 - (void)setStroke {
     //  Set current context color
-    CGContextSetStrokeColorWithColor(UIGraphicsGetCurrentContext(), _cgColor);
+    CGContextSetStrokeColorWithColor(UIGraphicsGetCurrentContext(), reinterpret_cast<CGColorRef>(self));
 }
 
 - (UIColor*)colorWithAlphaComponent:(CGFloat)alpha {
-    auto color = woc::MakeStrongCF<CGColorRef>(CGColorCreateCopyWithAlpha(_cgColor, alpha));
+    auto color = woc::MakeStrongCF<CGColorRef>(CGColorCreateCopyWithAlpha(reinterpret_cast<CGColorRef>(self), alpha));
     return [UIColor colorWithCGColor:color];
 }
 
 - (CGColorRef)CGColor {
-    return _cgColor;
+    return reinterpret_cast<CGColorRef>(self);
 }
 
 @end
 
 // Const colors are expected to be a singleton
 @implementation _UIColorConcreteConst
+
++ (id)alloc {
+    return static_cast<id>([UIColor allocWithZone:nil]);
+}
 
 - (id)autorelease {
     return self;

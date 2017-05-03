@@ -44,16 +44,7 @@ static const wchar_t* TAG = L"UIColor";
 
 @implementation UIColor
 
-/**
- @Status Interoperable
-*/
-+ (NSObject*)allocWithZone:(NSZone*)zone {
-    if (self == [UIColor class]) {
-        return [_UIColorConcrete allocWithZone:zone];
-    }
-
-    return [super allocWithZone:zone];
-}
+BASE_CLASS_REQUIRED_IMPLS(UIColor, UICGColorPrototype, CGColorGetTypeID);
 
 /**
  @Status Interoperable

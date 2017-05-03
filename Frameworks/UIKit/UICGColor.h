@@ -17,6 +17,9 @@
 
 #import <UIKit/UIColor.h>
 
+@interface UICGColorPrototype : UIColor
+@end
+
 @interface _UIColorConcrete : UIColor
 @end
 
