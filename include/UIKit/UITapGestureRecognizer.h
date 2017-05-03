@@ -32,11 +32,6 @@
 
 #import "UIGestureRecognizer.h"
 
-struct savedTouch {
-    id _touch;
-    CGPoint _savedPos;
-};
-
 UIKIT_EXPORT_CLASS
 @interface UITapGestureRecognizer : UIGestureRecognizer
 

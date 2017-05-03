@@ -34,6 +34,11 @@
 
 #import "_UIGestureCoordinator.h"
 
+struct savedTouch {
+    id _touch;
+    CGPoint _savedPos;
+};
+
 static const wchar_t* TAG = L"UITapGestureRecognizer";
 
 static id _pendingTaps;
