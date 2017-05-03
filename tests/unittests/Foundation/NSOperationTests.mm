@@ -1372,3 +1372,87 @@ TEST(NSOperation, NotReady_SuspendedOperations) {
                         2),
                     "Operation did not finish in time.");
 }
+
+TEST(NSOperation, OrderOfOperations_SamePriority) {
+    __block NSOperationQueue* queue = [[NSOperationQueue new] autorelease];
+    __block NSMutableArray* array = [[NSMutableArray new] autorelease];
+
+    queue.suspended = YES;
+    queue.maxConcurrentOperationCount = 1;
+
+    [queue addOperationWithBlock:^void() {
+        [array addObject:@0];
+    }];
+    [queue addOperationWithBlock:^void() {
+        [array addObject:@1];
+    }];
+    [queue addOperationWithBlock:^void() {
+        [array addObject:@2];
+    }];
+    [queue addOperationWithBlock:^void() {
+        [array addObject:@3];
+    }];
+    [queue addOperationWithBlock:^void() {
+        [array addObject:@4];
+    }];
+
+    queue.suspended = NO;
+    ASSERT_TRUE_MSG(_waitOnBlockToFinish(
+                        ^(void) {
+                            [queue waitUntilAllOperationsAreFinished];
+                        },
+                        2),
+                    "Operations did not finish in time.");
+
+    // When operations are all the same priority, queue should execute first-in first-out
+    NSArray* expected = @[ @0, @1, @2, @3, @4 ];
+    EXPECT_OBJCEQ(expected, array);
+    EXPECT_EQ(0, queue.operations.count);
+}
+
+TEST(NSOperation, OrderOfOperations_DifferentPriority) {
+    __block NSOperationQueue* queue = [[NSOperationQueue new] autorelease];
+    __block NSMutableArray* array = [[NSMutableArray new] autorelease];
+
+    queue.suspended = YES;
+    queue.maxConcurrentOperationCount = 1;
+    NSBlockOperation* op0 = [NSBlockOperation blockOperationWithBlock:^void() {
+        [array addObject:@0];
+    }];
+    NSBlockOperation* op1 = [NSBlockOperation blockOperationWithBlock:^void() {
+        [array addObject:@1];
+    }];
+    NSBlockOperation* op2 = [NSBlockOperation blockOperationWithBlock:^void() {
+        [array addObject:@2];
+    }];
+    NSBlockOperation* op3 = [NSBlockOperation blockOperationWithBlock:^void() {
+        [array addObject:@3];
+    }];
+    NSBlockOperation* op4 = [NSBlockOperation blockOperationWithBlock:^void() {
+        [array addObject:@4];
+    }];
+    NSBlockOperation* op5 = [NSBlockOperation blockOperationWithBlock:^void() {
+        [array addObject:@5];
+    }];
+
+    op0.queuePriority = NSOperationQueuePriorityNormal;
+    op1.queuePriority = NSOperationQueuePriorityLow;
+    op2.queuePriority = NSOperationQueuePriorityVeryLow;
+    op3.queuePriority = NSOperationQueuePriorityHigh;
+    op4.queuePriority = NSOperationQueuePriorityHigh;
+    op5.queuePriority = NSOperationQueuePriorityVeryLow;
+
+    __block NSArray<NSOperation*>* ops = @[ op0, op1, op2, op3, op4, op5 ];
+
+    queue.suspended = NO;
+    ASSERT_TRUE_MSG(_waitOnBlockToFinish(
+                        ^(void) {
+                            [queue addOperations:ops waitUntilFinished:YES];
+                        },
+                        2),
+                    "Operations did not finish in time.");
+
+    // Should be sorted first by priority, then by first-in first out
+    NSArray* expected = @[ @3, @4, @0, @1, @2, @5 ];
+    ASSERT_OBJCEQ(expected, array);
+}
