@@ -19,7 +19,6 @@
 #import <Starboard/String.h>
 
 #import "NSDelayedPerform.h"
-#import "NSObject_NSKeyValueArrayAdapter-Internal.h"
 #import "NSObject_NSKeyValueCoding-Internal.h"
 #import "NSRunLoop+Internal.h"
 #import "NSThread-Internal.h"
@@ -256,6 +255,24 @@ static bool tryGetArrayAdapter(id self, const char* key, id* ret) {
     return true;
 }
 
+static bool tryGetSetAdapter(id self, const char* key, id* ret) {
+    std::string countSelectorString = std::string("countOf").append(1, toupper(key[0])).append(key + 1);
+    std::string enumeratorOfSelectorString = std::string("enumeratorOf").append(1, toupper(key[0])).append(key + 1);
+    std::string memberOfSelectorString = std::string("memberOf").append(1, toupper(key[0])).append(key + 1).append(":");
+
+    SEL countSelector = sel_registerName(countSelectorString.c_str());
+    SEL enumeratorOfSelector = sel_registerName(enumeratorOfSelectorString.c_str());
+    SEL memberOfSelector = sel_registerName(memberOfSelectorString.c_str());
+
+    if ([self respondsToSelector:countSelector] && [self respondsToSelector:enumeratorOfSelector] &&
+        [self respondsToSelector:memberOfSelector]) {
+        *ret = [_NSKeyProxySet proxySetForObject:self key:[NSString stringWithUTF8String:key] ivar:nullptr];
+        return true;
+    }
+
+    return false;
+}
+
 /**
  @Status Caveat
  @Notes Does not support aggregate functions.
@@ -285,8 +302,7 @@ static bool tryGetArrayAdapter(id self, const char* key, id* ret) {
 }
 
 /**
- @Status Caveat
- @Notes Does not support set adapters
+ @Status Interoperable
 */
 - (id)valueForKey:(NSString*)key {
     if ([key length] == 0) {
@@ -304,7 +320,10 @@ static bool tryGetArrayAdapter(id self, const char* key, id* ret) {
     if (tryGetArrayAdapter(self, rawKey, &ret)) {
         return ret;
     }
-    // TODO: Add NSMutableSet adapter and its support machinery.
+
+    if (tryGetSetAdapter(self, rawKey, &ret)) {
+        return ret;
+    }
 
     auto ivar = KVCIvarForPropertyName(self, rawKey);
     if (ivar && KVCGetViaIvar(self, ivar, &ret)) {
@@ -567,39 +586,59 @@ bool KVCSetViaIvar(NSObject* self, struct objc_ivar* ivar, id value, NSString* k
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 - (NSMutableSet*)mutableSetValueForKey:(NSString*)key {
-    UNIMPLEMENTED();
-    return StubReturn();
+    if ([key length] == 0) {
+        // Bail quickly
+        return [self valueForUndefinedKey:key];
+    }
+
+    struct objc_ivar* ivar = KVCIvarForPropertyName(self, [key UTF8String]);
+    return [_NSMutableKeyProxySet proxySetForObject:self key:key ivar:ivar];
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interopertable
 */
 - (NSMutableSet*)mutableSetValueForKeyPath:(NSString*)keyPath {
-    UNIMPLEMENTED();
-    return StubReturn();
+    NSString* restOfKeypath = nil;
+    NSString* key = _NSKVCSplitKeypath(keyPath, &restOfKeypath);
+
+    if (restOfKeypath) {
+        id val = [self valueForKey:key];
+        return [val mutableSetValueForKeyPath:restOfKeypath];
+    }
+
+    return [self mutableSetValueForKey:key];
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 - (NSMutableOrderedSet*)mutableOrderedSetValueForKey:(NSString*)key {
-    UNIMPLEMENTED();
-    return StubReturn();
+    if ([key length] == 0) {
+        // Bail quickly
+        return [self valueForUndefinedKey:key];
+    }
+
+    struct objc_ivar* ivar = KVCIvarForPropertyName(self, [key UTF8String]);
+    return [_NSMutableKeyProxyOrderedSet proxyOrderedSetForObject:self key:key ivar:ivar];
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 - (NSMutableOrderedSet*)mutableOrderedSetValueForKeyPath:(NSString*)keyPath {
-    UNIMPLEMENTED();
-    return StubReturn();
+    NSString* restOfKeypath = nil;
+    NSString* key = _NSKVCSplitKeypath(keyPath, &restOfKeypath);
+
+    if (restOfKeypath) {
+        id val = [self valueForKey:key];
+        return [val mutableOrderedSetValueForKeyPath:restOfKeypath];
+    }
+
+    return [self mutableOrderedSetValueForKey:key];
 }
 
 static SEL KVCValidatorForPropertyName(NSObject* self, const char* key) {

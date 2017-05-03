@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -14,16 +14,7 @@
 //
 //******************************************************************************
 
-#import <Foundation/Foundation.h>
-#import <Starboard.h>
-#import <objc/objc.h>
-#import <string>
-#import <memory>
-#import <vector>
-#import <Starboard/String.h>
-
-#import "NSObject_NSKeyValueCoding-Internal.h"
-#import "NSObject_NSKeyValueArrayAdapter-Internal.h"
+#import <NSObject_NSKeyValueCoding-Internal.h>
 
 /*
 * KVC Array Adapters
@@ -63,264 +54,26 @@
 */
 
 namespace {
-struct ProxyInfo {
-    idretaint<NSObject> _target;
-    idretaint<NSString> _key;
-    struct {
-        /* Immutable Accessors */
-        // required
-        SEL count;
-        // one is required
-        SEL objectIn;
-        SEL objectsAt;
-        // optional
-        SEL getRange;
-
-        /* Mutable Accessors */
-        // required
-        SEL insertAtOne;
-        SEL removeAtOne;
-        // optional
-        SEL insertAtMany;
-        SEL removeAtMany;
-        // super optional
-        SEL replaceOne;
-        SEL replaceMany;
-
-        /* Brute Force Mutator */
-        SEL get;
-        SEL set;
-    } _targetSelectors;
-    objc_ivar* _ivar;
-    bool _treatNilValueAsEmptyArray;
-
-    bool setIfResponds(id target, const std::string& selectorString, SEL* out) {
-        auto sel(sel_registerName(selectorString.c_str()));
-        if ([target respondsToSelector:sel] && out) {
-            *out = sel;
-            return true;
-        }
-        return false;
+struct ProxyArray : public ProxyOrderedBase {
+    ProxyArray(id target, NSString* key, objc_ivar* ivar) : ProxyOrderedBase(target, key, ivar) {
     }
 
-    ProxyInfo(id target, NSString* key, objc_ivar* ivar) : _target(target), _ivar(ivar), _treatNilValueAsEmptyArray(false) {
-        _key.attach([key copy]);
-        const char* rawKey = [key UTF8String];
-        memset(reinterpret_cast<void*>(&_targetSelectors), 0, sizeof(_targetSelectors));
-
-        // These four selectors, countOfKey, objectInKeyAtIndex, keyAtIndexes:, getKey:range:,
-        // are used to back the proxy array.
-        setIfResponds(target, woc::string::format("countOf%c%s", toupper(rawKey[0]), &rawKey[1]), &_targetSelectors.count);
-        setIfResponds(target, woc::string::format("objectIn%c%sAtIndex:", toupper(rawKey[0]), &rawKey[1]), &_targetSelectors.objectIn);
-        setIfResponds(target, woc::string::format("%sAtIndexes:", rawKey), &_targetSelectors.objectsAt);
-        setIfResponds(target, woc::string::format("get%c%s:range:", toupper(rawKey[0]), &rawKey[1]), &_targetSelectors.getRange);
-
-        // The mutation selectors insert, remove, and replace (with Key substituted where necessary)
-        // are used to back the mutation-related methods on NSMutableArray.
-        setIfResponds(target,
-                      woc::string::format("insertObject:in%c%sAtIndex:", toupper(rawKey[0]), &rawKey[1]),
-                      &_targetSelectors.insertAtOne);
-        setIfResponds(target,
-                      woc::string::format("removeObjectFrom%c%sAtIndex:", toupper(rawKey[0]), &rawKey[1]),
-                      &_targetSelectors.removeAtOne);
-        setIfResponds(target, woc::string::format("insert%c%s:atIndexes:", toupper(rawKey[0]), &rawKey[1]), &_targetSelectors.insertAtMany);
-        setIfResponds(target, woc::string::format("remove%c%sAtIndexes:", toupper(rawKey[0]), &rawKey[1]), &_targetSelectors.removeAtMany);
-        setIfResponds(target,
-                      woc::string::format("replaceObjectIn%c%sAtIndex:withObject:", toupper(rawKey[0]), &rawKey[1]),
-                      &_targetSelectors.replaceOne);
-        setIfResponds(target,
-                      woc::string::format("replace%c%sAtIndexes:with%c%s:", toupper(rawKey[0]), &rawKey[1], toupper(rawKey[0]), &rawKey[1]),
-                      &_targetSelectors.replaceMany);
-
-        _targetSelectors.get = KVCGetterForPropertyName(target, [key UTF8String]);
-        _targetSelectors.set = KVCSetterForPropertyName(target, [key UTF8String]);
-
-        // Per the reference platform: If there's no setter (we're falling back to setValue:forKey:)
-        // we have to treat nil values as empty arrays so that the user can mutate them.
-        if (!_targetSelectors.set) {
-            _treatNilValueAsEmptyArray = true;
-        }
-    }
-
-    // calls a method identified by a selector, given the specified arguments
-    template <typename Ret, typename... Args>
-    Ret _call(SEL cmd, Args... args) {
-        auto imp = objc_msg_lookup(_target, cmd);
-        return reinterpret_cast<Ret (*)(id, SEL, Args...)>(imp)(_target, cmd, args...);
-    }
-
-    // This wraps the getter/s.
-    inline id _get() {
-        id object = nil;
-        if (_targetSelectors.get) {
-            KVCGetViaAccessor(_target, _targetSelectors.get, &object);
-        } else if (_ivar) {
-            KVCGetViaIvar(_target, _ivar, &object);
-        } else {
-            object = [_target valueForKey:_key];
-        }
-        return object;
-    }
-
-    inline void _set(id newValue) {
-        if (_targetSelectors.set) {
-            KVCSetViaAccessor(_target, _targetSelectors.set, newValue);
-        } else if (_ivar) {
-            KVCSetViaIvar(_target, _ivar, newValue);
-        } else {
-            [_target setValue:newValue forKey:_key];
-        }
-    }
-
-    template <typename... Args>
-    void _getMutateAndSet(SEL cmd, Args... args) {
-        id currentValue = _get();
-
-        if (!currentValue && !_treatNilValueAsEmptyArray) {
-            [NSException raise:NSInvalidArgumentException
-                        format:@"-[_NSKeyProxyArray %@]: value for key %@ on object %p is nil",
-                               NSStringFromSelector(cmd),
-                               static_cast<id>(_key),
-                               static_cast<id>(_target)];
-        }
-
-        if (currentValue && !_ivar) {
-            currentValue = [[currentValue mutableCopy] autorelease];
-        } else if (!currentValue && _treatNilValueAsEmptyArray) {
-            currentValue = [NSMutableArray array];
-        }
-
-        auto imp = objc_msg_lookup(currentValue, cmd);
-        reinterpret_cast<void (*)(id, SEL, Args...)>(imp)(currentValue, cmd, args...);
-
-        _set(currentValue);
-    }
-
-    /* Implementations of methods called by the Objective-C side */
-    NSUInteger count() {
-        if (_targetSelectors.count) {
-            return _call<NSUInteger>(_targetSelectors.count);
-        }
-        return [_get() count];
-    }
-
-    id objectAtIndex(NSUInteger index) {
-        if (_targetSelectors.objectIn) {
-            return _call<id>(_targetSelectors.objectIn, index);
-        } else if (_targetSelectors.objectsAt) {
-            return [_call<NSArray*>(_targetSelectors.objectsAt, [NSIndexSet indexSetWithIndex:index]) firstObject];
-        }
-        return [_get() objectAtIndex:index];
-    }
-
-    NSArray* objectsAtIndexes(NSIndexSet* indexes) {
-        if (_targetSelectors.objectsAt) {
-            return _call<NSArray*>(_targetSelectors.objectsAt, indexes);
-        } else if (_targetSelectors.objectIn) {
-            __block NSMutableArray* outArray = [NSMutableArray array];
-            [indexes enumerateIndexesUsingBlock:^(NSUInteger idx, BOOL* stop) {
-                id object = _call<id>(_targetSelectors.objectIn, idx);
-                [outArray addObject:object];
-            }];
-            return outArray;
-        }
-        return [_get() objectsAtIndexes:indexes];
-    }
-
-    void getObjectsRange(id* objects, const NSRange& range) {
-        if (_targetSelectors.getRange) {
-            _call<void>(_targetSelectors.getRange, objects, range);
-            return;
-        }
-        [_get() getObjects:objects range:range];
-    }
-
-    /* Mutables */
-    void insertObjectAtIndex(id object, NSUInteger index) {
-        if (_targetSelectors.insertAtOne) {
-            _call<void>(_targetSelectors.insertAtOne, object, index);
-            return;
-        }
-
-        NSIndexSet* indexes = [NSIndexSet indexSetWithIndex:index];
-        [_target willChange:NSKeyValueChangeInsertion valuesAtIndexes:indexes forKey:_key];
-
-        _getMutateAndSet(@selector(insertObject:atIndex:), object, index);
-
-        [_target didChange:NSKeyValueChangeInsertion valuesAtIndexes:indexes forKey:_key];
-    }
-
-    void removeObjectAtIndex(NSUInteger index) {
-        if (_targetSelectors.removeAtOne) {
-            _call<void>(_targetSelectors.removeAtOne, index);
-            return;
-        }
-
-        NSIndexSet* indexes = [NSIndexSet indexSetWithIndex:index];
-        [_target willChange:NSKeyValueChangeRemoval valuesAtIndexes:indexes forKey:_key];
-
-        _getMutateAndSet(@selector(removeObjectAtIndex:), index);
-
-        [_target didChange:NSKeyValueChangeRemoval valuesAtIndexes:indexes forKey:_key];
-    }
-
-    void addObject(id object) {
-        if (_targetSelectors.insertAtOne) {
-            insertObjectAtIndex(object, count());
-            return;
-        }
-
-        NSIndexSet* indexes = [NSIndexSet indexSetWithIndex:count()];
-        [_target willChange:NSKeyValueChangeInsertion valuesAtIndexes:indexes forKey:_key];
-
-        _getMutateAndSet(@selector(addObject:), object);
-
-        [_target didChange:NSKeyValueChangeInsertion valuesAtIndexes:indexes forKey:_key];
-    }
-
-    void removeLastObject() {
-        if (_targetSelectors.removeAtOne) {
-            removeObjectAtIndex(count() - 1);
-            return;
-        }
-
-        NSIndexSet* indexes = [NSIndexSet indexSetWithIndex:count() - 1];
-        [_target willChange:NSKeyValueChangeRemoval valuesAtIndexes:indexes forKey:_key];
-
-        _getMutateAndSet(@selector(removeLastObject));
-
-        [_target didChange:NSKeyValueChangeRemoval valuesAtIndexes:indexes forKey:_key];
-    }
-
-    void replaceObjectAtIndexWithObject(NSUInteger index, id object) {
-        if (_targetSelectors.replaceOne) {
-            _call<void>(_targetSelectors.replaceOne, index, object);
-            return;
-        } else if (_targetSelectors.removeAtOne && _targetSelectors.insertAtOne) {
-            _call<void>(_targetSelectors.removeAtOne, index);
-            _call<void>(_targetSelectors.insertAtOne, object, index);
-            return;
-        }
-
-        NSIndexSet* indexes = [NSIndexSet indexSetWithIndex:count() - 1];
-        [_target willChange:NSKeyValueChangeReplacement valuesAtIndexes:indexes forKey:_key];
-
-        _getMutateAndSet(@selector(replaceObjectAtIndex:withObject:), index, object);
-
-        [_target didChange:NSKeyValueChangeReplacement valuesAtIndexes:indexes forKey:_key];
+protected:
+    virtual id _getEmptyContainer() override {
+        return [NSMutableArray array];
     }
 };
 }
 
 @interface _NSKeyProxyArray () {
-    std::shared_ptr<ProxyInfo> _proxyInfo;
+    std::shared_ptr<ProxyArray> _proxyArray;
 }
 @end
 
 @interface _NSMutableKeyProxyArray () {
-    std::shared_ptr<ProxyInfo> _proxyInfo;
+    std::shared_ptr<ProxyArray> _proxyArray;
 }
-- (id)_initWithProxyInfo:(std::shared_ptr<ProxyInfo>)proxyInfo;
+- (id)_initWithProxyArray:(std::shared_ptr<ProxyArray>)proxyArray;
 @end
 
 @implementation _NSKeyProxyArray
@@ -330,29 +83,29 @@ struct ProxyInfo {
 
 - (id)initWithObject:(id)object key:(NSString*)key ivar:(struct objc_ivar*)ivar {
     if (self = [super init]) {
-        _proxyInfo = std::make_shared<ProxyInfo>(object, key, ivar);
+        _proxyArray = std::make_shared<ProxyArray>(object, key, ivar);
     }
     return self;
 }
 
 - (NSUInteger)count {
-    return _proxyInfo->count();
+    return _proxyArray->count();
 }
 
 - (id)objectAtIndex:(NSUInteger)index {
-    return _proxyInfo->objectAtIndex(index);
+    return _proxyArray->objectAtIndex(index);
 }
 
 - (NSArray*)objectsAtIndexes:(NSIndexSet*)indexes {
-    return _proxyInfo->objectsAtIndexes(indexes);
+    return _proxyArray->objectsAtIndexes(indexes);
 }
 
 - (void)getObjects:(id[])objects range:(NSRange)range {
-    return _proxyInfo->getObjectsRange(objects, range);
+    return _proxyArray->getObjectsRange(objects, range);
 }
 
 - (_NSMutableKeyProxyArray*)_mutableProxy {
-    return [[[_NSMutableKeyProxyArray alloc] _initWithProxyInfo:_proxyInfo] autorelease];
+    return [[[_NSMutableKeyProxyArray alloc] _initWithProxyArray:_proxyArray] autorelease];
 }
 
 - (NSMutableArray*)mutableCopy {
@@ -367,53 +120,53 @@ struct ProxyInfo {
 
 - (id)initWithObject:(id)object key:(NSString*)key ivar:(struct objc_ivar*)ivar {
     if (self = [super init]) {
-        _proxyInfo = std::make_shared<ProxyInfo>(object, key, ivar);
+        _proxyArray = std::make_shared<ProxyArray>(object, key, ivar);
     }
     return self;
 }
 
-- (id)_initWithProxyInfo:(std::shared_ptr<ProxyInfo>)proxyInfo {
+- (id)_initWithProxyArray:(std::shared_ptr<ProxyArray>)proxyArray {
     if (self = [super init]) {
-        _proxyInfo = std::move(proxyInfo);
+        _proxyArray = std::move(proxyArray);
     }
     return self;
 }
 
 - (NSUInteger)count {
-    return _proxyInfo->count();
+    return _proxyArray->count();
 }
 
 - (id)objectAtIndex:(NSUInteger)index {
-    return _proxyInfo->objectAtIndex(index);
+    return _proxyArray->objectAtIndex(index);
 }
 
 - (NSArray*)objectsAtIndexes:(NSIndexSet*)indexes {
-    return _proxyInfo->objectsAtIndexes(indexes);
+    return _proxyArray->objectsAtIndexes(indexes);
 }
 
 - (void)getObjects:(id[])objects range:(NSRange)range {
-    return _proxyInfo->getObjectsRange(objects, range);
+    return _proxyArray->getObjectsRange(objects, range);
 }
 
 // mutable methods
 - (void)insertObject:(id)object atIndex:(NSUInteger)index {
-    _proxyInfo->insertObjectAtIndex(object, index);
+    _proxyArray->insertObjectAtIndex(object, index);
 }
 
 - (void)removeObjectAtIndex:(NSUInteger)index {
-    _proxyInfo->removeObjectAtIndex(index);
+    _proxyArray->removeObjectAtIndex(index);
 }
 
 - (void)addObject:(id)object {
-    _proxyInfo->addObject(object);
+    _proxyArray->addObject(object);
 }
 
 - (void)removeLastObject {
-    _proxyInfo->removeLastObject();
+    _proxyArray->removeLastObject();
 }
 
 - (void)replaceObjectAtIndex:(NSUInteger)index withObject:(id)object {
-    _proxyInfo->replaceObjectAtIndexWithObject(index, object);
+    _proxyArray->replaceObjectAtIndexWithObject(index, object);
 }
 
 @end

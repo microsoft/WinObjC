@@ -145,7 +145,10 @@
     <ClangCompile Include="$(StarboardBasePath)\tests\UnitTests\Foundation\NSURLSessionTests.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\UnitTests\Foundation\NSIndexPathTests.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSNullTests.mm" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSInvocationOperationTests.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\UnitTests\Foundation\NSObject_NSKeyValueValidation.mm" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\UnitTests\Foundation\NSObject_NSKeyValueSetAdaptersTests.mm" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\UnitTests\Foundation\NSObject_NSKeyValueOrderedSetAdaptersTests.mm" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\..\..\tests\unittests\Foundation\NSFileManagerUT.txt" />
