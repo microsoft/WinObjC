@@ -76,8 +76,7 @@
     
     <ItemGroup>
       <!-- Package up .pri files associated with any .winmds -->
-      <_PriFileNames Include="$(ProjectPriFullPath)">
-      </_PriFileNames>
+      <_PriFileNames Include="$(ProjectPriFullPath)" />
       <PackageFile Include="@(_PriFileNames)" Condition="Exists('%(FullPath)') and Exists('$(_WinMDFilePath)')">
         <PackagePath>$(PackageContentBasePath)\%(Filename)%(Extension)</PackagePath>
       </PackageFile>
