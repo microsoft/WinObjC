@@ -251,8 +251,6 @@ static char _NSOperationQueue_IsReadyContext;
         } else {
             [self _setDispatchQueueUsingQualityOfService];
         }
-
-        _operationIndex;
     }
     return self;
 }
