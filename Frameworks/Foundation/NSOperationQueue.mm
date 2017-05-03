@@ -252,7 +252,7 @@ static char _NSOperationQueue_IsReadyContext;
             [self _setDispatchQueueUsingQualityOfService];
         }
 
-        _operationIndex = 0;
+        _operationIndex;
     }
     return self;
 }
