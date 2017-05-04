@@ -599,7 +599,7 @@ bool KVCSetViaIvar(NSObject* self, struct objc_ivar* ivar, id value, NSString* k
 }
 
 /**
- @Status Interopertable
+ @Status Interoperable
 */
 - (NSMutableSet*)mutableSetValueForKeyPath:(NSString*)keyPath {
     NSString* restOfKeypath = nil;
