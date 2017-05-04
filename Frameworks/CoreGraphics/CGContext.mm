@@ -2238,7 +2238,7 @@ HRESULT __CGContext::DrawGlyphRuns(GlyphRunData* glyphRuns, size_t runsCount, bo
         }
 
         if (state.textDrawingMode & kCGTextStroke) {
-            deviceContext->SetTransform(__CGAffineTransformToD2D_F(deviceTransform));
+            deviceContext->SetTransform(__CGAffineTransformToD2D_F(CGAffineTransformIdentity));
             RETURN_IF_FAILED(_DrawGeometryInternal(transformedGeometry.Get(), kCGPathStroke, context, deviceContext));
         }
 
