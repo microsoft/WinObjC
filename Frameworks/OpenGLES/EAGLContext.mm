@@ -30,7 +30,6 @@
 #include "CALayerInternal.h"
 #include "EAGLContextInternal.h"
 #include "UWP/InteropBase.h"
-#include "UWP/WindowsUIXamlControls.h"
 
 #include "QuartzCore/CALayer.h"
 #include "QuartzCore/CAEAGLLayer.h"
@@ -337,10 +336,9 @@ static const wchar_t* TAG = L"EAGL";
         { EGL_WIDTH, _rbWidth, EGL_HEIGHT, _rbHeight, EGL_ANGLE_SURFACE_RENDER_TO_BACK_BUFFER, EGL_TRUE, EGL_FIXED_SIZE_ANGLE,
           EGL_TRUE,  EGL_NONE };
 
-    IInspectable* pSwapChainInspectable = objcwinrt::to_insp(surface.swapChainPanel);
+    Microsoft::WRL::ComPtr<IInspectable> swapChainInspectable = objcwinrt::to_insp(surface.swapChainPanel);
 
-    _eglSurface = eglCreateWindowSurface(eglDisplay, _mConfig, pSwapChainInspectable, surface_attribute_list);
-    pSwapChainInspectable->Release();
+    _eglSurface = eglCreateWindowSurface(eglDisplay, _mConfig, swapChainInspectable.Get(), surface_attribute_list);
 
     if (_eglSurface == EGL_NO_SURFACE) {
         return FALSE;
