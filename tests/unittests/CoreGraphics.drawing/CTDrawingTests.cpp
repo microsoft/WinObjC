@@ -590,6 +590,7 @@ TEXT_DRAW_TEST_P(TextDrawingMode, CGTextDrawingMode) {
 
     CGAffineTransform textMatrix = CGContextGetTextMatrix(context);
     CGContextSetTextMatrix(context, CGAffineTransformRotate(textMatrix, ::testing::get<1>(GetParam()) * M_PI / 180.0));
+    CGContextScaleCTM(context, 1.5, 2.25);
     // Create style setting to match given alignment
     CTParagraphStyleSetting setting[1];
     CTTextAlignment alignment = kCTLeftTextAlignment;
