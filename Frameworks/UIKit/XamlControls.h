@@ -89,6 +89,24 @@ void SetActivityIndicatorViewHeightValue(const winrt::Windows::UI::Xaml::Framewo
 void SetActivityIndicatorViewWidthValue(const winrt::Windows::UI::Xaml::FrameworkElement& activityIndicatorInspectable, double width);
 
 ////////////////////////////////////////////////////////////////////////////////////
+// ProgressView
+////////////////////////////////////////////////////////////////////////////////////
+winrt::Windows::UI::Xaml::Controls::Grid CreateProgressView();
+
+winrt::Windows::UI::Xaml::Controls::ProgressBar XamlGetInternalProgressBar(
+    const winrt::Windows::UI::Xaml::Controls::Grid& progressViewInspectable);
+
+double GetProgressViewValue(const winrt::Windows::UI::Xaml::FrameworkElement& progressViewInspectable);
+
+void SetProgressViewValue(const winrt::Windows::UI::Xaml::FrameworkElement& progressViewInspectable, double value);
+
+void SetProgressViewForegroundValue(const winrt::Windows::UI::Xaml::FrameworkElement& progressViewInspectable,
+                                    const winrt::Windows::UI::Xaml::Media::Brush& foregroundColorBrush);
+
+void SetProgressViewBackgroundValue(const winrt::Windows::UI::Xaml::FrameworkElement& progressViewInspectable,
+                                    const winrt::Windows::UI::Xaml::Media::Brush& backgroundColorBrush);
+
+////////////////////////////////////////////////////////////////////////////////////
 // Button
 ////////////////////////////////////////////////////////////////////////////////////
 winrt::Windows::UI::Xaml::Controls::Button CreateButton();
