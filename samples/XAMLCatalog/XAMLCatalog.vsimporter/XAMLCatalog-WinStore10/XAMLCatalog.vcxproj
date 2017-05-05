@@ -211,6 +211,7 @@
     <ClInclude Include="..\..\XAMLCatalog\UIKitControls\UIScrollViewController.h" />
     <ClInclude Include="..\..\XAMLCatalog\UIKitControls\UISliderViewController.h" />
     <ClInclude Include="..\..\XAMLCatalog\UIKitControls\UITextFieldViewController.h" />
+    <ClInclude Include="..\..\XAMLCatalog\UIKitControls\UITextFieldViewController2.h" />
     <ClInclude Include="..\..\XAMLCatalog\UIKitControls\UIViewViewController.h" />
     <ClangCompile Include="..\..\XAMLCatalog\AppDelegate.m" />
     <ClangCompile Include="..\..\XAMLCatalog\CustomTextControlViewController.m" />
@@ -226,6 +227,7 @@
     <ClangCompile Include="..\..\XAMLCatalog\UIKitControls\UIScrollViewController.m" />
     <ClangCompile Include="..\..\XAMLCatalog\UIKitControls\UISliderViewController.m" />
     <ClangCompile Include="..\..\XAMLCatalog\UIKitControls\UITextFieldViewController.m" />
+    <ClangCompile Include="..\..\XAMLCatalog\UIKitControls\UITextFieldViewController2.m" />
     <ClangCompile Include="..\..\XAMLCatalog\UIKitControls\UIViewViewController.m" />
     <ClangCompile Include="..\..\XAMLCatalog\main.m" />
     <SBInfoPlistCopy Include="..\..\XAMLCatalog\Info.plist">

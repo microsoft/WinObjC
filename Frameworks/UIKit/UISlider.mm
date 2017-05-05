@@ -56,6 +56,9 @@ static const double c_defaultStepFrequency = 0.1;
     _xamlSlider.Minimum(0.0f);
     _xamlSlider.Value(0.0f);
 
+    // by default, no tool tip for slider on reference platform
+    _xamlSlider.IsThumbToolTipEnabled(false);
+
     [self _updateStepFrequency];
     [self setContinuous:YES];
     [self _registerForEventsWithXaml];

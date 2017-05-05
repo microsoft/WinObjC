@@ -253,12 +253,25 @@ NSString* const UITextFieldTextDidEndEditingNotification = @"UITextFieldTextDidE
     StrongId<UIFont> targetFont = _font;
 
     if (self.adjustsFontSizeToFitWidth) {
-        float adjustedFontSize = XamlUtilities::FindMaxFontSizeToFit([self bounds],
+        CGRect adjustedBounds;
+        adjustedBounds = [self bounds];
+
+        // This is padding between inner text control and outter control
+        // need to use adjustedBound (inner bound for text control) to fit the text.
+        const CGFloat padding = 16.0;
+        if (adjustedBounds.size.width > padding) {
+            adjustedBounds = CGRectMake(adjustedBounds.origin.x,
+                                        adjustedBounds.origin.y,
+                                        adjustedBounds.size.width - padding,
+                                        adjustedBounds.size.height);
+        }
+
+        float adjustedFontSize = XamlUtilities::FindMaxFontSizeToFit(adjustedBounds,
                                                                      XamlControls::GetTextFieldText(_textField),
                                                                      _font,
                                                                      1,
                                                                      _minimumFontSize,
-                                                                     [_font pointSize]);
+                                                                     std::max(_minimumFontSize, [_font pointSize]));
         if (adjustedFontSize != [_font pointSize]) {
             targetFont = [_font fontWithSize:adjustedFontSize];
         }

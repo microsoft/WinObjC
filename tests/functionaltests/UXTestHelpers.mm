@@ -132,7 +132,9 @@ ViewControllerPresenter::~ViewControllerPresenter() {
 //
 // XamlEventSubscription methods
 //
-void XamlEventSubscription::Set(const DependencyObject& xamlObject, const DependencyProperty& propertyToObserve, XamlEventBlock callbackHandler) {
+void XamlEventSubscription::Set(const DependencyObject& xamlObject,
+                                const DependencyProperty& propertyToObserve,
+                                XamlEventBlock callbackHandler) {
     Reset();
 
     _xamlObject = xamlObject;
@@ -140,9 +142,11 @@ void XamlEventSubscription::Set(const DependencyObject& xamlObject, const Depend
     _eventBlock = [callbackHandler copy];
 
     // Register callback and wait for the property changed event to trigger
-    _callbackToken = _xamlObject.RegisterPropertyChangedCallback(_propertyToObserve, objcwinrt::callback([this] (const DependencyObject& sender, const DependencyProperty& prop) {
-        this->_eventBlock(sender, prop);
-    }));
+    _callbackToken = _xamlObject.RegisterPropertyChangedCallback(_propertyToObserve,
+                                                                 objcwinrt::callback([this](const DependencyObject& sender,
+                                                                                            const DependencyProperty& prop) {
+                                                                     this->_eventBlock(sender, prop);
+                                                                 }));
 }
 
 void XamlEventSubscription::Reset() {
@@ -211,6 +215,24 @@ UIColor* ConvertWUColorToUIColor(const winrt::Windows::UI::Color& wuColor) {
     CGFloat b = wuColor.B / 255.0;
     CGFloat a = wuColor.A / 255.0;
     return [UIColor colorWithRed:r green:g blue:b alpha:a];
+}
+
+bool compareRGBAValues(UIColor* col1, UIColor* col2) {
+    if (col1 == nullptr && col2 == nullptr) {
+        return true;
+    }
+
+    if (!col1 || !col2) {
+        return false;
+    }
+
+    CGFloat r1, g1, b1, a1;
+    [col1 getRed:&r1 green:&g1 blue:&b1 alpha:&a1];
+
+    CGFloat r2, g2, b2, a2;
+    [col2 getRed:&r2 green:&g2 blue:&b2 alpha:&a2];
+
+    return (r1 == r2) && (g1 == g2) && (b1 == b2) && (a1 == a2);
 }
 
 } // namespace UXTestAPI

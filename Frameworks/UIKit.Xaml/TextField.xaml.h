@@ -57,7 +57,7 @@ public:
     // Accessor for the LayerProperty that manages the BorderThickness of this TextField
     virtual Private::CoreAnimation::LayerProperty^ GetBorderThicknessProperty();
 
-    property Platform::String^ Text
+    property Platform::String^ TextField_Text
     {
         Platform::String^ get()
         {
@@ -243,6 +243,7 @@ private:
     void _SetInputScope();
     void _SetEnabled();
     void _SetForeground();
+    void _SetBackgournd();
     void _SetTextAlignment();
 
     // Find the best inputScope given current security entry mode and inputscope

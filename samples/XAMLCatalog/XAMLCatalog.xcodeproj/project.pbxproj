@@ -33,6 +33,7 @@
 		822F85C01D8F908C001DC8A5 /* yellow_background.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 822F85BD1D8F908C001DC8A5 /* yellow_background.jpg */; };
 		96857DC01D598FB300EB1FD0 /* MiscellaneousViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 96857DBD1D598FB300EB1FD0 /* MiscellaneousViewController.m */; };
 		A5180F451E89656400BADAD5 /* UIScrollViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A5180F441E89656400BADAD5 /* UIScrollViewController.m */; };
+		A5BFFF791ECA7A0E00B798AE /* UITextFieldViewController2.m in Sources */ = {isa = PBXBuildFile; fileRef = A5BFFF781ECA7A0E00B798AE /* UITextFieldViewController2.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -79,6 +80,8 @@
 		96857DBD1D598FB300EB1FD0 /* MiscellaneousViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MiscellaneousViewController.m; sourceTree = "<group>"; };
 		A5180F431E89656400BADAD5 /* UIScrollViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UIScrollViewController.h; path = UIKitControls/UIScrollViewController.h; sourceTree = "<group>"; };
 		A5180F441E89656400BADAD5 /* UIScrollViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UIScrollViewController.m; path = UIKitControls/UIScrollViewController.m; sourceTree = "<group>"; };
+		A5BFFF771ECA7A0E00B798AE /* UITextFieldViewController2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UITextFieldViewController2.h; path = UIKitControls/UITextFieldViewController2.h; sourceTree = "<group>"; };
+		A5BFFF781ECA7A0E00B798AE /* UITextFieldViewController2.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UITextFieldViewController2.m; path = UIKitControls/UITextFieldViewController2.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -95,6 +98,8 @@
 		2324634F1CE69E2C00B7AAE4 /* UIKitControls */ = {
 			isa = PBXGroup;
 			children = (
+				A5BFFF771ECA7A0E00B798AE /* UITextFieldViewController2.h */,
+				A5BFFF781ECA7A0E00B798AE /* UITextFieldViewController2.m */,
 				A5180F431E89656400BADAD5 /* UIScrollViewController.h */,
 				A5180F441E89656400BADAD5 /* UIScrollViewController.m */,
 				234767181E2EE058006D97CB /* UIActionSheetViewController.h */,
@@ -269,6 +274,7 @@
 			files = (
 				2347672C1E2EE090006D97CB /* UIButtonWithControlsViewController.m in Sources */,
 				234767281E2EE058006D97CB /* UITextFieldViewController.m in Sources */,
+				A5BFFF791ECA7A0E00B798AE /* UITextFieldViewController2.m in Sources */,
 				234767251E2EE058006D97CB /* UIActivityIndicatorViewController.m in Sources */,
 				239EBAEB1E39559C00C845D0 /* TestEnabledUITextField.mm in Sources */,
 				6EEB8A411CE4F4050021021E /* StoryBoardViewController.m in Sources */,
