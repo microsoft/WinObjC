@@ -7,8 +7,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     x:Name="Root">
-    <ProgressBar Name="progressBar"
-                 IsIndeterminate="False"
+    <ProgressBar x:Name="progressBar"
                  Minimum="0.0"
                  Maximum="1.0"
                  Height="{x:Bind Height, Mode=OneWay}"

@@ -128,6 +128,11 @@ public:
             auto progressBar = objcwinrt::from_insp<Controls::ProgressBar>(inspectable);
             ASSERT_TRUE(progressBar);
 
+            // Ensure ProgressBar properties are as expected
+            EXPECT_EQ(0, progressBar.Minimum());
+            EXPECT_EQ(1, progressBar.Maximum());
+            EXPECT_FALSE(progressBar.IsIndeterminate());
+
             // Should start in the default style
             EXPECT_EQ(UIProgressViewStyleDefault, progressView.progressViewStyle);
 

@@ -142,7 +142,7 @@
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIDatePicker.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIPinchGestureRecognizer.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIProgressView.mm">
-      <ObjectiveCARC Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ObjectiveCARC>
+      <ObjectiveCARC>true</ObjectiveCARC>
     </ClangCompile>
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UITableViewCellContentView.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UITextView.mm" />
