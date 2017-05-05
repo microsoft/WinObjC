@@ -109,7 +109,7 @@ struct __CGImage : CoreFoundation::CppBase<__CGImage> {
 
         RETURN_IF_FAILED(SetImageSource(newBitmap.Get())); // also sets _colorSpace
         _isMask = other._isMask;
-        // _interpolate = other._interpolate;
+        _interpolate = other._interpolate;
         _renderingIntent = other._renderingIntent;
 
         return S_OK;
