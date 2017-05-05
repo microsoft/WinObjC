@@ -18,5 +18,6 @@
 
 @interface NSOperation ()
 @property (nonatomic, assign, getter=_completionQueue, setter=_setCompletionQueue:) dispatch_queue_t _completionQueue;
-- (BOOL)_markInQueue;
+- (unsigned int)_queueIndex;
+- (BOOL)_canAddToQueueAsIndex:(unsigned int)queueIndex;
 @end
