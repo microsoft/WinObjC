@@ -91,7 +91,6 @@ extern UIDeviceOrientation newDeviceOrientation;
     winrt::hstring publisher = packageId.Publisher();
 
     CC_SHA1_CTX sha1Ctx;
-
     CC_SHA1_Init(&sha1Ctx);
 
     CC_SHA1_Update(&sha1Ctx, &sc_wocPublisherNamespace, sizeof(GUID));
@@ -100,10 +99,10 @@ extern UIDeviceOrientation newDeviceOrientation;
     uint8_t hash[CC_SHA1_DIGEST_LENGTH];
     CC_SHA1_Final(&hash[0], &sha1Ctx);
 
-    hash[7] = (hash[7] & 0xF) | 0x50; // set the uuid version to 5; hash[7] corresponds to the 6th octet in a LE UUID
+    hash[6] = (hash[6] & 0xF) | 0x50; // set the uuid version to 5
     hash[8] = (hash[8] & 0x3F) | 0x80; // set the variant to 2 (RFC4122)
 
-    return [[NSUUID alloc] initWithUUIDBytes:hash];
+    return [[NSUUID alloc] initWithUUIDBytes:hash /* only consumes 16/20 bytes from hash */];
 }
 
 /**
@@ -288,8 +287,11 @@ if ( [curView isKindOfClass:popoverClass] ) {
 }
 
 /**
- @Status Caveat
- @Notes Returns the FamilyName from the package utilizing a WinRT api.
+ @Status Interoperable
+ @Notes This identifier is based on the package's signing certificat's publisher name. It will
+        not change if the application is uninstalled and reinstalled.
+        In contravention to the reference platform's documentation, however, removing _every_
+        package by a single publisher will _not_ roll this ID.
 */
 - (NSUUID*)identifierForVendor {
     return _identifierForVendor;
