@@ -81,27 +81,6 @@ TEST(Sanity, SanityTest) {
     //
 }
 
-TEST(NSUUID, NSUUID) {
-    NSUUID* uuidA = [NSUUID UUID];
-    NSUUID* uuidB = [NSUUID UUID];
-    NSUUID* uuidC = [NSUUID UUID];
-    ASSERT_OBJCNE_MSG(uuidA, uuidB, "FAILED: NSUUID instances should be unique");
-    ASSERT_OBJCNE_MSG(uuidB, uuidC, "FAILED: NSUUID instances should be unique");
-
-    NSUUID* uuidAClone = [[NSUUID alloc] initWithUUIDString:[uuidA UUIDString]];
-    ASSERT_OBJCEQ_MSG((id)uuidA,
-                      (id)uuidAClone,
-                      "FAILED: An NSUUID created from parsing the string format of another UUID should equal it.");
-
-    NSUUID* uuidBad = [[NSUUID alloc] initWithUUIDString:@"HELLOWOR-LDTH-ISIS-ABAD-UUIDSTRING!!"];
-    ASSERT_TRUE_MSG(uuidBad == nil, "FAILED: NSUUID should have failed to parse this weird string: %s", [[uuidBad description] UTF8String]);
-
-    NSUUID* uuidShort = [[NSUUID alloc] initWithUUIDString:@"000000"];
-    ASSERT_TRUE_MSG(uuidShort == nil,
-                    "FAILED: NSUUID should have failed to parse this short string: %s",
-                    [[uuidShort description] UTF8String]);
-}
-
 @interface TestKVOSelfObserver : NSObject {
     id _dummy;
 }
