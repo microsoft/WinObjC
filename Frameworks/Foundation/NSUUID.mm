@@ -100,6 +100,13 @@
             [self release];
             return nil;
         }
+
+        // The reference platform specifies that a UUID is a uint8_t[16], but the Win32
+        // definition is 3 typed integers plus a uint8_t[8].
+        // We have to fix these because we stuffed the provided bytes into a struct GUID.
+        _guid.Data1 = htonl(_guid.Data1);
+        _guid.Data2 = htons(_guid.Data2);
+        _guid.Data3 = htons(_guid.Data3);
     }
     return self;
 }
@@ -109,20 +116,23 @@
  @Notes Only supports NSKeyedArchiver NSCoder type.
 */
 - (id)initWithCoder:(NSCoder*)coder {
-    if ([coder isKindOfClass:[NSKeyedUnarchiver class]]) {
-        NSUInteger len = 0;
-        const uint8_t* bytes = [coder decodeBytesForKey:@"NSU.uuid" returnedLength:&len];
-        if (!bytes || len != sizeof(_guid)) {
+    if (self = [super init]) {
+        if ([coder isKindOfClass:[NSKeyedUnarchiver class]]) {
+            NSUInteger len = 0;
+            const uint8_t* bytes = [coder decodeBytesForKey:@"NSU.uuid" returnedLength:&len];
+            if (!bytes || len != sizeof(_guid)) {
+                [self release];
+                return nil;
+            }
+
+            memcpy_s(&_guid, 16, bytes, 16);
+        } else {
+            UNIMPLEMENTED_WITH_MSG("initWithCoder only supports NSKeyedUnarchiver coder type!");
             [self release];
             return nil;
         }
-
-        return [self initWithUUIDBytes:bytes];
-    } else {
-        UNIMPLEMENTED_WITH_MSG("initWithCoder only supports NSKeyedUnarchiver coder type!");
-        [self release];
-        return nil;
     }
+    return self;
 }
 
 /**
@@ -159,7 +169,25 @@
  @Status Interoperable
 */
 - (void)getUUIDBytes:(void*)bytes {
-    memcpy_s(bytes, 16, &_guid, 16);
+    // clang-format off
+    // The reference platform specifies that a UUID is a uint8_t[16], but the Win32
+    // definition is 3 typed integers plus a uint8_t[8].
+    // We have to fix these because we stuffed the provided bytes into a struct GUID.
+
+    uint8_t* buffer = reinterpret_cast<uint8_t*>(bytes);
+    buffer[0] = (_guid.Data1 >> 24) & 0xFF;
+    buffer[1] = (_guid.Data1 >> 16) & 0xFF;
+    buffer[2] = (_guid.Data1 >>  8) & 0xFF;
+    buffer[3] = (_guid.Data1      ) & 0xFF;
+
+    buffer[4] = (_guid.Data2 >>  8) & 0xFF;
+    buffer[5] = (_guid.Data2      ) & 0xFF;
+
+    buffer[6] = (_guid.Data3 >>  8) & 0xFF;
+    buffer[7] = (_guid.Data3      ) & 0xFF;
+
+    memcpy_s(&buffer[8], 8, &_guid.Data4, 8);
+    // clang-format on
 }
 
 /**
