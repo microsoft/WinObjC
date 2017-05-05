@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <PropertyGroup>
-    <WriteVersionInfoToBuildLog>false</WriteVersionInfoToBuildLog>
-  </PropertyGroup>
-
   <ItemGroup>
     <WinObjCPackageOverridePath Include="$(MSBuildThisFileDirectory)..\build\OutputPackages"/>
     <WinObjCPackageOverridePath Include="$(MSBuildThisFileDirectory)..\tools\OutputPackages"/>
@@ -24,7 +20,7 @@
     <ParameterGroup>
       <PackageReferences ParameterType="Microsoft.Build.Framework.ITaskItem[]" Required="true" />
       <SearchPaths ParameterType="Microsoft.Build.Framework.ITaskItem[]" Required="true" />
-      <PrereleaseVersion ParameterType="System.String" Required="false" />
+      <PackageReference_PrereleaseVersion ParameterType="System.String" Required="false" />
       <AdjustedPackageReferences  ParameterType="Microsoft.Build.Framework.ITaskItem[]" Output="true" />
     </ParameterGroup>
     <Task>
@@ -73,10 +69,10 @@
                 string version = Path.GetFileNameWithoutExtension(file).Remove(0, packageName.Length + 1);
                 Log.LogMessage("Adjusting " + packageName + " to new version " + version);
                 packageItem.SetMetadata("Version", version);
-              } else if (PrereleaseVersion != null) {
+              } else if (PackageReference_PrereleaseVersion != null) {
                 // No local package found. Fixup to use latest pre-release version.
-                Log.LogMessage("Adjusting " + packageName + " to latest pre-release version " + PrereleaseVersion);
-                packageItem.SetMetadata("Version", PrereleaseVersion);
+                Log.LogMessage("Adjusting " + packageName + " to latest pre-release version " + PackageReference_PrereleaseVersion);
+                packageItem.SetMetadata("Version", PackageReference_PrereleaseVersion);
               }
             }
           }
@@ -92,18 +88,18 @@
     <FixupWinObjCPackageReferencesDependsOn Condition="'$(IsNuGetized)' != ''">GetPackageContents;%(FixupWinObjCPackageReferencesDependsOn)</FixupWinObjCPackageReferencesDependsOn>
   </PropertyGroup>
   
-  <Target Name="FixupWinObjCPackageReferences" BeforeTargets="$(FixupWinObjCPackageReferencesDependsOn)" DependsOnTargets="GetVersion">
+  <Target Name="FixupWinObjCPackageReferences" BeforeTargets="$(FixupWinObjCPackageReferencesDependsOn)" DependsOnTargets="CalculatePackageVersion">
 
     <!-- Only set a pre-release version to use if it is a pre-release build itself. Stable builds should depend on stable packages. -->
     <PropertyGroup>
-      <PrereleaseVersion Condition="'$(GitVersion_PreReleaseLabel)' != ''">$(GitVersion_Major).$(GitVersion_Minor).$(GitVersion_Patch)-*</PrereleaseVersion>
+      <PackageReference_PrereleaseVersion Condition="'$(PackageVersion_PreRelease)' != ''">$(PackageVersion_Major).$(PackageVersion_Minor).$(PackageVersion_Patch)-*</PackageReference_PrereleaseVersion>
     </PropertyGroup>
 
 
     <FixupVersionOfWinObjCPackageReferences 
          PackageReferences="@(PackageReference)"
          SearchPaths="@(WinObjCPackageOverridePath)"
-         PrereleaseVersion="$(PrereleaseVersion)"
+         PackageReference_PrereleaseVersion="$(PackageReference_PrereleaseVersion)"
          >
       <Output TaskParameter="AdjustedPackageReferences" ItemName="_AdjustedPackageReferences" />
     </FixupVersionOfWinObjCPackageReferences>
@@ -115,72 +111,6 @@
   </Target>
 
   <Import Project="$(MSBuildThisFileDirectory)\workaround\Microsoft.Nuget.Workaround.targets"/>
-
-  <!-- Manually import this checked in NuGet instead of relying on the package itself since it is being used
-       to adjust the Restore process. If it were a normal NuGet dependency, it also would need restored which means it
-       couldn't adjust the restore process itself as it would already be too late. -->
-  <Import Project="$(MSBuildThisFileDirectory)\gitversiontask\4.0.0-beta0011\build\GitVersionTask.targets" Condition="'$(GitVersion_Task_targets_Imported)' == ''"/>
-
-  <!-- Inline tasks (and targets) to make sure GitVersion only runs one at a time. This is an improvement that should 
-         probably be contributed back (see https://github.com/GitTools/GitVersion/issues/1031) -->
-
-  <UsingTask  
-    TaskName="LockGitVersion"  
-    TaskFactory="CodeTaskFactory"  
-    AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.v12.0.dll" >  
-    <ParameterGroup>
-      <SolutionPath ParameterType="System.String" Required="true" />
-      <Unlock ParameterType="System.Boolean" Required="true" />
-    </ParameterGroup>
-    <Task>
-      <Reference Include="System" />
-      <Reference Include="System.Threading" />
-      <Code Type="Class" Language="cs">
-        <![CDATA[
-        
-          using System;
-          using System.Threading;
-          using Microsoft.Build.Framework;
-          using Microsoft.Build.Utilities;
-          
-          public class LockGitVersion : Task
-          {
-              static ThreadLocal<Mutex> mutex = new ThreadLocal<Mutex>();
-
-              [Required]
-              public string SolutionPath { get; set;}
-
-              [Required]
-              public bool Unlock { get; set;}
-
-              public override bool Execute()
-              {
-
-                  if (!Unlock) {
-                      mutex.Value = new Mutex(false, SolutionPath.Replace("\\", "."));
-                      try {
-                        mutex.Value.WaitOne();
-                      } catch (AbandonedMutexException e) {
-                      }
-                  } else {
-                      mutex.Value.ReleaseMutex();
-                  }
-
-                  return true;
-              }
-          }
-        ]]>
-      </Code>
-    </Task>
-  </UsingTask>
-
-  <Target Name="_GetVersion_Lock" BeforeTargets="GetVersion" >
-    <LockGitVersion Condition="'$(SolutionDir)' != ''" SolutionPath="$(SolutionDir)$(SolutionName)" Unlock="false"/>
-  </Target>
-
-  <Target Name="_GetVersion_Unlock" AfterTargets="GetVersion" >
-    <LockGitVersion Condition="'$(SolutionDir)' != ''" SolutionPath="$(SolutionDir)$(SolutionName)" Unlock="true"/>
-  </Target>
 
   <!-- 
        Work around issue with new PackageReference style of Restore. This style doesn't auto-restore in viusal studio when building (at least not for .vcxproj)
