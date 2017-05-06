@@ -75,7 +75,7 @@ UIKIT_EXPORT_CLASS
 - (BOOL)getRed:(CGFloat*)red green:(CGFloat*)green blue:(CGFloat*)blue alpha:(CGFloat*)alpha;
 - (BOOL)getWhite:(CGFloat*)white alpha:(CGFloat*)alpha;
 - (UIColor*)colorWithAlphaComponent:(CGFloat)alpha;
-- (UIColor*)initWithCGColor:(CGColorRef)cgColor STUB_METHOD;
+- (UIColor*)initWithCGColor:(CGColorRef)cgColor;
 - (UIColor*)initWithCIColor:(CIColor*)ciColor STUB_METHOD;
 - (UIColor*)initWithHue:(CGFloat)hue saturation:(CGFloat)saturation brightness:(CGFloat)brightness alpha:(CGFloat)alpha;
 - (UIColor*)initWithPatternImage:(UIImage*)image;

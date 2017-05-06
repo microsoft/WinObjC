@@ -55,3 +55,36 @@ TEST(UIColor, EncodeDecodeUIColor) {
     __EncodeAndDecodeColor([UIColor colorWithRed:1 green:0.5 blue:0.34 alpha:0.89]);
     __EncodeAndDecodeColor([UIColor colorWithRed:1 green:0.4 blue:0.34 alpha:1.0]);
 }
+
+TEST(UIColor, ColorWithCGColor) {
+    CGColorRef cgColor = CGColorGetConstantColor(kCGColorBlack);
+    UIColor* blackColor = [UIColor blackColor];
+    // NOTE: you should never cast CGColor into a UIColor or vice versa
+    // This is only to support CoreText related attribute functionality
+    EXPECT_OBJCEQ(static_cast<UIColor*>(cgColor), blackColor);
+    EXPECT_TRUE(CGColorEqualToColor(static_cast<CGColorRef>(blackColor), cgColor));
+
+    UIColor* color1 = [UIColor colorWithCGColor:cgColor];
+    EXPECT_OBJCEQ(color1, blackColor);
+
+    color1 = [UIColor colorWithCGColor:[blackColor CGColor]];
+    EXPECT_OBJCEQ(color1, blackColor);
+
+    color1 = [UIColor colorWithCGColor:[[UIColor yellowColor] CGColor]];
+    EXPECT_OBJCEQ(color1, [UIColor yellowColor]);
+
+    auto cgColorRed = woc::MakeStrongCF<CGColorRef>(CGColorCreateGenericRGB(1, 0, 0, 1));
+    color1 = [UIColor colorWithCGColor:cgColorRed];
+    EXPECT_OBJCEQ(color1, [UIColor redColor]);
+    EXPECT_OBJCEQ(color1, [UIColor colorWithRed:1 green:0 blue:0 alpha:1]);
+
+    auto cgColorGray = woc::MakeStrongCF<CGColorRef>(CGColorCreateGenericGray(0.5, 1));
+    color1 = [UIColor colorWithCGColor:cgColorGray];
+    EXPECT_OBJCEQ(color1, [UIColor grayColor]);
+    EXPECT_OBJCNE(color1, [UIColor colorWithRed:1 green:0 blue:0 alpha:1]);
+    EXPECT_OBJCEQ(color1, [UIColor colorWithWhite:0.5 alpha:1]);
+}
+
+TEST(UIColor, SameColorInDifferentColorSpaces) {
+    EXPECT_OBJCNE([UIColor colorWithWhite:0.5 alpha:1], [UIColor colorWithRed:0.5 green:0.5 blue:0.5 alpha:1]);
+}
