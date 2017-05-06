@@ -340,16 +340,54 @@ BASE_CLASS_REQUIRED_IMPLS(UIColor, UICGColorPrototype, CGColorGetTypeID);
 }
 
 /**
- @Status Stub
+ @Status Caveat
+ @Notes Only supports non-pattern color in grayscale and RGB
 */
 - (instancetype)initWithCoder:(NSCoder*)coder {
-    return StubReturn();
+    NSString* pattern = [coder decodeObjectForKey:@"UIPatternSelector"];
+    if (pattern == nil) {
+        pattern = [coder decodeObjectForKey:@"UISystemColorName"];
+    }
+
+    if (pattern != nil) {
+        const char* pPattern = [pattern UTF8String];
+        TraceVerbose(TAG, L"Selecting pattern %hs", pPattern);
+
+        return [[[self class] performSelector:NSSelectorFromString(pattern)] retain];
+    } else {
+        CGFloat alpha = ([coder containsValueForKey:@"UIAlpha"]) ? [coder decodeFloatForKey:@"UIAlpha"] : 1.0f;
+        if ([coder containsValueForKey:@"UIWhite"]) {
+            return [self initWithWhite:[coder decodeFloatForKey:@"UIWhite"] alpha:alpha];
+        }
+        return [self initWithRed:[coder decodeFloatForKey:@"UIRed"]
+                           green:[coder decodeFloatForKey:@"UIGreen"]
+                            blue:[coder decodeFloatForKey:@"UIBlue"]
+                           alpha:alpha];
+    }
+
+    return nullptr;
 }
 
 /**
- @Status Stub
+ @Status Caveat
+ @Notes Only supports non-pattern color in grayscale and RGB
 */
 - (void)encodeWithCoder:(NSCoder*)coder {
+    CGColorRef cgColor = [self CGColor];
+    if (CGColorGetPattern(cgColor) == nullptr) {
+        const CGFloat* components = CGColorGetComponents(cgColor);
+        RETURN_IF(components == nullptr);
+
+        if (CGColorSpaceGetModel(CGColorGetColorSpace(cgColor)) == kCGColorSpaceModelMonochrome) {
+            [coder encodeFloat:components[0] forKey:@"UIWhite"];
+        } else {
+            [coder encodeFloat:components[0] forKey:@"UIRed"];
+            [coder encodeFloat:components[1] forKey:@"UIGreen"];
+            [coder encodeFloat:components[2] forKey:@"UIBlue"];
+        }
+
+        [coder encodeFloat:components[3] forKey:@"UIAlpha"];
+    }
 }
 
 #pragma region PreDefinedColor
