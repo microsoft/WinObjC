@@ -30,3 +30,28 @@ TEST(UIColor, ColorTests) {
     color2 = [UIColor colorWithRed:0 green:0 blue:0 alpha:1];
     EXPECT_OBJCNE(color, color2);
 }
+
+static void __EncodeAndDecodeColor(UIColor* color) {
+    NSMutableData* data = [NSMutableData data];
+
+    StrongId<NSKeyedArchiver> coder{ woc::TakeOwnership, [[NSKeyedArchiver alloc] initForWritingWithMutableData:data] };
+    [color encodeWithCoder:coder];
+    [coder finishEncoding];
+
+    StrongId<NSKeyedUnarchiver> decoder{ woc::TakeOwnership, [[NSKeyedUnarchiver alloc] initForReadingWithData:data] };
+    StrongId<UIColor> decodedColor{ woc::TakeOwnership, [[UIColor alloc] initWithCoder:decoder] };
+    EXPECT_OBJCEQ(color, decodedColor);
+}
+
+TEST(UIColor, EncodeDecodeUIColor) {
+    // GrayScale
+    __EncodeAndDecodeColor([UIColor grayColor]);
+    __EncodeAndDecodeColor([UIColor colorWithWhite:0.5 alpha:0.98]);
+    __EncodeAndDecodeColor([UIColor colorWithWhite:0 alpha:1]);
+    __EncodeAndDecodeColor([UIColor colorWithWhite:1 alpha:1]);
+
+    // RGB
+    __EncodeAndDecodeColor([UIColor redColor]);
+    __EncodeAndDecodeColor([UIColor colorWithRed:1 green:0.5 blue:0.34 alpha:0.89]);
+    __EncodeAndDecodeColor([UIColor colorWithRed:1 green:0.4 blue:0.34 alpha:1.0]);
+}
