@@ -17,7 +17,7 @@
 #include <TestFramework.h>
 #import <UIKit/UIColor.h>
 
-TEST(UIColorTest, ColorTests) {
+TEST(UIColor, ColorTests) {
     UIColor* color = [UIColor redColor];
     UIColor* color2 = [UIColor colorWithRed:1 green:0 blue:0 alpha:1];
     EXPECT_OBJCEQ(color, color2);
@@ -29,43 +29,4 @@ TEST(UIColorTest, ColorTests) {
     color = [UIColor blackColor];
     color2 = [UIColor colorWithRed:0 green:0 blue:0 alpha:1];
     EXPECT_OBJCNE(color, color2);
-}
-
-TEST(UIColorTest, NamedUIColorMethods) {
-    UIColor* color = [UIColor redColor];
-
-    NSUInteger retainCount = [color retainCount];
-    ASSERT_TRUE_MSG(retainCount == NSUIntegerMax, "Failed: RetainCount not correct for UICachedColor");
-
-    [color release];
-    [color release];
-    [color release];
-    [color release];
-    retainCount = [color retainCount];
-    ASSERT_TRUE_MSG(retainCount == NSUIntegerMax, "Failed: RetainCount not correct for UICachedColor");
-
-    [color retain];
-    [color retain];
-    [color retain];
-    [color retain];
-    retainCount = [color retainCount];
-    ASSERT_TRUE_MSG(retainCount == NSUIntegerMax, "Failed: RetainCount not correct for UICachedColor");
-
-    color = [UIColor blueColor];
-    retainCount = [color retainCount];
-    ASSERT_TRUE_MSG(retainCount == NSUIntegerMax, "Failed: RetainCount not correct for UICachedColor");
-
-    [color release];
-    [color release];
-    [color release];
-    [color release];
-    retainCount = [color retainCount];
-    ASSERT_TRUE_MSG(retainCount == NSUIntegerMax, "Failed: RetainCount not correct for UICachedColor");
-
-    [color retain];
-    [color retain];
-    [color retain];
-    [color retain];
-    retainCount = [color retainCount];
-    ASSERT_TRUE_MSG(retainCount == NSUIntegerMax, "Failed: RetainCount not correct for UICachedColor");
 }
