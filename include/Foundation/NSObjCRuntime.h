@@ -24,7 +24,6 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
 #import <TargetConditionals.h>
 #import <Foundation/FoundationExport.h>
 #import <Availability.h>
-#import <StubIncludes.h>
 
 #define NS_INLINE static inline
 
@@ -189,8 +188,8 @@ FOUNDATION_EXPORT NSString* NSStringFromSelector(SEL selector);
 FOUNDATION_EXPORT Class NSClassFromString(NSString* className);
 FOUNDATION_EXPORT NSString* NSStringFromClass(Class aClass);
 
-FOUNDATION_EXPORT NSString* NSStringFromProtocol(Protocol* proto) STUB_METHOD;
-FOUNDATION_EXPORT Protocol* NSProtocolFromString(NSString* namestr) STUB_METHOD;
+FOUNDATION_EXPORT NSString* NSStringFromProtocol(Protocol* proto);
+FOUNDATION_EXPORT Protocol* NSProtocolFromString(NSString* namestr);
 
 #ifndef NS_BLOCKS_AVAILABLE
 #if __BLOCKS__
