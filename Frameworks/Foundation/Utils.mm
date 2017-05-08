@@ -59,7 +59,7 @@ NSString* NSStringFromSelector(SEL sel) {
  @Status Interoperable
 */
 NSString* NSStringFromProtocol(Protocol* proto) {
-    return proto ? [NSString stringWithCString:protocol_getName(proto)] : nil;
+    return proto ? [NSString stringWithCString:protocol_getName(proto)] : @"nil";
 }
 
 /**

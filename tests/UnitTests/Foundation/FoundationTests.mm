@@ -1266,7 +1266,7 @@ TEST(Foundation, NSSet_PerformSelector) {
 TEST(Foundation, NSStringFromProtocol) {
     EXPECT_OBJCEQ(@"Protocol1", NSStringFromProtocol(@protocol(Protocol1)));
     EXPECT_OBJCEQ(@"Protocol2", NSStringFromProtocol(@protocol(Protocol2)));
-    EXPECT_EQ(nil, NSStringFromProtocol(nil));
+    EXPECT_OBJCEQ(@"nil", NSStringFromProtocol(nil));
 }
 
 TEST(Foundation, NSProtocolFromString) {
