@@ -21,7 +21,7 @@
 
 #include <string>
 
-CGImageRef _CGImageCreateFromPNGFile(CFStringRef filename);
+CGImageRef _CGImageCreateFromPNGFile(CFStringRef filename, bool shouldInterpolate = false);
 CGImageRef _CGImageCreateFromJPEGFile(CFStringRef filename);
 CFDataRef _CFDataCreatePNGFromCGImage(CGImageRef image);
 bool _WriteCFDataToFile(CFDataRef data, CFStringRef filename);
