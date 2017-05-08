@@ -16,7 +16,6 @@
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSRecursiveLockTests.m" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\ArchivalTests.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\CoreFoundationTests.m" />
-    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\FoundationTests.m" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSArrayTests.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSAttributedStringTests.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSBundleTests.mm" />
@@ -46,7 +45,6 @@
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSProcessInfoTests.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSProgressTests.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSProxyTests.mm" />
-    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSScannerTests.m" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSStringTests.m" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSTimeZoneTests.m" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSURLCacheTests.mm" />
@@ -150,6 +148,8 @@
     <ClangCompile Include="$(StarboardBasePath)\tests\UnitTests\Foundation\NSObject_NSKeyValueSetAdaptersTests.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\UnitTests\Foundation\NSObject_NSKeyValueOrderedSetAdaptersTests.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSUUIDTests.mm" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSScannerTests.mm" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\FoundationTests.mm" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\..\..\tests\unittests\Foundation\NSFileManagerUT.txt" />

@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -1068,12 +1068,12 @@ TEST(KVO, SubpathOnDerivedKey) {
     TestKVOObserver* observer = [[[TestKVOObserver alloc] init] autorelease];
 
     observed.cascadableKey = child;
-    child.dictionaryProperty = @{ @"Key1" : @"Value1" };
+    child.dictionaryProperty = [NSMutableDictionary dictionaryWithDictionary:@{ @"Key1" : @"Value1" }];
 
     [observed addObserver:observer forKeyPath:@"derivedCascadableKey.dictionaryProperty.Key1" options:0 context:nil];
 
     observed.cascadableKey = child2;
-    child2.dictionaryProperty = @{ @"Key1" : @"Value2" };
+    child2.dictionaryProperty = [NSMutableDictionary dictionaryWithDictionary:@{ @"Key1" : @"Value2" }];
 
     EXPECT_EQ(2, [observer numberOfObservedChanges]);
 
@@ -1252,4 +1252,28 @@ TEST(Foundation, NSSet_PerformSelector) {
     EXPECT_EQ(1, [array count]);
     [set makeObjectsPerformSelector:@selector(removeAllObjects)];
     EXPECT_EQ(0, [array count]);
+}
+
+@protocol Protocol1
+@end
+
+@protocol Protocol2 <NSObject>
+- (void)emptyMethod;
+- (NSObject*)otherMethod:(id)arg1;
++ (id)classMethod;
+@end
+
+TEST(Foundation, NSStringFromProtocol) {
+    EXPECT_OBJCEQ(@"Protocol1", NSStringFromProtocol(@protocol(Protocol1)));
+    EXPECT_OBJCEQ(@"Protocol2", NSStringFromProtocol(@protocol(Protocol2)));
+    EXPECT_OBJCEQ(@"nil", NSStringFromProtocol(nil));
+}
+
+TEST(Foundation, NSProtocolFromString) {
+    EXPECT_EQ(@protocol(Protocol1), NSProtocolFromString(@"Protocol1"));
+    EXPECT_EQ(@protocol(Protocol2), NSProtocolFromString(@"Protocol2"));
+    EXPECT_EQ(nil, NSProtocolFromString(nil));
+    EXPECT_EQ(nil,
+              NSProtocolFromString(@"NonexistentProtocolOrAtLeastOneThatShouldNotEverEVERExistBecauseOfTheObnoxiouslyLongNameAsWellAsI"
+                                   @"rrelevantToJustAboutAnythingAnyoneShouldEverBeDoing"));
 }

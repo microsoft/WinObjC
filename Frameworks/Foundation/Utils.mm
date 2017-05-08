@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -14,11 +14,12 @@
 //
 //******************************************************************************
 
-#include "StubReturn.h"
 #include "Foundation/Foundation.h"
 #include "Foundation/NSObjCRuntime.h"
 #include "Foundation/NSArray.h"
 #include "Foundation/NSPathUtilities.h"
+
+#include <objc/encoding.h>
 
 const double NSFoundationVersionNumber = NSFoundationVersionNumber_iOS_8_3;
 
@@ -55,28 +56,30 @@ NSString* NSStringFromSelector(SEL sel) {
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 NSString* NSStringFromProtocol(Protocol* proto) {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return proto ? [NSString stringWithCString:protocol_getName(proto)] : @"nil";
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
-Protocol* NSProtocolFromString(NSString* namestr) {
-    UNIMPLEMENTED();
-    return StubReturn();
+Protocol* NSProtocolFromString(NSString* name) {
+    return objc_getProtocol([name UTF8String]);
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
-const char* NSGetSizeAndAlignment(const char* typePtr, NSUInteger* sizep, NSUInteger* alignp) {
-    UNIMPLEMENTED();
-    return StubReturn();
+const char* NSGetSizeAndAlignment(const char* type, NSUInteger* sizep, NSUInteger* alignp) {
+    if (sizep) {
+        *sizep = objc_sizeof_type(type);
+    }
+
+    if (alignp) {
+        *alignp = objc_alignof_type(type);
+    }
+
+    return objc_skip_typespec(type);
 }

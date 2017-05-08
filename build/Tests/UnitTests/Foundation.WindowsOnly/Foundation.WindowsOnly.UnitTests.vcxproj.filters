@@ -10,7 +10,6 @@
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\WindowsOnly\BlockClassTests.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\WindowsOnly\CFBridgeBaseTests.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\WindowsOnly\ErrorHandlingTests.mm" />
-    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\WindowsOnly\FoundationInternalTests.m" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\WindowsOnly\NSBooleanPredicateTests.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\WindowsOnly\NSCacheInternalTests.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\WindowsOnly\NSEnumeratorTests.mm" />
@@ -22,11 +21,11 @@
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\WindowsOnly\NSObjectInternalTests.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\WindowsOnly\NSPointerFunctionsInternalTests.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\WindowsOnly\NSRecursiveLockInternalTests.mm" />
-    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\WindowsOnly\NSStringInternalTests.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\WindowsOnly\NSPointerArrayInternalTests.mm" />
     <ClangCompile Include="$(StarboardBasePath)\Frameworks\Foundation\NSObject_NSCoding.mm" />
     <ClangCompile Include="$(StarboardBasePath)\Frameworks\Foundation\NSKeyValueCoding.mm" />
     <ClangCompile Include="$(StarboardBasePath)\Frameworks\Foundation\NSString+HSTRING.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\WindowsOnly\ArchivalInternalTests.mm" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\WindowsOnly\FoundationInternalTests.mm" />
   </ItemGroup>
 </Project>
