@@ -63,7 +63,7 @@ struct __CGImage : CoreFoundation::CppBase<__CGImage> {
 
     // User-specified
     bool _isMask;
-    bool _interpolate;
+    bool _interpolate; // default: true
     CGColorRenderingIntent _renderingIntent;
 
     __CGImage()
@@ -78,7 +78,7 @@ struct __CGImage : CoreFoundation::CppBase<__CGImage> {
           _bitmapInfo(kCGBitmapByteOrderDefault),
           _alphaInfo(kCGImageAlphaNone),
           _isMask(false),
-          _interpolate(false),
+          _interpolate(true),
           _renderingIntent(kCGRenderingIntentDefault) {
     }
 
