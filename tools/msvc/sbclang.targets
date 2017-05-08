@@ -695,12 +695,14 @@
     <ItemGroup Condition="$(ClCompileCRTs.ToLower().Contains('multithreadeddll'))">
       <Link Include="vccorlib.lib" />
       <Link Include="msvcrt.lib" />
+      <Link Condition="'$(UseWinObjCCRT)' == 'true'" Include="WinObjCRT.lib" />
       <Link Include="ucrt.lib" />
     </ItemGroup>
 
     <ItemGroup Condition="$(ClCompileCRTs.ToLower().Contains('multithreadeddebugdll'))">
       <Link Include="vccorlibd.lib" />
       <Link Include="msvcrtd.lib" />
+      <Link Condition="'$(UseWinObjCCRT)' == 'true'" Include="WinObjCRT.lib" />
       <Link Include="ucrtd.lib" />
     </ItemGroup>
 
@@ -833,7 +835,7 @@
 
   <ItemDefinitionGroup>
     <Link Condition="'$(UseWinObjCCRT)' == 'true'">
-      <AdditionalOptions>/DISALLOWLIB:libucrt.lib /DISALLOWLIB:libucrtd.lib /nodefaultlib:ucrt /nodefaultlib:ucrtd /nodefaultlib:vccorlib /nodefaultlib:msvcrt /nodefaultlib:vccorlibd /nodefaultlib:msvcrtd /defaultlib:winobjcrt winobjcrt.lib %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>/DISALLOWLIB:libucrt.lib /DISALLOWLIB:libucrtd.lib /nodefaultlib:ucrt /nodefaultlib:ucrtd /nodefaultlib:vccorlib /nodefaultlib:msvcrt /nodefaultlib:vccorlibd /nodefaultlib:msvcrtd /defaultlib:winobjcrt %(AdditionalOptions)</AdditionalOptions>
     </Link>
   </ItemDefinitionGroup>
 
