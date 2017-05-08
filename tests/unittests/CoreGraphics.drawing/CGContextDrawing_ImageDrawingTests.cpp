@@ -280,3 +280,53 @@ DRAW_TEST_F(CGImageDrawing, DrawAContextIntoAnImage, UIKitMimicTest<>) {
     CGContextDrawImage(context, bounds, image.get());
 }
 #pragma endregion DrawingToCanvas
+
+#pragma region Interpolation
+struct CGNamedInterpolationQuality {
+    const char* name;
+    CGInterpolationQuality quality;
+};
+
+static const CGNamedInterpolationQuality interpolationQualities[]{
+    { "None", kCGInterpolationNone },
+    { "Low", kCGInterpolationLow },
+    { "Medium", kCGInterpolationMedium },
+    { "High", kCGInterpolationHigh },
+};
+
+class CGContextImageInterpolation : public WhiteBackgroundTest<PixelByPixelImageComparator<>>,
+                                    public ::testing::WithParamInterface<CGNamedInterpolationQuality> {
+    CFStringRef CreateOutputFilename() {
+        const char* qualityName = GetParam().name;
+        return CFStringCreateWithFormat(nullptr, nullptr, CFSTR("TestImage.CGContext.ImageInterpolation_%s.png"), qualityName);
+    }
+
+public:
+    static woc::StrongCF<CGImageRef> s_testImage;
+    static void SetUpTestCase() {
+        auto drawingConfig = DrawingTestConfig::Get();
+        auto testFilename =
+            woc::MakeStrongCF<CFStringRef>(_CFStringCreateWithStdString(drawingConfig->GetResourcePath("winobjc_indexed.png")));
+        s_testImage.attach(_CGImageCreateFromPNGFile(testFilename, true /* shouldInterpolate */));
+    }
+
+    static void TearDownTestCase() {
+        s_testImage.attach(nullptr);
+    }
+};
+woc::StrongCF<CGImageRef> CGContextImageInterpolation::s_testImage;
+
+DRAW_TEST_P(CGContextImageInterpolation, Downscale) {
+    CGContextRef context = GetDrawingContext();
+    CGRect bounds = GetDrawingBounds();
+
+    CGSize imageSize{
+        CGImageGetWidth(s_testImage) / 4.f, CGImageGetHeight(s_testImage) / 4.f,
+    };
+
+    CGContextSetInterpolationQuality(context, GetParam().quality);
+    CGContextDrawImage(context, _CGRectCenteredOnPoint(imageSize, _CGRectGetCenter(bounds)), s_testImage);
+}
+
+INSTANTIATE_TEST_CASE_P(Interpolation, CGContextImageInterpolation, ::testing::ValuesIn(interpolationQualities));
+#pragma endregion

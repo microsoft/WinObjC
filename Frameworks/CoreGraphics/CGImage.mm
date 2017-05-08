@@ -47,102 +47,111 @@ COREGRAPHICS_EXPORT void _CGImageAddDestructionListener(CGImageDestructionListen
 
 #pragma region CGImageImplementation
 
-struct __CGImageImpl {
-    Microsoft::WRL::ComPtr<IWICBitmap> bitmapImageSource;
-    bool isMask;
-    bool interpolate;
-    woc::unique_cf<CGColorSpaceRef> colorSpace;
-    CGImageAlphaInfo alphaInfo;
-    size_t height;
-    size_t width;
-    size_t bitsPerPixel;
-    size_t bitsPerComponent;
-    size_t bytesPerRow;
-    CGBitmapInfo bitmapInfo;
-    CGColorRenderingIntent renderingIntent;
+struct __CGImage : CoreFoundation::CppBase<__CGImage> {
+    ComPtr<IWICBitmap> _bitmapImageSource;
 
-    __CGImageImpl() {
-        height = 0;
-        width = 0;
-        bitsPerComponent = 0;
-        bitsPerPixel = 0;
-        bytesPerRow = 0;
-        bitmapInfo = kCGBitmapByteOrderDefault;
-        alphaInfo = kCGImageAlphaNone;
-        isMask = false;
-        interpolate = false;
-        renderingIntent = kCGRenderingIntentDefault;
+    // Calculated from pixel format + WIC backing
+    WICPixelFormatGUID _pixelFormat;
+    woc::StrongCF<CGColorSpaceRef> _colorSpace;
+    size_t _width;
+    size_t _height;
+    size_t _bitsPerPixel;
+    size_t _bitsPerComponent;
+    size_t _bytesPerRow;
+    CGBitmapInfo _bitmapInfo;
+    CGImageAlphaInfo _alphaInfo;
+
+    // User-specified
+    bool _isMask;
+    bool _interpolate; // default: true
+    CGColorRenderingIntent _renderingIntent;
+
+    __CGImage()
+        : Parent(),
+          _bitmapImageSource(nullptr),
+          _pixelFormat(GUID_WICPixelFormatUndefined),
+          _width(0),
+          _height(0),
+          _bitsPerPixel(0),
+          _bitsPerComponent(0),
+          _bytesPerRow(0),
+          _bitmapInfo(kCGBitmapByteOrderDefault),
+          _alphaInfo(kCGImageAlphaNone),
+          _isMask(false),
+          _interpolate(true),
+          _renderingIntent(kCGRenderingIntentDefault) {
+    }
+
+    // We would use a copy constructor here, but they cannot return HRESULTs.
+    // There are no other throwing constructors in our code, so it doesn't make sense to introduce our first one.
+    HRESULT CopyFromImage(const __CGImage& other, WICPixelFormatGUID newFormat = GUID_WICPixelFormatDontCare, CGRect* region = nullptr) {
+        CGRect rect = region ? *region : CGRect{ CGPointZero, { other._width, other._height } };
+
+        ComPtr<IWICImagingFactory> imageFactory;
+        RETURN_IF_FAILED(_CGGetWICFactory(&imageFactory));
+
+        ComPtr<IWICBitmapSource> bitmapSource;
+
+        if (newFormat == GUID_WICPixelFormatDontCare || newFormat == other._pixelFormat) {
+            bitmapSource = other.ImageSource();
+        } else {
+            ComPtr<IWICFormatConverter> converter;
+            RETURN_IF_FAILED(imageFactory->CreateFormatConverter(&converter));
+
+            RETURN_IF_FAILED(converter->Initialize(
+                other.ImageSource(), newFormat, WICBitmapDitherTypeNone, nullptr, 0.f, WICBitmapPaletteTypeMedianCut));
+
+            bitmapSource = converter;
+        }
+
+        ComPtr<IWICBitmap> newBitmap;
+        RETURN_IF_FAILED(imageFactory->CreateBitmapFromSourceRect(bitmapSource.Get(), rect.origin.x, rect.origin.y, rect.size.width, rect.size.height, &newBitmap));
+
+        RETURN_IF_FAILED(SetImageSource(newBitmap.Get())); // also sets _colorSpace
+        _isMask = other._isMask;
+        _interpolate = other._interpolate;
+        _renderingIntent = other._renderingIntent;
+
+        return S_OK;
+    }
+
+    inline HRESULT SetImageSource(IWICBitmap* source) {
+        RETURN_IF_FAILED(source->GetPixelFormat(&_pixelFormat));
+
+        _bitmapImageSource = source;
+
+        const __CGImagePixelProperties* properties = _CGGetPixelFormatProperties(_pixelFormat);
+
+        // populate the image info.
+        if (FAILED(_bitmapImageSource->GetSize(&_width, &_height))) {
+            _height = 0;
+            _width = 0;
+        }
+
+        _bitmapInfo = properties->bitmapInfo;
+        _alphaInfo = static_cast<CGImageAlphaInfo>(_bitmapInfo & kCGBitmapAlphaInfoMask);
+        _bitsPerPixel = properties->bitsPerPixel;
+        _bitsPerComponent = properties->bitsPerComponent;
+        _bytesPerRow = (_bitsPerPixel >> 3) * _width;
+        if (!_colorSpace) {
+            // create a new empty colorspace of the appropriate model
+            _colorSpace.attach(_CGColorSpaceCreate(properties->colorSpaceModel));
+        }
+
+        return S_OK;
+    }
+
+    inline IWICBitmap* ImageSource() const {
+        return _bitmapImageSource.Get();
     }
 
     inline WICPixelFormatGUID PixelFormat() const {
-        WICPixelFormatGUID pixelFormat;
-        RETURN_RESULT_IF_FAILED(bitmapImageSource->GetPixelFormat(&pixelFormat), GUID_WICPixelFormatUndefined);
-        return pixelFormat;
-    }
-
-    inline const __CGImagePixelProperties* Properties() const {
-        WICPixelFormatGUID pixelFormat = PixelFormat();
-        return _CGGetPixelFormatProperties(pixelFormat);
-    }
-
-    inline size_t BitsPerPixel() const {
-        const __CGImagePixelProperties* properties = Properties();
-        RETURN_RESULT_IF_NULL(properties, 0);
-        return properties->bitsPerPixel;
-    }
-
-    inline size_t BitsPerComponent() const {
-        const __CGImagePixelProperties* properties = Properties();
-        RETURN_RESULT_IF_NULL(properties, 0);
-        return properties->bitsPerComponent;
-    }
-
-    inline CGBitmapInfo BitmapInfo() const {
-        const __CGImagePixelProperties* properties = Properties();
-        RETURN_RESULT_IF_NULL(properties, 0);
-        return properties->bitmapInfo;
-    }
-
-    inline CGImageAlphaInfo AlphaInfo() const {
-        return static_cast<CGImageAlphaInfo>(BitmapInfo() & kCGBitmapAlphaInfoMask);
-    }
-
-    inline CGColorSpaceRef ColorSpace() {
-        const __CGImagePixelProperties* properties = Properties();
-        RETURN_NULL_IF(!properties);
-        return _CGColorSpaceCreate(properties->colorSpaceModel);
-    }
-
-    inline void SetImageSource(Microsoft::WRL::ComPtr<IWICBitmap> source) {
-        bitmapImageSource = std::move(source);
-        // populate the image info.
-        if (FAILED(bitmapImageSource->GetSize(&width, &height))) {
-            height = 0;
-            width = 0;
-        }
-
-        bitmapInfo = BitmapInfo();
-        alphaInfo = AlphaInfo();
-        bitsPerPixel = BitsPerPixel();
-        bitsPerComponent = BitsPerComponent();
-        bytesPerRow = (bitsPerPixel >> 3) * width;
-        if (!colorSpace) {
-            colorSpace.reset(ColorSpace());
-        }
-    }
-};
-
-struct __CGImage : CoreFoundation::CppBase<__CGImage> {
-    // TODO(JJ) REMOVE THIS; Merge Impl into __CGImage.
-    __CGImageImpl _impl;
-
-    inline Microsoft::WRL::ComPtr<IWICBitmap>& ImageSource() {
-        return _impl.bitmapImageSource;
+        return _pixelFormat;
     }
 
     inline void* Data() const {
         Microsoft::WRL::ComPtr<IWICBitmapLock> lock;
-        RETURN_NULL_IF_FAILED(_impl.bitmapImageSource->Lock(nullptr, WICBitmapLockWrite, &lock));
+        RETURN_NULL_IF_FAILED(_bitmapImageSource->Lock(nullptr, WICBitmapLockWrite, &lock));
         BYTE* data;
         UINT size;
         RETURN_NULL_IF_FAILED(lock->GetDataPointer(&size, &data));
@@ -150,77 +159,63 @@ struct __CGImage : CoreFoundation::CppBase<__CGImage> {
     }
 
     inline size_t Height() const {
-        return _impl.height;
+        return _height;
     }
 
     inline size_t Width() const {
-        return _impl.width;
+        return _width;
     }
 
-    inline bool IsMask() const {
-        return _impl.isMask;
+    inline CGColorSpaceRef ColorSpace() const {
+        return _colorSpace.get();
     }
 
-    inline bool Interpolate() const {
-        return _impl.interpolate;
-    }
-
-    inline CGColorSpaceRef ColorSpace() {
-        return _impl.colorSpace.get();
-    }
-
-    inline CGColorRenderingIntent RenderingIntent() const {
-        return _impl.renderingIntent;
+    inline void SetColorSpace(CGColorSpaceRef space) {
+        _colorSpace = space;
     }
 
     inline CGBitmapInfo BitmapInfo() const {
-        return _impl.bitmapInfo;
+        return _bitmapInfo;
     }
 
     inline CGImageAlphaInfo AlphaInfo() const {
-        return _impl.alphaInfo;
+        return _alphaInfo;
     }
 
     inline size_t BitsPerPixel() const {
-        return _impl.bitsPerPixel;
+        return _bitsPerPixel;
     }
 
     inline size_t BytesPerRow() const {
-        return _impl.bytesPerRow;
+        return _bytesPerRow;
     }
 
     inline size_t BitsPerComponent() const {
-        return _impl.bitsPerComponent;
+        return _bitsPerComponent;
     }
 
-    inline WICPixelFormatGUID PixelFormat() const {
-        return _impl.PixelFormat();
+    inline bool IsMask() const {
+        return _isMask;
     }
 
-    inline __CGImage& SetImageSource(Microsoft::WRL::ComPtr<IWICBitmap> source) {
-        _impl.SetImageSource(source);
-        return *this;
+    inline void SetIsMask(bool mask) {
+        _isMask = mask;
     }
 
-    inline __CGImage& SetIsMask(bool mask) {
-        _impl.isMask = mask;
-        return *this;
+    inline bool Interpolate() const {
+        return _interpolate;
     }
 
-    inline __CGImage& SetInterpolate(bool interpolate) {
-        _impl.interpolate = interpolate;
-        return *this;
+    inline void SetInterpolate(bool interpolate) {
+        _interpolate = interpolate;
     }
 
-    inline __CGImage& SetColorSpace(CGColorSpaceRef space) {
-        _impl.colorSpace.reset(space);
-        CGColorSpaceRetain(space);
-        return *this;
+    inline CGColorRenderingIntent RenderingIntent() const {
+        return _renderingIntent;
     }
 
-    inline __CGImage& SetRenderingIntent(CGColorRenderingIntent intent) {
-        _impl.renderingIntent = intent;
-        return *this;
+    inline void SetRenderingIntent(CGColorRenderingIntent intent) {
+        _renderingIntent = intent;
     }
 
     ~__CGImage() {
@@ -269,7 +264,10 @@ CGImageRef CGImageCreate(size_t width,
         imageFactory->CreateBitmapFromMemory(width, height, pixelFormat, bytesPerRow, height * bytesPerRow, bytes, &image));
 
     CGImageRef imageRef = __CGImage::CreateInstance();
-    imageRef->SetImageSource(image).SetColorSpace(colorSpace).SetRenderingIntent(intent).SetInterpolate(shouldInterpolate);
+    RETURN_NULL_IF_FAILED(imageRef->SetImageSource(image.Get()));
+    imageRef->SetColorSpace(colorSpace);
+    imageRef->SetRenderingIntent(intent);
+    imageRef->SetInterpolate(shouldInterpolate);
 
     return imageRef;
 }
@@ -280,20 +278,9 @@ CGImageRef CGImageCreate(size_t width,
 CGImageRef CGImageCreateWithImageInRect(CGImageRef ref, CGRect rect) {
     RETURN_NULL_IF(!ref);
 
-    ComPtr<IWICImagingFactory> imageFactory;
-    RETURN_NULL_IF_FAILED(_CGGetWICFactory(&imageFactory));
-
-    ComPtr<IWICBitmap> rectImage;
-    RETURN_NULL_IF_FAILED(imageFactory->CreateBitmapFromSourceRect(
-        ref->ImageSource().Get(), rect.origin.x, rect.origin.y, rect.size.width, rect.size.height, &rectImage));
-
-    CGImageRef imageRef = __CGImage::CreateInstance();
-    imageRef->SetImageSource(rectImage)
-        .SetColorSpace(ref->ColorSpace())
-        .SetRenderingIntent(ref->RenderingIntent())
-        .SetInterpolate(ref->Interpolate());
-
-    return imageRef;
+    woc::StrongCF<CGImageRef> newImage{ woc::TakeOwnership, __CGImage::CreateInstance() };
+    RETURN_NULL_IF_FAILED(newImage->CopyFromImage(*ref, GUID_WICPixelFormatDontCare, &rect));
+    return newImage.detach();
 }
 
 /**
@@ -302,21 +289,9 @@ CGImageRef CGImageCreateWithImageInRect(CGImageRef ref, CGRect rect) {
 CGImageRef CGImageCreateCopy(CGImageRef ref) {
     RETURN_NULL_IF(!ref);
 
-    ComPtr<IWICImagingFactory> imageFactory;
-    RETURN_NULL_IF_FAILED(_CGGetWICFactory(&imageFactory));
-
-    ComPtr<IWICBitmap> image;
-
-    RETURN_NULL_IF_FAILED(imageFactory->CreateBitmapFromSource(ref->ImageSource().Get(), WICBitmapCacheOnLoad, &image));
-
-    CGImageRef imageRef = __CGImage::CreateInstance();
-    imageRef->SetImageSource(image)
-        .SetIsMask(ref->IsMask())
-        .SetInterpolate(ref->Interpolate())
-        .SetColorSpace(ref->ColorSpace())
-        .SetRenderingIntent(ref->RenderingIntent());
-
-    return imageRef;
+    woc::StrongCF<CGImageRef> newImage{ woc::TakeOwnership, __CGImage::CreateInstance() };
+    RETURN_NULL_IF_FAILED(newImage->CopyFromImage(*ref, GUID_WICPixelFormatDontCare, nullptr));
+    return newImage.detach();
 }
 
 /**
@@ -347,7 +322,9 @@ CGImageRef CGImageMaskCreate(size_t width,
         imageFactory->CreateBitmapFromMemory(width, height, pixelFormat, bytesPerRow, height * bytesPerRow, bytes, &image));
 
     CGImageRef imageRef = __CGImage::CreateInstance();
-    imageRef->SetImageSource(image).SetIsMask(true).SetInterpolate(shouldInterpolate);
+    RETURN_NULL_IF_FAILED(imageRef->SetImageSource(image.Get()));
+    imageRef->SetIsMask(true);
+    imageRef->SetInterpolate(shouldInterpolate);
 
     return imageRef;
 }
@@ -462,7 +439,8 @@ CGImageRef CGImageCreateWithJPEGDataProvider(CGDataProviderRef source,
     CGImageRef imageRef = _CGImageLoadJPEG(bytes, _CGDataProviderGetSize(source));
 
     RETURN_NULL_IF(!imageRef);
-    imageRef->SetInterpolate(shouldInterpolate).SetRenderingIntent(intent);
+    imageRef->SetInterpolate(shouldInterpolate);
+    imageRef->SetRenderingIntent(intent);
 
     return imageRef;
 }
@@ -481,7 +459,8 @@ CGImageRef CGImageCreateWithPNGDataProvider(CGDataProviderRef source,
     CGImageRef imageRef = _CGImageLoadPNG(bytes, _CGDataProviderGetSize(source));
 
     RETURN_NULL_IF(!imageRef);
-    imageRef->SetInterpolate(shouldInterpolate).SetRenderingIntent(intent);
+    imageRef->SetInterpolate(shouldInterpolate);
+    imageRef->SetRenderingIntent(intent);
 
     return imageRef;
 }
@@ -599,14 +578,17 @@ const __CGImagePixelProperties* _CGGetPixelFormatProperties(WICPixelFormatGUID p
 HRESULT _CGImageGetWICImageSource(CGImageRef image, IWICBitmap** source) {
     RETURN_HR_IF_NULL(E_INVALIDARG, image);
     RETURN_HR_IF_NULL(E_POINTER, source);
-    return image->ImageSource().CopyTo(source);
+    IWICBitmap* copy = image->ImageSource();
+    copy->AddRef();
+    *source = copy;
+    return S_OK;
 }
 
 __declspec(dllexport) std::shared_ptr<IDisplayTexture> _CGImageGetDisplayTexture(CGImageRef image) {
     RETURN_NULL_IF(!image);
 
     ComPtr<ICGDisplayTexture> displayTextureAccess;
-    RETURN_NULL_IF_FAILED(image->ImageSource().Get()->QueryInterface(IID_PPV_ARGS(&displayTextureAccess)));
+    RETURN_NULL_IF_FAILED(image->ImageSource()->QueryInterface(IID_PPV_ARGS(&displayTextureAccess)));
     RETURN_NULL_IF(!displayTextureAccess);
 
     return displayTextureAccess->DisplayTexture();
@@ -621,34 +603,20 @@ void* _CGImageGetRawBytes(CGImageRef image) {
 CGImageRef _CGImageCreateWithWICBitmap(IWICBitmap* bitmap) {
     RETURN_NULL_IF(!bitmap);
     CGImageRef imageRef = __CGImage::CreateInstance();
-    imageRef->SetImageSource(bitmap);
+    RETURN_NULL_IF_FAILED(imageRef->SetImageSource(bitmap));
 
     return imageRef;
 }
 
-CGImageRef _CGImageCreateCopyWithPixelFormat(CGImageRef image, WICPixelFormatGUID pixelFormat) {
-    RETURN_NULL_IF(!image);
-    if (IsEqualGUID(image->PixelFormat(), pixelFormat)) {
-        CGImageRetain(image);
-        return image;
+CGImageRef _CGImageCreateCopyWithPixelFormat(CGImageRef ref, WICPixelFormatGUID pixelFormat) {
+    RETURN_NULL_IF(!ref);
+    if (IsEqualGUID(ref->PixelFormat(), pixelFormat)) {
+        return CGImageRetain(ref);
     }
 
-    ComPtr<IWICImagingFactory> imageFactory;
-    RETURN_NULL_IF_FAILED(_CGGetWICFactory(&imageFactory));
-
-    ComPtr<IWICFormatConverter> converter;
-    RETURN_NULL_IF_FAILED(imageFactory->CreateFormatConverter(&converter));
-
-    RETURN_NULL_IF_FAILED(converter->Initialize(
-        image->ImageSource().Get(), pixelFormat, WICBitmapDitherTypeNone, nullptr, 0.f, WICBitmapPaletteTypeMedianCut));
-
-    ComPtr<IWICBitmap> convertedImage;
-    RETURN_NULL_IF_FAILED(imageFactory->CreateBitmapFromSource(converter.Get(), WICBitmapCacheOnLoad, &convertedImage));
-
-    CGImageRef imageRef = __CGImage::CreateInstance();
-    imageRef->SetImageSource(convertedImage);
-
-    return imageRef;
+    woc::StrongCF<CGImageRef> newImage{ woc::TakeOwnership, __CGImage::CreateInstance() };
+    RETURN_NULL_IF_FAILED(newImage->CopyFromImage(*ref, pixelFormat));
+    return newImage.detach();
 }
 
 CGImageRef _CGImageCreateFromDataProvider(CGDataProviderRef provider) {
@@ -704,7 +672,7 @@ CGImageRef _CGImageLoadImageWithWICDecoder(REFGUID decoderCls, void* bytes, int 
     RETURN_NULL_IF_FAILED(imageFactory->CreateBitmapFromSource(bitMapFrameDecoder.Get(), WICBitmapCacheOnLoad, &bitmap));
 
     CGImageRef imageRef = __CGImage::CreateInstance();
-    imageRef->SetImageSource(bitmap);
+    RETURN_NULL_IF_FAILED(imageRef->SetImageSource(bitmap.Get()));
     return imageRef;
 }
 

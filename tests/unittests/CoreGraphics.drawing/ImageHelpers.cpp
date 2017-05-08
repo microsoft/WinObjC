@@ -23,14 +23,14 @@
 
 #include <windows.h>
 
-CGImageRef _CGImageCreateFromPNGFile(CFStringRef filename) {
+CGImageRef _CGImageCreateFromPNGFile(CFStringRef filename, bool shouldInterpolate) {
     woc::unique_cf<CGDataProviderRef> dataProvider{ CGDataProviderCreateWithFilename(
         CFStringGetCStringPtr(filename, kCFStringEncodingUTF8)) };
     if (!dataProvider) {
         return nullptr;
     }
 
-    return CGImageCreateWithPNGDataProvider(dataProvider.get(), nullptr, FALSE, kCGRenderingIntentDefault);
+    return CGImageCreateWithPNGDataProvider(dataProvider.get(), nullptr, shouldInterpolate, kCGRenderingIntentDefault);
 }
 
 CGImageRef _CGImageCreateFromJPEGFile(CFStringRef filename) {
