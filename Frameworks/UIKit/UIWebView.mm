@@ -363,13 +363,16 @@ static void _initUIWebView(UIWebView* self) {
     [color getRed:&r green:&g blue:&b alpha:&a];
 
     // XAML WebView transparency is not used unless it's set to the transparent system color.
-    if (a != 1.0f) {
-        _xamlWebControl.DefaultBackgroundColor(winrt::Windows::UI::Colors::Transparent());
-    } else {
-        _xamlWebControl.DefaultBackgroundColor(winrt::Windows::UI::ColorHelper::FromArgb(255,
-                                                                         (unsigned char)(r * 255.0),
-                                                                         (unsigned char)(g * 255.0),
-                                                                         (unsigned char)(b * 255.0)));
+    if (_xamlWebControl) {
+        if (a != 1.0f) {
+            _xamlWebControl.DefaultBackgroundColor(winrt::Windows::UI::Colors::Transparent());
+        }
+        else {
+            _xamlWebControl.DefaultBackgroundColor(winrt::Windows::UI::ColorHelper::FromArgb(255,
+                (unsigned char)(r * 255.0),
+                (unsigned char)(g * 255.0),
+                (unsigned char)(b * 255.0)));
+        }
     }
 }
 
