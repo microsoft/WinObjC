@@ -1,4 +1,4 @@
-//******************************************************************************
+﻿//******************************************************************************
 //
 // Copyright (c) Microsoft. All rights reserved.
 //
@@ -271,4 +271,38 @@ DRAW_TEST_F(CGContext, ClipBoundingBox, WhiteBackgroundTest<>) {
 
     CGContextSetRGBFillColor(context, 0.0, 1.0, 0.0, 1.0);
     CGContextFillRect(context, CGContextGetClipBoundingBox(context));
+}
+
+DRAW_TEST_F(CGContext, SubPixelAlignment, WhiteBackgroundTest<>) {
+    CGContextRef context = GetDrawingContext();
+    CGRect bounds = GetDrawingBounds();
+
+    CGMutablePathRef path = CGPathCreateMutable();
+    CGPathMoveToPoint(path, NULL, bounds.origin.x + 50, bounds.origin.y + 50);
+    CGPathAddLineToPoint(path, NULL, bounds.origin.x + 150, bounds.origin.y + 50);
+    CGPathAddLineToPoint(path, NULL, bounds.origin.x + 150, bounds.origin.y + 150);
+    CGPathAddLineToPoint(path, NULL, bounds.origin.x + 50, bounds.origin.y + 150);
+    CGPathCloseSubpath(path);
+
+    CGContextAddPath(context, path);
+    CGContextTranslateCTM(context, 50.5, 50.5);
+    CGContextAddPath(context, path);
+    CGPathRelease(path);
+
+    CGContextSetRGBStrokeColor(context, 0.0, 0.0, 0.0, 1.0);
+    CGContextDrawPath(context, kCGPathStroke);
+}
+
+DRAW_TEST_F(CGContext, StrokeRectWithWidth, WhiteBackgroundTest<>) {
+    CGContextRef context = GetDrawingContext();
+    CGRect bounds = GetDrawingBounds();
+
+    CGRect box = CGRectMake(bounds.size.width * .1, bounds.size.height * .1, bounds.size.width * .3, bounds.size.height * .3);
+    CGContextStrokeRectWithWidth(context, box, 1);
+    CGContextTranslateCTM(context, bounds.size.width * .5, 0);
+    CGContextStrokeRectWithWidth(context, box, 3);
+    CGContextTranslateCTM(context, bounds.size.width * -.5, bounds.size.height * .5);
+    CGContextStrokeRectWithWidth(context, box, 10);
+    CGContextTranslateCTM(context, bounds.size.width * .5, 0);
+    CGContextStrokeRectWithWidth(context, box, 20);
 }
