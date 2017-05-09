@@ -79,6 +79,62 @@ DRAW_TEST_F(CGGradient, LinearGradientDrawWithCGColor, UIKitMimicTest<PixelByPix
                                 kCGGradientDrawsBeforeStartLocation);
 }
 
+class CGGradientLinearDiffColorSpace : public UIKitMimicTest<PixelByPixelImageComparator<PixelComparisonModeMask<64>>>,
+                                       public ::testing::WithParamInterface<CGColorSpaceRef> {
+    CFStringRef CreateOutputFilename() {
+        CGColorSpaceRef colorSpace = GetParam();
+
+        const char* optionsName;
+        switch (CGColorSpaceGetModel(colorSpace)) {
+            case kCGColorSpaceModelRGB:
+                optionsName = "RGB";
+                break;
+            case kCGColorSpaceModelPattern:
+                optionsName = "Pattern";
+                break;
+            case kCGColorSpaceModelMonochrome:
+                optionsName = "MonoChrome";
+                break;
+            case kCGColorSpaceModelIndexed:
+                optionsName = "Indexed";
+                break;
+            case kCGColorSpaceModelCMYK:
+                optionsName = "CMYK";
+                break;
+            default:
+                optionsName = "Unknown";
+                break;
+        }
+
+        return CFStringCreateWithFormat(nullptr, nullptr, CFSTR("TestImage.CGGradient.Linear.DifferentColorSpace.%s.png"), optionsName);
+    }
+};
+
+DRAW_TEST_P(CGGradientLinearDiffColorSpace, LinearGradientCGColorDifferentColorSpace) {
+    CGColorSpaceRef colorSpace = GetParam();
+    auto grayHalf = woc::MakeStrongCF<CGColorRef>(CGColorCreateGenericGray(0.5, 0.5));
+    auto blue = woc::MakeStrongCF<CGColorRef>(CGColorCreateGenericRGB(0, 0, 1, 1));
+    auto clear = woc::MakeStrongCF<CGColorRef>(CGColorCreateGenericGray(0.0, 0.0));
+    auto red = woc::MakeStrongCF<CGColorRef>(CGColorCreateGenericRGB(1, 0, 0, 1));
+    auto green = woc::MakeStrongCF<CGColorRef>(CGColorCreateGenericRGB(0, 1, 0, 1));
+
+    CGColorRef colors[] = { grayHalf, red, clear, blue, green };
+    CFArrayRef colArray = CFArrayCreate(nullptr, (const void**)colors, 5, &kCFTypeArrayCallBacks);
+
+    CGGradientRef gradient = CGGradientCreateWithColors(colorSpace, colArray, nullptr);
+
+    CGContextDrawLinearGradient(GetDrawingContext(),
+                                gradient,
+                                CGPointMake(0, 0),
+                                CGPointMake(512, 1024),
+                                kCGGradientDrawsBeforeStartLocation);
+}
+
+static const CGColorSpaceRef sc_RGBColorSpace = woc::MakeStrongCF<CGColorSpaceRef>(CGColorSpaceCreateDeviceRGB());
+static const CGColorSpaceRef sc_ColorSpaces[] = { sc_RGBColorSpace, nullptr };
+
+INSTANTIATE_TEST_CASE_P(CGGradient, CGGradientLinearDiffColorSpace, ::testing::ValuesIn(sc_ColorSpaces));
+
 DRAW_TEST_F(CGGradient, LinearGradientShortBothSides_Options_0, UIKitMimicTest<PixelByPixelImageComparator<PixelComparisonModeMask<64>>>) {
     _drawShortLinearGradientWithOptions(GetDrawingContext(), GetDrawingBounds(), 0);
 }
