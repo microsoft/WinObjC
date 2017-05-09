@@ -1,7 +1,7 @@
 //******************************************************************************
 //
 // Copyright (c) 2016 Intel Corporation. All rights reserved.
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -18,6 +18,7 @@
 #import "GeocodingViewController.h"
 #include <mach/mach.h>
 #include <CoreLocation/CoreLocation.h>
+#include <UWP/WindowsServicesMaps.h>
 
 @interface GeocodingViewController ()
 @property integer_t user_time_sec;
@@ -63,6 +64,8 @@
 }
 
 - (void)startGeocodingCalls {
+    // Note: This will not function as the service token is not set
+    // [WSMMapService setServiceToken:@"…"];
     self.location1 = [[CLLocation alloc] initWithLatitude:47.6062 longitude:-122.3321];
     self.location2 = [[CLLocation alloc] initWithLatitude:250 longitude:500];
     self.locationName1 = @"Moscow, Russia";
