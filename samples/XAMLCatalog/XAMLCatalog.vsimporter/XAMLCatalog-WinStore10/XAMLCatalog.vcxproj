@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|ARM">
@@ -179,6 +179,15 @@
     </AppxManifest>
     <Xml Include="default.rd.xml" />
     <None Include="XAMLCatalog_TemporaryKey.pfx" />
+    <None Include="project.json" />
+    <Image Include="..\..\XAMLCatalog\Images\progress-fill-sample.png">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
+    </Image>
+    <Image Include="..\..\XAMLCatalog\Images\progress-track-sample.png">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
+    </Image>
     <Image Include="Assets\LockScreenLogo.scale-200.png" />
     <Image Include="Assets\SplashScreen.scale-200.png" />
     <Image Include="Assets\Square150x150Logo.scale-200.png" />
@@ -208,6 +217,7 @@
     <ClInclude Include="..\..\XAMLCatalog\UIKitControls\UIActivityIndicatorViewController.h" />
     <ClInclude Include="..\..\XAMLCatalog\UIKitControls\UIButtonWithControlsViewController.h" />
     <ClInclude Include="..\..\XAMLCatalog\UIKitControls\UILabelViewController.h" />
+    <ClInclude Include="..\..\XAMLCatalog\UIKitControls\UIProgressViewController.h" />
     <ClInclude Include="..\..\XAMLCatalog\UIKitControls\UIScrollViewController.h" />
     <ClInclude Include="..\..\XAMLCatalog\UIKitControls\UISliderViewController.h" />
     <ClInclude Include="..\..\XAMLCatalog\UIKitControls\UITextFieldViewController.h" />
@@ -223,6 +233,7 @@
     <ClangCompile Include="..\..\XAMLCatalog\UIKitControls\UIActivityIndicatorViewController.m" />
     <ClangCompile Include="..\..\XAMLCatalog\UIKitControls\UIButtonWithControlsViewController.m" />
     <ClangCompile Include="..\..\XAMLCatalog\UIKitControls\UILabelViewController.m" />
+    <ClangCompile Include="..\..\XAMLCatalog\UIKitControls\UIProgressViewController.m" />
     <ClangCompile Include="..\..\XAMLCatalog\UIKitControls\UIScrollViewController.m" />
     <ClangCompile Include="..\..\XAMLCatalog\UIKitControls\UISliderViewController.m" />
     <ClangCompile Include="..\..\XAMLCatalog\UIKitControls\UITextFieldViewController.m" />
@@ -250,6 +261,7 @@
       <DeploymentContent>false</DeploymentContent>
     </Text>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />
   <!-- Begin NuGet Section -->

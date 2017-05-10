@@ -66,6 +66,36 @@ void SetActivityIndicatorViewWidthValue(const FrameworkElement& activityIndicato
 }
 
 ////////////////////////////////////////////////////////////////////////////////////
+// ProgressView
+////////////////////////////////////////////////////////////////////////////////////
+Controls::Grid CreateProgressView() {
+    ComPtr<IInspectable> inspectable;
+    XamlCreateProgressView(&inspectable);
+    return objcwinrt::from_insp<Controls::Grid>(inspectable);
+}
+
+Controls::ProgressBar XamlGetInternalProgressBar(const Controls::Grid& progressViewControl) {
+    ComPtr<IInspectable> inspectable(XamlGetInternalProgressBar(objcwinrt::to_insp(progressViewControl)));
+    return objcwinrt::from_insp<Controls::ProgressBar>(inspectable);
+}
+
+double GetProgressViewValue(const FrameworkElement& progressViewControl) {
+    return XamlGetProgressViewValue(objcwinrt::to_insp(progressViewControl));
+}
+
+void SetProgressViewValue(const FrameworkElement& progressViewControl, double value) {
+    XamlSetProgressViewValue(objcwinrt::to_insp(progressViewControl), value);
+}
+
+void SetProgressViewForegroundValue(const FrameworkElement& progressViewControl, const Media::Brush& foregroundColorBrush) {
+    XamlSetProgressViewForegroundValue(objcwinrt::to_insp(progressViewControl), objcwinrt::to_insp(foregroundColorBrush));
+}
+
+void SetProgressViewBackgroundValue(const FrameworkElement& progressViewControl, const Media::Brush& backgroundColorBrush) {
+    XamlSetProgressViewBackgroundValue(objcwinrt::to_insp(progressViewControl), objcwinrt::to_insp(backgroundColorBrush));
+}
+
+////////////////////////////////////////////////////////////////////////////////////
 // Button
 ////////////////////////////////////////////////////////////////////////////////////
 Controls::Button CreateButton() {
