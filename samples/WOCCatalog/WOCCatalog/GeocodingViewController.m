@@ -64,7 +64,7 @@
 
 - (void)startGeocodingCalls {
     // Note: This will not function as the service token is not set
-    // [CLGeocoder _setServiceToken:@"…"];
+    // [CLGeocoder setWindowsServiceToken:@"…"];
     self.location1 = [[CLLocation alloc] initWithLatitude:47.6062 longitude:-122.3321];
     self.location2 = [[CLLocation alloc] initWithLatitude:250 longitude:500];
     self.locationName1 = @"Moscow, Russia";
