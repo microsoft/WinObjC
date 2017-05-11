@@ -1,7 +1,7 @@
 //******************************************************************************
 //
 // Copyright (c) 2016 Intel Corporation. All rights reserved.
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -40,4 +40,10 @@ CORELOCATION_EXPORT_CLASS
            completionHandler:(CLGeocodeCompletionHandler)completionHandler;
 - (void)cancelGeocode STUB_METHOD;
 @property (readonly, getter=isGeocoding, nonatomic) BOOL geocoding;
+@end
+
+@interface CLGeocoder (WinObjC)
+// WINOBJC extension method to set underlying Bing service token, required to use CLGeocoder APIs
+// See https://docs.microsoft.com/en-us/windows/uwp/maps-and-location/geocoding for more info
++ (void)_setServiceToken:(NSString*)token;
 @end

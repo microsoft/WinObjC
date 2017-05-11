@@ -47,6 +47,14 @@ namespace WF = winrt::Windows::Foundation;
     return self;
 }
 
+/**
+ @Status Interoperable
+ @Notes Registers app with underlying Bing service (see https://docs.microsoft.com/en-us/windows/uwp/maps-and-location/geocoding)
+*/
++ (void)_setServiceToken:(NSString*)token {
+    MapService::ServiceToken(objcwinrt::string(token));
+}
+
 // Helper function to convert WSM error code to NSError codes
 NSError* parseError(const MapLocationFinderResult& results) {
     // Unknown Error and Status Not Supported don't map to any iOS error codes
