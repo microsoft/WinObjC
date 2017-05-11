@@ -1,0 +1,105 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="CodeGen.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="CommandLine.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="DepResolution.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="Generics.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="Misc.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="precompiled.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="ShimTracker.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="TypeInfo.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="WinrtType.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="MetadataScope.cpp">
+      <Filter>src\ObjectModel</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectModel.cpp">
+      <Filter>src\ObjectModel</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\include\caparser.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\CodeGen.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\CodeGenModel.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\CommandLine.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\DepResolution.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Generics.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\MetadataScope.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Misc.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\ObjectModel.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\ShimTracker.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\TypeInfo.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\WinMDVerString.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\WinRTSymbolTable.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\WinrtType.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\TypeEnumerator.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="Precompiled.h">
+      <Filter>src</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="src">
+      <UniqueIdentifier>{07c820e6-e209-4677-9672-63c537f91953}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\ObjectModel">
+      <UniqueIdentifier>{b017dd67-bfb5-4ee3-bd61-c6c0f1f728e0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include">
+      <UniqueIdentifier>{25c5ee88-2e35-4954-b1eb-cdca50ca5cd2}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+</Project>
