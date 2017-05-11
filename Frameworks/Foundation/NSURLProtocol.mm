@@ -81,14 +81,6 @@ static const wchar_t* TAG = L"NSURLProtocol";
     return self;
 }
 
-- (id)scheduleInRunLoop:(id)runLoop forMode:(id)mode {
-    return self;
-}
-
-- (id)unscheduleFromRunLoop:(id)runLoop forMode:(id)mode {
-    return self;
-}
-
 /**
  @Status Interoperable
 */

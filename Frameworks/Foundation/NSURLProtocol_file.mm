@@ -76,11 +76,6 @@ static const wchar_t* TAG = L"NSURLProtocol_file";
     return self;
 }
 
-- (id)scheduleInRunLoop:(id)runLoop forMode:(id)mode {
-    [runLoop performSelector:@selector(_doFileLoad) target:self argument:nil order:0 modes:[NSArray arrayWithObject:mode]];
-    return self;
-}
-
 - (id)_doFileLoad {
     NSData* dataReceived = [NSData dataWithContentsOfFile:_path];
 
@@ -89,10 +84,6 @@ static const wchar_t* TAG = L"NSURLProtocol_file";
     [client URLProtocol:self didLoadData:dataReceived];
     [client URLProtocolDidFinishLoading:self];
 
-    return self;
-}
-
-- (id)unscheduleFromRunLoop:(id)runLoop forMode:(id)mode {
     return self;
 }
 
