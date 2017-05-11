@@ -45,5 +45,5 @@ CORELOCATION_EXPORT_CLASS
 @interface CLGeocoder (WinObjC)
 // WINOBJC extension method to set underlying Bing service token, required to use CLGeocoder APIs
 // See https://docs.microsoft.com/en-us/windows/uwp/maps-and-location/geocoding for more info
-+ (void)_setServiceToken:(NSString*)token;
++ (void)setWindowsServiceToken:(NSString*)token;
 @end

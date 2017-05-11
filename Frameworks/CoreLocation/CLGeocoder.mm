@@ -51,7 +51,7 @@ namespace WF = winrt::Windows::Foundation;
  @Status Interoperable
  @Notes Registers app with underlying Bing service (see https://docs.microsoft.com/en-us/windows/uwp/maps-and-location/geocoding)
 */
-+ (void)_setServiceToken:(NSString*)token {
++ (void)setWindowsServiceToken:(NSString*)token {
     MapService::ServiceToken(objcwinrt::string(token));
 }
 
