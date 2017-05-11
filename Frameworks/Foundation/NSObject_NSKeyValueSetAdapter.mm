@@ -144,8 +144,9 @@ struct ProxySet {
         if (_targetSelectors.unionSet) {
             _call<void>(_target, _targetSelectors.unionSet, set);
         } else {
-            // TODO #2641:: call will/didChangeValueForKey:withSetMutation
+            [_target willChangeValueForKey:_key withSetMutation:NSKeyValueUnionSetMutation usingObjects:set];
             getMutateAndSet(@selector(unionSet:), set);
+            [_target didChangeValueForKey:_key withSetMutation:NSKeyValueUnionSetMutation usingObjects:set];
         }
     }
 
@@ -153,8 +154,9 @@ struct ProxySet {
         if (_targetSelectors.minusSet) {
             _call<void>(_target, _targetSelectors.minusSet, set);
         } else {
-            // TODO #2641:: call will/didChangeValueForKey:withSetMutation
+            [_target willChangeValueForKey:_key withSetMutation:NSKeyValueMinusSetMutation usingObjects:set];
             getMutateAndSet(@selector(minusSet:), set);
+            [_target didChangeValueForKey:_key withSetMutation:NSKeyValueMinusSetMutation usingObjects:set];
         }
     }
 
@@ -162,8 +164,9 @@ struct ProxySet {
         if (_targetSelectors.intersectSet) {
             _call<void>(_target, _targetSelectors.intersectSet, set);
         } else {
-            // TODO #2641:: call will/didChangeValueForKey:withSetMutation
+            [_target willChangeValueForKey:_key withSetMutation:NSKeyValueIntersectSetMutation usingObjects:set];
             getMutateAndSet(@selector(intersectSet:), set);
+            [_target didChangeValueForKey:_key withSetMutation:NSKeyValueIntersectSetMutation usingObjects:set];
         }
     }
 
@@ -171,8 +174,9 @@ struct ProxySet {
         if (_targetSelectors.setSet) {
             _call<void>(_target, _targetSelectors.setSet, set);
         } else {
-            // TODO #2641:: call will/didChangeValueForKey:withSetMutation
+            [_target willChangeValueForKey:_key withSetMutation:NSKeyValueSetSetMutation usingObjects:set];
             getMutateAndSet(@selector(setSet:), set);
+            [_target didChangeValueForKey:_key withSetMutation:NSKeyValueSetSetMutation usingObjects:set];
         }
     }
 

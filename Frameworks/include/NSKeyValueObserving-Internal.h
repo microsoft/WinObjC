@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -15,7 +15,7 @@
 //******************************************************************************
 
 #import <Foundation/Foundation.h>
-#include <Starboard.h>
+#import <Starboard.h>
 
 #define NS_COLLECTION_THROW_ILLEGAL_KVO(keyPath)                                                                                 \
     do {                                                                                                                         \

@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -31,6 +31,7 @@
     NSMutableArray* _manualNotificationArray;
     NSMutableArray* _kvcMediatedArray;
     NSMutableArray* _arrayWithHelpers;
+    NSMutableSet* _setWithHelpers;
 }
 @end
 
@@ -45,6 +46,7 @@
         _manualNotificationArray = [NSMutableArray new];
         _kvcMediatedArray = [NSMutableArray new];
         _arrayWithHelpers = [NSMutableArray new];
+        _setWithHelpers = [NSMutableSet new];
     }
     return self;
 }
@@ -54,6 +56,7 @@
     [_manualNotificationArray release];
     [_kvcMediatedArray release];
     [_arrayWithHelpers release];
+    [_setWithHelpers release];
     [super dealloc];
 }
 
@@ -81,6 +84,22 @@
 
 - (void)removeObjectFromArrayWithHelpersAtIndex:(NSUInteger)index {
     [_arrayWithHelpers removeObjectAtIndex:index];
+}
+
+- (void)addSetWithHelpers:(NSSet*)set {
+    [_setWithHelpers unionSet:set];
+}
+
+- (void)removeSetWithHelpers:(NSSet*)set {
+    [_setWithHelpers minusSet:set];
+}
+
+- (void)intersectSetWithHelpers:(NSSet*)set {
+    [_setWithHelpers intersectSet:set];
+}
+
+- (void)setSetWithHelpers:(NSSet*)set {
+    [_setWithHelpers setSet:set];
 }
 @end
 
@@ -473,4 +492,66 @@ TEST(KVO, NSSetShouldNotBeObservable) {
     // These would throw anyways because there should be no observer for the key path, but test anyways
     EXPECT_ANY_THROW([test removeObserver:observer forKeyPath:@"count"]);
     EXPECT_ANY_THROW([test removeObserver:observer forKeyPath:@"count" context:nullptr]);
+}
+
+static void __testSetMutationMethods(void (^callback)(id)) {
+    auto unionCallback = CHANGE_CB {
+        // Union with @({@1, @2, @3}) to get @({@1, @2, @3})
+        EXPECT_OBJCEQ(@(NSKeyValueUnionSetMutation), change[NSKeyValueChangeKindKey]);
+        NSSet* expected = [NSSet setWithObjects:@1, @2, @3, nil];
+        EXPECT_OBJCEQ(expected, change[NSKeyValueChangeNewKey]);
+    };
+
+    auto minusCallback = CHANGE_CB {
+        // Minus with @({@1}) to get @({@2, @3})
+        EXPECT_OBJCEQ(@(NSKeyValueMinusSetMutation), change[NSKeyValueChangeKindKey]);
+        NSSet* expected = [NSSet setWithObjects:@2, @3, nil];
+        EXPECT_OBJCEQ(expected, change[NSKeyValueChangeNewKey]);
+    };
+
+    auto intersectCallback = CHANGE_CB {
+        // Intersect with @({@2}) to get @({2})
+        EXPECT_OBJCEQ(@(NSKeyValueIntersectSetMutation), change[NSKeyValueChangeKindKey]);
+        EXPECT_OBJCEQ([NSSet setWithObject:@2], change[NSKeyValueChangeNewKey]);
+    };
+
+    auto setCallback = CHANGE_CB {
+        // Set with @({@3}) to get @({@3})
+        EXPECT_OBJCEQ(@(NSKeyValueSetSetMutation), change[NSKeyValueChangeKindKey]);
+        EXPECT_OBJCEQ([NSSet setWithObject:@3], change[NSKeyValueChangeNewKey]);
+    };
+
+    auto illegalChangeNotification = CHANGE_CB {
+        ADD_FAILURE();
+    };
+
+    _NSFoundationTestKVOFacade* facade = [[_NSFoundationTestKVOFacade newWithObservee:[TEST_IDENT(Observee) observee]] autorelease];
+    [facade observeKeyPath:@"setWithHelpers"
+                     withOptions:NSKeyValueObservingOptionNew
+                 performingBlock:callback
+        andExpectChangeCallbacks:@[ unionCallback, minusCallback, intersectCallback, setCallback, illegalChangeNotification ]];
+    EXPECT_EQ(4, facade.hits);
+}
+
+// Reference platform does not perform as expected with set mutation methods so we've opted for consistency
+// The following two tests are disabled on reference platform but ensure no regressions in the future
+OSX_DISABLED_TEST(KVO, SetMutationMethods_Helpers) {
+    __testSetMutationMethods(PERFORM {
+        // This set is assisted by setter functions, and should also dispatch one notification per change.
+        [observee addSetWithHelpers:[NSSet setWithObjects:@1, @2, @3, nil]];
+        [observee removeSetWithHelpers:[NSSet setWithObject:@1]];
+        [observee intersectSetWithHelpers:[NSSet setWithObject:@2]];
+        [observee setSetWithHelpers:[NSSet setWithObject:@3]];
+    });
+}
+
+OSX_DISABLED_TEST(KVO, SetMutationMethods_Proxy) {
+    __testSetMutationMethods(PERFORM {
+        // Proxy mutable set should dispatch one notification per change
+        NSMutableSet* proxySet = [observee mutableSetValueForKey:@"setWithHelpers"];
+        [proxySet unionSet:[NSSet setWithObjects:@1, @2, @3, nil]];
+        [proxySet minusSet:[NSSet setWithObject:@1]];
+        [proxySet intersectSet:[NSSet setWithObject:@2]];
+        [proxySet setSet:[NSSet setWithObject:@3]];
+    });
 }
