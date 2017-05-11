@@ -16,20 +16,16 @@
 
 #include "DrawingTest.h"
 
-static CGLineCap lineCaps[] = { kCGLineCapButt, kCGLineCapSquare, kCGLineCapRound };
-static CGLineJoin lineJoins[] = { kCGLineJoinBevel, kCGLineJoinRound };
-static CGFloat miterLimits[] = { 1.5, 1.8, 2, 3 };
+static const CGLineCap sc_lineCaps[] = { kCGLineCapButt, kCGLineCapSquare, kCGLineCapRound };
+static const CGLineJoin sc_lineJoins[] = { kCGLineJoinBevel, kCGLineJoinRound };
+static const CGFloat sc_miterLimits[] = { 1.5, 1.8, 2, 3 };
+
 struct PhaseDashCount {
     CGFloat phase;
-    const CGFloat dashPattern[4];
-    size_t count;
+    std::vector<CGFloat> dashPattern;
 };
 
-struct PhaseDashCount dashParams[] = { { 0, { 5, 2 }, 2 },
-                                       { 5, { 5, 2 }, 2 },
-                                       { 0, { 5, 2, 3, 1 }, 4 },
-                                       { 0, { 1, 1 }, 2 },
-                                       { 1, { 1, 1 }, 2 } };
+struct PhaseDashCount dashParams[] = { { 0, { 5, 2 } }, { 5, { 5, 2 } }, { 0, { 5, 2, 3, 1 } }, { 0, { 1, 1 } }, { 1, { 1, 1 } } };
 
 class CGDrawLineCaps : public WhiteBackgroundTest<>, public ::testing::WithParamInterface<CGLineCap> {
     CFStringRef CreateOutputFilename() {
@@ -38,13 +34,13 @@ class CGDrawLineCaps : public WhiteBackgroundTest<>, public ::testing::WithParam
         const char* lineCapName;
         switch (lineCap) {
             case kCGLineCapButt:
-                lineCapName = "LineCapButt";
+                lineCapName = "Butt";
                 break;
             case kCGLineCapSquare:
-                lineCapName = "LineCapSquare";
+                lineCapName = "Square";
                 break;
             case kCGLineCapRound:
-                lineCapName = "LineCapRound";
+                lineCapName = "Round";
                 break;
             default:
                 break;
@@ -61,13 +57,13 @@ class CGDrawLineJoins : public WhiteBackgroundTest<>, public ::testing::WithPara
         const char* lineJoinName;
         switch (lineJoin) {
             case kCGLineJoinMiter:
-                lineJoinName = "LineJoinMiter";
+                lineJoinName = "Miter";
                 break;
             case kCGLineJoinBevel:
-                lineJoinName = "LineJoinBevel";
+                lineJoinName = "Bevel";
                 break;
             case kCGLineJoinRound:
-                lineJoinName = "LineJoinRound";
+                lineJoinName = "Round";
                 break;
             default:
                 break;
@@ -81,26 +77,26 @@ class CGDrawLineMiter : public WhiteBackgroundTest<>, public ::testing::WithPara
     CFStringRef CreateOutputFilename() {
         CGFloat miterLimit = GetParam();
 
-        return CFStringCreateWithFormat(nullptr, nullptr, CFSTR("TestImage.LineWithMiter.%f.png"), miterLimit);
+        return CFStringCreateWithFormat(nullptr, nullptr, CFSTR("TestImage.LineWithMiter.%g.png"), miterLimit);
     }
 };
 
-class CGDrawLineDash : public WhiteBackgroundTest<>, public ::testing::WithParamInterface<struct PhaseDashCount> {
+class CGDrawLineDash : public WhiteBackgroundTest<>, public ::testing::WithParamInterface<PhaseDashCount> {
     CFStringRef CreateOutputFilename() {
         PhaseDashCount dashes = GetParam();
 
-        CFMutableStringRef dashString =
-            CFStringCreateMutableCopy(NULL, 0, CFStringCreateWithFormat(nullptr, nullptr, CFSTR("%f"), dashes.dashPattern[0]));
-        for (int i = 1; i < dashes.count; i++) {
-            CFStringAppendFormat(dashString, NULL, CFSTR(".%f"), dashes.dashPattern[i]);
+        auto dashString = woc::MakeStrongCF<CFMutableStringRef>(
+            CFStringCreateMutableCopy(NULL, 0, CFStringCreateWithFormat(nullptr, nullptr, CFSTR("%g"), dashes.dashPattern[0])));
+        for (int i = 1; i < dashes.dashPattern.size(); i++) {
+            CFStringAppendFormat(dashString, NULL, CFSTR(".%g"), dashes.dashPattern[i]);
         }
 
         return CFStringCreateWithFormat(nullptr,
                                         nullptr,
-                                        CFSTR("TestImage.LineWithPhaseDashes.%f.%@.%lu.png"),
+                                        CFSTR("TestImage.LineWithPhaseDashes.%g.%@.%lu.png"),
                                         dashes.phase,
-                                        dashString,
-                                        dashes.count);
+                                        dashString.get(),
+                                        dashes.dashPattern.size());
     }
 };
 
@@ -156,14 +152,14 @@ DRAW_TEST_P(CGDrawLineDash, LineDash) {
     CGRect drawingBounds = GetDrawingBounds();
 
     struct PhaseDashCount dashes = GetParam();
-    CGContextSetLineDash(context, dashes.phase, dashes.dashPattern, dashes.count);
+    CGContextSetLineDash(context, dashes.phase, &dashes.dashPattern[0], dashes.dashPattern.size());
     drawStrokeTestWithParams(context, drawingBounds);
 }
 
-INSTANTIATE_TEST_CASE_P(CGContextLineOptions, CGDrawLineJoins, ::testing::ValuesIn(lineJoins));
+INSTANTIATE_TEST_CASE_P(CGContextLineOptions, CGDrawLineJoins, ::testing::ValuesIn(sc_lineJoins));
 
-INSTANTIATE_TEST_CASE_P(CGContextLineOptions, CGDrawLineCaps, ::testing::ValuesIn(lineCaps));
+INSTANTIATE_TEST_CASE_P(CGContextLineOptions, CGDrawLineCaps, ::testing::ValuesIn(sc_lineCaps));
 
-INSTANTIATE_TEST_CASE_P(CGContextLineOptions, CGDrawLineMiter, ::testing::ValuesIn(miterLimits));
+INSTANTIATE_TEST_CASE_P(CGContextLineOptions, CGDrawLineMiter, ::testing::ValuesIn(sc_miterLimits));
 
 INSTANTIATE_TEST_CASE_P(CGContextLineOptions, CGDrawLineDash, ::testing::ValuesIn(dashParams));
