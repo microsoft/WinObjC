@@ -85,8 +85,8 @@ class CGDrawLineDash : public WhiteBackgroundTest<>, public ::testing::WithParam
     CFStringRef CreateOutputFilename() {
         PhaseDashCount dashes = GetParam();
 
-        auto dashString = woc::MakeStrongCF<CFMutableStringRef>(
-            CFStringCreateMutableCopy(NULL, 0, CFStringCreateWithFormat(nullptr, nullptr, CFSTR("%g"), dashes.dashPattern[0])));
+        auto startString = woc::MakeStrongCF<CFStringRef>(CFStringCreateWithFormat(nullptr, nullptr, CFSTR("%g"), dashes.dashPattern[0]));
+        auto dashString = woc::MakeStrongCF<CFMutableStringRef>(CFStringCreateMutableCopy(NULL, 0, startString));
         for (int i = 1; i < dashes.dashPattern.size(); i++) {
             CFStringAppendFormat(dashString, NULL, CFSTR(".%g"), dashes.dashPattern[i]);
         }
