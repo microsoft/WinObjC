@@ -382,19 +382,17 @@ static void __dispatchDelegateCallback(NSURLConnection* connection, void (^callb
  @Status Interoperable
 */
 - (void)URLProtocol:(NSURLProtocol*)urlProtocol didFailWithError:(NSError*)error {
-    __block StrongId<NSURLConnection> strongSelf = self;
-    __block StrongId<NSError> strongError = error;
     __dispatchDelegateCallback(self, ^void() {
         TraceError(TAG, L"URL protocol did fail");
         // if ( [_delegate respondsToSelector:@selector(connection:willSendRequest:redirectResponse:)] ) [_delegate
         // connection:self willSendRequest:_request redirectResponse:nil];
-        if ([strongSelf->_delegate respondsToSelector:@selector(connection:didFailWithError:)]) {
-            [strongSelf->_delegate connection:strongSelf didFailWithError:strongError];
+        if ([_delegate respondsToSelector:@selector(connection:didFailWithError:)]) {
+            [_delegate connection:self didFailWithError:error];
         }
 
-        strongSelf->_protocol = nil;
-        strongSelf->_delegate = nil;
-        strongSelf->_done = true;
+        _protocol = nil;
+        _delegate = nil;
+        _done = true;
     });
 }
 
@@ -404,8 +402,6 @@ static void __dispatchDelegateCallback(NSURLConnection* connection, void (^callb
 - (void)URLProtocol:(NSURLProtocol*)urlProtocol
     didReceiveResponse:(NSURLResponse*)response
     cacheStoragePolicy:(NSURLCacheStoragePolicy)policy {
-    __block StrongId<NSURLConnection> strongSelf = self;
-    __block StrongId<NSURLResponse> strongResponse = response;
     __dispatchDelegateCallback(self, ^void() {
         /*
         if ( [response respondsToSelector:@selector(statusCode)] && [response statusCode] != 200 ) {
@@ -413,15 +409,15 @@ static void __dispatchDelegateCallback(NSURLConnection* connection, void (^callb
         }
         */
 
-        strongSelf->_response = response;
-        strongSelf->_storagePolicy = policy;
+        _response = response;
+        _storagePolicy = policy;
 
-        if ([strongSelf->_delegate respondsToSelector:@selector(connection:willCacheResponse:)]) {
+        if ([_delegate respondsToSelector:@selector(connection:willCacheResponse:)]) {
             // TODO #2469: This is currently incorrect, these are not the same thing
-            [strongSelf->_delegate connection:strongSelf willCacheResponse:static_cast<NSCachedURLResponse*>(response)];
+            [_delegate connection:self willCacheResponse:static_cast<NSCachedURLResponse*>(response)];
         }
-        if ([strongSelf->_delegate respondsToSelector:@selector(connection:didReceiveResponse:)]) {
-            [strongSelf->_delegate connection:strongSelf didReceiveResponse:strongResponse];
+        if ([_delegate respondsToSelector:@selector(connection:didReceiveResponse:)]) {
+            [_delegate connection:self didReceiveResponse:response];
         }
     });
 }
@@ -430,11 +426,9 @@ static void __dispatchDelegateCallback(NSURLConnection* connection, void (^callb
  @Status Interoperable
 */
 - (void)URLProtocol:(NSURLProtocol*)urlProtocol didLoadData:(NSData*)data {
-    __block StrongId<NSURLConnection> strongSelf = self;
-    __block StrongId<NSData*> strongData = data;
     __dispatchDelegateCallback(self, ^void() {
-        if ([strongSelf->_delegate respondsToSelector:@selector(connection:didReceiveData:)]) {
-            [strongSelf->_delegate connection:strongSelf didReceiveData:strongData];
+        if ([_delegate respondsToSelector:@selector(connection:didReceiveData:)]) {
+            [_delegate connection:self didReceiveData:data];
         }
     });
 }
@@ -443,7 +437,6 @@ static void __dispatchDelegateCallback(NSURLConnection* connection, void (^callb
  @Status Interoperable
 */
 - (void)URLProtocolDidFinishLoading:(NSURLProtocol*)urlProtocol {
-    __block StrongId<NSURLConnection> strongSelf = self;
     __dispatchDelegateCallback(self, ^void() {
         /*
         if(_storagePolicy==NSURLCacheStorageNotAllowed) {
@@ -461,13 +454,13 @@ static void __dispatchDelegateCallback(NSURLConnection* connection, void (^callb
         }
         */
 
-        if ([strongSelf->_delegate respondsToSelector:@selector(connectionDidFinishLoading:)]) {
-            [strongSelf->_delegate connectionDidFinishLoading:strongSelf];
+        if ([_delegate respondsToSelector:@selector(connectionDidFinishLoading:)]) {
+            [_delegate connectionDidFinishLoading:self];
         }
 
-        strongSelf->_protocol = nil;
-        strongSelf->_delegate = nil;
-        strongSelf->_done = true;
+        _protocol = nil;
+        _delegate = nil;
+        _done = true;
     });
 }
 
@@ -475,13 +468,11 @@ static void __dispatchDelegateCallback(NSURLConnection* connection, void (^callb
  @Status Interoperable
 */
 - (void)URLProtocol:(NSURLProtocol*)urlProtocol didReceiveAuthenticationChallenge:(NSURLAuthenticationChallenge*)challenge {
-    __block StrongId<NSURLConnection> strongSelf = self;
-    __block StrongId<NSURLAuthenticationChallenge> strongChallenge = challenge;
     __dispatchDelegateCallback(self, ^void() {
-        if ([strongSelf->_delegate respondsToSelector:@selector(connection:willSendRequestForAuthenticationChallenge:)]) {
-            [strongSelf->_delegate connection:strongSelf willSendRequestForAuthenticationChallenge:strongChallenge];
+        if ([_delegate respondsToSelector:@selector(connection:willSendRequestForAuthenticationChallenge:)]) {
+            [_delegate connection:self willSendRequestForAuthenticationChallenge:challenge];
         } else {
-            [strongSelf->_delegate connection:strongSelf didReceiveAuthenticationChallenge:strongChallenge];
+            [_delegate connection:self didReceiveAuthenticationChallenge:challenge];
         }
     });
 }
@@ -490,34 +481,28 @@ static void __dispatchDelegateCallback(NSURLConnection* connection, void (^callb
  @Status Interoperable
 */
 - (void)URLProtocol:(NSURLProtocol*)urlProtocol wasRedirectedToRequest:(NSURLRequest*)request redirectResponse:(NSURLResponse*)response {
-    __block StrongId<NSURLConnection> strongSelf = self;
-    __block StrongId<NSURLRequest> strongRequest = request;
-    __block StrongId<NSURLResponse> strongResponse = response;
     __dispatchDelegateCallback(self, ^void() {
-        [strongSelf->_protocol stopLoading];
+        [_protocol stopLoading];
         NSURLRequest* newRequest = request;
-        if ([strongSelf->_delegate respondsToSelector:@selector(connection:willSendRequest:redirectResponse:)]) {
-            newRequest = [strongSelf->_delegate connection:strongSelf willSendRequest:strongRequest redirectResponse:strongResponse];
+        if ([_delegate respondsToSelector:@selector(connection:willSendRequest:redirectResponse:)]) {
+            newRequest = [_delegate connection:self willSendRequest:request redirectResponse:response];
         }
-        strongSelf->_protocol = nil;
+        _protocol = nil;
 
         if (!newRequest) {
-            [strongSelf cancel];
+            [self cancel];
             return;
         }
 
-        NSURLProtocol* protocol = __protocolForRequest(request, strongSelf.get());
+        NSURLProtocol* protocol = __protocolForRequest(request, self);
         if (!protocol) {
             TraceError(TAG, L"NSURLConnection was redirected to a new request, but could not create a NSURLProtocol for the new request.");
             return;
         }
 
-        strongSelf->_protocol = protocol;
-        strongSelf->_currentRequest = newRequest;
-        [strongSelf->_protocol performSelector:@selector(startLoading)
-                                      onThread:strongSelf->_protocolThread
-                                    withObject:nil
-                                 waitUntilDone:NO];
+        _protocol = protocol;
+        _currentRequest = newRequest;
+        [_protocol performSelector:@selector(startLoading) onThread:_protocolThread withObject:nil waitUntilDone:NO];
     });
 }
 
