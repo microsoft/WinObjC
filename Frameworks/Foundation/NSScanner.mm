@@ -32,6 +32,7 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 
 #import <Starboard.h>
 
+#import <algorithm>
 #import <cctype>
 #import <functional>
 #import <limits>
@@ -45,7 +46,7 @@ static BOOL __scanNumeric(NSScanner* scanner,
                           bool enforceUnsigned = false) {
     // Skip past the characters in charactersToBeSkipped
     NSUInteger start = [scanner _indexOfNextUnskippedCharacter];
-    if (start >= scanner->_stringChars.size()) {
+    if (start >= scanner->_stringChars.size() - 1) {
         return NO;
     }
 
@@ -69,7 +70,7 @@ static BOOL __scanNumeric(NSScanner* scanner,
         *valuep = value;
     }
 
-    scanner.scanLocation = start + (scanEnd - scanStart);
+    scanner.scanLocation = std::min(start + (scanEnd - scanStart), scanner->_stringChars.size() - 1);
     return YES;
 }
 
@@ -104,8 +105,11 @@ static BOOL __scanNumeric(NSScanner* scanner,
     if (self = [super init]) {
         _string = [string copy];
 
-        _stringChars.resize(_string.length);
+        _stringChars.resize(_string.length + 1);
         [_string getCharacters:_stringChars.data() range:{ 0, _string.length }];
+
+        // Ensure terminating null char for correct CRT function behavior
+        _stringChars[_stringChars.size() - 1] = 0;
 
         // Don't need to copy here as whitespaceAndNewlineCharacterSet is a copy property
         _charactersToBeSkipped = [[NSCharacterSet whitespaceAndNewlineCharacterSet] retain];
@@ -173,14 +177,14 @@ static BOOL __scanNumeric(NSScanner* scanner,
 // Returns string length if no unskippable characters are found
 - (NSUInteger)_indexOfNextUnskippedCharacter {
     if (_charactersToBeSkipped) {
-        for (NSUInteger i = _scanLocation; i < _stringChars.size(); ++i) {
+        for (NSUInteger i = _scanLocation; i < _stringChars.size() - 1; ++i) {
             if (![_charactersToBeSkipped characterIsMember:_stringChars[i]]) {
                 return i;
             }
         }
     }
 
-    return _stringChars.size();
+    return _stringChars.size() - 1;
 }
 
 /**
