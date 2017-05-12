@@ -405,7 +405,6 @@ static inline void _NSKVOEnsureUnorderedCollectionWillNotify(id object, NSString
                                    formatSelector(@"intersect%s:", rawKey),
                                    key,
                                    (IMP)_NSKVOSetDispatch<NSKeyValueIntersectSetMutation>);
-        replaceAndAssociateWithKey(object, formatSelector(@"set%s:", rawKey), key, (IMP)_NSKVOSetDispatch<NSKeyValueSetSetMutation>);
     }
 }
 

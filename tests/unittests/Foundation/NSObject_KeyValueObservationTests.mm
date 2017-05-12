@@ -545,7 +545,7 @@ TEST(KVO, NSSetShouldNotBeObservable) {
     EXPECT_ANY_THROW([test removeObserver:observer forKeyPath:@"count" context:nullptr]);
 }
 
-static void __testSetMutationMethods(NSString* keypath, void (^callback)(id)) {
+static void __testSetMutationMethods(NSString* keypath, bool setSetChanged, void (^callback)(id)) {
     auto unionCallback = CHANGE_CB {
         // Union with @({@1, @2, @3}) to get @({@1, @2, @3})
         EXPECT_OBJCEQ(@(NSKeyValueChangeInsertion), change[NSKeyValueChangeKindKey]);
@@ -585,9 +585,16 @@ static void __testSetMutationMethods(NSString* keypath, void (^callback)(id)) {
 
     auto setCallback = CHANGE_CB {
         // Set with @({@3}) to get @({@3})
-        EXPECT_OBJCEQ(@(NSKeyValueChangeReplacement), change[NSKeyValueChangeKindKey]);
-        EXPECT_OBJCEQ([NSSet setWithObject:@2], change[NSKeyValueChangeOldKey]);
-        EXPECT_OBJCEQ([NSSet setWithObject:@3], change[NSKeyValueChangeNewKey]);
+        if (setSetChanged) {
+            EXPECT_OBJCEQ(@(NSKeyValueChangeReplacement), change[NSKeyValueChangeKindKey]);
+            EXPECT_OBJCEQ([NSSet setWithObject:@2], change[NSKeyValueChangeOldKey]);
+            EXPECT_OBJCEQ([NSSet setWithObject:@3], change[NSKeyValueChangeNewKey]);
+        } else {
+            // setXxx method is not automatically swizzled for observation
+            EXPECT_OBJCEQ(@(NSKeyValueChangeSetting), change[NSKeyValueChangeKindKey]);
+            EXPECT_OBJCEQ([NSSet setWithObject:@3], change[NSKeyValueChangeOldKey]);
+            EXPECT_OBJCEQ([NSSet setWithObject:@3], change[NSKeyValueChangeNewKey]);
+        }
     };
 
     auto illegalChangeNotification = CHANGE_CB {
@@ -606,7 +613,7 @@ static void __testSetMutationMethods(NSString* keypath, void (^callback)(id)) {
 // Reference platform does not perform as expected with set mutation methods so we've opted for consistency
 // The following two tests are disabled on reference platform but ensure no regressions in the future
 TEST(KVO, SetMutationMethods_Helpers) {
-    __testSetMutationMethods(@"setWithHelpers", PERFORM {
+    __testSetMutationMethods(@"setWithHelpers", false, PERFORM {
         // This set is assisted by setter functions, and should also dispatch one notification per change.
         [observee addSetWithHelpers:[NSSet setWithObjects:@1, @2, @3, nil]];
         [observee removeSetWithHelpers:[NSSet setWithObject:@1]];
@@ -618,7 +625,7 @@ TEST(KVO, SetMutationMethods_Helpers) {
 }
 
 TEST(KVO, SetMutationMethods_Proxy) {
-    __testSetMutationMethods(@"kvcMediatedSet", PERFORM {
+    __testSetMutationMethods(@"kvcMediatedSet", true, PERFORM {
         // Proxy mutable set should dispatch one notification per change
         NSMutableSet* proxySet = [observee mutableSetValueForKey:@"kvcMediatedSet"];
         [proxySet unionSet:[NSSet setWithObjects:@1, @2, @3, nil]];
@@ -631,7 +638,7 @@ TEST(KVO, SetMutationMethods_Proxy) {
 }
 
 TEST(KVO, SetMutationMethods_Manual) {
-    __testSetMutationMethods(@"manualNotificationSet", PERFORM {
+    __testSetMutationMethods(@"manualNotificationSet", true, PERFORM {
         // Manually should dispatch one notification per change
         [observee manualUnionSet:[NSSet setWithObjects:@1, @2, @3, nil]];
         [observee manualMinusSet:[NSSet setWithObject:@1]];
