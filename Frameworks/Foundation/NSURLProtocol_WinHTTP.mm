@@ -443,7 +443,7 @@ static void __dispatchClientCallback(NSURLProtocol_WinHTTP* protocol, void (^cal
 
             if (content) {
                 // we could be cancelled mid-operation, but we need to retain the ability to clean up.
-                __block StrongId<NSURLProtocol_WinHTTP> strongSelf = self;
+                StrongId<NSURLProtocol_WinHTTP> strongSelf = self;
                 dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
                     [strongSelf _consumeDataStreamForIHttpContent:content.Get()];
                 });
