@@ -126,18 +126,9 @@ static void __dispatchDelegateCallback(NSURLConnection* connection, void (^callb
     } else if (connection->_scheduledRunLoops.size() == 1) {
         // TODO #2469: Cannot currently schedule on more than one runloop
         for (auto pair : connection->_scheduledRunLoops) {
-            [pair.first performSelector:@selector(_invokeBlock:)
-                                 target:connection
-                               argument:callbackBlock
-                                  order:0
-                                  modes:@[ pair.second.get() ]];
+            [pair.first performSelector:@selector(invoke) target:callbackBlock argument:nil order:0 modes:@[ pair.second.get() ]];
         }
     }
-}
-
-// Helper function that just invokes a block
-- (void)_invokeBlock:(void (^)())block {
-    block();
 }
 
 // Body of the thread on which the NSURLProtocol loads

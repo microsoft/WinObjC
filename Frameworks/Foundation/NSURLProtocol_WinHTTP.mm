@@ -247,15 +247,10 @@ static std::function<R(Args...)> bindObjC(id instance, SEL _cmd) {
 // Helper function that executes a block on the client thread - used for client callbacks
 static void __dispatchClientCallback(NSURLProtocol_WinHTTP* protocol, void (^callbackBlock)()) {
     if (protocol->_clientThread) {
-        [protocol performSelector:@selector(_invokeBlock:) onThread:protocol->_clientThread withObject:callbackBlock waitUntilDone:NO];
+        [callbackBlock performSelector:@selector(invoke) onThread:protocol->_clientThread withObject:nil waitUntilDone:NO];
     } else {
         callbackBlock();
     }
-}
-
-// Helper function that just invokes a block
-- (void)_invokeBlock:(void (^)())block {
-    block();
 }
 
 - (void)startLoading {
@@ -411,10 +406,10 @@ static void __dispatchClientCallback(NSURLProtocol_WinHTTP* protocol, void (^cal
                 default:
                     httpVersionStr = nil;
             }
-            __block StrongId<NSHTTPURLResponse> nsResponse = [[[NSHTTPURLResponse alloc] initWithURL:[request URL]
-                                                                                          statusCode:statusCode
-                                                                                         HTTPVersion:httpVersionStr
-                                                                                        headerFields:nsHeaders] autorelease];
+            NSHTTPURLResponse* nsResponse = [[[NSHTTPURLResponse alloc] initWithURL:[request URL]
+                                                                         statusCode:statusCode
+                                                                        HTTPVersion:httpVersionStr
+                                                                       headerFields:nsHeaders] autorelease];
 
             if (statusCode >= 300 && statusCode <= 399) { // redirect code
                 ComPtr<IUriRuntimeClass> uri;
@@ -428,7 +423,7 @@ static void __dispatchClientCallback(NSURLProtocol_WinHTTP* protocol, void (^cal
 
                 // The location header can specify a relative or absolute URL: attempt to join it with the request URL.
                 NSURL* targetUrl = [NSURL URLWithString:Strings::WideToNSString(uriString.Get()) relativeToURL:[request URL]];
-                __block StrongId<NSURLRequest> req = [NSURLRequest requestWithURL:targetUrl];
+                NSURLRequest* req = [NSURLRequest requestWithURL:targetUrl];
 
                 __dispatchClientCallback(self, ^void() {
                     [self.client URLProtocol:self wasRedirectedToRequest:req redirectResponse:nsResponse];
@@ -462,15 +457,13 @@ static void __dispatchClientCallback(NSURLProtocol_WinHTTP* protocol, void (^cal
 }
 
 - (void)_propagateErrorToClient:(NSError*)error {
-    __block StrongId<NSError> strongError = error;
     __dispatchClientCallback(self, ^void() {
-        [self.client URLProtocol:self didFailWithError:strongError];
+        [self.client URLProtocol:self didFailWithError:error];
     });
 }
 
 - (void)_consumeDataStreamForIHttpContent:(IHttpContent*)pHttpContent {
     ComPtr<IHttpContent> httpContent(pHttpContent);
-    __block StrongId<NSURLProtocol_WinHTTP> strongSelf = self;
     NSError* error = nil;
     try {
         ComPtr<IInputStream> stream;
@@ -486,7 +479,7 @@ static void __dispatchClientCallback(NSURLProtocol_WinHTTP* protocol, void (^cal
         ComPtr<IBuffer> outputBuffer;
 
         while (true) {
-            if ([strongSelf cancelled]) {
+            if ([self cancelled]) {
                 return;
             }
 
@@ -497,7 +490,7 @@ static void __dispatchClientCallback(NSURLProtocol_WinHTTP* protocol, void (^cal
                 outputBuffer.ReleaseAndGetAddressOf());
             THROW_IF_FAILED(hr);
 
-            if ([strongSelf cancelled]) { // double check on cancel after a long-running async operation.
+            if ([self cancelled]) { // double check on cancel after a long-running async operation.
                 return;
             }
 
@@ -515,20 +508,20 @@ static void __dispatchClientCallback(NSURLProtocol_WinHTTP* protocol, void (^cal
             // We're opting to take a copy of the buffer here, as NSURLProtocol's consumer can legally expect the data
             // to remain valid long after the connection is gone. Eventually, it would be very nice to have an IBuffer-backed
             // NSData.
-            __block StrongId<NSData> data = [NSData dataWithBytes:pOutputBuffer length:length];
+            NSData* data = [NSData dataWithBytes:pOutputBuffer length:length];
             __dispatchClientCallback(self, ^void() {
-                [self.client URLProtocol:strongSelf didLoadData:data];
+                [self.client URLProtocol:self didLoadData:data];
             });
         }
 
         __dispatchClientCallback(self, ^void() {
-            [self.client URLProtocolDidFinishLoading:strongSelf];
+            [self.client URLProtocolDidFinishLoading:self];
         });
     }
     CATCH_POPULATE_NSERROR(&error);
 
     if (error) {
-        [strongSelf _propagateErrorToClient:error];
+        [self _propagateErrorToClient:error];
     }
 }
 @end
