@@ -87,15 +87,10 @@ class CGDrawLineDash : public WhiteBackgroundTest<>, public ::testing::WithParam
 
         auto dashString = woc::MakeStrongCF<CFMutableStringRef>(CFStringCreateMutable(NULL, 0));
         for (int i = 0; i < dashes.dashPattern.size(); i++) {
-            CFStringAppendFormat(dashString, NULL, CFSTR("%g."), dashes.dashPattern[i]);
+            CFStringAppendFormat(dashString, NULL, CFSTR(".%g"), dashes.dashPattern[i]);
         }
 
-        return CFStringCreateWithFormat(nullptr,
-                                        nullptr,
-                                        CFSTR("TestImage.LineWithPhaseDashes.%g.%@%lu.png"),
-                                        dashes.phase,
-                                        dashString.get(),
-                                        dashes.dashPattern.size());
+        return CFStringCreateWithFormat(nullptr, nullptr, CFSTR("TestImage.LineWithPhaseDashes.%g%@.png"), dashes.phase, dashString.get());
     }
 };
 
