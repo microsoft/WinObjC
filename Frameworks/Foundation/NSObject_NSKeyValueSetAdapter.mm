@@ -128,7 +128,10 @@ struct ProxySet {
         if (_targetSelectors.addObject) {
             _call<void>(_target, _targetSelectors.addObject, obj);
         } else {
+            NSSet* set = [NSSet setWithObject:obj];
+            [_target willChangeValueForKey:_key withSetMutation:NSKeyValueUnionSetMutation usingObjects:set];
             getMutateAndSet(@selector(addObject:), obj);
+            [_target didChangeValueForKey:_key withSetMutation:NSKeyValueUnionSetMutation usingObjects:set];
         }
     }
 
@@ -136,7 +139,10 @@ struct ProxySet {
         if (_targetSelectors.removeObject) {
             _call<void>(_target, _targetSelectors.removeObject, obj);
         } else {
+            NSSet* set = [NSSet setWithObject:obj];
+            [_target willChangeValueForKey:_key withSetMutation:NSKeyValueMinusSetMutation usingObjects:set];
             getMutateAndSet(@selector(removeObject:), obj);
+            [_target didChangeValueForKey:_key withSetMutation:NSKeyValueMinusSetMutation usingObjects:set];
         }
     }
 
