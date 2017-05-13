@@ -1,0 +1,585 @@
+#include <SFML/Graphics.hpp>
+#include<fstream>
+#include<iostream>
+#include<vector>
+#include<string>
+#include <streambuf>
+#include <string>
+#include<stack>
+using namespace std;
+vector<sf::Vector2f> convertstack(stack<sf::Vector2f> position);
+void startGame();
+void displaymenu(sf::RenderWindow& window);
+void emptystack();
+vector<sf::RectangleShape> rectangle;
+sf::CircleShape circle;
+sf::Text finish;
+sf::Text start;
+bool flag = true;
+sf::Vector2f p(680, 510);
+stack<sf::Vector2f> pos;
+vector<sf::Vector2f> posit;
+vector < sf::Vector2f>trash;
+class MazeGame{
+public:
+	MazeGame();
+	const static int M = 22, N = 22;
+	int maze[M][N];
+	sf::Font font1;
+	sf::Font font2;
+	sf::Texture texture;
+};
+MazeGame::MazeGame(){
+	texture.loadFromFile("D:\\image1.jpg");
+	ifstream read;
+	read.open("D:\\maze.txt");
+	if (read.is_open()){
+		while (!read.eof()){
+			for (int i = 0; i < M; i++){
+				for (int j = 0; j < N; j++){
+					read >> maze[i][j];
+				}
+			}
+		}
+	}
+	read.close();
+	for (int i = 0; i < M; i++){
+		for (int j = 0; j < N; j++){
+			if (maze[i][j] == 1){
+				sf::RectangleShape temp;
+				temp.setSize(sf::Vector2f(30, 30));
+				temp.setPosition(30 * j + 50, 30 * i + 50);
+				temp.setTexture(&texture);
+				rectangle.push_back(temp);
+			}
+		}
+	}
+	start.setString("Start");
+	start.setColor(sf::Color::Blue);
+	font1.loadFromFile("C:/Windows/Fonts/Arial.ttf");
+	start.setFont(font1);
+	start.setPosition(50, 225);
+	finish.setString("Finish");
+	finish.setColor(sf::Color::Red);
+	finish.setPosition(690, 500);
+	font2.loadFromFile("C:/Windows/Fonts/Arial.ttf");
+	finish.setFont(font2);
+}
+class GameObject :sf::Transformable{
+public:
+	GameObject();
+	virtual void draw(sf::RenderWindow& window) = 0;
+	virtual void update(sf::RenderWindow& window) = 0;
+	virtual void checkintersection(sf::RenderWindow& window) = 0;
+};
+GameObject::GameObject(){
+}
+class Player :public GameObject{
+public:
+	Player();
+	void update(sf::RenderWindow& window);
+	void checkintersection(sf::RenderWindow& window);
+	void draw(sf::RenderWindow& window);
+	int playerspeed;
+	void intersection(sf::Sprite sp, sf::RenderWindow& window);
+	void intersection(sf::RectangleShape rec, sf::RenderWindow& window);
+};
+void Player::draw(sf::RenderWindow& window){
+	window.draw(circle);
+}
+Player::Player(){
+	playerspeed = 3;
+	circle.setRadius(5);
+	circle.setFillColor(sf::Color::Red);
+	circle.setPosition(50, 243);
+}
+void Player::intersection(sf::Sprite sp, sf::RenderWindow& window){
+	if (circle.getGlobalBounds().intersects(sp.getGlobalBounds())){ window.clear(); flag = false; }
+}
+void Player::intersection(sf::RectangleShape rec, sf::RenderWindow& window){
+	if (circle.getGlobalBounds().intersects(rec.getGlobalBounds())){ window.clear(); flag = false; }
+}
+void Player::update(sf::RenderWindow& window){
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)){
+		circle.move(0, -playerspeed);
+		for (int i = 0; i < rectangle.size(); i++){
+			if (circle.getGlobalBounds().intersects(rectangle[i].getGlobalBounds())){
+				circle.move(0, playerspeed);
+			}
+		}
+	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)){
+		circle.move(0, playerspeed);
+		for (int i = 0; i < rectangle.size(); i++){
+			if (circle.getGlobalBounds().intersects(rectangle[i].getGlobalBounds())){
+				circle.move(0, -playerspeed);
+			}
+		}
+
+	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)){
+		circle.move(playerspeed, 0);
+		for (int i = 0; i < rectangle.size(); i++){
+			if (circle.getGlobalBounds().intersects(rectangle[i].getGlobalBounds())){
+				circle.move(-playerspeed, 0);
+			}
+		}
+	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)){
+		circle.move(-playerspeed, 0);
+		for (int i = 0; i < rectangle.size(); i++){
+			if (circle.getGlobalBounds().intersects(rectangle[i].getGlobalBounds())){
+				circle.move(playerspeed, 0);
+			}
+		}
+	}
+}
+void Player::checkintersection(sf::RenderWindow& window){
+}
+class Monster :public GameObject{
+public:
+	Monster();
+	Monster(sf::Vector2f);
+	int monsterspeed;
+	sf::Sprite monster;
+	void setPos(sf::Vector2f);
+	sf::Texture texture;
+
+
+};
+Monster::Monster(){};
+Monster::Monster(sf::Vector2f position){
+	monsterspeed = 3;
+	texture.loadFromFile("D:\\monster.jpg");
+	monster.setTexture(texture);
+	monster.setPosition(position);
+	monster.setScale(0.09, 0.08);
+}
+class MovingMonster :public Monster{
+public:
+	MovingMonster(char orie, sf::Vector2f);
+	char orientation;
+	void setOrientation(char o);
+	char getOrientation();
+	void update(sf::RenderWindow& window);
+	void checkintersection(sf::RenderWindow& window);
+	void draw(sf::RenderWindow& window);
+};
+MovingMonster::MovingMonster(char orie, sf::Vector2f position) :Monster(position){
+	orientation = orie;
+}
+void MovingMonster::setOrientation(char o){
+	orientation = o;
+}
+char MovingMonster::getOrientation(){
+	return orientation;
+}
+void MovingMonster::checkintersection(sf::RenderWindow& window){
+	if (circle.getGlobalBounds().intersects(monster.getGlobalBounds())){
+		window.clear();
+		flag = false;
+	}
+}
+void MovingMonster::update(sf::RenderWindow& window){
+	if (this->getOrientation() == 'V' || this->getOrientation() == 'v'){
+		monster.move(0, monsterspeed);
+		for (int i = 0; i < rectangle.size(); i++){
+			if (monster.getGlobalBounds().intersects(rectangle[i].getGlobalBounds())) monsterspeed = -1 * monsterspeed;
+		}
+	}
+	else if (this->getOrientation() == 'h' || this->getOrientation() == 'H'){
+		monster.move(monsterspeed, 0);
+		for (int i = 0; i < rectangle.size(); i++){
+			if (monster.getGlobalBounds().intersects(rectangle[i].getGlobalBounds())) monsterspeed = -1 * monsterspeed;
+		}
+	}
+	this->checkintersection(window);
+}
+void MovingMonster::draw(sf::RenderWindow& window){
+	window.draw(this->monster);
+}
+class GhostMonster :public Monster{
+public:
+	char orientation;
+	GhostMonster(char orie, sf::Vector2f pos);
+	void update(sf::RenderWindow& window);
+	void setOrientation(char orie);
+	char getOrientation();
+	void checkintersection(sf::RenderWindow& window);
+	void draw(sf::RenderWindow& window);
+};
+void GhostMonster::setOrientation(char orie){
+	orientation = orie;
+}
+char GhostMonster::getOrientation(){
+	return orientation;
+}
+GhostMonster::GhostMonster(char orie, sf::Vector2f pos) :Monster(pos){
+	orientation = orie;
+}
+void GhostMonster::checkintersection(sf::RenderWindow& window){
+	if (monster.getGlobalBounds().intersects(circle.getGlobalBounds())){
+		window.clear(); flag = false;
+	}
+
+}
+void GhostMonster::update(sf::RenderWindow& window){
+	if (this->getOrientation() == 'H' || this->getOrientation() == 'h'){
+		monster.move(monsterspeed, 0);
+		if (monster.getPosition().x >= window.getSize().x)monster.setPosition(-1 * window.getPosition().x + 50, 230);
+	}
+	else if (this->getOrientation() == 'V' || this->getOrientation() == 'v'){
+		monster.move(0, -1 * monsterspeed);
+		if (monster.getPosition().y >= window.getSize().y)monster.setPosition(monster.getPosition().x, -1 * window.getPosition().y + 50);
+	}
+	this->checkintersection(window);
+}
+void GhostMonster::draw(sf::RenderWindow& window){
+	window.draw(this->monster);
+}
+GhostMonster monster3('H', sf::Vector2f(260, 240));
+class ShootingMonster :public Monster{
+public:
+	ShootingMonster();
+	ShootingMonster(sf::Vector2f position);
+	sf::Texture texture2;
+	sf::Sprite bullet;
+	void update(sf::RenderWindow& window);
+	void checkintersection(sf::RenderWindow& window);
+	void draw(sf::RenderWindow& window);
+};
+ShootingMonster::ShootingMonster(){}
+ShootingMonster::ShootingMonster(sf::Vector2f position) :Monster(position){
+	texture2.loadFromFile("D:\\bullet.jpg");
+	bullet.setTexture(texture2);
+	bullet.setScale(0.09, 0.08);
+	bullet.setPosition(position.x + 5, position.y + 23);
+}
+void ShootingMonster::checkintersection(sf::RenderWindow& window){
+	if (bullet.getGlobalBounds().intersects(circle.getGlobalBounds()) || monster.getGlobalBounds().intersects(circle.getGlobalBounds())){
+		window.clear();
+		flag = false;
+	}
+}
+void ShootingMonster::update(sf::RenderWindow& window){
+	bullet.move(0, 2.5);
+	if (bullet.getPosition().y >= window.getSize().y || bullet.getPosition().x > window.getSize().x) bullet.setPosition(monster.getPosition().x + 5, monster.getPosition().y + 23);
+	this->checkintersection(window);
+}
+void ShootingMonster::draw(sf::RenderWindow& window){
+	window.draw(this->bullet);
+	window.draw(this->monster);
+}
+class Laser :public GameObject{
+public:
+	Laser();
+	Laser(sf::Vector2f position, sf::Vector2f dsiz, sf::Vector2f asiz, int active, int deactive, sf::Color col);
+	Laser(sf::Vector2f position, sf::Vector2f size, sf::Color col);
+	sf::RectangleShape laser;
+	int count;
+	int activation;
+	int deactivation;
+	void setActivation(int act);
+	void setDeactivation(int deact);
+	int getActivation();
+	int getDeactivation();
+	sf::Vector2f desize;
+	sf::Vector2f asize;
+	void checkintersection(sf::RenderWindow& window);
+	void draw(sf::RenderWindow& window);
+	void update(sf::RenderWindow& window);
+};
+Laser::Laser(){};
+Laser::Laser(sf::Vector2f position, sf::Vector2f dsiz, sf::Vector2f asiz, int active, int deactive, sf::Color col){
+	count = 0;
+	laser.setPosition(position);
+	laser.setSize(dsiz);
+	laser.setFillColor(col);
+	activation = active;
+	deactivation = deactive;
+	desize = dsiz;
+	asize = asiz;
+}
+Laser::Laser(sf::Vector2f position, sf::Vector2f size, sf::Color col){
+	laser.setPosition(position);
+	laser.setSize(size);
+	laser.setFillColor(col);
+}
+void Laser::setActivation(int act){
+	activation = act;
+}
+void Laser::setDeactivation(int deact){
+	deactivation = deact;
+}
+int Laser::getActivation(){
+	return activation;
+}
+int Laser::getDeactivation(){
+	return deactivation;
+}
+void Laser::checkintersection(sf::RenderWindow& window){
+	if (circle.getGlobalBounds().intersects(laser.getGlobalBounds())){
+		window.clear();
+		flag = false;
+	}
+}
+void Laser::update(sf::RenderWindow& window){
+	count++;
+	if (count % (this->getActivation()) == 0){ laser.setSize(asize);  this->checkintersection(window); }
+	if (count % (this->getDeactivation()) == 0){ laser.setSize(desize);  this->checkintersection(window); }
+}
+void Laser::draw(sf::RenderWindow& window){
+	window.draw(this->laser);
+}
+class RotatingLaser :public Laser{
+public:
+	RotatingLaser();
+	RotatingLaser(sf::Vector2f position, sf::Vector2f size, sf::Color col);
+	void update(sf::RenderWindow& window);
+	void checkintersection(sf::RenderWindow& window);
+	void draw(sf::RenderWindow& window);
+};
+
+RotatingLaser::RotatingLaser(){}
+RotatingLaser::RotatingLaser(sf::Vector2f position, sf::Vector2f size, sf::Color col) :Laser(position, size, col){
+}
+void RotatingLaser::checkintersection(sf::RenderWindow& window){
+	if (circle.getGlobalBounds().intersects(laser.getGlobalBounds())){
+		window.clear();
+		flag = false;
+	}
+}
+void RotatingLaser::update(sf::RenderWindow& window){
+	count++;
+	if (count % 25 == 0) laser.rotate(10);
+	this->checkintersection(window);
+}
+void RotatingLaser::draw(sf::RenderWindow& window){
+	window.draw(this->laser);
+}
+sf::RectangleShape computerplayer;
+class ComputerPlayer :public GameObject{
+public:
+	ComputerPlayer();
+	void update(sf::RenderWindow& window);
+	void draw(sf::RenderWindow& window);
+	void checkintersection(sf::RenderWindow& window);
+	int speed;
+};
+ComputerPlayer::ComputerPlayer(){
+	speed = 4;
+	computerplayer.setSize(sf::Vector2f(10, 10));
+	computerplayer.setFillColor(sf::Color::Blue);
+	computerplayer.setPosition(680, 510);
+}
+void ComputerPlayer::draw(sf::RenderWindow& window){
+	window.draw(computerplayer);
+}
+void ComputerPlayer::update(sf::RenderWindow& window){
+	if (!computerplayer.getGlobalBounds().intersects(start.getGlobalBounds())){
+		posit = convertstack(pos);
+		int count = 0;
+		for (int i = 0; i < posit.size(); i++){
+			if (posit[i] == sf::Vector2f(p.x + speed, p.y)) count++;
+		}
+		for (int i = 0; i < trash.size(); i++){
+			if (trash[i] == sf::Vector2f(p.x + speed, p.y)) count++;
+		}
+		if (count == 0) pos.push(sf::Vector2f(p.x + speed, p.y));
+		count = 0;
+		for (int i = 0; i < posit.size(); i++){
+			if (posit[i] == sf::Vector2f(p.x - speed, p.y)) count++;
+		}
+		for (int i = 0; i < trash.size(); i++){
+			if (trash[i] == sf::Vector2f(p.x - speed, p.y)) count++;
+		}
+		if (count == 0) pos.push(sf::Vector2f(p.x - speed, p.y));
+		count = 0;
+		for (int i = 0; i < posit.size(); i++){
+			if (posit[i] == sf::Vector2f(p.x, p.y + speed)) count++;
+		}
+		for (int i = 0; i < trash.size(); i++){
+			if (trash[i] == sf::Vector2f(p.x, p.y + speed)) count++;
+		}
+		if (count == 0) pos.push(sf::Vector2f(p.x, p.y + speed));
+		count = 0;
+		for (int i = 0; i < posit.size(); i++){
+			if (posit[i] == sf::Vector2f(p.x, p.y - speed)) count++;
+		}
+		for (int i = 0; i < trash.size(); i++){
+			if (trash[i] == sf::Vector2f(p.x, p.y - speed)) count++;
+		}
+		if (count == 0) pos.push(sf::Vector2f(p.x, p.y - speed));
+		if (!computerplayer.getGlobalBounds().intersects(start.getGlobalBounds()) && !pos.empty()){
+			computerplayer.move(pos.top() - p);   trash.push_back(pos.top());
+			for (int i = 0; i < rectangle.size(); i++){
+				if (computerplayer.getGlobalBounds().intersects(rectangle[i].getGlobalBounds())){
+					computerplayer.move(-(pos.top() - p));
+				}
+			}
+		}
+		trash.push_back(pos.top());
+		pos.pop();
+		p = computerplayer.getPosition();
+	}
+	else flag = false;
+}
+void ComputerPlayer::checkintersection(sf::RenderWindow& window){
+
+}
+int main(){
+	while (flag){
+		startGame();
+		system("pause");
+		return 0;
+	}
+
+}
+void displaymenu(sf::RenderWindow& window){
+	sf::Text lost;
+	sf::Font lfont;
+	lfont.loadFromFile("C:/Windows/Fonts/Arial.ttf");
+	lost.setString("You Lost");
+	lost.setFont(lfont);
+	lost.setCharacterSize(50);
+	lost.setPosition(280, 150);
+	window.draw(lost);
+	sf::Text startmenu;
+	sf::Font sfont;
+	startmenu.setString("New Game");
+	startmenu.setColor(sf::Color::Blue);
+	startmenu.setCharacterSize(50);
+	sfont.loadFromFile("C:/Windows/Fonts/Arial.ttf");
+	startmenu.setFont(sfont);
+	startmenu.setPosition(280, 270);
+	window.draw(startmenu);
+	sf::Text endmenu;
+	sf::Font efont;
+	endmenu.setString("Quit Game");
+	endmenu.setCharacterSize(50);
+	endmenu.setColor(sf::Color::Red);
+	efont.loadFromFile("C:/Windows/Fonts/Arial.ttf");
+	endmenu.setFont(sfont);
+	endmenu.setPosition(280, 390);
+	window.draw(endmenu);
+	window.display();
+	if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && sf::Mouse::getPosition().x >= startmenu.getPosition().x&&sf::Mouse::getPosition().x <= startmenu.getPosition().x + 50 * startmenu.getString().getSize() && sf::Mouse::getPosition().y >= startmenu.getPosition().y&&sf::Mouse::getPosition().y < startmenu.getPosition().y + 50 * startmenu.getString().getSize()){
+		flag = true; circle.setPosition(50, 243); emptystack(); trash.clear(); p.x = 680; p.y = 510; computerplayer.setPosition(680, 510); monster3.monster.setPosition(sf::Vector2f(260, 240));
+	}
+	if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && sf::Mouse::getPosition().x >= endmenu.getPosition().x&&sf::Mouse::getPosition().x <= endmenu.getPosition().x + 50 * startmenu.getString().getSize() && sf::Mouse::getPosition().y >= endmenu.getPosition().y&&sf::Mouse::getPosition().y <= endmenu.getPosition().y + 50 * endmenu.getString().getSize()) window.close();
+}
+vector<GameObject*> moving;
+vector<GameObject*> las;
+void startGame(){
+	sf::ContextSettings settings;
+	settings.antialiasingLevel = 9;
+	sf::RenderWindow window(sf::VideoMode(1024, 768), "Maze", sf::Style::Fullscreen, settings);
+	window.setFramerateLimit(60);
+	MovingMonster monster('H', sf::Vector2f(120, 260));
+	GameObject* m1 = &monster;
+	moving.push_back(m1);
+	MazeGame m;
+	MovingMonster monster2('V', sf::Vector2f(80, 280));
+	GameObject* m2 = &monster2;
+	moving.push_back(m2);
+	GameObject* m3 = &monster3;
+	moving.push_back(m3);
+	MovingMonster monster4('V', sf::Vector2f(260, 240));
+	GameObject* m4 = &monster4;
+	moving.push_back(m4);
+	MovingMonster monster5('H', sf::Vector2f(300, 410));
+	GameObject* m5 = &monster5;
+	moving.push_back(m5);
+	MovingMonster monster6('H', sf::Vector2f(110, 410));
+	GameObject* m6 = &monster6;
+	moving.push_back(m6);
+	MovingMonster monster7('V', sf::Vector2f(200, 530));
+	GameObject* m7 = &monster7;
+	moving.push_back(m7);
+	Laser laser1(sf::Vector2f(637, 470), sf::Vector2f(5, 25), sf::Vector2f(5, 210), 200, 273, sf::Color::Red);
+	GameObject* l = &laser1;
+	las.push_back(l);
+	Laser laser2(sf::Vector2f(662, 320), sf::Vector2f(5, 25), sf::Vector2f(5, 210), 100, 171, sf::Color::Green);
+	GameObject* l2 = &laser2;
+	las.push_back(l2);
+	Laser laser3(sf::Vector2f(513, 470), sf::Vector2f(5, 25), sf::Vector2f(5, 120), 200, 273, sf::Color::Blue);
+	GameObject* l3 = &laser3;
+	las.push_back(l3);
+	Laser laser4(sf::Vector2f(573, 410), sf::Vector2f(5, 25), sf::Vector2f(5, 270), 100, 171, sf::Color::Cyan);
+	GameObject* l4 = &laser4;
+	las.push_back(l4);
+	RotatingLaser laser5(sf::Vector2f(423, 470), sf::Vector2f(5, 180), sf::Color::Yellow);
+	GameObject* l5 = &laser5;
+	las.push_back(l5);
+	ShootingMonster shoot(sf::Vector2f(143, 120));
+	GameObject* m8 = &shoot;
+	moving.push_back(m8);
+	ComputerPlayer comp;
+	Player p;
+	while (window.isOpen())
+	{
+		sf::Event event;
+		while (window.pollEvent(event))
+		{
+			if (event.type == sf::Event::Closed)
+				window.close();
+		}
+		vector<sf::Sprite> monstersprites{ monster.monster, monster2.monster, monster3.monster, monster4.monster, monster5.monster, monster6.monster, monster7.monster, shoot.bullet };
+		for (int i = 0; i < monstersprites.size(); i++) p.intersection(monstersprites[i], window);
+		vector<sf::RectangleShape> laserec{ laser1.laser, laser2.laser, laser3.laser, laser4.laser, laser5.laser };
+		for (int i = 0; i < laserec.size(); i++) p.intersection(laserec[i], window);
+		GameObject* obj = &p;
+		obj->update(window);
+		GameObject* g = &monster;
+		g->update(window);
+		GameObject* g2 = &monster2;
+		g2->update(window);
+		GameObject* g3 = &monster3;
+		g3->update(window);
+		GameObject* g4 = &monster4;
+		g4->update(window);
+		GameObject* g5 = &monster5;
+		g5->update(window);
+		GameObject* g6 = &monster6;
+		g6->update(window);
+		GameObject* g7 = &monster7;
+		g7->update(window);
+		GameObject* g8 = &laser1;
+		g8->update(window);
+		GameObject* g9 = &laser2;
+		g9->update(window);
+		GameObject* g10 = &laser3;
+		g10->update(window);
+		GameObject* g11 = &laser4;
+		g11->update(window);
+		GameObject* g12 = &laser5;
+		g12->update(window);
+		GameObject* g13 = &shoot;
+		g13->update(window);
+		comp.update(window);
+		if (circle.getGlobalBounds().intersects(finish.getGlobalBounds())) flag = false;
+		window.clear();
+		if (flag == true){
+			for (int i = 0; i < rectangle.size(); i++) window.draw(rectangle[i]);
+			window.draw(start);
+			window.draw(finish);
+			window.draw(circle);
+			for (int i = 0; i < moving.size(); i++) moving[i]->draw(window);
+			for (int j = 0; j < las.size(); j++) las[j]->draw(window);
+			window.draw(computerplayer);
+			window.display();
+		}
+		else displaymenu(window);
+	}
+}
+vector<sf::Vector2f> convertstack(stack<sf::Vector2f> position){
+	vector<sf::Vector2f> temp;
+	while (!position.empty()){
+		temp.push_back(position.top());
+		position.pop();
+	}
+	return temp;
+}
+void emptystack(){
+	while (!pos.empty())pos.pop();
+}
