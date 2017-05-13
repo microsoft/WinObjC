@@ -794,7 +794,11 @@ static void clipPoint(UIScrollView* o, CGPoint& p, bool bounce = true) {
     [self setNeedsLayout];
 
     if ([self.delegate respondsToSelector:@selector(scrollViewDidScroll:)]) {
-        [self.delegate scrollViewDidScroll:self];
+        // NOTE: We have to push this off of the ScrollViewer's callback thread to work around
+        // issue #1865.
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.delegate scrollViewDidScroll:self];
+        });
     }
 }
 
