@@ -114,6 +114,21 @@ typedef NS_ENUM(NSInteger, NSURLConnectionDelegateType) {
     return connection;
 }
 
+- (void)connection:(NSURLConnection*)connection didReceiveResponse:(NSURLResponse*)response {
+    EXPECT_TRUE([_operationQueue isEqual:[NSOperationQueue currentQueue]]);
+    [super connection:connection didReceiveResponse:response];
+}
+
+- (void)connection:(NSURLConnection*)connection didReceiveData:(nonnull NSData*)data {
+    EXPECT_TRUE([_operationQueue isEqual:[NSOperationQueue currentQueue]]);
+    [super connection:connection didReceiveData:data];
+}
+
+- (void)connection:(NSURLConnection*)connection didFailWithError:(NSError*)e {
+    EXPECT_TRUE([_operationQueue isEqual:[NSOperationQueue currentQueue]]);
+    [super connection:connection didFailWithError:e];
+}
+
 @end
 
 // Subclass of NSURLConnectionHelper that starts its connection on a separate thread's run loop.
@@ -122,6 +137,7 @@ typedef NS_ENUM(NSInteger, NSURLConnectionDelegateType) {
 @property (retain) NSThread* thread;
 - (void)doNothing;
 - (void)spinRunLoop;
+@property (assign) NSRunLoop* loop;
 @end
 
 @implementation NSURLConnectionTestHelper_RunLoop
@@ -145,14 +161,14 @@ typedef NS_ENUM(NSInteger, NSURLConnectionDelegateType) {
 // Keeps the run loop on the current thread spinning.
 - (void)spinRunLoop {
     @autoreleasepool {
-        NSRunLoop* loop = [NSRunLoop currentRunLoop];
+        _loop = [NSRunLoop currentRunLoop];
 
         NSTimer* timer = [NSTimer timerWithTimeInterval:0.1 target:self selector:@selector(doNothing) userInfo:nil repeats:YES];
-        [loop addTimer:timer forMode:NSDefaultRunLoopMode];
+        [_loop addTimer:timer forMode:NSDefaultRunLoopMode];
 
         while (!_isStopped) {
             @autoreleasepool {
-                [loop runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];
+                [_loop runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];
             }
         }
     }
@@ -163,6 +179,22 @@ typedef NS_ENUM(NSInteger, NSURLConnectionDelegateType) {
     [connection performSelector:@selector(start) onThread:_thread withObject:nil waitUntilDone:NO];
     return connection;
 }
+
+- (void)connection:(NSURLConnection*)connection didReceiveResponse:(NSURLResponse*)response {
+    EXPECT_TRUE([_loop isEqual:[NSRunLoop currentRunLoop]]);
+    [super connection:connection didReceiveResponse:response];
+}
+
+- (void)connection:(NSURLConnection*)connection didReceiveData:(nonnull NSData*)data {
+    EXPECT_TRUE([_loop isEqual:[NSRunLoop currentRunLoop]]);
+    [super connection:connection didReceiveData:data];
+}
+
+- (void)connection:(NSURLConnection*)connection didFailWithError:(NSError*)e {
+    EXPECT_TRUE([_loop isEqual:[NSRunLoop currentRunLoop]]);
+    [super connection:connection didFailWithError:e];
+}
+
 @end
 
 // Test to verify a request can be successfully made and a valid response and data is received.
