@@ -94,7 +94,30 @@ class CGDrawLineDash : public WhiteBackgroundTest<>, public ::testing::WithParam
     }
 };
 
-static void drawStrokeTestWithParams(CGContextRef context, CGRect bounds) {
+class CGDrawLineDashCaps : public WhiteBackgroundTest<>, public ::testing::WithParamInterface<CGLineCap> {
+    CFStringRef CreateOutputFilename() {
+        CGLineCap lineCap = GetParam();
+
+        const char* lineCapName;
+        switch (lineCap) {
+            case kCGLineCapButt:
+                lineCapName = "Butt";
+                break;
+            case kCGLineCapSquare:
+                lineCapName = "Square";
+                break;
+            case kCGLineCapRound:
+                lineCapName = "Round";
+                break;
+            default:
+                break;
+        }
+
+        return CFStringCreateWithFormat(nullptr, nullptr, CFSTR("TestImage.LineDashWithCap.%s.png"), lineCapName);
+    }
+};
+
+static void drawStrokeTest(CGContextRef context, CGRect bounds) {
     CGContextSetLineWidth(context, 25);
     CGContextSetRGBStrokeColor(context, 0, 0, 0, 1);
 
@@ -119,7 +142,7 @@ DRAW_TEST_P(CGDrawLineJoins, LineJoin) {
 
     CGLineJoin lineJoin = GetParam();
     CGContextSetLineJoin(context, lineJoin);
-    drawStrokeTestWithParams(context, drawingBounds);
+    drawStrokeTest(context, drawingBounds);
 }
 
 DRAW_TEST_P(CGDrawLineCaps, LineCap) {
@@ -128,7 +151,7 @@ DRAW_TEST_P(CGDrawLineCaps, LineCap) {
 
     CGLineCap lineCap = GetParam();
     CGContextSetLineCap(context, lineCap);
-    drawStrokeTestWithParams(context, drawingBounds);
+    drawStrokeTest(context, drawingBounds);
 }
 
 DRAW_TEST_P(CGDrawLineMiter, LineMiter) {
@@ -138,7 +161,7 @@ DRAW_TEST_P(CGDrawLineMiter, LineMiter) {
     CGFloat miterLimit = GetParam();
     CGContextSetLineJoin(context, kCGLineJoinMiter);
     CGContextSetMiterLimit(context, miterLimit);
-    drawStrokeTestWithParams(context, drawingBounds);
+    drawStrokeTest(context, drawingBounds);
 }
 
 DRAW_TEST_P(CGDrawLineDash, LineDash) {
@@ -147,7 +170,19 @@ DRAW_TEST_P(CGDrawLineDash, LineDash) {
 
     struct PhaseDashCount dashes = GetParam();
     CGContextSetLineDash(context, dashes.phase, &dashes.dashPattern[0], dashes.dashPattern.size());
-    drawStrokeTestWithParams(context, drawingBounds);
+    drawStrokeTest(context, drawingBounds);
+}
+
+DRAW_TEST_P(CGDrawLineDashCaps, LineDashCaps) {
+    CGContextRef context = GetDrawingContext();
+    CGRect drawingBounds = GetDrawingBounds();
+
+    CGFloat dashes[] = { 5, 30 };
+    CGLineCap lineCap = GetParam();
+
+    CGContextSetLineCap(context, lineCap);
+    CGContextSetLineDash(context, 0, dashes, 2);
+    drawStrokeTest(context, drawingBounds);
 }
 
 INSTANTIATE_TEST_CASE_P(CGContextLineOptions, CGDrawLineJoins, ::testing::ValuesIn(sc_lineJoins));
@@ -157,3 +192,5 @@ INSTANTIATE_TEST_CASE_P(CGContextLineOptions, CGDrawLineCaps, ::testing::ValuesI
 INSTANTIATE_TEST_CASE_P(CGContextLineOptions, CGDrawLineMiter, ::testing::ValuesIn(sc_miterLimits));
 
 INSTANTIATE_TEST_CASE_P(CGContextLineOptions, CGDrawLineDash, ::testing::ValuesIn(dashParams));
+
+INSTANTIATE_TEST_CASE_P(CGContextLineOptions, CGDrawLineDashCaps, ::testing::ValuesIn(sc_lineCaps));
