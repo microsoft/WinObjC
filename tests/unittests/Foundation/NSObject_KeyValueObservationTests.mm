@@ -476,6 +476,36 @@ TEST(KVO, ToMany_KVCMediatedArrayWithHelpers_AggregateFunction) {
     EXPECT_EQ(1, facade.hits);
 }
 
+TEST(KVO, ObserverInformationShouldNotLeak) {
+    auto emptyCallback = CHANGE_CB{};
+
+    auto onlyNewCallback = CHANGE_CB {
+        EXPECT_NE(nil, change[NSKeyValueChangeNewKey]);
+        EXPECT_EQ(nil, change[NSKeyValueChangeOldKey]);
+    };
+
+    auto illegalChangeNotification = CHANGE_CB {
+        ADD_FAILURE();
+    };
+
+    TEST_IDENT(Observee)* observee = [TEST_IDENT(Observee) observee];
+    _NSFoundationTestKVOFacade* firstFacade = [[_NSFoundationTestKVOFacade newWithObservee:observee] autorelease];
+    [firstFacade observeKeyPath:@"manualNotificationArray"
+                     withOptions:NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew
+                 performingBlock:PERFORM {
+                     // Do nothing, just registering to observe
+                 }
+        andExpectChangeCallbacks:@[ emptyCallback ]];
+
+    _NSFoundationTestKVOFacade* facade = [[_NSFoundationTestKVOFacade newWithObservee:observee] autorelease];
+    [facade observeKeyPath:@"manualNotificationArray"
+                     withOptions:NSKeyValueObservingOptionNew
+                 performingBlock:PERFORM { [observee addObjectToManualArray:@"object1"]; }
+        andExpectChangeCallbacks:@[ onlyNewCallback, illegalChangeNotification ]];
+
+    EXPECT_EQ(1, facade.hits);
+}
+
 TEST(KVO, NSArrayShouldNotBeObservable) {
     NSArray* test = @[ @1, @2, @3 ];
     _NSFoundationTestKVOObserver* observer = [[_NSFoundationTestKVOObserver new] autorelease];
