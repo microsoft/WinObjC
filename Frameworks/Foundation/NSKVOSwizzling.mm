@@ -128,12 +128,12 @@ static void notifyingVariadicSetImpl(id self, SEL _cmd, ...) {
     // in the same way: on the stack. For our two supported platforms, this seems to hold true.
     NSMethodSignature* sig = [self methodSignatureForSelector:_cmd];
     auto argSz = [sig getArgumentSizeAtIndex:2];
-    auto nStackArgs = argSz / sizeof(unsigned int);
-    unsigned int* raw = static_cast<unsigned int*>(calloc(sizeof(unsigned int), nStackArgs));
+    auto nStackArgs = argSz / sizeof(uintptr_t);
+    uintptr_t* raw = static_cast<uintptr_t*>(calloc(sizeof(uintptr_t), nStackArgs));
     va_list ap;
     va_start(ap, _cmd);
-    for (unsigned int i = 0; i < nStackArgs; ++i) {
-        raw[i] = va_arg(ap, unsigned int);
+    for (uintptr_t i = 0; i < nStackArgs; ++i) {
+        raw[i] = va_arg(ap, uintptr_t);
     }
     va_end(ap);
 
@@ -321,12 +321,12 @@ static inline void _NSKVOEnsureSimpleKeyWillNotify(id object, NSString* key, con
         case '{':
         case '[': {
             size_t valueSize = objc_sizeof_type(valueType);
-            if (valueSize > 6 * sizeof(unsigned long int)) {
+            if (valueSize > 6 * sizeof(uintptr_t)) {
                 [NSException raise:NSInvalidArgumentException
                             format:@"Class %s key %@ has a value size of %u bytes, and cannot currently be KVO compliant.",
                                    class_getName(object_getClass(object)),
                                    key,
-                                   static_cast<unsigned int>(valueSize)];
+                                   static_cast<uintptr_t>(valueSize)];
             }
             newImpl = reinterpret_cast<IMP>(&notifyingVariadicSetImpl);
             break;
