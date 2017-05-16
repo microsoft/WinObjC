@@ -530,12 +530,18 @@ static inline NSKeyValueChange _changeFromSetMutationKind(NSKeyValueSetMutationK
 }
 
 static inline id _valueForPendingChangeAtIndexes(
-    id notifyingObject, NSString* key, id rootObject, _NSKVOKeyObserver* keyObserver, NSIndexSet* indexes) {
-    id collection = [notifyingObject valueForKey:key];
-    NSString* restOfKeypath = keyObserver.restOfKeypath;
-    id value = restOfKeypath.length > 0 ? [collection valueForKeyPath:restOfKeypath] : collection;
-    if ([value respondsToSelector:@selector(objectsAtIndexes:)]) {
-        value = [value objectsAtIndexes:indexes];
+    id notifyingObject, NSString* key, NSString* keypath, id rootObject, _NSKVOKeyObserver* keyObserver, NSDictionary* pendingChange) {
+    id value = nil;
+    NSIndexSet* indexes = pendingChange[NSKeyValueChangeIndexesKey];
+    if (indexes) {
+        NSArray* collection = [notifyingObject valueForKey:key];
+        NSString* restOfKeypath = keyObserver.restOfKeypath;
+        value = restOfKeypath.length > 0 ? [collection valueForKeyPath:restOfKeypath] : collection;
+        if ([value respondsToSelector:@selector(objectsAtIndexes:)]) {
+            value = [value objectsAtIndexes:indexes];
+        }
+    } else {
+        value = [rootObject valueForKeyPath:keypath];
     }
 
     return value ?: [NSNull null];
@@ -650,25 +656,26 @@ static void _dispatchDidChange(id notifyingObject, NSString* key, TFunc&& func) 
 */
 - (void)willChange:(NSKeyValueChange)changeKind valuesAtIndexes:(NSIndexSet*)indexes forKey:(NSString*)key {
     if ([self observationInfo]) {
-        _dispatchWillChange(self, key, [ changeKind, indexes, key, notifyingObject = self ](_NSKVOKeyObserver * keyObserver) {
+        _dispatchWillChange(self, key, [ changeKind, indexes, key, notifyingObject = self ](_NSKVOKeyObserver * keyObserver) mutable {
             NSMutableDictionary* change = [NSMutableDictionary
                 dictionaryWithObjectsAndKeys:@(changeKind), NSKeyValueChangeKindKey, indexes, NSKeyValueChangeIndexesKey, nil];
-            NSKeyValueChange localChangeKind = changeKind;
             _NSKVOKeypathObserver* keypathObserver = keyObserver.keypathObserver;
             NSKeyValueObservingOptions options = keypathObserver.options;
             id rootObject = keypathObserver.object;
 
             // The reference platform does not support to-many mutations on nested keypaths.
             // We have to treat them as to-one mutations to support aggregate functions.
-            if (localChangeKind != NSKeyValueChangeSetting && keyObserver.restOfKeypathObserver) {
+            if (changeKind != NSKeyValueChangeSetting && keyObserver.restOfKeypathObserver) {
                 // This only needs to be done in willChange because didChange derives from the existing changeset.
-                change[NSKeyValueChangeKindKey] = @(localChangeKind = NSKeyValueChangeSetting);
+                change[NSKeyValueChangeKindKey] = @(changeKind = NSKeyValueChangeSetting);
                 [change removeObjectForKey:NSKeyValueChangeIndexesKey];
             }
 
-            if ((options & NSKeyValueObservingOptionOld) && localChangeKind != NSKeyValueChangeInsertion) {
+            if ((options & NSKeyValueObservingOptionOld) && changeKind != NSKeyValueChangeInsertion) {
                 // For to-many mutations, we can't get the old values at indexes that have not yet been inserted.
-                change[NSKeyValueChangeOldKey] = _valueForPendingChangeAtIndexes(notifyingObject, key, rootObject, keyObserver, indexes);
+                NSString* keypath = keypathObserver.keypath;
+                change[NSKeyValueChangeOldKey] =
+                    _valueForPendingChangeAtIndexes(notifyingObject, key, keypath, rootObject, keyObserver, change);
             }
 
             keypathObserver.pendingChange = change;
@@ -694,7 +701,8 @@ static void _dispatchDidChange(id notifyingObject, NSString* key, TFunc&& func) 
                 NSString* keypath = keypathObserver.keypath;
                 id newValue = keypathValueCache[keypath];
                 if (!newValue) {
-                    newValue = _valueForPendingChangeAtIndexes(notifyingObject, key, rootObject, keyObserver, indexes);
+                    NSString* keypath = keypathObserver.keypath;
+                    newValue = _valueForPendingChangeAtIndexes(notifyingObject, key, keypath, rootObject, keyObserver, change);
                     keypathValueCache[keypath] = newValue;
                 }
 
