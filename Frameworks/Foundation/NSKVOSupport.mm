@@ -668,6 +668,8 @@ static void _dispatchDidChange(id notifyingObject, NSString* key, TFunc&& func) 
             if (changeKind != NSKeyValueChangeSetting && keyObserver.restOfKeypathObserver) {
                 // This only needs to be done in willChange because didChange derives from the existing changeset.
                 change[NSKeyValueChangeKindKey] = @(changeKind = NSKeyValueChangeSetting);
+
+                // Make change Old/New values the entire collection rather than a to-many change with objectsAtIndexes:
                 [change removeObjectForKey:NSKeyValueChangeIndexesKey];
             }
 
