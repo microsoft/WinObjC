@@ -1,4 +1,4 @@
-//******************************************************************************
+﻿//******************************************************************************
 //
 // Copyright (c) Microsoft. All rights reserved.
 //
@@ -271,4 +271,37 @@ DRAW_TEST_F(CGContext, ClipBoundingBox, WhiteBackgroundTest<>) {
 
     CGContextSetRGBFillColor(context, 0.0, 1.0, 0.0, 1.0);
     CGContextFillRect(context, CGContextGetClipBoundingBox(context));
+}
+
+DRAW_TEST_F(CGContext, SubPixelAlignment, WhiteBackgroundTest<>) {
+    CGContextRef context = GetDrawingContext();
+    CGRect bounds = GetDrawingBounds();
+
+    CGContextSetRGBStrokeColor(context, 0.0, 0.0, 0.0, 1.0);
+    CGContextStrokeRect(context, CGRectMake(bounds.origin.x + 50.5, bounds.origin.y + 50.5, 100, 100));
+    CGContextRotateCTM(context, M_PI);
+    CGContextTranslateCTM(context, -bounds.size.width, -bounds.size.height);
+    CGContextStrokeRect(context, CGRectMake(bounds.origin.x + 250.5, bounds.origin.y + 50.5, 100, 100));
+}
+
+DRAW_TEST_F(CGContext, StrokeRectWithWidth, WhiteBackgroundTest<>) {
+    CGContextRef context = GetDrawingContext();
+    CGRect bounds = GetDrawingBounds();
+
+    CGRect box = CGRectMake(bounds.size.width * .1, bounds.size.height * .1, bounds.size.width * .3, bounds.size.height * .3);
+
+    CGContextStrokeRectWithWidth(context, box, 1);
+    CGContextTranslateCTM(context, bounds.size.width * .5, 0);
+    CGContextStrokeRectWithWidth(context, box, 3);
+    CGContextTranslateCTM(context, bounds.size.width * -.5, bounds.size.height * .5);
+    CGContextStrokeRectWithWidth(context, box, 10);
+    CGContextTranslateCTM(context, bounds.size.width * .5, 0);
+    CGContextStrokeRectWithWidth(context, box, 20);
+    CGContextTranslateCTM(context, bounds.size.width * -.5, bounds.size.height * -.5);
+
+    CGContextMoveToPoint(context, 0, bounds.size.height * .5);
+    CGContextAddLineToPoint(context, bounds.size.width, bounds.size.height * .5);
+    CGContextMoveToPoint(context, bounds.size.width * .5, 0);
+    CGContextAddLineToPoint(context, bounds.size.width * .5, bounds.size.height);
+    CGContextDrawPath(context, kCGPathStroke);
 }
