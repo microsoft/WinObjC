@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -14,9 +14,12 @@
 //
 //******************************************************************************
 
-#include "Misc.h"
-#include "TypeInfo.h"
-#include "precompiled.h"
+#include "Precompiled.h"
+#include <TypeInfo.h>
+#include <Misc.h>
+
+using namespace std;
+using namespace ObjectModel;
 
 namespace {
 map<wstring, wstring> gBasicTypes = { { L"Enum", L"Basic" }, // TODO: BK: this is wrong and will die in the ObjcC case.

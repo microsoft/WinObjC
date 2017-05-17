@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -14,19 +14,19 @@
 //
 //******************************************************************************
 
-// clang-format off
-#include "precompiled.h"
-#include "CodeGen.h"
-#include "TypeInfo.h"
-#include "Generics.h"
-#include "DepResolution.h"
-#include "ShimTracker.h"
-#include "Misc.h"
+#include "Precompiled.h"
+#include <CodeGen.h>
+#include <TypeInfo.h>
+#include <Generics.h>
+#include <DepResolution.h>
+#include <ShimTracker.h>
+#include <Misc.h>
 
-#include "CodeGenModel.h"
-#include "CommandLine.h"
+#include <CodeGenModel.h>
+#include <CommandLine.h>
 
-// clang-format on
+using namespace std;
+using namespace ObjectModel;
 
 // ToDo: Move stuff to its own namespace.
 
@@ -35,7 +35,7 @@ const int namespaceLengthLimit = 200;
 const wstring& g_copyrightNotice =
     L"//******************************************************************************\n"
     "//\n"
-    "// Copyright (c) 2015 Microsoft Corporation. All rights reserved.\n"
+    "// Copyright (c) Microsoft. All rights reserved.\n"
     "//\n"
     "// This code is licensed under the MIT License (MIT).\n"
     "//\n"
@@ -2159,7 +2159,7 @@ wstring generateClangCompileStatements(const vector<shared_ptr<NameSpace>>& name
     for (auto& ns : namespaces) {
         headers += LR"~(    <PackageHeader Include="$(MSBuildProjectDirectory)\..\..\)~" + g_srcDirectory;
         headers += filenameFromNamespace(ns->Name);
-        headers += LR"~(.h" />
+        headers += LR"~(.h> />
 )~";
 
         clangCompileBlock += LR"~(    <ClangCompile Include="..\..\)~" + g_srcDirectory;

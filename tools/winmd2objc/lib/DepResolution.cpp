@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -14,8 +14,11 @@
 //
 //******************************************************************************
 
-#include "DepResolution.h"
-#include "precompiled.h"
+#include "Precompiled.h"
+#include <DepResolution.h>
+
+using namespace std;
+using namespace ObjectModel;
 
 void ResolveAssemblyRefs(shared_ptr<MetaDataConvert> convert,
                          wstring fileName,
@@ -67,7 +70,7 @@ void ResolveAssemblyRefs(shared_ptr<MetaDataConvert> convert,
                 if (FAILED(refHr)) {
                     wprintf(L"Failed! (hr=0x%08X)\n", refHr);
                 } else {
-                    // depMap[scope].push_back(wstring(refName) + L".h");
+                    // depMap[scope].push_back(wstring(refName) + L".h>);
 
                     wprintf(L"Success!\n");
                     // Comment this out, if you don't want to recurse the entire dep tree.

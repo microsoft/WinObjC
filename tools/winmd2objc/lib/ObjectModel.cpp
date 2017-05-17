@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -14,11 +14,13 @@
 //
 //******************************************************************************
 
-#include "ObjectModel.h"
-#include "MetadataScope.h"
-#include "precompiled.h"
+#include "Precompiled.h"
+#include <ObjectModel.h>
+#include <MetadataScope.h>
 
-//#include "utility.h"
+using namespace std;
+
+//#include <utility.h>
 //#include <WexTestClass.h>
 //
 //#define LOGFILE_OUTPUT(ftm, ...)                            \

@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -17,31 +17,27 @@
 #pragma once
 
 #include <Windows.h>
-#include <assert.h>
-#include <atlbase.h>
-#include <cor.h>
-#include <memory>
 #include <string>
-#include <wrl/client.h>
+#include <memory>
+#include <cor.h>
 #include <wrl/def.h>
+#include <wrl/client.h>
+#include <atlbase.h>
+#include <assert.h>
 
 // STL:
-#include <algorithm>
+#include <unordered_map>
 #include <functional>
+#include <vector>
+#include <sstream>
+#include <algorithm>
+#include <unordered_set>
+#include <set>
 #include <map>
 #include <numeric>
-#include <set>
-#include <sstream>
-#include <unordered_map>
-#include <unordered_set>
-#include <vector>
 
-using namespace std; // @_@
-using namespace Microsoft::WRL;
+#include <caparser.h>
 
-#include "caparser.h"
-
-#include "MetadataScope.h"
-#include "ObjectModel.h"
-using namespace ObjectModel;
-typedef map<wstring, shared_ptr<ObjectModel::Symbol>> SymbolTable;
+#include <MetadataScope.h>
+#include <ObjectModel.h>
+typedef std::map<std::wstring, std::shared_ptr<ObjectModel::Symbol>> SymbolTable;

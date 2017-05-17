@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -14,10 +14,12 @@
 //
 //******************************************************************************
 
-#include "CommandLine.h"
-#include "Misc.h"
-#include "ObjectModel.h"
-#include "precompiled.h"
+#include "Precompiled.h"
+#include <CommandLine.h>
+#include <Misc.h>
+#include <ObjectModel.h>
+
+using namespace std;
 
 struct CommandLineTemplate {
     wstring sw;
@@ -34,7 +36,8 @@ static CommandLineTemplate gCmds[] =
       { L"p", L"generate projects", L"generate new .vcxproj files for ObjCUWP" },
       { L"name", L"Solution Name", L"Name for the solution" },
       { L"merge", L"", L"merge all namespaces in the current input file" },
-      { L"nuget", L"Name of nuget package:Version Number", L"Name and version of Nuget package" } };
+      { L"nuget", L"Name of nuget package:Version Number", L"Name and version of Nuget package" },
+      { L"output", L"", L"Path to output directory" } };
 
 static unsigned int gNCmds = sizeof(gCmds) / sizeof(gCmds[0]);
 

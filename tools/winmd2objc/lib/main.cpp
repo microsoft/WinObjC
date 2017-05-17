@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -14,12 +14,16 @@
 //
 //******************************************************************************
 
-#include "CodeGen.h"
-#include "CommandLine.h"
-#include "DepResolution.h"
-#include "Misc.h"
-#include "precompiled.h"
+#include "Precompiled.h"
+#include <DepResolution.h>
+#include <CommandLine.h>
+#include <CodeGen.h>
+#include <Misc.h>
+#include <Conversion.h>
 #include <objbase.h>
+
+using namespace std;
+using namespace ObjectModel;
 
 typedef pair<map<wstring, pair<wstring, vector<shared_ptr<NameSpace>>>>, map<wstring, wstring>> ModuleGraphType;
 void _exitIfDirectoryNotCreated(const wstring& path) {
@@ -106,6 +110,11 @@ void startWinmdConversion(int argc, wchar_t** argv) {
     CommandLineInfo::Initialize(options, solutionFileName);
 
     wstring outputDirectory = g_defaultOutputDirectory;
+    if (options.optMap[L"output"].size() > 0) {
+        outputDirectory = options.optMap[L"output"][0];
+    } else {
+        wprintf(L"output directory is set to:: %s\n You can specify a output directory via -output option", outputDirectory);
+    }
 
     replaceAll(outputDirectory, L"/", L"\\");
     if (outputDirectory[outputDirectory.length() - 1] != L'\\') {

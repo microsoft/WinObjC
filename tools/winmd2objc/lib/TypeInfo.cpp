@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -14,11 +14,14 @@
 //
 //******************************************************************************
 
-#include "TypeInfo.h"
-#include "Generics.h"
-#include "Misc.h"
-#include "ShimTracker.h"
-#include "precompiled.h"
+#include "Precompiled.h"
+#include <TypeInfo.h>
+#include <Misc.h>
+#include <Generics.h>
+#include <ShimTracker.h>
+
+using namespace std;
+using namespace ObjectModel;
 
 namespace {
 std::map<wstring, wstring> toBasic{

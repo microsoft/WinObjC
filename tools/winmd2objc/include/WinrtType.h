@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -67,30 +67,30 @@ inline bool isMap(ContainerType ct) {
 struct WinrtContainerInfo;
 class ToObjcTypeConvertor;
 class WinrtType {
-    wstring objcType;
+    std::wstring objcType;
 
-    wstring wrlName; // ABI type for this type.
-    wstring templateType; // Logical type, basically different only for templated stuff.
+    std::wstring wrlName; // ABI type for this type.
+    std::wstring templateType; // Logical type, basically different only for templated stuff.
 
 public:
-    wstring getObjcType(bool decoratedName = true) const;
+    std::wstring getObjcType(bool decoratedName = true) const;
 
-    void setObjcType(const wstring& s);
-    void setWrlType(const wstring& wrlName, const wstring& templateName);
-    inline void setWrlType(const wstring& name) {
+    void setObjcType(const std::wstring& s);
+    void setWrlType(const std::wstring& wrlName, const std::wstring& templateName);
+    inline void setWrlType(const std::wstring& name) {
         setWrlType(name, name);
     }
 
-    void setBasicType(const wstring& s); // ints and so forth.
+    void setBasicType(const std::wstring& s); // ints and so forth.
 
     // These two are used for containers.  The input type is the type acceptable as an input param,
     // which may be different than the objcType.  Ie, objcType=NSMutableArray, objcInputType=id<NSFastEnumeration>.
     // And the full objc typename is the actual class that implements this particular type.
-    wstring getObjcInputType(shared_ptr<Symbol> type) const; // decorated.
+    std::wstring getObjcInputType(std::shared_ptr<ObjectModel::Symbol> type) const; // decorated.
 
-    wstring getFullObjcTypename(bool convert = false) const; // you should never need the default arg.
+    std::wstring getFullObjcTypename(bool convert = false) const; // you should never need the default arg.
 
-    wstring wrlFullName(bool interfaceType = true, bool baseType = false) const;
+    std::wstring wrlFullName(bool interfaceType = true, bool baseType = false) const;
 
     bool isValueType = true;
     bool isFundamentalType = true;
@@ -104,14 +104,14 @@ public:
     ToObjcTypeConvertor* toObjc = NULL;
 
     // Convert from ObjC type -> WRL type
-    std::function<wstring(wstring, bool)> convertFnWrl = [](wstring p, bool setter = false) { return p; };
+    std::function<std::wstring(std::wstring, bool)> convertFnWrl = [](std::wstring p, bool setter = false) { return p; };
 
-    wstring subtypeComment; // which subtypes are in a container.  used for documenting.
+    std::wstring subtypeComment; // which subtypes are in a container.  used for documenting.
 
     // Template parameters for generics
     std::vector<WinrtType> templateParams;
 
-    wstring getObjcClass() const;
+    std::wstring getObjcClass() const;
 
     // Convenience functions.
     bool isContainer() const {
@@ -144,7 +144,7 @@ public:
     bool isIInspectableType() const {
         return !(isValueType || isEnumType || isCArray());
     }
-    wstring wrlRawName() const {
+    std::wstring wrlRawName() const {
         return wrlName;
     }
 
@@ -153,7 +153,7 @@ public:
     bool isInheritable() const;
     bool isSupportedInheritable() const;
 
-    wstring aggregateWrlType() const;
+    std::wstring aggregateWrlType() const;
 };
 
 class ShimTracker;
@@ -168,49 +168,49 @@ protected:
 
 public:
     virtual ~ToObjcTypeConvertor();
-    static ToObjcTypeConvertor* builtinFor(const wstring& conversion, bool func);
+    static ToObjcTypeConvertor* builtinFor(const std::wstring& conversion, bool func);
 
     virtual bool isBuiltin() const {
         return false;
     }
 
     // Call this func to get a code snipped that converts paramName to an ObjC type, a la toWrlFunc.  (default impl does nothing).
-    virtual wstring call(const WinrtType& t, const wstring& paramName) {
+    virtual std::wstring call(const WinrtType& t, const std::wstring& paramName) {
         return paramName;
     }
 
     // Various bits of code that are needed for types that need shims.
-    virtual wstring prototype(const WinrtType& t) {
+    virtual std::wstring prototype(const WinrtType& t) {
         return L"";
     }
 
-    virtual wstring instantiator(const WinrtType& t) {
+    virtual std::wstring instantiator(const WinrtType& t) {
         return t.getObjcType() + L"()";
     }
 
-    virtual wstring instantiator(const WinrtType& t, ShimTracker& shims) {
+    virtual std::wstring instantiator(const WinrtType& t, ShimTracker& shims) {
         return t.getObjcType() + L"()";
     }
 
-    virtual wstring supportCode(const WinrtType& t, ShimTracker& shims) {
+    virtual std::wstring supportCode(const WinrtType& t, ShimTracker& shims) {
         return L"";
     } // ie, key enumerators for maps.
 
-    virtual wstring implementation(const WinrtType& t, ShimTracker& shims, bool inheritedType = false) {
+    virtual std::wstring implementation(const WinrtType& t, ShimTracker& shims, bool inheritedType = false) {
         return L"";
     }
 };
 
 class SingleObjConvertor : public ToObjcTypeConvertor {
 public:
-    virtual wstring prototype(const WinrtType& t) override;
-    virtual wstring call(const WinrtType& t, const wstring& param) override;
-    virtual wstring instantiator(const WinrtType& t) override;
+    virtual std::wstring prototype(const WinrtType& t) override;
+    virtual std::wstring call(const WinrtType& t, const std::wstring& param) override;
+    virtual std::wstring instantiator(const WinrtType& t) override;
 };
 
 class SingleObjContainerConvertor : public SingleObjConvertor {
 public:
-    virtual wstring prototype(const WinrtType& t) override;
+    virtual std::wstring prototype(const WinrtType& t) override;
 };
 
 class NilConvertor : public ToObjcTypeConvertor {
@@ -218,7 +218,7 @@ public:
     virtual bool isBuiltin() const {
         return true;
     }
-    virtual wstring call(const WinrtType& t, const wstring& param) override {
+    virtual std::wstring call(const WinrtType& t, const std::wstring& param) override {
         return L"nil";
     }
 };

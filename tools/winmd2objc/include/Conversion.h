@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -15,17 +15,5 @@
 //******************************************************************************
 
 #pragma once
-#include <map>
-#include <string>
-#include <vector>
 
-struct CommandLineOptions {
-    wstring executable;
-    map<wstring, vector<wstring>> optMap;
-
-    // pair.first: input file name.
-    // pair.second: If set merge all namespaces from pair.first into a single namespace.
-    pair<wstring, bool> metaDataFileInfo;
-};
-
-bool parseCommandLine(int argc, wchar_t** argv, CommandLineOptions& options);
+void startWinmdConversion(int argc, wchar_t** argv);

@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -20,28 +20,28 @@
 
 struct DelegateShimInfo {
     WinrtType type;
-    wstring returnType;
+    std::wstring returnType;
 };
 
 class ShimTracker {
     bool inGeneration = false;
-    map<wstring, set<wstring>> generatedShims;
-    map<wstring, wstring> typedefShims;
-    map<wstring, WinrtType> referencedClasses;
-    map<wstring, wstring>& namespaceMap;
+    std::map<std::wstring, std::set<std::wstring>> generatedShims;
+    std::map<std::wstring, std::wstring> typedefShims;
+    std::map<std::wstring, WinrtType> referencedClasses;
+    std::map<std::wstring, std::wstring>& namespaceMap;
 
 public:
-    ShimTracker(map<wstring, wstring>& map);
+    ShimTracker(std::map<std::wstring, std::wstring>& map);
 
 protected:
     void dumpForwardDecls(FILE* outHeader, FILE* outImpl, FILE* cheatHeader);
 
 public:
-    map<wstring, DelegateShimInfo> delegateShims;
+    std::map<std::wstring, DelegateShimInfo> delegateShims;
 
-    void dumpAndReset(const wstring& ns, FILE* outHeader, FILE* outImpl, FILE* cheatHeader);
+    void dumpAndReset(const std::wstring& ns, FILE* outHeader, FILE* outImpl, FILE* cheatHeader);
 
     void addref(const WinrtType& t);
 
-    wstring getTypedefName(const wstring& type);
+    std::wstring getTypedefName(const std::wstring& type);
 };

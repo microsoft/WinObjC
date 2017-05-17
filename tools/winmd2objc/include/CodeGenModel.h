@@ -1,17 +1,30 @@
+//******************************************************************************
+//
+// Copyright (c) Microsoft. All rights reserved.
+//
+// This code is licensed under the MIT License (MIT).
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+//
+//******************************************************************************
+
 #pragma once
 
 #include "Misc.h"
 
-#include <string>
 #include <vector>
-
-using std::wstring;
-using std::vector;
+#include <string>
 
 // If property or method name begins with the memory management identifier tokens like 'alloc', 'new', 'copy'
 // then ARC is going to generate code to manage memory assuming that these return a +1 ref count object.
 // So we return annotations which notify ARC that these do not return +1 ref count objects.
-inline wstring _getClangAnnotationsForARC(wstring name) {
+inline std::wstring _getClangAnnotationsForARC(std::wstring name) {
     if (name.find(L"new") == 0 || name.find(L"alloc") == 0 || name.find(L"copy") == 0) {
         return L"__attribute__ ((ns_returns_not_retained))";
     }
@@ -21,16 +34,16 @@ inline wstring _getClangAnnotationsForARC(wstring name) {
 
 // Intersperse [separator] between each element of [data] that passes [filter], using [transform] to convert to a string type
 template <typename Container, typename TransformFn>
-static wstring addSeparators(const Container& data,
-                             const TransformFn& transform,
-                             const wstring& separator = L", ",
-                             function<bool(const typename Container::value_type&)> filter = [](auto val) { return true; }) {
+static std::wstring addSeparators(const Container& data,
+                                  const TransformFn& transform,
+                                  const std::wstring& separator = L", ",
+                                  std::function<bool(const typename Container::value_type&)> filter = [](auto val) { return true; }) {
     auto first = find_if(begin(data), end(data), filter);
     if (first == end(data)) {
         return L"";
     }
 
-    wstringstream ss;
+    std::wstringstream ss;
     ss << transform(*first);
     for_each(next(first), end(data), [&](const auto& val) {
         if (filter(val)) {
@@ -46,40 +59,43 @@ class Stmt {
 public:
     virtual ~Stmt() {
     }
-    virtual wstring emit() = 0;
+    virtual std::wstring emit() = 0;
 };
 
 namespace ObjC {
 struct MethodSig : Stmt {
     // name:(type)var
     struct NameTypeVar {
-        wstring name, type, var;
+        std::wstring name, type, var;
     };
 
-    vector<NameTypeVar> _nameTypeVar;
-    wstring _returnType;
+    std::vector<NameTypeVar> _nameTypeVar;
+    std::wstring _returnType;
     bool _hasArgs, _staticMethod;
     bool _needsARCAnnotation;
 
     // No args:
-    MethodSig(bool staticMethod, const wstring& returnType, const wstring& name, bool needsARCAnnotation = false)
+    MethodSig(bool staticMethod, const std::wstring& returnType, const std::wstring& name, bool needsARCAnnotation = false)
         : _returnType(returnType), _staticMethod(staticMethod), _hasArgs(false), _needsARCAnnotation(needsARCAnnotation) {
         _nameTypeVar.push_back({ name, L"", L"" });
     }
 
-    MethodSig(bool staticMethod, const wstring& returnType, const vector<NameTypeVar>& nameTypeVar, bool needsARCAnnotation = false)
+    MethodSig(bool staticMethod,
+              const std::wstring& returnType,
+              const std::vector<NameTypeVar>& nameTypeVar,
+              bool needsARCAnnotation = false)
         : _returnType(returnType),
           _nameTypeVar(nameTypeVar),
           _hasArgs(true),
           _staticMethod(staticMethod),
           _needsARCAnnotation(needsARCAnnotation) {
         if (nameTypeVar.empty()) {
-            throw invalid_argument("parameters list must not be empty!");
+            throw std::invalid_argument("parameters list must not be empty!");
         }
     }
 
-    wstring emit() override {
-        wstring parameters;
+    std::wstring emit() override {
+        std::wstring parameters;
 
         if (_hasArgs) {
             parameters =
@@ -93,7 +109,7 @@ struct MethodSig : Stmt {
 
         // Get ARC related clang annotations.
         if (_needsARCAnnotation) {
-            wstring annotation = _getClangAnnotationsForARC(parameters);
+            std::wstring annotation = _getClangAnnotationsForARC(parameters);
             if (annotation.length()) {
                 parameters += L" " + annotation;
             }
@@ -107,19 +123,19 @@ struct ObjCMethodDefn : Stmt {};
 
 class ProtocolDecl : public Stmt {
 public:
-    ProtocolDecl(const wstring& name, const vector<wstring>& protocols = {}) : _name(name), _protocols(protocols) {
+    ProtocolDecl(const std::wstring& name, const std::vector<std::wstring>& protocols = {}) : _name(name), _protocols(protocols) {
     }
 
-    wstring emit() override {
+    std::wstring emit() override {
         return formatString(L"@protocol %s%s", _name.c_str(), generateProtocolList().c_str());
     }
 
 protected:
-    wstring _name;
-    vector<wstring> _protocols;
+    std::wstring _name;
+    std::vector<std::wstring> _protocols;
 
-    wstring generateProtocolList() {
-        wstring protocols = addSeparators(_protocols, identity<wstring>());
+    std::wstring generateProtocolList() {
+        std::wstring protocols = addSeparators(_protocols, std::identity<std::wstring>());
         if (!protocols.empty()) {
             protocols = formatString(L" <%s>", protocols.c_str());
         }
@@ -129,15 +145,18 @@ protected:
 
 // This should eventually be merged with ClassDefn but currently they're fed from different places.
 class ClassDecl : public ProtocolDecl {
-    wstring _parent;
-    wstring _exportDefine;
+    std::wstring _parent;
+    std::wstring _exportDefine;
 
 public:
-    ClassDecl(const wstring& name, const wstring& parent, const wstring& exportDefine, const vector<wstring>& protocols = {})
+    ClassDecl(const std::wstring& name,
+              const std::wstring& parent,
+              const std::wstring& exportDefine,
+              const std::vector<std::wstring>& protocols = {})
         : ProtocolDecl(name, protocols), _parent(parent), _exportDefine(exportDefine) {
     }
 
-    wstring emit() override {
+    std::wstring emit() override {
         return formatString(L"%s\n@interface %s : %s%s",
                             _exportDefine.c_str(),
                             _name.c_str(),
