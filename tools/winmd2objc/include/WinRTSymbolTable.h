@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -20,10 +20,10 @@
 //
 #pragma once
 
-#include <ios>
-#include <iostream>
 #include <map>
 #include <memory>
+#include <ios>
+#include <iostream>
 
 template <class TString, class TNode>
 class SymbolTable;
@@ -34,7 +34,7 @@ class SymbolNode;
 //  intentional - if we ever hit the templated version, it's an error.
 template <class T>
 bool CompareStringLess(T left, T right) {
-    NT_ASSERT(FALSE);
+    assert(FALSE);
 };
 
 //
@@ -56,7 +56,7 @@ public:
     }
 
     const TNode& Leaf() {
-        NT_ASSERT(_fLeafNode);
+        assert(_fLeafNode);
         return _nodeLeaf;
     }
 
@@ -97,7 +97,7 @@ private:
 //  Template class which implements a symbol table.  It takes two
 //  template parameters - a string class (either std::string or
 //  std::wstring) and a node type (either const named_node * (for
-//  midlrt) or shared_ptr<CMetadataType> (for mdmerge)).
+//  midlrt) or std::shared_ptr<CMetadataType> (for mdmerge)).
 //
 //
 //  The MIDLRT case sensitivity algorithm matches elements of a type

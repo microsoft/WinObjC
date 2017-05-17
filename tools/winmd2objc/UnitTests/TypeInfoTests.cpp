@@ -1,6 +1,6 @@
-#include "../lib/TypeInfo.h"
-#include "stdafx.h"
+#include <stdafx.h>
 #include <gtest/gtest.h>
+#include <TypeInfo.h>
 
 TEST(TypeInfo, NamespaceMangleTest) {
     // Test the builtin overrides, which should eventually be scriptable:

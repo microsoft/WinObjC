@@ -1,6 +1,13 @@
+// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+//
+// File: caparser.h
+//
+
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -14,15 +21,7 @@
 //
 //******************************************************************************
 
-//
-// File: caparser.h
-// Copied from CLR sources
-//
-//
-// ============================================================================
-
-#ifndef __CAPARSER_H__
-#define __CAPARSER_H__
+#pragma once
 
 class CustomAttributeParser {
 public:
@@ -251,7 +250,7 @@ public:
     }
 
     // Parses a string into a nice, null-terminated wstring.
-    wstring GetWString() {
+    std::wstring GetWString() {
         LPCSTR pStr = NULL;
         ULONG cbVal = 0;
         DWORD ret = 0;
@@ -265,7 +264,7 @@ public:
         }
 
         ret = MultiByteToWideChar(CP_UTF8, 0, pStr, cbVal, nullptr, 0);
-        shared_ptr<wchar_t> heapBuf(new wchar_t[ret + 1]);
+        std::shared_ptr<wchar_t> heapBuf(new wchar_t[ret + 1]);
         ret = MultiByteToWideChar(CP_UTF8, 0, pStr, cbVal, heapBuf.get(), ret);
         if (ret == 0) {
             throw GetLastError();
@@ -314,5 +313,3 @@ private:
     const BYTE* m_pbBlob;
     ULONG m_cbBlob;
 };
-
-#endif // __CAPARSER_H__

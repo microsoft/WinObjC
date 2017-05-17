@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -14,12 +14,14 @@
 //
 //******************************************************************************
 
-#include "MetadataScope.h"
-#include "MetaHost.h"
-#include "WinMDVerString.h"
-#include "precompiled.h"
+#include "Precompiled.h"
+#include <MetaHost.h>
+#include <MetadataScope.h>
+#include <WinMDVerString.h>
 #include <assert.h>
-#define NT_ASSERT assert // @_@
+
+using namespace std;
+using namespace Microsoft::WRL;
 
 // Hard-coded the mscorlib strong name
 const BYTE CMetadataScope::s_mscorlibStrongNameBlob[] = { 0xb7, 0x7a, 0x5c, 0x56, 0x19, 0x34, 0xe0, 0x89 };
@@ -1542,7 +1544,7 @@ mdToken CMetadataScope::GetTokenForType(__in PCWSTR pszTypeName) {
         // Now find the local TypeRef for a retargetable type def
         if (!FindTypeRef(tkModule, pszTypeName, &tkReturns)) {
             // We should always see the companion TypeRef.
-            NT_ASSERT(FALSE);
+            assert(FALSE);
         }
     }
     if (FAILED(hr)) {
@@ -1614,7 +1616,7 @@ wstring CMetadataScope::GetCurrentAssembly() {
     mdAssembly tokeAssembly;
     wstring strAssemblyName;
 
-    NT_ASSERT(_spAssemblyReader != nullptr);
+    assert(_spAssemblyReader != nullptr);
 
     // Get the assembly in the current scope.
     if (SUCCEEDED(_spAssemblyReader->GetAssemblyFromScope(&tokeAssembly))) {
@@ -1634,7 +1636,7 @@ mdAssembly CMetadataScope::GetAssemblyFromScope() {
     HRESULT hr = S_OK;
     mdAssembly tkCurrentAssembly;
 
-    NT_ASSERT(_spAssemblyReader != nullptr);
+    assert(_spAssemblyReader != nullptr);
     hr = _spAssemblyReader->GetAssemblyFromScope(&tkCurrentAssembly);
     if (FAILED(hr)) {
         throw CMetadataFormatError(this, hr);
@@ -1653,7 +1655,7 @@ void CMetadataScope::GetAssemblyProps(_In_ mdAssembly mda,
                                       _Out_opt_ ASSEMBLYMETADATA* pMetadata,
                                       _Out_opt_ DWORD* pdwAssemblyFlags) {
     HRESULT hr = S_OK;
-    NT_ASSERT(_spAssemblyReader != nullptr);
+    assert(_spAssemblyReader != nullptr);
     hr = _spAssemblyReader
              ->GetAssemblyProps(mda, ppbPublicKey, pcbPublicKey, pulHashAlgId, szName, cchName, pchName, pMetadata, pdwAssemblyFlags);
     if (FAILED(hr)) {
@@ -1672,7 +1674,7 @@ void CMetadataScope::GetAssemblyRefProps(_In_ mdAssemblyRef mda,
                                          _Out_opt_ ULONG* pcbHashValue,
                                          _Out_opt_ DWORD* pdwAssemblyFlags) {
     HRESULT hr = S_OK;
-    NT_ASSERT(_spAssemblyReader != nullptr);
+    assert(_spAssemblyReader != nullptr);
     hr = _spAssemblyReader->GetAssemblyRefProps(
         mda, ppbPublicKey, pcbPublicKey, szName, cchName, pchName, pMetadata, ppbHashValue, pcbHashValue, pdwAssemblyFlags);
     if (FAILED(hr)) {
@@ -1773,7 +1775,7 @@ mdToken CMetadataScope::EnsureMember(mdToken tkType, PCWSTR pszMethodName, PCCOR
         if (hr == CLDB_E_RECORD_NOTFOUND) {
             //  We should never be in a situation where a member lookup
             //  on a typedef fails.
-            NT_ASSERT(TypeFromToken(tkType) != mdtTypeDef);
+            assert(TypeFromToken(tkType) != mdtTypeDef);
             hr = _spWriter->DefineMemberRef(tkType, pszMethodName, pbMethodSig, cbMethodSig, &tkCtor);
             if (FAILED(hr)) {
                 throw CMetadataFormatError(this, hr);
@@ -1943,7 +1945,7 @@ bool CMetadataScope::DetermineMetadataFormatVersion(std::wstring wstrFormatVersi
         { g_ExpectedWinMdVersionStrings[2], MetadataFormatVersion::WindowsRuntime1_4 },
     };
 
-    NT_ASSERT(ARRAYSIZE(strToEnumMapping) == ARRAYSIZE(g_ExpectedWinMdVersionStrings));
+    assert(ARRAYSIZE(strToEnumMapping) == ARRAYSIZE(g_ExpectedWinMdVersionStrings));
 
     bool fFoundValidVersion = false;
     for (size_t i = 0; i < ARRAYSIZE(g_ExpectedWinMdVersionStrings); ++i) {

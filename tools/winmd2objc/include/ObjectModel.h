@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -89,84 +89,88 @@ public:
     }
 
 public:
-    virtual void Visit(const shared_ptr<NameSpace>&) {
+    virtual void Visit(const std::shared_ptr<NameSpace>&) {
     }
 
-    virtual void Visit(const shared_ptr<Enum>&) {
+    virtual void Visit(const std::shared_ptr<Enum>&) {
     }
 
-    virtual void Visit(const shared_ptr<Attribute>&) {
+    virtual void Visit(const std::shared_ptr<Attribute>&) {
     }
 
-    virtual void Visit(const shared_ptr<AttributeDef>&) {
+    virtual void Visit(const std::shared_ptr<AttributeDef>&) {
     }
 
-    virtual void Visit(const shared_ptr<Struct>&) {
+    virtual void Visit(const std::shared_ptr<Struct>&) {
     }
 
-    virtual void Visit(const shared_ptr<Delegate>&) {
+    virtual void Visit(const std::shared_ptr<Delegate>&) {
     }
 
-    virtual void Visit(const shared_ptr<Interface>&) {
+    virtual void Visit(const std::shared_ptr<Interface>&) {
     }
 
-    virtual void Visit(const shared_ptr<RuntimeClass>&) {
+    virtual void Visit(const std::shared_ptr<RuntimeClass>&) {
     }
 
-    virtual void Visit(const shared_ptr<ApiContract>&) {
+    virtual void Visit(const std::shared_ptr<ApiContract>&) {
     }
 
-    virtual void Visit(const shared_ptr<Array>&) {
+    virtual void Visit(const std::shared_ptr<Array>&) {
     }
 
-    virtual void Visit(const shared_ptr<Generic>&) {
+    virtual void Visit(const std::shared_ptr<Generic>&) {
     }
 
-    virtual void Visit(const shared_ptr<GenericParam>&) {
+    virtual void Visit(const std::shared_ptr<GenericParam>&) {
     }
 
-    virtual void Visit(const shared_ptr<BasicType>&) {
+    virtual void Visit(const std::shared_ptr<BasicType>&) {
     }
 
-    virtual void Visit(const shared_ptr<UnresolvedSymbol>&) {
+    virtual void Visit(const std::shared_ptr<UnresolvedSymbol>&) {
     }
 
-    virtual void Visit(const shared_ptr<CustomModifier>&) {
+    virtual void Visit(const std::shared_ptr<CustomModifier>&) {
     }
 };
 
 struct RawType {
     mdToken tdef;
-    wstring typeName;
+    std::wstring typeName;
     DWORD attrs;
-    wstring extendsTypeName;
+    std::wstring extendsTypeName;
     ObjectModel::TypeCategory typeCategory;
-    RawType(mdToken tkType, const wstring& name, DWORD dwAttrs, const wstring& extendsName, ObjectModel::TypeCategory category)
+    RawType(mdToken tkType, const std::wstring& name, DWORD dwAttrs, const std::wstring& extendsName, ObjectModel::TypeCategory category)
         : tdef(tkType), typeName(name), attrs(dwAttrs), extendsTypeName(extendsName), typeCategory(category) {
     }
 };
 
 // Contains information about a field in a Struct or Enum type
 struct FieldInfo {
-    shared_ptr<Symbol> ElementType;
-    wstring ElementName;
-    multimap<const wstring, shared_ptr<Attribute>> Attributes;
+    std::shared_ptr<Symbol> ElementType;
+    std::wstring ElementName;
+    std::multimap<const std::wstring, std::shared_ptr<Attribute>> Attributes;
     bool IsPublic;
     bool HasFieldMarshalTableRow;
 };
 
 struct Symbol {
-    wstring Name;
-    wstring SourceFileName;
+    std::wstring Name;
+    std::wstring SourceFileName;
     mdToken Token;
     TypeCategory Category;
-    shared_ptr<ObjectModel::RawType> RawType;
-    multimap<const wstring, shared_ptr<CustomModifier>> CustomModifiers;
+    std::shared_ptr<ObjectModel::RawType> RawType;
+    std::multimap<const std::wstring, std::shared_ptr<CustomModifier>> CustomModifiers;
     bool IsPublic;
     ElementPointerKind PointerKind;
     ElementTypeKind TypeKind;
 
-    Symbol(TypeCategory category, const wstring& name, mdToken token, shared_ptr<ObjectModel::RawType> type, const wstring& sourceFileName)
+    Symbol(TypeCategory category,
+           const std::wstring& name,
+           mdToken token,
+           std::shared_ptr<ObjectModel::RawType> type,
+           const std::wstring& sourceFileName)
         : Category(category),
           Name(name),
           SourceFileName(sourceFileName),
@@ -187,11 +191,11 @@ struct Symbol {
     virtual void Visit(Visitor* /*visitor*/) = 0;
 };
 
-struct UnresolvedSymbol : Symbol, enable_shared_from_this<UnresolvedSymbol> {
-    UnresolvedSymbol(const wstring& name,
+struct UnresolvedSymbol : Symbol, std::enable_shared_from_this<UnresolvedSymbol> {
+    UnresolvedSymbol(const std::wstring& name,
                      mdToken token,
-                     shared_ptr<ObjectModel::RawType>& type,
-                     const wstring& sourceFileName,
+                     std::shared_ptr<ObjectModel::RawType>& type,
+                     const std::wstring& sourceFileName,
                      TypeCategory category = TypeCategory::UnresolvedType)
         : Symbol(category, name, token, type, sourceFileName) {
     }
@@ -199,8 +203,8 @@ struct UnresolvedSymbol : Symbol, enable_shared_from_this<UnresolvedSymbol> {
         visitor->Visit(shared_from_this());
     }
 };
-struct BasicType : Symbol, enable_shared_from_this<BasicType> {
-    BasicType(const wstring& name, const wstring& sourceFileName, TypeCategory category = TypeCategory::None)
+struct BasicType : Symbol, std::enable_shared_from_this<BasicType> {
+    BasicType(const std::wstring& name, const std::wstring& sourceFileName, TypeCategory category = TypeCategory::None)
         : Symbol(category, name, mdTokenNil, nullptr, sourceFileName) {
     }
     virtual void Visit(Visitor* visitor) {
@@ -208,19 +212,19 @@ struct BasicType : Symbol, enable_shared_from_this<BasicType> {
     }
 };
 
-struct Attribute : Symbol, enable_shared_from_this<Attribute> {
-    Attribute(const wstring& name, mdToken token, shared_ptr<ObjectModel::RawType> type, const wstring& sourceFileName)
+struct Attribute : Symbol, std::enable_shared_from_this<Attribute> {
+    Attribute(const std::wstring& name, mdToken token, std::shared_ptr<ObjectModel::RawType> type, const std::wstring& sourceFileName)
         : Symbol(TypeCategory::WinRtAttribute, name, token, type, sourceFileName) {
     }
     virtual void Visit(Visitor* visitor) {
         visitor->Visit(shared_from_this());
     }
-    vector<CustomAttributeParamInfo> FixedParameters;
-    unordered_map<wstring, ObjectModel::CustomAttributeParamInfo> NamedParameters;
+    std::vector<CustomAttributeParamInfo> FixedParameters;
+    std::unordered_map<std::wstring, ObjectModel::CustomAttributeParamInfo> NamedParameters;
 };
 
-struct CustomModifier : Symbol, enable_shared_from_this<CustomModifier> {
-    CustomModifier(CustomModifierKind kind, const wstring& sourceFileName)
+struct CustomModifier : Symbol, std::enable_shared_from_this<CustomModifier> {
+    CustomModifier(CustomModifierKind kind, const std::wstring& sourceFileName)
         : Symbol(TypeCategory::WinRtCustomModifier, L"", mdTokenNil, nullptr, sourceFileName), Kind(kind) {
     }
     virtual void Visit(Visitor* visitor) {
@@ -232,11 +236,11 @@ struct CustomModifier : Symbol, enable_shared_from_this<CustomModifier> {
     // ECMA II.7.1.1 modreq and modopt
     // "Each modifer associates a type reference with an item in the signature"
     // This type represents the type reference, eg System.Runtime.CompilerServices.IsConst
-    shared_ptr<Symbol> Type;
+    std::shared_ptr<Symbol> Type;
 };
 
-struct Enum : Symbol, enable_shared_from_this<Enum> {
-    Enum(const wstring& name, mdToken token, shared_ptr<ObjectModel::RawType> type, const wstring& sourceFileName)
+struct Enum : Symbol, std::enable_shared_from_this<Enum> {
+    Enum(const std::wstring& name, mdToken token, std::shared_ptr<ObjectModel::RawType> type, const std::wstring& sourceFileName)
         : Symbol(TypeCategory::WinRtEnum, name, token, type, sourceFileName), FlagsEnum(false), MaxElementNameLen(0) {
     }
     virtual void Visit(Visitor* visitor) {
@@ -246,50 +250,50 @@ struct Enum : Symbol, enable_shared_from_this<Enum> {
     // Contains information about a static field in an enumeration
     // Special name fields are internally stored in a FieldInfo struct
     struct EnumerationLabel {
-        wstring EnumerationName;
+        std::wstring EnumerationName;
         unsigned int EnumerationValue;
-        multimap<const wstring, shared_ptr<Attribute>> Attributes;
+        std::multimap<const std::wstring, std::shared_ptr<Attribute>> Attributes;
         bool IsPublic;
         bool HasDefault;
         bool IsStatic;
         bool IsLiteral;
     };
 
-    vector<FieldInfo> SpecialNameFieldInfo;
-    vector<EnumerationLabel> EnumerationLabels;
-    multimap<const wstring, shared_ptr<Attribute>> Attributes;
+    std::vector<FieldInfo> SpecialNameFieldInfo;
+    std::vector<EnumerationLabel> EnumerationLabels;
+    std::multimap<const std::wstring, std::shared_ptr<Attribute>> Attributes;
     bool FlagsEnum;
     size_t MaxElementNameLen;
 };
 
-struct Struct : Symbol, enable_shared_from_this<Struct> {
-    Struct(const wstring& name, mdToken token, shared_ptr<ObjectModel::RawType> type, const wstring& sourceFileName)
+struct Struct : Symbol, std::enable_shared_from_this<Struct> {
+    Struct(const std::wstring& name, mdToken token, std::shared_ptr<ObjectModel::RawType> type, const std::wstring& sourceFileName)
         : Symbol(TypeCategory::WinRtStruct, name, token, type, sourceFileName) {
     }
     virtual void Visit(Visitor* visitor) {
         visitor->Visit(shared_from_this());
     }
-    vector<FieldInfo> Fields;
-    multimap<const wstring, shared_ptr<Attribute>> Attributes;
+    std::vector<FieldInfo> Fields;
+    std::multimap<const std::wstring, std::shared_ptr<Attribute>> Attributes;
 };
 
-struct ApiContract : Symbol, enable_shared_from_this<ApiContract> {
+struct ApiContract : Symbol, std::enable_shared_from_this<ApiContract> {
     PCCOR_SIGNATURE Signature;
 
-    ApiContract(const wstring& name, mdToken token, shared_ptr<ObjectModel::RawType> type, const wstring& sourceFileName)
+    ApiContract(const std::wstring& name, mdToken token, std::shared_ptr<ObjectModel::RawType> type, const std::wstring& sourceFileName)
         : Symbol(TypeCategory::WinRtApiContract, name, token, type, sourceFileName) {
     }
     virtual void Visit(Visitor* visitor) {
         visitor->Visit(shared_from_this());
     }
     UINT32 ContractVersion;
-    multimap<const wstring, shared_ptr<Attribute>> Attributes;
+    std::multimap<const std::wstring, std::shared_ptr<Attribute>> Attributes;
 };
 
 struct ParameterInfo {
-    wstring Name;
-    shared_ptr<Symbol> Type;
-    multimap<const wstring, shared_ptr<Attribute>> Attributes;
+    std::wstring Name;
+    std::shared_ptr<Symbol> Type;
+    std::multimap<const std::wstring, std::shared_ptr<Attribute>> Attributes;
     bool HasParamTableRow;
     bool HasDefault;
     bool HasFieldMarshalTableRow;
@@ -297,7 +301,7 @@ struct ParameterInfo {
     bool IsInParam;
     bool IsOutParam;
     bool IsVoid;
-    ParameterInfo(const wstring& name)
+    ParameterInfo(const std::wstring& name)
         : Name(name),
           HasDefault(false),
           HasParamTableRow(false),
@@ -363,20 +367,20 @@ struct CustomAttributeParamInfo {
         return false;
     }
 
-    shared_ptr<ObjectModel::BasicType> Type;
-    wstring StringValue;
+    std::shared_ptr<ObjectModel::BasicType> Type;
+    std::wstring StringValue;
     LONGLONG SignedIntValue;
     double DoubleValue;
     ULONG ElementType;
 };
 
 struct MemberInfo {
-    wstring Name;
-    vector<ParameterInfo> Parameters;
+    std::wstring Name;
+    std::vector<ParameterInfo> Parameters;
     ParameterInfo ReturnParameter;
-    multimap<const wstring, shared_ptr<Attribute>> Attributes;
-    shared_ptr<MemberInfo> MethodImpl;
-    shared_ptr<Symbol> MethodImplType;
+    std::multimap<const std::wstring, std::shared_ptr<Attribute>> Attributes;
+    std::shared_ptr<MemberInfo> MethodImpl;
+    std::shared_ptr<Symbol> MethodImplType;
     bool IsPublic;
     bool IsStatic;
     bool IsProtected;
@@ -403,59 +407,62 @@ struct MemberInfo {
     }
 };
 
-struct Delegate : Symbol, enable_shared_from_this<Delegate> {
+struct Delegate : Symbol, std::enable_shared_from_this<Delegate> {
     PCCOR_SIGNATURE Signature;
 
-    Delegate(
-        const wstring& name, mdToken token, shared_ptr<ObjectModel::RawType> type, const wstring& sourceFileName, PCCOR_SIGNATURE signature)
+    Delegate(const std::wstring& name,
+             mdToken token,
+             std::shared_ptr<ObjectModel::RawType> type,
+             const std::wstring& sourceFileName,
+             PCCOR_SIGNATURE signature)
         : Symbol(TypeCategory::WinRtDelegate, name, token, type, sourceFileName), Signature(signature) {
     }
     virtual void Visit(Visitor* visitor) {
         visitor->Visit(shared_from_this());
     }
-    map<mdToken, shared_ptr<MemberInfo>> Members;
-    multimap<const wstring, shared_ptr<Attribute>> Attributes;
+    std::map<mdToken, std::shared_ptr<MemberInfo>> Members;
+    std::multimap<const std::wstring, std::shared_ptr<Attribute>> Attributes;
 };
 
 struct InterfaceImplInfo {
-    shared_ptr<Symbol> Type;
-    multimap<const wstring, shared_ptr<Attribute>> Attributes;
+    std::shared_ptr<Symbol> Type;
+    std::multimap<const std::wstring, std::shared_ptr<Attribute>> Attributes;
 };
 
 struct MethodRef {
     mdToken Token;
-    shared_ptr<MemberInfo> Info;
+    std::shared_ptr<MemberInfo> Info;
 };
 
 struct EventInfo {
-    wstring Name;
+    std::wstring Name;
     MethodRef Adder;
     MethodRef Remover;
 };
 
 struct PropertyInfo {
-    wstring Name;
+    std::wstring Name;
     MethodRef Getter;
     MethodRef Setter;
 };
 
-struct Interface : Symbol, enable_shared_from_this<Interface> {
-    Interface(const wstring& name, mdToken token, shared_ptr<ObjectModel::RawType> type, const wstring& sourceFileName)
+struct Interface : Symbol, std::enable_shared_from_this<Interface> {
+    Interface(const std::wstring& name, mdToken token, std::shared_ptr<ObjectModel::RawType> type, const std::wstring& sourceFileName)
         : Symbol(TypeCategory::WinRtInterface, name, token, type, sourceFileName), IsExclusiveTo(false) {
     }
     virtual void Visit(Visitor* visitor) {
         visitor->Visit(shared_from_this());
     }
-    map<mdToken, shared_ptr<MemberInfo>> Members;
-    vector<InterfaceImplInfo> InterfaceImplements;
-    vector<shared_ptr<EventInfo>> Events;
-    vector<shared_ptr<PropertyInfo>> Properties;
-    multimap<const wstring, shared_ptr<Attribute>> Attributes;
+    std::map<mdToken, std::shared_ptr<MemberInfo>> Members;
+    std::vector<InterfaceImplInfo> InterfaceImplements;
+    std::vector<std::shared_ptr<EventInfo>> Events;
+    std::vector<std::shared_ptr<PropertyInfo>> Properties;
+    std::multimap<const std::wstring, std::shared_ptr<Attribute>> Attributes;
     bool IsExclusiveTo;
 };
 
-struct RuntimeClass : Symbol, enable_shared_from_this<RuntimeClass> {
-    RuntimeClass(const wstring& name, mdToken token, shared_ptr<ObjectModel::RawType> type, const wstring& sourceFileName)
+struct RuntimeClass : Symbol, std::enable_shared_from_this<RuntimeClass> {
+    RuntimeClass(const std::wstring& name, mdToken token, std::shared_ptr<ObjectModel::RawType> type, const std::wstring& sourceFileName)
         : Symbol(TypeCategory::WinRtClass, name, token, type, sourceFileName),
           Extends(std::move(new ObjectModel::BasicType(L"", sourceFileName))),
           IsSealed(IsTdSealed(type->attrs) != 0),
@@ -468,36 +475,39 @@ struct RuntimeClass : Symbol, enable_shared_from_this<RuntimeClass> {
     }
 
     std::shared_ptr<ObjectModel::BasicType> Extends;
-    map<mdToken, shared_ptr<MemberInfo>> Members;
-    vector<InterfaceImplInfo> InterfaceImplements;
-    vector<shared_ptr<EventInfo>> Events;
-    vector<shared_ptr<PropertyInfo>> Properties;
-    multimap<const wstring, shared_ptr<Attribute>> Attributes;
+    std::map<mdToken, std::shared_ptr<MemberInfo>> Members;
+    std::vector<InterfaceImplInfo> InterfaceImplements;
+    std::vector<std::shared_ptr<EventInfo>> Events;
+    std::vector<std::shared_ptr<PropertyInfo>> Properties;
+    std::multimap<const std::wstring, std::shared_ptr<Attribute>> Attributes;
     bool IsSealed;
     bool IsActivatable;
     bool IsComposable;
     bool IsAbstract;
 };
 
-struct AttributeDef : Symbol, enable_shared_from_this<AttributeDef> {
-    AttributeDef(const wstring& name, mdToken token, shared_ptr<ObjectModel::RawType> type, const wstring& sourceFileName)
+struct AttributeDef : Symbol, std::enable_shared_from_this<AttributeDef> {
+    AttributeDef(const std::wstring& name, mdToken token, std::shared_ptr<ObjectModel::RawType> type, const std::wstring& sourceFileName)
         : Symbol(TypeCategory::WinRtAttributeDef, name, token, type, sourceFileName) {
     }
     virtual void Visit(Visitor* visitor) {
         visitor->Visit(shared_from_this());
     }
-    multimap<const wstring, shared_ptr<Attribute>> Attributes;
-    vector<FieldInfo> Fields;
-    map<mdToken, shared_ptr<MemberInfo>> Members;
+    std::multimap<const std::wstring, std::shared_ptr<Attribute>> Attributes;
+    std::vector<FieldInfo> Fields;
+    std::map<mdToken, std::shared_ptr<MemberInfo>> Members;
 
     bool IsPublic;
 };
 
-struct NameSpace : Symbol, enable_shared_from_this<NameSpace> {
+struct NameSpace : Symbol, std::enable_shared_from_this<NameSpace> {
     NameSpace() {
     }
-    NameSpace(
-        TypeCategory category, const wstring& name, mdToken token, shared_ptr<ObjectModel::RawType> type, const wstring& sourceFileName)
+    NameSpace(TypeCategory category,
+              const std::wstring& name,
+              mdToken token,
+              std::shared_ptr<ObjectModel::RawType> type,
+              const std::wstring& sourceFileName)
         : Symbol(category, name, token, type, sourceFileName) {
     }
 
@@ -505,17 +515,17 @@ struct NameSpace : Symbol, enable_shared_from_this<NameSpace> {
         visitor->Visit(shared_from_this());
     }
 
-    vector<shared_ptr<Enum>> Enums;
-    vector<shared_ptr<Struct>> Structs;
-    vector<shared_ptr<Interface>> Interfaces;
-    vector<shared_ptr<Delegate>> Delegates;
-    vector<shared_ptr<RuntimeClass>> RuntimeClasses;
-    vector<shared_ptr<AttributeDef>> AttributeDefs;
-    vector<shared_ptr<ApiContract>> ApiContracts;
+    std::vector<std::shared_ptr<Enum>> Enums;
+    std::vector<std::shared_ptr<Struct>> Structs;
+    std::vector<std::shared_ptr<Interface>> Interfaces;
+    std::vector<std::shared_ptr<Delegate>> Delegates;
+    std::vector<std::shared_ptr<RuntimeClass>> RuntimeClasses;
+    std::vector<std::shared_ptr<AttributeDef>> AttributeDefs;
+    std::vector<std::shared_ptr<ApiContract>> ApiContracts;
 };
 
-struct Array : public Symbol, enable_shared_from_this<Array> {
-    Array(const wstring& name, mdToken token, const wstring& sourceFileName)
+struct Array : public Symbol, std::enable_shared_from_this<Array> {
+    Array(const std::wstring& name, mdToken token, const std::wstring& sourceFileName)
         : Symbol(TypeCategory::WinRtArray, name, token, nullptr, sourceFileName) {
     }
     virtual void Visit(Visitor* visitor) {
@@ -526,25 +536,25 @@ struct Array : public Symbol, enable_shared_from_this<Array> {
         FillArray,
         ReceiveArray,
     };
-    shared_ptr<Symbol> Type;
+    std::shared_ptr<Symbol> Type;
     ArrayCategory ArrayCategory;
 };
 
-struct Generic : public Symbol, enable_shared_from_this<Generic> {
+struct Generic : public Symbol, std::enable_shared_from_this<Generic> {
     Generic() = delete;
 
-    Generic(const wstring& sourceFileName) : Symbol(TypeCategory::WinRtGeneric, L"", mdTokenNil, nullptr, sourceFileName) {
+    Generic(const std::wstring& sourceFileName) : Symbol(TypeCategory::WinRtGeneric, L"", mdTokenNil, nullptr, sourceFileName) {
     }
     virtual void Visit(Visitor* visitor) {
         visitor->Visit(shared_from_this());
     }
-    shared_ptr<Symbol> Type;
-    vector<shared_ptr<Symbol>> Parameters;
-    multimap<const wstring, shared_ptr<Attribute>> Attributes;
+    std::shared_ptr<Symbol> Type;
+    std::vector<std::shared_ptr<Symbol>> Parameters;
+    std::multimap<const std::wstring, std::shared_ptr<Attribute>> Attributes;
 };
 
-struct GenericParam : public Symbol, enable_shared_from_this<GenericParam> {
-    GenericParam(const wchar_t* paramName, int paramIndex, const wstring& sourceFileName)
+struct GenericParam : public Symbol, std::enable_shared_from_this<GenericParam> {
+    GenericParam(const wchar_t* paramName, int paramIndex, const std::wstring& sourceFileName)
         : Symbol(TypeCategory::WinRtGenericParam, paramName, mdTokenNil, nullptr, sourceFileName), ParamIndex(paramIndex) {
     }
     virtual void Visit(Visitor* visitor) {
@@ -554,38 +564,38 @@ struct GenericParam : public Symbol, enable_shared_from_this<GenericParam> {
 };
 
 //  Returns true if the types are equal, false if they are not.
-bool CompareTypes(const shared_ptr<ObjectModel::Symbol>& left,
-                  const shared_ptr<ObjectModel::Symbol>& right,
-                  const shared_ptr<ObjectModel::Generic>& genericImpl);
+bool CompareTypes(const std::shared_ptr<ObjectModel::Symbol>& left,
+                  const std::shared_ptr<ObjectModel::Symbol>& right,
+                  const std::shared_ptr<ObjectModel::Generic>& genericImpl);
 } // namespace ObjectModel
 
 class MetaDataConvert {
-    shared_ptr<CMetadataScope> _scope;
+    std::shared_ptr<CMetadataScope> _scope;
     std::map<std::wstring, std::shared_ptr<ObjectModel::NameSpace>> _namespaces;
-    map<mdToken, shared_ptr<ObjectModel::RawType>> _resolvedTypes;
-    map<const wstring, mdToken> _tokenFromType;
-    map<wstring, shared_ptr<ObjectModel::Symbol>>& _fqnMap;
-    wstring _fileName;
+    std::map<mdToken, std::shared_ptr<ObjectModel::RawType>> _resolvedTypes;
+    std::map<const std::wstring, mdToken> _tokenFromType;
+    std::map<std::wstring, std::shared_ptr<ObjectModel::Symbol>>& _fqnMap;
+    std::wstring _fileName;
 
 public:
     struct NamespaceDomain {
-        unordered_set<wstring> rejectTypes;
-        unordered_set<wstring> rejectNs;
-        unordered_set<wstring> incTypes;
-        unordered_set<wstring> incNs;
+        std::unordered_set<std::wstring> rejectTypes;
+        std::unordered_set<std::wstring> rejectNs;
+        std::unordered_set<std::wstring> incTypes;
+        std::unordered_set<std::wstring> incNs;
     };
 
-    const shared_ptr<CMetadataScope>& Scope() {
+    const std::shared_ptr<CMetadataScope>& Scope() {
         return _scope;
     }
-    const wstring& FileName() {
+    const std::wstring& FileName() {
         return _fileName;
     }
 
-    MetaDataConvert(_In_ wstring filename, map<wstring, shared_ptr<ObjectModel::Symbol>>&);
+    MetaDataConvert(_In_ std::wstring filename, std::map<std::wstring, std::shared_ptr<ObjectModel::Symbol>>&);
 
     HRESULT ConvertMetaData(const MetaDataConvert::NamespaceDomain& nsDom = MetaDataConvert::NamespaceDomain());
-    void NameFromToken(mdToken token, bool nameForParameter, shared_ptr<ObjectModel::Symbol>* sym);
+    void NameFromToken(mdToken token, bool nameForParameter, std::shared_ptr<ObjectModel::Symbol>* sym);
     void VisitNamespaces(ObjectModel::Visitor* visitor);
 
     const wchar_t* GetNameSpaceFromFQN(const wchar_t* fqn) {
@@ -602,7 +612,7 @@ public:
 
     //  Returns information about a token.  Returns true if information about the token could be
     //  retrieved, false otherwise.
-    bool GetTypeInformation(mdToken token, shared_ptr<ObjectModel::RawType>& type) {
+    bool GetTypeInformation(mdToken token, std::shared_ptr<ObjectModel::RawType>& type) {
         if (token == mdTokenNil) {
             return false;
         }
@@ -629,7 +639,7 @@ public:
             } else {
                 if (_scope->FindTypeDefByName(name, mdTokenNil, &tDef)) {
                     token = tDef;
-                    _tokenFromType.insert(std::move(pair<const wstring, mdToken>(name, token)));
+                    _tokenFromType.insert(std::move(std::pair<const std::wstring, mdToken>(name, token)));
                 } else // This typeref isn't self referential, return false because we couldn't determine type information about it.
                 {
                     return false;
@@ -698,15 +708,15 @@ public:
             *reinterpret_cast<unsigned int*>(&typeCategory) |= ObjectModel::TypeCategory::WinRtGeneric;
         }
 
-        type = shared_ptr<ObjectModel::RawType>(new ObjectModel::RawType(token, name, attrs, extendsName, typeCategory));
+        type = std::shared_ptr<ObjectModel::RawType>(new ObjectModel::RawType(token, name, attrs, extendsName, typeCategory));
 
         //  Cache the return raw type so it can be looked up again.
         _resolvedTypes[token] = type;
         return true;
     }
 
-    void AddTypeToNamespace(shared_ptr<ObjectModel::NameSpace>& nameSpace, mdTypeDef tdef) {
-        shared_ptr<ObjectModel::RawType> type;
+    void AddTypeToNamespace(std::shared_ptr<ObjectModel::NameSpace>& nameSpace, mdTypeDef tdef) {
+        std::shared_ptr<ObjectModel::RawType> type;
         GetTypeInformation(tdef, type);
         if (nameSpace->Name.length() > type->typeName.length()) {
             DebugBreak();
@@ -729,28 +739,30 @@ public:
                 _fqnMap[type->typeName] = del;
             } break;
             case ObjectModel::TypeCategory::WinRtInterface: {
-                auto iface = shared_ptr<ObjectModel::Interface>(new ObjectModel::Interface(type->typeName.c_str(), tdef, type, _fileName));
+                auto iface =
+                    std::shared_ptr<ObjectModel::Interface>(new ObjectModel::Interface(type->typeName.c_str(), tdef, type, _fileName));
                 nameSpace->Interfaces.push_back(iface);
                 _fqnMap[type->typeName] = iface;
             } break;
             case ObjectModel::TypeCategory::WinRtStruct: {
-                auto structure = shared_ptr<ObjectModel::Struct>(new ObjectModel::Struct(type->typeName.c_str(), tdef, type, _fileName));
+                auto structure =
+                    std::shared_ptr<ObjectModel::Struct>(new ObjectModel::Struct(type->typeName.c_str(), tdef, type, _fileName));
                 nameSpace->Structs.push_back(structure);
                 _fqnMap[type->typeName] = structure;
             } break;
             case ObjectModel::TypeCategory::WinRtEnum: {
-                auto enumeration = shared_ptr<ObjectModel::Enum>(new ObjectModel::Enum(type->typeName.c_str(), tdef, type, _fileName));
+                auto enumeration = std::shared_ptr<ObjectModel::Enum>(new ObjectModel::Enum(type->typeName.c_str(), tdef, type, _fileName));
                 nameSpace->Enums.push_back(enumeration);
                 _fqnMap[type->typeName] = enumeration;
             } break;
             case ObjectModel::TypeCategory::WinRtAttributeDef: {
-                auto attrDef =
-                    shared_ptr<ObjectModel::AttributeDef>(new ObjectModel::AttributeDef(type->typeName.c_str(), tdef, type, _fileName));
+                auto attrDef = std::shared_ptr<ObjectModel::AttributeDef>(
+                    new ObjectModel::AttributeDef(type->typeName.c_str(), tdef, type, _fileName));
                 nameSpace->AttributeDefs.push_back(attrDef);
                 _fqnMap[type->typeName] = attrDef;
             } break;
             case ObjectModel::TypeCategory::WinRtApiContract: {
-                auto contract = make_shared<ObjectModel::ApiContract>(type->typeName.c_str(), tdef, type, _fileName);
+                auto contract = std::make_shared<ObjectModel::ApiContract>(type->typeName.c_str(), tdef, type, _fileName);
                 nameSpace->ApiContracts.push_back(contract);
                 _fqnMap[type->typeName] = contract;
             } break;
@@ -773,16 +785,16 @@ public:
         }
 
         // Determine the namespace. If there is not one, set it to an empty string.
-        wstring nameSpace;
+        std::wstring nameSpace;
         const wchar_t* lastDot = GetNameSpaceFromFQN(name);
         if (nullptr == lastDot) {
-            nameSpace = wstring(L"");
+            nameSpace = std::wstring(L"");
         } else {
-            nameSpace = wstring((const wchar_t*)name, lastDot);
+            nameSpace = std::wstring((const wchar_t*)name, lastDot);
         }
 
         if (_namespaces.find(nameSpace) == _namespaces.end()) {
-            shared_ptr<ObjectModel::NameSpace> ns(
+            std::shared_ptr<ObjectModel::NameSpace> ns(
                 new ObjectModel::NameSpace(ObjectModel::WinRtNameSpace, nameSpace, mdTokenNil, nullptr, _fileName));
             _namespaces[nameSpace] = ns;
         }
@@ -794,16 +806,16 @@ public:
                                    ULONG signatureColumn,
                                    ULONG (MetaDataConvert::*decoder)(PCCOR_SIGNATURE, ULONG, std::vector<std::wstring>& signatureBlob));
     bool GetValueFromCustomAttributeSig(CustomAttributeParser& CA, ULONG elemType, ObjectModel::CustomAttributeParamInfo& parameter);
-    bool GetCustomAttributeInformation(mdCustomAttribute token, shared_ptr<ObjectModel::Attribute> attribute);
+    bool GetCustomAttributeInformation(mdCustomAttribute token, std::shared_ptr<ObjectModel::Attribute> attribute);
 };
 
 struct MultiFileObjectModel {
 public:
-    map<wstring, shared_ptr<ObjectModel::Symbol>> _fqnMap;
+    std::map<std::wstring, std::shared_ptr<ObjectModel::Symbol>> _fqnMap;
 
-    MultiFileObjectModel(vector<wstring> filenames);
+    MultiFileObjectModel(std::vector<std::wstring> filenames);
     void VisitNamespaces(ObjectModel::Visitor* visitor);
-    map<const wstring, shared_ptr<MetaDataConvert>> _perFileModels;
+    std::map<const std::wstring, std::shared_ptr<MetaDataConvert>> _perFileModels;
 };
 
 static const wchar_t* IntrinsicTypeMap[] = {

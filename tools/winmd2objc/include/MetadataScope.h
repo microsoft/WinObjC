@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -79,7 +79,7 @@ public:
         ReadWrite,
     };
 
-    CMetadataScope(const wstring& strFileName) : _fWindowsFoundation(false), _tkAssemblyWriter(mdTokenNil), _strFileName(strFileName) {
+    CMetadataScope(const std::wstring& strFileName) : _fWindowsFoundation(false), _tkAssemblyWriter(mdTokenNil), _strFileName(strFileName) {
         ZeroMemory(_rgtkCommonTokensReader, sizeof(_rgtkCommonTokensReader));
         ZeroMemory(_rgtkCommonTokensWriter, sizeof(_rgtkCommonTokensWriter));
     }
@@ -396,9 +396,9 @@ public:
                         __out ULONG* pcFieldOffset,
                         __out ULONG* pulClassSize);
 
-    wstring GetTypeName(mdToken tkType);
+    std::wstring GetTypeName(mdToken tkType);
 #if DBG
-    wstring TypeNameFromTypeSpecBlob(__in_bcount(cbSignature) const BYTE* pbSignature, __in ULONG cbSignature, __out ULONG& cbUsed);
+    std::wstring TypeNameFromTypeSpecBlob(__in_bcount(cbSignature) const BYTE* pbSignature, __in ULONG cbSignature, __out ULONG& cbUsed);
 #endif
 
     // Retrieve the token for an enclosing type
@@ -408,8 +408,8 @@ public:
     mdToken GetCommonTokenReader(TOKEN_ID id);
     mdToken GetCommonTokenWriter(TOKEN_ID id);
 
-    mdToken EnsureMember(const wstring& strAssemblyName,
-                         const wstring& strTypeName,
+    mdToken EnsureMember(const std::wstring& strAssemblyName,
+                         const std::wstring& strTypeName,
                          PCWSTR pszMethodName,
                          PCCOR_SIGNATURE pbSig,
                          ULONG cbSig,
@@ -421,9 +421,9 @@ public:
 
     //  Returns if the specified type token is a foundation type or not.
     bool IsKnownReferenceType(mdToken tkType, __out TOKEN_ID* pAssemblyToken);
-    mdAssemblyRef GetAssemblyRefToken(const wstring& strAssemblyName);
-    wstring GetTypeRefAssembly(mdToken tkType);
-    wstring GetCurrentAssembly();
+    mdAssemblyRef GetAssemblyRefToken(const std::wstring& strAssemblyName);
+    std::wstring GetTypeRefAssembly(mdToken tkType);
+    std::wstring GetCurrentAssembly();
     mdAssembly GetAssemblyFromScope();
     void GetAssemblyProps(_In_ mdAssembly mda,
                           _Outptr_opt_result_buffer_(*pcbPublicKey) const void** ppbPublicKey,
@@ -446,7 +446,7 @@ public:
                              _Out_opt_ ULONG* pcbHashValue,
                              _Out_opt_ DWORD* pdwAssemblyFlags);
 
-    const wstring& FileName() {
+    const std::wstring& FileName() {
         return _strFileName;
     }
     bool IsReadOnly() const {
@@ -465,7 +465,7 @@ public:
     }
 #endif
     // Check if a type is retargetable.
-    static bool IsRedirectedType(const wstring& strTypeName);
+    static bool IsRedirectedType(const std::wstring& strTypeName);
 
     bool DetermineMetadataFormatVersion(std::wstring wstrFormatVersion);
 
@@ -474,7 +474,7 @@ public:
     }
 
 private:
-    const wstring _strFileName;
+    const std::wstring _strFileName;
     CComPtr<IMetaDataDispenserEx> _spDispenser;
     CComPtr<IMetaDataEmit2> _spWriter;
     CComPtr<IMetaDataAssemblyEmit> _spAssemblyWriter;
@@ -487,7 +487,7 @@ private:
 
     mdToken _rgtkCommonTokensReader[TOKEN_MAX];
     mdToken _rgtkCommonTokensWriter[TOKEN_MAX];
-    map<wstring, mdToken> _maptkAssemblyRefs;
+    std::map<std::wstring, mdToken> _maptkAssemblyRefs;
 
     // Ensure a common token
     mdToken EnsureCommonTokenReader(TOKEN_ID id);
@@ -567,7 +567,7 @@ public:
         return iterator();
     }
 
-    CMetadataEnumerator(const shared_ptr<CMetadataScope> spScope) : _spMetadataScope(spScope), _hce(nullptr) {
+    CMetadataEnumerator(const std::shared_ptr<CMetadataScope> spScope) : _spMetadataScope(spScope), _hce(nullptr) {
     }
 
     ~CMetadataEnumerator() {
@@ -578,7 +578,7 @@ public:
     }
 
 protected:
-    shared_ptr<CMetadataScope> _spMetadataScope;
+    std::shared_ptr<CMetadataScope> _spMetadataScope;
 
 private:
     virtual bool Enumerate(__inout HCORENUM* hce,
@@ -591,7 +591,7 @@ private:
 //  Metadata enumerator specialized to enumerate type definitions.
 class CMetadataTypeDefEnumerator : public CMetadataEnumerator<mdTypeDef> {
 public:
-    CMetadataTypeDefEnumerator(shared_ptr<CMetadataScope> spScope) : CMetadataEnumerator<mdTypeDef>(spScope) {
+    CMetadataTypeDefEnumerator(std::shared_ptr<CMetadataScope> spScope) : CMetadataEnumerator<mdTypeDef>(spScope) {
     }
 
 private:
@@ -601,7 +601,7 @@ private:
 //  Metadata enumerator specialized to enumerate struct and enum fields.
 class CMetadataFieldEnumerator : public CMetadataEnumerator<mdFieldDef> {
 public:
-    CMetadataFieldEnumerator(shared_ptr<CMetadataScope> spScope, mdTypeDef tkType)
+    CMetadataFieldEnumerator(std::shared_ptr<CMetadataScope> spScope, mdTypeDef tkType)
         : CMetadataEnumerator<mdFieldDef>(spScope), _tkType(tkType) {
     }
 
@@ -614,7 +614,7 @@ private:
 //  elements.
 class CMetadataInterfaceImplEnumerator : public CMetadataEnumerator<mdInterfaceImpl> {
 public:
-    CMetadataInterfaceImplEnumerator(shared_ptr<CMetadataScope> spScope, mdTypeDef tkType)
+    CMetadataInterfaceImplEnumerator(std::shared_ptr<CMetadataScope> spScope, mdTypeDef tkType)
         : CMetadataEnumerator<mdInterfaceImpl>(spScope), _tkType(tkType) {
     }
 
@@ -629,7 +629,7 @@ private:
 //  Metadata enumerator specialized to enumerate methods.
 class CMetadataMethodEnumerator : public CMetadataEnumerator<mdMethodDef> {
 public:
-    CMetadataMethodEnumerator(shared_ptr<CMetadataScope> spScope, mdTypeDef tkType)
+    CMetadataMethodEnumerator(std::shared_ptr<CMetadataScope> spScope, mdTypeDef tkType)
         : CMetadataEnumerator<mdMethodDef>(spScope), _tkType(tkType) {
     }
 
@@ -644,7 +644,7 @@ private:
 //  Metadata enumerator specialized to enumerate custom attribute.
 class CMetadataAttributeEnumerator : public CMetadataEnumerator<mdCustomAttribute> {
 public:
-    CMetadataAttributeEnumerator(shared_ptr<CMetadataScope> spScope, mdTypeDef tkType, mdToken tkElement)
+    CMetadataAttributeEnumerator(std::shared_ptr<CMetadataScope> spScope, mdTypeDef tkType, mdToken tkElement)
         : CMetadataEnumerator<mdCustomAttribute>(spScope), _tkType(tkType), _tkElement(tkElement) {
     }
 
@@ -660,7 +660,7 @@ private:
 //  Metadata enumerator specialized to enumerate custom attribute.
 class CMetadataParameterEnumerator : public CMetadataEnumerator<mdParamDef> {
 public:
-    CMetadataParameterEnumerator(shared_ptr<CMetadataScope> spScope, mdMethodDef tkMethod)
+    CMetadataParameterEnumerator(std::shared_ptr<CMetadataScope> spScope, mdMethodDef tkMethod)
         : CMetadataEnumerator<mdParamDef>(spScope), _tkMethod(tkMethod) {
     }
 
@@ -672,7 +672,7 @@ private:
 //  Metadata enumerator specialized to enumerate properties.
 class CMetadataPropertyEnumerator : public CMetadataEnumerator<mdProperty> {
 public:
-    CMetadataPropertyEnumerator(shared_ptr<CMetadataScope> spScope, mdTypeDef tkType)
+    CMetadataPropertyEnumerator(std::shared_ptr<CMetadataScope> spScope, mdTypeDef tkType)
         : CMetadataEnumerator<mdProperty>(spScope), _tkType(tkType) {
     }
 
@@ -687,7 +687,7 @@ private:
 //  Metadata enumerator specialized to enumerate events.
 class CMetadataEventEnumerator : public CMetadataEnumerator<mdEvent> {
 public:
-    CMetadataEventEnumerator(shared_ptr<CMetadataScope> spScope, mdTypeDef tkType)
+    CMetadataEventEnumerator(std::shared_ptr<CMetadataScope> spScope, mdTypeDef tkType)
         : CMetadataEnumerator<mdProperty>(spScope), _tkType(tkType) {
     }
 
@@ -699,7 +699,7 @@ private:
 //  Metadata enumerator specialized to enumerate type references.
 class CMetadataTypeRefEnumerator : public CMetadataEnumerator<mdTypeRef> {
 public:
-    CMetadataTypeRefEnumerator(shared_ptr<CMetadataScope> spScope) : CMetadataEnumerator<mdTypeRef>(spScope) {
+    CMetadataTypeRefEnumerator(std::shared_ptr<CMetadataScope> spScope) : CMetadataEnumerator<mdTypeRef>(spScope) {
     }
 
 private:
@@ -712,7 +712,7 @@ private:
 //  Metadata enumerator specialized to enumerate generics.
 class CMetadataGenericParamEnumerator : public CMetadataEnumerator<mdGenericParam> {
 public:
-    CMetadataGenericParamEnumerator(shared_ptr<CMetadataScope> spScope, mdToken tkType)
+    CMetadataGenericParamEnumerator(std::shared_ptr<CMetadataScope> spScope, mdToken tkType)
         : CMetadataEnumerator<mdGenericParam>(spScope), _tkType(tkType) {
     }
 
@@ -727,7 +727,7 @@ private:
 //  Metadata enumerator specialized to enumerate generic constraints.
 class CMetadataGenericConstraintEnumerator : public CMetadataEnumerator<mdGenericParamConstraint> {
 public:
-    CMetadataGenericConstraintEnumerator(shared_ptr<CMetadataScope> spScope, mdToken tkType)
+    CMetadataGenericConstraintEnumerator(std::shared_ptr<CMetadataScope> spScope, mdToken tkType)
         : CMetadataEnumerator<mdGenericParamConstraint>(spScope), _tkType(tkType) {
     }
 
@@ -740,16 +740,16 @@ private:
 };
 
 //  Metadata enumerator specialized to enumerate generic constraints.
-class CMetadataMethodImplEnumerator : public CMetadataEnumerator<pair<mdToken, mdToken>> {
+class CMetadataMethodImplEnumerator : public CMetadataEnumerator<std::pair<mdToken, mdToken>> {
 public:
-    CMetadataMethodImplEnumerator(shared_ptr<CMetadataScope> spScope, mdToken tkType)
-        : CMetadataEnumerator<pair<mdToken, mdToken>>(spScope), _tkType(tkType) {
+    CMetadataMethodImplEnumerator(std::shared_ptr<CMetadataScope> spScope, mdToken tkType)
+        : CMetadataEnumerator<std::pair<mdToken, mdToken>>(spScope), _tkType(tkType) {
     }
 
 private:
     mdToken _tkType;
     bool Enumerate(__inout HCORENUM* hce,
-                   __out_ecount_part(cmethodImpls, *pcmethodImpls) pair<mdToken, mdToken>* rgmethodImpl,
+                   __out_ecount_part(cmethodImpls, *pcmethodImpls) std::pair<mdToken, mdToken>* rgmethodImpl,
                    ULONG cmethodImpls,
                    __out ULONG* pcmethodImpls);
 };
@@ -757,7 +757,7 @@ private:
 // Metadata enumerator specialized to enumerate assembly references.
 class CMetadataAssemblyRefsEnumerator : public CMetadataEnumerator<mdAssemblyRef> {
 public:
-    CMetadataAssemblyRefsEnumerator(shared_ptr<CMetadataScope> spScope) : CMetadataEnumerator<mdAssemblyRef>(spScope) {
+    CMetadataAssemblyRefsEnumerator(std::shared_ptr<CMetadataScope> spScope) : CMetadataEnumerator<mdAssemblyRef>(spScope) {
     }
 
 private:
@@ -773,7 +773,7 @@ public:
     CMetadataFormatError(CMetadataScope* spScope, HRESULT hr) : _strFileName(spScope->FileName()), _hr(hr) {
     }
 
-    const wstring& FileName() {
+    const std::wstring& FileName() {
         return _strFileName;
     }
     const HRESULT Error() {
@@ -781,6 +781,6 @@ public:
     }
 
 private:
-    wstring _strFileName;
+    std::wstring _strFileName;
     HRESULT _hr;
 };

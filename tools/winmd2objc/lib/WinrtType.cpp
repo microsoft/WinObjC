@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -14,11 +14,14 @@
 //
 //******************************************************************************
 
-#include "WinrtType.h"
-#include "Generics.h"
-#include "Misc.h"
-#include "TypeInfo.h"
-#include "precompiled.h"
+#include "Precompiled.h"
+#include <WinrtType.h>
+#include <TypeInfo.h>
+#include <Generics.h>
+#include <Misc.h>
+
+using namespace std;
+using namespace ObjectModel;
 
 SingleObjConvertor singleObjConv;
 NilConvertor nilConv;

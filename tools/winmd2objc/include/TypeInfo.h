@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -16,39 +16,39 @@
 
 #pragma once
 
-#include "CodeGenModel.h"
 #include "WinrtType.h"
+#include "CodeGenModel.h"
 
 struct ReturnHandler {
-    wstring returnVal;
-    wstring returnType;
-    wstring wrlType;
-    wstring wrlBaseType;
+    std::wstring returnVal;
+    std::wstring returnType;
+    std::wstring wrlType;
+    std::wstring wrlBaseType;
     bool needsARCAnnotation = false;
     // Params to add to the message signature (for callbacks since we aren't returning them):
-    vector<ObjC::MethodSig::NameTypeVar> newParams;
+    std::vector<ObjC::MethodSig::NameTypeVar> newParams;
 
-    wstring header;
-    wstring footer;
+    std::wstring header;
+    std::wstring footer;
 };
 
 class ShimTracker;
 
 // These are dumb text conversions to find the equivalent names in our implementations:
-wstring midlToWrlType(const wstring& midlType);
-wstring mapNamespacedType(const wstring& midlType);
+std::wstring midlToWrlType(const std::wstring& midlType);
+std::wstring mapNamespacedType(const std::wstring& midlType);
 
-bool basicTypeToWinrt(wstring& wrtType, const wstring& basicType);
+bool basicTypeToWinrt(std::wstring& wrtType, const std::wstring& basicType);
 
-ReturnHandler handleReturnType(const shared_ptr<MemberInfo>& memberInfo, const SymbolTable& _types, ShimTracker& _shims);
-WinrtType winrtTypeInfo(const shared_ptr<ObjectModel::Symbol>& internalType,
+ReturnHandler handleReturnType(const std::shared_ptr<ObjectModel::MemberInfo>& memberInfo, const SymbolTable& _types, ShimTracker& _shims);
+WinrtType winrtTypeInfo(const std::shared_ptr<ObjectModel::Symbol>& internalType,
                         const SymbolTable& types,
                         ShimTracker& shims,
                         bool box = false);
 
-bool winrtTypeInfoBasic(const wstring& typeName, WinrtType* out);
+bool winrtTypeInfoBasic(const std::wstring& typeName, WinrtType* out);
 
-inline bool hasPrefix(const wstring& str, const wstring& prefix) {
+inline bool hasPrefix(const std::wstring& str, const std::wstring& prefix) {
     if (prefix.length() <= str.length()) {
         return str.substr(0, prefix.length()) == prefix;
     }

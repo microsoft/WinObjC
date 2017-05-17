@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -14,12 +14,16 @@
 //
 //******************************************************************************
 
-#include "CodeGen.h"
-#include "CommandLine.h"
-#include "DepResolution.h"
-#include "Misc.h"
-#include "precompiled.h"
+#include "Precompiled.h"
+#include <DepResolution.h>
+#include <CommandLine.h>
+#include <CodeGen.h>
+#include <Misc.h>
+#include <Conversion.h>
 #include <objbase.h>
+
+using namespace std;
+using namespace ObjectModel;
 
 typedef pair<map<wstring, pair<wstring, vector<shared_ptr<NameSpace>>>>, map<wstring, wstring>> ModuleGraphType;
 void _exitIfDirectoryNotCreated(const wstring& path) {

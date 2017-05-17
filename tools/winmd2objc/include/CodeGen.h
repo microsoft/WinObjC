@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -16,12 +16,12 @@
 
 #pragma once
 
-#include "CommandLine.h"
-#include "ObjectModel.h"
 #include <iostream>
+#include <vector>
 #include <map>
 #include <memory>
-#include <vector>
+#include "ObjectModel.h"
+#include "CommandLine.h"
 
 const std::wstring g_defaultOutputDirectory = L"..\\..\\..\\Projections\\";
 const std::wstring g_projectsDirectory = L"projects\\";
@@ -52,7 +52,7 @@ class Visitor;
 }
 
 template <typename RuntimeClassOrInterface>
-wstring getDefaultInterfaceName(const shared_ptr<RuntimeClassOrInterface> cls, FILE* outputFile);
+std::wstring getDefaultInterfaceName(const std::shared_ptr<RuntimeClassOrInterface> cls, FILE* outputFile);
 void generateDefExports(const std::vector<std::shared_ptr<ObjectModel::NameSpace>>& namespaces,
                         const std::wstring& fileName,
                         const std::wstring& moduleName);

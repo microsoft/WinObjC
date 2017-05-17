@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -16,25 +16,25 @@
 
 #pragma once
 
-#include "ObjectModel.h"
 #include "precompiled.h"
+#include "ObjectModel.h"
 
-void ResolveAssemblyRefs(shared_ptr<MetaDataConvert> convert,
-                         wstring fileName,
-                         wstring dir,
-                         map<wstring, shared_ptr<MetaDataConvert>>& mdMap,
-                         map<wstring, shared_ptr<ObjectModel::Symbol>>& symMap,
-                         unordered_set<shared_ptr<MetaDataConvert>>& loadedDeps,
+void ResolveAssemblyRefs(std::shared_ptr<MetaDataConvert> convert,
+                         std::wstring fileName,
+                         std::wstring dir,
+                         std::map<std::wstring, std::shared_ptr<MetaDataConvert>>& mdMap,
+                         std::map<std::wstring, std::shared_ptr<ObjectModel::Symbol>>& symMap,
+                         std::unordered_set<std::shared_ptr<MetaDataConvert>>& loadedDeps,
                          const MetaDataConvert::NamespaceDomain& nsDom);
 
 // Collapses namespace collisions into a single canonical NameSpace
 // (ie. multiple WinMD files define types in the same namespace)
 class NamespaceCollector : public ObjectModel::Visitor {
-    map<wstring, shared_ptr<ObjectModel::NameSpace>>& _namespaces;
+    std::map<std::wstring, std::shared_ptr<ObjectModel::NameSpace>>& _namespaces;
 
 public:
-    NamespaceCollector(map<wstring, shared_ptr<ObjectModel::NameSpace>>& namespaces) : _namespaces(namespaces) {
+    NamespaceCollector(std::map<std::wstring, std::shared_ptr<ObjectModel::NameSpace>>& namespaces) : _namespaces(namespaces) {
     }
 
-    virtual void Visit(const shared_ptr<ObjectModel::NameSpace>& ns);
+    virtual void Visit(const std::shared_ptr<ObjectModel::NameSpace>& ns);
 };

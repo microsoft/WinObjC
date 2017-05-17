@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -14,11 +14,13 @@
 //
 //******************************************************************************
 
-#include "ShimTracker.h"
-#include "Generics.h"
-#include "Misc.h"
-#include "WinrtType.h"
-#include "precompiled.h"
+#include "Precompiled.h"
+#include <ShimTracker.h>
+#include <WinrtType.h>
+#include <Generics.h>
+#include <Misc.h>
+
+using namespace std;
 
 ShimTracker::ShimTracker(map<wstring, wstring>& map) : namespaceMap(map) {
 }

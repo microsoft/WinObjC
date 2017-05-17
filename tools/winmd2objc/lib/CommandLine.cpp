@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -14,10 +14,12 @@
 //
 //******************************************************************************
 
-#include "CommandLine.h"
-#include "Misc.h"
-#include "ObjectModel.h"
-#include "precompiled.h"
+#include "Precompiled.h"
+#include <CommandLine.h>
+#include <Misc.h>
+#include <ObjectModel.h>
+
+using namespace std;
 
 struct CommandLineTemplate {
     wstring sw;

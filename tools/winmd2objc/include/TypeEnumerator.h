@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -17,12 +17,12 @@
 // Define a set of helper classes for enumrating metadata symbols and doing RAII cleanup.
 // Inspired by CMetadataEnumerator used in mdmerge.exe
 #pragma once
-#include <WRL/client.h>
-#include <comdef.h>
 #include <cor.h>
-#include <string>
+#include <comdef.h>
 #include <utility>
 #include <vector>
+#include <string>
+#include <WRL/client.h>
 
 namespace Metadata {
 namespace Error {

@@ -14,11 +14,18 @@
 //
 //******************************************************************************
 
-#include "stdafx.h"
-#include <src/gtest-all.cc>
+#pragma once
+#include <string>
+#include <map>
+#include <vector>
 
-int main(int argc, char** argv) {
-    testing::InitGoogleTest(&argc, argv);
+struct CommandLineOptions {
+    std::wstring executable;
+    std::map<std::wstring, std::vector<std::wstring>> optMap;
 
-    return RUN_ALL_TESTS();
-}
+    // std::pair.first: input file name.
+    // std::pair.second: If set merge all namespaces from std::pair.first into a single namespace.
+    std::pair<std::wstring, bool> metaDataFileInfo;
+};
+
+bool parseCommandLine(int argc, wchar_t** argv, CommandLineOptions& options);
