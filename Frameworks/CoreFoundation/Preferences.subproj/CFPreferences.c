@@ -190,10 +190,10 @@ if (completePath) {
     CFStringAppend(completePath, CFSTR("Preferences\\"));
     url = CFURLCreateWithFileSystemPath(alloc, completePath, kCFURLWindowsPathStyle, true);
 
-    char cPath[CFMaxPathSize];
-    if (CFURLGetFileSystemRepresentation(url, true, (unsigned char *)cPath, CFMaxPathSize)) {
-        success = _CFCreateDirectory(cPath);
-    }
+	char cPath[CFMaxPathSize];
+	if (CFURLGetFileSystemRepresentation(url, true, (unsigned char *)cPath, CFMaxPathSize)) {
+		success = _CFCreateDirectory(cPath);
+	}
 
     CFRelease(completePath);
 }
