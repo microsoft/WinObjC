@@ -147,48 +147,6 @@
 /**
 @Status Interoperable
 */
-- (void)encodePoint:(NSPoint)point {
-    NSInvalidAbstractInvocation();
-}
-
-/**
-@Status Interoperable
-*/
-- (void)encodeSize:(NSSize)size {
-    NSInvalidAbstractInvocation();
-}
-
-/**
-@Status Interoperable
-*/
-- (void)encodeRect:(NSRect)rect {
-    NSInvalidAbstractInvocation();
-}
-
-/**
-@Status Interoperable
-*/
-- (void)encodePoint:(NSPoint)value forKey:(NSString*)key {
-    NSInvalidAbstractInvocation();
-}
-
-/**
-@Status Interoperable
-*/
-- (void)encodeRect:(NSRect)value forKey:(NSString*)key {
-    NSInvalidAbstractInvocation();
-}
-
-/**
-@Status Interoperable
-*/
-- (void)encodeSize:(NSSize)value forKey:(NSString*)key {
-    NSInvalidAbstractInvocation();
-}
-
-/**
-@Status Interoperable
-*/
 - (void)encodeBool:(BOOL)value forKey:(NSString*)key {
     NSInvalidAbstractInvocation();
 }
@@ -315,27 +273,6 @@
 /**
 @Status Interoperable
 */
-- (NSPoint)decodePoint {
-    return NSInvalidAbstractInvocationReturn();
-}
-
-/**
-@Status Interoperable
-*/
-- (NSSize)decodeSize {
-    return NSInvalidAbstractInvocationReturn();
-}
-
-/**
-@Status Interoperable
-*/
-- (NSRect)decodeRect {
-    return NSInvalidAbstractInvocationReturn();
-}
-
-/**
-@Status Interoperable
-*/
 - (BOOL)containsValueForKey:(NSString*)key {
     return NSInvalidAbstractInvocationReturn();
 }
@@ -344,27 +281,6 @@
 @Status Interoperable
 */
 - (const uint8_t*)decodeBytesForKey:(NSString*)key returnedLength:(NSUInteger*)length {
-    return NSInvalidAbstractInvocationReturn();
-}
-
-/**
-@Status Interoperable
-*/
-- (NSPoint)decodePointForKey:(NSString*)key {
-    return NSInvalidAbstractInvocationReturn();
-}
-
-/**
-@Status Interoperable
-*/
-- (NSRect)decodeRectForKey:(NSString*)key {
-    return NSInvalidAbstractInvocationReturn();
-}
-
-/**
-@Status Interoperable
-*/
-- (NSSize)decodeSizeForKey:(NSString*)key {
     return NSInvalidAbstractInvocationReturn();
 }
 
@@ -448,5 +364,3 @@
 }
 
 @end
-
-
