@@ -243,7 +243,7 @@ private:
     void _SetInputScope();
     void _SetEnabled();
     void _SetForeground();
-    void _SetBackgournd();
+    void _SetBackground();
     void _SetTextAlignment();
 
     // Find the best inputScope given current security entry mode and inputscope

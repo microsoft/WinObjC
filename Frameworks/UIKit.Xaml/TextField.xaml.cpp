@@ -425,7 +425,7 @@ void TextField::_SetForeground() {
     }
 }
 
-void TextField::_SetBackgournd() {
+void TextField::_SetBackground() {
     if (_backingControl) {
         _backingControl->Background = Background;
     }

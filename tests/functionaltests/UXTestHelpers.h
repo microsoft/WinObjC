@@ -135,6 +135,4 @@ private:
 
 UIColor* ConvertWUColorToUIColor(const winrt::Windows::UI::Color& wuColor);
 
-bool compareRGBAValues(UIColor* col1, UIColor* col2);
-
 } // namespace UXTestAPI

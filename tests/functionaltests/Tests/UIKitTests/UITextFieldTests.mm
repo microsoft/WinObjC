@@ -142,7 +142,7 @@ public:
             auto textBox = objcwinrt::from_insp<Controls::TextBox>(inspectable);
             EXPECT_TRUE(textBox);
 
-            textField.placeholder = @"placerholder";
+            textField.placeholder = @"placeholder";
             EXPECT_OBJCEQ(objcwinrt::string(textBox.PlaceholderText()), textField.placeholder);
 
             textField.placeholder = @"this is a long placeholder for testing.";
@@ -237,17 +237,17 @@ public:
 
             // Verify default textcolor
             auto colorBrush = textBox.Foreground().as<Media::SolidColorBrush>();
-            EXPECT_TRUE(UXTestAPI::compareRGBAValues(UXTestAPI::ConvertWUColorToUIColor(colorBrush.Color()), textField.textColor));
+            EXPECT_TRUE(UXTestAPI::IsRGBAEqual(colorBrush, textField.textColor));
 
             // Verify changing textcolor to blue
             textField.textColor = [UIColor blueColor];
             colorBrush = textBox.Foreground().as<Media::SolidColorBrush>();
-            EXPECT_TRUE(UXTestAPI::compareRGBAValues(UXTestAPI::ConvertWUColorToUIColor(colorBrush.Color()), textField.textColor));
+            EXPECT_TRUE(UXTestAPI::IsRGBAEqual(colorBrush, textField.textColor));
 
             // Verify changing textcolor to red
             textField.textColor = [UIColor redColor];
             colorBrush = textBox.Foreground().as<Media::SolidColorBrush>();
-            EXPECT_TRUE(UXTestAPI::compareRGBAValues(UXTestAPI::ConvertWUColorToUIColor(colorBrush.Color()), textField.textColor));
+            EXPECT_TRUE(UXTestAPI::IsRGBAEqual(colorBrush, textField.textColor));
 
         });
     }
@@ -274,8 +274,7 @@ public:
                                 ^(const DependencyObject& sender, const DependencyProperty& dp) {
                                     // Validation
                                     auto colorBrush = textBox.Background().as<Media::SolidColorBrush>();
-                                    if (UXTestAPI::compareRGBAValues(UXTestAPI::ConvertWUColorToUIColor(colorBrush.Color()),
-                                                                     textField.backgroundColor)) {
+                                    if (UXTestAPI::IsRGBAEqual(colorBrush, textField.backgroundColor)) {
                                         uxEvent->Set();
                                     }
                                 });
@@ -298,8 +297,7 @@ public:
                                 ^(const DependencyObject& sender, const DependencyProperty& dp) {
                                     // Validation
                                     auto colorBrush = textBox.Background().as<Media::SolidColorBrush>();
-                                    if (UXTestAPI::compareRGBAValues(UXTestAPI::ConvertWUColorToUIColor(colorBrush.Color()),
-                                                                     textField.backgroundColor)) {
+                                    if (UXTestAPI::IsRGBAEqual(colorBrush, textField.backgroundColor)) {
                                         uxEvent->Set();
                                     }
                                 });
@@ -322,8 +320,7 @@ public:
                                 ^(const DependencyObject& sender, const DependencyProperty& dp) {
                                     // Validation
                                     auto colorBrush = textBox.Background().as<Media::SolidColorBrush>();
-                                    if (UXTestAPI::compareRGBAValues(UXTestAPI::ConvertWUColorToUIColor(colorBrush.Color()),
-                                                                     textField.backgroundColor)) {
+                                    if (UXTestAPI::IsRGBAEqual(colorBrush, textField.backgroundColor)) {
                                         uxEvent->Set();
                                     }
                                 });

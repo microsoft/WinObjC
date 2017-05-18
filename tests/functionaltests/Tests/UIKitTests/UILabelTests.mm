@@ -468,37 +468,37 @@ public:
 
             auto colorBrush = textBlock.Foreground().as<Media::SolidColorBrush>();
             ASSERT_TRUE(colorBrush);
-            EXPECT_TRUE(UXTestAPI::compareRGBAValues(UXTestAPI::ConvertWUColorToUIColor(colorBrush.Color()), label.textColor));
+            EXPECT_TRUE(UXTestAPI::IsRGBAEqual(colorBrush, label.textColor));
 
             // verify setting color to others
             label.textColor = [UIColor redColor];
             colorBrush = textBlock.Foreground().as<Media::SolidColorBrush>();
             ASSERT_TRUE(colorBrush);
-            EXPECT_TRUE(UXTestAPI::compareRGBAValues(UXTestAPI::ConvertWUColorToUIColor(colorBrush.Color()), label.textColor));
+            EXPECT_TRUE(UXTestAPI::IsRGBAEqual(colorBrush, label.textColor));
 
             label.textColor = [UIColor greenColor];
             colorBrush = textBlock.Foreground().as<Media::SolidColorBrush>();
             ASSERT_TRUE(colorBrush);
-            EXPECT_TRUE(UXTestAPI::compareRGBAValues(UXTestAPI::ConvertWUColorToUIColor(colorBrush.Color()), label.textColor));
+            EXPECT_TRUE(UXTestAPI::IsRGBAEqual(colorBrush, label.textColor));
 
             // verify setting highlightedColor without changing UILabel state to highlighted state
             // the label's text color should not change
             label.highlightedTextColor = [UIColor blueColor];
             colorBrush = textBlock.Foreground().as<Media::SolidColorBrush>();
             ASSERT_TRUE(colorBrush);
-            EXPECT_TRUE(UXTestAPI::compareRGBAValues(UXTestAPI::ConvertWUColorToUIColor(colorBrush.Color()), label.textColor));
+            EXPECT_TRUE(UXTestAPI::IsRGBAEqual(colorBrush, label.textColor));
 
             // now change the UILabel's state to be highlighted, and textblock's foreground should be using highlightedTextColor
             label.highlighted = YES;
             colorBrush = textBlock.Foreground().as<Media::SolidColorBrush>();
             ASSERT_TRUE(colorBrush);
-            EXPECT_TRUE(UXTestAPI::compareRGBAValues(UXTestAPI::ConvertWUColorToUIColor(colorBrush.Color()), label.highlightedTextColor));
+            EXPECT_TRUE(UXTestAPI::IsRGBAEqual(colorBrush, label.highlightedTextColor));
 
             // now change the UILabel's state to be normal, verify textBlock's forground return to use original textColor
             label.highlighted = NO;
             colorBrush = textBlock.Foreground().as<Media::SolidColorBrush>();
             ASSERT_TRUE(colorBrush);
-            EXPECT_TRUE(UXTestAPI::compareRGBAValues(UXTestAPI::ConvertWUColorToUIColor(colorBrush.Color()), label.textColor));
+            EXPECT_TRUE(UXTestAPI::IsRGBAEqual(colorBrush, label.textColor));
         });
     }
 
