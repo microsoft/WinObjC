@@ -136,16 +136,18 @@ static void _initUIWebView(UIWebView* self) {
         self->_xamlWebControl.NavigationStarting(objcwinrt::callback([self] (const Controls::WebView&, const Controls::WebViewNavigationStartingEventArgs& e) {
             // Give the client a chance to cancel the navigation
             if ([self.delegate respondsToSelector:@selector(webView:shouldStartLoadWithRequest:navigationType:)]) {
-                NSString* urlStr = objcwinrt::string(e.Uri().AbsoluteUri());
-                NSURL* url = [NSURL URLWithString:urlStr];
-                NSURLRequest* request = [NSURLRequest requestWithURL:url];
+                if (e.Uri()) {
+                    NSString* urlStr = objcwinrt::string(e.Uri().AbsoluteUri());
+                    NSURL* url = [NSURL URLWithString : urlStr];
+                    NSURLRequest* request = [NSURLRequest requestWithURL : url];
 
-                // ???? XAML doesn't expose this information to us
-                UIWebViewNavigationType navigationType = UIWebViewNavigationTypeOther;
+                    // ???? XAML doesn't expose this information to us
+                    UIWebViewNavigationType navigationType = UIWebViewNavigationTypeOther;
 
-                if (![self.delegate webView:self shouldStartLoadWithRequest:request navigationType:navigationType]) {
-                    e.Cancel(true);
-                    return;
+                    if (![self.delegate webView:self shouldStartLoadWithRequest : request navigationType : navigationType]) {
+                        e.Cancel(true);
+                        return;
+                    }
                 }
             }
 
