@@ -20,7 +20,6 @@
 #import <Foundation/NSObjCRuntime.h>
 #import <Foundation/NSObject.h>
 
-#import <Foundation/NSAffineTransform.h>
 #import <Foundation/NSArchiver.h>
 #import <Foundation/NSArray.h>
 #import <Foundation/NSAssertionHandler.h>
@@ -78,7 +77,6 @@
 #import <Foundation/NSFileVersion.h>
 #import <Foundation/NSFileWrapper.h>
 #import <Foundation/NSFormatter.h>
-#import <Foundation/NSGeometry.h>
 #import <Foundation/NSHashTable.h>
 #import <Foundation/NSHost.h>
 #import <Foundation/NSHTTPCookie.h>
