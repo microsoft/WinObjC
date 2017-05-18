@@ -489,7 +489,8 @@ TEST(KVO, ToMany_KVCMediatedArrayWithHelpers_AggregateFunction) {
 
 @end
 
-TEST(KVO, ToMany_ToOne_ShouldDowngradeForOrderedObservation) {
+// Reference platform adds observers slightly differently so this test will not pass
+OSX_DISABLED_TEST(KVO, ToMany_ToOne_ShouldDowngradeForOrderedObservation) {
     TEST_IDENT(Observee)* observee = [TEST_IDENT(Observee) observee];
     [observee insertObject:[DummyObject makeDummy] inArrayWithHelpersAtIndex:0];
 

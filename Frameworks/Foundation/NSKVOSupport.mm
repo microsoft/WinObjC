@@ -547,7 +547,7 @@ static inline id _valueForPendingChangeAtIndexes(
     return value ?: [NSNull null];
 }
 
-// void TFunc(_NSKVOKeyObserver* keybserver);
+// void TFunc(_NSKVOKeyObserver* keyObserver);
 template <typename TFunc>
 inline static void _dispatchWillChange(id notifyingObject, NSString* key, TFunc&& func) {
     _NSKVOObservationInfo* observationInfo = (__bridge _NSKVOObservationInfo*)[notifyingObject observationInfo];
