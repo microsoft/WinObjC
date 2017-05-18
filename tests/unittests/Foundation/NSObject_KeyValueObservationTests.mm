@@ -476,6 +476,49 @@ TEST(KVO, ToMany_KVCMediatedArrayWithHelpers_AggregateFunction) {
     EXPECT_EQ(1, facade.hits);
 }
 
+@interface DummyObject : NSObject
+@property (nonatomic, copy) NSString* name;
+@end
+
+@implementation DummyObject
++ (instancetype)makeDummy {
+    DummyObject* ret = [[DummyObject new] autorelease];
+    ret.name = @"Value";
+    return ret;
+}
+
+@end
+
+TEST(KVO, ToMany_ToOne_ShouldDowngradeForOrderedObservation) {
+    TEST_IDENT(Observee)* observee = [TEST_IDENT(Observee) observee];
+    [observee insertObject:[DummyObject makeDummy] inArrayWithHelpersAtIndex:0];
+
+    auto insertCallbackPost = CHANGE_CB {
+        EXPECT_OBJCEQ(nil, change[NSKeyValueChangeNotificationIsPriorKey]);
+        EXPECT_OBJCEQ(@(NSKeyValueChangeSetting), change[NSKeyValueChangeKindKey]);
+        NSArray* expectedOld = @[ @"Value" ];
+        EXPECT_OBJCEQ(expectedOld, change[NSKeyValueChangeOldKey]);
+        NSArray* expectedNew = @[ @"Value", @"Value" ];
+        EXPECT_OBJCEQ(expectedNew, change[NSKeyValueChangeNewKey]);
+        NSIndexSet* indexes = change[NSKeyValueChangeIndexesKey];
+        EXPECT_OBJCEQ(nil, indexes);
+    };
+    auto illegalChangeNotification = CHANGE_CB {
+        ADD_FAILURE();
+    };
+
+    _NSFoundationTestKVOFacade* facade = [[_NSFoundationTestKVOFacade newWithObservee:observee] autorelease];
+    // In this test, we use the same arrayWithHelpers as above, but interact with it manually.
+    [facade observeKeyPath:@"arrayWithHelpers.name"
+                     withOptions:NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew
+                 performingBlock:PERFORM {
+                     // This array is assisted by setter functions, and should also dispatch one notification per change.
+                     [observee insertObject:[DummyObject makeDummy] inArrayWithHelpersAtIndex:0];
+                 }
+        andExpectChangeCallbacks:@[ insertCallbackPost, illegalChangeNotification ]];
+    EXPECT_EQ(1, facade.hits);
+}
+
 TEST(KVO, ObserverInformationShouldNotLeak) {
     auto emptyCallback = CHANGE_CB{};
 
