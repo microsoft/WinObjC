@@ -160,17 +160,20 @@ static void _initUIWebView(UIWebView* self) {
     self->_xamlUnsupportedUriSchemeEventCookie =
         self->_xamlWebControl.UnsupportedUriSchemeIdentified(objcwinrt::callback([self] (const Controls::WebView&, const Controls::WebViewUnsupportedUriSchemeIdentifiedEventArgs& e) {
             if ([self.delegate respondsToSelector:@selector(webView:shouldStartLoadWithRequest:navigationType:)]) {
-                NSString* urlStr = objcwinrt::string(e.Uri().AbsoluteUri());
-                NSURL* url = [NSURL URLWithString:urlStr];
-                NSURLRequest* request = [NSURLRequest requestWithURL:url];
-                UIWebViewNavigationType navigationType = UIWebViewNavigationTypeOther;
+                if (e.Uri()) {
+                    NSString* urlStr = objcwinrt::string(e.Uri().AbsoluteUri());
+                    NSURL* url = [NSURL URLWithString : urlStr];
+                    NSURLRequest* request = [NSURLRequest requestWithURL : url];
+                    UIWebViewNavigationType navigationType = UIWebViewNavigationTypeOther;
 
-                // The WebView doesn't know what to do with this URL, but give our client a crack at it
-                if ([self.delegate webView:self shouldStartLoadWithRequest:request navigationType:navigationType]) {
-                    // Client said to proceed, so pass the URL off to the system URI resolver
-                } else {
-                    // Client took care of the URL
-                    e.Handled(true);
+                    // The WebView doesn't know what to do with this URL, but give our client a crack at it
+                    if ([self.delegate webView:self shouldStartLoadWithRequest : request navigationType : navigationType]) {
+                        // Client said to proceed, so pass the URL off to the system URI resolver
+                    }
+                    else {
+                        // Client took care of the URL
+                        e.Handled(true);
+                    }
                 }
             }
         }));
@@ -178,10 +181,12 @@ static void _initUIWebView(UIWebView* self) {
     // Add handler which will be invoked when user calls window.external.notify(msg) function in javascript
     self->_xamlWebControl.ScriptNotify(objcwinrt::callback([self] (const WF::IInspectable& sender, const Controls::NotifyEventArgs& e) {
         // Send event to webView delegate
-        NSString* urlStr = objcwinrt::string(e.CallingUri().AbsoluteUri());
-        NSURL* url = [NSURL URLWithString:urlStr];
-        if ([self.delegate respondsToSelector:@selector(webView:scriptNotify:value:)]) {
-            [self.delegate webView:self scriptNotify:url value:objcwinrt::string(e.Value())];
+        if (e.CallingUri()) {
+            NSString* urlStr = objcwinrt::string(e.CallingUri().AbsoluteUri());
+            NSURL* url = [NSURL URLWithString : urlStr];
+            if ([self.delegate respondsToSelector:@selector(webView : scriptNotify : value : )]) {
+                [self.delegate webView:self scriptNotify : url value : objcwinrt::string(e.Value())];
+            }
         }
     }));
 
