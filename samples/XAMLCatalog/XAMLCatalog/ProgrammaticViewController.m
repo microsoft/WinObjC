@@ -20,6 +20,7 @@
 #import "UIActivityIndicatorViewController.h"
 #import "UIButtonWithControlsViewController.h"
 #import "UILabelViewController.h"
+#import "UIProgressViewController.h"
 #import "UIScrollViewController.h"
 #import "UISliderViewController.h"
 #import "UITextFieldViewController.h"
@@ -38,6 +39,9 @@
 
     // UIActivityIndicatorView
     [self addMenuItemViewController:[[UIActivityIndicatorViewController alloc] init] andTitle:@"UIActivityIndicatorView"];
+    
+    // UIProgressView
+    [self addMenuItemViewController:[[UIProgressViewController alloc] init] andTitle:@"UIProgressView"];
 
     // UIButton
     [self addMenuItemViewController:[[UIButtonWithControlsViewController alloc] init]

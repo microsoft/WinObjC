@@ -113,6 +113,30 @@ UIKIT_XAML_EXPORT void XamlSetActivityIndicatorViewWidthValue(const Microsoft::W
                                                               double width);
 
 ////////////////////////////////////////////////////////////////////////////////////
+// ProgressView.xaml.cpp
+////////////////////////////////////////////////////////////////////////////////////
+
+// Returns a UIKit::Xaml::ProgressView as an IInspectable
+UIKIT_XAML_EXPORT void XamlCreateProgressView(IInspectable** created);
+
+// Retrieves the UIKit::Xaml::ProgressView's backing ProgressBar as an IInspetable
+UIKIT_XAML_EXPORT IInspectable* XamlGetInternalProgressBar(const Microsoft::WRL::ComPtr<IInspectable>& progressVewInspectable);
+
+// Retrieves the Value property value, denoting the ProgressView's progress
+UIKIT_XAML_EXPORT double XamlGetProgressViewValue(const Microsoft::WRL::ComPtr<IInspectable>& progressViewInspectable);
+
+// Sets the Value property value to update the progress of the ProgressView
+UIKIT_XAML_EXPORT void XamlSetProgressViewValue(const Microsoft::WRL::ComPtr<IInspectable>& progressViewInspectable, double value);
+
+// Sets the Foreground property value to set the progress fill color of the ProgressView
+UIKIT_XAML_EXPORT void XamlSetProgressViewForegroundValue(const Microsoft::WRL::ComPtr<IInspectable>& progressViewInspectable,
+                                                          const Microsoft::WRL::ComPtr<IInspectable>& inspectableForegroundBrush);
+
+// Sets the Background property value to set the track color of the ProgressView
+UIKIT_XAML_EXPORT void XamlSetProgressViewBackgroundValue(const Microsoft::WRL::ComPtr<IInspectable>& progressViewInspectable,
+                                                          const Microsoft::WRL::ComPtr<IInspectable>& inspectableForegroundBrush);
+
+////////////////////////////////////////////////////////////////////////////////////
 // ScrollView.xaml.cpp
 ////////////////////////////////////////////////////////////////////////////////////
 

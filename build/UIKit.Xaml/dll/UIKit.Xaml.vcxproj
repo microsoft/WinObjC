@@ -161,6 +161,9 @@
       <DependentUpon>ContentDialog.xaml</DependentUpon>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit.Xaml\ObjCXamlControls.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit.Xaml\ProgressView.xaml.h">
+      <DependentUpon>ProgressView.xaml</DependentUpon>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit.Xaml\pch.cpp">
@@ -179,8 +182,11 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit.Xaml\Layer.xaml.cpp">
       <DependentUpon>Layer.xaml</DependentUpon>
     </ClCompile>
-    <ClCompile Include="..\..\..\Frameworks\UIKit.Xaml\ActivityIndicatorView.xaml.cpp">
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit.Xaml\ActivityIndicatorView.xaml.cpp">
       <DependentUpon>ActivityIndicatorView.xaml</DependentUpon>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit.Xaml\ProgressView.xaml.cpp">
+      <DependentUpon>ProgressView.xaml</DependentUpon>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit.Xaml\ScrollView.xaml.cpp">
       <DependentUpon>ScrollView.xaml</DependentUpon>
@@ -205,7 +211,7 @@
     <Page Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit.Xaml\Layer.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="..\..\..\Frameworks\UIKit.Xaml\ActivityIndicatorView.xaml">
+    <Page Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit.Xaml\ActivityIndicatorView.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit.Xaml\ScrollView.xaml">
@@ -221,6 +227,9 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit.Xaml\Themes\Generic.xaml" />
+    <Page Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit.Xaml\ProgressView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
   </ItemGroup>
   <ImportGroup Label="ExtensionTargets">
     <Import Project="$(StarboardBasePath)\msvc\sdk-build.targets" />

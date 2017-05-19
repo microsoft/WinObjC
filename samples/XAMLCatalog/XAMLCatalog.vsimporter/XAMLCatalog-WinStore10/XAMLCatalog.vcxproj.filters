@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="Common">
       <UniqueIdentifier>{15cb5cc4-3ef7-46f9-b26d-d17129ef9036}</UniqueIdentifier>
@@ -87,6 +87,9 @@
     <ClInclude Include="..\..\XAMLCatalog\UIKitControls\UILabelViewController.h">
       <Filter>XAMLCatalog\UIKitControls</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\XAMLCatalog\UIKitControls\UIProgressViewController.h">
+      <Filter>XAMLCatalog\UIKitControls</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\XAMLCatalog\UIKitControls\UIScrollViewController.h">
       <Filter>XAMLCatalog\UIKitControls</Filter>
     </ClInclude>
@@ -135,9 +138,12 @@
     <ClangCompile Include="..\..\XAMLCatalog\UIKitControls\UILabelViewController.m">
       <Filter>XAMLCatalog\UIKitControls</Filter>
     </ClangCompile>
+    <ClangCompile Include="..\..\XAMLCatalog\UIKitControls\UIProgressViewController.m">
+      <Filter>XAMLCatalog\UIKitControls</Filter>
+    </ClangCompile>
     <ClangCompile Include="..\..\XAMLCatalog\UIKitControls\UIScrollViewController.m">
       <Filter>XAMLCatalog\UIKitControls</Filter>
-    </ClangCompile>    
+    </ClangCompile>
     <ClangCompile Include="..\..\XAMLCatalog\UIKitControls\UISliderViewController.m">
       <Filter>XAMLCatalog\UIKitControls</Filter>
     </ClangCompile>
@@ -190,5 +196,27 @@
     <Font Include="..\..\XAMLCatalog\Fonts\WinObjC.ttf" />
     <Font Include="..\..\XAMLCatalog\Fonts\WinObjC-Bold.ttf" />
     <Font Include="..\..\XAMLCatalog\Fonts\WinObjC-Italic.ttf" />
+  </ItemGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="App.xaml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="App.xaml.cpp" />
+    <ClCompile Include="pch.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="pch.h" />
+    <ClInclude Include="App.xaml.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="project.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\..\XAMLCatalog\Images\progress-fill-sample.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="..\..\XAMLCatalog\Images\progress-track-sample.png">
+      <Filter>Images</Filter>
+    </Image>
   </ItemGroup>
 </Project>

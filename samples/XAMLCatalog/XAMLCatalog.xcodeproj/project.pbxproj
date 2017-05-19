@@ -34,6 +34,7 @@
 		96857DC01D598FB300EB1FD0 /* MiscellaneousViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 96857DBD1D598FB300EB1FD0 /* MiscellaneousViewController.m */; };
 		A5180F451E89656400BADAD5 /* UIScrollViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A5180F441E89656400BADAD5 /* UIScrollViewController.m */; };
 		A5BFFF791ECA7A0E00B798AE /* UITextFieldViewController2.m in Sources */ = {isa = PBXBuildFile; fileRef = A5BFFF781ECA7A0E00B798AE /* UITextFieldViewController2.m */; };
+		DE93EADB1EB3F65400CCE388 /* UIProgressViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DE93EADA1EB3F65400CCE388 /* UIProgressViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -82,6 +83,8 @@
 		A5180F441E89656400BADAD5 /* UIScrollViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UIScrollViewController.m; path = UIKitControls/UIScrollViewController.m; sourceTree = "<group>"; };
 		A5BFFF771ECA7A0E00B798AE /* UITextFieldViewController2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UITextFieldViewController2.h; path = UIKitControls/UITextFieldViewController2.h; sourceTree = "<group>"; };
 		A5BFFF781ECA7A0E00B798AE /* UITextFieldViewController2.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UITextFieldViewController2.m; path = UIKitControls/UITextFieldViewController2.m; sourceTree = "<group>"; };
+		DE93EAD91EB3F65400CCE388 /* UIProgressViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UIProgressViewController.h; path = UIKitControls/UIProgressViewController.h; sourceTree = "<group>"; };
+		DE93EADA1EB3F65400CCE388 /* UIProgressViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UIProgressViewController.m; path = UIKitControls/UIProgressViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -116,6 +119,8 @@
 				234767211E2EE058006D97CB /* UITextFieldViewController.m */,
 				234767221E2EE058006D97CB /* UIViewViewController.h */,
 				234767231E2EE058006D97CB /* UIViewViewController.m */,
+				DE93EAD91EB3F65400CCE388 /* UIProgressViewController.h */,
+				DE93EADA1EB3F65400CCE388 /* UIProgressViewController.m */,
 			);
 			name = UIKitControls;
 			sourceTree = "<group>";
@@ -276,6 +281,7 @@
 				234767281E2EE058006D97CB /* UITextFieldViewController.m in Sources */,
 				A5BFFF791ECA7A0E00B798AE /* UITextFieldViewController2.m in Sources */,
 				234767251E2EE058006D97CB /* UIActivityIndicatorViewController.m in Sources */,
+				DE93EADB1EB3F65400CCE388 /* UIProgressViewController.m in Sources */,
 				239EBAEB1E39559C00C845D0 /* TestEnabledUITextField.mm in Sources */,
 				6EEB8A411CE4F4050021021E /* StoryBoardViewController.m in Sources */,
 				6EEB8A3B1CE4F4050021021E /* AppDelegate.m in Sources */,

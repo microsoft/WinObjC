@@ -281,7 +281,6 @@ class NSURLSessionTests {
 public:
     BEGIN_TEST_CLASS(NSURLSessionTests)
     TEST_CLASS_PROPERTY(L"UAP:AppXManifest", L"NSURL.AppxManifest.xml")
-    TEST_CLASS_PROPERTY(L"ignore", L"true")
     END_TEST_CLASS()
 
     TEST_CLASS_SETUP(NSURLClassSetup) {
