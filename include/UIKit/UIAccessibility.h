@@ -35,6 +35,7 @@
 #import <Foundation/Foundation.h>
 #import <Foundation/NSString.h>
 #import <UIKit/UIAccessibilityIdentification.h>
+#import <CoreGraphics/CGBase.h>
 
 @class UIView;
 @class UIBezierPath;

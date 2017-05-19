@@ -33,6 +33,7 @@
 #import <UIKit/UIDevice.h>
 #import <UIKit/UIResponder.h>
 #import <StarboardExport.h>
+#import <CoreGraphics/CGBase.h>
 #import <stdint.h>
 
 UIKIT_EXPORT NSString* const UIApplicationStatusBarOrientationUserInfoKey;
@@ -198,7 +199,8 @@ UIKIT_EXPORT_CLASS
 @interface UIApplication : UIResponder
 
 + (UIApplication*)sharedApplication;
-+ (void)registerObjectForStateRestoration:(id<UIStateRestoring>)object restorationIdentifier:(NSString*)restorationIdentifier NOTINPLAN_METHOD;
++ (void)registerObjectForStateRestoration:(id<UIStateRestoring>)object
+                    restorationIdentifier:(NSString*)restorationIdentifier NOTINPLAN_METHOD;
 - (BOOL)canOpenURL:(NSURL*)URL;
 - (BOOL)isIgnoringInteractionEvents;
 - (BOOL)isRegisteredForRemoteNotifications NOTINPLAN_METHOD;

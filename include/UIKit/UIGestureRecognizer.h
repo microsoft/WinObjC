@@ -32,6 +32,7 @@
 
 #import <UIKit/UIKitExport.h>
 #import <Foundation/Foundation.h>
+#import <CoreGraphics/CGBase.h>
 
 typedef enum {
     UIGestureRecognizerStatePossible,
@@ -83,15 +84,14 @@ UIKIT_EXPORT_CLASS
 
 @end
 
-
 @protocol UIGestureRecognizerDelegate <NSObject>
 @optional
 - (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer*)gestureRecognizer;
--(BOOL)gestureRecognizer:(UIGestureRecognizer*)gestureRecognizer shouldReceiveTouch : (UITouch*)touch;
--(BOOL)gestureRecognizer:(UIGestureRecognizer*)gestureRecognizer
-shouldRecognizeSimultaneouslyWithGestureRecognizer : (UIGestureRecognizer*)otherGestureRecognizer;
--(BOOL)gestureRecognizer:(UIGestureRecognizer*)gestureRecognizer
-shouldRequireFailureOfGestureRecognizer : (UIGestureRecognizer*)otherGestureRecognizer;
--(BOOL)gestureRecognizer:(UIGestureRecognizer*)gestureRecognizer
-shouldBeRequiredToFailByGestureRecognizer : (UIGestureRecognizer*)otherGestureRecognizer;
+- (BOOL)gestureRecognizer:(UIGestureRecognizer*)gestureRecognizer shouldReceiveTouch:(UITouch*)touch;
+- (BOOL)gestureRecognizer:(UIGestureRecognizer*)gestureRecognizer
+    shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer*)otherGestureRecognizer;
+- (BOOL)gestureRecognizer:(UIGestureRecognizer*)gestureRecognizer
+    shouldRequireFailureOfGestureRecognizer:(UIGestureRecognizer*)otherGestureRecognizer;
+- (BOOL)gestureRecognizer:(UIGestureRecognizer*)gestureRecognizer
+    shouldBeRequiredToFailByGestureRecognizer:(UIGestureRecognizer*)otherGestureRecognizer;
 @end

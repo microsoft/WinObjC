@@ -28,6 +28,7 @@
 
 #import "StubReturn.h"
 #import "StarboardXaml/DisplayProperties.h"
+#import <CoreGraphics/CGBase.h>
 
 static UIScreen* mainScreen;
 static UIScreenMode* _curMode;

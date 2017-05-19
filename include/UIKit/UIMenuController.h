@@ -31,6 +31,7 @@
 #pragma once
 
 #import "UIKitExport.h"
+#import <CoreGraphics/CGBase.h>
 #import <Foundation/Foundation.h>
 
 extern NSString* const UIMenuControllerWillShowMenuNotification;

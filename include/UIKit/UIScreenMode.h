@@ -32,6 +32,7 @@
 
 #import "UIKitExport.h"
 #import <Foundation/Foundation.h>
+#import <CoreGraphics/CGBase.h>
 
 UIKIT_EXPORT_CLASS
 @interface UIScreenMode : NSObject
