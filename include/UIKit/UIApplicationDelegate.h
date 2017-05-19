@@ -33,6 +33,7 @@
 #import <UIKit/UIKitExport.h>
 #import <Foundation/Foundation.h>
 #import <UIKit/UIApplication.h>
+#import <CoreGraphics/CGBase.h>
 /* TODO 7328699::
  * Projection headers cannot currenly be included in modules, so we must forward declare classes for now
  * App developers should import the following files to use methods requiring projected classes
@@ -166,9 +167,9 @@ UIKIT_EXPORT NSString* const UIApplicationLaunchOptionsToastActionUserInputKey;
 - (void)application:(UIApplication*)application didChangeStatusBarFrame:(CGRect)oldStatusBarFrame;
 - (BOOL)application:(UIApplication*)application handleOpenURL:(NSURL*)url;
 - (BOOL)application:(UIApplication*)application
-            openURL:(NSURL*)url
-  sourceApplication:(NSString*)sourceApplication
-         annotation:(id)annotation;
+              openURL:(NSURL*)url
+    sourceApplication:(NSString*)sourceApplication
+           annotation:(id)annotation;
 
 @property (nonatomic, strong) UIWindow* window;
 

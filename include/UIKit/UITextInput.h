@@ -20,6 +20,7 @@
 #import <UIKit/UITextInputTraits.h>
 #import <UIKit/UITextInputTokenizer.h>
 #import <UIKit/UIKeyInput.h>
+#import <CoreGraphics/CGBase.h>
 
 typedef enum {
     UITextLayoutDirectionRight = 2,
