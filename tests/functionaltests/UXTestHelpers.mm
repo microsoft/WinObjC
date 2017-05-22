@@ -132,7 +132,9 @@ ViewControllerPresenter::~ViewControllerPresenter() {
 //
 // XamlEventSubscription methods
 //
-void XamlEventSubscription::Set(const DependencyObject& xamlObject, const DependencyProperty& propertyToObserve, XamlEventBlock callbackHandler) {
+void XamlEventSubscription::Set(const DependencyObject& xamlObject,
+                                const DependencyProperty& propertyToObserve,
+                                XamlEventBlock callbackHandler) {
     Reset();
 
     _xamlObject = xamlObject;
@@ -140,9 +142,11 @@ void XamlEventSubscription::Set(const DependencyObject& xamlObject, const Depend
     _eventBlock = [callbackHandler copy];
 
     // Register callback and wait for the property changed event to trigger
-    _callbackToken = _xamlObject.RegisterPropertyChangedCallback(_propertyToObserve, objcwinrt::callback([this] (const DependencyObject& sender, const DependencyProperty& prop) {
-        this->_eventBlock(sender, prop);
-    }));
+    _callbackToken = _xamlObject.RegisterPropertyChangedCallback(_propertyToObserve,
+                                                                 objcwinrt::callback([this](const DependencyObject& sender,
+                                                                                            const DependencyProperty& prop) {
+                                                                     this->_eventBlock(sender, prop);
+                                                                 }));
 }
 
 void XamlEventSubscription::Reset() {

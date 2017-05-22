@@ -118,7 +118,6 @@ void TextField::_SwitchToMode(bool secure) {
         // switch to Non-secure mode, create a textbox as backingControl
         _backingControl = ref new Controls::TextBox();
     }
-
     _backingControl->Loaded += ref new Windows::UI::Xaml::RoutedEventHandler(this, &UIKit::Xaml::TextField::OnBackingControlLoaded); 
     _gotFocusHandlerRegistrationToken = _backingControl->GotFocus += ref new Windows::UI::Xaml::RoutedEventHandler(this, &TextField::OnGotFocus);
     _lostFocusHandlerRegistrationToken = _backingControl->LostFocus += ref new Windows::UI::Xaml::RoutedEventHandler(this, &UIKit::Xaml::TextField::OnLostFocus);
@@ -167,9 +166,16 @@ void TextField::OnBackingControlLoaded(Platform::Object ^sender, Windows::UI::Xa
         Windows::UI::Xaml::Data::Binding^ binding = ref new Windows::UI::Xaml::Data::Binding();
         binding->Mode = Windows::UI::Xaml::Data::BindingMode::TwoWay;
         binding->ElementName = "Root";
-        binding->Path = ref new Windows::UI::Xaml::PropertyPath("Text");
+        binding->Path = ref new Windows::UI::Xaml::PropertyPath("TextField_Text");
         binding->UpdateSourceTrigger = Windows::UI::Xaml::Data::UpdateSourceTrigger::PropertyChanged;
         passwordBox->SetBinding(Controls::PasswordBox::PasswordProperty, binding);
+
+        // one way binding background to inner passwordbox background
+        binding = ref new Windows::UI::Xaml::Data::Binding();
+        binding->Mode = Windows::UI::Xaml::Data::BindingMode::OneWay;
+        binding->ElementName = "Root";
+        binding->Path = ref new Windows::UI::Xaml::PropertyPath("Background");
+        passwordBox->SetBinding(Controls::PasswordBox::BackgroundProperty, binding);
 
         passwordBox->PlaceholderText = _placeholder;
         passwordBox->InputScope = _FindBestFitInputScope();
@@ -178,10 +184,17 @@ void TextField::OnBackingControlLoaded(Platform::Object ^sender, Windows::UI::Xa
         auto textBox = safe_cast<Controls::TextBox^>(_backingControl);
         Windows::UI::Xaml::Data::Binding^ binding = ref new Windows::UI::Xaml::Data::Binding();
         binding->ElementName = "Root";
-        binding->Path = ref new Windows::UI::Xaml::PropertyPath("Text");
+        binding->Path = ref new Windows::UI::Xaml::PropertyPath("TextField_Text");
         binding->Mode = Windows::UI::Xaml::Data::BindingMode::TwoWay;
         binding->UpdateSourceTrigger = Windows::UI::Xaml::Data::UpdateSourceTrigger::PropertyChanged;
         textBox->SetBinding(Controls::TextBox::TextProperty, binding);
+
+        // one way binding background to inner textbox background
+        binding = ref new Windows::UI::Xaml::Data::Binding();
+        binding->Mode = Windows::UI::Xaml::Data::BindingMode::OneWay;
+        binding->ElementName = "Root";
+        binding->Path = ref new Windows::UI::Xaml::PropertyPath("Background");
+        textBox->SetBinding(Controls::TextBox::BackgroundProperty, binding);
 
         textBox->PlaceholderText = _placeholder;
         textBox->TextAlignment = _textAlignment;
@@ -190,7 +203,6 @@ void TextField::OnBackingControlLoaded(Platform::Object ^sender, Windows::UI::Xa
 
     _backingControl->IsEnabled = _enabled;
     _backingControl->Foreground = _foreground;
-    _backingControl->Background = Background;
 
     _SetTextVerticalAlignment();
     _SetBorderStyle();
@@ -219,9 +231,10 @@ void TextField::_RegisterDependencyProperties() {
     if (!s_dependencyPropertiesRegistered) {
         s_dependencyPropertiesRegistered = true;
 
-        s_textProperty = DependencyProperty::RegisterAttached("Text",
+        // TODO: These Dependency Properties should be attached to TextField instead of FrameworkElement once #2607 is fixed
+        s_textProperty = DependencyProperty::RegisterAttached("TextField_Text",
             Platform::String::typeid,
-            TextField::typeid,
+            FrameworkElement::typeid,
             nullptr);
     }
 }
@@ -252,11 +265,11 @@ Private::CoreAnimation::LayerProperty^ TextField::GetBorderThicknessProperty() {
 }
 
 TextBox^ TextField::TextBox::get() {
-    return safe_cast<Windows::UI::Xaml::Controls::TextBox^>(_backingControl);
+    return dynamic_cast<Windows::UI::Xaml::Controls::TextBox^>(_backingControl);
 }
 
 PasswordBox^ TextField::PasswordBox::get() {
-    return safe_cast<Windows::UI::Xaml::Controls::PasswordBox^>(_backingControl);
+    return dynamic_cast<Windows::UI::Xaml::Controls::PasswordBox^>(_backingControl);
 }
 
 void TextField::KillFocus() {
@@ -412,6 +425,12 @@ void TextField::_SetForeground() {
     }
 }
 
+void TextField::_SetBackground() {
+    if (_backingControl) {
+        _backingControl->Background = Background;
+    }
+}
+
 void TextField::_SetTextAlignment() {
     if (_backingControl) {
         if (!_secureEntry) {
@@ -469,12 +488,12 @@ UIKIT_XAML_EXPORT bool XamlGetTextFieldSecureTextEntryValue(const Microsoft::WRL
 // Set the UIKit::Xaml::TextField's Text property
 UIKIT_XAML_EXPORT void XamlSetTextFieldText(const Microsoft::WRL::ComPtr<IInspectable>&  inspectableTextField, const std::wstring& text) {
     auto textField = safe_cast<UIKit::Xaml::TextField^>(reinterpret_cast<Platform::Object^>(inspectableTextField.Get()));
-    textField->Text = Platform::StringReference(text.c_str());
+    textField->TextField_Text = Platform::StringReference(text.c_str());
     if (!textField->SecureEntry) {
         // this is to set the selection to the end of of text so that
         // to ensure when user tap into TextBox, the caret is at
         // the end of the TextBox. 
-        textField->TextBox->SelectionStart = textField->Text->Length();
+        textField->TextBox->SelectionStart = textField->TextField_Text->Length();
         textField->TextBox->SelectionLength = 0;
     } else {
         UNIMPLEMENTED_WITH_MSG("XAML passwordbox currently does not allow set selection programmatically");
@@ -484,7 +503,7 @@ UIKIT_XAML_EXPORT void XamlSetTextFieldText(const Microsoft::WRL::ComPtr<IInspec
 // Get the UIKit::Xaml::TextField's Text property
 UIKIT_XAML_EXPORT IInspectable* XamlGetTextFieldText(const Microsoft::WRL::ComPtr<IInspectable>& inspectableTextField) {
     auto textField = safe_cast<UIKit::Xaml::TextField^>(reinterpret_cast<Platform::Object^>(inspectableTextField.Get()));
-    Platform::Object^ propVal = Windows::Foundation::PropertyValue::CreateString(textField->Text);
+    Platform::Object^ propVal = Windows::Foundation::PropertyValue::CreateString(textField->TextField_Text);
     return InspectableFromObject(propVal).Detach();
 }
 

@@ -118,9 +118,9 @@ UIKIT_EXPORT_CLASS
 
 // UITextInputTraits protocol defined properties,  Managing the Keyboard Behavior
 @property (nonatomic) UITextAutocapitalizationType autocapitalizationType NOTINPLAN_PROPERTY;
-@property (nonatomic) UITextAutocorrectionType autocorrectionType;
-@property (nonatomic) UITextSpellCheckingType spellCheckingType;
-@property (nonatomic) BOOL enablesReturnKeyAutomatically;
+@property (nonatomic) UITextAutocorrectionType autocorrectionType NOTINPLAN_PROPERTY;
+@property (nonatomic) UITextSpellCheckingType spellCheckingType NOTINPLAN_PROPERTY;
+@property (nonatomic) BOOL enablesReturnKeyAutomatically NOTINPLAN_PROPERTY;
 @property (nonatomic) UIKeyboardAppearance keyboardAppearance NOTINPLAN_PROPERTY;
 @property (nonatomic) UIKeyboardType keyboardType;
 @property (nonatomic) UIReturnKeyType returnKeyType NOTINPLAN_PROPERTY;

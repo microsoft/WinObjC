@@ -86,7 +86,9 @@ public:
     XamlEventSubscription(const XamlEventSubscription& other) = delete; // no copy
     XamlEventSubscription& operator=(const XamlEventSubscription& other) = delete;
 
-    void Set(const winrt::Windows::UI::Xaml::DependencyObject& xamlObject, const winrt::Windows::UI::Xaml::DependencyProperty& propertyToObserve, XamlEventBlock callbackHandler);
+    void Set(const winrt::Windows::UI::Xaml::DependencyObject& xamlObject,
+             const winrt::Windows::UI::Xaml::DependencyProperty& propertyToObserve,
+             XamlEventBlock callbackHandler);
     void Reset();
 
 private:

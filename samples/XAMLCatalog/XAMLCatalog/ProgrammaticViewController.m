@@ -24,6 +24,7 @@
 #import "UIScrollViewController.h"
 #import "UISliderViewController.h"
 #import "UITextFieldViewController.h"
+#import "UITextFieldViewController2.h"
 #import "UIViewViewController.h"
 #import "CustomTextControlViewController.h"
 #import "MiscellaneousViewController.h"
@@ -57,6 +58,9 @@
 
     // UITextField
     [self addMenuItemViewController:[[UITextFieldViewController alloc] init] andTitle:@"UITextField"];
+
+    // UITextField2
+    [self addMenuItemViewController:[[UITextFieldViewController2 alloc] init] andTitle : @"UITextField2"];
 
     // UIViewViewController
     [self addMenuItemViewController:[[UIViewViewController alloc] init] andTitle:@"UIView"];
