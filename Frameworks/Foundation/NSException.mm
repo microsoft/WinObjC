@@ -25,6 +25,8 @@
 #import <wrl/wrappers/corewrappers.h>
 #include <COMIncludes_End.h>
 
+#import <StringHelpers.h>
+
 #import "NSExceptionInternal.h"
 
 static const wchar_t* TAG = L"NSException";
@@ -225,11 +227,11 @@ NSUncaughtExceptionHandler* NSGetUncaughtExceptionHandler() {
 }
 
 // Returns a HRESULT for an exception name
-// Note: The table is not the exact inverse of _exceptionNameForHRESULT. 
+// Note: The table is not the exact inverse of _exceptionNameForHRESULT.
 // E.g. E_ACCESSDENIED and RPC_E_WRONG_THREAD both map to NSObjectInaccessibleException.
 // However, NSObjectInaccessibleException only maps to E_ACCESSDENIED
-+ (HRESULT)_HRESULTForExceptionName:(NSString *)exceptionName {
-    if([exceptionName isEqualToString:NSInvalidArgumentException]) {
++ (HRESULT)_HRESULTForExceptionName:(NSString*)exceptionName {
+    if ([exceptionName isEqualToString:NSInvalidArgumentException]) {
         return E_INVALIDARG;
     } else if ([exceptionName isEqualToString:NSGenericException]) {
         return E_FAIL;
@@ -266,15 +268,9 @@ NSUncaughtExceptionHandler* NSGetUncaughtExceptionHandler() {
 
 - (void)_processException {
     HRESULT hr = [self _hresult];
-    assert(hr != S_OK);
-
-    if(self.reason != nil) {
-        LPCWSTR reason = (LPCWSTR)([[self reason] cStringUsingEncoding:NSUnicodeStringEncoding]);
-        Microsoft::WRL::Wrappers::HStringReference hstrRef(reason);
-        RoOriginateError(hr, hstrRef.Get());
-    } else {
-        RoOriginateError(hr, nullptr);
-    }
+    auto reason = Strings::NarrowToWide<HSTRING>(self.reason);
+    ::SetRestrictedErrorInfo(nullptr); // Clear the COM Error Info
+    RoOriginateLanguageException(hr, reason.Get(), nullptr);
 }
 @end
 
