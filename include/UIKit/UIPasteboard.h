@@ -49,7 +49,7 @@ UIKIT_EXPORT_CLASS
 @property (readonly, nonatomic) NSString* name;
 @property (getter=isPersistent, nonatomic) BOOL persistent STUB_PROPERTY;
 @property (readonly, nonatomic) NSInteger changeCount STUB_PROPERTY;
-- (NSArray*)pasteboardTypes STUB_METHOD;
+- (NSArray*)pasteboardTypes;
 - (BOOL)containsPasteboardTypes:(NSArray*)pasteboardTypes;
 - (NSData*)dataForPasteboardType:(NSString*)pasteboardType;
 - (id)valueForPasteboardType:(NSString*)pasteboardType STUB_METHOD;
