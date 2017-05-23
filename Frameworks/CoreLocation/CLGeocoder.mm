@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -47,6 +47,14 @@ namespace WF = winrt::Windows::Foundation;
     return self;
 }
 
+/**
+ @Status Interoperable
+ @Notes Registers app with underlying Bing service (see https://docs.microsoft.com/en-us/windows/uwp/maps-and-location/geocoding)
+*/
++ (void)setWindowsServiceToken:(NSString*)token {
+    MapService::ServiceToken(objcwinrt::string(token));
+}
+
 // Helper function to convert WSM error code to NSError codes
 NSError* parseError(const MapLocationFinderResult& results) {
     // Unknown Error and Status Not Supported don't map to any iOS error codes
@@ -81,11 +89,14 @@ void createResultsArray(const MapLocationFinderResult& results, NSMutableArray* 
 
         NSString* placemarkName;
         if (!currentAddress.StreetNumber().empty() && !currentAddress.Street().empty()) {
-            placemarkName = [NSString stringWithFormat:@"%S %S", (const unichar*)currentAddress.StreetNumber().c_str(), (const unichar*)currentAddress.Street().c_str()];
+            placemarkName = [NSString stringWithFormat:@"%S %S",
+                                                       (const unichar*)currentAddress.StreetNumber().c_str(),
+                                                       (const unichar*)currentAddress.Street().c_str()];
         } else if (!currentAddress.Street().empty()) {
             placemarkName = objcwinrt::string(currentAddress.Street());
         } else if (!currentAddress.Town().empty() && !currentAddress.Region().empty()) {
-            placemarkName = [NSString stringWithFormat:@"%S, %S", (const unichar*)currentAddress.Town().c_str(), (const unichar*)currentAddress.Region().c_str()];
+            placemarkName = [NSString
+                stringWithFormat:@"%S, %S", (const unichar*)currentAddress.Town().c_str(), (const unichar*)currentAddress.Region().c_str()];
         } else if (!currentAddress.Town().empty()) {
             placemarkName = objcwinrt::string(currentAddress.Town());
         } else {
@@ -113,6 +124,8 @@ void createResultsArray(const MapLocationFinderResult& results, NSMutableArray* 
 
 /**
  @Status Interoperable
+ @Notes App must authenticate map service WSMMapService to use (see
+ https://docs.microsoft.com/en-us/windows/uwp/maps-and-location/geocoding)
 */
 - (void)reverseGeocodeLocation:(CLLocation*)location completionHandler:(CLGeocodeCompletionHandler)completionHandler {
     @synchronized(self) {
@@ -135,23 +148,24 @@ void createResultsArray(const MapLocationFinderResult& results, NSMutableArray* 
 
             WF::IAsyncOperation<MapLocationFinderResult> async = MapLocationFinder::FindLocationsAtAsync(geopoint);
 
-            async.Completed(objcwinrt::callback([self, completionHandler] (const WF::IAsyncOperation<MapLocationFinderResult>& op, WF::AsyncStatus status) {
-                NSError* geocodeStatus = objcwinrt::to_nserror(op, status);
-                NSMutableArray* geocodeResult = nil;
-                self.geocoding = NO;
+            async.Completed(objcwinrt::callback(
+                [self, completionHandler](const WF::IAsyncOperation<MapLocationFinderResult>& op, WF::AsyncStatus status) {
+                    NSError* geocodeStatus = objcwinrt::to_nserror(op, status);
+                    NSMutableArray* geocodeResult = nil;
+                    self.geocoding = NO;
 
-                if (status == WF::AsyncStatus::Completed) {
-                    MapLocationFinderResult result = op.GetResults();
-                    geocodeStatus = parseError(result);
+                    if (status == WF::AsyncStatus::Completed) {
+                        MapLocationFinderResult result = op.GetResults();
+                        geocodeStatus = parseError(result);
 
-                    geocodeResult = [NSMutableArray new];
-                    createResultsArray(result, geocodeResult);
-                }
+                        geocodeResult = [NSMutableArray new];
+                        createResultsArray(result, geocodeResult);
+                    }
 
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    completionHandler(geocodeResult, geocodeStatus);
-                });
-            }));
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        completionHandler(geocodeResult, geocodeStatus);
+                    });
+                }));
         }
     }
 }
@@ -168,32 +182,34 @@ void createResultsArray(const MapLocationFinderResult& results, NSMutableArray* 
         } else {
             self.geocoding = YES;
 
-            WF::IAsyncOperation<MapLocationFinderResult> async =
-                MapLocationFinder::FindLocationsAsync(objcwinrt::string(address), point);
+            WF::IAsyncOperation<MapLocationFinderResult> async = MapLocationFinder::FindLocationsAsync(objcwinrt::string(address), point);
 
-            async.Completed(objcwinrt::callback([self, completion] (const WF::IAsyncOperation<MapLocationFinderResult>& op, WF::AsyncStatus status) {
-                NSError* geocodeStatus = objcwinrt::to_nserror(op, status);
-                NSMutableArray* geocodeResult = nil;
-                self.geocoding = NO;
+            async.Completed(
+                objcwinrt::callback([self, completion](const WF::IAsyncOperation<MapLocationFinderResult>& op, WF::AsyncStatus status) {
+                    NSError* geocodeStatus = objcwinrt::to_nserror(op, status);
+                    NSMutableArray* geocodeResult = nil;
+                    self.geocoding = NO;
 
-                if (status == WF::AsyncStatus::Completed) {
-                    MapLocationFinderResult result = op.GetResults();
-                    geocodeStatus = parseError(result);
+                    if (status == WF::AsyncStatus::Completed) {
+                        MapLocationFinderResult result = op.GetResults();
+                        geocodeStatus = parseError(result);
 
-                    geocodeResult = [NSMutableArray new];
-                    createResultsArray(result, geocodeResult);
-                }
+                        geocodeResult = [NSMutableArray new];
+                        createResultsArray(result, geocodeResult);
+                    }
 
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    completion(geocodeResult, geocodeStatus);
-                });
-            }));
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        completion(geocodeResult, geocodeStatus);
+                    });
+                }));
         }
     }
 }
 
 /**
  @Status Interoperable
+ @Notes App must authenticate map service WSMMapService to use (see
+ https://docs.microsoft.com/en-us/windows/uwp/maps-and-location/geocoding)
 */
 - (void)geocodeAddressDictionary:(NSDictionary*)addressDictionary completionHandler:(CLGeocodeCompletionHandler)completionHandler {
     const NSString* addressStreet = (const NSString*)[addressDictionary objectForKey:@"Street"];
@@ -232,6 +248,8 @@ void createResultsArray(const MapLocationFinderResult& results, NSMutableArray* 
 
 /**
  @Status Interoperable
+ @Notes App must authenticate map service WSMMapService to use (see
+ https://docs.microsoft.com/en-us/windows/uwp/maps-and-location/geocoding)
 */
 - (void)geocodeAddressString:(NSString*)addressString completionHandler:(CLGeocodeCompletionHandler)completionHandler {
     [self _geocodeAddress:addressString atPoint:nullptr completionHandler:completionHandler];
@@ -241,11 +259,12 @@ void createResultsArray(const MapLocationFinderResult& results, NSMutableArray* 
  @Status Caveat
  @Notes There is no direct Windows API mapping to geocode within a region.
         Therefore, this API currently just uses the center of the region as a hint for Geocoding.
+        App must authenticate map service WSMMapService to use (see
+ https://docs.microsoft.com/en-us/windows/uwp/maps-and-location/geocoding)
 */
 - (void)geocodeAddressString:(NSString*)addressString
                     inRegion:(CLRegion*)region
            completionHandler:(CLGeocodeCompletionHandler)completionHandler {
-
     BasicGeoposition geoposition;
     geoposition.Latitude = region.center.latitude;
     geoposition.Longitude = region.center.longitude;
