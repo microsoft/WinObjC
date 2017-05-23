@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <Target Name="_ConfirmWinObjCSDKRootEnviromentVariableIsSet" BeforeTargets="_ClangCompile">
+      <Error Condition="'$(WINOBJC_SDK_ROOT)' == ''"
+           Text="Cannot find WinObjC SDK. Please make sure you have cloned WinObjC repository and have set the environment variable WINOBJC_SDK_ROOT to point to it." />
+  </Target>
+  
+</Project>

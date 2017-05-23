@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClInclude Include="caparser.h" />
+    <ClInclude Include="DirIterator.h" />
+    <ClInclude Include="MetadataScope.h" />
+    <ClInclude Include="ObjectModel.h" />
+    <ClInclude Include="precompiled.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="MetadataScope.cpp" />
+    <ClCompile Include="ObjectModel.cpp" />
+    <ClCompile Include="entry.cpp" />
+    <ClCompile Include="precompiled.cpp" />
+  </ItemGroup>
+</Project>
