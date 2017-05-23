@@ -21,6 +21,11 @@
 #import <utility>
 #import <type_traits>
 
+// Required for the propagation of exceptions across language boundaries
+@interface NSException (WinRTInternal)
+- (HRESULT)_hresult;
+@end
+
 // TODO: Make RTHelpers.h includable from Objective-C++ without these gymnastics
 #ifdef __OBJC__
 #pragma push_macro("interface")
@@ -220,7 +225,16 @@ namespace impl {
         template <typename... TArgs>
         auto operator()(TArgs&& ...args) {
             @autoreleasepool {
+#ifndef _M_ARM // !_M_ARM; TODO GH#352 ARM exception handling is currently broken
+                @try {
+                    return _callback(std::forward<TArgs>(args)...);
+                } @catch(NSException* ex) {
+                    // NSException has set the COM error info for us by virtue of it calling RoOriginateLanguageException.
+                    throw winrt::hresult_error([ex _hresult], winrt::hresult_error::from_abi);
+                }
+#else // _M_ARM
                 return _callback(std::forward<TArgs>(args)...);
+#endif // _M_ARM
             }
         }
 
