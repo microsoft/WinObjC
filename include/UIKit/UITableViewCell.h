@@ -110,7 +110,7 @@ UIKIT_EXPORT_CLASS
 @property (nonatomic) UITableViewCellAccessoryType editingAccessoryType;
 @property (nonatomic, getter=isSelected) BOOL selected;
 @property (nonatomic, getter=isHighlighted) BOOL highlighted;
-@property (nonatomic, getter=isEditing) BOOL editing STUB_PROPERTY;
+@property (nonatomic, getter=isEditing) BOOL editing;
 @property (readonly, nonatomic) UITableViewCellEditingStyle editingStyle STUB_PROPERTY;
 @property (nonatomic, readonly) BOOL showingDeleteConfirmation STUB_PROPERTY;
 @property (nonatomic, readonly, copy) NSString* reuseIdentifier;

@@ -341,7 +341,7 @@ UIKIT_EXPORT_CLASS
 @property (nonatomic, readonly) UIWindow* window;
 @property (nonatomic, retain) UIColor* tintColor STUB_PROPERTY;
 @property (nonatomic, strong) UIView* maskView STUB_PROPERTY;
-@property (readonly, copy, nonatomic) NSArray* layoutGuides STUB_PROPERTY;
+@property (readonly, copy, nonatomic) NSArray* layoutGuides;
 @property (readonly, getter=isFocused, nonatomic) BOOL focused STUB_PROPERTY;
 @property (readonly, nonatomic) NSArray* constraints;
 @property (readonly, nonatomic, strong) UILayoutGuide* readableContentGuide STUB_PROPERTY;
