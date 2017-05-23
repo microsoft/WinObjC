@@ -573,12 +573,7 @@ TEST(KVO, ObserverInformationShouldNotStompOld) {
     [facade observeKeyPath:@"sub.name"
                      withOptions:NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew
                  performingBlock:^(DummyObject* observee) {
-                     [observee addObserver:otherFacade.observer
-                                forKeyPath:@"sub"
-                                   options:(NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew)
-                                   context:nullptr];
                      [observee.sub setName:@"NEW!"];
-                     [observee removeObserver:otherFacade.observer forKeyPath:@"sub"];
                  }
         andExpectChangeCallbacks:@[ observingSubName, illegalChangeNotification ]];
     [dummy removeObserver:otherFacade.observer forKeyPath:@"sub"];
@@ -586,8 +581,6 @@ TEST(KVO, ObserverInformationShouldNotStompOld) {
 }
 
 TEST(KVO, ObserverInformationShouldNotLeak) {
-    auto emptyCallback = CHANGE_CB{};
-
     auto onlyNewCallback = CHANGE_CB {
         EXPECT_NE(nil, change[NSKeyValueChangeNewKey]);
         EXPECT_EQ(nil, change[NSKeyValueChangeOldKey]);
