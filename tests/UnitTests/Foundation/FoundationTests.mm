@@ -1225,6 +1225,40 @@ TEST(KVO, DerivedKeyDependentOnTwoSubKeys) {
     EXPECT_NO_THROW([pool release]);
 }
 
+TEST(KVO, ObserverInfoShouldNotStompOthers) {
+    TestKVOObject* observed = [[[TestKVOObject alloc] init] autorelease];
+    TestKVOObject* oldObj = [[[TestKVOObject alloc] init] autorelease];
+    observed.cascadableKey = oldObj;
+    observed.cascadableKey.basicObjectProperty = @"Original";
+    TestKVOObserver* observer = [[[TestKVOObserver alloc] init] autorelease];
+
+    [observed addObserver:observer
+               forKeyPath:@"cascadableKey"
+                  options:(NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew)
+                  context:nil];
+    [observed addObserver:observer
+               forKeyPath:@"cascadableKey.basicObjectProperty"
+                  options:(NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew)
+                  context:nil];
+
+    TestKVOObject* newObj = [[[TestKVOObject alloc] init] autorelease];
+    newObj.basicObjectProperty = @"NewObj";
+    observed.cascadableKey = newObj;
+
+    NSDictionary* baseInfo = [[[observer changesForKeypath:@"cascadableKey"] anyObject] info];
+    EXPECT_NE(nil, baseInfo);
+    EXPECT_EQ(oldObj, baseInfo[NSKeyValueChangeOldKey]);
+    EXPECT_EQ(newObj, baseInfo[NSKeyValueChangeNewKey]);
+
+    NSDictionary* subInfo = [[[observer changesForKeypath:@"cascadableKey.basicObjectProperty"] anyObject] info];
+    EXPECT_NE(nil, subInfo);
+    EXPECT_OBJCEQ(@"Original", subInfo[NSKeyValueChangeOldKey]);
+    EXPECT_OBJCEQ(@"NewObj", subInfo[NSKeyValueChangeNewKey]);
+
+    EXPECT_NO_THROW([observed removeObserver:observer forKeyPath:@"cascadableKey"]);
+    EXPECT_NO_THROW([observed removeObserver:observer forKeyPath:@"cascadableKey.basicObjectProperty"]);
+}
+
 TEST(Foundation, NSSearchPathForDirectoriesInDomains) {
     NSArray* documentPaths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSArray* cachesPaths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSAllDomainsMask, YES);

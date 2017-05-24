@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -22,8 +22,6 @@
 
 #pragma region Helper Classes
 #define TEST_PREFIX Foundation_NSObject_KVO_Tests
-#define _CONCAT(x, y) x##y
-#define CONCAT(x, y) _CONCAT(x, y)
 #define TEST_IDENT(x) CONCAT(TEST_PREFIX, _##x)
 
 @interface TEST_IDENT (Observee): NSObject {
@@ -31,6 +29,9 @@
     NSMutableArray* _manualNotificationArray;
     NSMutableArray* _kvcMediatedArray;
     NSMutableArray* _arrayWithHelpers;
+    NSMutableSet* _setWithHelpers;
+    NSMutableSet* _kvcMediatedSet;
+    NSMutableSet* _manualNotificationSet;
 }
 @end
 
@@ -45,6 +46,9 @@
         _manualNotificationArray = [NSMutableArray new];
         _kvcMediatedArray = [NSMutableArray new];
         _arrayWithHelpers = [NSMutableArray new];
+        _setWithHelpers = [NSMutableSet new];
+        _kvcMediatedSet = [NSMutableSet new];
+        _manualNotificationSet = [NSMutableSet new];
     }
     return self;
 }
@@ -54,6 +58,9 @@
     [_manualNotificationArray release];
     [_kvcMediatedArray release];
     [_arrayWithHelpers release];
+    [_setWithHelpers release];
+    [_kvcMediatedSet release];
+    [_manualNotificationSet release];
     [super dealloc];
 }
 
@@ -82,6 +89,69 @@
 - (void)removeObjectFromArrayWithHelpersAtIndex:(NSUInteger)index {
     [_arrayWithHelpers removeObjectAtIndex:index];
 }
+
+- (void)addSetWithHelpersObject:(id)obj {
+    [_setWithHelpers addObject:obj];
+}
+
+- (void)removeSetWithHelpersObject:(id)obj {
+    [_setWithHelpers removeObject:obj];
+}
+
+- (void)addSetWithHelpers:(NSSet*)set {
+    [_setWithHelpers unionSet:set];
+}
+
+- (void)removeSetWithHelpers:(NSSet*)set {
+    [_setWithHelpers minusSet:set];
+}
+
+- (void)intersectSetWithHelpers:(NSSet*)set {
+    [_setWithHelpers intersectSet:set];
+}
+
+- (void)setSetWithHelpers:(NSSet*)set {
+    [_setWithHelpers setSet:set];
+}
+
+- (void)manualSetAddObject:(id)obj {
+    NSSet* set = [NSSet setWithObject:obj];
+    [self willChangeValueForKey:@"manualNotificationSet" withSetMutation:NSKeyValueUnionSetMutation usingObjects:set];
+    [_manualNotificationSet addObject:obj];
+    [self didChangeValueForKey:@"manualNotificationSet" withSetMutation:NSKeyValueUnionSetMutation usingObjects:set];
+}
+
+- (void)manualSetRemoveObject:(id)obj {
+    NSSet* set = [NSSet setWithObject:obj];
+    [self willChangeValueForKey:@"manualNotificationSet" withSetMutation:NSKeyValueMinusSetMutation usingObjects:set];
+    [_manualNotificationSet removeObject:obj];
+    [self didChangeValueForKey:@"manualNotificationSet" withSetMutation:NSKeyValueMinusSetMutation usingObjects:set];
+}
+
+- (void)manualUnionSet:(NSSet*)set {
+    [self willChangeValueForKey:@"manualNotificationSet" withSetMutation:NSKeyValueUnionSetMutation usingObjects:set];
+    [_manualNotificationSet unionSet:set];
+    [self didChangeValueForKey:@"manualNotificationSet" withSetMutation:NSKeyValueUnionSetMutation usingObjects:set];
+}
+
+- (void)manualMinusSet:(NSSet*)set {
+    [self willChangeValueForKey:@"manualNotificationSet" withSetMutation:NSKeyValueMinusSetMutation usingObjects:set];
+    [_manualNotificationSet minusSet:set];
+    [self didChangeValueForKey:@"manualNotificationSet" withSetMutation:NSKeyValueMinusSetMutation usingObjects:set];
+}
+
+- (void)manualIntersectSet:(NSSet*)set {
+    [self willChangeValueForKey:@"manualNotificationSet" withSetMutation:NSKeyValueIntersectSetMutation usingObjects:set];
+    [_manualNotificationSet intersectSet:set];
+    [self didChangeValueForKey:@"manualNotificationSet" withSetMutation:NSKeyValueIntersectSetMutation usingObjects:set];
+}
+
+- (void)manualSetSet:(NSSet*)set {
+    [self willChangeValueForKey:@"manualNotificationSet" withSetMutation:NSKeyValueSetSetMutation usingObjects:set];
+    [_manualNotificationSet setSet:set];
+    [self didChangeValueForKey:@"manualNotificationSet" withSetMutation:NSKeyValueSetSetMutation usingObjects:set];
+}
+
 @end
 
 @interface _NSFoundationTestKVOObserver () {
@@ -127,6 +197,10 @@
         _observer.attach([_NSFoundationTestKVOObserver new]);
     }
     return self;
+}
+
+- (id)observer {
+    return _observer;
 }
 
 - (void)performBlock:(void (^)(id))block andExpectChangeCallbacks:(NSArray<void (^)(NSString*, id, NSDictionary*, void*)>*)callbacks {
@@ -406,6 +480,83 @@ TEST(KVO, ToMany_KVCMediatedArrayWithHelpers_AggregateFunction) {
     EXPECT_EQ(1, facade.hits);
 }
 
+@interface DummyObject : NSObject
+@property (nonatomic, copy) NSString* name;
+@property (nonatomic, retain) DummyObject* sub;
+@end
+
+@implementation DummyObject
++ (instancetype)makeDummy {
+    DummyObject* ret = [[DummyObject new] autorelease];
+    ret.name = @"Value";
+    return ret;
+}
+
+- (void)dealloc {
+    [_name release];
+    [_sub release];
+    [super dealloc];
+}
+
+@end
+
+// Reference platform adds observers slightly differently so this test will not pass
+OSX_DISABLED_TEST(KVO, ToMany_ToOne_ShouldDowngradeForOrderedObservation) {
+    TEST_IDENT(Observee)* observee = [TEST_IDENT(Observee) observee];
+    [observee insertObject:[DummyObject makeDummy] inArrayWithHelpersAtIndex:0];
+
+    auto insertCallbackPost = CHANGE_CB {
+        EXPECT_OBJCEQ(nil, change[NSKeyValueChangeNotificationIsPriorKey]);
+        EXPECT_OBJCEQ(@(NSKeyValueChangeSetting), change[NSKeyValueChangeKindKey]);
+        NSArray* expectedOld = @[ @"Value" ];
+        EXPECT_OBJCEQ(expectedOld, change[NSKeyValueChangeOldKey]);
+        NSArray* expectedNew = @[ @"Value", @"Value" ];
+        EXPECT_OBJCEQ(expectedNew, change[NSKeyValueChangeNewKey]);
+        NSIndexSet* indexes = change[NSKeyValueChangeIndexesKey];
+        EXPECT_OBJCEQ(nil, indexes);
+    };
+    auto illegalChangeNotification = CHANGE_CB {
+        ADD_FAILURE();
+    };
+
+    _NSFoundationTestKVOFacade* facade = [[_NSFoundationTestKVOFacade newWithObservee:observee] autorelease];
+    // In this test, we use the same arrayWithHelpers as above, but interact with it manually.
+    [facade observeKeyPath:@"arrayWithHelpers.name"
+                     withOptions:NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew
+                 performingBlock:PERFORM {
+                     // This array is assisted by setter functions, and should also dispatch one notification per change.
+                     [observee insertObject:[DummyObject makeDummy] inArrayWithHelpersAtIndex:0];
+                 }
+        andExpectChangeCallbacks:@[ insertCallbackPost, illegalChangeNotification ]];
+    EXPECT_EQ(1, facade.hits);
+}
+
+TEST(KVO, ObserverInformationShouldNotLeak) {
+    auto onlyNewCallback = CHANGE_CB {
+        EXPECT_NE(nil, change[NSKeyValueChangeNewKey]);
+        EXPECT_EQ(nil, change[NSKeyValueChangeOldKey]);
+    };
+
+    auto illegalChangeNotification = CHANGE_CB {
+        ADD_FAILURE();
+    };
+
+    TEST_IDENT(Observee)* observee = [TEST_IDENT(Observee) observee];
+    _NSFoundationTestKVOFacade* firstFacade = [[_NSFoundationTestKVOFacade newWithObservee:observee] autorelease];
+    [observee addObserver:firstFacade.observer
+               forKeyPath:@"manualNotificationArray"
+                  options:(NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew)
+                  context:nullptr];
+    _NSFoundationTestKVOFacade* facade = [[_NSFoundationTestKVOFacade newWithObservee:observee] autorelease];
+    [facade observeKeyPath:@"manualNotificationArray"
+                     withOptions:NSKeyValueObservingOptionNew
+                 performingBlock:PERFORM { [observee addObjectToManualArray:@"object1"]; }
+        andExpectChangeCallbacks:@[ onlyNewCallback, illegalChangeNotification ]];
+    [observee removeObserver:firstFacade.observer forKeyPath:@"manualNotificationArray"];
+
+    EXPECT_EQ(1, facade.hits);
+}
+
 TEST(KVO, NSArrayShouldNotBeObservable) {
     NSArray* test = @[ @1, @2, @3 ];
     _NSFoundationTestKVOObserver* observer = [[_NSFoundationTestKVOObserver new] autorelease];
@@ -473,4 +624,108 @@ TEST(KVO, NSSetShouldNotBeObservable) {
     // These would throw anyways because there should be no observer for the key path, but test anyways
     EXPECT_ANY_THROW([test removeObserver:observer forKeyPath:@"count"]);
     EXPECT_ANY_THROW([test removeObserver:observer forKeyPath:@"count" context:nullptr]);
+}
+
+static void __testSetMutationMethods(NSString* keypath, bool setSetChanged, void (^callback)(id)) {
+    auto unionCallback = CHANGE_CB {
+        // Union with @({@1, @2, @3}) to get @({@1, @2, @3})
+        EXPECT_OBJCEQ(@(NSKeyValueChangeInsertion), change[NSKeyValueChangeKindKey]);
+        NSSet* expected = [NSSet setWithObjects:@1, @2, @3, nil];
+        EXPECT_OBJCEQ(expected, change[NSKeyValueChangeNewKey]);
+        EXPECT_EQ(nil, change[NSKeyValueChangeOldKey]);
+    };
+
+    auto minusCallback = CHANGE_CB {
+        // Minus with @({@1}) to get @({@2, @3})
+        EXPECT_OBJCEQ(@(NSKeyValueChangeRemoval), change[NSKeyValueChangeKindKey]);
+        EXPECT_OBJCEQ([NSSet setWithObject:@1], change[NSKeyValueChangeOldKey]);
+        EXPECT_EQ(nil, change[NSKeyValueChangeNewKey]);
+    };
+
+    auto addCallback = CHANGE_CB {
+        // Add @1 to @({@2, @3}) to get @({@1, @2, @3})
+        EXPECT_OBJCEQ(@(NSKeyValueChangeInsertion), change[NSKeyValueChangeKindKey]);
+        EXPECT_OBJCEQ([NSSet setWithObject:@1], change[NSKeyValueChangeNewKey]);
+        EXPECT_EQ(nil, change[NSKeyValueChangeOldKey]);
+    };
+
+    auto removeCallback = CHANGE_CB {
+        // Remove @1 from @({@1, @2, @3}) to get @({@2, @3})
+        EXPECT_OBJCEQ(@(NSKeyValueChangeRemoval), change[NSKeyValueChangeKindKey]);
+        EXPECT_OBJCEQ([NSSet setWithObject:@1], change[NSKeyValueChangeOldKey]);
+        EXPECT_EQ(nil, change[NSKeyValueChangeNewKey]);
+    };
+
+    auto intersectCallback = CHANGE_CB {
+        // Intersect with @({@2}) to get @({2})
+        EXPECT_OBJCEQ(@(NSKeyValueChangeRemoval), change[NSKeyValueChangeKindKey]);
+        NSSet* expected = [NSSet setWithObject:@3];
+        EXPECT_OBJCEQ(expected, change[NSKeyValueChangeOldKey]);
+        EXPECT_EQ(nil, change[NSKeyValueChangeNewKey]);
+    };
+
+    auto setCallback = CHANGE_CB {
+        // Set with @({@3}) to get @({@3})
+        if (setSetChanged) {
+            EXPECT_OBJCEQ(@(NSKeyValueChangeReplacement), change[NSKeyValueChangeKindKey]);
+            EXPECT_OBJCEQ([NSSet setWithObject:@2], change[NSKeyValueChangeOldKey]);
+            EXPECT_OBJCEQ([NSSet setWithObject:@3], change[NSKeyValueChangeNewKey]);
+        } else {
+            // setXxx method is not automatically swizzled for observation
+            EXPECT_OBJCEQ(@(NSKeyValueChangeSetting), change[NSKeyValueChangeKindKey]);
+            EXPECT_OBJCEQ([NSSet setWithObject:@3], change[NSKeyValueChangeOldKey]);
+            EXPECT_OBJCEQ([NSSet setWithObject:@3], change[NSKeyValueChangeNewKey]);
+        }
+    };
+
+    auto illegalChangeNotification = CHANGE_CB {
+        ADD_FAILURE();
+    };
+
+    _NSFoundationTestKVOFacade* facade = [[_NSFoundationTestKVOFacade newWithObservee:[TEST_IDENT(Observee) observee]] autorelease];
+    [facade observeKeyPath:keypath
+                     withOptions:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld
+                 performingBlock:callback
+        andExpectChangeCallbacks:
+            @[ unionCallback, minusCallback, addCallback, removeCallback, intersectCallback, setCallback, illegalChangeNotification ]];
+    EXPECT_EQ(6, facade.hits);
+}
+
+// Reference platform does not perform as expected with set mutation methods so we've opted for consistency
+// The following two tests are disabled on reference platform but ensure no regressions in the future
+TEST(KVO, SetMutationMethods_Helpers) {
+    __testSetMutationMethods(@"setWithHelpers", false, PERFORM {
+        // This set is assisted by setter functions, and should also dispatch one notification per change.
+        [observee addSetWithHelpers:[NSSet setWithObjects:@1, @2, @3, nil]];
+        [observee removeSetWithHelpers:[NSSet setWithObject:@1]];
+        [observee addSetWithHelpersObject:@1];
+        [observee removeSetWithHelpersObject:@1];
+        [observee intersectSetWithHelpers:[NSSet setWithObject:@2]];
+        [observee setSetWithHelpers:[NSSet setWithObject:@3]];
+    });
+}
+
+TEST(KVO, SetMutationMethods_Proxy) {
+    __testSetMutationMethods(@"kvcMediatedSet", true, PERFORM {
+        // Proxy mutable set should dispatch one notification per change
+        NSMutableSet* proxySet = [observee mutableSetValueForKey:@"kvcMediatedSet"];
+        [proxySet unionSet:[NSSet setWithObjects:@1, @2, @3, nil]];
+        [proxySet minusSet:[NSSet setWithObject:@1]];
+        [proxySet addObject:@1];
+        [proxySet removeObject:@1];
+        [proxySet intersectSet:[NSSet setWithObject:@2]];
+        [proxySet setSet:[NSSet setWithObject:@3]];
+    });
+}
+
+TEST(KVO, SetMutationMethods_Manual) {
+    __testSetMutationMethods(@"manualNotificationSet", true, PERFORM {
+        // Manually should dispatch one notification per change
+        [observee manualUnionSet:[NSSet setWithObjects:@1, @2, @3, nil]];
+        [observee manualMinusSet:[NSSet setWithObject:@1]];
+        [observee manualSetAddObject:@1];
+        [observee manualSetRemoveObject:@1];
+        [observee manualIntersectSet:[NSSet setWithObject:@2]];
+        [observee manualSetSet:[NSSet setWithObject:@3]];
+    });
 }

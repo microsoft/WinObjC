@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -22,7 +22,7 @@
 #import <objc/runtime.h>
 #import "type_encoding_cases.h"
 
-#include <memory>
+#import <memory>
 
 /* These are defined by the ABI and the runtime. */
 #define ABI_SUPER(obj) (((Class**)obj)[0][1])
@@ -128,12 +128,12 @@ static void notifyingVariadicSetImpl(id self, SEL _cmd, ...) {
     // in the same way: on the stack. For our two supported platforms, this seems to hold true.
     NSMethodSignature* sig = [self methodSignatureForSelector:_cmd];
     auto argSz = [sig getArgumentSizeAtIndex:2];
-    auto nStackArgs = argSz / sizeof(unsigned);
-    unsigned* raw = static_cast<unsigned*>(calloc(sizeof(unsigned), nStackArgs));
+    auto nStackArgs = argSz / sizeof(uintptr_t);
+    uintptr_t* raw = static_cast<uintptr_t*>(calloc(sizeof(uintptr_t), nStackArgs));
     va_list ap;
     va_start(ap, _cmd);
-    for (unsigned int i = 0; i < nStackArgs; ++i) {
-        raw[i] = va_arg(ap, unsigned);
+    for (uintptr_t i = 0; i < nStackArgs; ++i) {
+        raw[i] = va_arg(ap, uintptr_t);
     }
     va_end(ap);
 
@@ -166,7 +166,7 @@ static void notifyingVariadicSetImpl(id self, SEL _cmd, ...) {
             imp(self, _cmd, raw[0], raw[1], raw[2], raw[3], raw[4], raw[5]);
             break;
         default:
-            FAIL_FAST_MSG("Can't override setter with more than 6 sizeof(long) stack arguments.");
+            FAIL_FAST_MSG("Can't override setter with more than 6 sizeof(long int) stack arguments.");
             return;
     }
 
@@ -181,9 +181,7 @@ static void NSKVONotifying$insertObject$inXxxAtIndex$(id self, SEL _cmd, id obje
 
     [self willChange:NSKeyValueChangeInsertion valuesAtIndexes:indexes forKey:key];
 
-    struct objc_super super {
-        self, ABI_SUPER(self)
-    };
+    objc_super super{ self, ABI_SUPER(self) };
     auto imp = (void (*)(id, SEL, id, NSUInteger))objc_msg_lookup_super(&super, _cmd);
     imp(self, _cmd, object, index);
 
@@ -195,9 +193,7 @@ static void NSKVONotifying$insertXxx$atIndexes$(id self, SEL _cmd, id object, NS
 
     [self willChange:NSKeyValueChangeInsertion valuesAtIndexes:indexes forKey:key];
 
-    struct objc_super super {
-        self, ABI_SUPER(self)
-    };
+    objc_super super{ self, ABI_SUPER(self) };
     auto imp = (void (*)(id, SEL, id, NSIndexSet*))objc_msg_lookup_super(&super, _cmd);
     imp(self, _cmd, object, indexes);
 
@@ -210,9 +206,7 @@ static void NSKVONotifying$removeObjectFromXxxAtIndex$(id self, SEL _cmd, NSUInt
 
     [self willChange:NSKeyValueChangeRemoval valuesAtIndexes:indexes forKey:key];
 
-    struct objc_super super {
-        self, ABI_SUPER(self)
-    };
+    objc_super super{ self, ABI_SUPER(self) };
     auto imp = (void (*)(id, SEL, NSUInteger))objc_msg_lookup_super(&super, _cmd);
     imp(self, _cmd, index);
 
@@ -224,9 +218,7 @@ static void NSKVONotifying$removeXxxAtIndexes$(id self, SEL _cmd, NSIndexSet* in
 
     [self willChange:NSKeyValueChangeRemoval valuesAtIndexes:indexes forKey:key];
 
-    struct objc_super super {
-        self, ABI_SUPER(self)
-    };
+    objc_super super{ self, ABI_SUPER(self) };
     auto imp = (void (*)(id, SEL, NSIndexSet*))objc_msg_lookup_super(&super, _cmd);
     imp(self, _cmd, indexes);
 
@@ -239,9 +231,7 @@ static void NSKVONotifying$replaceObjectInXxxAtIndex$withObject$(id self, SEL _c
 
     [self willChange:NSKeyValueChangeReplacement valuesAtIndexes:indexes forKey:key];
 
-    struct objc_super super {
-        self, ABI_SUPER(self)
-    };
+    objc_super super{ self, ABI_SUPER(self) };
     auto imp = (void (*)(id, SEL, NSUInteger, id))objc_msg_lookup_super(&super, _cmd);
     imp(self, _cmd, index, object);
 
@@ -253,21 +243,44 @@ static void NSKVONotifying$replaceXxxAtIndexes$withXxx$(id self, SEL _cmd, NSInd
 
     [self willChange:NSKeyValueChangeReplacement valuesAtIndexes:indexes forKey:key];
 
-    struct objc_super super {
-        self, ABI_SUPER(self)
-    };
+    objc_super super{ self, ABI_SUPER(self) };
     auto imp = (void (*)(id, SEL, NSIndexSet*, NSArray*))objc_msg_lookup_super(&super, _cmd);
     imp(self, _cmd, indexes, objects);
 
     [self didChange:NSKeyValueChangeReplacement valuesAtIndexes:indexes forKey:key];
 }
 
+template <NSKeyValueSetMutationKind Kind>
+static inline void _NSKVOSetDispatch(id self, SEL _cmd, NSSet* set) {
+    NSString* key = _keyForSelector(self, _cmd);
+
+    [self willChangeValueForKey:key withSetMutation:Kind usingObjects:set];
+
+    objc_super super{ self, ABI_SUPER(self) };
+    auto imp = (void (*)(id, SEL, NSSet*))objc_msg_lookup_super(&super, _cmd);
+    imp(self, _cmd, set);
+
+    [self didChangeValueForKey:key withSetMutation:Kind usingObjects:set];
+}
+
+template <NSKeyValueSetMutationKind Kind>
+static inline void _NSKVOSetDispatchIndividual(id self, SEL _cmd, id obj) {
+    NSSet* set = [NSSet setWithObject:obj];
+
+    NSString* key = _keyForSelector(self, _cmd);
+    [self willChangeValueForKey:key withSetMutation:Kind usingObjects:set];
+
+    objc_super super{ self, ABI_SUPER(self) };
+    auto imp = (void (*)(id, SEL, id))objc_msg_lookup_super(&super, _cmd);
+    imp(self, _cmd, obj);
+
+    [self didChangeValueForKey:key withSetMutation:Kind usingObjects:set];
+}
+
 // - (void)setObject:(id)object forKey:(NSString*)key
 static void NSKVO$setObject$forKey$(id self, SEL _cmd, id object, NSString* key) {
     [self willChangeValueForKey:key];
-    struct objc_super super {
-        self, ABI_SUPER(self)
-    };
+    objc_super super{ self, ABI_SUPER(self) };
     auto imp = (void (*)(id, SEL, id, id))objc_msg_lookup_super(&super, _cmd);
     imp(self, _cmd, object, key);
     [self didChangeValueForKey:key];
@@ -276,9 +289,7 @@ static void NSKVO$setObject$forKey$(id self, SEL _cmd, id object, NSString* key)
 // - (void)removeObjectForKey:(NSString*)key
 static void NSKVO$removeObjectForKey$(id self, SEL _cmd, NSString* key) {
     [self willChangeValueForKey:key];
-    struct objc_super super {
-        self, ABI_SUPER(self)
-    };
+    objc_super super{ self, ABI_SUPER(self) };
     auto imp = (void (*)(id, SEL, id))objc_msg_lookup_super(&super, _cmd);
     imp(self, _cmd, key);
     [self didChangeValueForKey:key];
@@ -289,8 +300,9 @@ static void NSKVO$removeObjectForKey$(id self, SEL _cmd, NSString* key) {
     case encodingChar:                                               \
         newImpl = reinterpret_cast<IMP>(&notifyingSetImpl<type>);    \
         break;
+
 // invariant: rawKey has already been capitalized
-static void _NSKVOEnsureSimpleKeyWillNotify(id object, NSString* key, const char* rawKey) {
+static inline void _NSKVOEnsureSimpleKeyWillNotify(id object, NSString* key, const char* rawKey) {
     auto sel = KVCSetterForPropertyName(object, rawKey);
 
     Method originalMethod = class_getInstanceMethod(object_getClass(object), sel);
@@ -309,12 +321,12 @@ static void _NSKVOEnsureSimpleKeyWillNotify(id object, NSString* key, const char
         case '{':
         case '[': {
             size_t valueSize = objc_sizeof_type(valueType);
-            if (valueSize > 6 * sizeof(unsigned long)) {
+            if (valueSize > 6 * sizeof(uintptr_t)) {
                 [NSException raise:NSInvalidArgumentException
                             format:@"Class %s key %@ has a value size of %u bytes, and cannot currently be KVO compliant.",
                                    class_getName(object_getClass(object)),
                                    key,
-                                   static_cast<unsigned int>(valueSize)];
+                                   static_cast<uintptr_t>(valueSize)];
             }
             newImpl = reinterpret_cast<IMP>(&notifyingVariadicSetImpl);
             break;
@@ -355,36 +367,45 @@ static SEL formatSelector(NSString* format, ...) {
 }
 
 // invariant: rawKey has already been capitalized
-static void _NSKVOEnsureCollectionWillNotify(id object, NSString* key, const char* rawKey) {
-    bool found = false;
-    auto insertOneSel = formatSelector(@"insertObject:in%sAtIndex:", rawKey);
-
-    if ([object respondsToSelector:insertOneSel]) {
-        found = true;
+static inline void _NSKVOEnsureOrderedCollectionWillNotify(id object, NSString* key, const char* rawKey) {
+    SEL insertOne = formatSelector(@"insertObject:in%sAtIndex:", rawKey);
+    SEL insertMany = formatSelector(@"insert%s:atIndexes:", rawKey);
+    if ([object respondsToSelector:insertOne] || [object respondsToSelector:insertMany]) {
+        replaceAndAssociateWithKey(object, insertOne, key, (IMP)NSKVONotifying$insertObject$inXxxAtIndex$);
+        replaceAndAssociateWithKey(object, insertMany, key, (IMP)NSKVONotifying$insertXxx$atIndexes$);
+        replaceAndAssociateWithKey(object,
+                                   formatSelector(@"removeObjectFrom%sAtIndex:", rawKey),
+                                   key,
+                                   (IMP)NSKVONotifying$removeObjectFromXxxAtIndex$);
+        replaceAndAssociateWithKey(object, formatSelector(@"remove%sAtIndexes:", rawKey), key, (IMP)NSKVONotifying$removeXxxAtIndexes$);
+        replaceAndAssociateWithKey(object,
+                                   formatSelector(@"replaceObjectIn%sAtIndex:withObject:", rawKey),
+                                   key,
+                                   (IMP)NSKVONotifying$replaceObjectInXxxAtIndex$withObject$);
+        replaceAndAssociateWithKey(object,
+                                   formatSelector(@"replace%sAtIndexes:with%s:", rawKey, rawKey),
+                                   key,
+                                   (IMP)NSKVONotifying$replaceXxxAtIndexes$withXxx$);
     }
+}
 
-    auto insertManySel = formatSelector(@"insert%s:atIndexes:", rawKey);
-
-    if (!found && ![object respondsToSelector:insertManySel]) {
-        // There is no autodetectable collection here.
-        return;
+// invariant: rawKey has already been capitalized
+static inline void _NSKVOEnsureUnorderedCollectionWillNotify(id object, NSString* key, const char* rawKey) {
+    SEL addOne = formatSelector(@"add%sObject:", rawKey);
+    SEL addMany = formatSelector(@"add%s:", rawKey);
+    SEL removeOne = formatSelector(@"remove%sObject:", rawKey);
+    SEL removeMany = formatSelector(@"remove%s:", rawKey);
+    if (([object respondsToSelector:addOne] || [object respondsToSelector:addMany]) &&
+        ([object respondsToSelector:removeOne] || [object respondsToSelector:removeMany])) {
+        replaceAndAssociateWithKey(object, addOne, key, (IMP)_NSKVOSetDispatchIndividual<NSKeyValueUnionSetMutation>);
+        replaceAndAssociateWithKey(object, addMany, key, (IMP)_NSKVOSetDispatch<NSKeyValueUnionSetMutation>);
+        replaceAndAssociateWithKey(object, removeOne, key, (IMP)_NSKVOSetDispatchIndividual<NSKeyValueMinusSetMutation>);
+        replaceAndAssociateWithKey(object, removeMany, key, (IMP)_NSKVOSetDispatch<NSKeyValueMinusSetMutation>);
+        replaceAndAssociateWithKey(object,
+                                   formatSelector(@"intersect%s:", rawKey),
+                                   key,
+                                   (IMP)_NSKVOSetDispatch<NSKeyValueIntersectSetMutation>);
     }
-
-    replaceAndAssociateWithKey(object, insertOneSel, key, (IMP)NSKVONotifying$insertObject$inXxxAtIndex$);
-    replaceAndAssociateWithKey(object, insertManySel, key, (IMP)NSKVONotifying$insertXxx$atIndexes$);
-    replaceAndAssociateWithKey(object,
-                               formatSelector(@"removeObjectFrom%sAtIndex:", rawKey),
-                               key,
-                               (IMP)NSKVONotifying$removeObjectFromXxxAtIndex$);
-    replaceAndAssociateWithKey(object, formatSelector(@"remove%sAtIndexes:", rawKey), key, (IMP)NSKVONotifying$removeXxxAtIndexes$);
-    replaceAndAssociateWithKey(object,
-                               formatSelector(@"replaceObjectIn%sAtIndex:withObject:", rawKey),
-                               key,
-                               (IMP)NSKVONotifying$replaceObjectInXxxAtIndex$withObject$);
-    replaceAndAssociateWithKey(object,
-                               formatSelector(@"replace%sAtIndexes:with%s:", rawKey, rawKey),
-                               key,
-                               (IMP)NSKVONotifying$replaceXxxAtIndexes$withXxx$);
 }
 
 static std::unique_ptr<char[]> mutableBufferFromString(NSString* string) {
@@ -426,8 +447,8 @@ void _NSKVOEnsureKeyWillNotify(id object, NSString* key) {
 
     @synchronized(object) {
         _NSKVOEnsureObjectIsKVOAware(object);
-
         _NSKVOEnsureSimpleKeyWillNotify(object, key, rawKey.get());
-        _NSKVOEnsureCollectionWillNotify(object, key, rawKey.get());
+        _NSKVOEnsureOrderedCollectionWillNotify(object, key, rawKey.get());
+        _NSKVOEnsureUnorderedCollectionWillNotify(object, key, rawKey.get());
     }
 }
