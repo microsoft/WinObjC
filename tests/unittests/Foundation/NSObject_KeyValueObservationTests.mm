@@ -531,55 +531,6 @@ OSX_DISABLED_TEST(KVO, ToMany_ToOne_ShouldDowngradeForOrderedObservation) {
     EXPECT_EQ(1, facade.hits);
 }
 
-TEST(KVO, ObserverInformationShouldNotStompOld) {
-    auto observingSubName = CHANGE_CB {
-        id old = change[NSKeyValueChangeOldKey];
-        ASSERT_NE(nil, old);
-        EXPECT_OBJCEQ(@"SUB!", old);
-        id newObj = change[NSKeyValueChangeNewKey];
-        ASSERT_NE(nil, newObj);
-        EXPECT_OBJCEQ(@"NEW!", newObj);
-    };
-
-    auto illegalChangeNotification = CHANGE_CB {
-        ADD_FAILURE();
-    };
-
-    DummyObject* dummy = [DummyObject makeDummy];
-    dummy.name = @"TOP!";
-    dummy.sub = [DummyObject makeDummy];
-    [dummy.sub setName:@"SUB!"];
-    _NSFoundationTestKVOFacade* facade = [[_NSFoundationTestKVOFacade newWithObservee:dummy] autorelease];
-    _NSFoundationTestKVOFacade* otherFacade = [[_NSFoundationTestKVOFacade newWithObservee:dummy] autorelease];
-    [facade observeKeyPath:@"sub.name"
-                     withOptions:NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew
-                 performingBlock:^(DummyObject* observee) {
-                     [observee addObserver:otherFacade.observer
-                                forKeyPath:@"sub"
-                                   options:(NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew)
-                                   context:nullptr];
-                     [observee.sub setName:@"NEW!"];
-                     [observee removeObserver:otherFacade.observer forKeyPath:@"sub"];
-                 }
-        andExpectChangeCallbacks:@[ observingSubName, illegalChangeNotification ]];
-
-    EXPECT_EQ(1, facade.hits);
-
-    [dummy.sub setName:@"SUB!"];
-    [dummy addObserver:otherFacade.observer
-            forKeyPath:@"sub"
-               options:(NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew)
-               context:nullptr];
-    [facade observeKeyPath:@"sub.name"
-                     withOptions:NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew
-                 performingBlock:^(DummyObject* observee) {
-                     [observee.sub setName:@"NEW!"];
-                 }
-        andExpectChangeCallbacks:@[ observingSubName, illegalChangeNotification ]];
-    [dummy removeObserver:otherFacade.observer forKeyPath:@"sub"];
-    EXPECT_EQ(1, facade.hits);
-}
-
 TEST(KVO, ObserverInformationShouldNotLeak) {
     auto onlyNewCallback = CHANGE_CB {
         EXPECT_NE(nil, change[NSKeyValueChangeNewKey]);
