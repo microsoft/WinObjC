@@ -168,7 +168,7 @@ static ComPtr<IHttpRequestMessage> _requestMessageForNS(NSURLRequest* nsRequest,
         THROW_IF_FAILED(httpRequestMessage->put_Content(httpContent.Get()));
 
     } else if (NSInputStream* bodyStream = nsRequest.HTTPBodyStream) {
-        // VSO 6693048: Properly support streaming bodies instead of flattening the data up front.
+        // TODO #2721: Properly support streaming bodies instead of flattening the data up front.
         if (bodyStream.streamStatus == NSStreamStatusNotOpen) {
             [bodyStream open];
         }
@@ -285,7 +285,7 @@ static void __dispatchClientCallback(NSURLProtocol_WinHTTP* protocol, void (^cal
         try {
             auto httpRequestMessage = _requestMessageForNS(self.request, _flattenedBodyStream);
 
-            // VSO 6693048: If this properly supports streaming bodies instead of flattening the data up front,
+            // TODO #2721: If this properly supports streaming bodies instead of flattening the data up front,
             // more accurate callbacks can be done
             NSInteger contentSize = self.request.HTTPBody ? self.request.HTTPBody.length : _flattenedBodyStream.size();
             if (contentSize > 0) {

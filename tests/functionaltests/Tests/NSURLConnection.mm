@@ -194,10 +194,11 @@ typedef NS_ENUM(NSInteger, NSURLConnectionDelegateType) {
 }
 
 // Does nothing. Used to keep the run loop alive.
-- (void)doNothing{}
+- (void)doNothing {
+}
 
-    // Keeps the run loop on the current thread spinning.
-    - (void)spinRunLoop {
+// Keeps the run loop on the current thread spinning.
+- (void)spinRunLoop {
     @autoreleasepool {
         _loop = [NSRunLoop currentRunLoop];
 
@@ -267,9 +268,8 @@ static void _testRequestWithURL(NSURLConnectionTestHelper* connectionTestHelper)
     [connectionTestHelper.doneCondition unlock];
 
     // Make sure we received a response.
-    ASSERT_EQ_MSG(NSURLConnectionDelegateDidReceiveResponse,
-                  [(NSNumber*)[connectionTestHelper.delegateCallOrder objectAtIndex:0] integerValue],
-                  "FAILED: didReceiveResponse should be the 1st delegate to be called!");
+    ASSERT_TRUE_MSG([@(NSURLConnectionDelegateDidReceiveResponse) isEqual:[connectionTestHelper.delegateCallOrder objectAtIndex:0]],
+                    "FAILED: didReceiveResponse should be the 1st delegate to be called!");
     ASSERT_TRUE_MSG((connectionTestHelper.response != nil), "FAILED: Response cannot be empty!");
 
     NSURLResponse* response = connectionTestHelper.response;
@@ -281,16 +281,14 @@ static void _testRequestWithURL(NSURLConnectionTestHelper* connectionTestHelper)
     LOG_INFO("Received HTTP response headers: %d", [httpResponse allHeaderFields]);
 
     // Make sure we received data.
-    ASSERT_EQ_MSG(NSURLConnectionDelegateDidReceiveData,
-                  [(NSNumber*)[connectionTestHelper.delegateCallOrder objectAtIndex:1] integerValue],
-                  "FAILED: didReceiveData should be the 2nd delegate to be called!");
+    ASSERT_TRUE_MSG([@(NSURLConnectionDelegateDidReceiveData) isEqual:[connectionTestHelper.delegateCallOrder objectAtIndex:1]],
+                    "FAILED: didReceiveData should be the 2nd delegate to be called!");
     ASSERT_TRUE_MSG((connectionTestHelper.data != nil), "FAILED: We should have received some data!");
     LOG_INFO("Received data: %@", [[NSString alloc] initWithData:connectionTestHelper.data encoding:NSUTF8StringEncoding]);
 
     // Make sure we received a didFinishLoading callback
-    ASSERT_EQ_MSG(NSURLConnectionDelegateDidFinishLoading,
-                  [(NSNumber*)[connectionTestHelper.delegateCallOrder objectAtIndex:2] integerValue],
-                  "FAILED: didReceiveData should be the 3rd delegate to be called!");
+    ASSERT_TRUE_MSG([@(NSURLConnectionDelegateDidFinishLoading) isEqual:[connectionTestHelper.delegateCallOrder objectAtIndex:2]],
+                    "FAILED: didReceiveData should be the 3rd delegate to be called!");
 
     // Make sure there was no error.
     ASSERT_TRUE_MSG((connectionTestHelper.error == nil), "FAILED: Connection returned error %@!", connectionTestHelper.error);
@@ -312,9 +310,8 @@ static void _testRequestWithURL_Failure(NSURLConnectionTestHelper* connectionTes
     [connectionTestHelper.doneCondition unlock];
 
     // Make sure we received a response.
-    ASSERT_EQ_MSG(NSURLConnectionDelegateDidReceiveResponse,
-                  [(NSNumber*)[connectionTestHelper.delegateCallOrder objectAtIndex:0] integerValue],
-                  "FAILED: didReceiveResponse should be the 1st delegate to be called!");
+    ASSERT_TRUE_MSG([@(NSURLConnectionDelegateDidReceiveResponse) isEqual:[connectionTestHelper.delegateCallOrder objectAtIndex:0]],
+                    "FAILED: didReceiveResponse should be the 1st delegate to be called!");
     ASSERT_TRUE_MSG((connectionTestHelper.response != nil), "FAILED: Response cannot be empty!");
 
     NSURLResponse* response = connectionTestHelper.response;
@@ -325,12 +322,11 @@ static void _testRequestWithURL_Failure(NSURLConnectionTestHelper* connectionTes
     ASSERT_EQ_MSG(404, [httpResponse statusCode], "FAILED: HTTP status 404 was expected!");
 
     // Make sure we received a didFinishLoading callback
-    ASSERT_EQ_MSG(NSURLConnectionDelegateDidFinishLoading,
-                  [(NSNumber*)[connectionTestHelper.delegateCallOrder objectAtIndex:1] integerValue],
-                  "FAILED: didReceiveData should be the 2nd delegate to be called!");
+    ASSERT_TRUE_MSG([@(NSURLConnectionDelegateDidFinishLoading) isEqual:[connectionTestHelper.delegateCallOrder objectAtIndex:1]],
+                    "FAILED: didReceiveData should be the 2nd delegate to be called!");
 
     // Make sure we did not receive any data.
-    ASSERT_TRUE_MSG((connectionTestHelper.data == nil), "FAILED: We should not have received any data!");
+    ASSERT_TRUE_MSG((connectionTestHelper.data.length == 0), "FAILED: We should not have received any data!");
 
     // Make sure there was no error.
     ASSERT_TRUE_MSG((connectionTestHelper.error == nil), "FAILED: Connection returned error %@!", connectionTestHelper.error);
@@ -375,9 +371,8 @@ static void _testRequestWithURL_Post(NSURLConnectionTestHelper* connectionTestHe
     size_t index = 0;
 
     // Should have received a number of didSendBodyData callbacks
-    for (;
-         (index < [connectionTestHelper.delegateCallOrder count]) &&
-         ([(NSNumber*)[connectionTestHelper.delegateCallOrder objectAtIndex:index] integerValue] == NSURLConnectionDelegateDidSendBodyData);
+    for (; (index < [connectionTestHelper.delegateCallOrder count]) &&
+           ([[connectionTestHelper.delegateCallOrder objectAtIndex:index] isEqual:@(NSURLConnectionDelegateDidSendBodyData)]);
          ++index) {
     }
     ASSERT_LT_MSG(0, index, "FAILED: Should have received one or more didSendBodyData calls.");
@@ -385,9 +380,8 @@ static void _testRequestWithURL_Post(NSURLConnectionTestHelper* connectionTestHe
     ASSERT_GE(data.size(), connectionTestHelper.totalBytesExpectedToWrite);
 
     // Make sure we received a response.
-    ASSERT_EQ_MSG(NSURLConnectionDelegateDidReceiveResponse,
-                  [(NSNumber*)[connectionTestHelper.delegateCallOrder objectAtIndex:index] integerValue],
-                  "FAILED: didReceiveResponse should be the 1st delegate to be called after sending body data!");
+    ASSERT_TRUE_MSG([@(NSURLConnectionDelegateDidReceiveResponse) isEqual:[connectionTestHelper.delegateCallOrder objectAtIndex:index]],
+                    "FAILED: didReceiveResponse should be the 1st delegate to be called after sending body data!");
     ASSERT_TRUE_MSG((connectionTestHelper.response != nil), "FAILED: Response cannot be empty!");
 
     NSURLResponse* response = connectionTestHelper.response;
@@ -400,16 +394,14 @@ static void _testRequestWithURL_Post(NSURLConnectionTestHelper* connectionTestHe
 
     // Should have received a number of didReceiveData callbacks
     size_t receivedResponseIndex = index++;
-    for (;
-         (index < [connectionTestHelper.delegateCallOrder count]) &&
-         ([(NSNumber*)[connectionTestHelper.delegateCallOrder objectAtIndex:index] integerValue] == NSURLConnectionDelegateDidReceiveData);
+    for (; (index < [connectionTestHelper.delegateCallOrder count]) &&
+           ([[connectionTestHelper.delegateCallOrder objectAtIndex:index] isEqual:@(NSURLConnectionDelegateDidReceiveData)]);
          ++index) {
     }
     ASSERT_LT_MSG(receivedResponseIndex, index, "FAILED: Should have received one or more didReceiveData calls.");
 
     // Should have received a didFinishLoading callback last
-    ASSERT_TRUE_MSG(([(NSNumber*)[connectionTestHelper.delegateCallOrder objectAtIndex:index] integerValue] ==
-                     NSURLConnectionDelegateDidFinishLoading) &&
+    ASSERT_TRUE_MSG([[connectionTestHelper.delegateCallOrder objectAtIndex:index] isEqual:@(NSURLConnectionDelegateDidFinishLoading)] &&
                         (index == [connectionTestHelper.delegateCallOrder count] - 1),
                     "FAILED: didFinishLoading should be the last delegate to be called!");
 
