@@ -31,7 +31,7 @@
 @class NSURL;
 
 FOUNDATION_EXPORT_CLASS
-@interface NSURLConnection : NSObject <NSURLProtocolClient>
+@interface NSURLConnection : NSObject
 + (BOOL)canHandleRequest:(NSURLRequest*)request;
 @property (readonly, copy) NSURLRequest* originalRequest;
 @property (readonly, copy) NSURLRequest* currentRequest;

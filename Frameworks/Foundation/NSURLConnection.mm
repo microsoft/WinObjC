@@ -99,7 +99,7 @@ static NSURLProtocol* __protocolForRequest(NSURLRequest* request, id<NSURLProtoc
 @end
 
 // Actual NSURLConnection implementation
-@implementation NSURLConnection {
+@interface NSURLConnection () <_NSURLProtocolClientInternal> {
 @private
     StrongId<NSObject<NSURLConnectionDelegate>> _delegate;
 
@@ -117,6 +117,9 @@ static NSURLProtocol* __protocolForRequest(NSURLRequest* request, id<NSURLProtoc
     bool _started;
     bool _done;
 }
+@end
+
+@implementation NSURLConnection
 
 // Helper function that executes a block on the delegate queue or scheduled run loops - used for delegate callbacks
 static void __dispatchDelegateCallback(NSURLConnection* connection, void (^callbackBlock)()) {
@@ -511,6 +514,25 @@ static void __dispatchDelegateCallback(NSURLConnection* connection, void (^callb
 */
 - (void)URLProtocol:(NSURLProtocol*)protocol didCancelAuthenticationChallenge:(NSURLAuthenticationChallenge*)challenge {
     UNIMPLEMENTED();
+}
+
+- (void)URLProtocol:(NSURLProtocol*)protocol
+                 didWriteData:(NSInteger)bytesWritten
+            totalBytesWritten:(NSInteger)totalBytesWritten
+    totalBytesExpectedToWrite:(NSInteger)totalBytesExpectedToWrite {
+    __dispatchDelegateCallback(self, ^void() {
+        if ([_delegate respondsToSelector:@selector(connection:didSendBodyData:totalBytesWritten:totalBytesExpectedToWrite:)]) {
+            [_delegate connection:self
+                          didSendBodyData:bytesWritten
+                        totalBytesWritten:totalBytesWritten
+                totalBytesExpectedToWrite:totalBytesExpectedToWrite];
+        } else if ([_delegate respondsToSelector:@selector(connection:didWriteData:totalBytesWritten:expectedTotalBytes:)]) {
+            [_delegate connection:self
+                             didWriteData:bytesWritten
+                        totalBytesWritten:totalBytesWritten
+                totalBytesExpectedToWrite:totalBytesExpectedToWrite];
+        }
+    });
 }
 
 @end

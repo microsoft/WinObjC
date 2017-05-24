@@ -14,45 +14,46 @@
 //
 //******************************************************************************
 
-#include <TestFramework.h>
-#include <Foundation/Foundation.h>
+#import <TestFramework.h>
+#import <Foundation/Foundation.h>
+#import <random>
 
 typedef NS_ENUM(NSInteger, NSURLConnectionDelegateType) {
     NSURLConnectionDelegateDidReceiveResponse,
     NSURLConnectionDelegateDidReceiveData,
+    NSURLConnectionDelegateDidSendBodyData,
+    NSURLConnectionDelegateDidFinishLoading,
     NSURLConnectionDelegateDidFailWithError
 };
 
 // Abstract wrapper around a NSURLConnection that signals a condition when a callback is received.
 // Do not use this class directly - instantiate one of the subclasses instead
 @interface NSURLConnectionTestHelper : NSObject <NSURLConnectionDelegate>
-@property (retain) NSCondition* condition;
+@property (retain) NSCondition* doneCondition;
+@property BOOL done;
+
 @property (assign) dispatch_queue_t queue;
 @property (retain) NSMutableArray* delegateCallOrder;
 @property (copy) NSURLResponse* response;
-@property (copy) NSData* data;
+@property (copy) NSMutableData* data;
+@property NSInteger totalBytesWritten;
+@property NSInteger totalBytesExpectedToWrite;
 @property (copy) NSError* error;
 
 - (instancetype)init;
-- (NSURLConnection*)_createConnectionWithRequest:(NSString*)URLString;
-- (NSURLConnection*)createAndStartConnectionWithRequest:(NSString*)URLString;
+- (NSURLConnection*)createAndStartConnectionWithRequest:(NSURLRequest*)request;
 
 @end
 
 @implementation NSURLConnectionTestHelper
 - (instancetype)init {
     if (self = [super init]) {
-        _condition = [NSCondition new];
+        _doneCondition = [NSCondition new];
         _queue = dispatch_queue_create("NSURLConnectionDelegateCallOrder", NULL);
         _delegateCallOrder = [NSMutableArray new];
+        _data = [NSMutableData new];
     }
     return self;
-}
-
-- (NSURLConnection*)_createConnectionWithRequest:(NSString*)URLString {
-    NSMutableURLRequest* request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:URLString]];
-    NSURLConnection* connection = [[NSURLConnection alloc] initWithRequest:request delegate:self startImmediately:NO];
-    return connection;
 }
 
 - (NSURLConnection*)createAndStartConnectionWithRequest:(NSString*)URLString {
@@ -62,34 +63,56 @@ typedef NS_ENUM(NSInteger, NSURLConnectionDelegateType) {
 
 - (void)connection:(NSURLConnection*)connection didReceiveResponse:(NSURLResponse*)response {
     dispatch_sync(self.queue, ^{
-        [self.delegateCallOrder addObject:[NSNumber numberWithInteger:NSURLConnectionDelegateDidReceiveResponse]];
+        [self.delegateCallOrder addObject:@(NSURLConnectionDelegateDidReceiveResponse)];
     });
-    [self.condition lock];
     self.response = response;
-    [self.condition signal];
-    [self.condition unlock];
 }
 
 - (void)connection:(NSURLConnection*)connection didReceiveData:(nonnull NSData*)data {
     dispatch_sync(self.queue, ^{
-        [self.delegateCallOrder addObject:[NSNumber numberWithInteger:NSURLConnectionDelegateDidReceiveData]];
+        [self.delegateCallOrder addObject:@(NSURLConnectionDelegateDidReceiveData)];
+    });
+    [self.data appendData:data];
+}
+
+- (void)connection:(NSURLConnection*)connection
+              didSendBodyData:(NSInteger)bytesWritten
+            totalBytesWritten:(NSInteger)totalBytesWritten
+    totalBytesExpectedToWrite:(NSInteger)totalBytesExpectedToWrite {
+    dispatch_sync(self.queue, ^{
+        [self.delegateCallOrder addObject:@(NSURLConnectionDelegateDidSendBodyData)];
     });
 
-    [self.condition lock];
-    self.data = data;
-    [self.condition signal];
-    [self.condition unlock];
+    LOG_INFO("Wrote: %ld bytes; Total written: %ld bytes; Expected total to write: %ld bytes",
+             bytesWritten,
+             totalBytesWritten,
+             totalBytesExpectedToWrite);
+
+    _totalBytesWritten = totalBytesWritten;
+    _totalBytesExpectedToWrite = totalBytesExpectedToWrite;
 }
 
 - (void)connection:(NSURLConnection*)connection didFailWithError:(NSError*)e {
     dispatch_sync(self.queue, ^{
-        [self.delegateCallOrder addObject:[NSNumber numberWithInteger:NSURLConnectionDelegateDidFailWithError]];
+        [self.delegateCallOrder addObject:@(NSURLConnectionDelegateDidFailWithError)];
     });
 
-    [self.condition lock];
+    [self.doneCondition lock];
     self.error = e;
-    [self.condition signal];
-    [self.condition unlock];
+    self.done = YES;
+    [self.doneCondition signal];
+    [self.doneCondition unlock];
+}
+
+- (void)connectionDidFinishLoading:(NSURLConnection*)connection {
+    dispatch_sync(self.queue, ^{
+        [self.delegateCallOrder addObject:@(NSURLConnectionDelegateDidFinishLoading)];
+    });
+
+    [self.doneCondition lock];
+    self.done = YES;
+    [self.doneCondition signal];
+    [self.doneCondition unlock];
 }
 
 @end
@@ -107,8 +130,8 @@ typedef NS_ENUM(NSInteger, NSURLConnectionDelegateType) {
     return self;
 }
 
-- (NSURLConnection*)createAndStartConnectionWithRequest:(NSString*)URLString {
-    NSURLConnection* connection = [self _createConnectionWithRequest:URLString];
+- (NSURLConnection*)createAndStartConnectionWithRequest:(NSURLRequest*)request {
+    NSURLConnection* connection = [[NSURLConnection alloc] initWithRequest:request delegate:self startImmediately:NO];
     [connection setDelegateQueue:_operationQueue];
     [connection start];
     return connection;
@@ -124,9 +147,25 @@ typedef NS_ENUM(NSInteger, NSURLConnectionDelegateType) {
     [super connection:connection didReceiveData:data];
 }
 
+- (void)connection:(NSURLConnection*)connection
+              didSendBodyData:(NSInteger)bytesWritten
+            totalBytesWritten:(NSInteger)totalBytesWritten
+    totalBytesExpectedToWrite:(NSInteger)totalBytesExpectedToWrite {
+    EXPECT_TRUE([_operationQueue isEqual:[NSOperationQueue currentQueue]]);
+    [super connection:connection
+                  didSendBodyData:bytesWritten
+                totalBytesWritten:totalBytesWritten
+        totalBytesExpectedToWrite:totalBytesExpectedToWrite];
+}
+
 - (void)connection:(NSURLConnection*)connection didFailWithError:(NSError*)e {
     EXPECT_TRUE([_operationQueue isEqual:[NSOperationQueue currentQueue]]);
     [super connection:connection didFailWithError:e];
+}
+
+- (void)connectionDidFinishLoading:(NSURLConnection*)connection {
+    EXPECT_TRUE([_operationQueue isEqual:[NSOperationQueue currentQueue]]);
+    [super connectionDidFinishLoading:connection];
 }
 
 @end
@@ -155,11 +194,10 @@ typedef NS_ENUM(NSInteger, NSURLConnectionDelegateType) {
 }
 
 // Does nothing. Used to keep the run loop alive.
-- (void)doNothing {
-}
+- (void)doNothing{}
 
-// Keeps the run loop on the current thread spinning.
-- (void)spinRunLoop {
+    // Keeps the run loop on the current thread spinning.
+    - (void)spinRunLoop {
     @autoreleasepool {
         _loop = [NSRunLoop currentRunLoop];
 
@@ -174,8 +212,8 @@ typedef NS_ENUM(NSInteger, NSURLConnectionDelegateType) {
     }
 }
 
-- (NSURLConnection*)createAndStartConnectionWithRequest:(NSString*)URLString {
-    NSURLConnection* connection = [self _createConnectionWithRequest:URLString];
+- (NSURLConnection*)createAndStartConnectionWithRequest:(NSURLRequest*)request {
+    NSURLConnection* connection = [[NSURLConnection alloc] initWithRequest:request delegate:self startImmediately:NO];
     [connection performSelector:@selector(start) onThread:_thread withObject:nil waitUntilDone:NO];
     return connection;
 }
@@ -190,9 +228,25 @@ typedef NS_ENUM(NSInteger, NSURLConnectionDelegateType) {
     [super connection:connection didReceiveData:data];
 }
 
+- (void)connection:(NSURLConnection*)connection
+              didSendBodyData:(NSInteger)bytesWritten
+            totalBytesWritten:(NSInteger)totalBytesWritten
+    totalBytesExpectedToWrite:(NSInteger)totalBytesExpectedToWrite {
+    EXPECT_TRUE([_loop isEqual:[NSRunLoop currentRunLoop]]);
+    [super connection:connection
+                  didSendBodyData:bytesWritten
+                totalBytesWritten:totalBytesWritten
+        totalBytesExpectedToWrite:totalBytesExpectedToWrite];
+}
+
 - (void)connection:(NSURLConnection*)connection didFailWithError:(NSError*)e {
     EXPECT_TRUE([_loop isEqual:[NSRunLoop currentRunLoop]]);
     [super connection:connection didFailWithError:e];
+}
+
+- (void)connectionDidFinishLoading:(NSURLConnection*)connection {
+    EXPECT_TRUE([_loop isEqual:[NSRunLoop currentRunLoop]]);
+    [super connectionDidFinishLoading:connection];
 }
 
 @end
@@ -201,25 +255,26 @@ typedef NS_ENUM(NSInteger, NSURLConnectionDelegateType) {
 static void _testRequestWithURL(NSURLConnectionTestHelper* connectionTestHelper) {
     NSString* urlString = @"https://httpbin.org/cookies/set?winobjc=awesome";
     LOG_INFO("Establishing download task with url %@", urlString);
-    NSURLConnection* connection = [connectionTestHelper createAndStartConnectionWithRequest:urlString];
+    NSURLConnection* connection =
+        [connectionTestHelper createAndStartConnectionWithRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:urlString]]];
 
     // Wait for data.
-    [connectionTestHelper.condition lock];
-    for (int i = 0; (i < 5) && ([connectionTestHelper.delegateCallOrder count] != 2); i++) {
-        [connectionTestHelper.condition waitUntilDate:[NSDate dateWithTimeIntervalSinceNow:c_testTimeoutInSec]];
+    [connectionTestHelper.doneCondition lock];
+    for (int i = 0; (i < 5) && (!connectionTestHelper.done); ++i) {
+        [connectionTestHelper.doneCondition waitUntilDate:[NSDate dateWithTimeIntervalSinceNow:c_testTimeoutInSec]];
     }
-    ASSERT_EQ_MSG(2, [connectionTestHelper.delegateCallOrder count], "FAILED: We should have received two delegates call by now!");
-    [connectionTestHelper.condition unlock];
+    ASSERT_EQ_MSG(3, [connectionTestHelper.delegateCallOrder count], "FAILED: We should have received 3 delegate calls by now!");
+    [connectionTestHelper.doneCondition unlock];
 
     // Make sure we received a response.
     ASSERT_EQ_MSG(NSURLConnectionDelegateDidReceiveResponse,
                   [(NSNumber*)[connectionTestHelper.delegateCallOrder objectAtIndex:0] integerValue],
-                  "FAILED: didReceiveResponse should be the first delegate to be called!");
+                  "FAILED: didReceiveResponse should be the 1st delegate to be called!");
     ASSERT_TRUE_MSG((connectionTestHelper.response != nil), "FAILED: Response cannot be empty!");
+
     NSURLResponse* response = connectionTestHelper.response;
-    if (![response isKindOfClass:[NSHTTPURLResponse class]]) {
-        ASSERT_FALSE_MSG(true, "FAILED: Response should be of kind NSHTTPURLResponse class!");
-    }
+    ASSERT_TRUE_MSG([response isKindOfClass:[NSHTTPURLResponse class]], "FAILED: Response should be of kind NSHTTPURLResponse class!");
+
     NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*)response;
     LOG_INFO("Received HTTP response status: %ld", [httpResponse statusCode]);
     ASSERT_EQ_MSG(200, [httpResponse statusCode], "FAILED: HTTP status 200 expected!");
@@ -228,9 +283,14 @@ static void _testRequestWithURL(NSURLConnectionTestHelper* connectionTestHelper)
     // Make sure we received data.
     ASSERT_EQ_MSG(NSURLConnectionDelegateDidReceiveData,
                   [(NSNumber*)[connectionTestHelper.delegateCallOrder objectAtIndex:1] integerValue],
-                  "FAILED: didReceiveData should be the first delegate to be called!");
+                  "FAILED: didReceiveData should be the 2nd delegate to be called!");
     ASSERT_TRUE_MSG((connectionTestHelper.data != nil), "FAILED: We should have received some data!");
     LOG_INFO("Received data: %@", [[NSString alloc] initWithData:connectionTestHelper.data encoding:NSUTF8StringEncoding]);
+
+    // Make sure we received a didFinishLoading callback
+    ASSERT_EQ_MSG(NSURLConnectionDelegateDidFinishLoading,
+                  [(NSNumber*)[connectionTestHelper.delegateCallOrder objectAtIndex:2] integerValue],
+                  "FAILED: didReceiveData should be the 3rd delegate to be called!");
 
     // Make sure there was no error.
     ASSERT_TRUE_MSG((connectionTestHelper.error == nil), "FAILED: Connection returned error %@!", connectionTestHelper.error);
@@ -240,32 +300,124 @@ static void _testRequestWithURL(NSURLConnectionTestHelper* connectionTestHelper)
 static void _testRequestWithURL_Failure(NSURLConnectionTestHelper* connectionTestHelper) {
     NSString* urlString = @"https://httpbin.org/status/404";
     LOG_INFO("Establishing download task with url %@", urlString);
-    NSURLConnection* connection = [connectionTestHelper createAndStartConnectionWithRequest:urlString];
+    NSURLConnection* connection =
+        [connectionTestHelper createAndStartConnectionWithRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:urlString]]];
 
     // Wait for a response.
-    [connectionTestHelper.condition lock];
-
-    for (int i = 0; (i < 5) && ([connectionTestHelper.delegateCallOrder count] != 1); i++) {
-        [connectionTestHelper.condition waitUntilDate:[NSDate dateWithTimeIntervalSinceNow:c_testTimeoutInSec]];
+    [connectionTestHelper.doneCondition lock];
+    for (int i = 0; (i < 5) && (!connectionTestHelper.done); ++i) {
+        [connectionTestHelper.doneCondition waitUntilDate:[NSDate dateWithTimeIntervalSinceNow:c_testTimeoutInSec]];
     }
-    ASSERT_EQ_MSG(1, [connectionTestHelper.delegateCallOrder count], "FAILED: We should have received one delegate call by now!");
-    [connectionTestHelper.condition unlock];
+    ASSERT_EQ_MSG(2, [connectionTestHelper.delegateCallOrder count], "FAILED: We should have received 2 delegate calls by now!");
+    [connectionTestHelper.doneCondition unlock];
 
     // Make sure we received a response.
     ASSERT_EQ_MSG(NSURLConnectionDelegateDidReceiveResponse,
                   [(NSNumber*)[connectionTestHelper.delegateCallOrder objectAtIndex:0] integerValue],
-                  "FAILED: didReceiveResponse should be the first delegate to be called!");
+                  "FAILED: didReceiveResponse should be the 1st delegate to be called!");
     ASSERT_TRUE_MSG((connectionTestHelper.response != nil), "FAILED: Response cannot be empty!");
+
     NSURLResponse* response = connectionTestHelper.response;
-    if (![response isKindOfClass:[NSHTTPURLResponse class]]) {
-        ASSERT_FALSE_MSG(true, "FAILED: Response should be of kind NSHTTPURLResponse class!");
-    }
+    ASSERT_TRUE_MSG([response isKindOfClass:[NSHTTPURLResponse class]], "FAILED: Response should be of kind NSHTTPURLResponse class!");
+
     NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*)response;
     LOG_INFO("Received HTTP response status: %ld", [httpResponse statusCode]);
     ASSERT_EQ_MSG(404, [httpResponse statusCode], "FAILED: HTTP status 404 was expected!");
 
+    // Make sure we received a didFinishLoading callback
+    ASSERT_EQ_MSG(NSURLConnectionDelegateDidFinishLoading,
+                  [(NSNumber*)[connectionTestHelper.delegateCallOrder objectAtIndex:1] integerValue],
+                  "FAILED: didReceiveData should be the 2nd delegate to be called!");
+
     // Make sure we did not receive any data.
     ASSERT_TRUE_MSG((connectionTestHelper.data == nil), "FAILED: We should not have received any data!");
+
+    // Make sure there was no error.
+    ASSERT_TRUE_MSG((connectionTestHelper.error == nil), "FAILED: Connection returned error %@!", connectionTestHelper.error);
+}
+
+static void _testRequestWithURL_Post(NSURLConnectionTestHelper* connectionTestHelper, bool useStream) {
+    NSString* urlString = @"https://httpbin.org/post";
+    LOG_INFO("Establishing upload task with url %@", urlString);
+
+    NSMutableURLRequest* request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:urlString]];
+
+    // Generate a random alphanumeric string to use in the body
+    static const std::string alphanumeric = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+
+    std::vector<unsigned char> data((1 << 15) + 1);
+    std::default_random_engine engine;
+    engine.seed(2);
+    std::uniform_int_distribution<> distribution(0, alphanumeric.length() - 1);
+    std::generate(data.begin(), data.end(), [&distribution, &engine] { return alphanumeric[distribution(engine)]; });
+
+    NSData* nsData = [NSData dataWithBytesNoCopy:data.data() length:data.size() freeWhenDone:NO];
+
+    if (useStream) {
+        request.HTTPBodyStream = [NSInputStream inputStreamWithData:nsData];
+    } else {
+        request.HTTPBody = nsData;
+    }
+    request.HTTPMethod = @"POST";
+    [request setValue:[NSString stringWithFormat:@"%lu", data.size()] forHTTPHeaderField:@"Content-Length"];
+
+    // Start the connection
+    NSURLConnection* connection = [connectionTestHelper createAndStartConnectionWithRequest:request];
+
+    // Wait for the connection to finish
+    [connectionTestHelper.doneCondition lock];
+    for (int i = 0; (i < 5) && (!connectionTestHelper.done); ++i) {
+        [connectionTestHelper.doneCondition waitUntilDate:[NSDate dateWithTimeIntervalSinceNow:c_testTimeoutInSec]];
+    }
+    ASSERT_LE_MSG(4, [connectionTestHelper.delegateCallOrder count], "FAILED: We should have received 4 or more delegate calls by now!");
+    [connectionTestHelper.doneCondition unlock];
+
+    size_t index = 0;
+
+    // Should have received a number of didSendBodyData callbacks
+    for (;
+         (index < [connectionTestHelper.delegateCallOrder count]) &&
+         ([(NSNumber*)[connectionTestHelper.delegateCallOrder objectAtIndex:index] integerValue] == NSURLConnectionDelegateDidSendBodyData);
+         ++index) {
+    }
+    ASSERT_LT_MSG(0, index, "FAILED: Should have received one or more didSendBodyData calls.");
+    ASSERT_EQ(data.size(), connectionTestHelper.totalBytesWritten);
+    ASSERT_GE(data.size(), connectionTestHelper.totalBytesExpectedToWrite);
+
+    // Make sure we received a response.
+    ASSERT_EQ_MSG(NSURLConnectionDelegateDidReceiveResponse,
+                  [(NSNumber*)[connectionTestHelper.delegateCallOrder objectAtIndex:index] integerValue],
+                  "FAILED: didReceiveResponse should be the 1st delegate to be called after sending body data!");
+    ASSERT_TRUE_MSG((connectionTestHelper.response != nil), "FAILED: Response cannot be empty!");
+
+    NSURLResponse* response = connectionTestHelper.response;
+    ASSERT_TRUE_MSG([response isKindOfClass:[NSHTTPURLResponse class]], "FAILED: Response should be of kind NSHTTPURLResponse class!");
+
+    NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*)response;
+    LOG_INFO("Received HTTP response status: %ld", [httpResponse statusCode]);
+    ASSERT_EQ_MSG(200, [httpResponse statusCode], "FAILED: HTTP status 200 expected!");
+    LOG_INFO("Received HTTP response headers: %d", [httpResponse allHeaderFields]);
+
+    // Should have received a number of didReceiveData callbacks
+    size_t receivedResponseIndex = index++;
+    for (;
+         (index < [connectionTestHelper.delegateCallOrder count]) &&
+         ([(NSNumber*)[connectionTestHelper.delegateCallOrder objectAtIndex:index] integerValue] == NSURLConnectionDelegateDidReceiveData);
+         ++index) {
+    }
+    ASSERT_LT_MSG(receivedResponseIndex, index, "FAILED: Should have received one or more didReceiveData calls.");
+
+    // Should have received a didFinishLoading callback last
+    ASSERT_TRUE_MSG(([(NSNumber*)[connectionTestHelper.delegateCallOrder objectAtIndex:index] integerValue] ==
+                     NSURLConnectionDelegateDidFinishLoading) &&
+                        (index == [connectionTestHelper.delegateCallOrder count] - 1),
+                    "FAILED: didFinishLoading should be the last delegate to be called!");
+
+    // The returned data should contain the posted body
+    ASSERT_TRUE_MSG((connectionTestHelper.data != nil), "FAILED: We should have received some data!");
+    NSRange rangeOfPostedData =
+        [connectionTestHelper.data rangeOfData:nsData options:0 range:NSMakeRange(0, connectionTestHelper.data.length)];
+    ASSERT_NE_MSG(NSNotFound, rangeOfPostedData.location, "FAILED: Returned data should contain the posted data.");
 
     // Make sure there was no error.
     ASSERT_TRUE_MSG((connectionTestHelper.error == nil), "FAILED: Connection returned error %@!", connectionTestHelper.error);
@@ -313,6 +465,22 @@ public:
      */
     TEST_METHOD(RequestWithURL_Failure_RunLoop) {
         _testRequestWithURL_Failure([NSURLConnectionTestHelper_RunLoop new]);
+    }
+
+    /**
+     * Test to verify a post request can be successfully made and a valid response and data is received, after setting a delegate queue.
+     */
+    TEST_METHOD(RequestWithURL_Post_OperationQueue) {
+        _testRequestWithURL_Post([NSURLConnectionTestHelper_OperationQueue new], true);
+        _testRequestWithURL_Post([NSURLConnectionTestHelper_OperationQueue new], false);
+    }
+
+    /**
+     * Test to verify a post request can be successfully made and a valid response and data is received, on a run loop.
+     */
+    TEST_METHOD(RequestWithURL_Post_RunLoop) {
+        _testRequestWithURL_Post([NSURLConnectionTestHelper_RunLoop new], true);
+        _testRequestWithURL_Post([NSURLConnectionTestHelper_RunLoop new], false);
     }
 
     /**
