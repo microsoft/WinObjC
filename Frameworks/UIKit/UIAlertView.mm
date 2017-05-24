@@ -397,13 +397,14 @@ static void hideAlert(UIAlertView* self, int index, BOOL animated) {
     return alertPriv->_isVisible;
 }
 
-- (void) _handleRotation {
+- (void)_handleRotation {
     // We need to offset the 'presentationTransform' used in WOCDispalyMode, because we always want to render alerts vertically.
     // TODO: We'll remove this when we switch UIAlertView over to a Xaml ContentDialog, since rotation will be handled for us.
     const float c_angleToRadian = kPi / 180.0;
     switch ([[UIApplication displayMode] presentationTransform]) {
         case UIInterfaceOrientationLandscapeRight:
-            [self setTransform:CGAffineTransformMakeRotation(-static_cast<float>(DisplayProperties::ScreenRotation90Clockwise) * c_angleToRadian)];
+            [self setTransform:CGAffineTransformMakeRotation(-static_cast<float>(DisplayProperties::ScreenRotation90Clockwise) *
+                                                             c_angleToRadian)];
             break;
 
         case UIInterfaceOrientationPortrait:
@@ -411,7 +412,8 @@ static void hideAlert(UIAlertView* self, int index, BOOL animated) {
             break;
 
         case UIInterfaceOrientationLandscapeLeft:
-            [self setTransform:CGAffineTransformMakeRotation(-static_cast<float>(DisplayProperties::ScreenRotation90CounterClockwise) * c_angleToRadian)];
+            [self setTransform:CGAffineTransformMakeRotation(-static_cast<float>(DisplayProperties::ScreenRotation90CounterClockwise) *
+                                                             c_angleToRadian)];
             break;
 
         case UIInterfaceOrientationPortraitUpsideDown:
@@ -426,7 +428,7 @@ static void hideAlert(UIAlertView* self, int index, BOOL animated) {
 /**
  @Status Interoperable
 */
-- (void) /* use typed version */ show {
+- (void)/* use typed version */ show {
     float boxWidth = 320.0f;
     id titleFont = [UIFont titleFont];
     id messageFont = [UIFont messageFont];
@@ -438,7 +440,18 @@ static void hideAlert(UIAlertView* self, int index, BOOL animated) {
         boxWidth = screenRect.size.width * 0.9f;
     }
 
-    float itemWidth = boxWidth - 20.0f;
+    // TODO: we should get rid of all majic numbers in this file, at least define them
+    // with meaningful const
+
+    // itemOriginX specifies where the origin.x for title label or message label
+    const float itemOriginX = 24.0f;
+
+    // itemHorizontalPadding specifies the padding between title or message label and its parent container
+    const float itemHorizontalPadding = 20.0f;
+
+    // itemWidth is uesd to limit how wide the mesasge or title label can be
+    const float itemWidth = boxWidth - 20.0f / 2 - itemOriginX;
+
     float curHeight = 18.0f;
 
     //  Measure the title and message sizes
@@ -450,7 +463,7 @@ static void hideAlert(UIAlertView* self, int index, BOOL animated) {
 
         CGRect frame;
 
-        frame.origin.x = 24.0f;
+        frame.origin.x = itemOriginX;
         frame.origin.y = curHeight;
         frame.size.width = itemWidth;
         frame.size.height = titleSize.height;
@@ -509,7 +522,7 @@ static void hideAlert(UIAlertView* self, int index, BOOL animated) {
 
         CGRect frame;
 
-        frame.origin.x = 24.0f;
+        frame.origin.x = itemOriginX;
         frame.origin.y = curHeight;
         frame.size.width = itemWidth;
         frame.size.height = messageSize.height;
