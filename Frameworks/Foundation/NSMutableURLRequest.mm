@@ -42,6 +42,14 @@ static CFHashCode _CFHTTPHeaderHash(const void* obj1) {
     }
 }
 
+- (void)_lazyInitProperties {
+    @synchronized(self) {
+        if (!_properties) {
+            _properties.attach([NSMutableDictionary<NSString*, id> new]);
+        }
+    }
+}
+
 /**
  @Status Interoperable
 */
@@ -74,6 +82,20 @@ static CFHashCode _CFHTTPHeaderHash(const void* obj1) {
 */
 - (instancetype)copyWithZone:(NSZone*)zone {
     return [self mutableCopyWithZone:zone];
+}
+
+- (void)_setProperty:(id)value forKey:(NSString*)key {
+    @synchronized(self) {
+        [self _lazyInitProperties];
+        [_properties setValue:value forKey:key];
+    }
+}
+
+- (void)_removePropertyForKey:(NSString*)key {
+    @synchronized(self) {
+        [self _lazyInitProperties];
+        [_properties removeObjectForKey:key];
+    }
 }
 
 @end

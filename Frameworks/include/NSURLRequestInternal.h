@@ -29,5 +29,13 @@
     NSMutableDictionary* _allHTTPHeaderFields;
     BOOL _HTTPShouldHandleCookies;
     BOOL _allowsCellularAccess;
+
+    StrongId<NSMutableDictionary<NSString*, id>> _properties; // For [NSURLProtocol propertyForKey:] et al.
 }
+- (id)_propertyForKey:(NSString*)key;
+@end
+
+@interface NSMutableURLRequest ()
+- (void)_setProperty:(id)value forKey:(NSString*)key;
+- (void)_removePropertyForKey:(NSString*)key;
 @end

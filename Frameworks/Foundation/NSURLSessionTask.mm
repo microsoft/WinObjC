@@ -219,23 +219,18 @@ enum HttpStatus : int {
 }
 
 /**
- @Status Stub
+ @Status NotInPlan
 */
 - (void)suspend {
     UNIMPLEMENTED();
-    @synchronized(self) {
-        if (_state == NSURLSessionTaskStateSuspended) {
-            return;
-        }
-    }
 }
 
 /**
  @Status Interoperable
 */
 - (void)URLProtocol:(NSURLProtocol*)connection
- didReceiveResponse:(NSURLResponse*)response
- cacheStoragePolicy:(NSURLCacheStoragePolicy)policy {
+    didReceiveResponse:(NSURLResponse*)response
+    cacheStoragePolicy:(NSURLCacheStoragePolicy)policy {
     [self _updateWithURLResponse:response];
 }
 

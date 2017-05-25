@@ -267,6 +267,7 @@
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSURLCredentialStorageTests.m" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSURLCredentialTests.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSURLProtectionSpaceTests.m" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSURLProtocolTests.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSURLRequestTests.m" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSURLSessionConfigurationTests.m" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSURLTests.m" />

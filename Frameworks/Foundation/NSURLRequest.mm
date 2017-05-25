@@ -208,4 +208,10 @@
     [super dealloc];
 }
 
+- (id)_propertyForKey:(NSString*)key {
+    @synchronized(self) {
+        return [_properties objectForKey:key];
+    }
+}
+
 @end
