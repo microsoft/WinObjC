@@ -175,6 +175,43 @@
 }
 
 /**
+ @Status Interoperable
+*/
+- (BOOL)isEqual:(id)other {
+    if (self == other) {
+        return YES;
+    }
+
+    if (![other isKindOfClass:[NSURLRequest class]]) {
+        return NO;
+    }
+
+    NSURLRequest* otherRequest = static_cast<NSURLRequest*>(other);
+
+    return
+        [_URL isEqual:otherRequest->_URL] && //
+        ((_HTTPMethod == otherRequest->_HTTPMethod) || [_HTTPMethod isEqual:otherRequest->_HTTPMethod]) && //
+        ((_HTTPBody == otherRequest->_HTTPBody) || [_HTTPBody isEqual:otherRequest->_HTTPBody]) && //
+        ((_HTTPBodyStream == otherRequest->_HTTPBodyStream) || [_HTTPBodyStream isEqual:otherRequest->_HTTPBodyStream]) && //
+        ((_mainDocumentURL == otherRequest->_mainDocumentURL) || [_mainDocumentURL isEqual:otherRequest->_mainDocumentURL]) && //
+        (_cachePolicy == otherRequest->_cachePolicy) && //
+        (_timeoutInterval == otherRequest->_timeoutInterval) && //
+        (_HTTPShouldHandleCookies == otherRequest->_HTTPShouldHandleCookies) && //
+        (_networkServiceType == otherRequest->_networkServiceType) && //
+        (_HTTPShouldUsePipelining == otherRequest->_HTTPShouldUsePipelining) && //
+        (_allowsCellularAccess == otherRequest->_allowsCellularAccess) && //
+        ((_properties.get() == otherRequest->_properties.get()) || [_properties isEqual:otherRequest->_properties]) && //
+        ((_allHTTPHeaderFields == otherRequest->_allHTTPHeaderFields) || [_allHTTPHeaderFields isEqual:otherRequest->_allHTTPHeaderFields]);
+}
+
+/**
+ @Status Interoperable
+*/
+- (unsigned int)hash {
+    return [self.URL hash];
+}
+
+/**
  @Status Caveat
  @Notes Only limited header fields are supported.
 */

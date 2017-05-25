@@ -36,6 +36,12 @@ TEST(NSURLProtocol, PropertyForKey_InRequest) {
     ASSERT_NO_THROW(decodedRequest = [NSKeyedUnarchiver unarchiveObjectWithData:data]);
     ASSERT_OBJCEQ(@2, [NSURLProtocol propertyForKey:key inRequest:decodedRequest]);
 
+    // Properties affect equality but not hashing
+    NSMutableURLRequest* requestWithoutProperty = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:@"http://notarealurl.not/"]];
+    ASSERT_OBJCEQ(copiedRequest, request);
+    ASSERT_OBJCNE(requestWithoutProperty, request);
+    ASSERT_EQ([requestWithoutProperty hash], [request hash]);
+
     [NSURLProtocol removePropertyForKey:key inRequest:request];
     ASSERT_OBJCEQ(nil, [NSURLProtocol propertyForKey:key inRequest:request]);
 }
