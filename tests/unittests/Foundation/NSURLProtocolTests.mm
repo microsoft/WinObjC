@@ -26,6 +26,9 @@ TEST(NSURLProtocol, PropertyForKey_InRequest) {
     [NSURLProtocol setProperty:@2 forKey:key inRequest:request];
     ASSERT_OBJCEQ(@2, [NSURLProtocol propertyForKey:key inRequest:request]);
 
+    NSMutableURLRequest* copiedRequest = [[request mutableCopy] autorelease];
+    ASSERT_OBJCEQ(@2, [NSURLProtocol propertyForKey:key inRequest:copiedRequest]);
+
     [NSURLProtocol removePropertyForKey:key inRequest:request];
     ASSERT_OBJCEQ(nil, [NSURLProtocol propertyForKey:key inRequest:request]);
 }

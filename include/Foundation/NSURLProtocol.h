@@ -37,7 +37,7 @@ FOUNDATION_EXPORT_CLASS
 + (void)unregisterClass:(Class)protocolClass;
 + (BOOL)canInitWithRequest:(NSURLRequest*)request;
 + (id)propertyForKey:(NSString*)key inRequest:(NSURLRequest*)request;
-+ (void)setProperty:(id)value forKey:(NSString*)key inRequest:(NSMutableURLRequest*)request;
++ (void)setProperty:(id _Nonnull)value forKey:(NSString*)key inRequest:(NSMutableURLRequest*)request;
 + (void)removePropertyForKey:(NSString*)key inRequest:(NSMutableURLRequest*)request;
 + (NSURLRequest*)canonicalRequestForRequest:(NSURLRequest*)request STUB_METHOD;
 + (BOOL)requestIsCacheEquivalent:(NSURLRequest*)aRequest toRequest:(NSURLRequest*)bRequest STUB_METHOD;
