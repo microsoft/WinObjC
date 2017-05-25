@@ -299,7 +299,7 @@
     </ClangCompile>
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\FunctionalTestHelpers.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\UXTestHelpers.mm" />
-    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\Tests\NSURLConnection.mm">
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\Tests\NSURLConnectionTests.mm">
       <ObjectiveCARC>true</ObjectiveCARC>
     </ClangCompile>
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\Tests\NSURLSession.mm">

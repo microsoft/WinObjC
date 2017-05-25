@@ -27,6 +27,7 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 #import <NSRunLoopSource.h>
 
 #import <algorithm>
+#import <atomic>
 #import <vector>
 
 static const wchar_t* TAG = L"NSURLConnection";
@@ -104,12 +105,10 @@ static NSURLProtocol* __protocolForRequest(NSURLRequest* request, id<NSURLProtoc
     StrongId<NSObject<NSURLConnectionDelegate>> _delegate;
 
     std::vector<std::pair<StrongId<NSRunLoop>, StrongId<NSRunLoopMode>>> _scheduledRunLoops;
-    // TODO #2469: Cannot currently schedule on more than one runloop
 
     StrongId<NSOperationQueue> _delegateQueue; // Lazily initialized
 
     StrongId<NSURLResponse> _response;
-    NSURLCacheStoragePolicy _storagePolicy;
     StrongId<NSURLProtocol> _protocol;
 
     StrongId<NSRunLoopSource> _runLoopCancelSource;
@@ -126,8 +125,7 @@ static void __dispatchDelegateCallback(NSURLConnection* connection, void (^callb
     if (connection->_delegateQueue) {
         [connection->_delegateQueue addOperationWithBlock:callbackBlock];
 
-    } else if (connection->_scheduledRunLoops.size() == 1) {
-        // TODO #2469: Cannot currently schedule on more than one runloop
+    } else if (connection->_scheduledRunLoops.size() > 0) {
         for (auto pair : connection->_scheduledRunLoops) {
             [pair.first performSelector:@selector(invoke) target:callbackBlock argument:nil order:0 modes:@[ pair.second.get() ]];
         }
@@ -290,9 +288,7 @@ static void __dispatchDelegateCallback(NSURLConnection* connection, void (^callb
 }
 
 /**
- @Status Caveat
- @Notes  TODO #2469: Cannot currently schedule on more than one runloop
-                 Callbacks do not currently occur on scheduled runloop
+ @Status Interoperable
 */
 - (void)scheduleInRunLoop:(NSRunLoop*)aRunLoop forMode:(NSRunLoopMode)mode {
     @synchronized(self) {
@@ -306,18 +302,12 @@ static void __dispatchDelegateCallback(NSURLConnection* connection, void (^callb
                         format:@"A connection cannot be scheduled with both an operation queue and a run loop."];
         }
 
-        if (_scheduledRunLoops.size() >= 1) {
-            TraceError(TAG, L"NSURLConnection: Scheduling on more than one run loop is currently not supported.");
-            return;
-        }
-
         _scheduledRunLoops.emplace_back(aRunLoop, mode);
     }
 }
 
 /**
- @Status Caveat
- @Notes  TODO #2469: Callbacks do not currently occur on delegate queue
+ @Status Interoperable
 */
 - (void)setDelegateQueue:(NSOperationQueue*)queue {
     @synchronized(self) {
@@ -341,8 +331,7 @@ static void __dispatchDelegateCallback(NSURLConnection* connection, void (^callb
 }
 
 /**
- @Status Caveat
- @Notes  TODO #2469: Cannot currently schedule on more than one runloop
+ @Status Interoperable
 */
 - (void)unscheduleFromRunLoop:(NSRunLoop*)aRunLoop forMode:(NSRunLoopMode)mode {
     @synchronized(self) {
@@ -376,6 +365,8 @@ static void __dispatchDelegateCallback(NSURLConnection* connection, void (^callb
  @Status Interoperable
 */
 - (void)URLProtocol:(NSURLProtocol*)urlProtocol didFailWithError:(NSError*)error {
+    auto delegateCount = std::make_shared<std::atomic<uint>>(std::max(_scheduledRunLoops.size(), 1u));
+
     __dispatchDelegateCallback(self, ^void() {
         TraceError(TAG, L"URL protocol did fail");
         // if ( [_delegate respondsToSelector:@selector(connection:willSendRequest:redirectResponse:)] ) [_delegate
@@ -384,9 +375,11 @@ static void __dispatchDelegateCallback(NSURLConnection* connection, void (^callb
             [_delegate connection:self didFailWithError:error];
         }
 
-        _protocol = nil;
-        _delegate = nil;
-        _done = true;
+        if (--*delegateCount == 0) {
+            _protocol = nil;
+            _delegate = nil;
+            _done = true;
+        }
     });
 }
 
@@ -396,6 +389,13 @@ static void __dispatchDelegateCallback(NSURLConnection* connection, void (^callb
 - (void)URLProtocol:(NSURLProtocol*)urlProtocol
     didReceiveResponse:(NSURLResponse*)response
     cacheStoragePolicy:(NSURLCacheStoragePolicy)policy {
+    auto delegateCount = std::make_shared<std::atomic<uint>>(std::max(_scheduledRunLoops.size(), 1u));
+
+    __block StrongId<NSCachedURLResponse> cachedResponse;
+    if (policy != NSURLCacheStorageNotAllowed) {
+        cachedResponse.attach([[NSCachedURLResponse alloc] initWithResponse:response data:nil]);
+    }
+
     __dispatchDelegateCallback(self, ^void() {
         /*
         if ( [response respondsToSelector:@selector(statusCode)] && [response statusCode] != 200 ) {
@@ -404,12 +404,15 @@ static void __dispatchDelegateCallback(NSURLConnection* connection, void (^callb
         */
 
         _response = response;
-        _storagePolicy = policy;
 
-        if ([_delegate respondsToSelector:@selector(connection:willCacheResponse:)]) {
-            // TODO #2469: This is currently incorrect, these are not the same thing
-            [_delegate connection:self willCacheResponse:static_cast<NSCachedURLResponse*>(response)];
+        if (cachedResponse && [_delegate respondsToSelector:@selector(connection:willCacheResponse:)]) {
+            cachedResponse = [_delegate connection:self willCacheResponse:cachedResponse];
         }
+
+        if (cachedResponse && (--*delegateCount == 0)) {
+            [[NSURLCache sharedURLCache] storeCachedResponse:cachedResponse forRequest:_currentRequest];
+        }
+
         if ([_delegate respondsToSelector:@selector(connection:didReceiveResponse:)]) {
             [_delegate connection:self didReceiveResponse:response];
         }
@@ -431,6 +434,8 @@ static void __dispatchDelegateCallback(NSURLConnection* connection, void (^callb
  @Status Interoperable
 */
 - (void)URLProtocolDidFinishLoading:(NSURLProtocol*)urlProtocol {
+    auto delegateCount = std::make_shared<std::atomic<uint>>(std::max(_scheduledRunLoops.size(), 1u));
+
     __dispatchDelegateCallback(self, ^void() {
         /*
         if(_storagePolicy==NSURLCacheStorageNotAllowed) {
@@ -452,9 +457,11 @@ static void __dispatchDelegateCallback(NSURLConnection* connection, void (^callb
             [_delegate connectionDidFinishLoading:self];
         }
 
-        _protocol = nil;
-        _delegate = nil;
-        _done = true;
+        if (--*delegateCount == 0) {
+            _protocol = nil;
+            _delegate = nil;
+            _done = true;
+        }
     });
 }
 
@@ -475,28 +482,40 @@ static void __dispatchDelegateCallback(NSURLConnection* connection, void (^callb
  @Status Interoperable
 */
 - (void)URLProtocol:(NSURLProtocol*)urlProtocol wasRedirectedToRequest:(NSURLRequest*)request redirectResponse:(NSURLResponse*)response {
+    __block StrongId<NSURLRequest> newRequest = request;
+
+    auto delegateCount = std::make_shared<std::atomic<uint>>(std::max(_scheduledRunLoops.size(), 1u));
+    auto stoppedLoading = std::make_shared<std::atomic<uint>>(0);
+
     __dispatchDelegateCallback(self, ^void() {
-        [_protocol stopLoading];
-        NSURLRequest* newRequest = request;
+        // Call stop loading on the delegate thread to preserve callback ordering, only call it once though
+        if (stoppedLoading->fetch_add(1) == 0) {
+            [_protocol stopLoading];
+        }
+
         if ([_delegate respondsToSelector:@selector(connection:willSendRequest:redirectResponse:)]) {
-            newRequest = [_delegate connection:self willSendRequest:request redirectResponse:response];
-        }
-        _protocol = nil;
-
-        if (!newRequest) {
-            [self cancel];
-            return;
+            newRequest = [_delegate connection:self willSendRequest:newRequest redirectResponse:response];
         }
 
-        NSURLProtocol* protocol = __protocolForRequest(request, self);
-        if (!protocol) {
-            TraceError(TAG, L"NSURLConnection was redirected to a new request, but could not create a NSURLProtocol for the new request.");
-            return;
-        }
+        if (--*delegateCount == 0) {
+            _protocol = nil;
 
-        _protocol = protocol;
-        _currentRequest = newRequest;
-        [_protocol performSelector:@selector(startLoading) onThread:_protocolThread withObject:nil waitUntilDone:NO];
+            if (!newRequest) {
+                [self cancel];
+                return;
+            }
+
+            NSURLProtocol* protocol = __protocolForRequest(request, self);
+            if (!protocol) {
+                TraceError(TAG,
+                           L"NSURLConnection was redirected to a new request, but could not create a NSURLProtocol for the new request.");
+                return;
+            }
+
+            _protocol = protocol;
+            _currentRequest = newRequest;
+            [_protocol performSelector:@selector(startLoading) onThread:_protocolThread withObject:nil waitUntilDone:NO];
+        }
     });
 }
 

@@ -16,6 +16,8 @@
 
 #import <TestFramework.h>
 #import <Foundation/Foundation.h>
+#import <atomic>
+#import <map>
 #import <random>
 
 typedef NS_ENUM(NSInteger, NSURLConnectionDelegateType) {
@@ -252,6 +254,148 @@ typedef NS_ENUM(NSInteger, NSURLConnectionDelegateType) {
 
 @end
 
+// Subclass of NSURLConnectionHelper that starts its connection on a multiple separate threads' run loops.
+@interface NSURLConnectionTestHelper_MultiRunLoop : NSURLConnectionTestHelper
+@property BOOL isStopped;
+@property (retain) NSMutableArray<NSThread*>* threads;
+- (void)doNothing;
+- (void)spinRunLoop;
+@property (retain) NSMutableArray<NSRunLoop*>* loops;
+
+// Callback objects (request, response, data...) -> NSMutableSet<NSRunLoop>
+@property (retain) NSMapTable<id, NSMutableSet<NSRunLoop*>*>* callbacksFromLoops;
+@end
+
+@implementation NSURLConnectionTestHelper_MultiRunLoop
+
+- (instancetype)init {
+    if (self = [super init]) {
+        _threads = [NSMutableArray<NSThread*> new];
+        _loops = [NSMutableArray<NSRunLoop*> new];
+
+        for (size_t i = 0; i < 3; ++i) {
+            NSThread* thread = [[NSThread alloc] initWithTarget:self selector:@selector(spinRunLoop) object:nil];
+            [_threads addObject:thread];
+            [thread start];
+        }
+
+        _callbacksFromLoops = [NSMapTable<id, NSMutableSet<NSRunLoop*>*> mapTableWithKeyOptions:NSMapTableObjectPointerPersonality
+                                                                                   valueOptions:NSMapTableStrongMemory];
+    }
+    return self;
+}
+
+- (void)dealloc {
+    _isStopped = YES;
+}
+
+// Does nothing. Used to keep the run loop alive.
+- (void)doNothing {
+}
+
+// Keeps the run loop on the current thread spinning.
+- (void)spinRunLoop {
+    @autoreleasepool {
+        NSRunLoop* loop = [NSRunLoop currentRunLoop];
+        [_loops addObject:loop];
+
+        NSTimer* timer = [NSTimer timerWithTimeInterval:0.1 target:self selector:@selector(doNothing) userInfo:nil repeats:YES];
+        [loop addTimer:timer forMode:NSDefaultRunLoopMode];
+
+        while (!_isStopped) {
+            @autoreleasepool {
+                [loop runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];
+            }
+        }
+    }
+}
+
+- (BOOL)_allRunLoopsHaveCalledBackWith:(id)callbackObject {
+    @synchronized(_callbacksFromLoops) {
+        NSMutableSet<NSRunLoop*>* loopsThatHaveCalledBack =
+            static_cast<NSMutableSet<NSRunLoop*>*>([_callbacksFromLoops objectForKey:callbackObject]);
+
+        if (!loopsThatHaveCalledBack) {
+            loopsThatHaveCalledBack = [NSMutableSet<NSRunLoop*> new];
+            [_callbacksFromLoops setObject:loopsThatHaveCalledBack forKey:callbackObject];
+        }
+
+        [loopsThatHaveCalledBack addObject:[NSRunLoop currentRunLoop]];
+
+        return loopsThatHaveCalledBack.count == _threads.count;
+    }
+}
+
+- (NSURLConnection*)createAndStartConnectionWithRequest:(NSURLRequest*)request {
+    NSURLConnection* connection = [[NSURLConnection alloc] initWithRequest:request delegate:self startImmediately:NO];
+    for (NSRunLoop* runLoop : _loops) {
+        [connection scheduleInRunLoop:runLoop forMode:NSDefaultRunLoopMode];
+    }
+    [connection start];
+    return connection;
+}
+
+- (void)connection:(NSURLConnection*)connection didReceiveResponse:(NSURLResponse*)response {
+    EXPECT_TRUE([_loops containsObject:[NSRunLoop currentRunLoop]]);
+
+    if ([self _allRunLoopsHaveCalledBackWith:response]) {
+        [super connection:connection didReceiveResponse:response];
+    }
+}
+
+- (void)connection:(NSURLConnection*)connection didReceiveData:(nonnull NSData*)data {
+    EXPECT_TRUE([_loops containsObject:[NSRunLoop currentRunLoop]]);
+
+    if ([self _allRunLoopsHaveCalledBackWith:data]) {
+        [super connection:connection didReceiveData:data];
+    }
+}
+
+- (void)connection:(NSURLConnection*)connection
+              didSendBodyData:(NSInteger)bytesWritten
+            totalBytesWritten:(NSInteger)totalBytesWritten
+    totalBytesExpectedToWrite:(NSInteger)totalBytesExpectedToWrite {
+    EXPECT_TRUE([_loops containsObject:[NSRunLoop currentRunLoop]]);
+
+    // _allRunLoopsHaveCalledBackWith: uses object pointer equality, but this callback has no object
+    // reuse the same NSNumber
+    static NSMutableDictionary<NSNumber*, NSNumber*>* reusedNums = [NSMutableDictionary<NSNumber*, NSNumber*> new];
+
+    NSNumber* num = @(bytesWritten);
+    @synchronized(reusedNums) {
+        if (NSNumber* reusedNum = [reusedNums objectForKey:num]) {
+            num = reusedNum;
+        } else {
+            [reusedNums setObject:num forKey:num];
+        }
+    }
+
+    if ([self _allRunLoopsHaveCalledBackWith:num]) {
+        [super connection:connection
+                      didSendBodyData:bytesWritten
+                    totalBytesWritten:totalBytesWritten
+            totalBytesExpectedToWrite:totalBytesExpectedToWrite];
+    }
+}
+
+- (void)connection:(NSURLConnection*)connection didFailWithError:(NSError*)e {
+    EXPECT_TRUE([_loops containsObject:[NSRunLoop currentRunLoop]]);
+
+    if ([self _allRunLoopsHaveCalledBackWith:e]) {
+        [super connection:connection didFailWithError:e];
+    }
+}
+
+- (void)connectionDidFinishLoading:(NSURLConnection*)connection {
+    EXPECT_TRUE([_loops containsObject:[NSRunLoop currentRunLoop]]);
+
+    if ([self _allRunLoopsHaveCalledBackWith:connection]) {
+        [super connectionDidFinishLoading:connection];
+    }
+}
+
+@end
+
 // Test to verify a request can be successfully made and a valid response and data is received.
 static void _testRequestWithURL(NSURLConnectionTestHelper* connectionTestHelper) {
     NSString* urlString = @"https://httpbin.org/cookies/set?winobjc=awesome";
@@ -430,49 +574,51 @@ public:
     }
 
     /**
-     * Test to verify a request can be successfully made and a valid response and data is received, after setting a delegate queue.
+     * Tests to verify a request can be successfully made and a valid response and data is received.
      */
     TEST_METHOD(RequestWithURL_OperationQueue) {
         _testRequestWithURL([NSURLConnectionTestHelper_OperationQueue new]);
     }
 
-    /**
-     * Test to verify a request can be successfully made and a valid response and data is received, on a run loop.
-     */
     TEST_METHOD(RequestWithURL_RunLoop) {
         _testRequestWithURL([NSURLConnectionTestHelper_RunLoop new]);
     }
 
+    TEST_METHOD(RequestWithURL_MultiRunLoop) {
+        _testRequestWithURL([NSURLConnectionTestHelper_MultiRunLoop new]);
+    }
+
     /**
-     * Test to verify a request can be successfully made but no data was received and a valid response error code was received,
-     * after setting a delegate queue.
+     * Tests to verify a request can be successfully made but no data was received and a valid response error code was received.
      */
     TEST_METHOD(RequestWithURL_Failure_OperationQueue) {
         _testRequestWithURL_Failure([NSURLConnectionTestHelper_OperationQueue new]);
     }
 
-    /**
-     * Test to verify a request can be successfully made but no data was received and a valid response error code was received,
-     * on a run loop.
-     */
     TEST_METHOD(RequestWithURL_Failure_RunLoop) {
         _testRequestWithURL_Failure([NSURLConnectionTestHelper_RunLoop new]);
     }
 
+    TEST_METHOD(RequestWithURL_Failure_MultiRunLoop) {
+        _testRequestWithURL_Failure([NSURLConnectionTestHelper_RunLoop new]);
+    }
+
     /**
-     * Test to verify a post request can be successfully made and a valid response and data is received, after setting a delegate queue.
+     * Tests to verify a post request can be successfully made and a valid response and data is received.
      */
     TEST_METHOD(RequestWithURL_Post_OperationQueue) {
         _testRequestWithURL_Post([NSURLConnectionTestHelper_OperationQueue new], true);
         _testRequestWithURL_Post([NSURLConnectionTestHelper_OperationQueue new], false);
     }
 
-    /**
-     * Test to verify a post request can be successfully made and a valid response and data is received, on a run loop.
-     */
     TEST_METHOD(RequestWithURL_Post_RunLoop) {
         _testRequestWithURL_Post([NSURLConnectionTestHelper_RunLoop new], true);
         _testRequestWithURL_Post([NSURLConnectionTestHelper_RunLoop new], false);
+    }
+
+    TEST_METHOD(RequestWithURL_Post_MultiRunLoop) {
+        _testRequestWithURL_Post([NSURLConnectionTestHelper_MultiRunLoop new], true);
+        _testRequestWithURL_Post([NSURLConnectionTestHelper_MultiRunLoop new], false);
     }
 
     /**
