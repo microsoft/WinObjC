@@ -2159,7 +2159,7 @@ wstring generateClangCompileStatements(const vector<shared_ptr<NameSpace>>& name
     for (auto& ns : namespaces) {
         headers += LR"~(    <PackageHeader Include="$(MSBuildProjectDirectory)\..\..\)~" + g_srcDirectory;
         headers += filenameFromNamespace(ns->Name);
-        headers += LR"~(.h> />
+        headers += LR"~(.h" />
 )~";
 
         clangCompileBlock += LR"~(    <ClangCompile Include="..\..\)~" + g_srcDirectory;
