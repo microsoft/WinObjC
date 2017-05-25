@@ -234,8 +234,6 @@ void startWinmdConversion(int argc, wchar_t** argv) {
     }
     generatePropsFileForPackageable(outputDirectory, solutionFileName);
     generateTargetsFileForPackageable(outputDirectory, solutionFileName);
-    generatePropsFileForConsumption(outputProjectDirectory + L"Nuget\\", solutionFileName);
-    generateTargetsFileForConsumption(outputProjectDirectory + L"Nuget\\", solutionFileName);
 
     wstring nugetProjectGUID = generateNugetProject(maps.first, outputProjectDirectory + L"Nuget\\", solutionFileName, solutionFileName);
     pair<wstring, wstring> nugetInfo({ solutionFileName, nugetProjectGUID });
