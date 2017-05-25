@@ -35,17 +35,20 @@
 #import <CFFoundationInternal.h>
 #import <ForFoundationOnly.h>
 #import "NSDirectoryEnumeratorInternal.h"
-#import <StringHelpers.h>
+#import <Starboard/SmartTypes.h>
 
 #include <COMIncludes.h>
 #import <windows.storage.h>
-#import <wrl/client.h>
+#import <winrt/Windows.Storage.h>
 #include <COMIncludes_End.h>
+
+#import <CppWinRTHelpers.h>
+#import <WRLHelpers.h>
 
 static const wchar_t* TAG = L"NSFileManager";
 
-using namespace Microsoft::WRL;
-using namespace ABI::Windows::Storage;
+namespace WF = winrt::Windows::Foundation;
+namespace WS = winrt::Windows::Storage;
 
 // file attribute keys
 NSString* const NSFileType = @"NSFileType";
@@ -90,6 +93,20 @@ NSString* const NSFileProtectionNone = @"NSFileProtectionNone";
 NSString* const NSFileProtectionComplete = @"NSFileProtectionComplete";
 NSString* const NSFileProtectionCompleteUnlessOpen = @"NSFileProtectionCompleteUnlessOpen";
 NSString* const NSFileProtectionCompleteUntilFirstUserAuthentication = @"NSFileProtectionCompleteUntilFirstUserAuthentication";
+
+static const winrt::hstring sc_fileSizeKey = L"System.Size";
+static const winrt::hstring sc_fileAttributesKey = L"System.FileAttributes";
+static const winrt::hstring sc_fileModificationDateKey = L"System.DateModified";
+static const winrt::hstring sc_fileCreationDateKey = L"System.DateCreated";
+
+// Conversion math from https://msdn.microsoft.com/en-us/library/ms724228
+static DateTime __NSDateToSystemTime(NSDate* date) {
+    return { (int64_t)([date timeIntervalSince1970] * 10000000) + 116444736000000000 };
+}
+
+static NSDate* __SystemTimeToNSDate(DateTime systemTime) {
+    return [NSDate dateWithTimeIntervalSince1970:((systemTime.UniversalTime - 116444736000000000) / 10000000)];
+}
 
 @implementation NSFileManager
 
@@ -151,28 +168,10 @@ NSString* const NSFileProtectionCompleteUntilFirstUserAuthentication = @"NSFileP
  @Notes Container is contained within a Publisher Cache Folder, so a user could erase the data
 */
 - (NSURL*)containerURLForSecurityApplicationGroupIdentifier:(NSString*)groupIdentifier {
-    ComPtr<IApplicationDataStatics> applicationDataStatics;
-    RETURN_NULL_IF_FAILED(Windows::Foundation::GetActivationFactory(
-        Microsoft::WRL::Wrappers::HStringReference(RuntimeClass_Windows_Storage_ApplicationData).Get(), &applicationDataStatics));
-
-    ComPtr<IApplicationData> applicationData;
-    RETURN_NULL_IF_FAILED(applicationDataStatics->get_Current(&applicationData));
-
-    // IApplicationData3 has the method needed for container URL
-    ComPtr<IApplicationData3> applicationData3;
-    RETURN_NULL_IF_FAILED(applicationData.As(&applicationData3));
-
-    ComPtr<IStorageFolder> folder;
-    RETURN_NULL_IF_FAILED(applicationData3->GetPublisherCacheFolder(Strings::NarrowToWide<HSTRING>(groupIdentifier).Get(), &folder));
-
-    // Convert to IStorageItem to get the path
-    ComPtr<IStorageItem> storageItem;
-    RETURN_NULL_IF_FAILED(folder.As(&storageItem));
-
-    Wrappers::HString folderPath;
-    RETURN_NULL_IF_FAILED(storageItem->get_Path(folderPath.GetAddressOf()));
-
-    return [NSURL fileURLWithPath:Strings::WideToNSString(folderPath.Get()) isDirectory:YES];
+    WS::ApplicationData applicationData = WS::ApplicationData::Current();
+    WS::StorageFolder folder = applicationData.GetPublisherCacheFolder(objcwinrt::string(groupIdentifier));
+    winrt::hstring path = folder.Path();
+    return [NSURL fileURLWithPath:Strings::WideToNSString(winrt::get_abi(path)) isDirectory:YES];
 }
 
 // Discovering Directory Contents
@@ -236,14 +235,16 @@ NSString* const NSFileProtectionCompleteUntilFirstUserAuthentication = @"NSFileP
 }
 
 /**
- @Status Stub
+ @Status Caveat
+ @Notes URL must be an existing file URL
 */
 - (NSDirectoryEnumerator*)enumeratorAtURL:(NSURL*)url
                includingPropertiesForKeys:(NSArray*)keys
                                   options:(NSDirectoryEnumerationOptions)mask
                              errorHandler:(BOOL (^)(NSURL* url, NSError* error))handler {
-    UNIMPLEMENTED();
-    return nil;
+    const char* path = [[url path] UTF8String];
+    return [[[NSDirectoryEnumerator alloc] _initWithPath:path shallow:NO includingPropertiesForKeys:keys options:mask returnNSURL:YES]
+        autorelease];
 }
 
 /**
@@ -251,19 +252,16 @@ NSString* const NSFileProtectionCompleteUntilFirstUserAuthentication = @"NSFileP
 */
 - (id)enumeratorAtPath:(id)pathAddr {
     const char* path = [pathAddr UTF8String];
-
-    NSDirectoryEnumerator* directoryEnum = [NSDirectoryEnumerator new];
-    [directoryEnum _initWithPath:path
-                           shallow:NO
-        includingPropertiesForKeys:nil
-                           options:NSDirectoryEnumerationSkipsSubdirectoryDescendants
-                       returnNSURL:NO];
-
-    return directoryEnum;
+    return [[[NSDirectoryEnumerator alloc] _initWithPath:path
+                                                 shallow:NO
+                              includingPropertiesForKeys:nil
+                                                 options:NSDirectoryEnumerationSkipsSubdirectoryDescendants
+                                             returnNSURL:NO] autorelease];
 }
 
 /**
- @Status Stub
+ @Status NotInPlan
+ @Notes UWP does not provide an API to perform this
 */
 - (NSArray*)mountedVolumeURLsIncludingResourceValuesForKeys:(NSArray*)propertyKeys options:(NSVolumeEnumerationOptions)options {
     UNIMPLEMENTED();
@@ -271,19 +269,31 @@ NSString* const NSFileProtectionCompleteUntilFirstUserAuthentication = @"NSFileP
 }
 
 /**
- @Status Stub
+ @Status Caveat
+ @Notes Error not set
 */
 - (NSArray*)subpathsOfDirectoryAtPath:(NSString*)path error:(NSError**)error {
-    UNIMPLEMENTED();
-    return nil;
+    NSArray* allContents = [[self enumeratorAtPath:path] allObjects];
+    NSMutableArray* ret = [NSMutableArray arrayWithCapacity:allContents.count];
+
+    // Only return subpaths, not files or . or ..
+    for (NSString* path in allContents) {
+        if (path.length > 0L && !([path isEqualToString:@"."] || [path isEqualToString:@".."])) {
+            struct stat s {};
+            if (stat([path UTF8String], &s) == 0 && (s.st_mode & _S_IFDIR)) {
+                [ret addObject:path];
+            }
+        }
+    }
+
+    return ret;
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 - (NSArray*)subpathsAtPath:(NSString*)path {
-    UNIMPLEMENTED();
-    return nil;
+    return [self subpathsOfDirectoryAtPath:path error:nil];
 }
 
 // Creating and Deleting Items
@@ -366,7 +376,8 @@ NSString* const NSFileProtectionCompleteUntilFirstUserAuthentication = @"NSFileP
 }
 
 /**
- @Status Stub
+ @Status NotInPlan
+ @Notes UWP does not provide an API to perform this
 */
 - (BOOL)replaceItemAtURL:(NSURL*)originalItemURL
            withItemAtURL:(NSURL*)newItemURL
@@ -379,7 +390,8 @@ NSString* const NSFileProtectionCompleteUntilFirstUserAuthentication = @"NSFileP
 }
 
 /**
- @Status Stub
+ @Status NotInPlan
+ @Notes Windows systems do not have a trash, we use the Recycle Bin
 */
 - (BOOL)trashItemAtURL:(NSURL*)url resultingItemURL:(NSURL**)outResultingURL error:(NSError**)error {
     UNIMPLEMENTED();
@@ -389,12 +401,59 @@ NSString* const NSFileProtectionCompleteUntilFirstUserAuthentication = @"NSFileP
 // Moving and Copying Items
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 - (BOOL)copyItemAtURL:(NSURL*)srcURL toURL:(NSURL*)dstURL error:(NSError**)error {
-    UNIMPLEMENTED();
+    NSString* sourcePath = [[srcURL path] stringByReplacingOccurrencesOfString:@"/" withString:@"\\"];
 
-    return NO;
+    dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
+    WF::IAsyncOperation<WS::StorageFile> sourceOperation = WS::StorageFile::GetFileFromPathAsync(objcwinrt::string(sourcePath));
+    BOOL ret = NO;
+    sourceOperation.Completed(objcwinrt::callback(
+        [semaphore, &ret, dstURL, error](const WF::IAsyncOperation<WS::StorageFile>& sourceSuccess, WF::AsyncStatus status) {
+            if (status == WF::AsyncStatus::Completed) {
+                WS::StorageFile sourceFile = sourceSuccess.GetResults();
+                NSString* destinationFileName = dstURL.lastPathComponent;
+                NSString* destinationPath = [[dstURL path] stringByReplacingOccurrencesOfString:@"/" withString:@"\\"];
+                NSString* destinationFolder = [destinationPath substringToIndex:destinationPath.length - destinationFileName.length];
+                WF::IAsyncOperation<WS::StorageFolder> destinationOperation =
+                    WS::StorageFolder::GetFolderFromPathAsync(objcwinrt::string(destinationFolder));
+                destinationOperation.Completed(objcwinrt::callback([semaphore, &ret, &sourceFile, destinationFileName, error](
+                    const WF::IAsyncOperation<WS::StorageFolder>& destinationSuccess, WF::AsyncStatus status) {
+                    if (status == WF::AsyncStatus::Completed) {
+                        WS::StorageFolder destinationFolder = destinationSuccess.GetResults();
+                        WF::IAsyncOperation<WS::StorageFile> copyOperation =
+                            sourceFile.CopyAsync(destinationFolder, objcwinrt::string(destinationFileName));
+                        copyOperation.Completed(objcwinrt::callback(
+                            [semaphore, &ret, error](const WF::IAsyncOperation<WS::StorageFile>& success, WF::AsyncStatus status) {
+                                if (status == WF::AsyncStatus::Completed) {
+                                    ret = YES;
+                                } else if (error) {
+                                    *error = objcwinrt::to_nserror(success, status);
+                                }
+
+                                dispatch_semaphore_signal(semaphore);
+                            }));
+                    } else {
+                        if (error) {
+                            *error = objcwinrt::to_nserror(destinationSuccess, status);
+                        }
+                        dispatch_semaphore_signal(semaphore);
+                    }
+                }));
+            } else {
+                if (error) {
+                    *error = objcwinrt::to_nserror(sourceSuccess, status);
+                }
+                dispatch_semaphore_signal(semaphore);
+            }
+        }));
+
+    // Wait until async method completes.
+    dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
+    dispatch_release(semaphore);
+
+    return ret;
 }
 
 /**
@@ -518,7 +577,8 @@ NSString* const NSFileProtectionCompleteUntilFirstUserAuthentication = @"NSFileP
 // Managing iCloud-Based Items
 
 /**
- @Status Stub
+ @Status NotInPlan
+ @Notes UWP does not provide an API to perform this
 */
 - (NSURL*)URLForUbiquityContainerIdentifier:(NSString*)containerID {
     UNIMPLEMENTED();
@@ -527,7 +587,8 @@ NSString* const NSFileProtectionCompleteUntilFirstUserAuthentication = @"NSFileP
 }
 
 /**
- @Status Stub
+ @Status NotInPlan
+ @Notes UWP does not provide an API to perform this
 */
 - (BOOL)isUbiquitousItemAtURL:(NSURL*)url {
     UNIMPLEMENTED();
@@ -535,7 +596,8 @@ NSString* const NSFileProtectionCompleteUntilFirstUserAuthentication = @"NSFileP
 }
 
 /**
- @Status Stub
+ @Status NotInPlan
+ @Notes UWP does not provide an API to perform this
 */
 - (BOOL)setUbiquitous:(BOOL)flag itemAtURL:(NSURL*)url destinationURL:(NSURL*)destinationURL error:(NSError**)errorOut {
     UNIMPLEMENTED();
@@ -543,7 +605,8 @@ NSString* const NSFileProtectionCompleteUntilFirstUserAuthentication = @"NSFileP
 }
 
 /**
- @Status Stub
+ @Status NotInPlan
+ @Notes UWP does not provide an API to perform this
 */
 - (BOOL)startDownloadingUbiquitousItemAtURL:(NSURL*)url error:(NSError**)errorOut {
     UNIMPLEMENTED();
@@ -551,7 +614,8 @@ NSString* const NSFileProtectionCompleteUntilFirstUserAuthentication = @"NSFileP
 }
 
 /**
- @Status Stub
+ @Status NotInPlan
+ @Notes UWP does not provide an API to perform this
 */
 - (BOOL)evictUbiquitousItemAtURL:(NSURL*)url error:(NSError**)errorOut {
     UNIMPLEMENTED();
@@ -559,7 +623,8 @@ NSString* const NSFileProtectionCompleteUntilFirstUserAuthentication = @"NSFileP
 }
 
 /**
- @Status Stub
+ @Status NotInPlan
+ @Notes UWP does not provide an API to perform this
 */
 - (NSURL*)URLForPublishingUbiquitousItemAtURL:(NSURL*)url expirationDate:(NSDate**)outDate error:(NSError**)error {
     UNIMPLEMENTED();
@@ -568,7 +633,8 @@ NSString* const NSFileProtectionCompleteUntilFirstUserAuthentication = @"NSFileP
 
 // Creating Symbolic and Hard Links
 /**
- @Status Stub
+ @Status NotInPlan
+ @Notes UWP does not provide an API to perform this
 */
 - (BOOL)createSymbolicLinkAtURL:(NSURL*)url withDestinationURL:(NSURL*)destURL error:(NSError**)error {
     UNIMPLEMENTED();
@@ -576,7 +642,8 @@ NSString* const NSFileProtectionCompleteUntilFirstUserAuthentication = @"NSFileP
 }
 
 /**
- @Status Stub
+ @Status NotInPlan
+ @Notes UWP does not provide an API to perform this
 */
 - (BOOL)createSymbolicLinkAtPath:(NSString*)path withDestinationPath:(NSString*)toPath error:(NSError**)error {
     UNIMPLEMENTED();
@@ -584,7 +651,8 @@ NSString* const NSFileProtectionCompleteUntilFirstUserAuthentication = @"NSFileP
 }
 
 /**
- @Status Stub
+ @Status NotInPlan
+ @Notes UWP does not provide an API to perform this
 */
 - (BOOL)linkItemAtURL:(NSURL*)srcURL toURL:(NSURL*)dstURL error:(NSError**)error {
     UNIMPLEMENTED();
@@ -592,7 +660,8 @@ NSString* const NSFileProtectionCompleteUntilFirstUserAuthentication = @"NSFileP
 }
 
 /**
- @Status Stub
+ @Status NotInPlan
+ @Notes UWP does not provide an API to perform this
 */
 - (BOOL)linkItemAtPath:(NSString*)fromPath toPath:(NSString*)toPath error:(NSError**)error {
     UNIMPLEMENTED();
@@ -677,15 +746,20 @@ NSString* const NSFileProtectionCompleteUntilFirstUserAuthentication = @"NSFileP
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 - (BOOL)isExecutableFileAtPath:(NSString*)path {
-    UNIMPLEMENTED();
+    struct stat st;
+    if (EbrStat([path UTF8String], &st) == 0) {
+        return (st.st_mode & _S_IEXEC);
+    }
+
     return NO;
 }
 
 /**
- @Status Stub
+ @Status NotInPlan
+ @Notes UWP does not provide an API to perform this
 */
 - (BOOL)isDeletableFileAtPath:(NSString*)path {
     UNIMPLEMENTED();
@@ -695,7 +769,8 @@ NSString* const NSFileProtectionCompleteUntilFirstUserAuthentication = @"NSFileP
 // Getting and Setting Attributes
 
 /**
- @Status Stub
+ @Status NotInPlan
+ @Notes UWP does not provide an API to perform this
 */
 - (NSArray*)componentsToDisplayForPath:(NSString*)path {
     UNIMPLEMENTED();
@@ -703,7 +778,8 @@ NSString* const NSFileProtectionCompleteUntilFirstUserAuthentication = @"NSFileP
 }
 
 /**
- @Status Stub
+ @Status NotInPlan
+ @Notes UWP does not provide an API to perform this
 */
 - (id)displayNameAtPath:(id)path {
     UNIMPLEMENTED();
@@ -712,12 +788,11 @@ NSString* const NSFileProtectionCompleteUntilFirstUserAuthentication = @"NSFileP
 
 /**
  @Status Caveat
- @Notes Only NSFileSize and NSFileType attributes are supported
+ @Notes Only NSFileType, NSFileImmutable, NSFileSize, NSFileModificationDate, and NSFileCreationDate are supported
 */
-- (id)attributesOfItemAtPath:(id)pathAddr error:(NSError**)error {
-    if (pathAddr == nil) {
+- (NSDictionary<NSFileAttributeKey, id>*)attributesOfItemAtPath:(NSString*)path error:(NSError**)error {
+    if (path == nil) {
         TraceVerbose(TAG, L"attributesOfItemAtPath nil!");
-
         if (error) {
             // TODO: standardize the error code and message
             *error = [NSError errorWithDomain:@"Empty File Path" code:100 userInfo:nil];
@@ -726,33 +801,76 @@ NSString* const NSFileProtectionCompleteUntilFirstUserAuthentication = @"NSFileP
         return nil;
     }
 
-    struct stat st;
+    NSString* filePath = [path stringByReplacingOccurrencesOfString:@"/" withString:@"\\"];
+    NSMutableDictionary* ret = [NSMutableDictionary dictionary];
 
-    const char* path = [pathAddr UTF8String];
-    TraceVerbose(TAG, L"attributesOfItemAtPath: %hs", path);
+    // TODO:: GH____ convert to C++ winrt when SavePropertiesAsync is fixed
+    ComPtr<ABI::Windows::Storage::IStorageFileStatics> storageFileStatics;
+    RETURN_NULL_IF_FAILED(Windows::Foundation::GetActivationFactory(
+        Microsoft::WRL::Wrappers::HStringReference(RuntimeClass_Windows_Storage_StorageFile).Get(), &storageFileStatics));
 
-    if (EbrStat(path, &st) == -1) {
-        if (error) {
-            // TODO: standardize the error code and message
-            *error = [NSError errorWithDomain:@"File not found" code:100 userInfo:nil];
-        }
-        return nil;
-    }
+    ComPtr<ABI::Windows::Foundation::IAsyncOperation<ABI::Windows::Storage::StorageFile*>> fileOperation;
+    RETURN_NULL_IF_FAILED(storageFileStatics->GetFileFromPathAsync(Strings::NarrowToWide<HSTRING>(filePath).Get(), &fileOperation));
 
-    id ret = [NSMutableDictionary dictionary];
+    ComPtr<ABI::Windows::Storage::IStorageFile> file;
+    RETURN_NULL_IF_FAILED(WRLHelpers::AwaitOperationResult(fileOperation.Get(), &file));
 
-    [ret setValue:[NSNumber numberWithInt:st.st_size] forKey:NSFileSize];
-    if (st.st_mode & _S_IFDIR) {
-        [ret setValue:NSFileTypeDirectory forKey:NSFileType];
-    } else {
-        [ret setValue:NSFileTypeRegular forKey:NSFileType];
-    }
+    ComPtr<ABI::Windows::Storage::IStorageItem> fileAsItem;
+    RETURN_NULL_IF_FAILED(file.As(&fileAsItem));
+
+    ABI::Windows::Storage::FileAttributes attributes;
+    RETURN_NULL_IF_FAILED(fileAsItem->get_Attributes(&attributes));
+    ret[NSFileType] = ((attributes & ABI::Windows::Storage::FileAttributes_Directory) == ABI::Windows::Storage::FileAttributes_Directory) ?
+                          NSFileTypeDirectory :
+                          NSFileTypeRegular;
+    ret[NSFileImmutable] =
+        ((attributes & ABI::Windows::Storage::FileAttributes_ReadOnly) == ABI::Windows::Storage::FileAttributes_ReadOnly) ? @YES : @NO;
+
+    ComPtr<ABI::Windows::Storage::IStorageItemProperties> fileAsProperties;
+    RETURN_NULL_IF_FAILED(file.As(&fileAsProperties));
+
+    ComPtr<ABI::Windows::Storage::FileProperties::IStorageItemContentProperties> properties;
+    RETURN_NULL_IF_FAILED(fileAsProperties->get_Properties(&properties));
+    ComPtr<ABI::Windows::Storage::FileProperties::IStorageItemExtraProperties> extraProperties;
+    RETURN_NULL_IF_FAILED(properties.As(&extraProperties));
+
+    static const StrongId<NSArray> sc_propertiesToRetrieve = @[ @"System.DateModified", @"System.DateCreated", @"System.Size" ];
+    ComPtr<IInspectable> inspectablePropertiesToRetrieve = new ObjcIterableProxy<HSTRING, dummyWRLCreator>(sc_propertiesToRetrieve);
+    ComPtr<ABI::Windows::Foundation::Collections::IIterable<HSTRING>> abiPropertiesToRetrieve;
+    RETURN_NULL_IF_FAILED(inspectablePropertiesToRetrieve.As(&abiPropertiesToRetrieve));
+
+    ComPtr<ABI::Windows::Foundation::IAsyncOperation<ABI::Windows::Foundation::Collections::IMap<HSTRING, IInspectable*>*>>
+        propertiesOperation;
+    RETURN_NULL_IF_FAILED(extraProperties->RetrievePropertiesAsync(abiPropertiesToRetrieve.Get(), &propertiesOperation));
+
+    ComPtr<ABI::Windows::Foundation::Collections::IMap<HSTRING, IInspectable*>> abiResults;
+    WRLHelpers::AwaitOperationResult(propertiesOperation.Get(), &abiResults);
+    ComPtr<IInspectable> inspectableValue;
+
+    RETURN_NULL_IF_FAILED(abiResults->Lookup(winrt::get_abi(sc_fileSizeKey), &inspectableValue));
+    ComPtr<ABI::Windows::Foundation::IPropertyValue> propertyValue;
+    RETURN_NULL_IF_FAILED(inspectableValue.As(&propertyValue));
+    uint64_t fileSize = 0;
+    RETURN_NULL_IF_FAILED(propertyValue->GetUInt64(&fileSize));
+    ret[NSFileSize] = [NSNumber numberWithUnsignedLongLong:fileSize];
+
+    RETURN_NULL_IF_FAILED(abiResults->Lookup(winrt::get_abi(sc_fileModificationDateKey), &inspectableValue));
+    RETURN_NULL_IF_FAILED(inspectableValue.As(&propertyValue));
+    DateTime dateValue{};
+    RETURN_NULL_IF_FAILED(propertyValue->GetDateTime(&dateValue));
+    ret[NSFileModificationDate] = __SystemTimeToNSDate(dateValue);
+
+    RETURN_NULL_IF_FAILED(abiResults->Lookup(winrt::get_abi(sc_fileCreationDateKey), &inspectableValue));
+    RETURN_NULL_IF_FAILED(inspectableValue.As(&propertyValue));
+    RETURN_NULL_IF_FAILED(propertyValue->GetDateTime(&dateValue));
+    ret[NSFileCreationDate] = __SystemTimeToNSDate(dateValue);
 
     return ret;
 }
 
 /**
- @Status Stub
+ @Status NotInPlan
+ @Notes UWP does not provide an API to perform this
 */
 - (id)attributesOfFileSystemForPath:(id)pathAddr error:(NSError**)error {
     UNIMPLEMENTED();
@@ -771,11 +889,86 @@ NSString* const NSFileProtectionCompleteUntilFirstUserAuthentication = @"NSFileP
 }
 
 /**
- @Status Stub
+ @Status Caveat
+ @Notes Only NSFileType, NSFileImmutable are supported
+        NSFileSize, NSFileModificationDate, and NSFileCreationDate cannot be set using WRL APIs
 */
-- (BOOL)setAttributes:(id)attribs ofItemAtPath:(id)pathAddr error:(NSError**)err {
-    UNIMPLEMENTED();
-    return YES;
+- (BOOL)setAttributes:(NSDictionary<NSFileAttributeKey, id>*)attribs ofItemAtPath:(NSString*)path error:(NSError**)error {
+    // TODO:: GH____ convert to C++ winrt when SavePropertiesAsync is fixed
+    ComPtr<ABI::Windows::Storage::IStorageFileStatics> storageFileStatics;
+    RETURN_FALSE_IF_FAILED(Windows::Foundation::GetActivationFactory(
+        Microsoft::WRL::Wrappers::HStringReference(RuntimeClass_Windows_Storage_StorageFile).Get(), &storageFileStatics));
+
+    NSString* filePath = [path stringByReplacingOccurrencesOfString:@"/" withString:@"\\"];
+    ComPtr<ABI::Windows::Foundation::IAsyncOperation<ABI::Windows::Storage::StorageFile*>> fileOperation;
+    RETURN_FALSE_IF_FAILED(storageFileStatics->GetFileFromPathAsync(Strings::NarrowToWide<HSTRING>(filePath).Get(), &fileOperation));
+
+    ComPtr<ABI::Windows::Storage::IStorageFile> file;
+    RETURN_FALSE_IF_FAILED(WRLHelpers::AwaitOperationResult(fileOperation.Get(), &file));
+
+    ComPtr<ABI::Windows::Storage::IStorageItem> fileAsItem;
+    RETURN_FALSE_IF_FAILED(file.As(&fileAsItem));
+
+    ABI::Windows::Storage::FileAttributes fileAttributes;
+    RETURN_FALSE_IF_FAILED(fileAsItem->get_Attributes(&fileAttributes));
+
+    ComPtr<IInspectable> changingAttributesInspectable;
+    RETURN_FALSE_IF_FAILED(
+        RoActivateInstance(Microsoft::WRL::Wrappers::HStringReference(RuntimeClass_Windows_Foundation_Collections_ValueSet).Get(),
+                           &changingAttributesInspectable));
+    ComPtr<ABI::Windows::Foundation::Collections::IMap<HSTRING, IInspectable*>> changingAttributes;
+    RETURN_FALSE_IF_FAILED(changingAttributesInspectable.As(&changingAttributes));
+
+    for (NSFileAttributeKey key in attribs) {
+        id value = attribs[key];
+        if ([key isEqualToString:NSFileType]) {
+            // Value is NSFileAttributeType (NSString*), only support Directory or Regular
+            if ([value isEqualToString:NSFileTypeRegular]) {
+                fileAttributes &= ~ABI::Windows::Storage::FileAttributes_Directory;
+            } else if ([value isEqualToString:NSFileTypeRegular]) {
+                fileAttributes |= ABI::Windows::Storage::FileAttributes_Directory;
+            } // Otherwise just ignore the value, we don't want to fail for all unsupported values
+        } else if ([key isEqualToString:NSFileImmutable]) {
+            // Value is NSNumber with a boolean value
+            if ([value boolValue]) {
+                fileAttributes |= ABI::Windows::Storage::FileAttributes_ReadOnly;
+            } else {
+                fileAttributes &= ~ABI::Windows::Storage::FileAttributes_ReadOnly;
+            }
+        } else {
+            TraceWarning(TAG, L"Unsupported NSFileAttributeKey %@ used in [%s %s]", key, class_getName([self class]), sel_getName(_cmd));
+        }
+    }
+
+    ComPtr<ABI::Windows::Foundation::IPropertyValueStatics> propertyStatics;
+    RETURN_FALSE_IF_FAILED(ABI::Windows::Foundation::GetActivationFactory(
+        Microsoft::WRL::Wrappers::HStringReference(RuntimeClass_Windows_Foundation_PropertyValue).Get(), &propertyStatics));
+
+    ComPtr<IInspectable> attributeInspectableValue;
+    RETURN_FALSE_IF_FAILED(propertyStatics->CreateUInt32(fileAttributes, &attributeInspectableValue))
+
+    BOOLEAN unused = false;
+    RETURN_FALSE_IF_FAILED(changingAttributes->Insert(winrt::get_abi(sc_fileAttributesKey), attributeInspectableValue.Get(), &unused));
+
+    ComPtr<ABI::Windows::Foundation::Collections::IIterable<ABI::Windows::Foundation::Collections::IKeyValuePair<HSTRING, IInspectable*>*>>
+        abiIterable;
+    RETURN_FALSE_IF_FAILED(changingAttributes.As(&abiIterable));
+
+    ComPtr<ABI::Windows::Storage::IStorageItemProperties> fileAsProperties;
+    RETURN_FALSE_IF_FAILED(file.As(&fileAsProperties));
+    ComPtr<ABI::Windows::Storage::FileProperties::IStorageItemContentProperties> properties;
+    RETURN_FALSE_IF_FAILED(fileAsProperties->get_Properties(&properties));
+    ComPtr<ABI::Windows::Storage::FileProperties::IStorageItemExtraProperties> extraProperties;
+    RETURN_FALSE_IF_FAILED(properties.As(&extraProperties));
+
+    ComPtr<ABI::Windows::Foundation::IAsyncAction> saveAction;
+    RETURN_FALSE_IF_FAILED(extraProperties->SavePropertiesAsync(abiIterable.Get(), &saveAction));
+
+    Microsoft::WRL::ComPtr<WRLHelpers::ActionCallback> completion;
+    RETURN_FALSE_IF_FAILED(Microsoft::WRL::MakeAndInitialize<WRLHelpers::ActionCallback>(&completion));
+    RETURN_FALSE_IF_FAILED(saveAction->put_Completed(completion.Get()));
+    completion->Wait();
+    return SUCCEEDED(saveAction->GetResults());
 }
 
 // Getting and Comparing File Contents
@@ -830,7 +1023,8 @@ NSString* const NSFileProtectionCompleteUntilFirstUserAuthentication = @"NSFileP
 // Getting the Relationship Between Items
 
 /**
- @Status Stub
+ @Status NotInPlan
+ @Notes UWP does not provide an API to perform this
 */
 - (BOOL)getRelationship:(NSURLRelationship*)outRelationship
        ofDirectoryAtURL:(NSURL*)directoryURL
@@ -841,7 +1035,8 @@ NSString* const NSFileProtectionCompleteUntilFirstUserAuthentication = @"NSFileP
 }
 
 /**
- @Status Stub
+ @Status NotInPlan
+ @Notes UWP does not provide an API to perform this
 */
 - (BOOL)getRelationship:(NSURLRelationship*)outRelationship
             ofDirectory:(NSSearchPathDirectory)directory
@@ -855,7 +1050,8 @@ NSString* const NSFileProtectionCompleteUntilFirstUserAuthentication = @"NSFileP
 // Converting File Paths to Strings
 
 /**
- @Status Stub
+ @Status NotInPlan
+ @Notes UWP does not provide an API to perform this
 */
 - (const char*)fileSystemRepresentationWithPath:(id)pathAddr {
     UNIMPLEMENTED();
@@ -863,7 +1059,8 @@ NSString* const NSFileProtectionCompleteUntilFirstUserAuthentication = @"NSFileP
 }
 
 /**
- @Status Stub
+ @Status NotInPlan
+ @Notes UWP does not provide an API to perform this
 */
 - (id)stringWithFileSystemRepresentation:(const char*)path length:(NSUInteger)length {
     UNIMPLEMENTED();
@@ -891,7 +1088,8 @@ NSString* const NSFileProtectionCompleteUntilFirstUserAuthentication = @"NSFileP
 // Deprecated Methods
 
 /**
- @Status Stub
+ @Status NotInPlan
+ @Notes UWP does not provide an API to perform this
 */
 - (BOOL)copyPath:(NSString*)src toPath:(NSString*)dest handler:handler {
     UNIMPLEMENTED();
@@ -899,7 +1097,8 @@ NSString* const NSFileProtectionCompleteUntilFirstUserAuthentication = @"NSFileP
 }
 
 /**
- @Status Stub
+ @Status NotInPlan
+ @Notes UWP does not provide an API to perform this
 */
 - (BOOL)movePath:(NSString*)src toPath:(NSString*)dest handler:handler {
     UNIMPLEMENTED();
@@ -907,7 +1106,8 @@ NSString* const NSFileProtectionCompleteUntilFirstUserAuthentication = @"NSFileP
 }
 
 /**
- @Status Stub
+ @Status NotInPlan
+ @Notes UWP does not provide an API to perform this
 */
 - (BOOL)removeFileAtPath:(NSString*)path handler:handler {
     UNIMPLEMENTED();
@@ -915,7 +1115,8 @@ NSString* const NSFileProtectionCompleteUntilFirstUserAuthentication = @"NSFileP
 }
 
 /**
- @Status Stub
+ @Status NotInPlan
+ @Notes UWP does not provide an API to perform this
 */
 - (BOOL)changeFileAttributes:(NSDictionary*)attributes atPath:(NSString*)path {
     UNIMPLEMENTED();
@@ -924,40 +1125,11 @@ NSString* const NSFileProtectionCompleteUntilFirstUserAuthentication = @"NSFileP
 
 /**
  @Status Caveat
- @Notes Only NSFileSize, NSFileType, NSFileCreationDate, NSFileModificationDate attributes are supported.
+ @Notes Only NSFileType, NSFileImmutable, NSFileSize, NSFileModificationDate, and NSFileCreationDate are supported
  @traverseLink not supported.
 */
-- (NSDictionary*)fileAttributesAtPath:(NSString*)pathAddr traverseLink:(BOOL)traveseLinks {
-    if (pathAddr == nil) {
-        TraceVerbose(TAG, L"fileAttributesAtPath nil!");
-
-        return nil;
-    }
-
-    struct stat st;
-
-    const char* path = [pathAddr UTF8String];
-    TraceVerbose(TAG, L"fileAttributesAtPath: %hs", path);
-
-    if (EbrStat(path, &st) == -1) {
-        return nil;
-    }
-
-    id ret = [NSMutableDictionary dictionary];
-
-    [ret setValue:[NSNumber numberWithInt:st.st_size] forKey:NSFileSize];
-
-    // NOTE: st_ctime is file creation time on windows for NTFS
-    [ret setValue:[NSDate dateWithTimeIntervalSince1970:st.st_ctime] forKey:NSFileCreationDate];
-    [ret setValue:[NSDate dateWithTimeIntervalSince1970:st.st_mtime] forKey:NSFileModificationDate];
-
-    if (st.st_mode & _S_IFDIR) {
-        [ret setValue:NSFileTypeDirectory forKey:NSFileType];
-    } else {
-        [ret setValue:NSFileTypeRegular forKey:NSFileType];
-    }
-
-    return ret;
+- (NSDictionary*)fileAttributesAtPath:(NSString*)path traverseLink:(BOOL)traveseLinks {
+    return [self attributesOfItemAtPath:path error:nullptr];
 }
 
 /**
@@ -1001,7 +1173,8 @@ NSString* const NSFileProtectionCompleteUntilFirstUserAuthentication = @"NSFileP
 }
 
 /**
- @Status Stub
+ @Status NotInPlan
+ @Notes UWP does not provide an API to perform this
 */
 - (BOOL)createSymbolicLinkAtPath:(NSString*)path pathContent:(NSString*)destination {
     UNIMPLEMENTED();
@@ -1009,7 +1182,8 @@ NSString* const NSFileProtectionCompleteUntilFirstUserAuthentication = @"NSFileP
 }
 
 /**
- @Status Stub
+ @Status NotInPlan
+ @Notes UWP does not provide an API to perform this
 */
 - (NSString*)pathContentOfSymbolicLinkAtPath:(NSString*)path {
     UNIMPLEMENTED();
@@ -1017,7 +1191,8 @@ NSString* const NSFileProtectionCompleteUntilFirstUserAuthentication = @"NSFileP
 }
 
 /**
- @Status Stub
+ @Status NotInPlan
+ @Notes UWP does not provide an API to perform this
 */
 - (BOOL)linkPath:(NSString*)source toPath:(NSString*)destination handler:handler {
     UNIMPLEMENTED();
@@ -1047,8 +1222,8 @@ NSString* const NSFileProtectionCompleteUntilFirstUserAuthentication = @"NSFileP
 @end
 
 /**
- @Status Stub
- @Notes
+ @Status NotInPlan
+ @Notes UWP does not provide an API to perform this
 */
 NSString* NSOpenStepRootDirectory() {
     UNIMPLEMENTED();

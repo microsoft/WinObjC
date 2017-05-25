@@ -74,8 +74,7 @@
 }
 
 /**
- @Status Caveat
- @Notes Value will not be set by NSFileManager methods
+ @Status Interoperable
 */
 - (BOOL)fileIsImmutable {
     return [[self objectForKey:NSFileImmutable] boolValue];
@@ -114,8 +113,7 @@
 }
 
 /**
- @Status Caveat
- @Notes Value will not be set by NSFileManager methods
+ @Status Interoperable
 */
 - (unsigned long long int)fileSize {
     return [[self objectForKey:NSFileSize] unsignedLongLongValue];

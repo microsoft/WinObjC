@@ -27,43 +27,6 @@
 #include <Starboard/SmartTypes.h>
 #include "TestUtils.h"
 
-TEST(NSFileManager, GetAttributes) {
-    NSString* testFileFullPath =
-        [[NSString stringWithUTF8String:GetCurrentTestDirectory().c_str()] stringByAppendingPathComponent:@"/data/NSFileManagerUT.txt"];
-
-    LOG_INFO("this test try to validate file creation date and modification date and size for %@", testFileFullPath);
-    NSFileManager* manager = [NSFileManager defaultManager];
-    ASSERT_TRUE_MSG([manager fileExistsAtPath:testFileFullPath], "Failed: file %@ does not exist", testFileFullPath);
-
-    NSDictionary* attributes = [manager fileAttributesAtPath:testFileFullPath traverseLink:YES];
-    ASSERT_TRUE_MSG(attributes != nil, "failed to get file attributes for %@", testFileFullPath);
-
-// Get file attributes from OS-side
-// _stat and _wstat are MS extensions
-#if TARGET_OS_WIN32
-    struct _stat fileStatus = { 0 };
-    ASSERT_TRUE(::_stat([testFileFullPath UTF8String], &fileStatus) == 0);
-#else
-    struct stat fileStatus = { 0 };
-    ASSERT_TRUE(stat([testFileFullPath UTF8String], &fileStatus) == 0);
-#endif
-
-    // check file creation date
-    NSDate* expectedCreationDate = [NSDate dateWithTimeIntervalSince1970:(double)fileStatus.st_ctime];
-    NSDate* creationDate = [attributes fileCreationDate];
-    ASSERT_TRUE_MSG(creationDate != nil, "failed to get creation date for %@", testFileFullPath);
-    ASSERT_OBJCEQ_MSG(expectedCreationDate, creationDate, "failed to check creation date for %@", testFileFullPath);
-
-    // check file modification date
-    NSDate* expectedModificationDate = [NSDate dateWithTimeIntervalSince1970:fileStatus.st_mtime];
-    NSDate* modificationDate = [attributes fileModificationDate];
-    ASSERT_TRUE_MSG(modificationDate != nil, "failed to get ModificationDate for %@", testFileFullPath);
-    ASSERT_OBJCEQ_MSG(expectedModificationDate, modificationDate, "failed to check modification date for %@", testFileFullPath);
-
-    // now check file size
-    ASSERT_EQ_MSG(fileStatus.st_size, static_cast<long>([attributes fileSize]), "failed to check file size for %@", testFileFullPath);
-}
-
 TEST(NSFileManager, EnumateDirectoryUsingURL) {
     NSFileManager* manager = [NSFileManager defaultManager];
     NSString* originalPath = [manager currentDirectoryPath];
@@ -217,4 +180,128 @@ TEST(NSFileManager, DirectoryWithUTF16Chars) {
     EXPECT_TRUE([[NSFileManager defaultManager] fileExistsAtPath:testPath]);
     EXPECT_TRUE([[NSFileManager defaultManager] removeItemAtPath:testPath error:nil]);
     EXPECT_FALSE([[NSFileManager defaultManager] fileExistsAtPath:testPath]);
+}
+
+TEST(NSFileManager, CopyFileViaURL) {
+    NSString* srcName = @"NSFileManagerCopyTestFileURL.txt";
+    NSString* destName = @"MovedFileURL.txt";
+    SCOPE_DELETE_FILE(srcName);
+    SCOPE_DELETE_FILE(destName);
+
+    NSString* content = @"The Quick Brown Fox.";
+    createFileWithContentAndVerify(srcName, content);
+
+    NSURL* srcURL = [NSURL fileURLWithPath:getPathToFile(srcName)];
+    NSURL* destURL = [NSURL fileURLWithPath:getPathToFile(destName)];
+
+    NSFileManager* manager = [NSFileManager defaultManager];
+
+    NSError* error = nil;
+    BOOL status = [manager copyItemAtURL:srcURL toURL:destURL error:&error];
+    EXPECT_TRUE(status);
+    EXPECT_EQ(nil, error);
+
+    // Verify file exists.
+    EXPECT_TRUE([manager fileExistsAtPath:[destURL path]]);
+    EXPECT_TRUE([manager fileExistsAtPath:[srcURL path]]);
+
+    // Verify data.
+    ASSERT_OBJCEQ([content dataUsingEncoding:NSUTF8StringEncoding], [NSData dataWithContentsOfURL:destURL]);
+}
+
+TEST(NSFileManager, GetSetAttributes) {
+    NSString* srcName = @"GETsetATTRIBUTES.txt";
+    SCOPE_DELETE_FILE(srcName);
+
+    NSString* content = @"The Quick Brown Fox.";
+    createFileWithContentAndVerify(srcName, content);
+    NSURL* srcURL = [NSURL fileURLWithPath:getPathToFile(srcName)];
+
+    NSDictionary* attributes = @{
+        NSFileType : NSFileTypeRegular,
+        NSFileImmutable : @YES,
+    };
+
+    NSFileManager* manager = [NSFileManager defaultManager];
+    NSError* error = nil;
+    EXPECT_TRUE([manager setAttributes:attributes ofItemAtPath:[srcURL path] error:&error]);
+    EXPECT_EQ(nil, error);
+
+    error = nil;
+    NSDictionary* retrievedAttributes = [manager attributesOfItemAtPath:[srcURL path] error:&error];
+    EXPECT_OBJCEQ(attributes[NSFileType], retrievedAttributes[NSFileType]);
+    EXPECT_OBJCEQ(attributes[NSFileImmutable], retrievedAttributes[NSFileImmutable]);
+    EXPECT_EQ(nil, error);
+}
+
+// Should never be more than 5 seconds apart from creating the date and creating the file
+// If it is then we've bigger problems than attributesOfItemAtPath:
+static constexpr double sc_timeThreshold = 5.0;
+TEST(NSFileManager, AttributesOfItemAtPath) {
+    NSString* srcName = @"NSFileManagerAttributeGetTestFile.txt";
+    NSString* content = @"The Quick Brown Fox.";
+    NSDate* rightNow = [NSDate date];
+    createFileWithContentAndVerify(srcName, content);
+    SCOPE_DELETE_FILE(srcName);
+    NSURL* srcURL = [NSURL fileURLWithPath:getPathToFile(srcName)];
+
+    NSFileManager* manager = [NSFileManager defaultManager];
+    NSError* error = nil;
+
+    NSDictionary* retrievedAttributes = [manager attributesOfItemAtPath:[srcURL path] error:&error];
+    EXPECT_OBJCEQ(NSFileTypeRegular, retrievedAttributes[NSFileType]);
+    EXPECT_OBJCEQ(@NO, retrievedAttributes[NSFileImmutable]);
+    EXPECT_OBJCEQ(@20, retrievedAttributes[NSFileSize]);
+
+    NSDate* modificationDate = retrievedAttributes[NSFileModificationDate];
+    EXPECT_NE(nil, modificationDate);
+    EXPECT_NEAR([rightNow timeIntervalSince1970], [modificationDate timeIntervalSince1970], 10);
+
+    NSDate* creationDate = retrievedAttributes[NSFileCreationDate];
+    EXPECT_NE(nil, creationDate);
+    EXPECT_NEAR([rightNow timeIntervalSince1970], [creationDate timeIntervalSince1970], 10);
+
+    EXPECT_EQ(nil, error);
+}
+
+TEST(NSFileManager, EnumeratorAtURL) {
+    NSString* subFolderName = @"SUBFOLDER";
+    NSString* itemName = @"ArBiTraRY_FiLE.txt";
+
+    NSFileManager* manager = [NSFileManager defaultManager];
+    [manager createDirectoryAtPath:subFolderName withIntermediateDirectories:NO attributes:nil error:nullptr];
+    createFileWithContentAndVerify(itemName, @"The Quick Brown Fox.");
+    SCOPE_DELETE_FILE(subFolderName);
+    SCOPE_DELETE_FILE(itemName);
+    NSString* currentDirectory = [manager currentDirectoryPath];
+
+    NSURL* current = [NSURL fileURLWithPath:currentDirectory];
+    NSDirectoryEnumerator* enumerator = [manager enumeratorAtURL:current
+                                      includingPropertiesForKeys:nil
+                                                         options:NSDirectoryEnumerationSkipsHiddenFiles
+                                                    errorHandler:^(NSURL* url, NSError* error) {
+                                                        return NO;
+                                                    }];
+
+    NSArray* all = [enumerator allObjects];
+    EXPECT_TRUE([all containsObject:[NSURL fileURLWithPath:[currentDirectory stringByAppendingPathComponent:subFolderName]]]);
+    EXPECT_TRUE([all containsObject:[NSURL fileURLWithPath:[currentDirectory stringByAppendingPathComponent:itemName]]]);
+}
+
+TEST(NSFileManager, SubPathsOfDirectoryAtPath) {
+    NSString* subFolderName = @"SUBFOLDER";
+    NSString* subSubFolderName = @"SUBFOLDER/SUBSUBFOLDER";
+    NSFileManager* manager = [NSFileManager defaultManager];
+    [manager createDirectoryAtPath:subFolderName withIntermediateDirectories:NO attributes:nil error:nullptr];
+    [manager createDirectoryAtPath:subSubFolderName withIntermediateDirectories:NO attributes:nil error:nullptr];
+    SCOPE_DELETE_FILE(subFolderName);
+    SCOPE_DELETE_FILE(subSubFolderName);
+
+    NSArray* subpaths = [manager subpathsOfDirectoryAtPath:[manager currentDirectoryPath] error:nullptr];
+
+    EXPECT_TRUE([subpaths containsObject:subFolderName]);
+    EXPECT_TRUE([subpaths containsObject:subSubFolderName]);
+
+    EXPECT_FALSE([subpaths containsObject:@"."]);
+    EXPECT_FALSE([subpaths containsObject:@".."]);
 }
