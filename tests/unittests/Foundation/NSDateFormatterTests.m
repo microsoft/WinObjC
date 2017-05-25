@@ -63,7 +63,10 @@ bool isSupportedLocaleAndTimeZone(NSLocale* locale, NSTimeZone* timezone) {
     return supportedTestCase;
 }
 
-TEST(NSDateFormatter, NSDateFormatter) {
+// This is due to time zone and time zone abbreviation mismatches on OSX Machines.
+// Currently these tests do not work well with same times that are abbreviated differently.
+// e.g  Greenwich Mean Time vs GMT
+OSX_DISABLED_TEST(NSDateFormatter, NSDateFormatter) {
     NSLocale* currentLocale = [NSLocale currentLocale];
     NSTimeZone* systemTimeZone = [NSTimeZone systemTimeZone];
 
