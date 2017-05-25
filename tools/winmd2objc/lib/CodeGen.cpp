@@ -2326,8 +2326,7 @@ wstring generateNugetProject(const map<wstring, pair<wstring, vector<shared_ptr<
     }
 
     referenceBlock += LR"~(
-    <PackageReference Include="GitVersionTask" Version="*" />
-    <PackageReference Include="Nuget.Build.Packaging" Version="*" />
+    <PackageReference Include="Nuget.Build.Packaging" Version="0.1.186" />
     <PackageReference Include="WinObjC.Packaging" Version="*" />
 )~";
     referenceBlock += LR"~(  </ItemGroup>)~";
@@ -2433,7 +2432,7 @@ void generateVCXProj(const pair<wstring, pair<wstring, vector<shared_ptr<NameSpa
     // clang-format off
     wstring packageReferences = LR"~(
   <ItemGroup>
-    <PackageReference Include="Nuget.Build.Packaging" Version="*" />
+    <PackageReference Include="Nuget.Build.Packaging" Version="0.1.186" />
     <PackageReference Include="WinObjC.Language" Version="*" />
     <PackageReference Include="WinObjC.Frameworks.UWP.Core" Version="*" />)~";
     for (auto& nugetInfo : nugetDependencies) {
