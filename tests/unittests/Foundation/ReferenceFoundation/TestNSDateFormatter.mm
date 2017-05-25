@@ -169,7 +169,12 @@ TEST(NSDateFormatter, DateStyleLong) {
 // locale  stringFromDate  example
 // ------  --------------  -------------------------
 // en_US   EEEE, MMMM d, y  Friday, December 25, 2015
-TEST(NSDateFormatter, DateStyleFull) {
+
+// WINOBJC
+// This is due to time zone and time zone abbreviation mismatches on OSX Machines.
+// Currently these tests do not work well with same times that are abbreviated differently.
+// e.g  Greenwich Mean Time vs GMT
+OSX_DISABLED_TEST(NSDateFormatter, DateStyleFull) {
     auto timestamps = @{
         @-31536000 : @"Wednesday, January 1, 1969 at 12:00:00 AM GMT",
         @0.0 : @"Thursday, January 1, 1970 at 12:00:00 AM GMT",
