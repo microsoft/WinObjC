@@ -440,10 +440,9 @@ static void hideAlert(UIAlertView* self, int index, BOOL animated) {
         boxWidth = screenRect.size.width * 0.9f;
     }
 
-    // TODO: we should get rid of all majic numbers in this file, at least define them
-    // with meaningful const
+    // TODO: we should get rid of all magic numbers in this file, at least define them with meaningful const
 
-    // itemOriginX specifies where the origin.x for title label or message label
+    // itemOriginX specifies where the origin.x is for title label or message label
     const float itemOriginX = 24.0f;
 
     // itemHorizontalPadding specifies the padding between title or message label and its parent container
