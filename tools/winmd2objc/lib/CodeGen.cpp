@@ -2390,10 +2390,6 @@ wstring generateNugetProject(const map<wstring, pair<wstring, vector<shared_ptr<
     <OutputPath>bin\$(Configuration)\</OutputPath>
     <ProjectGuid>)~" + guidAsString + LR"~(</ProjectGuid>
   </PropertyGroup>
-  <ItemGroup>
-    <None Include=")~" + solutionName + LR"~(.custom.props" />
-    <None Include=")~" + solutionName + LR"~(.custom.targets" />
-  </ItemGroup>
   )~" + referenceBlock + LR"~(
   <Import Project="$(MSBuildToolsPath)\Microsoft.Common.targets" />
   <Import Project="$(NuGetAuthoringPath)\NuGet.Packaging.Authoring.targets" Condition="Exists('$(NuGetAuthoringPath)\NuGet.Packaging.Authoring.targets')" />
@@ -2741,75 +2737,6 @@ void generateTargetsFileForPackageable(const wstring& outputDirectory, const wst
 
     FILE* targetsFile = nullptr;
     if (_wfopen_s(&targetsFile, (outputDirectory + L"\\" + solutionFileName + L".Packageable.targets").c_str(), L"w")) {
-        wprintf(L"Failed to open targets file\n");
-        exit(1);
-    }
-
-    fwprintf(targetsFile, content.c_str());
-
-    fclose(targetsFile);
-}
-
-void generatePropsFileForConsumption(const wstring& outputDirectory, const wstring& solutionFileName) {
-    // clang-format off
-    wstring content = LR"~(<?xml version="1.0" encoding="utf-8" standalone="no"?>
-<Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-</Project>)~";
-    // clang-format on
-
-    FILE* propsFile = nullptr;
-    if (_wfopen_s(&propsFile, (outputDirectory + L"\\" + solutionFileName + L".custom.props").c_str(), L"w")) {
-        wprintf(L"Failed to open targets file\n");
-        exit(1);
-    }
-
-    fwprintf(propsFile, content.c_str());
-
-    fclose(propsFile);
-}
-
-void generateTargetsFileForConsumption(const wstring& outputDirectory, const wstring& solutionFileName) {
-    // clang-format off
-    wstring content = LR"~(<?xml version="1.0" encoding="utf-8" standalone="no"?>
-
-<Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-    <PropertyGroup>
-      <TargetOsAndVersion Condition="'$(TargetOsAndVersion)' == ''">Universal Windows</TargetOsAndVersion>
-    </PropertyGroup>
-
-  <!-- Make sure that the output artifacts are included in the build. This means adding include paths and link libraries for it.
-    NOTE: It is important that this information is added at the end in the .targets instead of in the .props so that consumers don't
-    accidentally stomp it. This is contrary to a configurable type property that a consumer may want / need to adjust. To depend on
-    this package means the consumer gets these these things.  -->
-  <ItemGroup Condition="'$(ConfigurationType)' != 'StaticLibrary'">
-    <_LibsFromPackage Include="$(MSBuildThisFileDirectory)\lib\$(TargetOsAndVersion)\$(PlatformTarget)\*.dll"/>    
-    <_LibsFromPackage Include="$(MSBuildThisFileDirectory)\lib\$(TargetOsAndVersion)\$(PlatformTarget)\$(Configuration)\*.dll"/>
-    <_ImportLibsFromPackage Include="$(MSBuildThisFileDirectory)\lib\$(TargetOsAndVersion)\$(PlatformTarget)\*.lib"/>    
-    <_ImportLibsFromPackage Include="$(MSBuildThisFileDirectory)\lib\$(TargetOsAndVersion)\$(PlatformTarget)\$(Configuration)\*.lib"/>
-  </ItemGroup>
-
-  <ItemDefinitionGroup>
-    <ClCompile>
-      <AdditionalIncludeDirectories>$(MSBuildThisFileDirectory)\include\;%%(AdditionalIncludeDirectories);</AdditionalIncludeDirectories>
-    </ClCompile>
-
-    <!-- Add in the link bits only if its a "final" linked product like a  dll or exe -->
-    <Link Condition="'$(ConfigurationType)' != 'StaticLibrary'">
-      <AdditionalLibraryDirectories>$(MSBuildThisFileDirectory)\lib\$(TargetOsAndVersion)\$(PlatformTarget)\;$(MSBuildThisFileDirectory)\lib\$(TargetOsAndVersion)\$(PlatformTarget)\$(Configuration)\;$(MSBuildThisFileDirectory)\deps\prebuilt\$(TargetOsAndVersion)\$(PlatformTarget)\;$(MSBuildThisFileDirectory)\deps\prebuilt\$(TargetOsAndVersion)\$(PlatformTarget)\$(Configuration)\;%%(AdditionalLibraryDirectories);</AdditionalLibraryDirectories>
-    </Link>
-  </ItemDefinitionGroup>
-
-  <!-- TODO: This should use XMLPoke or similar to dynamically figure out where the important bits are packaged to.-->
-  <ItemGroup Condition="'$(ConfigurationType)' != 'StaticLibrary'">
-    <ReferenceCopyLocalPaths Include="@(_LibsFromPackage)"/>
-    <Link Include="@(_ImportLibsFromPackage)"/>
-  </ItemGroup>
-</Project>
-)~";
-    // clang-format on
-
-    FILE* targetsFile = nullptr;
-    if (_wfopen_s(&targetsFile, (outputDirectory + L"\\" + solutionFileName + L".custom.targets").c_str(), L"w")) {
         wprintf(L"Failed to open targets file\n");
         exit(1);
     }

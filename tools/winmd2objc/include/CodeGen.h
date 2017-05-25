@@ -65,8 +65,6 @@ void generateVCXProj(const std::pair<std::wstring, std::pair<std::wstring, std::
                      const std::wstring& solutionName);
 void generatePropsFileForPackageable(const std::wstring& outputDirectory, const std::wstring& solutionFileName);
 void generateTargetsFileForPackageable(const std::wstring& outputDirectory, const std::wstring& solutionFileName);
-void generatePropsFileForConsumption(const std::wstring& outputDirectory, const std::wstring& solutionFileName);
-void generateTargetsFileForConsumption(const std::wstring& outputDirectory, const std::wstring& solutionFileName);
 void generateSolutionFile(
     const std::map<std::wstring, std::pair<std::wstring, std::vector<std::shared_ptr<ObjectModel::NameSpace>>>>& moduleMap,
     const std::wstring& outputDirectory,
