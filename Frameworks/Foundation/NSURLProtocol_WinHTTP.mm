@@ -107,7 +107,10 @@ static ComPtr<IHttpClient> _getHttpClient() {
 #pragma endregion
 
 #pragma region Bridging Helpers
-static ComPtr<IHttpRequestMessage> _requestMessageForNS(NSURLRequest* nsRequest) {
+// Creates an IHttpRequestMessage for a given NSRequest
+// flattenedBodyStream is an in-out std::vector that may used to hold an in-memory copy of body data,
+// and must be kept alive until the message send completes
+static ComPtr<IHttpRequestMessage> _requestMessageForNS(NSURLRequest* nsRequest, std::vector<uint8_t>& flattenedBodyStream) {
     ComPtr<IHttpMethodFactory> httpMethodFactory;
     ComPtr<IHttpMethod> httpMethod;
     THROW_IF_FAILED(GetActivationFactory(Wrappers::HStringReference(RuntimeClass_Windows_Web_Http_HttpMethod).Get(), &httpMethodFactory));
@@ -151,12 +154,28 @@ static ComPtr<IHttpRequestMessage> _requestMessageForNS(NSURLRequest* nsRequest)
         }
     }
 
-    NSData* requestBody = nsRequest.HTTPBody;
-    if (nsRequest.HTTPBodyStream) {
-        // VSO 6693048: Properly support streaming bodies instead of flattening the data up front.
-        NSInputStream* bodyStream = nsRequest.HTTPBodyStream;
-        std::vector<uint8_t> flattenedBodyStream(kHTTPContentBufferSize);
+    ComPtr<IHttpContent> httpContent;
+    if (NSData* requestBody = nsRequest.HTTPBody) {
+        ComPtr<IBuffer> bodyBuffer;
+        THROW_IF_FAILED(BufferFromRawData(bodyBuffer.GetAddressOf(),
+                                          reinterpret_cast<unsigned char*>(const_cast<void*>([requestBody bytes])),
+                                          [requestBody length]));
+
+        ComPtr<IHttpBufferContentFactory> httpBufferContentFactory;
+        THROW_IF_FAILED(GetActivationFactory(Wrappers::HStringReference(RuntimeClass_Windows_Web_Http_HttpBufferContent).Get(),
+                                             &httpBufferContentFactory));
+        THROW_IF_FAILED(httpBufferContentFactory->CreateFromBuffer(bodyBuffer.Get(), &httpContent));
+        THROW_IF_FAILED(httpRequestMessage->put_Content(httpContent.Get()));
+
+    } else if (NSInputStream* bodyStream = nsRequest.HTTPBodyStream) {
+        // TODO #2721: Properly support streaming bodies instead of flattening the data up front.
+        if (bodyStream.streamStatus == NSStreamStatusNotOpen) {
+            [bodyStream open];
+        }
+
+        flattenedBodyStream.resize(kHTTPContentBufferSize);
         ptrdiff_t offset = 0;
+
         while ([bodyStream hasBytesAvailable]) {
             ptrdiff_t read = [bodyStream read:flattenedBodyStream.data() + offset maxLength:flattenedBodyStream.capacity() - offset];
             if (read == 0) {
@@ -164,21 +183,19 @@ static ComPtr<IHttpRequestMessage> _requestMessageForNS(NSURLRequest* nsRequest)
             }
 
             offset += read;
-            if (offset > flattenedBodyStream.capacity()) {
-                flattenedBodyStream.reserve(flattenedBodyStream.capacity() + kHTTPContentBufferSize);
+            if (offset >= flattenedBodyStream.capacity()) {
+                // Need to use resize rather than reserve here: reading into the vector doesn't properly increment the size
+                flattenedBodyStream.resize(flattenedBodyStream.capacity() + kHTTPContentBufferSize);
             }
         }
         [bodyStream close];
 
-        requestBody = [NSData dataWithBytes:flattenedBodyStream.data() length:offset];
-    }
+        // flattenedBodyStream needs to be exactly sized, as the winrt APIs below read in the opposite direction,
+        // adding any unused bytes at the end and truncating the beginning
+        flattenedBodyStream.resize(offset);
 
-    ComPtr<IHttpContent> httpContent;
-    if (requestBody) {
         ComPtr<IBuffer> bodyBuffer;
-        THROW_IF_FAILED(BufferFromRawData(bodyBuffer.GetAddressOf(),
-                                          reinterpret_cast<unsigned char*>(const_cast<void*>([requestBody bytes])),
-                                          [requestBody length]));
+        THROW_IF_FAILED(BufferFromRawData(bodyBuffer.GetAddressOf(), flattenedBodyStream.data(), flattenedBodyStream.size()));
 
         ComPtr<IHttpBufferContentFactory> httpBufferContentFactory;
         THROW_IF_FAILED(GetActivationFactory(Wrappers::HStringReference(RuntimeClass_Windows_Web_Http_HttpBufferContent).Get(),
@@ -212,6 +229,8 @@ static ComPtr<IHttpRequestMessage> _requestMessageForNS(NSURLRequest* nsRequest)
     ComPtr<AsyncHttpOperation> _httpRequestOperation;
     ComPtr<IHttpClient> _httpClient;
     StrongId<NSThread> _clientThread;
+
+    std::vector<uint8_t> _flattenedBodyStream;
 }
 @property (assign, atomic) bool cancelled;
 @end
@@ -264,7 +283,20 @@ static void __dispatchClientCallback(NSURLProtocol_WinHTTP* protocol, void (^cal
         NSError* error = nil;
 
         try {
-            auto httpRequestMessage = _requestMessageForNS(self.request);
+            auto httpRequestMessage = _requestMessageForNS(self.request, _flattenedBodyStream);
+
+            // TODO #2721: If this properly supports streaming bodies instead of flattening the data up front,
+            // more accurate callbacks can be done
+            NSInteger contentSize = self.request.HTTPBody ? self.request.HTTPBody.length : _flattenedBodyStream.size();
+            if (contentSize > 0) {
+                __dispatchClientCallback(self, ^void() {
+                    [self.client URLProtocol:self
+                                     didWriteData:contentSize
+                                totalBytesWritten:contentSize
+                        totalBytesExpectedToWrite:contentSize];
+                });
+            }
+
             THROW_IF_FAILED(_httpClient->SendRequestWithOptionAsync(httpRequestMessage.Get(),
                                                                     HttpCompletionOption::HttpCompletionOption_ResponseHeadersRead,
                                                                     &_httpRequestOperation));
