@@ -117,7 +117,7 @@ FOUNDATION_EXPORT_CLASS
 @interface NSURLSessionTask : NSObject <NSCopying>
 - (void)cancel;
 - (void)resume;
-- (void)suspend;
+- (void)suspend NOTINPLAN_METHOD;
 @property (readonly) NSURLSessionTaskState state;
 @property float priority;
 @property (readonly) int64_t countOfBytesExpectedToReceive;
@@ -169,8 +169,8 @@ FOUNDATION_EXPORT_CLASS
               totalBytesSent:(int64_t)totalBytesSent
     totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend;
 - (void)URLSession:(NSURLSession*)session
-              task:(NSURLSessionTask*)task
- needNewBodyStream:(void (^)(NSInputStream* bodyStream))completionHandler;
+                 task:(NSURLSessionTask*)task
+    needNewBodyStream:(void (^)(NSInputStream* bodyStream))completionHandler;
 - (void)URLSession:(NSURLSession*)session
                           task:(NSURLSessionTask*)task
     willPerformHTTPRedirection:(NSHTTPURLResponse*)response
@@ -181,17 +181,17 @@ FOUNDATION_EXPORT_CLASS
 @protocol NSURLSessionDataDelegate <NSURLSessionTaskDelegate>
 @optional
 - (void)URLSession:(NSURLSession*)session
-          dataTask:(NSURLSessionDataTask*)dataTask
-didReceiveResponse:(NSURLResponse*)response
- completionHandler:(void (^)(NSURLSessionResponseDisposition disposition))completionHandler;
+              dataTask:(NSURLSessionDataTask*)dataTask
+    didReceiveResponse:(NSURLResponse*)response
+     completionHandler:(void (^)(NSURLSessionResponseDisposition disposition))completionHandler;
 - (void)URLSession:(NSURLSession*)session
                  dataTask:(NSURLSessionDataTask*)dataTask
     didBecomeDownloadTask:(NSURLSessionDownloadTask*)downloadTask;
 - (void)URLSession:(NSURLSession*)session dataTask:(NSURLSessionDataTask*)dataTask didReceiveData:(NSData*)data;
 - (void)URLSession:(NSURLSession*)session
-          dataTask:(NSURLSessionDataTask*)dataTask
- willCacheResponse:(NSCachedURLResponse*)proposedResponse
- completionHandler:(void (^)(NSCachedURLResponse* cachedResponse))completionHandler;
+             dataTask:(NSURLSessionDataTask*)dataTask
+    willCacheResponse:(NSCachedURLResponse*)proposedResponse
+    completionHandler:(void (^)(NSCachedURLResponse* cachedResponse))completionHandler;
 @end
 
 @protocol NSURLSessionDownloadDelegate <NSURLSessionTaskDelegate>
@@ -199,9 +199,9 @@ didReceiveResponse:(NSURLResponse*)response
 
 @optional
 - (void)URLSession:(NSURLSession*)session
-      downloadTask:(NSURLSessionDownloadTask*)downloadTask
- didResumeAtOffset:(int64_t)fileOffset
-expectedTotalBytes:(int64_t)expectedTotalBytes;
+          downloadTask:(NSURLSessionDownloadTask*)downloadTask
+     didResumeAtOffset:(int64_t)fileOffset
+    expectedTotalBytes:(int64_t)expectedTotalBytes;
 - (void)URLSession:(NSURLSession*)session
                  downloadTask:(NSURLSessionDownloadTask*)downloadTask
                  didWriteData:(int64_t)bytesWritten

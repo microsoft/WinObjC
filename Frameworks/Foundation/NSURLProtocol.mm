@@ -14,15 +14,19 @@ WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEM
 COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
 OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
 
-#include "Starboard.h"
-#include "StubReturn.h"
-#include "Foundation/NSString.h"
-#include "Foundation/NSURLProtocol.h"
-#include "NSURLProtocol_file.h"
-#include "Foundation/NSMutableArray.h"
-#include "NSURLProtocolInternal.h"
-#include "NSRaise.h"
-#include "LoggingNative.h"
+#import <Starboard.h>
+#import <StubReturn.h>
+
+#import <Foundation/NSMutableArray.h>
+#import <Foundation/NSString.h>
+#import <Foundation/NSURLProtocol.h>
+
+#import <NSRaise.h>
+#import <LoggingNative.h>
+
+#import <NSURLProtocolInternal.h>
+#import <NSURLRequestInternal.h>
+#import "NSURLProtocol_file.h"
 
 static const wchar_t* TAG = L"NSURLProtocol";
 
@@ -113,28 +117,27 @@ static const wchar_t* TAG = L"NSURLProtocol";
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
 + (id)propertyForKey:(NSString*)key inRequest:(NSURLRequest*)request {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return [request _propertyForKey:key];
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
 + (void)setProperty:(id)value forKey:(NSString*)key inRequest:(NSMutableURLRequest*)request {
-    UNIMPLEMENTED();
+    [request _setProperty:value forKey:key];
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
 + (void)removePropertyForKey:(NSString*)key inRequest:(NSMutableURLRequest*)request {
-    UNIMPLEMENTED();
+    [request _removePropertyForKey:key];
 }
 
 /**
