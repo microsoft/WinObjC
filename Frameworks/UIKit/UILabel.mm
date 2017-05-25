@@ -231,7 +231,7 @@ static const wchar_t* TAG = L"UILabel";
         float adjustedFontSize = [self _searchAdjustedFontSizeToFit];
         if (adjustedFontSize != -1.0f && adjustedFontSize != [_font pointSize]) {
             _textBlock.FontSize(adjustedFontSize);
-            UIFont* adjustFont = [_font fontWithSize:adjustedFontSize]; 
+            UIFont* adjustFont = [_font fontWithSize:adjustedFontSize];
 
             // when updating font size, also need update lineheight
             _textBlock.LineHeight([adjustFont ascender] - [adjustFont descender]);
@@ -462,6 +462,7 @@ static const wchar_t* TAG = L"UILabel";
     if (numberOfLines != _numberOfLines) {
         _numberOfLines = numberOfLines;
         _textBlock.MaxLines(self.numberOfLines);
+        XamlUtilities::ApplyLineBreakModeOnTextBlock(_textBlock, _lineBreakMode, self.numberOfLines);
         [self _adjustTextBlockFontSizeIfNecessary];
     }
 }
@@ -671,7 +672,7 @@ static const wchar_t* TAG = L"UILabel";
         float adjustedFontSize = [self _searchAdjustedFontSizeToFit];
         if (adjustedFontSize != -1.0f && adjustedFontSize != curTextBlockFontSize) {
             _textBlock.FontSize(adjustedFontSize);
-            UIFont* adjustFont = [_font fontWithSize:adjustedFontSize]; 
+            UIFont* adjustFont = [_font fontWithSize:adjustedFontSize];
 
             // when updating font size, also need update lineheight
             _textBlock.LineHeight([adjustFont ascender] - [adjustFont descender]);
