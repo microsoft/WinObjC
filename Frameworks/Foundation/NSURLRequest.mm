@@ -140,6 +140,8 @@
     [coder encodeBool:_HTTPShouldUsePipelining forKey:@"HTTPShouldUsePipelining"];
     [coder encodeBool:_HTTPShouldHandleCookies forKey:@"HTTPShouldHandleCookies"];
     [coder encodeBool:_allowsCellularAccess forKey:@"allowsCellularAccess"];
+
+    [coder encodeObject:_properties forKey:@"_properties"];
 }
 
 /**
@@ -159,6 +161,8 @@
         _HTTPShouldUsePipelining = [coder decodeBoolForKey:@"HTTPShouldUsePipelining"];
         _HTTPShouldHandleCookies = [coder decodeBoolForKey:@"HTTPShouldHandleCookies"];
         _allowsCellularAccess = [coder decodeBoolForKey:@"allowsCellularAccess"];
+
+        _properties = [coder decodeObjectForKey:@"_properties"];
     }
     return self;
 }

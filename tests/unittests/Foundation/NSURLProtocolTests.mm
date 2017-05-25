@@ -29,6 +29,13 @@ TEST(NSURLProtocol, PropertyForKey_InRequest) {
     NSMutableURLRequest* copiedRequest = [[request mutableCopy] autorelease];
     ASSERT_OBJCEQ(@2, [NSURLProtocol propertyForKey:key inRequest:copiedRequest]);
 
+    NSData* data = nil;
+    ASSERT_NO_THROW(data = [NSKeyedArchiver archivedDataWithRootObject:request]);
+
+    NSMutableURLRequest* decodedRequest = nil;
+    ASSERT_NO_THROW(decodedRequest = [NSKeyedUnarchiver unarchiveObjectWithData:data]);
+    ASSERT_OBJCEQ(@2, [NSURLProtocol propertyForKey:key inRequest:decodedRequest]);
+
     [NSURLProtocol removePropertyForKey:key inRequest:request];
     ASSERT_OBJCEQ(nil, [NSURLProtocol propertyForKey:key inRequest:request]);
 }
