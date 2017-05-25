@@ -375,7 +375,7 @@ static void __dispatchDelegateCallback(NSURLConnection* connection, void (^callb
             [_delegate connection:self didFailWithError:error];
         }
 
-        if (--*delegateCount == 0) {
+        if (--(*delegateCount) == 0) {
             _protocol = nil;
             _delegate = nil;
             _done = true;
@@ -409,7 +409,7 @@ static void __dispatchDelegateCallback(NSURLConnection* connection, void (^callb
             cachedResponse = [_delegate connection:self willCacheResponse:cachedResponse];
         }
 
-        if (cachedResponse && (--*delegateCount == 0)) {
+        if (cachedResponse && (--(*delegateCount) == 0)) {
             [[NSURLCache sharedURLCache] storeCachedResponse:cachedResponse forRequest:_currentRequest];
         }
 
@@ -457,7 +457,7 @@ static void __dispatchDelegateCallback(NSURLConnection* connection, void (^callb
             [_delegate connectionDidFinishLoading:self];
         }
 
-        if (--*delegateCount == 0) {
+        if (--(*delegateCount) == 0) {
             _protocol = nil;
             _delegate = nil;
             _done = true;
@@ -497,7 +497,7 @@ static void __dispatchDelegateCallback(NSURLConnection* connection, void (^callb
             newRequest = [_delegate connection:self willSendRequest:newRequest redirectResponse:response];
         }
 
-        if (--*delegateCount == 0) {
+        if (--(*delegateCount) == 0) {
             _protocol = nil;
 
             if (!newRequest) {
