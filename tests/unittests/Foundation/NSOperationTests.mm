@@ -16,6 +16,7 @@
 
 #import <TestFramework.h>
 #import <Foundation/Foundation.h>
+#import "TestUtils.h"
 
 #import <thread>
 #import <mutex>
@@ -35,16 +36,6 @@ static void (^_completionBlockPopulatingConditionAndFlag(void (^completionBlock)
         [cond unlock];
     });
 }
-
-// Convenience class that wraps an NSCondition and an associated boolean, and implements the NSCondition usage pattern documented in:
-// https://developer.apple.com/reference/foundation/nscondition?language=objc
-// This can be replaced/re-implemented based on NSConditionLock once that has a stable implementation
-@interface _NSBooleanCondition : NSObject
-- (BOOL)waitUntilDate:(NSDate*)limit;
-- (void)broadcast;
-@property (readonly) NSCondition* condition;
-@property (readonly) bool isOpen;
-@end
 
 @implementation _NSBooleanCondition
 - (instancetype)init {

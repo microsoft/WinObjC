@@ -53,3 +53,13 @@ void deleteFile(NSString* name);
 @interface THRunLoopSpinner : NSObject
 - (void)scheduleAndAwaitBlock:(void (^)())block;
 @end
+
+// Convenience class that wraps an NSCondition and an associated boolean, and implements the NSCondition usage pattern documented in:
+// https://developer.apple.com/reference/foundation/nscondition?language=objc
+// This can be replaced/re-implemented based on NSConditionLock once that has a stable implementation
+@interface _NSBooleanCondition : NSObject
+- (BOOL)waitUntilDate:(NSDate*)limit;
+- (void)broadcast;
+@property (readonly) NSCondition* condition;
+@property (readonly) bool isOpen;
+@end
