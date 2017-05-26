@@ -772,8 +772,6 @@ Project("{5DD5E4FA-CB73-4610-85AB-557B54E96AA9}") = "WinObjC.Frameworks.Core", "
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Package", "Package", "{F0F1B2A3-6924-4A09-99CE-D08CD8BCF392}"
 EndProject
-Project("{5DD5E4FA-CB73-4610-85AB-557B54E96AA9}") = "WinObjC.Frameworks.UWP", "WinObjC.Frameworks.UWP\WinObjC.Frameworks.UWP.nuproj", "{B0F24416-5500-4A60-815B-8E08E9F3717A}"
-EndProject
 Project("{5DD5E4FA-CB73-4610-85AB-557B54E96AA9}") = "WinObjC.Frameworks", "WinObjC.Frameworks\WinObjC.Frameworks.nuproj", "{BEF15618-E03F-4A44-A797-9150C979B09F}"
 EndProject
 Project("{13B669BE-BB05-4DDF-9536-439F39A36129}") = "TestPlatformMultiplexer", "BuildSupport\TestPlatformMultiplexer.msbuildproj", "{60A07842-5D75-45E8-9FCF-C126E608B654}"
