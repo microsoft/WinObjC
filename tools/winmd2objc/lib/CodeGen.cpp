@@ -2387,7 +2387,7 @@ wstring generateNugetProject(const map<wstring, pair<wstring, vector<shared_ptr<
     <TargetFramework>uap10.0</TargetFramework>
   </PropertyGroup>
   <PropertyGroup Label="Globals">
-    <OutputPath>bin\$(Configuration)\</OutputPath>
+    <OutputPath>..\..\..\..\build\OutputPackages\$(Configuration)\</OutputPath>
     <ProjectGuid>)~" + guidAsString + LR"~(</ProjectGuid>
   </PropertyGroup>
   <ItemGroup>
