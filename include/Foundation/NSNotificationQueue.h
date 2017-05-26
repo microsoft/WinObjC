@@ -46,5 +46,5 @@ FOUNDATION_EXPORT_CLASS
                coalesceMask:(NSNotificationCoalescing)coalesceMask
                    forModes:(NSArray*)modes;
 
-- (void)dequeueNotificationsMatching:(NSNotification*)notification coalesceMask:(NSUInteger)coalesceMask STUB_METHOD;
+- (void)dequeueNotificationsMatching:(NSNotification*)notification coalesceMask:(NSUInteger)coalesceMask NOTINPLAN_METHOD;
 @end

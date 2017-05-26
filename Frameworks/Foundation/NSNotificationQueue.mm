@@ -67,6 +67,10 @@
                postingStyle:(NSPostingStyle)postingStyle
                coalesceMask:(NSNotificationCoalescing)coalesceMask
                    forModes:(NSArray*)modes {
+    if (!notification) {
+        [NSException raise:NSInvalidArgumentException format:@"*** %s: notification cannot be nil", __PRETTY_FUNCTION__];
+    }
+
     if (!modes) {
         modes = @[ NSDefaultRunLoopMode ];
     }
@@ -91,12 +95,15 @@
                                                   order:NSUIntegerMax
                                                   modes:modes];
             break;
+        default:
+            [NSException raise:NSInvalidArgumentException format:@"*** %s: unknown posting style %u", __PRETTY_FUNCTION__, (unsigned /* int */)postingStyle];
+            break;
     }
 }
 
 /**
- @Status Stub
- @Notes Doesn't unqueue anything because notifications are posted immediately.
+ @Status NotInPlan
+ @Notes Won't unqueue anything because notifications are posted immediately.
 */
 - (void)dequeueNotificationsMatching:(NSNotification*)notification coalesceMask:(NSUInteger)coalesceMask {
     UNIMPLEMENTED();
