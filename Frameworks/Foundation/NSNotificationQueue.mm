@@ -14,53 +14,94 @@
 //
 //******************************************************************************
 
-#include "Starboard.h"
-#include "StubReturn.h"
-#include "Foundation/NSNotificationQueue.h"
+#import <Foundation/NSNotificationQueue.h>
+#import <StubReturn.h>
+#import <Starboard/SmartTypes.h>
+
+@interface NSNotificationQueue () {
+    StrongId<NSNotificationCenter> _notificationCenter;
+}
+@end
 
 @implementation NSNotificationQueue
-
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
-+ (instancetype)defaultQueue {
-    // TODO: Intentionally commented out for now to prevent flooded debug spew from NSRunLoop's usage.
-    // UNIMPLEMENTED();
-    return StubReturn();
++ (NSNotificationQueue*)defaultQueue {
+    static thread_local StrongId<NSNotificationQueue> threadQueue{ woc::TakeOwnership,
+                                                                   [[NSNotificationQueue alloc]
+                                                                       initWithNotificationCenter:[NSNotificationCenter defaultCenter]] };
+    return threadQueue;
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 - (instancetype)initWithNotificationCenter:(NSNotificationCenter*)notificationCenter {
-    UNIMPLEMENTED();
-    return StubReturn();
+    if (self = [super init]) {
+        _notificationCenter = notificationCenter;
+    }
+    return self;
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Caveat
+ @Notes Does not coalesce notifications.
 */
 - (void)enqueueNotification:(NSNotification*)notification postingStyle:(NSPostingStyle)postingStyle {
-    UNIMPLEMENTED();
+    [self enqueueNotification:notification
+                 postingStyle:postingStyle
+                 coalesceMask:(NSNotificationCoalescingOnName | NSNotificationCoalescingOnSender)
+                     forModes:nil];
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Caveat
+ @Notes Ignores the coalescing mask.
 */
 - (void)enqueueNotification:(NSNotification*)notification
                postingStyle:(NSPostingStyle)postingStyle
                coalesceMask:(NSNotificationCoalescing)coalesceMask
                    forModes:(NSArray*)modes {
-    UNIMPLEMENTED();
+    if (!notification) {
+        [NSException raise:NSInvalidArgumentException format:@"*** %s: notification cannot be nil", __PRETTY_FUNCTION__];
+    }
+
+    if (!modes) {
+        modes = @[ NSDefaultRunLoopMode ];
+    }
+
+    if (postingStyle == NSPostNow) {
+        [_notificationCenter postNotification:notification];
+        return;
+    }
+
+    NSUInteger postOrder = 0;
+    switch (postingStyle) {
+        case NSPostASAP:
+            // NOTE: Posting with order 0 makes this the next thing to execute when the runloop spins again.
+            postOrder = 0;
+            break;
+        case NSPostWhenIdle:
+            // NOTE: Approximating "later" by passing the highest order we can; this should be scheduled after all other performs.
+            postOrder = NSUIntegerMax;
+            break;
+        default:
+            [NSException raise:NSInvalidArgumentException
+                        format:@"*** %s: unknown posting style %u", __PRETTY_FUNCTION__, (unsigned int)postingStyle];
+            break;
+    }
+
+    [[NSRunLoop currentRunLoop] performSelector:@selector(postNotification:)
+                                         target:_notificationCenter
+                                       argument:notification
+                                          order:postOrder
+                                          modes:modes];
 }
 
 /**
- @Status Stub
- @Notes
+ @Status NotInPlan
+ @Notes Won't unqueue anything because notifications are posted immediately.
 */
 - (void)dequeueNotificationsMatching:(NSNotification*)notification coalesceMask:(NSUInteger)coalesceMask {
     UNIMPLEMENTED();
