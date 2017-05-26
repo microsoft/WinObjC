@@ -19,6 +19,96 @@
 #import <atomic>
 #import <map>
 #import <random>
+#import <memory>
+
+@interface THRunLoopSpinner : NSObject {
+@public
+    std::shared_ptr<std::atomic<bool>> _shouldStop;
+    BOOL _threadStarted;
+    NSCondition* _threadStartedCondition;
+    NSRunLoop* _loop;
+    pthread_t _thread;
+}
+@property (nonatomic, readonly, retain) NSRunLoop* loop;
+@end
+
+@implementation THRunLoopSpinner
+static void* _helperThreadBody(void* context) {
+    __unsafe_unretained THRunLoopSpinner* unsafeHelper = (__bridge id)context;
+    @autoreleasepool {
+        std::shared_ptr<std::atomic<bool>> pShouldStop;
+        NSRunLoop* loop = nil;
+        { // scope guard for ownership of helper
+            __strong THRunLoopSpinner* helper = unsafeHelper;
+            pShouldStop =
+                helper->_shouldStop; // Capture the shared_ptr; the thread needs to read from it _after the helper is deallocated!_
+
+            loop = helper->_loop = [NSRunLoop currentRunLoop];
+
+            helper->_threadStarted = YES;
+            [helper->_threadStartedCondition lock];
+            [helper->_threadStartedCondition broadcast];
+            [helper->_threadStartedCondition unlock];
+        }
+
+        std::atomic<bool>& shouldStop = *pShouldStop;
+        while (!shouldStop) {
+            @autoreleasepool {
+                [loop runMode:NSDefaultRunLoopMode beforeDate:[NSDate dateWithTimeIntervalSinceNow:0.1]];
+            }
+        }
+    }
+    return nullptr;
+}
+
+- (instancetype)init {
+    if (self = [super init]) {
+        _shouldStop.reset(new std::atomic<bool>(false));
+        _threadStartedCondition = [NSCondition new];
+
+        [_threadStartedCondition lock];
+
+        auto rc = pthread_create(&_thread, nullptr, &_helperThreadBody, (__bridge void*)self);
+        ASSERT_EQ_MSG(0, rc, "Failed to create a thread");
+
+        while (!_threadStarted) {
+            [_threadStartedCondition wait];
+        }
+
+        [_threadStartedCondition unlock];
+    }
+    return self;
+}
+
+- (void)dealloc {
+    [self stop];
+}
+
+- (void)stop {
+    _shouldStop->store(true);
+    pthread_join(_thread, nullptr);
+}
+
+- (void)scheduleAndAwaitBlock:(void (^)())block {
+    NSCondition* condition = [NSCondition new];
+    __block bool _triggered = false;
+    void (^wrappedBlock)() = ^{
+        block();
+        [condition lock];
+        _triggered = true;
+        [condition broadcast];
+        [condition unlock];
+    };
+
+    [_loop performSelector:@selector(invoke) target:wrappedBlock argument:nil order:0 modes:@[ NSDefaultRunLoopMode ]];
+
+    [condition lock];
+    while (!_triggered) {
+        [condition wait];
+    }
+    [condition unlock];
+}
+@end
 
 typedef NS_ENUM(NSInteger, NSURLConnectionDelegateType) {
     NSURLConnectionDelegateDidReceiveResponse,
@@ -175,59 +265,33 @@ typedef NS_ENUM(NSInteger, NSURLConnectionDelegateType) {
 // Subclass of NSURLConnectionHelper that starts its connection on a separate thread's run loop.
 @interface NSURLConnectionTestHelper_RunLoop : NSURLConnectionTestHelper
 @property BOOL isStopped;
-@property (retain) NSThread* thread;
-- (void)doNothing;
-- (void)spinRunLoop;
-@property (assign) NSRunLoop* loop;
+@property (retain) THRunLoopSpinner* spinner;
 @end
 
 @implementation NSURLConnectionTestHelper_RunLoop
 
 - (instancetype)init {
     if (self = [super init]) {
-        _thread = [[NSThread alloc] initWithTarget:self selector:@selector(spinRunLoop) object:nil];
-        [_thread start];
+        _spinner = [THRunLoopSpinner new];
     }
     return self;
 }
 
-- (void)dealloc {
-    _isStopped = YES;
-}
-
-// Does nothing. Used to keep the run loop alive.
-- (void)doNothing {
-}
-
-// Keeps the run loop on the current thread spinning.
-- (void)spinRunLoop {
-    @autoreleasepool {
-        _loop = [NSRunLoop currentRunLoop];
-
-        NSTimer* timer = [NSTimer timerWithTimeInterval:0.1 target:self selector:@selector(doNothing) userInfo:nil repeats:YES];
-        [_loop addTimer:timer forMode:NSDefaultRunLoopMode];
-
-        while (!_isStopped) {
-            @autoreleasepool {
-                [_loop runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];
-            }
-        }
-    }
-}
-
 - (NSURLConnection*)createAndStartConnectionWithRequest:(NSURLRequest*)request {
     NSURLConnection* connection = [[NSURLConnection alloc] initWithRequest:request delegate:self startImmediately:NO];
-    [connection performSelector:@selector(start) onThread:_thread withObject:nil waitUntilDone:NO];
+    [_spinner scheduleAndAwaitBlock:^{
+        [connection start];
+    }];
     return connection;
 }
 
 - (void)connection:(NSURLConnection*)connection didReceiveResponse:(NSURLResponse*)response {
-    EXPECT_TRUE([_loop isEqual:[NSRunLoop currentRunLoop]]);
+    EXPECT_TRUE([_spinner.loop isEqual:[NSRunLoop currentRunLoop]]);
     [super connection:connection didReceiveResponse:response];
 }
 
 - (void)connection:(NSURLConnection*)connection didReceiveData:(nonnull NSData*)data {
-    EXPECT_TRUE([_loop isEqual:[NSRunLoop currentRunLoop]]);
+    EXPECT_TRUE([_spinner.loop isEqual:[NSRunLoop currentRunLoop]]);
     [super connection:connection didReceiveData:data];
 }
 
@@ -235,7 +299,7 @@ typedef NS_ENUM(NSInteger, NSURLConnectionDelegateType) {
               didSendBodyData:(NSInteger)bytesWritten
             totalBytesWritten:(NSInteger)totalBytesWritten
     totalBytesExpectedToWrite:(NSInteger)totalBytesExpectedToWrite {
-    EXPECT_TRUE([_loop isEqual:[NSRunLoop currentRunLoop]]);
+    EXPECT_TRUE([_spinner.loop isEqual:[NSRunLoop currentRunLoop]]);
     [super connection:connection
                   didSendBodyData:bytesWritten
                 totalBytesWritten:totalBytesWritten
@@ -243,12 +307,12 @@ typedef NS_ENUM(NSInteger, NSURLConnectionDelegateType) {
 }
 
 - (void)connection:(NSURLConnection*)connection didFailWithError:(NSError*)e {
-    EXPECT_TRUE([_loop isEqual:[NSRunLoop currentRunLoop]]);
+    EXPECT_TRUE([_spinner.loop isEqual:[NSRunLoop currentRunLoop]]);
     [super connection:connection didFailWithError:e];
 }
 
 - (void)connectionDidFinishLoading:(NSURLConnection*)connection {
-    EXPECT_TRUE([_loop isEqual:[NSRunLoop currentRunLoop]]);
+    EXPECT_TRUE([_spinner.loop isEqual:[NSRunLoop currentRunLoop]]);
     [super connectionDidFinishLoading:connection];
 }
 
@@ -258,9 +322,8 @@ typedef NS_ENUM(NSInteger, NSURLConnectionDelegateType) {
 @interface NSURLConnectionTestHelper_MultiRunLoop : NSURLConnectionTestHelper
 @property BOOL isStopped;
 @property (retain) NSMutableArray<NSThread*>* threads;
-- (void)doNothing;
-- (void)spinRunLoop;
 @property (retain) NSMutableArray<NSRunLoop*>* loops;
+@property (retain) NSMutableArray<THRunLoopSpinner*>* spinners;
 
 // Callback objects (request, response, data...) -> NSMutableSet<NSRunLoop>
 @property (retain) NSMapTable<id, NSMutableSet<NSRunLoop*>*>* callbacksFromLoops;
@@ -270,44 +333,19 @@ typedef NS_ENUM(NSInteger, NSURLConnectionDelegateType) {
 
 - (instancetype)init {
     if (self = [super init]) {
-        _threads = [NSMutableArray<NSThread*> new];
         _loops = [NSMutableArray<NSRunLoop*> new];
+        _spinners = [NSMutableArray<THRunLoopSpinner*> new];
 
         for (size_t i = 0; i < 3; ++i) {
-            NSThread* thread = [[NSThread alloc] initWithTarget:self selector:@selector(spinRunLoop) object:nil];
-            [_threads addObject:thread];
-            [thread start];
+            THRunLoopSpinner* spinner = [THRunLoopSpinner new];
+            [_spinners addObject:spinner];
+            [_loops addObject:[spinner loop]];
         }
 
         _callbacksFromLoops = [NSMapTable<id, NSMutableSet<NSRunLoop*>*> mapTableWithKeyOptions:NSMapTableObjectPointerPersonality
                                                                                    valueOptions:NSMapTableStrongMemory];
     }
     return self;
-}
-
-- (void)dealloc {
-    _isStopped = YES;
-}
-
-// Does nothing. Used to keep the run loop alive.
-- (void)doNothing {
-}
-
-// Keeps the run loop on the current thread spinning.
-- (void)spinRunLoop {
-    @autoreleasepool {
-        NSRunLoop* loop = [NSRunLoop currentRunLoop];
-        [_loops addObject:loop];
-
-        NSTimer* timer = [NSTimer timerWithTimeInterval:0.1 target:self selector:@selector(doNothing) userInfo:nil repeats:YES];
-        [loop addTimer:timer forMode:NSDefaultRunLoopMode];
-
-        while (!_isStopped) {
-            @autoreleasepool {
-                [loop runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];
-            }
-        }
-    }
 }
 
 - (BOOL)_allRunLoopsHaveCalledBackWith:(id)callbackObject {
@@ -322,7 +360,7 @@ typedef NS_ENUM(NSInteger, NSURLConnectionDelegateType) {
 
         [loopsThatHaveCalledBack addObject:[NSRunLoop currentRunLoop]];
 
-        return loopsThatHaveCalledBack.count == _threads.count;
+        return loopsThatHaveCalledBack.count == _loops.count;
     }
 }
 
