@@ -28,14 +28,10 @@
  @Status Interoperable
 */
 + (NSNotificationQueue*)defaultQueue {
-    @synchronized(self) {
-        NSNotificationQueue* threadQueue = [[[NSThread currentThread] threadDictionary] objectForKey:self];
-        if (!threadQueue) {
-            threadQueue = [[[NSNotificationQueue alloc] initWithNotificationCenter:[NSNotificationCenter defaultCenter]] autorelease];
-            [[[NSThread currentThread] threadDictionary] setObject:threadQueue forKey:self];
-        }
-        return [[threadQueue retain] autorelease];
-    }
+    static thread_local StrongId<NSNotificationQueue> threadQueue{ woc::TakeOwnership,
+                                                                   [[NSNotificationQueue alloc]
+                                                                       initWithNotificationCenter:[NSNotificationCenter defaultCenter]] };
+    return threadQueue;
 }
 
 /**
@@ -75,30 +71,32 @@
         modes = @[ NSDefaultRunLoopMode ];
     }
 
+    if (postingStyle == NSPostNow) {
+        [_notificationCenter postNotification:notification];
+        return;
+    }
+
+    NSUInteger postOrder = 0;
     switch (postingStyle) {
-        case NSPostNow:
-            [_notificationCenter postNotification:notification];
-            break;
         case NSPostASAP:
             // NOTE: Posting with order 0 makes this the next thing to execute when the runloop spins again.
-            [[NSRunLoop currentRunLoop] performSelector:@selector(postNotification:)
-                                                 target:_notificationCenter
-                                               argument:notification
-                                                  order:0
-                                                  modes:modes];
+            postOrder = 0;
             break;
         case NSPostWhenIdle:
             // NOTE: Approximating "later" by passing the highest order we can; this should be scheduled after all other performs.
-            [[NSRunLoop currentRunLoop] performSelector:@selector(postNotification:)
-                                                 target:_notificationCenter
-                                               argument:notification
-                                                  order:NSUIntegerMax
-                                                  modes:modes];
+            postOrder = NSUIntegerMax;
             break;
         default:
-            [NSException raise:NSInvalidArgumentException format:@"*** %s: unknown posting style %u", __PRETTY_FUNCTION__, (unsigned int)postingStyle];
+            [NSException raise:NSInvalidArgumentException
+                        format:@"*** %s: unknown posting style %u", __PRETTY_FUNCTION__, (unsigned int)postingStyle];
             break;
     }
+
+    [[NSRunLoop currentRunLoop] performSelector:@selector(postNotification:)
+                                         target:_notificationCenter
+                                       argument:notification
+                                          order:postOrder
+                                          modes:modes];
 }
 
 /**

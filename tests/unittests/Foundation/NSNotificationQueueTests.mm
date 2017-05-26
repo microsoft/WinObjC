@@ -17,11 +17,15 @@
 #import <Foundation/Foundation.h>
 #import <TestFramework.h>
 #import <Starboard/SmartTypes.h>
+#import "TestUtils.h"
+
+#import <atomic>
 
 @interface NSNotificationQueueTestHelper : NSObject {
     NSRunLoop* _loop;
     BOOL _isStopped;
-    NSCondition* _threadStartedCondition;
+    BOOL _isStarted;
+    _NSBooleanCondition* _threadStartedCondition;
 }
 @property (retain) NSThread* thread;
 - (void)scheduleAndAwaitBlock:(void (^)())block;
@@ -32,11 +36,11 @@
 - (instancetype)init {
     if (self = [super init]) {
         _thread = [[NSThread alloc] initWithTarget:self selector:@selector(spinRunLoop) object:nil];
-        _threadStartedCondition = [[NSCondition alloc] init];
-        [_threadStartedCondition lock];
+        _threadStartedCondition = [[_NSBooleanCondition alloc] init];
         [_thread start];
-        [_threadStartedCondition wait];
-        [_threadStartedCondition unlock];
+        [_threadStartedCondition waitUntilDate:[NSDate dateWithTimeIntervalSinceNow:10]];
+
+        ASSERT_TRUE(_threadStartedCondition.isOpen);
     }
     return self;
 }
@@ -60,9 +64,7 @@
         NSTimer* timer = [NSTimer timerWithTimeInterval:0.1 target:self selector:@selector(doNothing) userInfo:nil repeats:YES];
         [_loop addTimer:timer forMode:NSDefaultRunLoopMode];
 
-        [_threadStartedCondition lock];
         [_threadStartedCondition broadcast];
-        [_threadStartedCondition unlock];
 
         while (!_isStopped) {
             @autoreleasepool {
@@ -73,21 +75,17 @@
 }
 
 - (void)scheduleAndAwaitBlock:(void (^)())block {
-    NSCondition* condition = [[NSCondition new] autorelease];
+    _NSBooleanCondition* condition = [[_NSBooleanCondition new] autorelease];
     void (^wrappedBlock)() = ^{
-        //[condition unlock];
         block();
-        [condition lock];
         [condition broadcast];
-        [condition unlock];
     };
 
-    [condition lock]; // Lock commuted into block
     [_loop performSelector:@selector(invoke) target:wrappedBlock argument:nil order:0 modes:@[ NSDefaultRunLoopMode ]];
 
-    //[condition lock];
-    [condition wait];
-    [condition unlock];
+    [condition waitUntilDate:[NSDate dateWithTimeIntervalSinceNow:20]];
+
+    ASSERT_TRUE(condition.isOpen);
 }
 @end
 
@@ -128,27 +126,22 @@ TEST(NSNotificationQueue, PostASAP) {
         queue.attach([[NSNotificationQueue alloc] initWithNotificationCenter:notificationCenter]);
     }];
 
-    __block NSCondition* condition = [[NSCondition new] autorelease];
+    __block _NSBooleanCondition* condition = [[_NSBooleanCondition new] autorelease];
     __block int counter = 0;
     [notificationCenter addObserverForName:s_TestNotificationName
                                     object:nil
                                      queue:nil
                                 usingBlock:^(NSNotification* note) {
                                     ASSERT_OBJCEQ(s_TestNotificationName, note.name);
-                                    [condition lock];
                                     ++counter;
                                     [condition broadcast];
-                                    [condition unlock];
                                 }];
-
-    [condition lock];
 
     [helper scheduleAndAwaitBlock:^{
         [queue enqueueNotification:[NSNotification notificationWithName:s_TestNotificationName object:nil] postingStyle:NSPostASAP];
     }];
 
     [condition waitUntilDate:[NSDate dateWithTimeIntervalSinceNow:20]];
-    [condition unlock];
 
     ASSERT_EQ(1, counter);
 }
@@ -163,29 +156,60 @@ TEST(NSNotificationQueue, PostWhenIdle) {
         queue.attach([[NSNotificationQueue alloc] initWithNotificationCenter:notificationCenter]);
     }];
 
-    __block NSCondition* condition = [[NSCondition new] autorelease];
+    __block _NSBooleanCondition* condition = [[_NSBooleanCondition new] autorelease];
     __block int counter = 0;
     [notificationCenter addObserverForName:s_TestNotificationName
                                     object:nil
                                      queue:nil
                                 usingBlock:^(NSNotification* note) {
                                     ASSERT_OBJCEQ(s_TestNotificationName, note.name);
-                                    [condition lock];
                                     ++counter;
                                     [condition broadcast];
-                                    [condition unlock];
                                 }];
-
-    [condition lock];
 
     [helper scheduleAndAwaitBlock:^{
         [queue enqueueNotification:[NSNotification notificationWithName:s_TestNotificationName object:nil] postingStyle:NSPostWhenIdle];
     }];
 
     [condition waitUntilDate:[NSDate dateWithTimeIntervalSinceNow:20]];
-    [condition unlock];
 
     ASSERT_EQ(1, counter);
+}
+
+TEST(NSNotificationQueue, AllThreePostingStyles) {
+    static NSString* s_TestNotificationName = @(GetTestFullName().c_str());
+    NSNotificationCenter* notificationCenter = [[NSNotificationCenter new] autorelease];
+    NSNotificationQueueTestHelper* helper = [[NSNotificationQueueTestHelper new] autorelease];
+
+    __block StrongId<NSNotificationQueue> queue;
+    [helper scheduleAndAwaitBlock:^{
+        queue.attach([[NSNotificationQueue alloc] initWithNotificationCenter:notificationCenter]);
+    }];
+
+    dispatch_semaphore_t sema = dispatch_semaphore_create(0);
+    std::atomic<int> counter{ 0 };
+    std::atomic<int>* counterp = &counter; // __block couldn't defeat the copy construction of std::atomic?
+    [notificationCenter addObserverForName:s_TestNotificationName
+                                    object:nil
+                                     queue:nil
+                                usingBlock:^(NSNotification* note) {
+                                    ASSERT_OBJCEQ(s_TestNotificationName, note.name);
+                                    ++(*counterp);
+                                    dispatch_semaphore_signal(sema);
+                                }];
+
+    [helper scheduleAndAwaitBlock:^{
+        [queue enqueueNotification:[NSNotification notificationWithName:s_TestNotificationName object:nil] postingStyle:NSPostNow];
+        [queue enqueueNotification:[NSNotification notificationWithName:s_TestNotificationName object:nil] postingStyle:NSPostASAP];
+        [queue enqueueNotification:[NSNotification notificationWithName:s_TestNotificationName object:nil] postingStyle:NSPostWhenIdle];
+    }];
+
+    dispatch_time_t timeout = dispatch_time(DISPATCH_TIME_NOW, 20 * 1000000000 /*ns*/);
+    dispatch_semaphore_wait(sema, timeout); // three signals
+    dispatch_semaphore_wait(sema, timeout);
+    dispatch_semaphore_wait(sema, timeout);
+
+    ASSERT_EQ(3, counter);
 }
 
 TEST(NSNotificationQueue, ThreadsHaveDifferentQueues) {
