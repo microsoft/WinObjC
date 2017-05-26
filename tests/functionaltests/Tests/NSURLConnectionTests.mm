@@ -328,6 +328,15 @@ typedef NS_ENUM(NSInteger, NSURLConnectionDelegateType) {
 
 - (NSURLConnection*)createAndStartConnectionWithRequest:(NSURLRequest*)request {
     NSURLConnection* connection = [[NSURLConnection alloc] initWithRequest:request delegate:self startImmediately:NO];
+
+    for (size_t i = 0; i < 2; ++i) {
+        if (_loops.count != _threads.count) {
+            [NSThread sleepForTimeInterval:0.5];
+        }
+    }
+
+    ASSERT_EQ_MSG(_threads.count, _loops.count, "Run loops did not start in time.");
+
     for (NSRunLoop* runLoop : _loops) {
         [connection scheduleInRunLoop:runLoop forMode:NSDefaultRunLoopMode];
     }
