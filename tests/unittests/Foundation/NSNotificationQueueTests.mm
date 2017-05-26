@@ -24,7 +24,6 @@
 @interface NSNotificationQueueTestHelper : NSObject {
     NSRunLoop* _loop;
     BOOL _isStopped;
-    BOOL _isStarted;
     _NSBooleanCondition* _threadStartedCondition;
 }
 @property (retain) NSThread* thread;
