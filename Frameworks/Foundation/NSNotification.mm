@@ -124,6 +124,10 @@ static NSString* s_NSNotificationKeyUserInfo = @"NS.userinfo";
     // All other notifications are immutable.
     return [self retain];
 }
+
+- (NSUInteger)hash {
+    return [[self name] hash];
+}
 @end
 
 @implementation _NSConcreteNotification
