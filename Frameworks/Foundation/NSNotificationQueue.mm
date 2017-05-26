@@ -96,7 +96,7 @@
                                                   modes:modes];
             break;
         default:
-            [NSException raise:NSInvalidArgumentException format:@"*** %s: unknown posting style %u", __PRETTY_FUNCTION__, (unsigned /* int */)postingStyle];
+            [NSException raise:NSInvalidArgumentException format:@"*** %s: unknown posting style %u", __PRETTY_FUNCTION__, (unsigned int)postingStyle];
             break;
     }
 }
