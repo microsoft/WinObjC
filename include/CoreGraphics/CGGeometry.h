@@ -224,7 +224,6 @@ COREGRAPHICS_EXPORT CGRect CGRectIntegral(CGRect rect);
 COREGRAPHICS_EXPORT CGRect CGRectIntersection(CGRect r1, CGRect r2);
 COREGRAPHICS_EXPORT CGRect CGRectStandardize(CGRect rect);
 COREGRAPHICS_EXPORT CGRect CGRectUnion(CGRect a, CGRect b);
-COREGRAPHICS_EXPORT CGRect CGRectStandardize(CGRect rect);
 
 COREGRAPHICS_EXPORT CFDictionaryRef CGPointCreateDictionaryRepresentation(CGPoint point) STUB_METHOD;
 COREGRAPHICS_EXPORT CFDictionaryRef CGSizeCreateDictionaryRepresentation(CGSize size) STUB_METHOD;
