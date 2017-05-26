@@ -14,9 +14,9 @@
 //
 //******************************************************************************
 
-#include "Starboard.h"
-#include "StubReturn.h"
-#include "Foundation/NSNotificationQueue.h"
+#import <Foundation/NSNotificationQueue.h>
+#import <StubReturn.h>
+#import <Starboard/SmartTypes.h>
 
 @interface NSNotificationQueue () {
     StrongId<NSNotificationCenter> _notificationCenter;
@@ -25,18 +25,17 @@
 
 @implementation NSNotificationQueue
 /**
- @Status Caveat
- @Notes Since there is no state kept by the notification queue (and it dispatches notifications immediately), there is only one default
- queue.
-        The reference platform specifies that there is one per thread, and it follows that they keep different coalescing and dispatch
- state.
-        It stands to reason that a singleton that doesn't queue notifications functions identically to every thread.
+ @Status Interoperable
 */
 + (NSNotificationQueue*)defaultQueue {
-    static StrongId<NSNotificationQueue> s_defaultQueue{ woc::TakeOwnership,
-                                                         [[NSNotificationQueue alloc]
-                                                             initWithNotificationCenter:[NSNotificationCenter defaultCenter]] };
-    return s_defaultQueue;
+    @synchronized(self) {
+        NSNotificationQueue* threadQueue = [[[NSThread currentThread] threadDictionary] objectForKey:self];
+        if (!threadQueue) {
+            threadQueue = [[[NSNotificationQueue alloc] initWithNotificationCenter:[NSNotificationCenter defaultCenter]] autorelease];
+            [[[NSThread currentThread] threadDictionary] setObject:threadQueue forKey:self];
+        }
+        return [[threadQueue retain] autorelease];
+    }
 }
 
 /**
