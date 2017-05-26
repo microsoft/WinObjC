@@ -167,7 +167,7 @@ FOUNDATION_EXPORT_CLASS
 - (BOOL)isReadableFileAtPath:(NSString*)path;
 - (BOOL)isWritableFileAtPath:(NSString*)path;
 - (BOOL)isExecutableFileAtPath:(NSString*)path;
-- (BOOL)isDeletableFileAtPath:(NSString*)path;
+- (BOOL)isDeletableFileAtPath:(NSString*)path NOTINPLAN_METHOD;
 - (NSArray<NSString*>*)componentsToDisplayForPath:(NSString*)path;
 - (NSString*)displayNameAtPath:(NSString*)path;
 - (NSDictionary<NSString*, id>*)attributesOfItemAtPath:(NSString*)path error:(NSError* _Nullable*)error;

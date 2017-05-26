@@ -752,10 +752,12 @@ static NSDate* __SystemTimeToNSDate(DateTime systemTime) {
 }
 
 /**
- @Status Interoperable
+ @Status NotInPlan
+ @Notes UWP does not provide a single API to perform this
 */
 - (BOOL)isDeletableFileAtPath:(NSString*)path {
-    return EbrAccess([path UTF8String], 2) == 0 ? YES : NO;
+    UNIMPLEMENTED();
+    return StubReturn();
 }
 
 // Getting and Setting Attributes
