@@ -1,0 +1,8 @@
+LIBRARY ObjCUWPWindowsUI
+    EXPORTS
+     _OBJC_CLASS_WUColorHelper    DATA
+     __objc_class_name_WUColorHelper    CONSTANT
+     _OBJC_CLASS_WUColors    DATA
+     __objc_class_name_WUColors    CONSTANT
+     _OBJC_CLASS_WUColor    DATA
+     __objc_class_name_WUColor    CONSTANT

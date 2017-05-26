@@ -1,0 +1,24 @@
+LIBRARY ObjCUWPWindowsUIXamlMarkup
+    EXPORTS
+     _OBJC_CLASS_WUXMXamlBinaryWriter    DATA
+     __objc_class_name_WUXMXamlBinaryWriter    CONSTANT
+     _OBJC_CLASS_WUXMXamlReader    DATA
+     __objc_class_name_WUXMXamlReader    CONSTANT
+     _OBJC_CLASS_WUXMXamlBindingHelper    DATA
+     __objc_class_name_WUXMXamlBindingHelper    CONSTANT
+     _OBJC_CLASS_WUXMXamlBinaryWriterErrorInformation    DATA
+     __objc_class_name_WUXMXamlBinaryWriterErrorInformation    CONSTANT
+     _OBJC_CLASS_WUXMXmlnsDefinition    DATA
+     __objc_class_name_WUXMXmlnsDefinition    CONSTANT
+     _OBJC_CLASS_WUXMIComponentConnector    DATA
+     __objc_class_name_WUXMIComponentConnector    CONSTANT
+     _OBJC_CLASS_WUXMIComponentConnector2    DATA
+     __objc_class_name_WUXMIComponentConnector2    CONSTANT
+     _OBJC_CLASS_WUXMIXamlMember    DATA
+     __objc_class_name_WUXMIXamlMember    CONSTANT
+     _OBJC_CLASS_WUXMIXamlType    DATA
+     __objc_class_name_WUXMIXamlType    CONSTANT
+     _OBJC_CLASS_WUXMIXamlMetadataProvider    DATA
+     __objc_class_name_WUXMIXamlMetadataProvider    CONSTANT
+     _OBJC_CLASS_WUXMIDataTemplateComponent    DATA
+     __objc_class_name_WUXMIDataTemplateComponent    CONSTANT

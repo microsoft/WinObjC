@@ -1,0 +1,34 @@
+LIBRARY ObjCUWPWindowsMediaPlayTo
+    EXPORTS
+     _OBJC_CLASS_WMPSourceChangeRequestedEventArgs    DATA
+     __objc_class_name_WMPSourceChangeRequestedEventArgs    CONSTANT
+     _OBJC_CLASS_WMPPlaybackRateChangeRequestedEventArgs    DATA
+     __objc_class_name_WMPPlaybackRateChangeRequestedEventArgs    CONSTANT
+     _OBJC_CLASS_WMPCurrentTimeChangeRequestedEventArgs    DATA
+     __objc_class_name_WMPCurrentTimeChangeRequestedEventArgs    CONSTANT
+     _OBJC_CLASS_WMPMuteChangeRequestedEventArgs    DATA
+     __objc_class_name_WMPMuteChangeRequestedEventArgs    CONSTANT
+     _OBJC_CLASS_WMPVolumeChangeRequestedEventArgs    DATA
+     __objc_class_name_WMPVolumeChangeRequestedEventArgs    CONSTANT
+     _OBJC_CLASS_WMPPlayToReceiver    DATA
+     __objc_class_name_WMPPlayToReceiver    CONSTANT
+     _OBJC_CLASS_WMPPlayToConnection    DATA
+     __objc_class_name_WMPPlayToConnection    CONSTANT
+     _OBJC_CLASS_WMPPlayToSource    DATA
+     __objc_class_name_WMPPlayToSource    CONSTANT
+     _OBJC_CLASS_WMPPlayToConnectionStateChangedEventArgs    DATA
+     __objc_class_name_WMPPlayToConnectionStateChangedEventArgs    CONSTANT
+     _OBJC_CLASS_WMPPlayToConnectionTransferredEventArgs    DATA
+     __objc_class_name_WMPPlayToConnectionTransferredEventArgs    CONSTANT
+     _OBJC_CLASS_WMPPlayToConnectionErrorEventArgs    DATA
+     __objc_class_name_WMPPlayToConnectionErrorEventArgs    CONSTANT
+     _OBJC_CLASS_WMPPlayToSourceSelectedEventArgs    DATA
+     __objc_class_name_WMPPlayToSourceSelectedEventArgs    CONSTANT
+     _OBJC_CLASS_WMPPlayToSourceDeferral    DATA
+     __objc_class_name_WMPPlayToSourceDeferral    CONSTANT
+     _OBJC_CLASS_WMPPlayToSourceRequest    DATA
+     __objc_class_name_WMPPlayToSourceRequest    CONSTANT
+     _OBJC_CLASS_WMPPlayToSourceRequestedEventArgs    DATA
+     __objc_class_name_WMPPlayToSourceRequestedEventArgs    CONSTANT
+     _OBJC_CLASS_WMPPlayToManager    DATA
+     __objc_class_name_WMPPlayToManager    CONSTANT

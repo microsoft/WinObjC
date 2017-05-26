@@ -1,0 +1,18 @@
+LIBRARY ObjCUWPWindowsUIInputPreviewInjection
+    EXPORTS
+     _OBJC_CLASS_WUIPIInjectedInputKeyboardInfo    DATA
+     __objc_class_name_WUIPIInjectedInputKeyboardInfo    CONSTANT
+     _OBJC_CLASS_WUIPIInjectedInputMouseInfo    DATA
+     __objc_class_name_WUIPIInjectedInputMouseInfo    CONSTANT
+     _OBJC_CLASS_WUIPIInjectedInputTouchInfo    DATA
+     __objc_class_name_WUIPIInjectedInputTouchInfo    CONSTANT
+     _OBJC_CLASS_WUIPIInjectedInputPenInfo    DATA
+     __objc_class_name_WUIPIInjectedInputPenInfo    CONSTANT
+     _OBJC_CLASS_WUIPIInputInjector    DATA
+     __objc_class_name_WUIPIInputInjector    CONSTANT
+     _OBJC_CLASS_WUIPIInjectedInputRectangle    DATA
+     __objc_class_name_WUIPIInjectedInputRectangle    CONSTANT
+     _OBJC_CLASS_WUIPIInjectedInputPoint    DATA
+     __objc_class_name_WUIPIInjectedInputPoint    CONSTANT
+     _OBJC_CLASS_WUIPIInjectedInputPointerInfo    DATA
+     __objc_class_name_WUIPIInjectedInputPointerInfo    CONSTANT

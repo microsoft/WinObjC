@@ -1,0 +1,12 @@
+LIBRARY ObjCUWPWindowsPhoneManagementDeployment
+    EXPORTS
+     _OBJC_CLASS_WPMDEnterprise    DATA
+     __objc_class_name_WPMDEnterprise    CONSTANT
+     _OBJC_CLASS_WPMDEnterpriseEnrollmentResult    DATA
+     __objc_class_name_WPMDEnterpriseEnrollmentResult    CONSTANT
+     _OBJC_CLASS_WPMDPackageInstallResult    DATA
+     __objc_class_name_WPMDPackageInstallResult    CONSTANT
+     _OBJC_CLASS_WPMDInstallationManager    DATA
+     __objc_class_name_WPMDInstallationManager    CONSTANT
+     _OBJC_CLASS_WPMDEnterpriseEnrollmentManager    DATA
+     __objc_class_name_WPMDEnterpriseEnrollmentManager    CONSTANT

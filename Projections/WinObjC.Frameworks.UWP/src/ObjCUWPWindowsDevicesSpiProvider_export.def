@@ -1,0 +1,10 @@
+LIBRARY ObjCUWPWindowsDevicesSpiProvider
+    EXPORTS
+     _OBJC_CLASS_WDSPProviderSpiConnectionSettings    DATA
+     __objc_class_name_WDSPProviderSpiConnectionSettings    CONSTANT
+     _OBJC_CLASS_WDSPISpiControllerProvider    DATA
+     __objc_class_name_WDSPISpiControllerProvider    CONSTANT
+     _OBJC_CLASS_WDSPISpiProvider    DATA
+     __objc_class_name_WDSPISpiProvider    CONSTANT
+     _OBJC_CLASS_WDSPISpiDeviceProvider    DATA
+     __objc_class_name_WDSPISpiDeviceProvider    CONSTANT

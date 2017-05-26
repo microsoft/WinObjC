@@ -1,0 +1,16 @@
+LIBRARY ObjCUWPWindowsFoundationNumerics
+    EXPORTS
+     _OBJC_CLASS_WFNVector2    DATA
+     __objc_class_name_WFNVector2    CONSTANT
+     _OBJC_CLASS_WFNVector3    DATA
+     __objc_class_name_WFNVector3    CONSTANT
+     _OBJC_CLASS_WFNVector4    DATA
+     __objc_class_name_WFNVector4    CONSTANT
+     _OBJC_CLASS_WFNMatrix3x2    DATA
+     __objc_class_name_WFNMatrix3x2    CONSTANT
+     _OBJC_CLASS_WFNMatrix4x4    DATA
+     __objc_class_name_WFNMatrix4x4    CONSTANT
+     _OBJC_CLASS_WFNPlane    DATA
+     __objc_class_name_WFNPlane    CONSTANT
+     _OBJC_CLASS_WFNQuaternion    DATA
+     __objc_class_name_WFNQuaternion    CONSTANT

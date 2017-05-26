@@ -1,0 +1,12 @@
+LIBRARY ObjCUWPWindowsDevicesI2c
+    EXPORTS
+     _OBJC_CLASS_WDII2cConnectionSettings    DATA
+     __objc_class_name_WDII2cConnectionSettings    CONSTANT
+     _OBJC_CLASS_WDII2cDevice    DATA
+     __objc_class_name_WDII2cDevice    CONSTANT
+     _OBJC_CLASS_WDII2cController    DATA
+     __objc_class_name_WDII2cController    CONSTANT
+     _OBJC_CLASS_WDII2cTransferResult    DATA
+     __objc_class_name_WDII2cTransferResult    CONSTANT
+     _OBJC_CLASS_WDIII2cDeviceStatics    DATA
+     __objc_class_name_WDIII2cDeviceStatics    CONSTANT

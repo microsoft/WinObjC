@@ -1,0 +1,6 @@
+LIBRARY ObjCUWPWindowsApplicationModelCommunicationBlocking
+    EXPORTS
+     _OBJC_CLASS_WACCommunicationBlockingAppManager    DATA
+     __objc_class_name_WACCommunicationBlockingAppManager    CONSTANT
+     _OBJC_CLASS_WACCommunicationBlockingAccessManager    DATA
+     __objc_class_name_WACCommunicationBlockingAccessManager    CONSTANT

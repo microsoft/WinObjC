@@ -1,0 +1,36 @@
+LIBRARY ObjCUWPWindowsFoundationDiagnostics
+    EXPORTS
+     _OBJC_CLASS_WFDTracingStatusChangedEventArgs    DATA
+     __objc_class_name_WFDTracingStatusChangedEventArgs    CONSTANT
+     _OBJC_CLASS_WFDAsyncCausalityTracer    DATA
+     __objc_class_name_WFDAsyncCausalityTracer    CONSTANT
+     _OBJC_CLASS_WFDRuntimeBrokerErrorSettings    DATA
+     __objc_class_name_WFDRuntimeBrokerErrorSettings    CONSTANT
+     _OBJC_CLASS_WFDErrorDetails    DATA
+     __objc_class_name_WFDErrorDetails    CONSTANT
+     _OBJC_CLASS_WFDLoggingOptions    DATA
+     __objc_class_name_WFDLoggingOptions    CONSTANT
+     _OBJC_CLASS_WFDLoggingChannelOptions    DATA
+     __objc_class_name_WFDLoggingChannelOptions    CONSTANT
+     _OBJC_CLASS_WFDLoggingFields    DATA
+     __objc_class_name_WFDLoggingFields    CONSTANT
+     _OBJC_CLASS_WFDLoggingActivity    DATA
+     __objc_class_name_WFDLoggingActivity    CONSTANT
+     _OBJC_CLASS_WFDLoggingChannel    DATA
+     __objc_class_name_WFDLoggingChannel    CONSTANT
+     _OBJC_CLASS_WFDLoggingSession    DATA
+     __objc_class_name_WFDLoggingSession    CONSTANT
+     _OBJC_CLASS_WFDLogFileGeneratedEventArgs    DATA
+     __objc_class_name_WFDLogFileGeneratedEventArgs    CONSTANT
+     _OBJC_CLASS_WFDFileLoggingSession    DATA
+     __objc_class_name_WFDFileLoggingSession    CONSTANT
+     _OBJC_CLASS_WFDIErrorReportingSettings    DATA
+     __objc_class_name_WFDIErrorReportingSettings    CONSTANT
+     _OBJC_CLASS_WFDILoggingTarget    DATA
+     __objc_class_name_WFDILoggingTarget    CONSTANT
+     _OBJC_CLASS_WFDILoggingChannel    DATA
+     __objc_class_name_WFDILoggingChannel    CONSTANT
+     _OBJC_CLASS_WFDILoggingSession    DATA
+     __objc_class_name_WFDILoggingSession    CONSTANT
+     _OBJC_CLASS_WFDIFileLoggingSession    DATA
+     __objc_class_name_WFDIFileLoggingSession    CONSTANT

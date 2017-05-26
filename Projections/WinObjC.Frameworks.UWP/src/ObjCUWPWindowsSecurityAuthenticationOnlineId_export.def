@@ -1,0 +1,14 @@
+LIBRARY ObjCUWPWindowsSecurityAuthenticationOnlineId
+    EXPORTS
+     _OBJC_CLASS_WSAOOnlineIdServiceTicketRequest    DATA
+     __objc_class_name_WSAOOnlineIdServiceTicketRequest    CONSTANT
+     _OBJC_CLASS_WSAOOnlineIdServiceTicket    DATA
+     __objc_class_name_WSAOOnlineIdServiceTicket    CONSTANT
+     _OBJC_CLASS_WSAOUserAuthenticationOperation    DATA
+     __objc_class_name_WSAOUserAuthenticationOperation    CONSTANT
+     _OBJC_CLASS_WSAOSignOutUserOperation    DATA
+     __objc_class_name_WSAOSignOutUserOperation    CONSTANT
+     _OBJC_CLASS_WSAOUserIdentity    DATA
+     __objc_class_name_WSAOUserIdentity    CONSTANT
+     _OBJC_CLASS_WSAOOnlineIdAuthenticator    DATA
+     __objc_class_name_WSAOOnlineIdAuthenticator    CONSTANT

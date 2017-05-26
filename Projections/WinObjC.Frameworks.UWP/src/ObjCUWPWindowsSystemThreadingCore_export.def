@@ -1,0 +1,6 @@
+LIBRARY ObjCUWPWindowsSystemThreadingCore
+    EXPORTS
+     _OBJC_CLASS_WSTCSignalNotifier    DATA
+     __objc_class_name_WSTCSignalNotifier    CONSTANT
+     _OBJC_CLASS_WSTCPreallocatedWorkItem    DATA
+     __objc_class_name_WSTCPreallocatedWorkItem    CONSTANT

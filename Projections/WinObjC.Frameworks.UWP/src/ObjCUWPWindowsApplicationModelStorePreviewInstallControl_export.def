@@ -1,0 +1,10 @@
+LIBRARY ObjCUWPWindowsApplicationModelStorePreviewInstallControl
+    EXPORTS
+     _OBJC_CLASS_WASPIAppInstallStatus    DATA
+     __objc_class_name_WASPIAppInstallStatus    CONSTANT
+     _OBJC_CLASS_WASPIAppInstallItem    DATA
+     __objc_class_name_WASPIAppInstallItem    CONSTANT
+     _OBJC_CLASS_WASPIAppInstallManagerItemEventArgs    DATA
+     __objc_class_name_WASPIAppInstallManagerItemEventArgs    CONSTANT
+     _OBJC_CLASS_WASPIAppInstallManager    DATA
+     __objc_class_name_WASPIAppInstallManager    CONSTANT

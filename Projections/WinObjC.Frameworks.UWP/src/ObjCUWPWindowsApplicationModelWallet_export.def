@@ -1,0 +1,18 @@
+LIBRARY ObjCUWPWindowsApplicationModelWallet
+    EXPORTS
+     _OBJC_CLASS_WAWWalletBarcode    DATA
+     __objc_class_name_WAWWalletBarcode    CONSTANT
+     _OBJC_CLASS_WAWWalletTransaction    DATA
+     __objc_class_name_WAWWalletTransaction    CONSTANT
+     _OBJC_CLASS_WAWWalletRelevantLocation    DATA
+     __objc_class_name_WAWWalletRelevantLocation    CONSTANT
+     _OBJC_CLASS_WAWWalletItemCustomProperty    DATA
+     __objc_class_name_WAWWalletItemCustomProperty    CONSTANT
+     _OBJC_CLASS_WAWWalletVerb    DATA
+     __objc_class_name_WAWWalletVerb    CONSTANT
+     _OBJC_CLASS_WAWWalletItem    DATA
+     __objc_class_name_WAWWalletItem    CONSTANT
+     _OBJC_CLASS_WAWWalletItemStore    DATA
+     __objc_class_name_WAWWalletItemStore    CONSTANT
+     _OBJC_CLASS_WAWWalletManager    DATA
+     __objc_class_name_WAWWalletManager    CONSTANT

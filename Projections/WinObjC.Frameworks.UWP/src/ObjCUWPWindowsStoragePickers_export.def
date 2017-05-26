@@ -1,0 +1,14 @@
+LIBRARY ObjCUWPWindowsStoragePickers
+    EXPORTS
+     _OBJC_CLASS_WSPFilePickerSelectedFilesArray    DATA
+     __objc_class_name_WSPFilePickerSelectedFilesArray    CONSTANT
+     _OBJC_CLASS_WSPFilePickerFileTypesOrderedMap    DATA
+     __objc_class_name_WSPFilePickerFileTypesOrderedMap    CONSTANT
+     _OBJC_CLASS_WSPFileExtensionVector    DATA
+     __objc_class_name_WSPFileExtensionVector    CONSTANT
+     _OBJC_CLASS_WSPFileOpenPicker    DATA
+     __objc_class_name_WSPFileOpenPicker    CONSTANT
+     _OBJC_CLASS_WSPFileSavePicker    DATA
+     __objc_class_name_WSPFileSavePicker    CONSTANT
+     _OBJC_CLASS_WSPFolderPicker    DATA
+     __objc_class_name_WSPFolderPicker    CONSTANT

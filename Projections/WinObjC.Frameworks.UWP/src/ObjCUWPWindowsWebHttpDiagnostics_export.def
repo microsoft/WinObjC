@@ -1,0 +1,14 @@
+LIBRARY ObjCUWPWindowsWebHttpDiagnostics
+    EXPORTS
+     _OBJC_CLASS_WWHDHttpDiagnosticSourceLocation    DATA
+     __objc_class_name_WWHDHttpDiagnosticSourceLocation    CONSTANT
+     _OBJC_CLASS_WWHDHttpDiagnosticProviderRequestSentEventArgs    DATA
+     __objc_class_name_WWHDHttpDiagnosticProviderRequestSentEventArgs    CONSTANT
+     _OBJC_CLASS_WWHDHttpDiagnosticProviderResponseReceivedEventArgs    DATA
+     __objc_class_name_WWHDHttpDiagnosticProviderResponseReceivedEventArgs    CONSTANT
+     _OBJC_CLASS_WWHDHttpDiagnosticProviderRequestResponseTimestamps    DATA
+     __objc_class_name_WWHDHttpDiagnosticProviderRequestResponseTimestamps    CONSTANT
+     _OBJC_CLASS_WWHDHttpDiagnosticProviderRequestResponseCompletedEventArgs    DATA
+     __objc_class_name_WWHDHttpDiagnosticProviderRequestResponseCompletedEventArgs    CONSTANT
+     _OBJC_CLASS_WWHDHttpDiagnosticProvider    DATA
+     __objc_class_name_WWHDHttpDiagnosticProvider    CONSTANT

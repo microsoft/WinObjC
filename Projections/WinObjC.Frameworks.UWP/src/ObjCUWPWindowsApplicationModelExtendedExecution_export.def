@@ -1,0 +1,6 @@
+LIBRARY ObjCUWPWindowsApplicationModelExtendedExecution
+    EXPORTS
+     _OBJC_CLASS_WAEExtendedExecutionRevokedEventArgs    DATA
+     __objc_class_name_WAEExtendedExecutionRevokedEventArgs    CONSTANT
+     _OBJC_CLASS_WAEExtendedExecutionSession    DATA
+     __objc_class_name_WAEExtendedExecutionSession    CONSTANT

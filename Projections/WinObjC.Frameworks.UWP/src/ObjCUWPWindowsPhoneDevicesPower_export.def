@@ -1,0 +1,4 @@
+LIBRARY ObjCUWPWindowsPhoneDevicesPower
+    EXPORTS
+     _OBJC_CLASS_WPDPBattery    DATA
+     __objc_class_name_WPDPBattery    CONSTANT

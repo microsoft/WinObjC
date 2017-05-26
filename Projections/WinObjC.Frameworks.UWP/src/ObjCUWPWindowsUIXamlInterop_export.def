@@ -1,0 +1,18 @@
+LIBRARY ObjCUWPWindowsUIXamlInterop
+    EXPORTS
+     _OBJC_CLASS_WUXINotifyCollectionChangedEventArgs    DATA
+     __objc_class_name_WUXINotifyCollectionChangedEventArgs    CONSTANT
+     _OBJC_CLASS_WUXITypeName    DATA
+     __objc_class_name_WUXITypeName    CONSTANT
+     _OBJC_CLASS_WUXIIBindableIterable    DATA
+     __objc_class_name_WUXIIBindableIterable    CONSTANT
+     _OBJC_CLASS_WUXIIBindableVector    DATA
+     __objc_class_name_WUXIIBindableVector    CONSTANT
+     _OBJC_CLASS_WUXIIBindableObservableVector    DATA
+     __objc_class_name_WUXIIBindableObservableVector    CONSTANT
+     _OBJC_CLASS_WUXIIBindableVectorView    DATA
+     __objc_class_name_WUXIIBindableVectorView    CONSTANT
+     _OBJC_CLASS_WUXIIBindableIterator    DATA
+     __objc_class_name_WUXIIBindableIterator    CONSTANT
+     _OBJC_CLASS_WUXIINotifyCollectionChanged    DATA
+     __objc_class_name_WUXIINotifyCollectionChanged    CONSTANT

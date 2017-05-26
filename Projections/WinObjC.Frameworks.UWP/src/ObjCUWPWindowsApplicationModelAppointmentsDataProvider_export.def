@@ -1,0 +1,30 @@
+LIBRARY ObjCUWPWindowsApplicationModelAppointmentsDataProvider
+    EXPORTS
+     _OBJC_CLASS_WAADAppointmentDataProviderConnection    DATA
+     __objc_class_name_WAADAppointmentDataProviderConnection    CONSTANT
+     _OBJC_CLASS_WAADAppointmentCalendarSyncManagerSyncRequestEventArgs    DATA
+     __objc_class_name_WAADAppointmentCalendarSyncManagerSyncRequestEventArgs    CONSTANT
+     _OBJC_CLASS_WAADAppointmentCalendarCreateOrUpdateAppointmentRequestEventArgs    DATA
+     __objc_class_name_WAADAppointmentCalendarCreateOrUpdateAppointmentRequestEventArgs    CONSTANT
+     _OBJC_CLASS_WAADAppointmentCalendarCancelMeetingRequestEventArgs    DATA
+     __objc_class_name_WAADAppointmentCalendarCancelMeetingRequestEventArgs    CONSTANT
+     _OBJC_CLASS_WAADAppointmentCalendarForwardMeetingRequestEventArgs    DATA
+     __objc_class_name_WAADAppointmentCalendarForwardMeetingRequestEventArgs    CONSTANT
+     _OBJC_CLASS_WAADAppointmentCalendarProposeNewTimeForMeetingRequestEventArgs    DATA
+     __objc_class_name_WAADAppointmentCalendarProposeNewTimeForMeetingRequestEventArgs    CONSTANT
+     _OBJC_CLASS_WAADAppointmentCalendarUpdateMeetingResponseRequestEventArgs    DATA
+     __objc_class_name_WAADAppointmentCalendarUpdateMeetingResponseRequestEventArgs    CONSTANT
+     _OBJC_CLASS_WAADAppointmentDataProviderTriggerDetails    DATA
+     __objc_class_name_WAADAppointmentDataProviderTriggerDetails    CONSTANT
+     _OBJC_CLASS_WAADAppointmentCalendarSyncManagerSyncRequest    DATA
+     __objc_class_name_WAADAppointmentCalendarSyncManagerSyncRequest    CONSTANT
+     _OBJC_CLASS_WAADAppointmentCalendarCreateOrUpdateAppointmentRequest    DATA
+     __objc_class_name_WAADAppointmentCalendarCreateOrUpdateAppointmentRequest    CONSTANT
+     _OBJC_CLASS_WAADAppointmentCalendarCancelMeetingRequest    DATA
+     __objc_class_name_WAADAppointmentCalendarCancelMeetingRequest    CONSTANT
+     _OBJC_CLASS_WAADAppointmentCalendarForwardMeetingRequest    DATA
+     __objc_class_name_WAADAppointmentCalendarForwardMeetingRequest    CONSTANT
+     _OBJC_CLASS_WAADAppointmentCalendarProposeNewTimeForMeetingRequest    DATA
+     __objc_class_name_WAADAppointmentCalendarProposeNewTimeForMeetingRequest    CONSTANT
+     _OBJC_CLASS_WAADAppointmentCalendarUpdateMeetingResponseRequest    DATA
+     __objc_class_name_WAADAppointmentCalendarUpdateMeetingResponseRequest    CONSTANT

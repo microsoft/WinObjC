@@ -1,0 +1,12 @@
+LIBRARY ObjCUWPWindowsDevicesI2cProvider
+    EXPORTS
+     _OBJC_CLASS_WDIPProviderI2cConnectionSettings    DATA
+     __objc_class_name_WDIPProviderI2cConnectionSettings    CONSTANT
+     _OBJC_CLASS_WDIPProviderI2cTransferResult    DATA
+     __objc_class_name_WDIPProviderI2cTransferResult    CONSTANT
+     _OBJC_CLASS_WDIPII2cControllerProvider    DATA
+     __objc_class_name_WDIPII2cControllerProvider    CONSTANT
+     _OBJC_CLASS_WDIPII2cProvider    DATA
+     __objc_class_name_WDIPII2cProvider    CONSTANT
+     _OBJC_CLASS_WDIPII2cDeviceProvider    DATA
+     __objc_class_name_WDIPII2cDeviceProvider    CONSTANT

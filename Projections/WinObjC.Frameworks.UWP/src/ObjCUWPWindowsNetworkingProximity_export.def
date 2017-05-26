@@ -1,0 +1,16 @@
+LIBRARY ObjCUWPWindowsNetworkingProximity
+    EXPORTS
+     _OBJC_CLASS_WNPProximityMessage    DATA
+     __objc_class_name_WNPProximityMessage    CONSTANT
+     _OBJC_CLASS_WNPProximityDevice    DATA
+     __objc_class_name_WNPProximityDevice    CONSTANT
+     _OBJC_CLASS_WNPTriggeredConnectionStateChangedEventArgs    DATA
+     __objc_class_name_WNPTriggeredConnectionStateChangedEventArgs    CONSTANT
+     _OBJC_CLASS_WNPPeerInformation    DATA
+     __objc_class_name_WNPPeerInformation    CONSTANT
+     _OBJC_CLASS_WNPConnectionRequestedEventArgs    DATA
+     __objc_class_name_WNPConnectionRequestedEventArgs    CONSTANT
+     _OBJC_CLASS_WNPPeerWatcher    DATA
+     __objc_class_name_WNPPeerWatcher    CONSTANT
+     _OBJC_CLASS_WNPPeerFinder    DATA
+     __objc_class_name_WNPPeerFinder    CONSTANT

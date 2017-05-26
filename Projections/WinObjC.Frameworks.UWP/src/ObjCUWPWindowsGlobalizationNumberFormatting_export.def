@@ -1,0 +1,32 @@
+LIBRARY ObjCUWPWindowsGlobalizationNumberFormatting
+    EXPORTS
+     _OBJC_CLASS_WGNSignificantDigitsNumberRounder    DATA
+     __objc_class_name_WGNSignificantDigitsNumberRounder    CONSTANT
+     _OBJC_CLASS_WGNIncrementNumberRounder    DATA
+     __objc_class_name_WGNIncrementNumberRounder    CONSTANT
+     _OBJC_CLASS_WGNDecimalFormatter    DATA
+     __objc_class_name_WGNDecimalFormatter    CONSTANT
+     _OBJC_CLASS_WGNPercentFormatter    DATA
+     __objc_class_name_WGNPercentFormatter    CONSTANT
+     _OBJC_CLASS_WGNPermilleFormatter    DATA
+     __objc_class_name_WGNPermilleFormatter    CONSTANT
+     _OBJC_CLASS_WGNCurrencyFormatter    DATA
+     __objc_class_name_WGNCurrencyFormatter    CONSTANT
+     _OBJC_CLASS_WGNNumeralSystemTranslator    DATA
+     __objc_class_name_WGNNumeralSystemTranslator    CONSTANT
+     _OBJC_CLASS_WGNINumberRounder    DATA
+     __objc_class_name_WGNINumberRounder    CONSTANT
+     _OBJC_CLASS_WGNINumberFormatter    DATA
+     __objc_class_name_WGNINumberFormatter    CONSTANT
+     _OBJC_CLASS_WGNINumberFormatter2    DATA
+     __objc_class_name_WGNINumberFormatter2    CONSTANT
+     _OBJC_CLASS_WGNINumberParser    DATA
+     __objc_class_name_WGNINumberParser    CONSTANT
+     _OBJC_CLASS_WGNINumberFormatterOptions    DATA
+     __objc_class_name_WGNINumberFormatterOptions    CONSTANT
+     _OBJC_CLASS_WGNISignificantDigitsOption    DATA
+     __objc_class_name_WGNISignificantDigitsOption    CONSTANT
+     _OBJC_CLASS_WGNINumberRounderOption    DATA
+     __objc_class_name_WGNINumberRounderOption    CONSTANT
+     _OBJC_CLASS_WGNISignedZeroOption    DATA
+     __objc_class_name_WGNISignedZeroOption    CONSTANT

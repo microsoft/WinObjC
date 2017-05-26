@@ -1,0 +1,6 @@
+LIBRARY ObjCUWPWindowsDevicesPwmProvider
+    EXPORTS
+     _OBJC_CLASS_WDPPIPwmControllerProvider    DATA
+     __objc_class_name_WDPPIPwmControllerProvider    CONSTANT
+     _OBJC_CLASS_WDPPIPwmProvider    DATA
+     __objc_class_name_WDPPIPwmProvider    CONSTANT

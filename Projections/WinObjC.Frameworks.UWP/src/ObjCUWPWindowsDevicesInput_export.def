@@ -1,0 +1,18 @@
+LIBRARY ObjCUWPWindowsDevicesInput
+    EXPORTS
+     _OBJC_CLASS_WDIPointerDevice    DATA
+     __objc_class_name_WDIPointerDevice    CONSTANT
+     _OBJC_CLASS_WDIMouseDevice    DATA
+     __objc_class_name_WDIMouseDevice    CONSTANT
+     _OBJC_CLASS_WDIMouseEventArgs    DATA
+     __objc_class_name_WDIMouseEventArgs    CONSTANT
+     _OBJC_CLASS_WDIMouseCapabilities    DATA
+     __objc_class_name_WDIMouseCapabilities    CONSTANT
+     _OBJC_CLASS_WDIKeyboardCapabilities    DATA
+     __objc_class_name_WDIKeyboardCapabilities    CONSTANT
+     _OBJC_CLASS_WDITouchCapabilities    DATA
+     __objc_class_name_WDITouchCapabilities    CONSTANT
+     _OBJC_CLASS_WDIPointerDeviceUsage    DATA
+     __objc_class_name_WDIPointerDeviceUsage    CONSTANT
+     _OBJC_CLASS_WDIMouseDelta    DATA
+     __objc_class_name_WDIMouseDelta    CONSTANT

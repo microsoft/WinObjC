@@ -1,0 +1,20 @@
+LIBRARY ObjCUWPWindowsApplicationModelStore
+    EXPORTS
+     _OBJC_CLASS_WSLicenseInformation    DATA
+     __objc_class_name_WSLicenseInformation    CONSTANT
+     _OBJC_CLASS_WSListingInformation    DATA
+     __objc_class_name_WSListingInformation    CONSTANT
+     _OBJC_CLASS_WSPurchaseResults    DATA
+     __objc_class_name_WSPurchaseResults    CONSTANT
+     _OBJC_CLASS_WSProductPurchaseDisplayProperties    DATA
+     __objc_class_name_WSProductPurchaseDisplayProperties    CONSTANT
+     _OBJC_CLASS_WSUnfulfilledConsumable    DATA
+     __objc_class_name_WSUnfulfilledConsumable    CONSTANT
+     _OBJC_CLASS_WSProductLicense    DATA
+     __objc_class_name_WSProductLicense    CONSTANT
+     _OBJC_CLASS_WSProductListing    DATA
+     __objc_class_name_WSProductListing    CONSTANT
+     _OBJC_CLASS_WSCurrentApp    DATA
+     __objc_class_name_WSCurrentApp    CONSTANT
+     _OBJC_CLASS_WSCurrentAppSimulator    DATA
+     __objc_class_name_WSCurrentAppSimulator    CONSTANT

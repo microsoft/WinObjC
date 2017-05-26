@@ -1,0 +1,10 @@
+LIBRARY ObjCUWPWindowsWebHttpFilters
+    EXPORTS
+     _OBJC_CLASS_WWHFHttpCacheControl    DATA
+     __objc_class_name_WWHFHttpCacheControl    CONSTANT
+     _OBJC_CLASS_WWHFHttpBaseProtocolFilter    DATA
+     __objc_class_name_WWHFHttpBaseProtocolFilter    CONSTANT
+     _OBJC_CLASS_WWHFHttpServerCustomValidationRequestedEventArgs    DATA
+     __objc_class_name_WWHFHttpServerCustomValidationRequestedEventArgs    CONSTANT
+     _OBJC_CLASS_WWHFIHttpFilter    DATA
+     __objc_class_name_WWHFIHttpFilter    CONSTANT

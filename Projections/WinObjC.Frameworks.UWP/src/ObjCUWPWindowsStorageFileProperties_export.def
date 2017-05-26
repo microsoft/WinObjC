@@ -1,0 +1,20 @@
+LIBRARY ObjCUWPWindowsStorageFileProperties
+    EXPORTS
+     _OBJC_CLASS_WSFGeotagHelper    DATA
+     __objc_class_name_WSFGeotagHelper    CONSTANT
+     _OBJC_CLASS_WSFStorageItemThumbnail    DATA
+     __objc_class_name_WSFStorageItemThumbnail    CONSTANT
+     _OBJC_CLASS_WSFMusicProperties    DATA
+     __objc_class_name_WSFMusicProperties    CONSTANT
+     _OBJC_CLASS_WSFVideoProperties    DATA
+     __objc_class_name_WSFVideoProperties    CONSTANT
+     _OBJC_CLASS_WSFImageProperties    DATA
+     __objc_class_name_WSFImageProperties    CONSTANT
+     _OBJC_CLASS_WSFDocumentProperties    DATA
+     __objc_class_name_WSFDocumentProperties    CONSTANT
+     _OBJC_CLASS_WSFStorageItemContentProperties    DATA
+     __objc_class_name_WSFStorageItemContentProperties    CONSTANT
+     _OBJC_CLASS_WSFBasicProperties    DATA
+     __objc_class_name_WSFBasicProperties    CONSTANT
+     _OBJC_CLASS_WSFIStorageItemExtraProperties    DATA
+     __objc_class_name_WSFIStorageItemExtraProperties    CONSTANT

@@ -1,0 +1,6 @@
+LIBRARY ObjCUWPWindowsApplicationModelCallsProvider
+    EXPORTS
+     _OBJC_CLASS_WACPPhoneCallOrigin    DATA
+     __objc_class_name_WACPPhoneCallOrigin    CONSTANT
+     _OBJC_CLASS_WACPPhoneCallOriginManager    DATA
+     __objc_class_name_WACPPhoneCallOriginManager    CONSTANT

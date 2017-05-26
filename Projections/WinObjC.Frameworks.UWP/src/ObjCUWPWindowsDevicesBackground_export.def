@@ -1,0 +1,6 @@
+LIBRARY ObjCUWPWindowsDevicesBackground
+    EXPORTS
+     _OBJC_CLASS_WDBDeviceUseDetails    DATA
+     __objc_class_name_WDBDeviceUseDetails    CONSTANT
+     _OBJC_CLASS_WDBDeviceServicingDetails    DATA
+     __objc_class_name_WDBDeviceServicingDetails    CONSTANT

@@ -1,0 +1,26 @@
+LIBRARY ObjCUWPWindowsServicesMaps
+    EXPORTS
+     _OBJC_CLASS_WSMMapAddress    DATA
+     __objc_class_name_WSMMapAddress    CONSTANT
+     _OBJC_CLASS_WSMMapLocation    DATA
+     __objc_class_name_WSMMapLocation    CONSTANT
+     _OBJC_CLASS_WSMMapRouteManeuver    DATA
+     __objc_class_name_WSMMapRouteManeuver    CONSTANT
+     _OBJC_CLASS_WSMMapRouteLeg    DATA
+     __objc_class_name_WSMMapRouteLeg    CONSTANT
+     _OBJC_CLASS_WSMMapRoute    DATA
+     __objc_class_name_WSMMapRoute    CONSTANT
+     _OBJC_CLASS_WSMMapLocationFinderResult    DATA
+     __objc_class_name_WSMMapLocationFinderResult    CONSTANT
+     _OBJC_CLASS_WSMMapRouteFinderResult    DATA
+     __objc_class_name_WSMMapRouteFinderResult    CONSTANT
+     _OBJC_CLASS_WSMMapRouteDrivingOptions    DATA
+     __objc_class_name_WSMMapRouteDrivingOptions    CONSTANT
+     _OBJC_CLASS_WSMMapLocationFinder    DATA
+     __objc_class_name_WSMMapLocationFinder    CONSTANT
+     _OBJC_CLASS_WSMMapRouteFinder    DATA
+     __objc_class_name_WSMMapRouteFinder    CONSTANT
+     _OBJC_CLASS_WSMMapService    DATA
+     __objc_class_name_WSMMapService    CONSTANT
+     _OBJC_CLASS_WSMMapManager    DATA
+     __objc_class_name_WSMMapManager    CONSTANT

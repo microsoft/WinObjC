@@ -1,0 +1,4 @@
+LIBRARY ObjCUWPWindowsSecurityCryptographyDataProtection
+    EXPORTS
+     _OBJC_CLASS_WSCDDataProtectionProvider    DATA
+     __objc_class_name_WSCDDataProtectionProvider    CONSTANT

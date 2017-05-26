@@ -1,0 +1,6 @@
+LIBRARY ObjCUWPWindowsManagementDeploymentPreview
+    EXPORTS
+     _OBJC_CLASS_WMDPInstalledClassicAppInfo    DATA
+     __objc_class_name_WMDPInstalledClassicAppInfo    CONSTANT
+     _OBJC_CLASS_WMDPClassicAppManager    DATA
+     __objc_class_name_WMDPClassicAppManager    CONSTANT

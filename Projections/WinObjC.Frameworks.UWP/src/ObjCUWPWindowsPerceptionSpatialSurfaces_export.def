@@ -1,0 +1,12 @@
+LIBRARY ObjCUWPWindowsPerceptionSpatialSurfaces
+    EXPORTS
+     _OBJC_CLASS_WPSSSpatialSurfaceInfo    DATA
+     __objc_class_name_WPSSSpatialSurfaceInfo    CONSTANT
+     _OBJC_CLASS_WPSSSpatialSurfaceMeshBuffer    DATA
+     __objc_class_name_WPSSSpatialSurfaceMeshBuffer    CONSTANT
+     _OBJC_CLASS_WPSSSpatialSurfaceMesh    DATA
+     __objc_class_name_WPSSSpatialSurfaceMesh    CONSTANT
+     _OBJC_CLASS_WPSSSpatialSurfaceMeshOptions    DATA
+     __objc_class_name_WPSSSpatialSurfaceMeshOptions    CONSTANT
+     _OBJC_CLASS_WPSSSpatialSurfaceObserver    DATA
+     __objc_class_name_WPSSSpatialSurfaceObserver    CONSTANT

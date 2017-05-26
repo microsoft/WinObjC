@@ -1,0 +1,10 @@
+LIBRARY ObjCUWPWindowsMediaOcr
+    EXPORTS
+     _OBJC_CLASS_WMOOcrWord    DATA
+     __objc_class_name_WMOOcrWord    CONSTANT
+     _OBJC_CLASS_WMOOcrLine    DATA
+     __objc_class_name_WMOOcrLine    CONSTANT
+     _OBJC_CLASS_WMOOcrResult    DATA
+     __objc_class_name_WMOOcrResult    CONSTANT
+     _OBJC_CLASS_WMOOcrEngine    DATA
+     __objc_class_name_WMOOcrEngine    CONSTANT

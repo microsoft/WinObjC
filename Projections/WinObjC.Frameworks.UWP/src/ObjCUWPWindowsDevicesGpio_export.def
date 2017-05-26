@@ -1,0 +1,8 @@
+LIBRARY ObjCUWPWindowsDevicesGpio
+    EXPORTS
+     _OBJC_CLASS_WDGGpioPinValueChangedEventArgs    DATA
+     __objc_class_name_WDGGpioPinValueChangedEventArgs    CONSTANT
+     _OBJC_CLASS_WDGGpioPin    DATA
+     __objc_class_name_WDGGpioPin    CONSTANT
+     _OBJC_CLASS_WDGGpioController    DATA
+     __objc_class_name_WDGGpioController    CONSTANT

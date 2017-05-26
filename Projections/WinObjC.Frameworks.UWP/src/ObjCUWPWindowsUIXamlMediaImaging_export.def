@@ -1,0 +1,20 @@
+LIBRARY ObjCUWPWindowsUIXamlMediaImaging
+    EXPORTS
+     _OBJC_CLASS_WUXMIDownloadProgressEventArgs    DATA
+     __objc_class_name_WUXMIDownloadProgressEventArgs    CONSTANT
+     _OBJC_CLASS_WUXMIBitmapSource    DATA
+     __objc_class_name_WUXMIBitmapSource    CONSTANT
+     _OBJC_CLASS_WUXMIRenderTargetBitmap    DATA
+     __objc_class_name_WUXMIRenderTargetBitmap    CONSTANT
+     _OBJC_CLASS_WUXMISurfaceImageSource    DATA
+     __objc_class_name_WUXMISurfaceImageSource    CONSTANT
+     _OBJC_CLASS_WUXMIBitmapImage    DATA
+     __objc_class_name_WUXMIBitmapImage    CONSTANT
+     _OBJC_CLASS_WUXMIVirtualSurfaceImageSource    DATA
+     __objc_class_name_WUXMIVirtualSurfaceImageSource    CONSTANT
+     _OBJC_CLASS_WUXMIWriteableBitmap    DATA
+     __objc_class_name_WUXMIWriteableBitmap    CONSTANT
+     _OBJC_CLASS_WUXMIXamlRenderingBackgroundTask    DATA
+     __objc_class_name_WUXMIXamlRenderingBackgroundTask    CONSTANT
+     _OBJC_CLASS_WUXMISoftwareBitmapSource    DATA
+     __objc_class_name_WUXMISoftwareBitmapSource    CONSTANT

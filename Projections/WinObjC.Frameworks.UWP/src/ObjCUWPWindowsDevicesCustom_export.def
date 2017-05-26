@@ -1,0 +1,10 @@
+LIBRARY ObjCUWPWindowsDevicesCustom
+    EXPORTS
+     _OBJC_CLASS_WDCKnownDeviceTypes    DATA
+     __objc_class_name_WDCKnownDeviceTypes    CONSTANT
+     _OBJC_CLASS_WDCIOControlCode    DATA
+     __objc_class_name_WDCIOControlCode    CONSTANT
+     _OBJC_CLASS_WDCCustomDevice    DATA
+     __objc_class_name_WDCCustomDevice    CONSTANT
+     _OBJC_CLASS_WDCIIOControlCode    DATA
+     __objc_class_name_WDCIIOControlCode    CONSTANT

@@ -1,0 +1,8 @@
+LIBRARY ObjCUWPWindowsGamingPreviewGamesEnumeration
+    EXPORTS
+     _OBJC_CLASS_WGPGGameListEntry    DATA
+     __objc_class_name_WGPGGameListEntry    CONSTANT
+     _OBJC_CLASS_WGPGGameList    DATA
+     __objc_class_name_WGPGGameList    CONSTANT
+     _OBJC_CLASS_WGPGIGameListEntry    DATA
+     __objc_class_name_WGPGIGameListEntry    CONSTANT

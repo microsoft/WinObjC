@@ -1,0 +1,8 @@
+LIBRARY ObjCUWPWindowsMediaContentRestrictions
+    EXPORTS
+     _OBJC_CLASS_WMCRatedContentDescription    DATA
+     __objc_class_name_WMCRatedContentDescription    CONSTANT
+     _OBJC_CLASS_WMCContentRestrictionsBrowsePolicy    DATA
+     __objc_class_name_WMCContentRestrictionsBrowsePolicy    CONSTANT
+     _OBJC_CLASS_WMCRatedContentRestrictions    DATA
+     __objc_class_name_WMCRatedContentRestrictions    CONSTANT

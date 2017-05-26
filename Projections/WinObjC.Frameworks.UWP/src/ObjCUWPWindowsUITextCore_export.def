@@ -1,0 +1,36 @@
+LIBRARY ObjCUWPWindowsUITextCore
+    EXPORTS
+     _OBJC_CLASS_WUTCCoreTextTextRequest    DATA
+     __objc_class_name_WUTCCoreTextTextRequest    CONSTANT
+     _OBJC_CLASS_WUTCCoreTextSelectionRequest    DATA
+     __objc_class_name_WUTCCoreTextSelectionRequest    CONSTANT
+     _OBJC_CLASS_WUTCCoreTextLayoutBounds    DATA
+     __objc_class_name_WUTCCoreTextLayoutBounds    CONSTANT
+     _OBJC_CLASS_WUTCCoreTextLayoutRequest    DATA
+     __objc_class_name_WUTCCoreTextLayoutRequest    CONSTANT
+     _OBJC_CLASS_WUTCCoreTextCompositionSegment    DATA
+     __objc_class_name_WUTCCoreTextCompositionSegment    CONSTANT
+     _OBJC_CLASS_WUTCCoreTextEditContext    DATA
+     __objc_class_name_WUTCCoreTextEditContext    CONSTANT
+     _OBJC_CLASS_WUTCCoreTextTextRequestedEventArgs    DATA
+     __objc_class_name_WUTCCoreTextTextRequestedEventArgs    CONSTANT
+     _OBJC_CLASS_WUTCCoreTextSelectionRequestedEventArgs    DATA
+     __objc_class_name_WUTCCoreTextSelectionRequestedEventArgs    CONSTANT
+     _OBJC_CLASS_WUTCCoreTextLayoutRequestedEventArgs    DATA
+     __objc_class_name_WUTCCoreTextLayoutRequestedEventArgs    CONSTANT
+     _OBJC_CLASS_WUTCCoreTextTextUpdatingEventArgs    DATA
+     __objc_class_name_WUTCCoreTextTextUpdatingEventArgs    CONSTANT
+     _OBJC_CLASS_WUTCCoreTextSelectionUpdatingEventArgs    DATA
+     __objc_class_name_WUTCCoreTextSelectionUpdatingEventArgs    CONSTANT
+     _OBJC_CLASS_WUTCCoreTextFormatUpdatingEventArgs    DATA
+     __objc_class_name_WUTCCoreTextFormatUpdatingEventArgs    CONSTANT
+     _OBJC_CLASS_WUTCCoreTextCompositionStartedEventArgs    DATA
+     __objc_class_name_WUTCCoreTextCompositionStartedEventArgs    CONSTANT
+     _OBJC_CLASS_WUTCCoreTextCompositionCompletedEventArgs    DATA
+     __objc_class_name_WUTCCoreTextCompositionCompletedEventArgs    CONSTANT
+     _OBJC_CLASS_WUTCCoreTextServicesManager    DATA
+     __objc_class_name_WUTCCoreTextServicesManager    CONSTANT
+     _OBJC_CLASS_WUTCCoreTextServicesConstants    DATA
+     __objc_class_name_WUTCCoreTextServicesConstants    CONSTANT
+     _OBJC_CLASS_WUTCCoreTextRange    DATA
+     __objc_class_name_WUTCCoreTextRange    CONSTANT

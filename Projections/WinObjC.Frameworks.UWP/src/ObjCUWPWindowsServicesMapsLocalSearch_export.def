@@ -1,0 +1,14 @@
+LIBRARY ObjCUWPWindowsServicesMapsLocalSearch
+    EXPORTS
+     _OBJC_CLASS_WSMLLocalLocation    DATA
+     __objc_class_name_WSMLLocalLocation    CONSTANT
+     _OBJC_CLASS_WSMLLocalLocationFinderResult    DATA
+     __objc_class_name_WSMLLocalLocationFinderResult    CONSTANT
+     _OBJC_CLASS_WSMLLocalLocationRatingInfo    DATA
+     __objc_class_name_WSMLLocalLocationRatingInfo    CONSTANT
+     _OBJC_CLASS_WSMLLocalLocationHoursOfOperationItem    DATA
+     __objc_class_name_WSMLLocalLocationHoursOfOperationItem    CONSTANT
+     _OBJC_CLASS_WSMLLocalLocationFinder    DATA
+     __objc_class_name_WSMLLocalLocationFinder    CONSTANT
+     _OBJC_CLASS_WSMLLocalCategories    DATA
+     __objc_class_name_WSMLLocalCategories    CONSTANT

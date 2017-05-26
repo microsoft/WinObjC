@@ -1,0 +1,10 @@
+LIBRARY ObjCUWPWindowsDevicesEnumerationPnp
+    EXPORTS
+     _OBJC_CLASS_WDEPPnpObjectUpdate    DATA
+     __objc_class_name_WDEPPnpObjectUpdate    CONSTANT
+     _OBJC_CLASS_WDEPPnpObjectCollection    DATA
+     __objc_class_name_WDEPPnpObjectCollection    CONSTANT
+     _OBJC_CLASS_WDEPPnpObjectWatcher    DATA
+     __objc_class_name_WDEPPnpObjectWatcher    CONSTANT
+     _OBJC_CLASS_WDEPPnpObject    DATA
+     __objc_class_name_WDEPPnpObject    CONSTANT

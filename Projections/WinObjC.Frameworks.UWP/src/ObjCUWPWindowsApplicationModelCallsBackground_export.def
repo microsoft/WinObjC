@@ -1,0 +1,10 @@
+LIBRARY ObjCUWPWindowsApplicationModelCallsBackground
+    EXPORTS
+     _OBJC_CLASS_WACBPhoneCallBlockedTriggerDetails    DATA
+     __objc_class_name_WACBPhoneCallBlockedTriggerDetails    CONSTANT
+     _OBJC_CLASS_WACBPhoneCallOriginDataRequestTriggerDetails    DATA
+     __objc_class_name_WACBPhoneCallOriginDataRequestTriggerDetails    CONSTANT
+     _OBJC_CLASS_WACBPhoneNewVoicemailMessageTriggerDetails    DATA
+     __objc_class_name_WACBPhoneNewVoicemailMessageTriggerDetails    CONSTANT
+     _OBJC_CLASS_WACBPhoneLineChangedTriggerDetails    DATA
+     __objc_class_name_WACBPhoneLineChangedTriggerDetails    CONSTANT

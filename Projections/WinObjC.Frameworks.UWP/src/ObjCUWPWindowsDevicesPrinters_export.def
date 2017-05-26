@@ -1,0 +1,6 @@
+LIBRARY ObjCUWPWindowsDevicesPrinters
+    EXPORTS
+     _OBJC_CLASS_WDPPrint3DDevice    DATA
+     __objc_class_name_WDPPrint3DDevice    CONSTANT
+     _OBJC_CLASS_WDPPrintSchema    DATA
+     __objc_class_name_WDPPrintSchema    CONSTANT

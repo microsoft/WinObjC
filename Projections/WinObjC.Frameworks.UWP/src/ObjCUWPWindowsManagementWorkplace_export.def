@@ -1,0 +1,6 @@
+LIBRARY ObjCUWPWindowsManagementWorkplace
+    EXPORTS
+     _OBJC_CLASS_WMWMdmPolicy    DATA
+     __objc_class_name_WMWMdmPolicy    CONSTANT
+     _OBJC_CLASS_WMWWorkplaceSettings    DATA
+     __objc_class_name_WMWWorkplaceSettings    CONSTANT

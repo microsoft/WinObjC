@@ -1,0 +1,10 @@
+LIBRARY ObjCUWPWindowsGraphicsDirectXDirect3D11
+    EXPORTS
+     _OBJC_CLASS_WGDDDirect3DMultisampleDescription    DATA
+     __objc_class_name_WGDDDirect3DMultisampleDescription    CONSTANT
+     _OBJC_CLASS_WGDDDirect3DSurfaceDescription    DATA
+     __objc_class_name_WGDDDirect3DSurfaceDescription    CONSTANT
+     _OBJC_CLASS_WGDDIDirect3DDevice    DATA
+     __objc_class_name_WGDDIDirect3DDevice    CONSTANT
+     _OBJC_CLASS_WGDDIDirect3DSurface    DATA
+     __objc_class_name_WGDDIDirect3DSurface    CONSTANT

@@ -1,0 +1,4 @@
+LIBRARY ObjCUWPWindowsPhoneMediaDevices
+    EXPORTS
+     _OBJC_CLASS_WPMDAudioRoutingManager    DATA
+     __objc_class_name_WPMDAudioRoutingManager    CONSTANT

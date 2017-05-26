@@ -1,0 +1,10 @@
+LIBRARY ObjCUWPWindowsUIXamlPrinting
+    EXPORTS
+     _OBJC_CLASS_WUXPAddPagesEventArgs    DATA
+     __objc_class_name_WUXPAddPagesEventArgs    CONSTANT
+     _OBJC_CLASS_WUXPGetPreviewPageEventArgs    DATA
+     __objc_class_name_WUXPGetPreviewPageEventArgs    CONSTANT
+     _OBJC_CLASS_WUXPPaginateEventArgs    DATA
+     __objc_class_name_WUXPPaginateEventArgs    CONSTANT
+     _OBJC_CLASS_WUXPPrintDocument    DATA
+     __objc_class_name_WUXPPrintDocument    CONSTANT

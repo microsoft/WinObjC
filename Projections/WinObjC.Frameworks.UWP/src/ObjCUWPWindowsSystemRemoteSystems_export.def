@@ -1,0 +1,24 @@
+LIBRARY ObjCUWPWindowsSystemRemoteSystems
+    EXPORTS
+     _OBJC_CLASS_WSRRemoteSystem    DATA
+     __objc_class_name_WSRRemoteSystem    CONSTANT
+     _OBJC_CLASS_WSRRemoteSystemWatcher    DATA
+     __objc_class_name_WSRRemoteSystemWatcher    CONSTANT
+     _OBJC_CLASS_WSRRemoteSystemAddedEventArgs    DATA
+     __objc_class_name_WSRRemoteSystemAddedEventArgs    CONSTANT
+     _OBJC_CLASS_WSRRemoteSystemUpdatedEventArgs    DATA
+     __objc_class_name_WSRRemoteSystemUpdatedEventArgs    CONSTANT
+     _OBJC_CLASS_WSRRemoteSystemRemovedEventArgs    DATA
+     __objc_class_name_WSRRemoteSystemRemovedEventArgs    CONSTANT
+     _OBJC_CLASS_WSRRemoteSystemConnectionRequest    DATA
+     __objc_class_name_WSRRemoteSystemConnectionRequest    CONSTANT
+     _OBJC_CLASS_WSRRemoteSystemKinds    DATA
+     __objc_class_name_WSRRemoteSystemKinds    CONSTANT
+     _OBJC_CLASS_WSRRemoteSystemKindFilter    DATA
+     __objc_class_name_WSRRemoteSystemKindFilter    CONSTANT
+     _OBJC_CLASS_WSRRemoteSystemDiscoveryTypeFilter    DATA
+     __objc_class_name_WSRRemoteSystemDiscoveryTypeFilter    CONSTANT
+     _OBJC_CLASS_WSRRemoteSystemStatusTypeFilter    DATA
+     __objc_class_name_WSRRemoteSystemStatusTypeFilter    CONSTANT
+     _OBJC_CLASS_WSRIRemoteSystemFilter    DATA
+     __objc_class_name_WSRIRemoteSystemFilter    CONSTANT

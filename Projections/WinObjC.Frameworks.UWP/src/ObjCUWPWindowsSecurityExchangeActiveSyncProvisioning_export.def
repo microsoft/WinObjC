@@ -1,0 +1,8 @@
+LIBRARY ObjCUWPWindowsSecurityExchangeActiveSyncProvisioning
+    EXPORTS
+     _OBJC_CLASS_WSEEasClientDeviceInformation    DATA
+     __objc_class_name_WSEEasClientDeviceInformation    CONSTANT
+     _OBJC_CLASS_WSEEasComplianceResults    DATA
+     __objc_class_name_WSEEasComplianceResults    CONSTANT
+     _OBJC_CLASS_WSEEasClientSecurityPolicy    DATA
+     __objc_class_name_WSEEasClientSecurityPolicy    CONSTANT

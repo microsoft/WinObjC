@@ -1,0 +1,4 @@
+LIBRARY ObjCUWPWindowsDataHtml
+    EXPORTS
+     _OBJC_CLASS_WDHHtmlUtilities    DATA
+     __objc_class_name_WDHHtmlUtilities    CONSTANT

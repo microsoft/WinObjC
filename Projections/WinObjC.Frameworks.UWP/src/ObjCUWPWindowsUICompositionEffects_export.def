@@ -1,0 +1,4 @@
+LIBRARY ObjCUWPWindowsUICompositionEffects
+    EXPORTS
+     _OBJC_CLASS_WUCESceneLightingEffect    DATA
+     __objc_class_name_WUCESceneLightingEffect    CONSTANT

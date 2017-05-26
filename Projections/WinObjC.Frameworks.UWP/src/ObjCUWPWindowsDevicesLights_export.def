@@ -1,0 +1,6 @@
+LIBRARY ObjCUWPWindowsDevicesLights
+    EXPORTS
+     _OBJC_CLASS_WDLLamp    DATA
+     __objc_class_name_WDLLamp    CONSTANT
+     _OBJC_CLASS_WDLLampAvailabilityChangedEventArgs    DATA
+     __objc_class_name_WDLLampAvailabilityChangedEventArgs    CONSTANT

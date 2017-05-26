@@ -1,0 +1,22 @@
+LIBRARY ObjCUWPWindowsGlobalization
+    EXPORTS
+     _OBJC_CLASS_WGCalendarIdentifiers    DATA
+     __objc_class_name_WGCalendarIdentifiers    CONSTANT
+     _OBJC_CLASS_WGClockIdentifiers    DATA
+     __objc_class_name_WGClockIdentifiers    CONSTANT
+     _OBJC_CLASS_WGNumeralSystemIdentifiers    DATA
+     __objc_class_name_WGNumeralSystemIdentifiers    CONSTANT
+     _OBJC_CLASS_WGCurrencyIdentifiers    DATA
+     __objc_class_name_WGCurrencyIdentifiers    CONSTANT
+     _OBJC_CLASS_WGGeographicRegion    DATA
+     __objc_class_name_WGGeographicRegion    CONSTANT
+     _OBJC_CLASS_WGLanguage    DATA
+     __objc_class_name_WGLanguage    CONSTANT
+     _OBJC_CLASS_WGCalendar    DATA
+     __objc_class_name_WGCalendar    CONSTANT
+     _OBJC_CLASS_WGApplicationLanguages    DATA
+     __objc_class_name_WGApplicationLanguages    CONSTANT
+     _OBJC_CLASS_WGJapanesePhoneme    DATA
+     __objc_class_name_WGJapanesePhoneme    CONSTANT
+     _OBJC_CLASS_WGJapanesePhoneticAnalyzer    DATA
+     __objc_class_name_WGJapanesePhoneticAnalyzer    CONSTANT

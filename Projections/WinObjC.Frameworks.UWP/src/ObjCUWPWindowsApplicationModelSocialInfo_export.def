@@ -1,0 +1,14 @@
+LIBRARY ObjCUWPWindowsApplicationModelSocialInfo
+    EXPORTS
+     _OBJC_CLASS_WASSocialUserInfo    DATA
+     __objc_class_name_WASSocialUserInfo    CONSTANT
+     _OBJC_CLASS_WASSocialFeedContent    DATA
+     __objc_class_name_WASSocialFeedContent    CONSTANT
+     _OBJC_CLASS_WASSocialItemThumbnail    DATA
+     __objc_class_name_WASSocialItemThumbnail    CONSTANT
+     _OBJC_CLASS_WASSocialFeedSharedItem    DATA
+     __objc_class_name_WASSocialFeedSharedItem    CONSTANT
+     _OBJC_CLASS_WASSocialFeedChildItem    DATA
+     __objc_class_name_WASSocialFeedChildItem    CONSTANT
+     _OBJC_CLASS_WASSocialFeedItem    DATA
+     __objc_class_name_WASSocialFeedItem    CONSTANT

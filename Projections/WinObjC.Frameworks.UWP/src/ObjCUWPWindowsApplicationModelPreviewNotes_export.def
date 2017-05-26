@@ -1,0 +1,8 @@
+LIBRARY ObjCUWPWindowsApplicationModelPreviewNotes
+    EXPORTS
+     _OBJC_CLASS_WAPNNotePlacementChangedPreviewEventArgs    DATA
+     __objc_class_name_WAPNNotePlacementChangedPreviewEventArgs    CONSTANT
+     _OBJC_CLASS_WAPNNoteVisibilityChangedPreviewEventArgs    DATA
+     __objc_class_name_WAPNNoteVisibilityChangedPreviewEventArgs    CONSTANT
+     _OBJC_CLASS_WAPNNotesWindowManagerPreview    DATA
+     __objc_class_name_WAPNNotesWindowManagerPreview    CONSTANT

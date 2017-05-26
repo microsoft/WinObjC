@@ -1,0 +1,12 @@
+LIBRARY ObjCUWPWindowsManagementDeployment
+    EXPORTS
+     _OBJC_CLASS_WMDDeploymentResult    DATA
+     __objc_class_name_WMDDeploymentResult    CONSTANT
+     _OBJC_CLASS_WMDPackageUserInformation    DATA
+     __objc_class_name_WMDPackageUserInformation    CONSTANT
+     _OBJC_CLASS_WMDPackageVolume    DATA
+     __objc_class_name_WMDPackageVolume    CONSTANT
+     _OBJC_CLASS_WMDPackageManager    DATA
+     __objc_class_name_WMDPackageManager    CONSTANT
+     _OBJC_CLASS_WMDDeploymentProgress    DATA
+     __objc_class_name_WMDDeploymentProgress    CONSTANT

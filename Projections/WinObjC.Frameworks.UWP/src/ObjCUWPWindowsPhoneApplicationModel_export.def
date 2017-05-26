@@ -1,0 +1,4 @@
+LIBRARY ObjCUWPWindowsPhoneApplicationModel
+    EXPORTS
+     _OBJC_CLASS_WPAApplicationProfile    DATA
+     __objc_class_name_WPAApplicationProfile    CONSTANT

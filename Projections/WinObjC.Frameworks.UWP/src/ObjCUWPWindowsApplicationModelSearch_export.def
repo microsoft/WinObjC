@@ -1,0 +1,32 @@
+LIBRARY ObjCUWPWindowsApplicationModelSearch
+    EXPORTS
+     _OBJC_CLASS_WASSearchPaneVisibilityChangedEventArgs    DATA
+     __objc_class_name_WASSearchPaneVisibilityChangedEventArgs    CONSTANT
+     _OBJC_CLASS_WASSearchPaneQueryChangedEventArgs    DATA
+     __objc_class_name_WASSearchPaneQueryChangedEventArgs    CONSTANT
+     _OBJC_CLASS_WASSearchPaneQuerySubmittedEventArgs    DATA
+     __objc_class_name_WASSearchPaneQuerySubmittedEventArgs    CONSTANT
+     _OBJC_CLASS_WASSearchPaneResultSuggestionChosenEventArgs    DATA
+     __objc_class_name_WASSearchPaneResultSuggestionChosenEventArgs    CONSTANT
+     _OBJC_CLASS_WASSearchPaneSuggestionsRequestDeferral    DATA
+     __objc_class_name_WASSearchPaneSuggestionsRequestDeferral    CONSTANT
+     _OBJC_CLASS_WASSearchPaneSuggestionsRequest    DATA
+     __objc_class_name_WASSearchPaneSuggestionsRequest    CONSTANT
+     _OBJC_CLASS_WASSearchPaneSuggestionsRequestedEventArgs    DATA
+     __objc_class_name_WASSearchPaneSuggestionsRequestedEventArgs    CONSTANT
+     _OBJC_CLASS_WASSearchPane    DATA
+     __objc_class_name_WASSearchPane    CONSTANT
+     _OBJC_CLASS_WASSearchPaneQueryLinguisticDetails    DATA
+     __objc_class_name_WASSearchPaneQueryLinguisticDetails    CONSTANT
+     _OBJC_CLASS_WASSearchSuggestionCollection    DATA
+     __objc_class_name_WASSearchSuggestionCollection    CONSTANT
+     _OBJC_CLASS_WASLocalContentSuggestionSettings    DATA
+     __objc_class_name_WASLocalContentSuggestionSettings    CONSTANT
+     _OBJC_CLASS_WASSearchQueryLinguisticDetails    DATA
+     __objc_class_name_WASSearchQueryLinguisticDetails    CONSTANT
+     _OBJC_CLASS_WASSearchSuggestionsRequestDeferral    DATA
+     __objc_class_name_WASSearchSuggestionsRequestDeferral    CONSTANT
+     _OBJC_CLASS_WASSearchSuggestionsRequest    DATA
+     __objc_class_name_WASSearchSuggestionsRequest    CONSTANT
+     _OBJC_CLASS_WASISearchPaneQueryChangedEventArgs    DATA
+     __objc_class_name_WASISearchPaneQueryChangedEventArgs    CONSTANT

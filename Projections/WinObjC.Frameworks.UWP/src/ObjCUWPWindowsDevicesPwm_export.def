@@ -1,0 +1,6 @@
+LIBRARY ObjCUWPWindowsDevicesPwm
+    EXPORTS
+     _OBJC_CLASS_WDPPwmPin    DATA
+     __objc_class_name_WDPPwmPin    CONSTANT
+     _OBJC_CLASS_WDPPwmController    DATA
+     __objc_class_name_WDPPwmController    CONSTANT

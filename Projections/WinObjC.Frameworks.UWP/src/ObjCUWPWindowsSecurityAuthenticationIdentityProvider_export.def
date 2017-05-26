@@ -1,0 +1,16 @@
+LIBRARY ObjCUWPWindowsSecurityAuthenticationIdentityProvider
+    EXPORTS
+     _OBJC_CLASS_WSAIPSecondaryAuthenticationFactorRegistration    DATA
+     __objc_class_name_WSAIPSecondaryAuthenticationFactorRegistration    CONSTANT
+     _OBJC_CLASS_WSAIPSecondaryAuthenticationFactorRegistrationResult    DATA
+     __objc_class_name_WSAIPSecondaryAuthenticationFactorRegistrationResult    CONSTANT
+     _OBJC_CLASS_WSAIPSecondaryAuthenticationFactorAuthentication    DATA
+     __objc_class_name_WSAIPSecondaryAuthenticationFactorAuthentication    CONSTANT
+     _OBJC_CLASS_WSAIPSecondaryAuthenticationFactorAuthenticationResult    DATA
+     __objc_class_name_WSAIPSecondaryAuthenticationFactorAuthenticationResult    CONSTANT
+     _OBJC_CLASS_WSAIPSecondaryAuthenticationFactorInfo    DATA
+     __objc_class_name_WSAIPSecondaryAuthenticationFactorInfo    CONSTANT
+     _OBJC_CLASS_WSAIPSecondaryAuthenticationFactorAuthenticationStageChangedEventArgs    DATA
+     __objc_class_name_WSAIPSecondaryAuthenticationFactorAuthenticationStageChangedEventArgs    CONSTANT
+     _OBJC_CLASS_WSAIPSecondaryAuthenticationFactorAuthenticationStageInfo    DATA
+     __objc_class_name_WSAIPSecondaryAuthenticationFactorAuthenticationStageInfo    CONSTANT

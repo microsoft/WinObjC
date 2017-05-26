@@ -1,0 +1,6 @@
+LIBRARY ObjCUWPWindowsApplicationModelWalletSystem
+    EXPORTS
+     _OBJC_CLASS_WAWSWalletItemSystemStore    DATA
+     __objc_class_name_WAWSWalletItemSystemStore    CONSTANT
+     _OBJC_CLASS_WAWSWalletManagerSystem    DATA
+     __objc_class_name_WAWSWalletManagerSystem    CONSTANT

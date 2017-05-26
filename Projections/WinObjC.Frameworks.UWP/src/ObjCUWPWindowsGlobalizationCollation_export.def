@@ -1,0 +1,6 @@
+LIBRARY ObjCUWPWindowsGlobalizationCollation
+    EXPORTS
+     _OBJC_CLASS_WGCCharacterGrouping    DATA
+     __objc_class_name_WGCCharacterGrouping    CONSTANT
+     _OBJC_CLASS_WGCCharacterGroupings    DATA
+     __objc_class_name_WGCCharacterGroupings    CONSTANT

@@ -1,0 +1,20 @@
+LIBRARY ObjCUWPWindowsDevicesScanners
+    EXPORTS
+     _OBJC_CLASS_WDSImageScannerAutoConfiguration    DATA
+     __objc_class_name_WDSImageScannerAutoConfiguration    CONSTANT
+     _OBJC_CLASS_WDSImageScannerFlatbedConfiguration    DATA
+     __objc_class_name_WDSImageScannerFlatbedConfiguration    CONSTANT
+     _OBJC_CLASS_WDSImageScannerFeederConfiguration    DATA
+     __objc_class_name_WDSImageScannerFeederConfiguration    CONSTANT
+     _OBJC_CLASS_WDSImageScannerScanResult    DATA
+     __objc_class_name_WDSImageScannerScanResult    CONSTANT
+     _OBJC_CLASS_WDSImageScannerPreviewResult    DATA
+     __objc_class_name_WDSImageScannerPreviewResult    CONSTANT
+     _OBJC_CLASS_WDSImageScanner    DATA
+     __objc_class_name_WDSImageScanner    CONSTANT
+     _OBJC_CLASS_WDSImageScannerResolution    DATA
+     __objc_class_name_WDSImageScannerResolution    CONSTANT
+     _OBJC_CLASS_WDSIImageScannerFormatConfiguration    DATA
+     __objc_class_name_WDSIImageScannerFormatConfiguration    CONSTANT
+     _OBJC_CLASS_WDSIImageScannerSourceConfiguration    DATA
+     __objc_class_name_WDSIImageScannerSourceConfiguration    CONSTANT

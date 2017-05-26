@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|ARM">
+      <Configuration>Debug</Configuration>
+      <Platform>ARM</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|ARM">
+      <Configuration>Release</Configuration>
+      <Platform>ARM</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{1BF34DBF-200E-40FC-A773-DE136FF25F2D}</ProjectGuid>
+    <Keyword>DynamicLibrary</Keyword>
+    <ProjectName>ObjCUWPWindowsUIXamlResources</ProjectName>
+    <RootNamespace>ObjCUWPWindowsUIXamlResources</RootNamespace>
+    <DefaultLanguage>en-US</DefaultLanguage>
+    <MinimumVisualStudioVersion>14.0</MinimumVisualStudioVersion>
+    <AppContainerApplication>true</AppContainerApplication>
+    <ApplicationType>Windows Store</ApplicationType>
+    <WindowsTargetPlatformVersion>10.0.14393.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformMinVersion>10.0.14393.0</WindowsTargetPlatformMinVersion>
+    <ApplicationTypeRevision>10.0</ApplicationTypeRevision>
+    <IncludeOutputsInPackage>false</IncludeOutputsInPackage>
+    <TargetFramework>uap10.0</TargetFramework>
+    <TargetOsAndVersion Condition="'$(TargetOsAndVersion)' == ''">Universal Windows</TargetOsAndVersion>
+    <EnableDotNetNativeCompatibleProfile Condition="'$(EnableDotNetNativeCompatibleProfile)'==''">true</EnableDotNetNativeCompatibleProfile>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v141</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v141</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+    <Import Project="..\..\WinObjC.Frameworks.UWP.Packageable.props" />
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <GenerateManifest>false</GenerateManifest>
+    <IgnoreImportLibrary>false</IgnoreImportLibrary>
+    <IslandwoodDRT>true</IslandwoodDRT>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <GenerateManifest>false</GenerateManifest>
+    <IgnoreImportLibrary>false</IgnoreImportLibrary>
+    <IslandwoodDRT>true</IslandwoodDRT>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
+    <GenerateManifest>false</GenerateManifest>
+    <IgnoreImportLibrary>false</IgnoreImportLibrary>
+    <IslandwoodDRT>true</IslandwoodDRT>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">
+    <GenerateManifest>false</GenerateManifest>
+    <IgnoreImportLibrary>false</IgnoreImportLibrary>
+    <IslandwoodDRT>true</IslandwoodDRT>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <CompileAsWinRT>false</CompileAsWinRT>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
+      <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
+      <ModuleDefinitionFile>$(MSBuildProjectDirectory)\..\..\src\ObjCUWPWindowsUIXamlResources_export.def</ModuleDefinitionFile>
+    </Link>
+    <ClangCompile>
+      <AdditionalOptions> -fno-rtti -Wno-microsoft -Wno-extern-initializer  -Wno-ignored-attributes -DWINAPI_FAMILY=WINAPI_FAMILY_APP  -ffunction-sections  -fdata-sections -d2bigobj </AdditionalOptions>
+      <IncludePaths>%(IncludePaths);$(MSBuildProjectDirectory)\..\..\..\Universal;$(WINOBJC_SDK_ROOT)\include;$(WINOBJC_SDK_ROOT)\Frameworks\include;$(WINOBJC_SDK_ROOT)\include\xplat</IncludePaths>
+      <UserIncludePaths>
+      </UserIncludePaths>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <PreprocessorDefinitions>DEBUG=1;OBJCUWPWINDOWSUIXAMLRESOURCESEXPORT="";IN_WinObjC_Frameworks_UWP_BUILD=1;</PreprocessorDefinitions>
+    </ClangCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <CompileAsWinRT>false</CompileAsWinRT>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
+      <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
+      <ModuleDefinitionFile>$(MSBuildProjectDirectory)\..\..\src\ObjCUWPWindowsUIXamlResources_export.def</ModuleDefinitionFile>
+    </Link>
+    <ClangCompile>
+      <AdditionalOptions> -fno-rtti -Wno-microsoft -Wno-extern-initializer  -Wno-ignored-attributes -DWINAPI_FAMILY=WINAPI_FAMILY_APP  -ffunction-sections  -fdata-sections -d2bigobj </AdditionalOptions>
+      <IncludePaths>%(IncludePaths);$(MSBuildProjectDirectory)\..\..\..\Universal;$(WINOBJC_SDK_ROOT)\include;$(WINOBJC_SDK_ROOT)\Frameworks\include;$(WINOBJC_SDK_ROOT)\include\xplat</IncludePaths>
+      <OptimizationLevel>Full</OptimizationLevel>
+      <WOCStdLib>true</WOCStdLib>
+      <UserIncludePaths>
+      </UserIncludePaths>
+      <PreprocessorDefinitions>;OBJCUWPWINDOWSUIXAMLRESOURCESEXPORT="";IN_WinObjC_Frameworks_UWP_BUILD=1;</PreprocessorDefinitions>
+    </ClangCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|arm'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <CompileAsWinRT>false</CompileAsWinRT>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
+      <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
+      <ModuleDefinitionFile>$(MSBuildProjectDirectory)\..\..\src\ObjCUWPWindowsUIXamlResources_export.def</ModuleDefinitionFile>
+    </Link>
+    <ClangCompile>
+      <AdditionalOptions> -fno-rtti -Wno-microsoft -Wno-extern-initializer  -Wno-ignored-attributes -DWINAPI_FAMILY=WINAPI_FAMILY_APP  -ffunction-sections  -fdata-sections -d2bigobj </AdditionalOptions>
+      <IncludePaths>%(IncludePaths);$(MSBuildProjectDirectory)\..\..\..\Universal;$(WINOBJC_SDK_ROOT)\include;$(WINOBJC_SDK_ROOT)\Frameworks\include;$(WINOBJC_SDK_ROOT)\include\xplat</IncludePaths>
+      <UserIncludePaths>
+      </UserIncludePaths>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <PreprocessorDefinitions>DEBUG=1;OBJCUWPWINDOWSUIXAMLRESOURCESEXPORT="";IN_WinObjC_Frameworks_UWP_BUILD=1;</PreprocessorDefinitions>
+    </ClangCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|arm'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <CompileAsWinRT>false</CompileAsWinRT>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
+      <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
+      <ModuleDefinitionFile>$(MSBuildProjectDirectory)\..\..\src\ObjCUWPWindowsUIXamlResources_export.def</ModuleDefinitionFile>
+    </Link>
+    <ClangCompile>
+      <AdditionalOptions> -fno-rtti -Wno-microsoft -Wno-extern-initializer  -Wno-ignored-attributes -DWINAPI_FAMILY=WINAPI_FAMILY_APP  -ffunction-sections  -fdata-sections -d2bigobj </AdditionalOptions>
+      <IncludePaths>%(IncludePaths);$(MSBuildProjectDirectory)\..\..\..\Universal;$(WINOBJC_SDK_ROOT)\include;$(WINOBJC_SDK_ROOT)\Frameworks\include;$(WINOBJC_SDK_ROOT)\include\xplat</IncludePaths>
+      <OptimizationLevel>Full</OptimizationLevel>
+      <WOCStdLib>true</WOCStdLib>
+      <UserIncludePaths>
+      </UserIncludePaths>
+      <PreprocessorDefinitions>;OBJCUWPWINDOWSUIXAMLRESOURCESEXPORT="";IN_WinObjC_Frameworks_UWP_BUILD=1;</PreprocessorDefinitions>
+    </ClangCompile>
+  </ItemDefinitionGroup>
+
+  <ItemGroup>
+    <PackageHeader Include="$(MSBuildProjectDirectory)\..\..\src\WindowsUIXamlResources.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClangCompile Include="..\..\src\WindowsUIXamlResources.mm" />
+  </ItemGroup>
+
+  
+  <ItemGroup>
+    <PackageReference Include="Nuget.Build.Packaging" Version="0.1.186" />
+    <PackageReference Include="WinObjC.Language" Version="*" />
+    <PackageReference Include="WinObjC.Frameworks.UWP.Core" Version="*" />
+  </ItemGroup>
+
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+    <Import Project="$(MSBuildProjectDirectory)\..\..\WinObjC.Frameworks.UWP.Packageable.targets" />
+    <Import Project="$(MSBuildProjectDirectory)\..\..\..\Common\WinObjC.Frameworks.UWP.Common.targets" Condition="Exists('$(SolutionDir)\..\..\..\Common\WinObjC.Frameworks.UWP.Common.targets')" />
+    <Import Project="$(WINOBJC_SDK_ROOT)\common\winobjc.packagereference.override.targets" Condition="Exists('$(WINOBJC_SDK_ROOT)\common\winobjc.packagereference.override.targets')"/>
+  </ImportGroup>
+</Project>

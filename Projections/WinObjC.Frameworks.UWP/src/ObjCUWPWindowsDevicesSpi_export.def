@@ -1,0 +1,12 @@
+LIBRARY ObjCUWPWindowsDevicesSpi
+    EXPORTS
+     _OBJC_CLASS_WDSSpiConnectionSettings    DATA
+     __objc_class_name_WDSSpiConnectionSettings    CONSTANT
+     _OBJC_CLASS_WDSSpiBusInfo    DATA
+     __objc_class_name_WDSSpiBusInfo    CONSTANT
+     _OBJC_CLASS_WDSSpiDevice    DATA
+     __objc_class_name_WDSSpiDevice    CONSTANT
+     _OBJC_CLASS_WDSSpiController    DATA
+     __objc_class_name_WDSSpiController    CONSTANT
+     _OBJC_CLASS_WDSISpiDeviceStatics    DATA
+     __objc_class_name_WDSISpiDeviceStatics    CONSTANT

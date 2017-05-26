@@ -1,0 +1,6 @@
+LIBRARY ObjCUWPWindowsPerception
+    EXPORTS
+     _OBJC_CLASS_WPPerceptionTimestamp    DATA
+     __objc_class_name_WPPerceptionTimestamp    CONSTANT
+     _OBJC_CLASS_WPPerceptionTimestampHelper    DATA
+     __objc_class_name_WPPerceptionTimestampHelper    CONSTANT

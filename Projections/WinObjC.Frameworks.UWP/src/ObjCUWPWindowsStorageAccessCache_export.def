@@ -1,0 +1,16 @@
+LIBRARY ObjCUWPWindowsStorageAccessCache
+    EXPORTS
+     _OBJC_CLASS_WSAAccessListEntryView    DATA
+     __objc_class_name_WSAAccessListEntryView    CONSTANT
+     _OBJC_CLASS_WSAStorageItemMostRecentlyUsedList    DATA
+     __objc_class_name_WSAStorageItemMostRecentlyUsedList    CONSTANT
+     _OBJC_CLASS_WSAItemRemovedEventArgs    DATA
+     __objc_class_name_WSAItemRemovedEventArgs    CONSTANT
+     _OBJC_CLASS_WSAStorageItemAccessList    DATA
+     __objc_class_name_WSAStorageItemAccessList    CONSTANT
+     _OBJC_CLASS_WSAStorageApplicationPermissions    DATA
+     __objc_class_name_WSAStorageApplicationPermissions    CONSTANT
+     _OBJC_CLASS_WSAAccessListEntry    DATA
+     __objc_class_name_WSAAccessListEntry    CONSTANT
+     _OBJC_CLASS_WSAIStorageItemAccessList    DATA
+     __objc_class_name_WSAIStorageItemAccessList    CONSTANT

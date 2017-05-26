@@ -1,0 +1,16 @@
+LIBRARY ObjCUWPWindowsUIXamlShapes
+    EXPORTS
+     _OBJC_CLASS_WUXSShape    DATA
+     __objc_class_name_WUXSShape    CONSTANT
+     _OBJC_CLASS_WUXSEllipse    DATA
+     __objc_class_name_WUXSEllipse    CONSTANT
+     _OBJC_CLASS_WUXSLine    DATA
+     __objc_class_name_WUXSLine    CONSTANT
+     _OBJC_CLASS_WUXSPath    DATA
+     __objc_class_name_WUXSPath    CONSTANT
+     _OBJC_CLASS_WUXSPolygon    DATA
+     __objc_class_name_WUXSPolygon    CONSTANT
+     _OBJC_CLASS_WUXSPolyline    DATA
+     __objc_class_name_WUXSPolyline    CONSTANT
+     _OBJC_CLASS_WUXSRectangle    DATA
+     __objc_class_name_WUXSRectangle    CONSTANT

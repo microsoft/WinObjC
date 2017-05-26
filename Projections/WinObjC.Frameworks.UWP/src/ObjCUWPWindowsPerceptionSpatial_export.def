@@ -1,0 +1,34 @@
+LIBRARY ObjCUWPWindowsPerceptionSpatial
+    EXPORTS
+     _OBJC_CLASS_WPSSpatialCoordinateSystem    DATA
+     __objc_class_name_WPSSpatialCoordinateSystem    CONSTANT
+     _OBJC_CLASS_WPSSpatialAnchor    DATA
+     __objc_class_name_WPSSpatialAnchor    CONSTANT
+     _OBJC_CLASS_WPSSpatialAnchorRawCoordinateSystemAdjustedEventArgs    DATA
+     __objc_class_name_WPSSpatialAnchorRawCoordinateSystemAdjustedEventArgs    CONSTANT
+     _OBJC_CLASS_WPSSpatialAnchorStore    DATA
+     __objc_class_name_WPSSpatialAnchorStore    CONSTANT
+     _OBJC_CLASS_WPSSpatialLocator    DATA
+     __objc_class_name_WPSSpatialLocator    CONSTANT
+     _OBJC_CLASS_WPSSpatialLocatorPositionalTrackingDeactivatingEventArgs    DATA
+     __objc_class_name_WPSSpatialLocatorPositionalTrackingDeactivatingEventArgs    CONSTANT
+     _OBJC_CLASS_WPSSpatialLocation    DATA
+     __objc_class_name_WPSSpatialLocation    CONSTANT
+     _OBJC_CLASS_WPSSpatialLocatorAttachedFrameOfReference    DATA
+     __objc_class_name_WPSSpatialLocatorAttachedFrameOfReference    CONSTANT
+     _OBJC_CLASS_WPSSpatialStationaryFrameOfReference    DATA
+     __objc_class_name_WPSSpatialStationaryFrameOfReference    CONSTANT
+     _OBJC_CLASS_WPSSpatialAnchorManager    DATA
+     __objc_class_name_WPSSpatialAnchorManager    CONSTANT
+     _OBJC_CLASS_WPSSpatialAnchorTransferManager    DATA
+     __objc_class_name_WPSSpatialAnchorTransferManager    CONSTANT
+     _OBJC_CLASS_WPSSpatialBoundingVolume    DATA
+     __objc_class_name_WPSSpatialBoundingVolume    CONSTANT
+     _OBJC_CLASS_WPSSpatialBoundingFrustum    DATA
+     __objc_class_name_WPSSpatialBoundingFrustum    CONSTANT
+     _OBJC_CLASS_WPSSpatialBoundingBox    DATA
+     __objc_class_name_WPSSpatialBoundingBox    CONSTANT
+     _OBJC_CLASS_WPSSpatialBoundingOrientedBox    DATA
+     __objc_class_name_WPSSpatialBoundingOrientedBox    CONSTANT
+     _OBJC_CLASS_WPSSpatialBoundingSphere    DATA
+     __objc_class_name_WPSSpatialBoundingSphere    CONSTANT

@@ -1,0 +1,6 @@
+LIBRARY ObjCUWPWindowsWeb
+    EXPORTS
+     _OBJC_CLASS_WWWebError    DATA
+     __objc_class_name_WWWebError    CONSTANT
+     _OBJC_CLASS_WWIUriToStreamResolver    DATA
+     __objc_class_name_WWIUriToStreamResolver    CONSTANT

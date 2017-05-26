@@ -1,0 +1,18 @@
+LIBRARY ObjCUWPWindowsUIText
+    EXPORTS
+     _OBJC_CLASS_WUTTextConstants    DATA
+     __objc_class_name_WUTTextConstants    CONSTANT
+     _OBJC_CLASS_WUTFontWeights    DATA
+     __objc_class_name_WUTFontWeights    CONSTANT
+     _OBJC_CLASS_WUTFontWeight    DATA
+     __objc_class_name_WUTFontWeight    CONSTANT
+     _OBJC_CLASS_WUTITextDocument    DATA
+     __objc_class_name_WUTITextDocument    CONSTANT
+     _OBJC_CLASS_WUTITextRange    DATA
+     __objc_class_name_WUTITextRange    CONSTANT
+     _OBJC_CLASS_WUTITextSelection    DATA
+     __objc_class_name_WUTITextSelection    CONSTANT
+     _OBJC_CLASS_WUTITextCharacterFormat    DATA
+     __objc_class_name_WUTITextCharacterFormat    CONSTANT
+     _OBJC_CLASS_WUTITextParagraphFormat    DATA
+     __objc_class_name_WUTITextParagraphFormat    CONSTANT

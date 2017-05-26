@@ -1,0 +1,6 @@
+LIBRARY ObjCUWPWindowsSecurityAuthenticationWeb
+    EXPORTS
+     _OBJC_CLASS_WSAWWebAuthenticationResult    DATA
+     __objc_class_name_WSAWWebAuthenticationResult    CONSTANT
+     _OBJC_CLASS_WSAWWebAuthenticationBroker    DATA
+     __objc_class_name_WSAWWebAuthenticationBroker    CONSTANT

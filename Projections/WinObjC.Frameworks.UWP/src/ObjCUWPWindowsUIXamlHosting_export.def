@@ -1,0 +1,12 @@
+LIBRARY ObjCUWPWindowsUIXamlHosting
+    EXPORTS
+     _OBJC_CLASS_WUXHElementCompositionPreview    DATA
+     __objc_class_name_WUXHElementCompositionPreview    CONSTANT
+     _OBJC_CLASS_WUXHXamlUIPresenter    DATA
+     __objc_class_name_WUXHXamlUIPresenter    CONSTANT
+     _OBJC_CLASS_WUXHIXamlUIPresenterHost    DATA
+     __objc_class_name_WUXHIXamlUIPresenterHost    CONSTANT
+     _OBJC_CLASS_WUXHIXamlUIPresenterHost2    DATA
+     __objc_class_name_WUXHIXamlUIPresenterHost2    CONSTANT
+     _OBJC_CLASS_WUXHIXamlUIPresenterHost3    DATA
+     __objc_class_name_WUXHIXamlUIPresenterHost3    CONSTANT

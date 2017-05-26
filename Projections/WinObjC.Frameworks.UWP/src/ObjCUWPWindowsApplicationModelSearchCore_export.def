@@ -1,0 +1,10 @@
+LIBRARY ObjCUWPWindowsApplicationModelSearchCore
+    EXPORTS
+     _OBJC_CLASS_WASCSearchSuggestion    DATA
+     __objc_class_name_WASCSearchSuggestion    CONSTANT
+     _OBJC_CLASS_WASCSearchSuggestionManager    DATA
+     __objc_class_name_WASCSearchSuggestionManager    CONSTANT
+     _OBJC_CLASS_WASCSearchSuggestionsRequestedEventArgs    DATA
+     __objc_class_name_WASCSearchSuggestionsRequestedEventArgs    CONSTANT
+     _OBJC_CLASS_WASCRequestingFocusOnKeyboardInputEventArgs    DATA
+     __objc_class_name_WASCRequestingFocusOnKeyboardInputEventArgs    CONSTANT

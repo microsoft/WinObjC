@@ -1,0 +1,22 @@
+LIBRARY ObjCUWPWindowsSystemProfile
+    EXPORTS
+     _OBJC_CLASS_WSPAnalyticsVersionInfo    DATA
+     __objc_class_name_WSPAnalyticsVersionInfo    CONSTANT
+     _OBJC_CLASS_WSPAnalyticsInfo    DATA
+     __objc_class_name_WSPAnalyticsInfo    CONSTANT
+     _OBJC_CLASS_WSPSystemIdentificationInfo    DATA
+     __objc_class_name_WSPSystemIdentificationInfo    CONSTANT
+     _OBJC_CLASS_WSPSystemIdentification    DATA
+     __objc_class_name_WSPSystemIdentification    CONSTANT
+     _OBJC_CLASS_WSPPlatformDiagnosticsAndUsageDataSettings    DATA
+     __objc_class_name_WSPPlatformDiagnosticsAndUsageDataSettings    CONSTANT
+     _OBJC_CLASS_WSPHardwareToken    DATA
+     __objc_class_name_WSPHardwareToken    CONSTANT
+     _OBJC_CLASS_WSPHardwareIdentification    DATA
+     __objc_class_name_WSPHardwareIdentification    CONSTANT
+     _OBJC_CLASS_WSPRetailInfo    DATA
+     __objc_class_name_WSPRetailInfo    CONSTANT
+     _OBJC_CLASS_WSPKnownRetailInfoProperties    DATA
+     __objc_class_name_WSPKnownRetailInfoProperties    CONSTANT
+     _OBJC_CLASS_WSPSharedModeSettings    DATA
+     __objc_class_name_WSPSharedModeSettings    CONSTANT

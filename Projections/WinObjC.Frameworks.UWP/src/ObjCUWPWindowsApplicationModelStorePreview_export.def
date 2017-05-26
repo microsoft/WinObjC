@@ -1,0 +1,14 @@
+LIBRARY ObjCUWPWindowsApplicationModelStorePreview
+    EXPORTS
+     _OBJC_CLASS_WASPStorePreviewSkuInfo    DATA
+     __objc_class_name_WASPStorePreviewSkuInfo    CONSTANT
+     _OBJC_CLASS_WASPStorePreviewPurchaseResults    DATA
+     __objc_class_name_WASPStorePreviewPurchaseResults    CONSTANT
+     _OBJC_CLASS_WASPStorePreviewProductInfo    DATA
+     __objc_class_name_WASPStorePreviewProductInfo    CONSTANT
+     _OBJC_CLASS_WASPStoreHardwareManufacturerInfo    DATA
+     __objc_class_name_WASPStoreHardwareManufacturerInfo    CONSTANT
+     _OBJC_CLASS_WASPStorePreview    DATA
+     __objc_class_name_WASPStorePreview    CONSTANT
+     _OBJC_CLASS_WASPStoreConfiguration    DATA
+     __objc_class_name_WASPStoreConfiguration    CONSTANT

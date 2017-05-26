@@ -1,0 +1,24 @@
+LIBRARY ObjCUWPWindowsServicesMapsGuidance
+    EXPORTS
+     _OBJC_CLASS_WSMGGuidanceRoadSignpost    DATA
+     __objc_class_name_WSMGGuidanceRoadSignpost    CONSTANT
+     _OBJC_CLASS_WSMGGuidanceManeuver    DATA
+     __objc_class_name_WSMGGuidanceManeuver    CONSTANT
+     _OBJC_CLASS_WSMGGuidanceRoute    DATA
+     __objc_class_name_WSMGGuidanceRoute    CONSTANT
+     _OBJC_CLASS_WSMGGuidanceMapMatchedCoordinate    DATA
+     __objc_class_name_WSMGGuidanceMapMatchedCoordinate    CONSTANT
+     _OBJC_CLASS_WSMGGuidanceLaneInfo    DATA
+     __objc_class_name_WSMGGuidanceLaneInfo    CONSTANT
+     _OBJC_CLASS_WSMGGuidanceUpdatedEventArgs    DATA
+     __objc_class_name_WSMGGuidanceUpdatedEventArgs    CONSTANT
+     _OBJC_CLASS_WSMGGuidanceReroutedEventArgs    DATA
+     __objc_class_name_WSMGGuidanceReroutedEventArgs    CONSTANT
+     _OBJC_CLASS_WSMGGuidanceAudioNotificationRequestedEventArgs    DATA
+     __objc_class_name_WSMGGuidanceAudioNotificationRequestedEventArgs    CONSTANT
+     _OBJC_CLASS_WSMGGuidanceNavigator    DATA
+     __objc_class_name_WSMGGuidanceNavigator    CONSTANT
+     _OBJC_CLASS_WSMGGuidanceRoadSegment    DATA
+     __objc_class_name_WSMGGuidanceRoadSegment    CONSTANT
+     _OBJC_CLASS_WSMGGuidanceTelemetryCollector    DATA
+     __objc_class_name_WSMGGuidanceTelemetryCollector    CONSTANT

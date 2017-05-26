@@ -1,0 +1,36 @@
+LIBRARY ObjCUWPWindowsGraphicsPrinting
+    EXPORTS
+     _OBJC_CLASS_WGPPrintPageInfo    DATA
+     __objc_class_name_WGPPrintPageInfo    CONSTANT
+     _OBJC_CLASS_WGPPrintTaskOptions    DATA
+     __objc_class_name_WGPPrintTaskOptions    CONSTANT
+     _OBJC_CLASS_WGPStandardPrintTaskOptions    DATA
+     __objc_class_name_WGPStandardPrintTaskOptions    CONSTANT
+     _OBJC_CLASS_WGPPrintTaskProgressingEventArgs    DATA
+     __objc_class_name_WGPPrintTaskProgressingEventArgs    CONSTANT
+     _OBJC_CLASS_WGPPrintTaskCompletedEventArgs    DATA
+     __objc_class_name_WGPPrintTaskCompletedEventArgs    CONSTANT
+     _OBJC_CLASS_WGPPrintTask    DATA
+     __objc_class_name_WGPPrintTask    CONSTANT
+     _OBJC_CLASS_WGPPrintTaskSourceRequestedDeferral    DATA
+     __objc_class_name_WGPPrintTaskSourceRequestedDeferral    CONSTANT
+     _OBJC_CLASS_WGPPrintTaskSourceRequestedArgs    DATA
+     __objc_class_name_WGPPrintTaskSourceRequestedArgs    CONSTANT
+     _OBJC_CLASS_WGPPrintTaskRequestedDeferral    DATA
+     __objc_class_name_WGPPrintTaskRequestedDeferral    CONSTANT
+     _OBJC_CLASS_WGPPrintTaskRequest    DATA
+     __objc_class_name_WGPPrintTaskRequest    CONSTANT
+     _OBJC_CLASS_WGPPrintTaskRequestedEventArgs    DATA
+     __objc_class_name_WGPPrintTaskRequestedEventArgs    CONSTANT
+     _OBJC_CLASS_WGPPrintManager    DATA
+     __objc_class_name_WGPPrintManager    CONSTANT
+     _OBJC_CLASS_WGPPrintPageDescription    DATA
+     __objc_class_name_WGPPrintPageDescription    CONSTANT
+     _OBJC_CLASS_WGPIPrintTaskOptionsCoreProperties    DATA
+     __objc_class_name_WGPIPrintTaskOptionsCoreProperties    CONSTANT
+     _OBJC_CLASS_WGPIPrintTaskOptionsCoreUIConfiguration    DATA
+     __objc_class_name_WGPIPrintTaskOptionsCoreUIConfiguration    CONSTANT
+     _OBJC_CLASS_WGPIPrintTaskOptionsCore    DATA
+     __objc_class_name_WGPIPrintTaskOptionsCore    CONSTANT
+     _OBJC_CLASS_WGPIPrintDocumentSource    DATA
+     __objc_class_name_WGPIPrintDocumentSource    CONSTANT

@@ -1,0 +1,6 @@
+LIBRARY ObjCUWPWindowsPhonePersonalInformationProvisioning
+    EXPORTS
+     _OBJC_CLASS_WPPPContactPartnerProvisioningManager    DATA
+     __objc_class_name_WPPPContactPartnerProvisioningManager    CONSTANT
+     _OBJC_CLASS_WPPPMessagePartnerProvisioningManager    DATA
+     __objc_class_name_WPPPMessagePartnerProvisioningManager    CONSTANT

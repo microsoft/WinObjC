@@ -1,0 +1,32 @@
+LIBRARY ObjCUWPWindowsSecurityEnterpriseData
+    EXPORTS
+     _OBJC_CLASS_WSEFileProtectionInfo    DATA
+     __objc_class_name_WSEFileProtectionInfo    CONSTANT
+     _OBJC_CLASS_WSEProtectedContainerExportResult    DATA
+     __objc_class_name_WSEProtectedContainerExportResult    CONSTANT
+     _OBJC_CLASS_WSEProtectedContainerImportResult    DATA
+     __objc_class_name_WSEProtectedContainerImportResult    CONSTANT
+     _OBJC_CLASS_WSEProtectedFileCreateResult    DATA
+     __objc_class_name_WSEProtectedFileCreateResult    CONSTANT
+     _OBJC_CLASS_WSEBufferProtectUnprotectResult    DATA
+     __objc_class_name_WSEBufferProtectUnprotectResult    CONSTANT
+     _OBJC_CLASS_WSEDataProtectionInfo    DATA
+     __objc_class_name_WSEDataProtectionInfo    CONSTANT
+     _OBJC_CLASS_WSEProtectionPolicyAuditInfo    DATA
+     __objc_class_name_WSEProtectionPolicyAuditInfo    CONSTANT
+     _OBJC_CLASS_WSEThreadNetworkContext    DATA
+     __objc_class_name_WSEThreadNetworkContext    CONSTANT
+     _OBJC_CLASS_WSEProtectionPolicyManager    DATA
+     __objc_class_name_WSEProtectionPolicyManager    CONSTANT
+     _OBJC_CLASS_WSEProtectedAccessSuspendingEventArgs    DATA
+     __objc_class_name_WSEProtectedAccessSuspendingEventArgs    CONSTANT
+     _OBJC_CLASS_WSEProtectedAccessResumedEventArgs    DATA
+     __objc_class_name_WSEProtectedAccessResumedEventArgs    CONSTANT
+     _OBJC_CLASS_WSEProtectedContentRevokedEventArgs    DATA
+     __objc_class_name_WSEProtectedContentRevokedEventArgs    CONSTANT
+     _OBJC_CLASS_WSEFileRevocationManager    DATA
+     __objc_class_name_WSEFileRevocationManager    CONSTANT
+     _OBJC_CLASS_WSEFileProtectionManager    DATA
+     __objc_class_name_WSEFileProtectionManager    CONSTANT
+     _OBJC_CLASS_WSEDataProtectionManager    DATA
+     __objc_class_name_WSEDataProtectionManager    CONSTANT

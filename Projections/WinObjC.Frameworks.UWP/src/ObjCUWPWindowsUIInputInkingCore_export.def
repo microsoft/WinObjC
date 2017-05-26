@@ -1,0 +1,8 @@
+LIBRARY ObjCUWPWindowsUIInputInkingCore
+    EXPORTS
+     _OBJC_CLASS_WUIICCoreInkIndependentInputSource    DATA
+     __objc_class_name_WUIICCoreInkIndependentInputSource    CONSTANT
+     _OBJC_CLASS_WUIICCoreWetStrokeUpdateEventArgs    DATA
+     __objc_class_name_WUIICCoreWetStrokeUpdateEventArgs    CONSTANT
+     _OBJC_CLASS_WUIICCoreWetStrokeUpdateSource    DATA
+     __objc_class_name_WUIICCoreWetStrokeUpdateSource    CONSTANT

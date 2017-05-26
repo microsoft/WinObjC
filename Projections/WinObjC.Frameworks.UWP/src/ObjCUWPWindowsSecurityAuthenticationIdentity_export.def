@@ -1,0 +1,6 @@
+LIBRARY ObjCUWPWindowsSecurityAuthenticationIdentity
+    EXPORTS
+     _OBJC_CLASS_WSAIEnterpriseKeyCredentialRegistrationInfo    DATA
+     __objc_class_name_WSAIEnterpriseKeyCredentialRegistrationInfo    CONSTANT
+     _OBJC_CLASS_WSAIEnterpriseKeyCredentialRegistrationManager    DATA
+     __objc_class_name_WSAIEnterpriseKeyCredentialRegistrationManager    CONSTANT

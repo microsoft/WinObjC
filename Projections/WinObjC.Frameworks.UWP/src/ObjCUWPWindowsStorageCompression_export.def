@@ -1,0 +1,6 @@
+LIBRARY ObjCUWPWindowsStorageCompression
+    EXPORTS
+     _OBJC_CLASS_WSCCompressor    DATA
+     __objc_class_name_WSCCompressor    CONSTANT
+     _OBJC_CLASS_WSCDecompressor    DATA
+     __objc_class_name_WSCDecompressor    CONSTANT

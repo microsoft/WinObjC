@@ -1,0 +1,12 @@
+LIBRARY ObjCUWPWindowsApplicationModelLockScreen
+    EXPORTS
+     _OBJC_CLASS_WALLockScreenInfo    DATA
+     __objc_class_name_WALLockScreenInfo    CONSTANT
+     _OBJC_CLASS_WALLockScreenBadge    DATA
+     __objc_class_name_WALLockScreenBadge    CONSTANT
+     _OBJC_CLASS_WALLockScreenUnlockingDeferral    DATA
+     __objc_class_name_WALLockScreenUnlockingDeferral    CONSTANT
+     _OBJC_CLASS_WALLockApplicationHost    DATA
+     __objc_class_name_WALLockApplicationHost    CONSTANT
+     _OBJC_CLASS_WALLockScreenUnlockingEventArgs    DATA
+     __objc_class_name_WALLockScreenUnlockingEventArgs    CONSTANT

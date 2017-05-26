@@ -1,0 +1,4 @@
+LIBRARY ObjCUWPWindowsGamingUI
+    EXPORTS
+     _OBJC_CLASS_WGUGameBar    DATA
+     __objc_class_name_WGUGameBar    CONSTANT

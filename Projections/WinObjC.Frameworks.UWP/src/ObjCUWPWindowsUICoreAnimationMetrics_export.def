@@ -1,0 +1,14 @@
+LIBRARY ObjCUWPWindowsUICoreAnimationMetrics
+    EXPORTS
+     _OBJC_CLASS_WUCAAnimationDescription    DATA
+     __objc_class_name_WUCAAnimationDescription    CONSTANT
+     _OBJC_CLASS_WUCAPropertyAnimation    DATA
+     __objc_class_name_WUCAPropertyAnimation    CONSTANT
+     _OBJC_CLASS_WUCAScaleAnimation    DATA
+     __objc_class_name_WUCAScaleAnimation    CONSTANT
+     _OBJC_CLASS_WUCATranslationAnimation    DATA
+     __objc_class_name_WUCATranslationAnimation    CONSTANT
+     _OBJC_CLASS_WUCAOpacityAnimation    DATA
+     __objc_class_name_WUCAOpacityAnimation    CONSTANT
+     _OBJC_CLASS_WUCAIPropertyAnimation    DATA
+     __objc_class_name_WUCAIPropertyAnimation    CONSTANT

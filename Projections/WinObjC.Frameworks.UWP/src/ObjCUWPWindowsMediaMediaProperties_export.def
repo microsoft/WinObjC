@@ -1,0 +1,24 @@
+LIBRARY ObjCUWPWindowsMediaMediaProperties
+    EXPORTS
+     _OBJC_CLASS_WMMMediaRatio    DATA
+     __objc_class_name_WMMMediaRatio    CONSTANT
+     _OBJC_CLASS_WMMMediaPropertySet    DATA
+     __objc_class_name_WMMMediaPropertySet    CONSTANT
+     _OBJC_CLASS_WMMAudioEncodingProperties    DATA
+     __objc_class_name_WMMAudioEncodingProperties    CONSTANT
+     _OBJC_CLASS_WMMMediaEncodingSubtypes    DATA
+     __objc_class_name_WMMMediaEncodingSubtypes    CONSTANT
+     _OBJC_CLASS_WMMH264ProfileIds    DATA
+     __objc_class_name_WMMH264ProfileIds    CONSTANT
+     _OBJC_CLASS_WMMMpeg2ProfileIds    DATA
+     __objc_class_name_WMMMpeg2ProfileIds    CONSTANT
+     _OBJC_CLASS_WMMVideoEncodingProperties    DATA
+     __objc_class_name_WMMVideoEncodingProperties    CONSTANT
+     _OBJC_CLASS_WMMImageEncodingProperties    DATA
+     __objc_class_name_WMMImageEncodingProperties    CONSTANT
+     _OBJC_CLASS_WMMContainerEncodingProperties    DATA
+     __objc_class_name_WMMContainerEncodingProperties    CONSTANT
+     _OBJC_CLASS_WMMMediaEncodingProfile    DATA
+     __objc_class_name_WMMMediaEncodingProfile    CONSTANT
+     _OBJC_CLASS_WMMIMediaEncodingProperties    DATA
+     __objc_class_name_WMMIMediaEncodingProperties    CONSTANT

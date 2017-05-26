@@ -1,0 +1,30 @@
+LIBRARY ObjCUWPWindowsDevicesGeolocation
+    EXPORTS
+     _OBJC_CLASS_WDGGeopoint    DATA
+     __objc_class_name_WDGGeopoint    CONSTANT
+     _OBJC_CLASS_WDGGeopath    DATA
+     __objc_class_name_WDGGeopath    CONSTANT
+     _OBJC_CLASS_WDGGeoboundingBox    DATA
+     __objc_class_name_WDGGeoboundingBox    CONSTANT
+     _OBJC_CLASS_WDGGeocoordinateSatelliteData    DATA
+     __objc_class_name_WDGGeocoordinateSatelliteData    CONSTANT
+     _OBJC_CLASS_WDGVenueData    DATA
+     __objc_class_name_WDGVenueData    CONSTANT
+     _OBJC_CLASS_WDGGeocoordinate    DATA
+     __objc_class_name_WDGGeocoordinate    CONSTANT
+     _OBJC_CLASS_WDGCivicAddress    DATA
+     __objc_class_name_WDGCivicAddress    CONSTANT
+     _OBJC_CLASS_WDGGeoposition    DATA
+     __objc_class_name_WDGGeoposition    CONSTANT
+     _OBJC_CLASS_WDGPositionChangedEventArgs    DATA
+     __objc_class_name_WDGPositionChangedEventArgs    CONSTANT
+     _OBJC_CLASS_WDGStatusChangedEventArgs    DATA
+     __objc_class_name_WDGStatusChangedEventArgs    CONSTANT
+     _OBJC_CLASS_WDGGeolocator    DATA
+     __objc_class_name_WDGGeolocator    CONSTANT
+     _OBJC_CLASS_WDGGeocircle    DATA
+     __objc_class_name_WDGGeocircle    CONSTANT
+     _OBJC_CLASS_WDGBasicGeoposition    DATA
+     __objc_class_name_WDGBasicGeoposition    CONSTANT
+     _OBJC_CLASS_WDGIGeoshape    DATA
+     __objc_class_name_WDGIGeoshape    CONSTANT

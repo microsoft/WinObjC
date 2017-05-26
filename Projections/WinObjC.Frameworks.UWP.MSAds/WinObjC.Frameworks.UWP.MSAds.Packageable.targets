@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Target Name="AddBuiltOutput" BeforeTargets="GetPackageContents"  DependsOnTargets="$(ComputeLinkInputsTargets);BuiltProjectOutputGroup" Condition="'$(ConfigurationType)' == 'DynamicLibrary' or '$(ConfigurationType)' == 'Application'">
+    <ItemGroup>
+      <!-- Public include folder for project  -->
+      <_IncludeFiles Include="@(PackageHeader)"/>
+
+      <_ImportLibraryFileNames Include="@(Link -> '%(ImportLibrary)')">
+      </_ImportLibraryFileNames>
+
+      <_WinMDFileNames Include="@(Link -> '%(WindowsMetadataFile)')">
+      </_WinMDFileNames>
+
+      <PackageFile Include="@(_IncludeFiles->Distinct())" Condition="Exists('%(FullPath)')">
+        <PackagePath>build\include\UWP\%(Filename)%(Extension)</PackagePath>
+      </PackageFile>
+
+      <PackageFile Include="@(BuiltProjectOutputGroupOutput -> '%(FinalOutputPath)')">
+        <PackagePath>build\lib\$(TargetOsAndVersion)\$(PlatformTarget)\%(Filename)%(Extension)</PackagePath>
+      </PackageFile>
+
+      <PackageFile Include="@(_ImportLibraryFileNames->Distinct())" Condition="Exists('%(FullPath)')">
+        <PackagePath>build\lib\$(TargetOsAndVersion)\$(PlatformTarget)\%(Filename)%(Extension)</PackagePath>
+      </PackageFile>
+
+      <PackageFile Include="@(_WinMDFileNames->Distinct())" Condition="Exists('%(FullPath)')">
+        <PackagePath>build\lib\$(TargetOsAndVersion)\$(PlatformTarget)\%(Filename)%(Extension)</PackagePath>
+      </PackageFile>
+    </ItemGroup>
+  </Target>
+</Project>
+    

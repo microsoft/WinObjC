@@ -1,0 +1,16 @@
+LIBRARY ObjCUWPWindowsMediaDialProtocol
+    EXPORTS
+     _OBJC_CLASS_WMDDialAppStateDetails    DATA
+     __objc_class_name_WMDDialAppStateDetails    CONSTANT
+     _OBJC_CLASS_WMDDialApp    DATA
+     __objc_class_name_WMDDialApp    CONSTANT
+     _OBJC_CLASS_WMDDialDevice    DATA
+     __objc_class_name_WMDDialDevice    CONSTANT
+     _OBJC_CLASS_WMDDialDeviceSelectedEventArgs    DATA
+     __objc_class_name_WMDDialDeviceSelectedEventArgs    CONSTANT
+     _OBJC_CLASS_WMDDialDisconnectButtonClickedEventArgs    DATA
+     __objc_class_name_WMDDialDisconnectButtonClickedEventArgs    CONSTANT
+     _OBJC_CLASS_WMDDialDevicePickerFilter    DATA
+     __objc_class_name_WMDDialDevicePickerFilter    CONSTANT
+     _OBJC_CLASS_WMDDialDevicePicker    DATA
+     __objc_class_name_WMDDialDevicePicker    CONSTANT

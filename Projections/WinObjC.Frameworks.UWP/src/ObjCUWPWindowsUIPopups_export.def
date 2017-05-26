@@ -1,0 +1,12 @@
+LIBRARY ObjCUWPWindowsUIPopups
+    EXPORTS
+     _OBJC_CLASS_WUPMessageDialog    DATA
+     __objc_class_name_WUPMessageDialog    CONSTANT
+     _OBJC_CLASS_WUPUICommand    DATA
+     __objc_class_name_WUPUICommand    CONSTANT
+     _OBJC_CLASS_WUPUICommandSeparator    DATA
+     __objc_class_name_WUPUICommandSeparator    CONSTANT
+     _OBJC_CLASS_WUPPopupMenu    DATA
+     __objc_class_name_WUPPopupMenu    CONSTANT
+     _OBJC_CLASS_WUPIUICommand    DATA
+     __objc_class_name_WUPIUICommand    CONSTANT

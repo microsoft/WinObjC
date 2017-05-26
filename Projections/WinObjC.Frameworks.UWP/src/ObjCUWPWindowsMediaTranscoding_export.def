@@ -1,0 +1,6 @@
+LIBRARY ObjCUWPWindowsMediaTranscoding
+    EXPORTS
+     _OBJC_CLASS_WMTPrepareTranscodeResult    DATA
+     __objc_class_name_WMTPrepareTranscodeResult    CONSTANT
+     _OBJC_CLASS_WMTMediaTranscoder    DATA
+     __objc_class_name_WMTMediaTranscoder    CONSTANT

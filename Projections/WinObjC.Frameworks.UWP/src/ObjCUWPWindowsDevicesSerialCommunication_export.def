@@ -1,0 +1,8 @@
+LIBRARY ObjCUWPWindowsDevicesSerialCommunication
+    EXPORTS
+     _OBJC_CLASS_WDSSerialDevice    DATA
+     __objc_class_name_WDSSerialDevice    CONSTANT
+     _OBJC_CLASS_WDSErrorReceivedEventArgs    DATA
+     __objc_class_name_WDSErrorReceivedEventArgs    CONSTANT
+     _OBJC_CLASS_WDSPinChangedEventArgs    DATA
+     __objc_class_name_WDSPinChangedEventArgs    CONSTANT

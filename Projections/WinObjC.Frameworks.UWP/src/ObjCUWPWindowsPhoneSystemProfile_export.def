@@ -1,0 +1,4 @@
+LIBRARY ObjCUWPWindowsPhoneSystemProfile
+    EXPORTS
+     _OBJC_CLASS_WPSPRetailMode    DATA
+     __objc_class_name_WPSPRetailMode    CONSTANT

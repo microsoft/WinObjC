@@ -1,0 +1,10 @@
+LIBRARY ObjCUWPWindowsDevicesWiFi
+    EXPORTS
+     _OBJC_CLASS_WDWWiFiAdapter    DATA
+     __objc_class_name_WDWWiFiAdapter    CONSTANT
+     _OBJC_CLASS_WDWWiFiNetworkReport    DATA
+     __objc_class_name_WDWWiFiNetworkReport    CONSTANT
+     _OBJC_CLASS_WDWWiFiAvailableNetwork    DATA
+     __objc_class_name_WDWWiFiAvailableNetwork    CONSTANT
+     _OBJC_CLASS_WDWWiFiConnectionResult    DATA
+     __objc_class_name_WDWWiFiConnectionResult    CONSTANT

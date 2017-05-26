@@ -1,0 +1,6 @@
+LIBRARY ObjCUWPWindowsManagementOrchestration
+    EXPORTS
+     _OBJC_CLASS_WMOCurrentAppOrchestration    DATA
+     __objc_class_name_WMOCurrentAppOrchestration    CONSTANT
+     _OBJC_CLASS_WMOSingleAppModeContext    DATA
+     __objc_class_name_WMOSingleAppModeContext    CONSTANT

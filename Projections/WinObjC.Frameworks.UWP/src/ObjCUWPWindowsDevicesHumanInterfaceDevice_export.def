@@ -1,0 +1,22 @@
+LIBRARY ObjCUWPWindowsDevicesHumanInterfaceDevice
+    EXPORTS
+     _OBJC_CLASS_WDHHidDevice    DATA
+     __objc_class_name_WDHHidDevice    CONSTANT
+     _OBJC_CLASS_WDHHidInputReport    DATA
+     __objc_class_name_WDHHidInputReport    CONSTANT
+     _OBJC_CLASS_WDHHidFeatureReport    DATA
+     __objc_class_name_WDHHidFeatureReport    CONSTANT
+     _OBJC_CLASS_WDHHidOutputReport    DATA
+     __objc_class_name_WDHHidOutputReport    CONSTANT
+     _OBJC_CLASS_WDHHidBooleanControlDescription    DATA
+     __objc_class_name_WDHHidBooleanControlDescription    CONSTANT
+     _OBJC_CLASS_WDHHidNumericControlDescription    DATA
+     __objc_class_name_WDHHidNumericControlDescription    CONSTANT
+     _OBJC_CLASS_WDHHidInputReportReceivedEventArgs    DATA
+     __objc_class_name_WDHHidInputReportReceivedEventArgs    CONSTANT
+     _OBJC_CLASS_WDHHidCollection    DATA
+     __objc_class_name_WDHHidCollection    CONSTANT
+     _OBJC_CLASS_WDHHidBooleanControl    DATA
+     __objc_class_name_WDHHidBooleanControl    CONSTANT
+     _OBJC_CLASS_WDHHidNumericControl    DATA
+     __objc_class_name_WDHHidNumericControl    CONSTANT
