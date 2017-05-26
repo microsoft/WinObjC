@@ -203,8 +203,6 @@ static void DispatchMainRunLoopWakeup(void* arg) {
         }
     } while (sleep == FALSE);
 
-    [[NSNotificationQueue defaultQueue] asapProcessMode:mode];
-
     return [state limitDateForMode:mode];
 }
 
@@ -214,11 +212,7 @@ static void DispatchMainRunLoopWakeup(void* arg) {
 - (void)acceptInputForMode:(NSRunLoopMode)mode beforeDate:(NSDate*)date {
     NSRunLoopState* state = [self _stateForMode:mode];
 
-    if ([[NSNotificationQueue defaultQueue] hasIdleNotificationsInMode:mode]) {
-        [[NSNotificationQueue defaultQueue] idleProcessMode:mode];
-    } else {
-        [state acceptInputForMode:mode beforeDate:date];
-    }
+    [state acceptInputForMode:mode beforeDate:date];
 }
 
 - (void)_invalidateTimerWithDelayedPerform:(NSDelayedPerform*)delayed {

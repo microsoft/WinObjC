@@ -22,21 +22,29 @@
 @class NSNotification;
 @class NSArray;
 
-typedef enum {
-    NSNotificationNoCoalescing = 0,
-    NSNotificationCoalescingOnName = 1,
-    NSNotificationCoalescingOnSender = 2
-} NSNotificationCoalescing;
-typedef enum { NSPostWhenIdle = 1, NSPostASAP = 2, NSPostNow = 3 } NSPostingStyle;
+typedef NS_OPTIONS(NSUInteger, NSNotificationCoalescing) {
+    NSNotificationNoCoalescing = 0x0,
+    NSNotificationCoalescingOnName = 0x1,
+    NSNotificationCoalescingOnSender = 0x2,
+};
+
+typedef NS_ENUM(NSUInteger, NSPostingStyle) {
+    NSPostWhenIdle = 1,
+    NSPostASAP = 2,
+    NSPostNow = 3,
+};
 
 FOUNDATION_EXPORT_CLASS
 @interface NSNotificationQueue : NSObject
-- (instancetype)initWithNotificationCenter:(NSNotificationCenter*)notificationCenter STUB_METHOD;
 + (NSNotificationQueue*)defaultQueue;
-- (void)enqueueNotification:(NSNotification*)notification postingStyle:(NSPostingStyle)postingStyle STUB_METHOD;
+
+- (instancetype)initWithNotificationCenter:(NSNotificationCenter*)notificationCenter;
+
+- (void)enqueueNotification:(NSNotification*)notification postingStyle:(NSPostingStyle)postingStyle;
 - (void)enqueueNotification:(NSNotification*)notification
                postingStyle:(NSPostingStyle)postingStyle
                coalesceMask:(NSNotificationCoalescing)coalesceMask
-                   forModes:(NSArray*)modes STUB_METHOD;
-- (void)dequeueNotificationsMatching:(NSNotification*)notification coalesceMask:(NSUInteger)coalesceMask STUB_METHOD;
+                   forModes:(NSArray*)modes;
+
+- (void)dequeueNotificationsMatching:(NSNotification*)notification coalesceMask:(NSUInteger)coalesceMask NOTINPLAN_METHOD;
 @end
