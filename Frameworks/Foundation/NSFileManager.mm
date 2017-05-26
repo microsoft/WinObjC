@@ -101,11 +101,11 @@ static const winrt::hstring sc_fileCreationDateKey = L"System.DateCreated";
 
 // Conversion math from https://msdn.microsoft.com/en-us/library/ms724228
 static DateTime __NSDateToSystemTime(NSDate* date) {
-    return { (int64_t)([date timeIntervalSince1970] * 10000000) + 116444736000000000 };
+    return { (int64_t)([date timeIntervalSince1970] * 10000000LL) + 116444736000000000LL };
 }
 
 static NSDate* __SystemTimeToNSDate(DateTime systemTime) {
-    return [NSDate dateWithTimeIntervalSince1970:((systemTime.UniversalTime - 116444736000000000) / 10000000)];
+    return [NSDate dateWithTimeIntervalSince1970:((systemTime.UniversalTime - 116444736000000000LL) / 10000000LL)];
 }
 
 @implementation NSFileManager
@@ -235,13 +235,12 @@ static NSDate* __SystemTimeToNSDate(DateTime systemTime) {
 }
 
 /**
- @Status Caveat
- @Notes URL must be an existing file URL
+ @Status Interoperable
 */
-- (NSDirectoryEnumerator*)enumeratorAtURL:(NSURL*)url
-               includingPropertiesForKeys:(NSArray*)keys
-                                  options:(NSDirectoryEnumerationOptions)mask
-                             errorHandler:(BOOL (^)(NSURL* url, NSError* error))handler {
+- (NSDirectoryEnumerator<NSURL*>*)enumeratorAtURL:(NSURL*)url
+                       includingPropertiesForKeys:(NSArray*)keys
+                                          options:(NSDirectoryEnumerationOptions)mask
+                                     errorHandler:(BOOL (^)(NSURL* url, NSError* error))handler {
     const char* path = [[url path] UTF8String];
     return [[[NSDirectoryEnumerator alloc] _initWithPath:path shallow:NO includingPropertiesForKeys:keys options:mask returnNSURL:YES]
         autorelease];
@@ -250,7 +249,7 @@ static NSDate* __SystemTimeToNSDate(DateTime systemTime) {
 /**
  @Status Interoperable
 */
-- (id)enumeratorAtPath:(id)pathAddr {
+- (NSDirectoryEnumerator<NSString*>*)enumeratorAtPath:(NSString*)pathAddr {
     const char* path = [pathAddr UTF8String];
     return [[[NSDirectoryEnumerator alloc] _initWithPath:path
                                                  shallow:NO
@@ -280,7 +279,7 @@ static NSDate* __SystemTimeToNSDate(DateTime systemTime) {
     for (NSString* path in allContents) {
         if (path.length > 0L && !([path isEqualToString:@"."] || [path isEqualToString:@".."])) {
             struct stat s {};
-            if (stat([path UTF8String], &s) == 0 && (s.st_mode & _S_IFDIR)) {
+            if (EbrStat([path UTF8String], &s) == 0 && (s.st_mode & _S_IFDIR)) {
                 [ret addObject:path];
             }
         }
@@ -391,7 +390,7 @@ static NSDate* __SystemTimeToNSDate(DateTime systemTime) {
 
 /**
  @Status NotInPlan
- @Notes Windows systems do not have a trash, we use the Recycle Bin
+ @Notes UWP does not provide an API to perform this
 */
 - (BOOL)trashItemAtURL:(NSURL*)url resultingItemURL:(NSURL**)outResultingURL error:(NSError**)error {
     UNIMPLEMENTED();
@@ -749,21 +748,14 @@ static NSDate* __SystemTimeToNSDate(DateTime systemTime) {
  @Status Interoperable
 */
 - (BOOL)isExecutableFileAtPath:(NSString*)path {
-    struct stat st;
-    if (EbrStat([path UTF8String], &st) == 0) {
-        return (st.st_mode & _S_IEXEC);
-    }
-
-    return NO;
+    return EbrAccess([path UTF8String], 1) == 0 ? YES : NO;
 }
 
 /**
- @Status NotInPlan
- @Notes UWP does not provide an API to perform this
+ @Status Interoperable
 */
 - (BOOL)isDeletableFileAtPath:(NSString*)path {
-    UNIMPLEMENTED();
-    return NO;
+    return EbrAccess([path UTF8String], 2) == 0 ? YES : NO;
 }
 
 // Getting and Setting Attributes
@@ -786,6 +778,19 @@ static NSDate* __SystemTimeToNSDate(DateTime systemTime) {
     return path;
 }
 
+static HRESULT __getFileFromPath(NSString* path, ABI::Windows::Storage::IStorageFile** file) {
+    NSString* filePath = [path stringByReplacingOccurrencesOfString:@"/" withString:@"\\"];
+
+    ComPtr<ABI::Windows::Storage::IStorageFileStatics> storageFileStatics;
+    RETURN_IF_FAILED(Windows::Foundation::GetActivationFactory(
+        Microsoft::WRL::Wrappers::HStringReference(RuntimeClass_Windows_Storage_StorageFile).Get(), &storageFileStatics));
+
+    ComPtr<ABI::Windows::Foundation::IAsyncOperation<ABI::Windows::Storage::StorageFile*>> fileOperation;
+    RETURN_IF_FAILED(storageFileStatics->GetFileFromPathAsync(Strings::NarrowToWide<HSTRING>(filePath).Get(), &fileOperation));
+
+    return WRLHelpers::AwaitOperationResult(fileOperation.Get(), file);
+}
+
 /**
  @Status Caveat
  @Notes Only NSFileType, NSFileImmutable, NSFileSize, NSFileModificationDate, and NSFileCreationDate are supported
@@ -801,25 +806,18 @@ static NSDate* __SystemTimeToNSDate(DateTime systemTime) {
         return nil;
     }
 
-    NSString* filePath = [path stringByReplacingOccurrencesOfString:@"/" withString:@"\\"];
-    NSMutableDictionary* ret = [NSMutableDictionary dictionary];
-
-    // TODO:: GH____ convert to C++ winrt when SavePropertiesAsync is fixed
-    ComPtr<ABI::Windows::Storage::IStorageFileStatics> storageFileStatics;
-    RETURN_NULL_IF_FAILED(Windows::Foundation::GetActivationFactory(
-        Microsoft::WRL::Wrappers::HStringReference(RuntimeClass_Windows_Storage_StorageFile).Get(), &storageFileStatics));
-
-    ComPtr<ABI::Windows::Foundation::IAsyncOperation<ABI::Windows::Storage::StorageFile*>> fileOperation;
-    RETURN_NULL_IF_FAILED(storageFileStatics->GetFileFromPathAsync(Strings::NarrowToWide<HSTRING>(filePath).Get(), &fileOperation));
-
+    // First get the file
     ComPtr<ABI::Windows::Storage::IStorageFile> file;
-    RETURN_NULL_IF_FAILED(WRLHelpers::AwaitOperationResult(fileOperation.Get(), &file));
+    RETURN_NULL_IF_FAILED(__getFileFromPath(path, &file));
 
+    // Then get the attributes, which translate to NSFileType and NSFileImmutable
     ComPtr<ABI::Windows::Storage::IStorageItem> fileAsItem;
     RETURN_NULL_IF_FAILED(file.As(&fileAsItem));
 
     ABI::Windows::Storage::FileAttributes attributes;
     RETURN_NULL_IF_FAILED(fileAsItem->get_Attributes(&attributes));
+
+    NSMutableDictionary* ret = [NSMutableDictionary dictionary];
     ret[NSFileType] = ((attributes & ABI::Windows::Storage::FileAttributes_Directory) == ABI::Windows::Storage::FileAttributes_Directory) ?
                           NSFileTypeDirectory :
                           NSFileTypeRegular;
@@ -829,6 +827,7 @@ static NSDate* __SystemTimeToNSDate(DateTime systemTime) {
     ComPtr<ABI::Windows::Storage::IStorageItemProperties> fileAsProperties;
     RETURN_NULL_IF_FAILED(file.As(&fileAsProperties));
 
+    // Then get the properties, which translate to NSFileSize, NSFileModificationDate, and NSFileCreationDate
     ComPtr<ABI::Windows::Storage::FileProperties::IStorageItemContentProperties> properties;
     RETURN_NULL_IF_FAILED(fileAsProperties->get_Properties(&properties));
     ComPtr<ABI::Windows::Storage::FileProperties::IStorageItemExtraProperties> extraProperties;
@@ -894,18 +893,11 @@ static NSDate* __SystemTimeToNSDate(DateTime systemTime) {
         NSFileSize, NSFileModificationDate, and NSFileCreationDate cannot be set using WRL APIs
 */
 - (BOOL)setAttributes:(NSDictionary<NSFileAttributeKey, id>*)attribs ofItemAtPath:(NSString*)path error:(NSError**)error {
-    // TODO:: GH____ convert to C++ winrt when SavePropertiesAsync is fixed
-    ComPtr<ABI::Windows::Storage::IStorageFileStatics> storageFileStatics;
-    RETURN_FALSE_IF_FAILED(Windows::Foundation::GetActivationFactory(
-        Microsoft::WRL::Wrappers::HStringReference(RuntimeClass_Windows_Storage_StorageFile).Get(), &storageFileStatics));
-
-    NSString* filePath = [path stringByReplacingOccurrencesOfString:@"/" withString:@"\\"];
-    ComPtr<ABI::Windows::Foundation::IAsyncOperation<ABI::Windows::Storage::StorageFile*>> fileOperation;
-    RETURN_FALSE_IF_FAILED(storageFileStatics->GetFileFromPathAsync(Strings::NarrowToWide<HSTRING>(filePath).Get(), &fileOperation));
-
+    // First get the file
     ComPtr<ABI::Windows::Storage::IStorageFile> file;
-    RETURN_FALSE_IF_FAILED(WRLHelpers::AwaitOperationResult(fileOperation.Get(), &file));
+    RETURN_FALSE_IF_FAILED(__getFileFromPath(path, &file));
 
+    // Then create a ValueSet which will contain the attributes
     ComPtr<ABI::Windows::Storage::IStorageItem> fileAsItem;
     RETURN_FALSE_IF_FAILED(file.As(&fileAsItem));
 
@@ -919,6 +911,7 @@ static NSDate* __SystemTimeToNSDate(DateTime systemTime) {
     ComPtr<ABI::Windows::Foundation::Collections::IMap<HSTRING, IInspectable*>> changingAttributes;
     RETURN_FALSE_IF_FAILED(changingAttributesInspectable.As(&changingAttributes));
 
+    // Iterate through the attributes the user wants changed
     for (NSFileAttributeKey key in attribs) {
         id value = attribs[key];
         if ([key isEqualToString:NSFileType]) {
@@ -940,6 +933,7 @@ static NSDate* __SystemTimeToNSDate(DateTime systemTime) {
         }
     }
 
+    // Add FileAttributes to the ValueSet of changing attribtues
     ComPtr<ABI::Windows::Foundation::IPropertyValueStatics> propertyStatics;
     RETURN_FALSE_IF_FAILED(ABI::Windows::Foundation::GetActivationFactory(
         Microsoft::WRL::Wrappers::HStringReference(RuntimeClass_Windows_Foundation_PropertyValue).Get(), &propertyStatics));
@@ -950,6 +944,7 @@ static NSDate* __SystemTimeToNSDate(DateTime systemTime) {
     BOOLEAN unused = false;
     RETURN_FALSE_IF_FAILED(changingAttributes->Insert(winrt::get_abi(sc_fileAttributesKey), attributeInspectableValue.Get(), &unused));
 
+    // Then save the attributes to the file
     ComPtr<ABI::Windows::Foundation::Collections::IIterable<ABI::Windows::Foundation::Collections::IKeyValuePair<HSTRING, IInspectable*>*>>
         abiIterable;
     RETURN_FALSE_IF_FAILED(changingAttributes.As(&abiIterable));
@@ -1050,20 +1045,16 @@ static NSDate* __SystemTimeToNSDate(DateTime systemTime) {
 // Converting File Paths to Strings
 
 /**
- @Status NotInPlan
- @Notes UWP does not provide an API to perform this
+ @Status Interoperable
 */
 - (const char*)fileSystemRepresentationWithPath:(id)pathAddr {
-    UNIMPLEMENTED();
     return [pathAddr UTF8String];
 }
 
 /**
- @Status NotInPlan
- @Notes UWP does not provide an API to perform this
+ @Status Interoperable
 */
 - (id)stringWithFileSystemRepresentation:(const char*)path length:(NSUInteger)length {
-    UNIMPLEMENTED();
     return [[NSString string] initWithBytes:path length:length encoding:NSUTF8StringEncoding];
 }
 
@@ -1128,7 +1119,7 @@ static NSDate* __SystemTimeToNSDate(DateTime systemTime) {
  @Notes Only NSFileType, NSFileImmutable, NSFileSize, NSFileModificationDate, and NSFileCreationDate are supported
  @traverseLink not supported.
 */
-- (NSDictionary*)fileAttributesAtPath:(NSString*)path traverseLink:(BOOL)traveseLinks {
+- (NSDictionary*)fileAttributesAtPath:(NSString*)path traverseLink:(BOOL)traverseLinks {
     return [self attributesOfItemAtPath:path error:nullptr];
 }
 

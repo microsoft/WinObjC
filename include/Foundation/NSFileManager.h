@@ -123,7 +123,7 @@ FOUNDATION_EXPORT_CLASS
 - (NSArray<NSURL*>*)mountedVolumeURLsIncludingResourceValuesForKeys:(NSArray<NSString*>*)propertyKeys
                                                             options:(NSVolumeEnumerationOptions)options;
 - (NSArray<NSURL*>*)subpathsOfDirectoryAtPath:(NSString*)path error:(NSError* _Nullable*)error;
-- (NSArray<NSURL*>*)subpathsAtPath:(NSString*)path NOTINPLAN_METHOD;
+- (NSArray<NSURL*>*)subpathsAtPath:(NSString*)path;
 - (BOOL)createDirectoryAtURL:(NSURL*)url
     withIntermediateDirectories:(BOOL)createIntermediates
                      attributes:(NSDictionary<NSString*, id>*)attributes
@@ -167,7 +167,7 @@ FOUNDATION_EXPORT_CLASS
 - (BOOL)isReadableFileAtPath:(NSString*)path;
 - (BOOL)isWritableFileAtPath:(NSString*)path;
 - (BOOL)isExecutableFileAtPath:(NSString*)path;
-- (BOOL)isDeletableFileAtPath:(NSString*)path NOTINPLAN_METHOD;
+- (BOOL)isDeletableFileAtPath:(NSString*)path;
 - (NSArray<NSString*>*)componentsToDisplayForPath:(NSString*)path;
 - (NSString*)displayNameAtPath:(NSString*)path;
 - (NSDictionary<NSString*, id>*)attributesOfItemAtPath:(NSString*)path error:(NSError* _Nullable*)error;
