@@ -49,3 +49,7 @@ void deleteFile(NSString* name);
              performingBlock:(void (^)(id))block
     andExpectChangeCallbacks:(NSArray<void (^)(NSString*, id, NSDictionary*, void*)>*)callbacks;
 @end
+
+@interface THRunLoopSpinner : NSObject
+- (void)scheduleAndAwaitBlock:(void (^)())block;
+@end
