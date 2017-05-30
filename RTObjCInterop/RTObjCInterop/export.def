@@ -1,0 +1,52 @@
+LIBRARY RTObjCInterop
+    EXPORTS
+    rt_dynamic_cast
+    fastEnumArrayImpl
+    fastEnumIteratorImpl
+    SizeByEnumeration
+    getPropertyValueArrayInfo
+    convertNSDictionaryToPropertySet
+    convertNSErrorToPropertySet
+    convertPropertySetToNSDictionary
+    propertyValueCreator
+    convertNSDateToWinRT
+    convertWinRTToNSDate
+    convertNSURLToWinRTStorageFile
+    convertNSURLToWinRTUri
+    convertWinRTStorageFileToNSURL
+    convertWinRTUriToNSURL
+    convertNSNumberToPropertyValue
+    convertNSStringToPropertyValue
+    _OBJC_CLASS_RTObject    DATA
+    __objc_class_name_RTObject    CONSTANT
+    _OBJC_CLASS_WFGUID    DATA
+    __objc_class_name_WFGUID    CONSTANT
+    _OBJC_CLASS_RTKeyValuePair    DATA
+    __objc_class_name_RTKeyValuePair    CONSTANT
+    _OBJC_CLASS_ListenerMgr    DATA
+    __objc_class_name_ListenerMgr    CONSTANT
+    _OBJC_CLASS_RTProxiedNSArray    DATA
+    __objc_class_name_RTProxiedNSArray    CONSTANT
+    _OBJC_CLASS_RTProxiedNSArrayFull    DATA
+    __objc_class_name_RTProxiedNSArrayFull    CONSTANT
+    _OBJC_CLASS_RTProxiedNSMutableArray    DATA
+    __objc_class_name_RTProxiedNSMutableArray    CONSTANT
+    _OBJC_CLASS_RTProxiedNSMutableArrayFull    DATA
+    __objc_class_name_RTProxiedNSMutableArrayFull    CONSTANT
+    _OBJC_CLASS_RTProxiedIterableNSArray    DATA
+    __objc_class_name_RTProxiedIterableNSArray    CONSTANT
+    _OBJC_CLASS_RTProxiedIterableNSArrayFull    DATA
+    __objc_class_name_RTProxiedIterableNSArrayFull    CONSTANT
+    _OBJC_CLASS_RTProxiedNSDictionaryKeyEnumerator    DATA
+    __objc_class_name_RTProxiedNSDictionaryKeyEnumerator    CONSTANT
+    _OBJC_CLASS_RTProxiedNSDictionary    DATA
+    __objc_class_name_RTProxiedNSDictionary    CONSTANT
+    _OBJC_CLASS_RTProxiedNSMutableDictionary    DATA
+    __objc_class_name_RTProxiedNSMutableDictionary    CONSTANT
+    _OBJC_CLASS_RTProxiedKeyValuePair    DATA
+    __objc_class_name_RTProxiedKeyValuePair    CONSTANT
+    _OBJC_CLASS_RTProxiedObservableNSMutableArray    DATA
+    __objc_class_name_RTProxiedObservableNSMutableArray    CONSTANT
+    _OBJC_CLASS_RTProxiedObservableNSMutableDictionary    DATA
+    __objc_class_name_RTProxiedObservableNSMutableDictionary    CONSTANT
+    

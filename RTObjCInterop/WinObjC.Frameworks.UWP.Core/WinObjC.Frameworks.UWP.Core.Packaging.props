@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Label="Configuration">
+    <PackageId>WinObjC.Frameworks.UWP.Core</PackageId>
+    <Title>WinObjC.Frameworks.UWP.Core</Title>
+    <Authors>Microsoft</Authors>
+    <Owners>Microsoft</Owners>
+    <Summary>WinObjC.Frameworks.UWP.Core</Summary>
+    <Description>WinObjC.Frameworks.UWP.Core</Description>
+    <PackageReleaseNotes>
+    </PackageReleaseNotes>
+    <PackageProjectUrl>
+    </PackageProjectUrl>
+    <PackageLicenseUrl>
+    </PackageLicenseUrl>
+    <Copyright>Copyright © Microsoft</Copyright>
+    <PackageTags>WinObjC.Frameworks.UWP.Core</PackageTags>
+    <UpdateAssemblyInfo>false</UpdateAssemblyInfo>
+    <WriteVersionInfoToBuildLog>false</WriteVersionInfoToBuildLog>
+    <TargetFramework>uap10.0</TargetFramework>
+  </PropertyGroup>
+</Project>

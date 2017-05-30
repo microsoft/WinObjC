@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Target Name="AddBuiltOutput" BeforeTargets="GetPackageContents"  DependsOnTargets="$(ComputeLinkInputsTargets);BuiltProjectOutputGroup" Condition="'$(ConfigurationType)' == 'DynamicLibrary' or '$(ConfigurationType)' == 'Application'">
+    <ItemGroup>
+
+        <!-- include folder for project  -->
+        <_IncludeFiles Include="$(WINOBJC_SDK_ROOT)\include\Platform\Universal Windows\**\InteropBase.h"/>
+        <_IncludeFiles Include="$(WINOBJC_SDK_ROOT)\include\Platform\Universal Windows\**\RTHelpers.h"/>
+        <_IncludeFiles Include="$(WINOBJC_SDK_ROOT)\include\Platform\Universal Windows\**\ObjCHelpers.h"/>
+        <_IncludeFiles Include="$(WINOBJC_SDK_ROOT)\include\Platform\Universal Windows\**\ObjCHelperCommonConvertors.h"/>
+        <_IncludeFiles Include="$(WINOBJC_SDK_ROOT)\include\Platform\Universal Windows\**\ObjCHelperAsyncImplementation.h"/>
+
+      <PackageFile Include="@(_IncludeFiles->Distinct())" Condition="Exists('%(FullPath)')">
+        <PackagePath>build\include\UWP\%(Filename)%(Extension)</PackagePath>
+      </PackageFile>
+
+      <PackageFile Include="@(BuiltProjectOutputGroupOutput -> '%(FinalOutputPath)')">
+        <PackagePath>build\lib\$(TargetOsAndVersion)\$(PlatformTarget)\%(Filename)%(Extension)</PackagePath>
+      </PackageFile>
+
+      <PackageFile Include="@(_ImportLibraryFileNames->Distinct())" Condition="Exists('%(FullPath)')">
+        <PackagePath>build\lib\$(TargetOsAndVersion)\$(PlatformTarget)\%(Filename)%(Extension)</PackagePath>
+      </PackageFile>
+
+    </ItemGroup>
+  </Target>
