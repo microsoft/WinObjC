@@ -78,6 +78,9 @@
     <ProjectReference Include="$(MSBuildThisFileDirectory)..\..\CoreFoundation\dll\CoreFoundation.vcxproj" />
     <ProjectReference Include="$(MSBuildThisFileDirectory)..\..\Foundation\dll\Foundation.vcxproj" />
     <ProjectReference Include="$(MSBuildThisFileDirectory)..\..\Starboard\dll\Starboard.vcxproj" />
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\Tests.Helpers\Tests.Helpers.vcxproj">
+      <Project>{48B2B4F1-50D5-4772-B4A4-8D2C23AB3B67}</Project>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{4fdf4507-8c1e-4617-9278-11d4bfe8f3a5}</ProjectGuid>

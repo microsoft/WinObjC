@@ -15,6 +15,7 @@
 //******************************************************************************
 
 #import <Helpers/TestHelpers.h>
+#import <pthread.h>
 
 #import <memory>
 #import <atomic>

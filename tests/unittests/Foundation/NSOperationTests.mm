@@ -16,6 +16,7 @@
 
 #import <TestFramework.h>
 #import <Foundation/Foundation.h>
+#import <Helpers/TestHelpers.h>
 
 #import <thread>
 #import <mutex>
@@ -36,60 +37,18 @@ static void (^_completionBlockPopulatingConditionAndFlag(void (^completionBlock)
     });
 }
 
-// Convenience class that wraps an NSCondition and an associated boolean, and implements the NSCondition usage pattern documented in:
-// https://developer.apple.com/reference/foundation/nscondition?language=objc
-// This can be replaced/re-implemented based on NSConditionLock once that has a stable implementation
-@interface _NSBooleanCondition : NSObject
-- (BOOL)waitUntilDate:(NSDate*)limit;
-- (void)broadcast;
-@property (readonly) NSCondition* condition;
-@property (readonly) bool isOpen;
-@end
-
-@implementation _NSBooleanCondition
-- (instancetype)init {
-    if (self = [super init]) {
-        _condition = [NSCondition new];
-        _isOpen = false;
-    }
-    return self;
-}
-
-- (void)dealloc {
-    [_condition release];
-    [super dealloc];
-}
-
-- (BOOL)waitUntilDate:(NSDate*)limit {
-    BOOL ret = YES;
-    [_condition lock];
-    while (!_isOpen && ret) {
-        ret = [_condition waitUntilDate:limit];
-    }
-    [_condition unlock];
-    return ret;
-}
-
-- (void)broadcast {
-    [_condition lock];
-    _isOpen = YES;
-    [_condition broadcast];
-    [_condition unlock];
-}
-@end
-
 // Convenience class that executes a block on a separate thread
 @interface BlockThread : NSThread
 - (instancetype)initWithBlock:(void (^)())block;
 @property (copy) void (^block)();
-@property (readonly) _NSBooleanCondition* finishCondition;
+@property (readonly) THBooleanCondition* finishCondition;
 @end
 
 @implementation BlockThread
 - (instancetype)initWithBlock:(void (^)())block {
     if (self = [super init]) {
         self.block = block;
-        self->_finishCondition = [_NSBooleanCondition new];
+        self->_finishCondition = [THBooleanCondition new];
     }
     return self;
 }
@@ -854,8 +813,8 @@ TEST(NSOperation, AddOperation_AndValidateState) {
     EXPECT_EQ(1, observer.suspendedChanges);
     [observer reset];
 
-    __block _NSBooleanCondition* startedCondition = [[_NSBooleanCondition new] autorelease];
-    __block _NSBooleanCondition* finishCondition = [[_NSBooleanCondition new] autorelease];
+    __block THBooleanCondition* startedCondition = [[THBooleanCondition new] autorelease];
+    __block THBooleanCondition* finishCondition = [[THBooleanCondition new] autorelease];
     NSOperation* operation = [NSBlockOperation blockOperationWithBlock:^void() {
         [startedCondition broadcast];
         ASSERT_TRUE_MSG([finishCondition waitUntilDate:[NSDate dateWithTimeIntervalSinceNow:2]],
@@ -944,7 +903,7 @@ TEST(NSOperation, AddOperations) {
     __block NSOperationQueue_KeyObserver* observer = [NSOperationQueue_KeyObserver observerWithQueue:queue];
 
     __block size_t opsFinished = 0;
-    __block _NSBooleanCondition* startCondition = [[_NSBooleanCondition new] autorelease];
+    __block THBooleanCondition* startCondition = [[THBooleanCondition new] autorelease];
     void (^incrementOpsFinished)() = ^void() {
         ASSERT_TRUE_MSG([startCondition waitUntilDate:[NSDate dateWithTimeIntervalSinceNow:2]],
                         "Operation was not allowed to start in time.");
@@ -981,7 +940,7 @@ TEST(NSOperation, AddOperations) {
     EXPECT_EQ(1, observer.operationCountChanges);
     [observer reset];
 
-    __block _NSBooleanCondition* startCondition2 = [[_NSBooleanCondition new] autorelease];
+    __block THBooleanCondition* startCondition2 = [[THBooleanCondition new] autorelease];
     void (^incrementOpsFinished2)() = ^void() {
         ASSERT_TRUE_MSG([startCondition2 waitUntilDate:[NSDate dateWithTimeIntervalSinceNow:2]],
                         "Operation was not allowed to start in time.");
@@ -1100,13 +1059,13 @@ TEST(NSOperation, CancelAllOperations_Suspended) {
 
 // An NSOperation for testing that only finishes if cancelled
 @interface CancellableOperation : NSOperation
-@property (retain, readonly) _NSBooleanCondition* started;
+@property (retain, readonly) THBooleanCondition* started;
 @end
 
 @implementation CancellableOperation : NSOperation
 - (instancetype)init {
     if (self = [super init]) {
-        _started = [_NSBooleanCondition new];
+        _started = [THBooleanCondition new];
     }
     return self;
 }
@@ -1144,7 +1103,7 @@ TEST(NSOperation, CancelAllOperations_Running) {
 TEST(NSOperation, WaitUntilAllOperationsAreFinished) {
     __block NSOperationQueue* queue = [[NSOperationQueue new] autorelease];
 
-    __block _NSBooleanCondition* startCondition = [[_NSBooleanCondition new] autorelease];
+    __block THBooleanCondition* startCondition = [[THBooleanCondition new] autorelease];
     void (^waitForStartCondition)() = ^void() {
         ASSERT_TRUE_MSG([startCondition waitUntilDate:[NSDate dateWithTimeIntervalSinceNow:2]], "Operation did not start in time.");
     };
@@ -1158,8 +1117,8 @@ TEST(NSOperation, WaitUntilAllOperationsAreFinished) {
     ];
 
     // On a separate thread, add a bunch of operations, then wait until they're all finished
-    __block _NSBooleanCondition* addedOperationsCondition = [[_NSBooleanCondition new] autorelease];
-    __block _NSBooleanCondition* finishedWaitingCondition = [[_NSBooleanCondition new] autorelease];
+    __block THBooleanCondition* addedOperationsCondition = [[THBooleanCondition new] autorelease];
+    __block THBooleanCondition* finishedWaitingCondition = [[THBooleanCondition new] autorelease];
 
     BlockThread* addOperationsAndWaitThread = [[[BlockThread alloc] initWithBlock:^void() {
         [queue addOperations:ops waitUntilFinished:NO];
