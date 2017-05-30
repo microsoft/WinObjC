@@ -33,6 +33,10 @@ ifeq ($(strip $(filter EntryPoint.cpp,$(UT_FILES))),)
 _UT_OBJECTS += $(_UT_OBJ_DIR)/EntryPoint.o
 endif
 
+ifneq ($(strip $(filter %.m %.mm,$(UT_FILES))),)
+_UT_OBJECTS += $(patsubst %.mm,$(_UT_OBJ_DIR)/helpers-%.mm.o,$(notdir $(wildcard $(_UT_BASE_DIR)/../helpers/*.mm)))
+endif
+
 _INC := $(_UT_BASE_DIR)/../frameworks/include $(_UT_BASE_DIR)/../frameworks/gtest $(_UT_BASE_DIR)/../frameworks/gtest/include
 _INC += $(_UT_BASE_DIR)/../frameworks/OSXShims/include $(_UT_BASE_DIR)/../../include/xplat $(_UT_BASE_DIR)/../../tools/include/xplat
 
@@ -73,6 +77,10 @@ $(_UT_OBJ_DIR)/EntryPoint.o : $(_UT_BASE_DIR)/EntryPoint.cpp
 	$(ECHO_CC)$(CLANG) -c -o $@ $(_ALL_CFLAGS) $(_ALL_CXXFLAGS) -x c++ $<$(ECHO_END)
 
 $(_UT_OBJ_DIR)/%.m.o : %.m
+	@mkdir -p $(dir $@)
+	$(ECHO_CC)$(CLANG) -c -o $@ $(_ALL_CFLAGS) $(_ALL_CXXFLAGS) -x objective-c++ $^$(ECHO_END)
+
+$(_UT_OBJ_DIR)/helpers-%.mm.o : $(_UT_BASE_DIR)/../helpers/%.mm
 	@mkdir -p $(dir $@)
 	$(ECHO_CC)$(CLANG) -c -o $@ $(_ALL_CFLAGS) $(_ALL_CXXFLAGS) -x objective-c++ $^$(ECHO_END)
 

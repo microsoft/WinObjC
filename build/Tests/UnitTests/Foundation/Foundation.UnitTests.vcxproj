@@ -28,6 +28,9 @@
     <ProjectReference Include="..\..\..\Foundation\dll\Foundation.vcxproj">
       <Project>{86127226-9A6E-439B-A070-420A572AF0C7}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\..\Tests.Helpers\Tests.Helpers.vcxproj">
+      <Project>{48B2B4F1-50D5-4772-B4A4-8D2C23AB3B67}</Project>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{C8276B21-7830-482C-94FB-784F2478CBF1}</ProjectGuid>
