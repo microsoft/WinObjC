@@ -187,7 +187,7 @@ FOUNDATION_EXPORT_CLASS
 - (const char*)fileSystemRepresentationWithPath:(NSString*)path;
 - (NSString*)stringWithFileSystemRepresentation:(const char*)string length:(NSUInteger)len;
 - (BOOL)changeCurrentDirectoryPath:(NSString*)path;
-- (BOOL)changeFileAttributes:(NSDictionary<NSString*, id>*)attributes atPath:(NSString*)path NOTINPLAN_METHOD;
+- (BOOL)changeFileAttributes:(NSDictionary<NSString*, id>*)attributes atPath:(NSString*)path;
 - (NSDictionary<NSString*, id>*)fileAttributesAtPath:(NSString*)path traverseLink:(BOOL)flag;
 - (NSDictionary<NSString*, id>*)fileSystemAttributesAtPath:(NSString*)path;
 - (NSArray<NSURL*>*)directoryContentsAtPath:(NSString*)path;

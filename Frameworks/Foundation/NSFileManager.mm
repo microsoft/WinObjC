@@ -1108,12 +1108,12 @@ static HRESULT __getFileFromPath(NSString* path, ABI::Windows::Storage::IStorage
 }
 
 /**
- @Status NotInPlan
- @Notes UWP does not provide an API to perform this
+ @Status Caveat
+ @Notes Only NSFileType, NSFileImmutable are supported
+        NSFileSize, NSFileModificationDate, and NSFileCreationDate cannot be set using WRL APIs
 */
 - (BOOL)changeFileAttributes:(NSDictionary*)attributes atPath:(NSString*)path {
-    UNIMPLEMENTED();
-    return NO;
+    return [self setAttributes:attributes ofItemAtPath:path error:nullptr];
 }
 
 /**
