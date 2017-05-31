@@ -46,10 +46,10 @@ public:
         : m_geometrySink(sink),
           m_lastPoint{ 0, 0 },
           m_isFigureOpen(false),
-          m_allowsFigureCalls(false),
+          m_allowsFigureCalls(0),
           m_hasGeometryStarted(false),
           m_lastClose(D2D1_FIGURE_END_CLOSED),
-          m_allowsFigureEndExceptFinal(false),
+          m_allowsFigureEndExceptFinal(0),
           m_delayedEndFigure(false) {
     }
 
@@ -115,7 +115,7 @@ public:
     }
 
     STDMETHOD_(void, BeginFigure)(D2D1_POINT_2F startPoint, D2D1_FIGURE_BEGIN figureBegin) {
-        if (m_allowsFigureCalls) {
+        if (m_allowsFigureCalls > 0) {
             _BeginFigure(startPoint, figureBegin);
         }
     }
@@ -135,10 +135,10 @@ public:
 
     // Only end the figure if we're requesting to actually close a figure, or if we have allowed the backing sink to dictate figure calls.
     STDMETHOD_(void, EndFigure)(D2D1_FIGURE_END figureEnd) {
-        if (m_allowsFigureEndExceptFinal && figureEnd != D2D1_FIGURE_END_CLOSED) {
+        if (m_allowsFigureEndExceptFinal > 0 && figureEnd != D2D1_FIGURE_END_CLOSED) {
             m_delayedEndFigure = true;
             m_delayedEndFigureClosure = figureEnd;
-        } else if (figureEnd == D2D1_FIGURE_END_CLOSED || m_allowsFigureCalls) {
+        } else if (figureEnd == D2D1_FIGURE_END_CLOSED || m_allowsFigureCalls > 0) {
             _EndFigure(figureEnd);
         }
     }
@@ -159,7 +159,7 @@ public:
     }
 
     void SetAllowsFigureCalls(bool allows) {
-        m_allowsFigureCalls = allows;
+        m_allowsFigureCalls += (allows ? 1 : -1);
     }
 
     bool IsFigureEndClosed() {
@@ -199,7 +199,7 @@ public:
     }
 
     void AllowAllExceptFinalEndFigure(bool allow) {
-        m_allowsFigureEndExceptFinal = allow;
+        m_allowsFigureEndExceptFinal += (allow ? 1 : -1);
         m_delayedEndFigure = false;
     }
 
@@ -222,9 +222,9 @@ private:
     // closed.
     bool m_hasGeometryStarted;
     // True if this geometry can end its own figures.
-    bool m_allowsFigureCalls;
+    int m_allowsFigureCalls;
     // True if this geometry will leave it's last EndFigure call ignored.
-    bool m_allowsFigureEndExceptFinal;
+    int m_allowsFigureEndExceptFinal;
     // True when the next figure created should end the previous figure first.
     bool m_delayedEndFigure;
     // The figure closure type to end the last figure with.
@@ -969,12 +969,7 @@ bool CGPathIsEmpty(CGPathRef path) {
         return true;
     }
 
-    UINT32 count;
-
-    RETURN_FALSE_IF_FAILED(path->ClosePath());
-
-    RETURN_FALSE_IF_FAILED(path->GetPathGeometry()->GetFigureCount(&count));
-    return count == 0;
+    return !path->IsGeometryStarted();
 }
 
 /**
