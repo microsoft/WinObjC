@@ -24,6 +24,10 @@
     </ProjectReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Condition="'$(BuildingFrameworksCore)' != 'true'" Include="WinObjC.Frameworks.UWP" Version="*" />
+  </ItemGroup>
+
   <PropertyGroup Label="Globals">
     <DefaultLanguage Condition="'$(DefaultLanguage)'==''">en-US</DefaultLanguage>
     <MinimumVisualStudioVersion Condition="'$(MinimumVisualStudioVersion)'==''">15.0</MinimumVisualStudioVersion>
