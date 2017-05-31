@@ -94,11 +94,11 @@ static void searchRecursive(const char* rootpath,
                 // TODO: ignore all mask for now, not needed for 1511
                 std::string fileFullPath = _searchPath;
                 fileFullPath.append(filename);
-
+                NSURL* newURL = [NSURL fileURLWithPath:[NSString stringWithUTF8String:fileFullPath.c_str()]];
+                [objArray addObject:newURL];
                 if (keys != nil) { // caller wants to fetch some properties for this URL
                     NSDictionary* fileAttributes = fileAttributesForFilePath(fileFullPath.c_str());
                     if (fileAttributes != nil) {
-                        NSURL* newURL = [NSURL fileURLWithPath:[NSString stringWithUTF8String:fileFullPath.c_str()]];
                         for (NSString* key in keys) {
                             if ([key isEqualToString:NSURLContentModificationDateKey]) {
                                 // TODO 7491994: Implement CFURL resourceValue APIs
@@ -110,8 +110,6 @@ static void searchRecursive(const char* rootpath,
                                 // TODO: add aditional properties, not needed in 1511.
                             }
                         }
-
-                        [objArray addObject:newURL];
                     }
                 }
 

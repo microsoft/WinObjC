@@ -50,33 +50,36 @@ typedef enum : NSUInteger {
 
 typedef enum NSURLRelationship : NSInteger { NSURLRelationshipContains, NSURLRelationshipSame, NSURLRelationshipOther } NSURLRelationship;
 
-FOUNDATION_EXPORT NSString* const NSFileType;
-FOUNDATION_EXPORT NSString* const NSFileSize;
-FOUNDATION_EXPORT NSString* const NSFileModificationDate;
-FOUNDATION_EXPORT NSString* const NSFileReferenceCount;
-FOUNDATION_EXPORT NSString* const NSFileDeviceIdentifier;
-FOUNDATION_EXPORT NSString* const NSFileOwnerAccountName;
-FOUNDATION_EXPORT NSString* const NSFileGroupOwnerAccountName;
-FOUNDATION_EXPORT NSString* const NSFilePosixPermissions;
-FOUNDATION_EXPORT NSString* const NSFileSystemNumber;
-FOUNDATION_EXPORT NSString* const NSFileSystemFileNumber;
-FOUNDATION_EXPORT NSString* const NSFileExtensionHidden;
-FOUNDATION_EXPORT NSString* const NSFileHFSCreatorCode;
-FOUNDATION_EXPORT NSString* const NSFileHFSTypeCode;
-FOUNDATION_EXPORT NSString* const NSFileImmutable;
-FOUNDATION_EXPORT NSString* const NSFileAppendOnly;
-FOUNDATION_EXPORT NSString* const NSFileCreationDate;
-FOUNDATION_EXPORT NSString* const NSFileOwnerAccountID;
-FOUNDATION_EXPORT NSString* const NSFileGroupOwnerAccountID;
-FOUNDATION_EXPORT NSString* const NSFileBusy;
-FOUNDATION_EXPORT NSString* const NSFileProtectionKey;
-FOUNDATION_EXPORT NSString* const NSFileTypeDirectory;
-FOUNDATION_EXPORT NSString* const NSFileTypeRegular;
-FOUNDATION_EXPORT NSString* const NSFileTypeSymbolicLink;
-FOUNDATION_EXPORT NSString* const NSFileTypeSocket;
-FOUNDATION_EXPORT NSString* const NSFileTypeCharacterSpecial;
-FOUNDATION_EXPORT NSString* const NSFileTypeBlockSpecial;
-FOUNDATION_EXPORT NSString* const NSFileTypeUnknown;
+typedef NSString* NSFileAttributeKey;
+typedef NSString* NSFileAttributeType;
+
+FOUNDATION_EXPORT NSFileAttributeKey const NSFileType;
+FOUNDATION_EXPORT NSFileAttributeKey const NSFileSize;
+FOUNDATION_EXPORT NSFileAttributeKey const NSFileModificationDate;
+FOUNDATION_EXPORT NSFileAttributeKey const NSFileReferenceCount;
+FOUNDATION_EXPORT NSFileAttributeKey const NSFileDeviceIdentifier;
+FOUNDATION_EXPORT NSFileAttributeKey const NSFileOwnerAccountName;
+FOUNDATION_EXPORT NSFileAttributeKey const NSFileGroupOwnerAccountName;
+FOUNDATION_EXPORT NSFileAttributeKey const NSFilePosixPermissions;
+FOUNDATION_EXPORT NSFileAttributeKey const NSFileSystemNumber;
+FOUNDATION_EXPORT NSFileAttributeKey const NSFileSystemFileNumber;
+FOUNDATION_EXPORT NSFileAttributeKey const NSFileExtensionHidden;
+FOUNDATION_EXPORT NSFileAttributeKey const NSFileHFSCreatorCode;
+FOUNDATION_EXPORT NSFileAttributeKey const NSFileHFSTypeCode;
+FOUNDATION_EXPORT NSFileAttributeKey const NSFileImmutable;
+FOUNDATION_EXPORT NSFileAttributeKey const NSFileAppendOnly;
+FOUNDATION_EXPORT NSFileAttributeKey const NSFileCreationDate;
+FOUNDATION_EXPORT NSFileAttributeKey const NSFileOwnerAccountID;
+FOUNDATION_EXPORT NSFileAttributeKey const NSFileGroupOwnerAccountID;
+FOUNDATION_EXPORT NSFileAttributeKey const NSFileBusy;
+FOUNDATION_EXPORT NSFileAttributeKey const NSFileProtectionKey;
+FOUNDATION_EXPORT NSFileAttributeType const NSFileTypeDirectory;
+FOUNDATION_EXPORT NSFileAttributeType const NSFileTypeRegular;
+FOUNDATION_EXPORT NSFileAttributeType const NSFileTypeSymbolicLink;
+FOUNDATION_EXPORT NSFileAttributeType const NSFileTypeSocket;
+FOUNDATION_EXPORT NSFileAttributeType const NSFileTypeCharacterSpecial;
+FOUNDATION_EXPORT NSFileAttributeType const NSFileTypeBlockSpecial;
+FOUNDATION_EXPORT NSFileAttributeType const NSFileTypeUnknown;
 FOUNDATION_EXPORT NSString* const NSFileSystemSize;
 FOUNDATION_EXPORT NSString* const NSFileSystemFreeSize;
 FOUNDATION_EXPORT NSString* const NSFileSystemNodes;
@@ -90,7 +93,7 @@ FOUNDATION_EXPORT NSString* const NSFileProtectionCompleteUntilFirstUserAuthenti
 
 FOUNDATION_EXPORT NSString* const NSUbiquityIdentityDidChangeNotification;
 
-FOUNDATION_EXPORT NSString* NSOpenStepRootDirectory() STUB_METHOD;
+FOUNDATION_EXPORT NSString* NSOpenStepRootDirectory() NOTINPLAN_METHOD;
 
 @interface NSObject (NSFileManager)
 - (BOOL)fileManager:(NSFileManager*)manager shouldProceedAfterError:(NSDictionary*)errorInfo;
@@ -137,28 +140,34 @@ FOUNDATION_EXPORT_CLASS
           backupItemName:(NSString*)backupItemName
                  options:(NSFileManagerItemReplacementOptions)options
         resultingItemURL:(NSURL* _Nullable*)resultingURL
-                   error:(NSError* _Nullable*)error;
+                   error:(NSError* _Nullable*)error NOTINPLAN_METHOD;
+- (BOOL)trashItemAtURL:(NSURL*)url resultingItemURL:(NSURL**)outResultingURL error:(NSError**)error NOTINPLAN_METHOD;
 - (BOOL)copyItemAtURL:(NSURL*)srcURL toURL:(NSURL*)dstURL error:(NSError* _Nullable*)error;
 - (BOOL)copyItemAtPath:(NSString*)srcPath toPath:(NSString*)dstPath error:(NSError* _Nullable*)error;
 - (BOOL)moveItemAtURL:(NSURL*)srcURL toURL:(NSURL*)dstURL error:(NSError* _Nullable*)error;
 - (BOOL)moveItemAtPath:(NSString*)srcPath toPath:(NSString*)dstPath error:(NSError* _Nullable*)error;
-- (NSURL*)URLForUbiquityContainerIdentifier:(NSString*)containerID;
-- (BOOL)isUbiquitousItemAtURL:(NSURL*)url;
-- (BOOL)setUbiquitous:(BOOL)flag itemAtURL:(NSURL*)url destinationURL:(NSURL*)destinationURL error:(NSError* _Nullable*)errorOut;
-- (BOOL)startDownloadingUbiquitousItemAtURL:(NSURL*)url error:(NSError* _Nullable*)errorOut;
-- (BOOL)evictUbiquitousItemAtURL:(NSURL*)url error:(NSError* _Nullable*)errorOut;
-- (NSURL*)URLForPublishingUbiquitousItemAtURL:(NSURL*)url expirationDate:(NSDate* _Nullable*)outDate error:(NSError* _Nullable*)error;
-- (BOOL)createSymbolicLinkAtURL:(NSURL*)url withDestinationURL:(NSURL*)destURL error:(NSError* _Nullable*)error;
-- (BOOL)createSymbolicLinkAtPath:(NSString*)path withDestinationPath:(NSString*)destPath error:(NSError* _Nullable*)error;
-- (BOOL)linkItemAtURL:(NSURL*)srcURL toURL:(NSURL*)dstURL error:(NSError* _Nullable*)error;
-- (BOOL)linkItemAtPath:(NSString*)srcPath toPath:(NSString*)dstPath error:(NSError* _Nullable*)error;
+- (NSURL*)URLForUbiquityContainerIdentifier:(NSString*)containerID NOTINPLAN_METHOD;
+- (BOOL)isUbiquitousItemAtURL:(NSURL*)url NOTINPLAN_METHOD;
+- (BOOL)setUbiquitous:(BOOL)flag
+            itemAtURL:(NSURL*)url
+       destinationURL:(NSURL*)destinationURL
+                error:(NSError* _Nullable*)errorOut NOTINPLAN_METHOD;
+- (BOOL)startDownloadingUbiquitousItemAtURL:(NSURL*)url error:(NSError* _Nullable*)errorOut NOTINPLAN_METHOD;
+- (BOOL)evictUbiquitousItemAtURL:(NSURL*)url error:(NSError* _Nullable*)errorOut NOTINPLAN_METHOD;
+- (NSURL*)URLForPublishingUbiquitousItemAtURL:(NSURL*)url
+                               expirationDate:(NSDate* _Nullable*)outDate
+                                        error:(NSError* _Nullable*)error NOTINPLAN_METHOD;
+- (BOOL)createSymbolicLinkAtURL:(NSURL*)url withDestinationURL:(NSURL*)destURL error:(NSError* _Nullable*)error NOTINPLAN_METHOD;
+- (BOOL)createSymbolicLinkAtPath:(NSString*)path withDestinationPath:(NSString*)destPath error:(NSError* _Nullable*)error NOTINPLAN_METHOD;
+- (BOOL)linkItemAtURL:(NSURL*)srcURL toURL:(NSURL*)dstURL error:(NSError* _Nullable*)error NOTINPLAN_METHOD;
+- (BOOL)linkItemAtPath:(NSString*)srcPath toPath:(NSString*)dstPath error:(NSError* _Nullable*)error NOTINPLAN_METHOD;
 - (NSString*)destinationOfSymbolicLinkAtPath:(NSString*)path error:(NSError* _Nullable*)error;
 - (BOOL)fileExistsAtPath:(NSString*)path;
 - (BOOL)fileExistsAtPath:(NSString*)path isDirectory:(BOOL*)isDirectory;
 - (BOOL)isReadableFileAtPath:(NSString*)path;
 - (BOOL)isWritableFileAtPath:(NSString*)path;
 - (BOOL)isExecutableFileAtPath:(NSString*)path;
-- (BOOL)isDeletableFileAtPath:(NSString*)path;
+- (BOOL)isDeletableFileAtPath:(NSString*)path NOTINPLAN_METHOD;
 - (NSArray<NSString*>*)componentsToDisplayForPath:(NSString*)path;
 - (NSString*)displayNameAtPath:(NSString*)path;
 - (NSDictionary<NSString*, id>*)attributesOfItemAtPath:(NSString*)path error:(NSError* _Nullable*)error;
@@ -169,12 +178,12 @@ FOUNDATION_EXPORT_CLASS
 - (BOOL)getRelationship:(NSURLRelationship*)outRelationship
        ofDirectoryAtURL:(NSURL*)directoryURL
             toItemAtURL:(NSURL*)otherURL
-                  error:(NSError* _Nullable*)error;
+                  error:(NSError* _Nullable*)error NOTINPLAN_METHOD;
 - (BOOL)getRelationship:(NSURLRelationship*)outRelationship
             ofDirectory:(NSSearchPathDirectory)directory
                inDomain:(NSSearchPathDomainMask)domainMask
             toItemAtURL:(NSURL*)url
-                  error:(NSError* _Nullable*)error;
+                  error:(NSError* _Nullable*)error NOTINPLAN_METHOD;
 - (const char*)fileSystemRepresentationWithPath:(NSString*)path;
 - (NSString*)stringWithFileSystemRepresentation:(const char*)string length:(NSUInteger)len;
 - (BOOL)changeCurrentDirectoryPath:(NSString*)path;
@@ -183,8 +192,12 @@ FOUNDATION_EXPORT_CLASS
 - (NSDictionary<NSString*, id>*)fileSystemAttributesAtPath:(NSString*)path;
 - (NSArray<NSURL*>*)directoryContentsAtPath:(NSString*)path;
 - (BOOL)createDirectoryAtPath:(NSString*)path attributes:(NSDictionary<NSString*, id>*)attributes;
-- (BOOL)createSymbolicLinkAtPath:(NSString*)path pathContent:(NSString*)otherPath;
-- (NSString*)pathContentOfSymbolicLinkAtPath:(NSString*)path;
+- (BOOL)createSymbolicLinkAtPath:(NSString*)path pathContent:(NSString*)otherPath NOTINPLAN_METHOD;
+- (NSString*)pathContentOfSymbolicLinkAtPath:(NSString*)path NOTINPLAN_METHOD;
+- (BOOL)linkPath:(NSString*)source toPath:(NSString*)destination handler:handler NOTINPLAN_METHOD;
+- (BOOL)copyPath:(NSString*)src toPath:(NSString*)dest handler:handler NOTINPLAN_METHOD;
+- (BOOL)movePath:(NSString*)src toPath:(NSString*)dest handler:handler NOTINPLAN_METHOD;
+- (BOOL)removeFileAtPath:(NSString*)path handler:handler NOTINPLAN_METHOD;
 @property (assign) id<NSFileManagerDelegate> delegate;
 @property (readonly, copy) id<NSCopying, NSCoding> ubiquityIdentityToken;
 @property (readonly, copy) NSString* currentDirectoryPath;
