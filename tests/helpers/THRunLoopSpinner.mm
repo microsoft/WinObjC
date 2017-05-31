@@ -41,6 +41,9 @@ static void* _helperThreadBody(void* context) {
         [helper->_threadStartedCondition broadcast];
         [helper release];
 
+        NSTimer* spinTimer = [NSTimer timerWithTimeInterval:0.1 target:[NSObject class] selector:@selector(class) userInfo:nil repeats:YES];
+        [loop addTimer:spinTimer forMode:NSDefaultRunLoopMode];
+
         while (!shouldStop) {
             @autoreleasepool {
                 // Spin the runloop for 0.1 seconds. It will usually bail out due to lack of input.
