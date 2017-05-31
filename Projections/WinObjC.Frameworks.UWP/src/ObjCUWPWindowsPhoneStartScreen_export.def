@@ -1,6 +1,0 @@
-LIBRARY ObjCUWPWindowsPhoneStartScreen
-    EXPORTS
-     _OBJC_CLASS_WPSDualSimTile    DATA
-     __objc_class_name_WPSDualSimTile    CONSTANT
-     _OBJC_CLASS_WPSIToastNotificationManagerStatics3    DATA
-     __objc_class_name_WPSIToastNotificationManagerStatics3    CONSTANT

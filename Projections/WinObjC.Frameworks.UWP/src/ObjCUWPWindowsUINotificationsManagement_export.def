@@ -1,4 +1,0 @@
-LIBRARY ObjCUWPWindowsUINotificationsManagement
-    EXPORTS
-     _OBJC_CLASS_WUNMUserNotificationListener    DATA
-     __objc_class_name_WUNMUserNotificationListener    CONSTANT

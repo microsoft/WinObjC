@@ -1,4 +1,0 @@
-LIBRARY ObjCUWPWindowsPerceptionAutomationCore
-    EXPORTS
-     _OBJC_CLASS_WPACCorePerceptionAutomation    DATA
-     __objc_class_name_WPACCorePerceptionAutomation    CONSTANT

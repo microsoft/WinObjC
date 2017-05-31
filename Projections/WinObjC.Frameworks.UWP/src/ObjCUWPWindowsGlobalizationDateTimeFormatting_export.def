@@ -1,4 +1,0 @@
-LIBRARY ObjCUWPWindowsGlobalizationDateTimeFormatting
-    EXPORTS
-     _OBJC_CLASS_WGDDateTimeFormatter    DATA
-     __objc_class_name_WGDDateTimeFormatter    CONSTANT

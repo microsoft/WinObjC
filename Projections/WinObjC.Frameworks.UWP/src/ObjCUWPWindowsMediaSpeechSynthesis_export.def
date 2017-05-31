@@ -1,8 +1,0 @@
-LIBRARY ObjCUWPWindowsMediaSpeechSynthesis
-    EXPORTS
-     _OBJC_CLASS_WMSVoiceInformation    DATA
-     __objc_class_name_WMSVoiceInformation    CONSTANT
-     _OBJC_CLASS_WMSSpeechSynthesisStream    DATA
-     __objc_class_name_WMSSpeechSynthesisStream    CONSTANT
-     _OBJC_CLASS_WMSSpeechSynthesizer    DATA
-     __objc_class_name_WMSSpeechSynthesizer    CONSTANT

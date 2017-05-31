@@ -1,8 +1,0 @@
-LIBRARY ObjCUWPWindowsSystemPower
-    EXPORTS
-     _OBJC_CLASS_WSPPowerManager    DATA
-     __objc_class_name_WSPPowerManager    CONSTANT
-     _OBJC_CLASS_WSPBackgroundEnergyManager    DATA
-     __objc_class_name_WSPBackgroundEnergyManager    CONSTANT
-     _OBJC_CLASS_WSPForegroundEnergyManager    DATA
-     __objc_class_name_WSPForegroundEnergyManager    CONSTANT

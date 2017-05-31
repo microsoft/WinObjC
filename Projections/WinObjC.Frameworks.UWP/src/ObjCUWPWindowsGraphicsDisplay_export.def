@@ -1,6 +1,0 @@
-LIBRARY ObjCUWPWindowsGraphicsDisplay
-    EXPORTS
-     _OBJC_CLASS_WGDDisplayInformation    DATA
-     __objc_class_name_WGDDisplayInformation    CONSTANT
-     _OBJC_CLASS_WGDDisplayProperties    DATA
-     __objc_class_name_WGDDisplayProperties    CONSTANT

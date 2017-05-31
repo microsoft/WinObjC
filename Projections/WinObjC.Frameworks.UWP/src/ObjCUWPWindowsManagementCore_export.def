@@ -1,4 +1,0 @@
-LIBRARY ObjCUWPWindowsManagementCore
-    EXPORTS
-     _OBJC_CLASS_WMCApplicationDataManager    DATA
-     __objc_class_name_WMCApplicationDataManager    CONSTANT

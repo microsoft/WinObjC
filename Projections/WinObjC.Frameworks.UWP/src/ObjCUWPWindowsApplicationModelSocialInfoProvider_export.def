@@ -1,8 +1,0 @@
-LIBRARY ObjCUWPWindowsApplicationModelSocialInfoProvider
-    EXPORTS
-     _OBJC_CLASS_WASPSocialFeedUpdater    DATA
-     __objc_class_name_WASPSocialFeedUpdater    CONSTANT
-     _OBJC_CLASS_WASPSocialDashboardItemUpdater    DATA
-     __objc_class_name_WASPSocialDashboardItemUpdater    CONSTANT
-     _OBJC_CLASS_WASPSocialInfoProviderManager    DATA
-     __objc_class_name_WASPSocialInfoProviderManager    CONSTANT

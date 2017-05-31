@@ -1,4 +1,0 @@
-LIBRARY ObjCUWPWindowsMediaPlaylists
-    EXPORTS
-     _OBJC_CLASS_WMPPlaylist    DATA
-     __objc_class_name_WMPPlaylist    CONSTANT

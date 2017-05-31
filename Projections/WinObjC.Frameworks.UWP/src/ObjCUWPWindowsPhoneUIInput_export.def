@@ -1,8 +1,0 @@
-LIBRARY ObjCUWPWindowsPhoneUIInput
-    EXPORTS
-     _OBJC_CLASS_WPUIBackPressedEventArgs    DATA
-     __objc_class_name_WPUIBackPressedEventArgs    CONSTANT
-     _OBJC_CLASS_WPUICameraEventArgs    DATA
-     __objc_class_name_WPUICameraEventArgs    CONSTANT
-     _OBJC_CLASS_WPUIHardwareButtons    DATA
-     __objc_class_name_WPUIHardwareButtons    CONSTANT

@@ -1,8 +1,0 @@
-LIBRARY ObjCUWPWindowsMediaFaceAnalysis
-    EXPORTS
-     _OBJC_CLASS_WMFDetectedFace    DATA
-     __objc_class_name_WMFDetectedFace    CONSTANT
-     _OBJC_CLASS_WMFFaceTracker    DATA
-     __objc_class_name_WMFFaceTracker    CONSTANT
-     _OBJC_CLASS_WMFFaceDetector    DATA
-     __objc_class_name_WMFFaceDetector    CONSTANT

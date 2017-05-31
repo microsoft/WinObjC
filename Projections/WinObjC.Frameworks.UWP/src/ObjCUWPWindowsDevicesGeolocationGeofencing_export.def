@@ -1,8 +1,0 @@
-LIBRARY ObjCUWPWindowsDevicesGeolocationGeofencing
-    EXPORTS
-     _OBJC_CLASS_WDGGGeofence    DATA
-     __objc_class_name_WDGGGeofence    CONSTANT
-     _OBJC_CLASS_WDGGGeofenceMonitor    DATA
-     __objc_class_name_WDGGGeofenceMonitor    CONSTANT
-     _OBJC_CLASS_WDGGGeofenceStateChangeReport    DATA
-     __objc_class_name_WDGGGeofenceStateChangeReport    CONSTANT

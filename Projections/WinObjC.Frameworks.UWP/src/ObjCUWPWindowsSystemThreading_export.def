@@ -1,6 +1,0 @@
-LIBRARY ObjCUWPWindowsSystemThreading
-    EXPORTS
-     _OBJC_CLASS_WSTThreadPoolTimer    DATA
-     __objc_class_name_WSTThreadPoolTimer    CONSTANT
-     _OBJC_CLASS_WSTThreadPool    DATA
-     __objc_class_name_WSTThreadPool    CONSTANT

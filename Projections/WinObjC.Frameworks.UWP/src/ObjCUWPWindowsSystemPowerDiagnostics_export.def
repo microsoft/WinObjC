@@ -1,6 +1,0 @@
-LIBRARY ObjCUWPWindowsSystemPowerDiagnostics
-    EXPORTS
-     _OBJC_CLASS_WSPDBackgroundEnergyDiagnostics    DATA
-     __objc_class_name_WSPDBackgroundEnergyDiagnostics    CONSTANT
-     _OBJC_CLASS_WSPDForegroundEnergyDiagnostics    DATA
-     __objc_class_name_WSPDForegroundEnergyDiagnostics    CONSTANT

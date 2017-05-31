@@ -1,4 +1,0 @@
-LIBRARY ObjCUWPWindowsDataXmlXsl
-    EXPORTS
-     _OBJC_CLASS_WDXXXsltProcessor    DATA
-     __objc_class_name_WDXXXsltProcessor    CONSTANT

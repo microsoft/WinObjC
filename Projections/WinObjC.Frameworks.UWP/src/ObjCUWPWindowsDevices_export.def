@@ -1,8 +1,0 @@
-LIBRARY ObjCUWPWindowsDevices
-    EXPORTS
-     _OBJC_CLASS_WDLowLevelDevicesAggregateProvider    DATA
-     __objc_class_name_WDLowLevelDevicesAggregateProvider    CONSTANT
-     _OBJC_CLASS_WDLowLevelDevicesController    DATA
-     __objc_class_name_WDLowLevelDevicesController    CONSTANT
-     _OBJC_CLASS_WDILowLevelDevicesAggregateProvider    DATA
-     __objc_class_name_WDILowLevelDevicesAggregateProvider    CONSTANT

@@ -1,4 +1,0 @@
-LIBRARY ObjCUWPWindowsDevicesRadios
-    EXPORTS
-     _OBJC_CLASS_WDRRadio    DATA
-     __objc_class_name_WDRRadio    CONSTANT

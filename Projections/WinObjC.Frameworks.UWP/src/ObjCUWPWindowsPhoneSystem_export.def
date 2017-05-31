@@ -1,4 +1,0 @@
-LIBRARY ObjCUWPWindowsPhoneSystem
-    EXPORTS
-     _OBJC_CLASS_WPSSystemProtection    DATA
-     __objc_class_name_WPSSystemProtection    CONSTANT

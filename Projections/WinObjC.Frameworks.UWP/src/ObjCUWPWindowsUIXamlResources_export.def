@@ -1,4 +1,0 @@
-LIBRARY ObjCUWPWindowsUIXamlResources
-    EXPORTS
-     _OBJC_CLASS_WUXRCustomXamlResourceLoader    DATA
-     __objc_class_name_WUXRCustomXamlResourceLoader    CONSTANT

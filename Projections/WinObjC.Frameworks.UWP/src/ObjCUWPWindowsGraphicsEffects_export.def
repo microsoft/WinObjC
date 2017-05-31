@@ -1,6 +1,0 @@
-LIBRARY ObjCUWPWindowsGraphicsEffects
-    EXPORTS
-     _OBJC_CLASS_WGEIGraphicsEffectSource    DATA
-     __objc_class_name_WGEIGraphicsEffectSource    CONSTANT
-     _OBJC_CLASS_WGEIGraphicsEffect    DATA
-     __objc_class_name_WGEIGraphicsEffect    CONSTANT

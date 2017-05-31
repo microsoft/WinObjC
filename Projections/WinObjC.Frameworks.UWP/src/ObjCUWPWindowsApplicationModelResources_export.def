@@ -1,4 +1,0 @@
-LIBRARY ObjCUWPWindowsApplicationModelResources
-    EXPORTS
-     _OBJC_CLASS_WARResourceLoader    DATA
-     __objc_class_name_WARResourceLoader    CONSTANT

@@ -1,8 +1,0 @@
-LIBRARY ObjCUWPWindowsApplicationModelStoreLicenseManagement
-    EXPORTS
-     _OBJC_CLASS_WASLLicenseSatisfactionInfo    DATA
-     __objc_class_name_WASLLicenseSatisfactionInfo    CONSTANT
-     _OBJC_CLASS_WASLLicenseSatisfactionResult    DATA
-     __objc_class_name_WASLLicenseSatisfactionResult    CONSTANT
-     _OBJC_CLASS_WASLLicenseManager    DATA
-     __objc_class_name_WASLLicenseManager    CONSTANT

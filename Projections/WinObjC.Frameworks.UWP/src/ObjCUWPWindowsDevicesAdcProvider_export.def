@@ -1,6 +1,0 @@
-LIBRARY ObjCUWPWindowsDevicesAdcProvider
-    EXPORTS
-     _OBJC_CLASS_WDAPIAdcControllerProvider    DATA
-     __objc_class_name_WDAPIAdcControllerProvider    CONSTANT
-     _OBJC_CLASS_WDAPIAdcProvider    DATA
-     __objc_class_name_WDAPIAdcProvider    CONSTANT

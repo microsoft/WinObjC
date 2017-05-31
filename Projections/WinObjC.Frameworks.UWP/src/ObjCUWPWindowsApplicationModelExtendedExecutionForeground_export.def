@@ -1,6 +1,0 @@
-LIBRARY ObjCUWPWindowsApplicationModelExtendedExecutionForeground
-    EXPORTS
-     _OBJC_CLASS_WAEFExtendedExecutionForegroundRevokedEventArgs    DATA
-     __objc_class_name_WAEFExtendedExecutionForegroundRevokedEventArgs    CONSTANT
-     _OBJC_CLASS_WAEFExtendedExecutionForegroundSession    DATA
-     __objc_class_name_WAEFExtendedExecutionForegroundSession    CONSTANT

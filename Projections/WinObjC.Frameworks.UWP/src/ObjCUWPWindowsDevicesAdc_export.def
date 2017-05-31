@@ -1,6 +1,0 @@
-LIBRARY ObjCUWPWindowsDevicesAdc
-    EXPORTS
-     _OBJC_CLASS_WDAAdcChannel    DATA
-     __objc_class_name_WDAAdcChannel    CONSTANT
-     _OBJC_CLASS_WDAAdcController    DATA
-     __objc_class_name_WDAAdcController    CONSTANT

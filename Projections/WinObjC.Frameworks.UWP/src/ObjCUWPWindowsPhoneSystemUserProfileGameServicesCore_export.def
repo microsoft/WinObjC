@@ -1,6 +1,0 @@
-LIBRARY ObjCUWPWindowsPhoneSystemUserProfileGameServicesCore
-    EXPORTS
-     _OBJC_CLASS_WPSUGCGameServicePropertyCollection    DATA
-     __objc_class_name_WPSUGCGameServicePropertyCollection    CONSTANT
-     _OBJC_CLASS_WPSUGCGameService    DATA
-     __objc_class_name_WPSUGCGameService    CONSTANT

@@ -1,6 +1,0 @@
-LIBRARY ObjCUWPWindowsApplicationModelDataTransferShareTarget
-    EXPORTS
-     _OBJC_CLASS_WADSQuickLink    DATA
-     __objc_class_name_WADSQuickLink    CONSTANT
-     _OBJC_CLASS_WADSShareOperation    DATA
-     __objc_class_name_WADSShareOperation    CONSTANT

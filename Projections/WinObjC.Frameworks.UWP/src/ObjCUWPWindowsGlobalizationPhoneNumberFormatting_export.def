@@ -1,6 +1,0 @@
-LIBRARY ObjCUWPWindowsGlobalizationPhoneNumberFormatting
-    EXPORTS
-     _OBJC_CLASS_WGPPhoneNumberInfo    DATA
-     __objc_class_name_WGPPhoneNumberInfo    CONSTANT
-     _OBJC_CLASS_WGPPhoneNumberFormatter    DATA
-     __objc_class_name_WGPPhoneNumberFormatter    CONSTANT

@@ -1,6 +1,0 @@
-LIBRARY ObjCUWPWindowsDevicesPortable
-    EXPORTS
-     _OBJC_CLASS_WDPStorageDevice    DATA
-     __objc_class_name_WDPStorageDevice    CONSTANT
-     _OBJC_CLASS_WDPServiceDevice    DATA
-     __objc_class_name_WDPServiceDevice    CONSTANT

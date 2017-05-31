@@ -1,6 +1,0 @@
-LIBRARY ObjCUWPWindowsEmbeddedDeviceLockdown
-    EXPORTS
-     _OBJC_CLASS_WEDDeviceLockdownProfileInformation    DATA
-     __objc_class_name_WEDDeviceLockdownProfileInformation    CONSTANT
-     _OBJC_CLASS_WEDDeviceLockdownProfile    DATA
-     __objc_class_name_WEDDeviceLockdownProfile    CONSTANT

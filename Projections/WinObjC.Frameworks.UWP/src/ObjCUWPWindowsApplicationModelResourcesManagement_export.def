@@ -1,8 +1,0 @@
-LIBRARY ObjCUWPWindowsApplicationModelResourcesManagement
-    EXPORTS
-     _OBJC_CLASS_WARMIndexedResourceCandidate    DATA
-     __objc_class_name_WARMIndexedResourceCandidate    CONSTANT
-     _OBJC_CLASS_WARMResourceIndexer    DATA
-     __objc_class_name_WARMResourceIndexer    CONSTANT
-     _OBJC_CLASS_WARMIndexedResourceQualifier    DATA
-     __objc_class_name_WARMIndexedResourceQualifier    CONSTANT

@@ -1,4 +1,0 @@
-LIBRARY ObjCUWPWindowsFoundationMetadata
-    EXPORTS
-     _OBJC_CLASS_WFMApiInformation    DATA
-     __objc_class_name_WFMApiInformation    CONSTANT

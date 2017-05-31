@@ -1,4 +1,0 @@
-LIBRARY ObjCUWPWindowsMediaClosedCaptioning
-    EXPORTS
-     _OBJC_CLASS_WMCClosedCaptionProperties    DATA
-     __objc_class_name_WMCClosedCaptionProperties    CONSTANT

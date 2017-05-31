@@ -1,4 +1,0 @@
-LIBRARY ObjCUWPWindowsPhoneDevicesNotification
-    EXPORTS
-     _OBJC_CLASS_WPDNVibrationDevice    DATA
-     __objc_class_name_WPDNVibrationDevice    CONSTANT

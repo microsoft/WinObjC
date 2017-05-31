@@ -1,6 +1,0 @@
-LIBRARY ObjCUWPWindowsApplicationModelUserDataAccountsSystemAccess
-    EXPORTS
-     _OBJC_CLASS_WAUSDeviceAccountConfiguration    DATA
-     __objc_class_name_WAUSDeviceAccountConfiguration    CONSTANT
-     _OBJC_CLASS_WAUSUserDataAccountSystemAccessManager    DATA
-     __objc_class_name_WAUSUserDataAccountSystemAccessManager    CONSTANT

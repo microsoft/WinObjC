@@ -1,8 +1,0 @@
-LIBRARY ObjCUWPWindowsDevicesSensorsCustom
-    EXPORTS
-     _OBJC_CLASS_WDSCCustomSensor    DATA
-     __objc_class_name_WDSCCustomSensor    CONSTANT
-     _OBJC_CLASS_WDSCCustomSensorReading    DATA
-     __objc_class_name_WDSCCustomSensorReading    CONSTANT
-     _OBJC_CLASS_WDSCCustomSensorReadingChangedEventArgs    DATA
-     __objc_class_name_WDSCCustomSensorReadingChangedEventArgs    CONSTANT

@@ -1,6 +1,0 @@
-LIBRARY ObjCUWPWindowsGlobalizationFonts
-    EXPORTS
-     _OBJC_CLASS_WGFLanguageFont    DATA
-     __objc_class_name_WGFLanguageFont    CONSTANT
-     _OBJC_CLASS_WGFLanguageFontGroup    DATA
-     __objc_class_name_WGFLanguageFontGroup    CONSTANT

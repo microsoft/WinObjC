@@ -1,4 +1,0 @@
-LIBRARY ObjCUWPWindowsSecurityCryptography
-    EXPORTS
-     _OBJC_CLASS_WSCCryptographicBuffer    DATA
-     __objc_class_name_WSCCryptographicBuffer    CONSTANT
