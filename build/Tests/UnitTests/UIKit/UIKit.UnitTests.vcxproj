@@ -251,6 +251,7 @@
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\UIKit\NSTextContainerTests.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\UIKit\UIImageTests.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\UnitTests\UIKit\NSIndexPath+UITableViewTests.mm" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\UIKit\UIBezierPathTests.mm" />
   </ItemGroup>
   <Target Name="CopyTestResourcesToOutput" AfterTargets="AfterBuild">
     <ItemGroup>

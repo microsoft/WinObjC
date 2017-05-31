@@ -743,6 +743,9 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CoreGraphics", "CoreGraphics", "{0A79AFE5-2685-433C-BC78-A4AD09CD7BF8}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CoreGraphics.UnitTests", "Tests\UnitTests\CoreGraphics\CoreGraphics.UnitTests.vcxproj", "{DA6C01EA-A22E-4807-BACE-63C5C6ABAE77}"
+	ProjectSection(ProjectDependencies) = postProject
+		{8E79930B-7EF6-4A4E-B46C-EFC0A49C55D9} = {8E79930B-7EF6-4A4E-B46C-EFC0A49C55D9}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Foundation.WindowsOnly.UnitTests", "Tests\UnitTests\Foundation.WindowsOnly\Foundation.WindowsOnly.UnitTests.vcxproj", "{0B1B276A-40B2-4E7A-BA77-7B8BD7F6D3D3}"
 EndProject
