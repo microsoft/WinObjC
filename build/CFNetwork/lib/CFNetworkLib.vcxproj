@@ -35,6 +35,7 @@
     <ProjectName>CFNetworkLib</ProjectName>
     <RootNamespace>CFNetworkLib</RootNamespace>
     <AppContainerApplication>true</AppContainerApplication>
+    <BuildingFrameworksCore>true</BuildingFrameworksCore>
     <StarboardBasePath>$(MSBuildThisFileDirectory)..\..\..</StarboardBasePath>
     <OutputName>CFNetworkLib</OutputName>
   </PropertyGroup>

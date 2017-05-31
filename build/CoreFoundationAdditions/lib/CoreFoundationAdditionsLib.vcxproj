@@ -34,6 +34,7 @@
     <ProjectName>CoreFoundationAdditionsLib</ProjectName>
     <RootNamespace>CoreFoundationAdditionsLib</RootNamespace>
     <AppContainerApplication>true</AppContainerApplication>
+    <BuildingFrameworksCore>true</BuildingFrameworksCore>
     <StarboardBasePath>$(MSBuildThisFileDirectory)..\..\..</StarboardBasePath>
     <OutputName>CoreFoundationAdditionsLib</OutputName>
   </PropertyGroup>

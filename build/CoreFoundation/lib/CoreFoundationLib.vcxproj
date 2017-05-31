@@ -204,6 +204,7 @@
     <ProjectGuid>{DC123A21-ECF5-4C43-9E69-25CEA438EE94}</ProjectGuid>
     <ProjectName>CoreFoundationLib</ProjectName>
     <RootNamespace>CoreFoundationLib</RootNamespace>
+    <BuildingFrameworksCore>true</BuildingFrameworksCore>
     <AppContainerApplication>true</AppContainerApplication>
     <StarboardBasePath>$(MSBuildThisFileDirectory)..\..\..</StarboardBasePath>
     <OutputName>CoreFoundationLib</OutputName>
