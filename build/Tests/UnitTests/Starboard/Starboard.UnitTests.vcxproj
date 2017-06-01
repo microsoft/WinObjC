@@ -223,7 +223,7 @@
   <ItemGroup>
     <ClInclude Include="..\..\..\..\tests\unittests\Starboard\LifetimeCounting.h" />
   </ItemGroup>
-    <ItemGroup>
+  <ItemGroup>
     <PackageReference Include="WinObjC.Frameworks.UWP" Version="*" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

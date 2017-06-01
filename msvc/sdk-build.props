@@ -23,11 +23,6 @@
       <IncludeInPackage Condition="'$(BuildingFrameworksCore)' != 'true'">false</IncludeInPackage>
     </ProjectReference>
   </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Condition="'$(BuildingFrameworksCore)' != 'true'" Include="WinObjC.Frameworks.UWP" Version="*" />
-  </ItemGroup>
-
   <PropertyGroup Label="Globals">
     <DefaultLanguage Condition="'$(DefaultLanguage)'==''">en-US</DefaultLanguage>
     <MinimumVisualStudioVersion Condition="'$(MinimumVisualStudioVersion)'==''">15.0</MinimumVisualStudioVersion>
@@ -46,6 +41,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Condition="'$(BuildingFrameworksCore)' != 'true'" Include="WinObjC.Frameworks.UWP" Version="*" />
     <PackageReference Include="NuGet.Build.Packaging" Version="0.1.186" />
     <PackageReference Include="WinObjC.Language" Version="*" />
     <PackageReference Include="cppwinrt" Version="*">

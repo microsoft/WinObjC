@@ -82,7 +82,6 @@
       <Project>{48B2B4F1-50D5-4772-B4A4-8D2C23AB3B67}</Project>
     </ProjectReference>
   </ItemGroup>
-
   <ItemGroup>
     <PackageReference Include="WinObjC.Frameworks.UWP" Version="*" />
   </ItemGroup>
