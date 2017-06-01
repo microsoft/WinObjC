@@ -151,26 +151,30 @@ BASE_CLASS_REQUIRED_IMPLS(NSArray, NSArrayPrototype, CFArrayGetTypeID);
  @Status Interoperable
 */
 - (NSObject*)lastObject {
-    int count = [self count];
+    @synchronized(self) {
+        int count = [self count];
 
-    if (count == 0) {
-        return nil;
+        if (count == 0) {
+            return nil;
+        }
+
+        return [self objectAtIndex:count - 1];
     }
-
-    return [self objectAtIndex:count - 1];
 }
 
 /**
  @Status Interoperable
 */
 - (NSObject*)firstObject {
-    int count = [self count];
+    @synchronized(self) {
+        int count = [self count];
 
-    if (count == 0) {
-        return nil;
+        if (count == 0) {
+            return nil;
+        }
+
+        return [self objectAtIndex:0];
     }
-
-    return [self objectAtIndex:0];
 }
 
 /**
