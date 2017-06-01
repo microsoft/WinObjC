@@ -18,8 +18,10 @@
 #import <TestFramework.h>
 #import <Starboard/SmartTypes.h>
 #import <Helpers/TestHelpers.h>
+#import <Windows.h>
 
-TEST(NSNotificationQueue, PostNow) {
+// NSNotificationQueue has different semantics on Windows.
+OSX_DISABLED_TEST(NSNotificationQueue, PostNow) {
     static NSString* s_TestNotificationName = @(GetTestFullName().c_str());
     NSNotificationCenter* notificationCenter = [[NSNotificationCenter new] autorelease];
     StrongId<THRunLoopSpinner> spinner{ woc::TakeOwnership, [THRunLoopSpinner new] };
@@ -46,7 +48,8 @@ TEST(NSNotificationQueue, PostNow) {
     ASSERT_EQ(1, counter);
 }
 
-TEST(NSNotificationQueue, PostASAP) {
+// NSNotificationQueue has different semantics on Windows.
+OSX_DISABLED_TEST(NSNotificationQueue, PostASAP) {
     static NSString* s_TestNotificationName = @(GetTestFullName().c_str());
     NSNotificationCenter* notificationCenter = [[NSNotificationCenter new] autorelease];
     StrongId<THRunLoopSpinner> spinner{ woc::TakeOwnership, [THRunLoopSpinner new] };
@@ -76,7 +79,8 @@ TEST(NSNotificationQueue, PostASAP) {
     ASSERT_EQ(1, counter);
 }
 
-TEST(NSNotificationQueue, PostWhenIdle) {
+// NSNotificationQueue has different semantics on Windows.
+OSX_DISABLED_TEST(NSNotificationQueue, PostWhenIdle) {
     static NSString* s_TestNotificationName = @(GetTestFullName().c_str());
     NSNotificationCenter* notificationCenter = [[NSNotificationCenter new] autorelease];
     StrongId<THRunLoopSpinner> spinner{ woc::TakeOwnership, [THRunLoopSpinner new] };
@@ -106,7 +110,8 @@ TEST(NSNotificationQueue, PostWhenIdle) {
     ASSERT_EQ(1, counter);
 }
 
-TEST(NSNotificationQueue, AllThreePostingStyles) {
+// NSNotificationQueue has different semantics on Windows.
+OSX_DISABLED_TEST(NSNotificationQueue, AllThreePostingStyles) {
     static NSString* s_TestNotificationName = @(GetTestFullName().c_str());
     NSNotificationCenter* notificationCenter = [[NSNotificationCenter new] autorelease];
     StrongId<THRunLoopSpinner> spinner{ woc::TakeOwnership, [THRunLoopSpinner new] };
@@ -117,7 +122,7 @@ TEST(NSNotificationQueue, AllThreePostingStyles) {
     }];
 
     __block THBooleanCondition* condition = [[THBooleanCondition new] autorelease];
-    __block uint32_t counter = 0;
+    __block long counter = 0;
     [notificationCenter addObserverForName:s_TestNotificationName
                                     object:nil
                                      queue:nil
@@ -138,7 +143,8 @@ TEST(NSNotificationQueue, AllThreePostingStyles) {
     ASSERT_EQ(3, counter);
 }
 
-TEST(NSNotificationQueue, ThreadsHaveDifferentQueues) {
+// NSNotificationQueue has different semantics on Windows.
+OSX_DISABLED_TEST(NSNotificationQueue, ThreadsHaveDifferentQueues) {
     StrongId<THRunLoopSpinner> spinner1{ woc::TakeOwnership, [THRunLoopSpinner new] };
     StrongId<THRunLoopSpinner> spinner2{ woc::TakeOwnership, [THRunLoopSpinner new] };
 
