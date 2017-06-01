@@ -222,6 +222,9 @@
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\AddressBook\ModifyContactsTests.mm" />
     <ClangCompile Include="$(StarboardBasePath)\Frameworks\AddressBook\NSDate+AddressBookAdditions.mm" />
   </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="WinObjC.Frameworks.UWP" Version="*" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <Import Project="$(StarboardBasePath)\common\winobjc.packagereference.override.targets" Condition="Exists('$(StarboardBasePath)\common\winobjc.packagereference.override.targets')"/>
 </Project>
