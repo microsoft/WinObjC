@@ -420,8 +420,18 @@ static char _NSOperationQueue_IsReadyContext;
  @Status Interoperable
 */
 - (void)waitUntilAllOperationsAreFinished {
-    while (NSOperation* lastOp = [_operations lastObject]) {
+    StrongId<NSOperation> lastOp;
+
+    @synchronized(_operations.get()) {
+        lastOp = [_operations lastObject];
+    }
+
+    while (lastOp) {
         [lastOp waitUntilFinished];
+
+        @synchronized(_operations.get()) {
+            lastOp = [_operations lastObject];
+        }
     }
 }
 
