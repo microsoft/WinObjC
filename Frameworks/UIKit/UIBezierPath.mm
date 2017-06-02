@@ -19,13 +19,15 @@
 #import "CoreGraphics/CGGeometry.h"
 #import "CoreGraphics/CGContext.h"
 #import "StubReturn.h"
+#import <Starboard/SmartTypes.h>
+#import <vector>
 
 @implementation UIBezierPath {
-    float* _pattern;
+    std::vector<CGFloat> _pattern;
     NSInteger _patternCount;
-    float _dashPhase;
+    CGFloat _dashPhase;
 
-    CGMutablePathRef _workingPath;
+    woc::StrongCF<CGMutablePathRef> _workingPath;
 }
 
 /**
@@ -50,17 +52,17 @@
     CGFloat outside_top = rect.origin.y;
     CGFloat outside_left = rect.origin.x;
 
-    CGPathMoveToPoint(ret->_workingPath, NULL, innerRect.origin.x, outside_top);
+    CGPathMoveToPoint(ret->_workingPath, nullptr, innerRect.origin.x, outside_top);
 
-    CGPathAddLineToPoint(ret->_workingPath, NULL, inside_right, outside_top);
-    CGPathAddArcToPoint(ret->_workingPath, NULL, outside_right, outside_top, outside_right, inside_top, radius);
-    CGPathAddLineToPoint(ret->_workingPath, NULL, outside_right, inside_bottom);
-    CGPathAddArcToPoint(ret->_workingPath, NULL, outside_right, outside_bottom, inside_right, outside_bottom, radius);
+    CGPathAddLineToPoint(ret->_workingPath, nullptr, inside_right, outside_top);
+    CGPathAddArcToPoint(ret->_workingPath, nullptr, outside_right, outside_top, outside_right, inside_top, radius);
+    CGPathAddLineToPoint(ret->_workingPath, nullptr, outside_right, inside_bottom);
+    CGPathAddArcToPoint(ret->_workingPath, nullptr, outside_right, outside_bottom, inside_right, outside_bottom, radius);
 
-    CGPathAddLineToPoint(ret->_workingPath, NULL, innerRect.origin.x, outside_bottom);
-    CGPathAddArcToPoint(ret->_workingPath, NULL, outside_left, outside_bottom, outside_left, inside_bottom, radius);
-    CGPathAddLineToPoint(ret->_workingPath, NULL, outside_left, inside_top);
-    CGPathAddArcToPoint(ret->_workingPath, NULL, outside_left, outside_top, innerRect.origin.x, outside_top, radius);
+    CGPathAddLineToPoint(ret->_workingPath, nullptr, innerRect.origin.x, outside_bottom);
+    CGPathAddArcToPoint(ret->_workingPath, nullptr, outside_left, outside_bottom, outside_left, inside_bottom, radius);
+    CGPathAddLineToPoint(ret->_workingPath, nullptr, outside_left, inside_top);
+    CGPathAddArcToPoint(ret->_workingPath, nullptr, outside_left, outside_top, innerRect.origin.x, outside_top, radius);
     CGPathCloseSubpath(ret->_workingPath);
 
     return ret;
@@ -89,8 +91,8 @@
 
     // Path needs to move to the actual start of the arc location otherwise CGPathAddArc will draw a line to this
     // start point instead.
-    CGPathMoveToPoint(ret->_workingPath, NULL, center.x + cos(startAngle) * radius, center.y + sin(startAngle) * radius);
-    CGPathAddArc(ret->_workingPath, NULL, center.x, center.y, radius, startAngle, endAngle, clockwise == FALSE);
+    CGPathMoveToPoint(ret->_workingPath, nullptr, center.x + cos(startAngle) * radius, center.y + sin(startAngle) * radius);
+    CGPathAddArc(ret->_workingPath, nullptr, center.x, center.y, radius, startAngle, endAngle, clockwise == FALSE);
 
     return ret;
 }
@@ -101,7 +103,7 @@
 + (instancetype)bezierPathWithRect:(CGRect)rect {
     UIBezierPath* ret = [[[self alloc] init] autorelease];
 
-    CGPathAddRect(ret->_workingPath, NULL, rect);
+    CGPathAddRect(ret->_workingPath, nullptr, rect);
 
     return ret;
 }
@@ -112,7 +114,7 @@
 + (instancetype)bezierPathWithCGPath:(CGPathRef)path {
     UIBezierPath* ret = [[[self alloc] init] autorelease];
 
-    CGPathAddPath(ret->_workingPath, NULL, path);
+    CGPathAddPath(ret->_workingPath, nullptr, path);
 
     return ret;
 }
@@ -123,7 +125,7 @@
 + (instancetype)bezierPathWithOvalInRect:(CGRect)rect {
     UIBezierPath* ret = [[[self alloc] init] autorelease];
 
-    CGPathAddEllipseInRect(ret->_workingPath, NULL, rect);
+    CGPathAddEllipseInRect(ret->_workingPath, nullptr, rect);
 
     return ret;
 }
@@ -139,7 +141,7 @@
  @Status Interoperable
 */
 - (void)appendPath:(UIBezierPath*)path {
-    CGPathAddPath(_workingPath, NULL, path.CGPath);
+    CGPathAddPath(_workingPath, nullptr, path.CGPath);
 }
 
 /**
@@ -150,21 +152,21 @@
               startAngle:(CGFloat)startAngle
                 endAngle:(CGFloat)endAngle
                clockwise:(BOOL)clockwise {
-    CGPathAddArc(_workingPath, NULL, center.x, center.y, radius, startAngle, endAngle, clockwise == TRUE);
+    CGPathAddArc(_workingPath, nullptr, center.x, center.y, radius, startAngle, endAngle, clockwise == TRUE);
 }
 
 /**
  @Status Interoperable
 */
 - (void)addLineToPoint:(CGPoint)pt {
-    CGPathAddLineToPoint(_workingPath, NULL, pt.x, pt.y);
+    CGPathAddLineToPoint(_workingPath, nullptr, pt.x, pt.y);
 }
 
 /**
  @Status Interoperable
 */
 - (void)moveToPoint:(CGPoint)pt {
-    CGPathMoveToPoint(_workingPath, NULL, pt.x, pt.y);
+    CGPathMoveToPoint(_workingPath, nullptr, pt.x, pt.y);
 }
 
 /**
@@ -178,29 +180,29 @@
  @Status Interoperable
 */
 - (CGPathRef)CGPath {
-    return CGPathCreateCopy(_workingPath);
+    return (CGPathRef)[(id)CGPathCreateCopy(_workingPath) autorelease];
 }
 
 /**
  @Status Interoperable
 */
 - (void)setCGPath:(CGPathRef)path {
-    CGPathRelease(_workingPath);
-    _workingPath = CGPathCreateMutableCopy(path);
+    _workingPath = woc::MakeStrongCF(CGPathCreateMutableCopy(path));
 }
 
 /**
  @Status Interoperable
 */
 - (void)addQuadCurveToPoint:(CGPoint)endPoint controlPoint:(CGPoint)controlPoint {
-    CGPathAddQuadCurveToPoint(_workingPath, NULL, controlPoint.x, controlPoint.y, endPoint.x, endPoint.y);
+    CGPathAddQuadCurveToPoint(_workingPath, nullptr, controlPoint.x, controlPoint.y, endPoint.x, endPoint.y);
 }
 
 /**
  @Status Interoperable
 */
 - (void)addCurveToPoint:(CGPoint)endPoint controlPoint1:(CGPoint)controlPoint1 controlPoint2:(CGPoint)controlPoint2 {
-    CGPathAddCurveToPoint(_workingPath, NULL, controlPoint1.x, controlPoint1.y, controlPoint2.x, controlPoint2.y, endPoint.x, endPoint.y);
+    CGPathAddCurveToPoint(
+        _workingPath, nullptr, controlPoint1.x, controlPoint1.y, controlPoint2.x, controlPoint2.y, endPoint.x, endPoint.y);
 }
 
 /**
@@ -208,8 +210,7 @@
 */
 - (void)applyTransform:(CGAffineTransform)transform {
     CGPathRef transformedPath = CGPathCreateMutableCopyByTransformingPath(_workingPath, &transform);
-    CGPathRelease(_workingPath);
-    _workingPath = transformedPath;
+    _workingPath = woc::MakeStrongCF(transformedPath);
 }
 
 /**
@@ -217,7 +218,7 @@
 */
 - (instancetype)init {
     if (self = [super init]) {
-        _workingPath = CGPathCreateMutable();
+        _workingPath = woc::MakeStrongCF(CGPathCreateMutable());
         _lineWidth = 1.0f;
     }
 
@@ -267,8 +268,8 @@
     CGContextAddPath(ctx, _workingPath);
     CGContextSetLineWidth(ctx, _lineWidth);
     CGContextSetLineJoin(ctx, _lineJoinStyle);
-    if (_pattern) {
-        CGContextSetLineDash(ctx, _dashPhase, _pattern, _patternCount);
+    if (_patternCount > 0) {
+        CGContextSetLineDash(ctx, _dashPhase, &_pattern[0], _patternCount);
     }
     CGContextStrokePath(ctx);
     CGContextRestoreGState(ctx);
@@ -277,31 +278,13 @@
 /**
  @Status Interoperable
 */
-- (void)dealloc {
-    if (_pattern) {
-        free(_pattern);
-        _pattern = NULL;
-    }
-
-    CGPathRelease(_workingPath);
-    [super dealloc];
-}
-
-/**
- @Status Interoperable
-*/
 - (void)setLineDash:(const CGFloat*)pattern count:(NSInteger)count phase:(CGFloat)phase {
-    if (_pattern) {
-        free(_pattern);
-        _pattern = NULL;
-    }
-
     _patternCount = count;
     _dashPhase = phase;
 
     if (count > 0) {
-        _pattern = (CGFloat*)malloc(sizeof(CGFloat) * count);
-        memcpy(_pattern, pattern, sizeof(CGFloat) * count);
+        std::vector<CGFloat> newPattern(pattern, pattern + count);
+        _pattern = std::move(newPattern);
     }
 }
 
@@ -309,8 +292,7 @@
  @Status Interoperable
 */
 - (void)removeAllPoints {
-    CGPathRelease(_workingPath);
-    _workingPath = CGPathCreateMutable();
+    _workingPath = woc::MakeStrongCF(CGPathCreateMutable());
 }
 
 /**
@@ -325,7 +307,7 @@
     }
 
     if (pattern && _patternCount > 0) {
-        memcpy(pattern, _pattern, sizeof(CGFloat) * _patternCount);
+        std::copy(_pattern.begin(), _pattern.end(), pattern);
     }
 }
 
@@ -347,7 +329,7 @@
  @Status Interoperable
 */
 - (BOOL)containsPoint:(CGPoint)point {
-    return CGPathContainsPoint(_workingPath, NULL, point, _usesEvenOddFillRule);
+    return CGPathContainsPoint(_workingPath, nullptr, point, _usesEvenOddFillRule);
 }
 
 /**
