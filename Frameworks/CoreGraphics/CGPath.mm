@@ -218,7 +218,7 @@ private:
     D2D1_POINT_2F m_lastPoint;
     // The starting point this geometry will move to if it is closed.
     D2D1_POINT_2F m_startPoint;
-    // Whether or not the figure is open and ready to recieve new path information
+    // Whether or not the figure is open and ready to receive new path information
     bool m_isFigureOpen;
     // Whether any geometry has been started. This can be inferred from other APIs, but those would require the geometry to be closed.
     bool m_hasGeometryStarted;
