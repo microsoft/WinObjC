@@ -209,8 +209,7 @@
  @Status Interoperable
 */
 - (void)applyTransform:(CGAffineTransform)transform {
-    CGPathRef transformedPath = CGPathCreateMutableCopyByTransformingPath(_workingPath, &transform);
-    _workingPath = woc::MakeStrongCF(transformedPath);
+    _workingPath = woc::MakeStrongCF(CGPathCreateMutableCopyByTransformingPath(_workingPath, &transform));
 }
 
 /**
