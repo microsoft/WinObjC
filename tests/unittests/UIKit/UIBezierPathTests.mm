@@ -54,3 +54,19 @@ TEST(UIBezierPath, currentPoint) {
     [path closePath];
     EXPECT_TRUE([path currentPoint] == currentPoint);
 }
+
+TEST(UIBezierPath, getDashPattern) {
+    UIBezierPath* path = [UIBezierPath bezierPathWithRect:CGRectMake(100, 100, 100, 100)];
+    const CGFloat pattern[] = { 5.0, 2.0 };
+    [path setLineDash:pattern count:2 phase:7.0f];
+
+    CGFloat outPattern[2];
+    NSInteger count;
+    CGFloat phase;
+    [path getLineDash:outPattern count:&count phase:&phase];
+    EXPECT_EQ(count, 2);
+    EXPECT_EQ(phase, 7.0f);
+    for (int i = 0; i < count; i++) {
+        EXPECT_EQ(outPattern[i], pattern[i]);
+    }
+}
