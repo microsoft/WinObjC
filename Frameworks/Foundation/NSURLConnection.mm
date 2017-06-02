@@ -379,6 +379,7 @@ static void __dispatchDelegateCallback(NSURLConnection* connection, void (^callb
             _protocol = nil;
             _delegate = nil;
             _done = true;
+            [_runLoopCancelSource _trigger];
         }
     });
 }
@@ -461,6 +462,7 @@ static void __dispatchDelegateCallback(NSURLConnection* connection, void (^callb
             _protocol = nil;
             _delegate = nil;
             _done = true;
+            [_runLoopCancelSource _trigger];
         }
     });
 }
