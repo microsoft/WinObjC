@@ -71,10 +71,10 @@
       <PackageFile Include="$(MSBuildThisFileDirectory)Package.Default.targets" Condition="Exists('$(MSBuildThisFileDirectory)Package.Default.targets')">
         <PackagePath>build\$(PackageId).Default.targets</PackagePath>
       </PackageFile>
-      <PackageFile Include="$(MSBuildProjectDirectory)\$(PackageId).Custom.targets" Condition="Exists('$(MSBuildProjectDirectory)\$(PackageId).Custom.targets')">
+      <PackageFile Include="$(MSBuildProjectDirectory)\$(MSBuildProjectName).Custom.targets" Condition="Exists('$(MSBuildProjectDirectory)\$(MSBuildProjectName).Custom.targets')">
         <PackagePath>build\$(PackageId).Custom.targets</PackagePath>
       </PackageFile>
-      <PackageFile Include="$(MSBuildProjectDirectory)\$(PackageId).Custom.props" Condition="Exists('$(MSBuildProjectDirectory)\$(PackageId).Custom.props')">
+      <PackageFile Include="$(MSBuildProjectDirectory)\$(MSBuildProjectName).Custom.props" Condition="Exists('$(MSBuildProjectDirectory)\$(MSBuildProjectName).Custom.props')">
         <PackagePath>build\$(PackageId).Custom.props</PackagePath>
       </PackageFile>
     </ItemGroup>
