@@ -128,6 +128,8 @@ typedef NS_ENUM(NSInteger, NSURLConnectionDelegateType) {
 - (instancetype)init {
     if (self = [super init]) {
         _operationQueue = [NSOperationQueue new];
+        // This class cannot handle out-of-order delegate callbacks. Force all delegate callbacks to be serialized.
+        _operationQueue.maxConcurrentOperationCount = 1;
     }
     return self;
 }
