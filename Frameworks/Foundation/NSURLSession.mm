@@ -34,8 +34,8 @@ const int64_t NSURLSessionTransferSizeUnknown = -1LL;
 #import <StubReturn.h>
 
 #define _THROW_IF_NULL_REQUEST(request)                                                                    \
-    \
-do {                                                                                                       \
+                                                                                                           \
+    do {                                                                                                   \
         if (request == nil) {                                                                              \
             @throw [NSException exceptionWithName:NSInvalidArgumentException                               \
                                            reason:[NSString stringWithFormat:@"*** %@ Cannot create data " \
@@ -44,9 +44,8 @@ do {                                                                            
                                                                              NSStringFromSelector(_cmd)]   \
                                          userInfo:nil];                                                    \
         }                                                                                                  \
-    \
-}                                                                                                   \
-    while (false)
+                                                                                                           \
+    } while (false)
 
 NSString* const NSURLErrorBackgroundTaskCancelledReasonKey = @"NSURLErrorBackgroundTaskCancelledReasonKey";
 
@@ -127,6 +126,7 @@ static bool dispatchDelegateOptional(NSOperationQueue* queue, id object, SEL cmd
     NSMutableSet* _allTasks;
 
     bool _invalidating;
+    bool _completed;
     std::mutex _mutex;
     std::condition_variable _taskRemovalCondition;
 
@@ -233,7 +233,7 @@ static bool dispatchDelegateOptional(NSOperationQueue* queue, id object, SEL cmd
 - (void)_taskDispatchThreadBody:(id)sender {
     NSRunLoop* currentRunLoop = [NSRunLoop currentRunLoop];
     [currentRunLoop _addInputSource:_runLoopCancelSource forMode:@"kCFRunLoopDefaultMode"];
-    while (!_invalidating) {
+    while (!_completed && !_invalidating) {
         [currentRunLoop runUntilDate:[NSDate distantFuture]];
     }
 }
@@ -590,6 +590,11 @@ static bool dispatchDelegateOptional(NSOperationQueue* queue, id object, SEL cmd
 }
 
 - (void)task:(NSURLSessionTask*)task didCompleteWithError:(NSError*)error {
+    // Since the task is completed, can allow the task dispatch thread to die
+    // (Remember that this callback is also used for the success case, with nil error)
+    _completed = true;
+    [_runLoopCancelSource _trigger];
+
     _NSURLSessionInflightTaskInfo* inflightTaskData = [self _inflightDataForTask:task];
     if (inflightTaskData) {
         [inflightTaskData dispatchTaskCompletionHandler];
