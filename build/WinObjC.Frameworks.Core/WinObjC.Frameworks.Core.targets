@@ -1,6 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="no"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
     <PropertyGroup>
+      <UseWinObjCFrameworksCore Condition="'$(UseWinObjCFrameworksCore)' == ''">true</UseWinObjCFrameworksCore>
       <TargetOsAndVersion Condition="'$(TargetOsAndVersion)' == ''">Universal Windows</TargetOsAndVersion>
     </PropertyGroup>
     <!-- Make sure that the output artifacts are included in the build. This means adding include paths and link libraries for it.
@@ -9,7 +10,7 @@
          accidentally stomp it and get really confused. This is contrary to a configurable type property that a consumer may want / need to adjust. 
          To depend on this package means the consumer gets these things.  -->
 
-    <ItemGroup Condition="'$(ConfigurationType)' != 'StaticLibrary'">
+    <ItemGroup Condition="'$(ConfigurationType)' != 'StaticLibrary' And '$(UseWinObjCFrameworksCore)' == 'true'">
       <_ReferencesFromPackage Include="$(MSBuildThisFileDirectory)\lib\$(TargetOsAndVersion)\$(PlatformTarget)\*.winmd"/>    
       <_ReferencesFromPackage Include="$(MSBuildThisFileDirectory)\lib\$(TargetOsAndVersion)\$(PlatformTarget)\$(Configuration)\*.winmd"/>
 
@@ -28,7 +29,7 @@
       <_ContentFilesFromPackage Include="$(MSBuildThisFileDirectory)\content\**\*.*" />
     </ItemGroup>
 
-    <ItemDefinitionGroup>
+    <ItemDefinitionGroup Condition="'$(UseWinObjCFrameworksCore)' == 'true'">
         <ClangCompile>
           <InternalSystemIncludePaths>$(MSBuildThisFileDirectory)\include\;%(InternalSystemIncludePaths);</InternalSystemIncludePaths>
         </ClangCompile>
@@ -39,7 +40,7 @@
     </ItemDefinitionGroup>
 
   
-  <ItemGroup Condition="'$(ConfigurationType)' != 'StaticLibrary'">
+  <ItemGroup Condition="'$(ConfigurationType)' != 'StaticLibrary' And '$(UseWinObjCFrameworksCore)' == 'true'">
     
     <Reference Include="@(_ReferencesFromPackage)">
       <Implementation>%(Filename).dll</Implementation>
