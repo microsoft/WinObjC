@@ -85,10 +85,10 @@ UIKIT_EXPORT_CLASS
 - (void)getLineDash:(CGFloat*)pattern count:(NSInteger*)count phase:(CGFloat*)phase;
 
 - (void)fill;
-- (void)fillWithBlendMode:(CGBlendMode)blendMode alpha:(CGFloat)alpha STUB_METHOD;
+- (void)fillWithBlendMode:(CGBlendMode)blendMode alpha:(CGFloat)alpha;
 
 - (void)stroke;
-- (void)strokeWithBlendMode:(CGBlendMode)blendMode alpha:(CGFloat)alpha STUB_METHOD;
+- (void)strokeWithBlendMode:(CGBlendMode)blendMode alpha:(CGFloat)alpha;
 
 - (void)addClip;
 

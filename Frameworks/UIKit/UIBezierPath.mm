@@ -297,7 +297,7 @@
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 - (void)fillWithBlendMode:(CGBlendMode)blendMode alpha:(CGFloat)alpha {
     CGContextRef ctx = UIGraphicsGetCurrentContext();
@@ -316,7 +316,7 @@
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 - (void)strokeWithBlendMode:(CGBlendMode)blendMode alpha:(CGFloat)alpha {
     CGContextRef ctx = UIGraphicsGetCurrentContext();
