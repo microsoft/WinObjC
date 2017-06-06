@@ -187,7 +187,7 @@
  @Status Interoperable
 */
 - (void)setCGPath:(CGPathRef)path {
-    _workingPath = woc::MakeStrongCF(CGPathCreateMutableCopy(path));
+    _workingPath.attach(CGPathCreateMutableCopy(path));
 }
 
 /**
@@ -209,7 +209,7 @@
  @Status Interoperable
 */
 - (void)applyTransform:(CGAffineTransform)transform {
-    _workingPath = woc::MakeStrongCF(CGPathCreateMutableCopyByTransformingPath(_workingPath, &transform));
+    _workingPath.attach(CGPathCreateMutableCopyByTransformingPath(_workingPath, &transform));
 }
 
 /**
@@ -217,7 +217,7 @@
 */
 - (instancetype)init {
     if (self = [super init]) {
-        _workingPath = woc::MakeStrongCF(CGPathCreateMutable());
+        _workingPath.attach(CGPathCreateMutable());
         _lineWidth = 1.0f;
     }
 
@@ -228,17 +228,7 @@
  @Status Interoperable
 */
 - (void)fill {
-    CGContextRef ctx = UIGraphicsGetCurrentContext();
-    CGContextSaveGState(ctx);
-    CGContextBeginPath(ctx);
-    CGContextAddPath(ctx, _workingPath);
-
-    if (_usesEvenOddFillRule) {
-        CGContextEOFillPath(ctx);
-    } else {
-        CGContextFillPath(ctx);
-    }
-    CGContextRestoreGState(ctx);
+    [self fillWithBlendMode:kCGBlendModeNormal alpha:1.0f];
 }
 
 /**
@@ -261,27 +251,23 @@
  @Status Interoperable
 */
 - (void)stroke {
-    CGContextRef ctx = UIGraphicsGetCurrentContext();
-    CGContextSaveGState(ctx);
-    CGContextBeginPath(ctx);
-    CGContextAddPath(ctx, _workingPath);
-    CGContextSetLineWidth(ctx, _lineWidth);
-    CGContextSetLineJoin(ctx, _lineJoinStyle);
-    if (_patternCount > 0) {
-        CGContextSetLineDash(ctx, _dashPhase, &_pattern[0], _patternCount);
-    }
-    CGContextStrokePath(ctx);
-    CGContextRestoreGState(ctx);
+    [self strokeWithBlendMode:kCGBlendModeNormal alpha:1];
 }
 
 /**
  @Status Interoperable
 */
 - (void)setLineDash:(const CGFloat*)pattern count:(NSInteger)count phase:(CGFloat)phase {
+    if (!pattern || count == 0) {
+        _patternCount = 0;
+        _dashPhase = 0;
+        _pattern.clear();
+        return;
+    }
     _patternCount = count;
     _dashPhase = phase;
 
-    if (count > 0) {
+    if (count > 0 && pattern) {
         std::vector<CGFloat> newPattern(pattern, pattern + count);
         _pattern = std::move(newPattern);
     }
@@ -291,7 +277,7 @@
  @Status Interoperable
 */
 - (void)removeAllPoints {
-    _workingPath = woc::MakeStrongCF(CGPathCreateMutable());
+    _workingPath.attach(CGPathCreateMutable());
 }
 
 /**
@@ -314,14 +300,38 @@
  @Status Stub
 */
 - (void)fillWithBlendMode:(CGBlendMode)blendMode alpha:(CGFloat)alpha {
-    UNIMPLEMENTED();
+    CGContextRef ctx = UIGraphicsGetCurrentContext();
+    CGContextSaveGState(ctx);
+    CGContextSetAlpha(ctx, alpha);
+    CGContextSetBlendMode(ctx, blendMode);
+    CGContextBeginPath(ctx);
+    CGContextAddPath(ctx, _workingPath);
+
+    if (_usesEvenOddFillRule) {
+        CGContextEOFillPath(ctx);
+    } else {
+        CGContextFillPath(ctx);
+    }
+    CGContextRestoreGState(ctx);
 }
 
 /**
  @Status Stub
 */
 - (void)strokeWithBlendMode:(CGBlendMode)blendMode alpha:(CGFloat)alpha {
-    UNIMPLEMENTED();
+    CGContextRef ctx = UIGraphicsGetCurrentContext();
+    CGContextSaveGState(ctx);
+    CGContextSetAlpha(ctx, alpha);
+    CGContextSetBlendMode(ctx, blendMode);
+    CGContextBeginPath(ctx);
+    CGContextAddPath(ctx, _workingPath);
+    CGContextSetLineWidth(ctx, _lineWidth);
+    CGContextSetLineJoin(ctx, _lineJoinStyle);
+    if (_patternCount > 0) {
+        CGContextSetLineDash(ctx, _dashPhase, &_pattern[0], _patternCount);
+    }
+    CGContextStrokePath(ctx);
+    CGContextRestoreGState(ctx);
 }
 
 /**

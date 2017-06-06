@@ -18,7 +18,7 @@
 #import <UIKit/UIBezierPath.h>
 #import <Starboard/SmartTypes.h>
 
-TEST(UIBezierPath, containsPoint) {
+TEST(UIBezierPath, ContainsPoint) {
     UIBezierPath* path = [UIBezierPath bezierPathWithRect:CGRectMake(0, 0, 100, 100)];
     ASSERT_TRUE_MSG(path != nil, "Failed to instantiate UIBezierPath.");
 
@@ -26,7 +26,7 @@ TEST(UIBezierPath, containsPoint) {
     EXPECT_FALSE([path containsPoint:CGPointMake(150, 150)]);
 }
 
-TEST(UIBezierPath, isEmpty) {
+TEST(UIBezierPath, IsEmpty) {
     UIBezierPath* path = [UIBezierPath bezierPath];
     EXPECT_TRUE([path isEmpty]);
     [path moveToPoint:CGPointMake(0, 0)];
@@ -35,7 +35,7 @@ TEST(UIBezierPath, isEmpty) {
     EXPECT_FALSE([path isEmpty]);
 }
 
-TEST(UIBezierPath, currentPoint) {
+TEST(UIBezierPath, CurrentPoint) {
     UIBezierPath* path = [UIBezierPath bezierPath];
 
     CGPoint currentPoint = CGPointMake(0, 0);
@@ -55,7 +55,7 @@ TEST(UIBezierPath, currentPoint) {
     EXPECT_TRUE([path currentPoint] == currentPoint);
 }
 
-TEST(UIBezierPath, getDashPattern) {
+TEST(UIBezierPath, GetDashPattern) {
     UIBezierPath* path = [UIBezierPath bezierPathWithRect:CGRectMake(100, 100, 100, 100)];
     const CGFloat pattern[] = { 5.0, 2.0 };
     [path setLineDash:pattern count:2 phase:7.0f];
@@ -69,4 +69,15 @@ TEST(UIBezierPath, getDashPattern) {
     for (int i = 0; i < count; i++) {
         EXPECT_EQ(outPattern[i], pattern[i]);
     }
+
+    [path setLineDash:nil count:0 phase:0];
+    [path getLineDash:outPattern count:&count phase:&phase];
+    EXPECT_EQ(count, 0);
+    EXPECT_EQ(phase, 0.0f);
+}
+
+TEST(UIBezierPath, GetPath) {
+    UIBezierPath* path1 = [UIBezierPath bezierPathWithRect:CGRectMake(100, 100, 100, 100)];
+    CGPathRef path2 = CGPathCreateWithRect(CGRectMake(100, 100, 100, 100), nullptr);
+    EXPECT_TRUE_MSG(CGPathEqualToPath(path1.CGPath, path2), "Paths were not equal.");
 }
