@@ -305,11 +305,9 @@ struct __CGPath : CoreFoundation::CppBase<__CGPath> {
     }
 
     HRESULT AllowAllExceptFinalEndFigure(bool allow) {
-        HRESULT hr = SetAllowsFigureCalls(allow);
-        if (SUCCEEDED(hr)) {
-            hr = geometrySink->AllowAllExceptFinalEndFigure(allow);
-        }
-        return hr;
+        RETURN_IF_FAILED(SetAllowsFigureCalls(allow));
+        RETURN_IF_FAILED(geometrySink->AllowAllExceptFinalEndFigure(allow));
+        return S_OK;
     }
 
     // A private helper function for re-opening a path geometry. CGPath does not

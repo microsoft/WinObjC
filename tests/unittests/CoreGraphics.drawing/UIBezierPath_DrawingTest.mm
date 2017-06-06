@@ -324,12 +324,14 @@ DRAW_TEST_F(UIBezierPath, LineDash, UIKitMimicTest<>) {
     CGRect squareTR = CGRectMake(xstart + width * .55, ystart + height * .05, width * .4, height * .4);
     CGRect squareBL = CGRectMake(xstart + width * .05, ystart + height * .55, width * .4, height * .4);
     CGRect squareBR = CGRectMake(xstart + width * .55, ystart + height * .55, width * .4, height * .4);
+    CGRect squareM = CGRectMake(xstart + width * .3, ystart + height * .3, width * .4, height * .4);
 
     UIBezierPath* path1 = [UIBezierPath bezierPathWithRect:squareTL];
     UIBezierPath* path2 = [UIBezierPath bezierPathWithRect:squareTR];
     UIBezierPath* path3 = [UIBezierPath bezierPathWithRect:squareBL];
     UIBezierPath* path4 = [UIBezierPath bezierPathWithRect:squareBR];
     UIBezierPath* path5 = [UIBezierPath bezierPathWithRect:squareBR];
+    UIBezierPath* path6 = [UIBezierPath bezierPathWithRect:squareM];
 
     const CGFloat pattern1[] = { 5.0, 2.0 };
     const CGFloat pattern2[] = { 10.0, 10.0 };
@@ -341,12 +343,14 @@ DRAW_TEST_F(UIBezierPath, LineDash, UIKitMimicTest<>) {
     [path3 setLineDash:pattern3 count:12 phase:0];
     [path4 setLineDash:pattern4 count:2 phase:0];
     [path5 setLineDash:pattern4 count:2 phase:1];
+    [path6 setLineDash:nil count:0 phase:0];
 
     [path1 stroke];
     [path2 stroke];
     [path3 stroke];
     [path4 stroke];
     [path5 stroke];
+    [path6 stroke];
 
     UIGraphicsPopContext();
 }

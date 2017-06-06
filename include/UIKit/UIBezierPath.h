@@ -73,7 +73,7 @@ UIKIT_EXPORT_CLASS
 
 @property (readonly) CGPoint currentPoint;
 
-@property (nonatomic) CGPathRef CGPath NS_RETURNS_INNER_POINTER CF_RETURNS_NOT_RETAINED;
+@property (nonatomic) CGPathRef CGPath;
 @property (nonatomic) CGFloat lineWidth;
 @property (nonatomic) CGLineCap lineCapStyle;
 @property (nonatomic) CGLineJoin lineJoinStyle;
