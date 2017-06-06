@@ -24,7 +24,6 @@
 
 @implementation UIBezierPath {
     std::vector<CGFloat> _pattern;
-    NSInteger _patternCount;
     CGFloat _dashPhase;
 
     woc::StrongCF<CGMutablePathRef> _workingPath;
@@ -259,12 +258,10 @@
 */
 - (void)setLineDash:(const CGFloat*)pattern count:(NSInteger)count phase:(CGFloat)phase {
     if (!pattern || count == 0) {
-        _patternCount = 0;
         _dashPhase = 0;
         _pattern.clear();
         return;
     }
-    _patternCount = count;
     _dashPhase = phase;
 
     if (count > 0 && pattern) {
@@ -288,10 +285,10 @@
         *phase = _dashPhase;
     }
     if (count) {
-        *count = _patternCount;
+        *count = _pattern.size();
     }
 
-    if (pattern && _patternCount > 0) {
+    if (pattern && _pattern.size() > 0) {
         std::copy(_pattern.begin(), _pattern.end(), pattern);
     }
 }
@@ -327,8 +324,8 @@
     CGContextAddPath(ctx, _workingPath);
     CGContextSetLineWidth(ctx, _lineWidth);
     CGContextSetLineJoin(ctx, _lineJoinStyle);
-    if (_patternCount > 0) {
-        CGContextSetLineDash(ctx, _dashPhase, &_pattern[0], _patternCount);
+    if (_pattern.size() > 0) {
+        CGContextSetLineDash(ctx, _dashPhase, &_pattern[0], _pattern.size());
     }
     CGContextStrokePath(ctx);
     CGContextRestoreGState(ctx);
