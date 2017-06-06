@@ -354,3 +354,31 @@ DRAW_TEST_F(UIBezierPath, LineDash, UIKitMimicTest<>) {
 
     UIGraphicsPopContext();
 }
+
+DRAW_TEST_F(UIBezierPath, BlendModeBezier, UIKitMimicTest<>) {
+    CGContextRef context = GetDrawingContext();
+    CGRect drawingBounds = GetDrawingBounds();
+    CGFloat width = drawingBounds.size.width;
+    CGFloat height = drawingBounds.size.height;
+    CGFloat xstart = drawingBounds.origin.x;
+    CGFloat ystart = drawingBounds.origin.y;
+    UIGraphicsPushContext(context);
+
+    UIBezierPath* background = [UIBezierPath bezierPathWithRect:drawingBounds];
+    UIBezierPath* backRectangle =
+        [UIBezierPath bezierPathWithRect:CGRectMake(xstart + .05 * width, ystart + .05 * height, .45 * width, .45 * height)];
+    UIBezierPath* midRectangle =
+        [UIBezierPath bezierPathWithRect:CGRectMake(xstart + .25 * width, ystart + .25 * height, .5 * width, .5 * height)];
+    UIBezierPath* topRectangle =
+        [UIBezierPath bezierPathWithRect:CGRectMake(xstart + .5 * width, ystart + .5 * height, .45 * width, .45 * height)];
+
+    CGContextSetRGBFillColor(context, .1, .1, .1, .9);
+    [background fill];
+    CGContextSetRGBFillColor(context, 0, 0, 1, 1);
+    [backRectangle fillWithBlendMode:kCGBlendModeColor alpha:1];
+    CGContextSetRGBFillColor(context, 0, 1, 0, 1);
+    [midRectangle fillWithBlendMode:kCGBlendModeColor alpha:.7];
+    CGContextSetRGBFillColor(context, 1, 0, 0, 1);
+    [topRectangle fillWithBlendMode:kCGBlendModeColor alpha:.3];
+    UIGraphicsPopContext();
+}
