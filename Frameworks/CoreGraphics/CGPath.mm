@@ -46,10 +46,10 @@ public:
         : m_geometrySink(sink),
           m_lastPoint{ 0, 0 },
           m_isFigureOpen(false),
-          m_allowsFigureCalls(false),
+          m_allowsFigureCalls(0),
           m_hasGeometryStarted(false),
           m_lastClose(D2D1_FIGURE_END_CLOSED),
-          m_allowsFigureEndExceptFinal(false),
+          m_allowsFigureEndExceptFinal(0),
           m_delayedEndFigure(false) {
     }
 
@@ -115,7 +115,7 @@ public:
     }
 
     STDMETHOD_(void, BeginFigure)(D2D1_POINT_2F startPoint, D2D1_FIGURE_BEGIN figureBegin) {
-        if (m_allowsFigureCalls) {
+        if (m_allowsFigureCalls > 0) {
             _BeginFigure(startPoint, figureBegin);
         }
     }
@@ -135,10 +135,10 @@ public:
 
     // Only end the figure if we're requesting to actually close a figure, or if we have allowed the backing sink to dictate figure calls.
     STDMETHOD_(void, EndFigure)(D2D1_FIGURE_END figureEnd) {
-        if (m_allowsFigureEndExceptFinal && figureEnd != D2D1_FIGURE_END_CLOSED) {
+        if (m_allowsFigureEndExceptFinal > 0 && figureEnd != D2D1_FIGURE_END_CLOSED) {
             m_delayedEndFigure = true;
             m_delayedEndFigureClosure = figureEnd;
-        } else if (figureEnd == D2D1_FIGURE_END_CLOSED || m_allowsFigureCalls) {
+        } else if (figureEnd == D2D1_FIGURE_END_CLOSED || m_allowsFigureCalls > 0) {
             _EndFigure(figureEnd);
         }
     }
@@ -158,8 +158,9 @@ public:
         return m_geometrySink.Get();
     }
 
-    void SetAllowsFigureCalls(bool allows) {
-        m_allowsFigureCalls = allows;
+    HRESULT SetAllowsFigureCalls(bool allows) {
+        m_allowsFigureCalls += (allows ? 1 : -1);
+        return m_allowsFigureCalls >= 0 ? S_OK : E_INVALIDARG;
     }
 
     bool IsFigureEndClosed() {
@@ -198,9 +199,10 @@ public:
         m_geometrySink = sink;
     }
 
-    void AllowAllExceptFinalEndFigure(bool allow) {
-        m_allowsFigureEndExceptFinal = allow;
+    HRESULT AllowAllExceptFinalEndFigure(bool allow) {
+        m_allowsFigureEndExceptFinal += (allow ? 1 : -1);
         m_delayedEndFigure = false;
+        return m_allowsFigureEndExceptFinal >= 0 ? S_OK : E_INVALIDARG;
     }
 
 private:
@@ -216,15 +218,14 @@ private:
     D2D1_POINT_2F m_lastPoint;
     // The starting point this geometry will move to if it is closed.
     D2D1_POINT_2F m_startPoint;
-    // Whether or not the figure is open and ready to recieve new path information
+    // Whether or not the figure is open and ready to receive new path information
     bool m_isFigureOpen;
-    // Whether or not any geometry has been started. This can be inferred from other APIs, but those would require the geometry to be
-    // closed.
+    // Whether any geometry has been started. This can be inferred from other APIs, but those would require the geometry to be closed.
     bool m_hasGeometryStarted;
-    // True if this geometry can end its own figures.
-    bool m_allowsFigureCalls;
-    // True if this geometry will leave it's last EndFigure call ignored.
-    bool m_allowsFigureEndExceptFinal;
+    // Greater than 0 if this geometry can end its own figures.
+    int m_allowsFigureCalls;
+    // Greater than 0 if this geometry will leave it's last EndFigure call ignored.
+    int m_allowsFigureEndExceptFinal;
     // True when the next figure created should end the previous figure first.
     bool m_delayedEndFigure;
     // The figure closure type to end the last figure with.
@@ -270,8 +271,8 @@ struct __CGPath : CoreFoundation::CppBase<__CGPath> {
         return geometrySink && geometrySink->IsGeometryStarted();
     }
 
-    void SetAllowsFigureCalls(bool allows) {
-        geometrySink->SetAllowsFigureCalls(allows);
+    HRESULT SetAllowsFigureCalls(bool allows) {
+        return geometrySink->SetAllowsFigureCalls(allows);
     }
 
     CGPoint GetCurrentPoint() const {
@@ -303,9 +304,10 @@ struct __CGPath : CoreFoundation::CppBase<__CGPath> {
         return &lastTransform;
     }
 
-    void AllowAllExceptFinalEndFigure(bool allow) {
-        SetAllowsFigureCalls(allow);
-        geometrySink->AllowAllExceptFinalEndFigure(allow);
+    HRESULT AllowAllExceptFinalEndFigure(bool allow) {
+        RETURN_IF_FAILED(SetAllowsFigureCalls(allow));
+        RETURN_IF_FAILED(geometrySink->AllowAllExceptFinalEndFigure(allow));
+        return S_OK;
     }
 
     // A private helper function for re-opening a path geometry. CGPath does not
@@ -335,9 +337,9 @@ struct __CGPath : CoreFoundation::CppBase<__CGPath> {
 
             geometrySink->SetBackingSink(newBackingSink.Get());
             // Allow all calls except final endfigure
-            AllowAllExceptFinalEndFigure(true);
+            RETURN_IF_FAILED(AllowAllExceptFinalEndFigure(true));
             RETURN_IF_FAILED(pathGeometry->Stream(geometrySink.Get()));
-            AllowAllExceptFinalEndFigure(false);
+            RETURN_IF_FAILED(AllowAllExceptFinalEndFigure(false));
             geometrySink->SetFillMode(D2D1_FILL_MODE_WINDING);
 
             pathGeometry = newPath;
@@ -430,9 +432,9 @@ struct __CGPath : CoreFoundation::CppBase<__CGPath> {
             d2dTransform = __CGAffineTransformToD2D_F(*transform);
         }
 
-        AllowAllExceptFinalEndFigure(true);
+        RETURN_IF_FAILED(AllowAllExceptFinalEndFigure(true));
         RETURN_IF_FAILED(path->GetPathGeometry()->Widen(lineWidth, newStrokeStyle.Get(), d2dTransform, geometrySink.Get()));
-        AllowAllExceptFinalEndFigure(false);
+        RETURN_IF_FAILED(AllowAllExceptFinalEndFigure(false));
 
         pathGeometry = newPath;
 
@@ -597,9 +599,9 @@ CGMutablePathRef CGPathCreateMutableCopy(CGPathRef path) {
     // Otherwise the D2D calls will return that a bad state has been entered.
     FAIL_FAST_IF_FAILED(path->ClosePath());
 
-    mutableRet->AllowAllExceptFinalEndFigure(true);
+    FAIL_FAST_IF_FAILED(mutableRet->AllowAllExceptFinalEndFigure(true));
     FAIL_FAST_IF_FAILED(path->GetPathGeometry()->Stream(mutableRet->GetGeometrySink()));
-    mutableRet->AllowAllExceptFinalEndFigure(false);
+    FAIL_FAST_IF_FAILED(mutableRet->AllowAllExceptFinalEndFigure(false));
 
     mutableRet->SetCurrentPoint(path->GetCurrentPoint());
     mutableRet->SetLastTransform(path->GetLastTransform());
@@ -872,9 +874,9 @@ void CGPathAddPath(CGMutablePathRef path, const CGAffineTransform* transform, CG
     FAIL_FAST_IF_FAILED(toAdd->ClosePath());
     CGPoint newStart = toAdd->GetStartingPoint();
     //    CGPathMoveToPoint(path, transform, newStart.x, newStart.y);
-    path->AllowAllExceptFinalEndFigure(true);
+    FAIL_FAST_IF_FAILED(path->AllowAllExceptFinalEndFigure(true));
     FAIL_FAST_IF_FAILED(path->AddGeometryToPathWithTransformation(toAdd->GetPathGeometry(), transform));
-    path->AllowAllExceptFinalEndFigure(false);
+    FAIL_FAST_IF_FAILED(path->AllowAllExceptFinalEndFigure(false));
 }
 
 /**
@@ -894,9 +896,9 @@ void CGPathAddEllipseInRect(CGMutablePathRef path, const CGAffineTransform* tran
 
     FAIL_FAST_IF_FAILED(factory->CreateEllipseGeometry(&ellipse, &ellipseGeometry));
 
-    path->SetAllowsFigureCalls(true);
+    FAIL_FAST_IF_FAILED(path->SetAllowsFigureCalls(true));
     FAIL_FAST_IF_FAILED(path->AddGeometryToPathWithTransformation(ellipseGeometry.Get(), transform));
-    path->SetAllowsFigureCalls(false);
+    FAIL_FAST_IF_FAILED(path->SetAllowsFigureCalls(false));
 }
 
 /**
@@ -969,12 +971,7 @@ bool CGPathIsEmpty(CGPathRef path) {
         return true;
     }
 
-    UINT32 count;
-
-    RETURN_FALSE_IF_FAILED(path->ClosePath());
-
-    RETURN_FALSE_IF_FAILED(path->GetPathGeometry()->GetFigureCount(&count));
-    return count == 0;
+    return !path->IsGeometryStarted();
 }
 
 /**
@@ -1128,9 +1125,9 @@ void CGPathAddRoundedRect(
 
     FAIL_FAST_IF_FAILED(factory->CreateRoundedRectangleGeometry(&roundedRectangle, &rectangleGeometry));
 
-    path->SetAllowsFigureCalls(true);
+    FAIL_FAST_IF_FAILED(path->SetAllowsFigureCalls(true));
     FAIL_FAST_IF_FAILED(path->AddGeometryToPathWithTransformation(rectangleGeometry.Get(), transform));
-    path->SetAllowsFigureCalls(false);
+    FAIL_FAST_IF_FAILED(path->SetAllowsFigureCalls(false));
 }
 
 /**
@@ -1211,9 +1208,9 @@ CGMutablePathRef CGPathCreateMutableCopyByTransformingPath(CGPathRef path, const
         CGMutablePathRef transformedPath = CGPathCreateMutable();
         FAIL_FAST_IF_FAILED(path->ClosePath());
 
-        transformedPath->AllowAllExceptFinalEndFigure(true);
+        FAIL_FAST_IF_FAILED(transformedPath->AllowAllExceptFinalEndFigure(true));
         FAIL_FAST_IF_FAILED(transformedPath->AddGeometryToPathWithTransformation(path->GetPathGeometry(), transform));
-        transformedPath->AllowAllExceptFinalEndFigure(false);
+        FAIL_FAST_IF_FAILED(transformedPath->AllowAllExceptFinalEndFigure(false));
 
         transformedPath->SetStartingPoint(path->GetStartingPoint());
         transformedPath->SetCurrentPoint(path->GetCurrentPoint());

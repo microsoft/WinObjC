@@ -68,12 +68,12 @@ UIKIT_EXPORT_CLASS
 - (void)addCurveToPoint:(CGPoint)endPoint controlPoint1:(CGPoint)controlPoint1 controlPoint2:(CGPoint)controlPoint2;
 - (void)addQuadCurveToPoint:(CGPoint)endPoint controlPoint:(CGPoint)controlPoint;
 - (void)closePath;
-- (void)removeAllPoints STUB_METHOD;
+- (void)removeAllPoints;
 - (void)appendPath:(UIBezierPath*)bezierPath;
 
-@property (nonatomic) CGPathRef CGPath NS_RETURNS_INNER_POINTER CF_RETURNS_NOT_RETAINED;
-@property (nonatomic, readonly) CGPoint currentPoint;
+@property (readonly) CGPoint currentPoint;
 
+@property (nonatomic) CGPathRef CGPath;
 @property (nonatomic) CGFloat lineWidth;
 @property (nonatomic) CGLineCap lineCapStyle;
 @property (nonatomic) CGLineJoin lineJoinStyle;
@@ -82,17 +82,17 @@ UIKIT_EXPORT_CLASS
 @property (nonatomic) BOOL usesEvenOddFillRule;
 
 - (void)setLineDash:(const CGFloat*)pattern count:(NSInteger)count phase:(CGFloat)phase;
-- (void)getLineDash:(CGFloat*)pattern count:(NSInteger*)count phase:(CGFloat*)phase STUB_METHOD;
+- (void)getLineDash:(CGFloat*)pattern count:(NSInteger*)count phase:(CGFloat*)phase;
 
 - (void)fill;
-- (void)fillWithBlendMode:(CGBlendMode)blendMode alpha:(CGFloat)alpha STUB_METHOD;
+- (void)fillWithBlendMode:(CGBlendMode)blendMode alpha:(CGFloat)alpha;
 
 - (void)stroke;
-- (void)strokeWithBlendMode:(CGBlendMode)blendMode alpha:(CGFloat)alpha STUB_METHOD;
+- (void)strokeWithBlendMode:(CGBlendMode)blendMode alpha:(CGFloat)alpha;
 
 - (void)addClip;
 
-- (BOOL)containsPoint:(CGPoint)point STUB_METHOD;
+- (BOOL)containsPoint:(CGPoint)point;
 
 @property (readonly, getter=isEmpty) BOOL empty;
 @property (nonatomic, readonly) CGRect bounds;
