@@ -29,6 +29,7 @@
 @interface THBooleanCondition : NSObject
 - (BOOL)waitUntilDate:(NSDate*)limit;
 - (void)broadcast;
+- (void)signal;
 @property (readonly) NSCondition* condition;
 @property (readonly) bool isOpen;
 @end
