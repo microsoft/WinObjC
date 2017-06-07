@@ -40,6 +40,13 @@
     return ret;
 }
 
+- (void)signal {
+	[_condition lock];
+	_isOpen = YES;
+	[_condition signal];
+	[_condition unlock];
+}
+
 - (void)broadcast {
     [_condition lock];
     _isOpen = YES;
