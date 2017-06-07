@@ -4,6 +4,7 @@
     <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
     <HasSharedItems>true</HasSharedItems>
     <ItemsProjectGuid>{EE68A240-536D-4557-AB96-D164E93059A1}</ItemsProjectGuid>
+    <CopyWinObjCFrameworksCorePackage>false</CopyWinObjCFrameworksCorePackage>
     <CopyStarboardLibraries>true</CopyStarboardLibraries>
     <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\$(TargetOsAndVersion)\</OutDir>
   </PropertyGroup>
