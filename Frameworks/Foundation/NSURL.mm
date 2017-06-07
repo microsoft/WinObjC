@@ -332,6 +332,13 @@ BASE_CLASS_REQUIRED_IMPLS(NSURL, NSURLPrototype, CFURLGetTypeID);
 /**
  @Status Interoperable
 */
+- (NSString*)description {
+    return [self absoluteString];
+}
+
+/**
+ @Status Interoperable
+*/
 - (NSUInteger)hash {
     return [[self relativeString] hash] + [[[self baseURL] relativeString] hash];
 }
