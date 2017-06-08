@@ -210,17 +210,14 @@ TEST(NSFileManager, CopyFileViaURL) {
 }
 
 TEST(NSFileManager, GetSetAttributes) {
-    NSString* srcName = @"GETsetATTRIBUTES.txt";
+    NSString* srcName = @"attributestestfile.txt";
     SCOPE_DELETE_FILE(srcName);
 
     NSString* content = @"The Quick Brown Fox.";
     createFileWithContentAndVerify(srcName, content);
     NSURL* srcURL = [NSURL fileURLWithPath:getPathToFile(srcName)];
 
-    NSDictionary* attributes = @{
-        NSFileType : NSFileTypeRegular,
-        NSFileImmutable : @YES,
-    };
+    NSDictionary* attributes = @{ NSFileImmutable : @YES };
 
     NSFileManager* manager = [NSFileManager defaultManager];
     NSError* error = nil;
@@ -229,8 +226,17 @@ TEST(NSFileManager, GetSetAttributes) {
 
     error = nil;
     NSDictionary* retrievedAttributes = [manager attributesOfItemAtPath:[srcURL path] error:&error];
-    EXPECT_OBJCEQ(attributes[NSFileType], retrievedAttributes[NSFileType]);
     EXPECT_OBJCEQ(attributes[NSFileImmutable], retrievedAttributes[NSFileImmutable]);
+    EXPECT_EQ(nil, error);
+
+    NSDictionary* newAttributes = @{ NSFileImmutable : @NO };
+
+    EXPECT_TRUE([manager setAttributes:newAttributes ofItemAtPath:[srcURL path] error:&error]);
+    EXPECT_EQ(nil, error);
+
+    error = nil;
+    retrievedAttributes = [manager attributesOfItemAtPath:[srcURL path] error:&error];
+    EXPECT_OBJCEQ(@NO, retrievedAttributes[NSFileImmutable]);
     EXPECT_EQ(nil, error);
 }
 
