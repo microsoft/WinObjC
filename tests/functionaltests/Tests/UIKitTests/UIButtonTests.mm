@@ -1286,7 +1286,8 @@ public:
     TEST_METHOD(UIButton_ImageEdgeInsets) {
         StrongId<UIButtonWithControlsViewController> buttonVC;
         buttonVC.attach([[UIButtonWithControlsViewController alloc] init]);
-        UXTestAPI::ViewControllerPresenter testHelper(buttonVC);
+        UXTestAPI::ViewControllerPresenter testHelper(buttonVC, 2);
+        LOG_INFO("UIButton_ImageEdgeInsets - present VC");
 
         UIButton* buttonToTest = [buttonVC defaultButton];
 
@@ -1299,6 +1300,7 @@ public:
         // Extract UIButton.imageView control to verify its visual state
         FrameworkElement xamlElement = [buttonToTest.imageView _winrtXamlElement];
         ASSERT_TRUE(xamlElement);
+        LOG_INFO("UIButton_ImageEdgeInsets - retrieve backing xaml element");
 
         dispatch_sync(dispatch_get_main_queue(), ^{
             [buttonVC textImageStateField].text = @"N;";
@@ -1307,6 +1309,7 @@ public:
             // Register RAII event subscription handler
             xamlWidthSubscriber->Set(xamlElement, FrameworkElement::WidthProperty(), ^(const DependencyObject& sender, const DependencyProperty& dp) {
                 double width = DoubleFromPropertyValue(sender.GetValue(dp));
+                LOG_INFO("UIButton_ImageEdgeInsets - width changed");
 
                 // Validation
                 EXPECT_EQ(width, 40.0f);
@@ -1314,6 +1317,7 @@ public:
             });
             xamlHeightSubscriber->Set(xamlElement, FrameworkElement::HeightProperty(), ^(const DependencyObject& sender, const DependencyProperty& dp) {
                 double height = DoubleFromPropertyValue(sender.GetValue(dp));
+                LOG_INFO("UIButton_ImageEdgeInsets - height changed");
 
                 // Validation
                 EXPECT_EQ(height, 40.0f);
@@ -1321,6 +1325,7 @@ public:
             });
             xamlCanvasLeftSubscriber->Set(xamlElement, Controls::Canvas::LeftProperty(), ^(const DependencyObject& sender, const DependencyProperty& dp) {
                 double left = DoubleFromPropertyValue(sender.GetValue(dp));
+                LOG_INFO("UIButton_ImageEdgeInsets - left changed");
 
                 // Validation
                 EXPECT_EQ(left, 80.0f);
@@ -1328,6 +1333,7 @@ public:
             });
             xamlCanvasTopSubscriber->Set(xamlElement, Controls::Canvas::TopProperty(), ^(const DependencyObject& sender, const DependencyProperty& dp) {
                 double top = DoubleFromPropertyValue(sender.GetValue(dp));
+                LOG_INFO("UIButton_ImageEdgeInsets - top changed");
 
                 // Validation
                 EXPECT_EQ(top, 80.0f);
@@ -1336,9 +1342,10 @@ public:
 
             // Action
             [buttonVC textImageEdgeInsets].text = @"{80.0f, 80.0f, 80.0f, 80.0f}";
+            LOG_INFO("UIButton_ImageEdgeInsets - trigger imedgeEdgeInsets properties to change");
         });
 
-        ASSERT_TRUE_MSG(uxEvent->Wait(c_testTimeoutInSec, 4 /* signal count */), "FAILED: Waiting for property changed events timed out!");
+        ASSERT_TRUE_MSG(uxEvent->Wait(c_testTimeoutInSec, 4 /* signal count */), "FAILED: Waiting for property changed events timed out after 4 seconds!");
     }
 
     TEST_METHOD(UIButton_CurrentTitle) {
