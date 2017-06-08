@@ -16,6 +16,11 @@
 #pragma once
 
 #import <Foundation/NSURLProtocol.h>
+#import <Starboard/SmartTypes.h>
+
+@interface NSURLProtocol ()
++ (id)_URLProtocolClassForRequest:(id)request;
+@end
 
 // Internal extension for NSURLProtocolClient, to support POST
 @protocol _NSURLProtocolClientInternal <NSURLProtocolClient>
