@@ -24,8 +24,8 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 #import <NSRaise.h>
 #import <LoggingNative.h>
 
-#import <NSURLProtocolInternal.h>
 #import <NSURLRequestInternal.h>
+#import "NSURLProtocolInternal.h"
 #import "NSURLProtocol_file.h"
 
 static const wchar_t* TAG = L"NSURLProtocol";

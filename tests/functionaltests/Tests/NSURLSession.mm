@@ -614,6 +614,58 @@ public:
         ASSERT_EQ_MSG(nil, taskError, "FAILED: Connection returned error!");
     }
 
+    /**
+     * Test to verify a data task post request can be successfully made and a valid data is received with a completion handler
+     */
+    TEST_METHOD(DataTaskWithPostRequest) {
+        __block THBooleanCondition* condition = [[THBooleanCondition alloc] init];
+        __block NSURLResponse* taskResponse;
+        __block NSData* taskData;
+        __block NSError* taskError;
+
+        NSURLSessionDataTaskTestHelper* dataTaskTestHelper = [[NSURLSessionDataTaskTestHelper alloc] init];
+        NSURLSession* session = [dataTaskTestHelper createSession];
+        NSURL* url = [NSURL URLWithString:@"https://httpbin.org/post"];
+        LOG_INFO("Establishing data task with url %@", url);
+
+        NSMutableURLRequest* request = [NSMutableURLRequest requestWithURL:url];
+
+        static const std::string alphanumeric = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        request.HTTPBody = [NSData dataWithBytes:reinterpret_cast<const void*>(alphanumeric.data()) length:alphanumeric.size()];
+        request.HTTPMethod = @"POST";
+        [request setValue:[NSString stringWithFormat:@"%lu", alphanumeric.size()] forHTTPHeaderField:@"Content-Length"];
+
+        NSURLSessionDataTask* dataTask = [session dataTaskWithRequest:request
+                                                    completionHandler:^(NSData* data, NSURLResponse* response, NSError* error) {
+                                                        taskResponse = response;
+                                                        taskData = data;
+                                                        taskError = error;
+                                                        [condition signal];
+                                                    }];
+        [dataTask resume];
+
+        // Wait for data.
+        ASSERT_TRUE([condition waitUntilDate:[NSDate dateWithTimeIntervalSinceNow:c_testTimeoutInSec]]);
+        ASSERT_TRUE(taskResponse || taskData || taskError);
+
+        // Make sure we received a response.
+        ASSERT_TRUE_MSG((taskResponse != nil), "FAILED: Response cannot be empty!");
+        if (![taskResponse isKindOfClass:[NSHTTPURLResponse class]]) {
+            ASSERT_FALSE_MSG(true, "FAILED: Response should be of kind NSHTTPURLResponse class!");
+        }
+        NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*)taskResponse;
+        LOG_INFO("Received HTTP response status: %ld", [httpResponse statusCode]);
+        ASSERT_EQ_MSG(200, [httpResponse statusCode], "FAILED: HTTP status 200 expected!");
+        LOG_INFO("Received HTTP response headers: %@", [httpResponse allHeaderFields]);
+
+        // Make sure we received data.
+        ASSERT_TRUE_MSG((taskData != nil), "FAILED: We should have received some data!");
+        LOG_INFO("Received data: %@", [[NSString alloc] initWithData:taskData encoding:NSUTF8StringEncoding]);
+
+        // Make sure there was no error.
+        ASSERT_EQ_MSG(nil, taskError, "FAILED: Task returned error!");
+    }
+
     //
     // NSURLSessionDownloadTask tests
     //
