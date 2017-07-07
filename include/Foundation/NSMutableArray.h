@@ -42,7 +42,7 @@ FOUNDATION_EXPORT_CLASS
 - (void)removeObjectAtIndex:(NSUInteger)index;
 - (void)removeObjectsAtIndexes:(NSIndexSet*)indexes;
 - (void)removeObjectIdenticalTo:(ObjectType)anObject;
-- (void)removeObjectIdenticalTo:(ObjectType)anObject inRange:(NSRange)aRange STUB_METHOD;
+- (void)removeObjectIdenticalTo:(ObjectType)anObject inRange:(NSRange)aRange;
 - (void)removeObjectsFromIndices:(NSUInteger*)indices numIndices:(NSUInteger)count STUB_METHOD;
 - (void)removeObjectsInArray:(NSArray<ObjectType>*)otherArray;
 - (void)removeObjectsInRange:(NSRange)aRange;
