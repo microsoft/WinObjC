@@ -22,6 +22,7 @@
 #import "CFHelpers.h"
 #import "NSRaise.h"
 #import "NSCFArray.h"
+#import "NSCFCollectionSupport.h"
 #import "BridgeHelpers.h"
 
 #include <algorithm>
@@ -157,46 +158,59 @@ using NSCompareFunc = NSInteger (*)(id, id, void*);
 /**
  @Status Interoperable
 */
-- (void)removeObject:(NSObject*)objAddr {
-    if (objAddr == nil) {
-        TraceVerbose(TAG, L"objAddr = nil!");
-    }
-
-    int idx = [self indexOfObject:objAddr];
-    if (idx != NSNotFound) {
-        [self removeObjectAtIndex:idx];
-    }
+- (void)removeObject:(NSObject*)object {
+    [self removeObject:object inRange:NSRange{ 0, self.count }];
 }
 
 /**
  @Status Interoperable
 */
-- (void)removeObject:(NSObject*)objAddr inRange:(NSRange)range {
-    for (int i = range.location + range.length - 1; i >= (int)range.location; i--) {
-        id curObj = [self objectAtIndex:i];
-
-        if ([curObj isEqual:objAddr]) {
-            [self removeObject:curObj];
+- (void)removeObject:(NSObject*)object inRange:(NSRange)range {
+    NS_COLLECTION_VALIDATE_RANGE(range, self.count);
+    // NSIndexSet can coalesce adjacent ranges. Combined with an efficient removeObjectsInRange:
+    // this can remove large swaths of objects more efficiently than individual mutation.
+    NSMutableIndexSet* indexes = [NSMutableIndexSet indexSet];
+    NSUInteger max = std::min(self.count, range.location + range.length);
+    for (NSUInteger i = range.location; i < max; ++i) {
+        id cur = [self objectAtIndex:i];
+        if ([cur isEqual:object]) {
+            [indexes addIndex:i];
         }
     }
+    [self removeObjectsAtIndexes:indexes];
+}
+
+/**
+ @Status Interoperable
+*/
+- (void)removeObjectIdenticalTo:(NSObject*)object {
+    [self removeObjectIdenticalTo:object inRange:NSRange{ 0, self.count }];
+}
+
+/**
+ @Status Interoperable
+*/
+- (void)removeObjectIdenticalTo:(id)object inRange:(NSRange)range {
+    NS_COLLECTION_VALIDATE_RANGE(range, self.count);
+    NSMutableIndexSet* indexes = [NSMutableIndexSet indexSet];
+    NSUInteger max = std::min(self.count, range.location + range.length);
+    for (NSUInteger i = range.location; i < max; ++i) {
+        id cur = [self objectAtIndex:i];
+        if (cur == object) {
+            [indexes addIndex:i];
+        }
+    }
+    [self removeObjectsAtIndexes:indexes];
 }
 
 /**
  @Status Interoperable
 */
 - (void)removeObjectsInRange:(NSRange)range {
-    for (int i = range.location + range.length - 1; i >= (int)range.location; i--) {
-        [self removeObjectAtIndex:i];
-    }
-}
+    NS_COLLECTION_VALIDATE_RANGE(range, self.count);
 
-/**
- @Status Interoperable
-*/
-- (void)removeObjectIdenticalTo:(NSObject*)objAddr {
-    int idx = [self indexOfObjectIdenticalTo:objAddr];
-    if (idx != NSNotFound) {
-        [self removeObjectAtIndex:idx];
+    for (NSUInteger i = range.location + range.length; i > range.location; i--) {
+        [self removeObjectAtIndex:i - 1];
     }
 }
 
@@ -212,10 +226,10 @@ using NSCompareFunc = NSInteger (*)(id, id, void*);
  @Status Interoperable
 */
 - (void)removeObjectsAtIndexes:(NSIndexSet*)indexSet {
-    [indexSet enumerateIndexesWithOptions:NSEnumerationReverse
-                               usingBlock:^(NSUInteger index, BOOL* stop) {
-                                   [self removeObjectAtIndex:index];
-                               }];
+    [indexSet enumerateRangesWithOptions:NSEnumerationReverse
+                              usingBlock:^(NSRange range, BOOL* stop) {
+                                  [self removeObjectsInRange:range];
+                              }];
 }
 
 /**
@@ -490,14 +504,6 @@ recurse:
         if (![predicate evaluateWithObject:check])
             [self removeObjectAtIndex:count];
     }
-}
-
-/**
- @Status Stub
- @Notes
-*/
-- (void)removeObjectIdenticalTo:(id)anObject inRange:(NSRange)aRange {
-    UNIMPLEMENTED();
 }
 
 /**

@@ -192,17 +192,7 @@ BASE_CLASS_REQUIRED_IMPLS(NSArray, NSArrayPrototype, CFArrayGetTypeID);
  @Status Interoperable
 */
 - (NSUInteger)indexOfObject:(id)obj {
-    int count = [self count];
-
-    for (int i = 0; i < count; i++) {
-        id value = [self objectAtIndex:i];
-
-        if ([obj isEqual:value]) {
-            return i;
-        }
-    }
-
-    return NSNotFound;
+    return [self indexOfObject:obj inRange:NSRange{ 0, self.count }];
 }
 
 /**
