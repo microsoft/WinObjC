@@ -818,21 +818,22 @@ static CFComparisonResult _CFComparatorFunctionFromComparator(const void* val1, 
  @Status Interoperable
 */
 - (NSArray*)objectsAtIndexes:(NSIndexSet*)indexes {
+    NS_COLLECTION_THROW_IF_NULL_REASON(indexes, @"indexes must not be nil”);
     NSUInteger idx = NSNotFound;
     id ret = nil;
     NSUInteger count = [self count];
 
-	if (indexes == nil)
-		[NSException raise:NSInvalidArgumentException format:@"No index set"];
-	else {
-		ret = [NSMutableArray array];
-		idx = [indexes firstIndex];
-	}
+    if (indexes == nil)
+        [NSException raise:NSInvalidArgumentException format:@"No index set"];
+    else {
+        ret = [NSMutableArray array];
+        idx = [indexes firstIndex];
+    }
 
     while (idx != NSNotFound) {
         if (idx >= count) {
             TraceCritical(TAG, L"objectsAtIndexes: index > count (%d > %d), throwing exception", idx, count);
-			[NSException raise:NSRangeException format:@"Index out of bounds"];
+            [NSException raise:NSRangeException format:@"Index out of bounds"];
             return nil;
         }
         [ret addObject:[self objectAtIndex:idx]];
