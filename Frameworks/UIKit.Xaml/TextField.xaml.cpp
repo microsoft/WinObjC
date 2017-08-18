@@ -37,7 +37,7 @@ unsigned int TextField::c_borderCornerRadius = 8;
 Platform::Boolean TextField::s_dependencyPropertiesRegistered = false;
 
 template <typename T>
-T TextField::FindTemplateChild(FrameworkElement^ source, Platform::String^ name) {
+static T FindTemplateChild(FrameworkElement^ source, Platform::String^ name) {
     T target = nullptr;
     if (source) {
         unsigned int count = VisualTreeHelper::GetChildrenCount(source);
