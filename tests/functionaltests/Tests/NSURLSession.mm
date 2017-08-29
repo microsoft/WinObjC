@@ -398,6 +398,12 @@ class NSURLSessionTests {
 public:
     BEGIN_TEST_CLASS(NSURLSessionTests)
     TEST_CLASS_PROPERTY(L"UAP:AppXManifest", L"NSURL.AppxManifest.xml")
+
+// Disable tests on ARM as it tries to hit a real endpoint and download significant data
+// and arm machines may not have a stable ethernet connection like a build server does.
+#ifdef _M_ARM
+    TEST_CLASS_PROPERTY(L"Ignore", L"true")
+#endif
     END_TEST_CLASS()
 
     TEST_CLASS_SETUP(NSURLClassSetup) {
@@ -674,14 +680,6 @@ public:
      * Test to verify a download task call can be successfully made without a completion handler
      */
     TEST_METHOD(DownloadTaskWithURL) {
-// Disable Test on ARM as it tries to hit a real endpoint and download significant data
-// and arm machines may not have a stable ethernet connection like a build server does.
-#ifdef _M_ARM
-        BEGIN_TEST_METHOD_PROPERTIES()
-        TEST_METHOD_PROPERTY(L"ignore", L"true")
-        END_TEST_METHOD_PROPERTIES()
-#endif
-
         NSURLSessionDownloadTaskTestHelper* downloadTaskTestHelper = [[NSURLSessionDownloadTaskTestHelper alloc] init];
         NSURLSession* session = [downloadTaskTestHelper createSession];
         NSURL* url = [NSURL URLWithString:@"http://speedtest.sea01.softlayer.com/downloads/test10.zip"];
@@ -763,13 +761,6 @@ public:
      * Test to verify a download task call can be successfully made with a completion handler
      */
     TEST_METHOD(DownloadTaskWithURL_WithCompletionHandler) {
-// Disable Test on ARM as it tries to hit a real endpoint and download significant data
-// and arm machines may not have a stable ethernet connection like a build server does.
-#ifdef _M_ARM
-        BEGIN_TEST_METHOD_PROPERTIES()
-        TEST_METHOD_PROPERTY(L"ignore", L"true")
-        END_TEST_METHOD_PROPERTIES()
-#endif
         __block THBooleanCondition* condition = [[THBooleanCondition alloc] init];
         __block NSURLResponse* downloadResponse;
         __block NSURL* downloadLocation;
