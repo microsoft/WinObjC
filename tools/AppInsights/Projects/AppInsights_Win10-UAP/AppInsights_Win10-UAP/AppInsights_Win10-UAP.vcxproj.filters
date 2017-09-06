@@ -174,9 +174,6 @@
     <ClInclude Include="..\..\..\src\core\common\Utils.h">
       <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\src\core\contracts\shared\Nullable.h">
-      <Filter>Contracts\Shared</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\src\core\contracts\Application.h">
       <Filter>Contracts</Filter>
     </ClInclude>
@@ -289,5 +286,8 @@
     <ClInclude Include="..\..\..\src\core\common\Serializer.h">
       <Filter>Common</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Project.json" />
   </ItemGroup>
 </Project>

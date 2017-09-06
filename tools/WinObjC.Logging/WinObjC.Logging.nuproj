@@ -42,17 +42,16 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'" />
   <Import Project="WinObjC.Logging.Packaging.props" />
   <ItemGroup>
-    <None Include="project.json" />
     <None Include="WinObjC.Logging.Packaging.props" />
     <None Include="WinObjC.Logging.Packaging.targets" />
     <None Include="WinObjC.Logging.props" />
     <None Include="WinObjC.Logging.targets" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Readme.txt">
+    <PackageFile Include="Readme.txt">
       <IncludeInPackage>true</IncludeInPackage>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    </PackageFile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Logging\dll\Logging.vcxproj" />

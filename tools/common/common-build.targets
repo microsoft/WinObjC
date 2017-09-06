@@ -21,12 +21,13 @@
       <_ImportLibraryFileNames Include="@(Link -> '%(ImportLibrary)')">
       </_ImportLibraryFileNames>
       
-      <_BuiltProjectOutputGroupOutput Include="@(BuiltProjectOutputGroupOutput -> '%(FinalOutputPath)')" />
-      <PackageFile Include="@(_BuiltProjectOutputGroupOutput)" Condition="Exists('%(FullPath)')">
+      <!-- EXPLORATORY DIFF to reduce input duplication suspected to be the cause of duplicate file errors -->
+      <_IWBuiltProjectOutputGroupOutput Include="@(BuiltProjectOutputGroupOutput -> '%(FinalOutputPath)')" />
+      <PackageFile Include="@(_IWBuiltProjectOutputGroupOutput->Distinct())" Condition="Exists('%(FullPath)')">
         <PackagePath>$(PackageContentBasePath)\%(Filename)%(Extension)</PackagePath>
       </PackageFile>
       
-      <PackageFile Include="@(_ImportLibraryFileNames->Distinct())" Condition="Exists('%(FullPath)')">
+      <PackageFile Include="@(_ImportLibraryFileNames -> '%(FullPath)')" Condition="Exists('%(FullPath)')">
         <PackagePath>$(PackageContentBasePath)\%(Filename)%(Extension)</PackagePath>
       </PackageFile>
 

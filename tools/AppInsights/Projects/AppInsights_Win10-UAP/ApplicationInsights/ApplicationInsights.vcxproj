@@ -25,6 +25,8 @@
     <RootNamespace>ApplicationInsights</RootNamespace>
     <IncludeOutputsInPackage>false</IncludeOutputsInPackage>
     <IncludeContentInPackage>false</IncludeContentInPackage>
+    <WindowsTargetPlatformVersion>10.0.15063.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformMinVersion>10.0.15063.0</WindowsTargetPlatformMinVersion>
   </PropertyGroup>
   <PropertyGroup>
     <ConfigurationType>DynamicLibrary</ConfigurationType>
@@ -37,7 +39,7 @@
       <CompileAsWinRT>true</CompileAsWinRT>
     </ClCompile>
     <Link>
-      <GenerateWindowsMetadata>true</GenerateWindowsMetadata> 
+      <GenerateWindowsMetadata>true</GenerateWindowsMetadata>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">

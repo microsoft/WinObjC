@@ -1,6 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|ARM">
       <Configuration>Debug</Configuration>
@@ -18,13 +17,11 @@
       <Configuration>Release</Configuration>
       <Platform>Win32</Platform>
     </ProjectConfiguration>
-  </ItemGroup>  
-
+  </ItemGroup>
   <PropertyGroup Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
   </PropertyGroup>
   <Import Project="$(MSBuildThisFileDirectory)..\..\common\common-build.props" />
-
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)UTSName.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)mach.cpp" />
@@ -48,6 +45,8 @@
     <AppContainerApplication>true</AppContainerApplication>
     <WOCStdLibBasePath>..\..\..</WOCStdLibBasePath>
     <OutputName>WOCStdLibLib</OutputName>
+    <WindowsTargetPlatformVersion>10.0.15063.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformMinVersion>10.0.15063.0</WindowsTargetPlatformMinVersion>
   </PropertyGroup>
   <ItemDefinitionGroup>
     <ClCompile>

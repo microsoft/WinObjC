@@ -28,8 +28,8 @@
     <ApplicationTypeRevision>10.0</ApplicationTypeRevision>
     <ConvergedProjectType>CodeSharingDll</ConvergedProjectType>
     <OutputName>libdispatch</OutputName>
-    <WindowsTargetPlatformVersion>10.0.14393.0</WindowsTargetPlatformVersion>
-    <WindowsTargetPlatformMinVersion>10.0.10240.0</WindowsTargetPlatformMinVersion>
+    <WindowsTargetPlatformVersion>10.0.15063.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformMinVersion>10.0.15063.0</WindowsTargetPlatformMinVersion>
     <WINOBJC_SDK_ROOT>..\..\..\..</WINOBJC_SDK_ROOT>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -37,27 +37,27 @@
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
@@ -74,39 +74,23 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <OutDir>$(SolutionDir)bin\$(Platform)\$(TargetOsAndVersion)\$(Configuration)\</OutDir>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
-    <OutDir>$(SolutionDir)bin\$(Platform)\$(TargetOsAndVersion)\$(Configuration)\</OutDir>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <IntDir>$(SolutionDir)obj\$(Platform)\$(TargetOsAndVersion)\$(Configuration)\</IntDir>
     <IncludePath>.;$(IncludePath)</IncludePath>
-    
     <TargetName>libdispatch</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
     <IntDir>$(SolutionDir)obj\$(Platform)\$(TargetOsAndVersion)\$(Configuration)\</IntDir>
     <IncludePath>.;$(IncludePath)</IncludePath>
-    
     <TargetName>libdispatch</TargetName>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <OutDir>$(SolutionDir)bin\$(Platform)\$(TargetOsAndVersion)\$(Configuration)\</OutDir>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">
-    <OutDir>$(SolutionDir)bin\$(Platform)\$(TargetOsAndVersion)\$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <IntDir>$(SolutionDir)obj\$(Platform)\$(TargetOsAndVersion)\$(Configuration)\</IntDir>
     <IncludePath>.;$(IncludePath)</IncludePath>
-    
     <TargetName>libdispatch</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">
     <IntDir>$(SolutionDir)obj\$(Platform)\$(TargetOsAndVersion)\$(Configuration)\</IntDir>
     <IncludePath>.;$(IncludePath)</IncludePath>
-    
     <TargetName>libdispatch</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -125,8 +109,8 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <LargeAddressAware>true</LargeAddressAware>
       <ImageHasSafeExceptionHandlers>true</ImageHasSafeExceptionHandlers>
-      <AdditionalDependencies>libobjc2.lib;mincore.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>"$(WINOBJC_SDK_ROOT)\build\$(Platform)\$(Configuration)\Universal Windows"</AdditionalLibraryDirectories>
+      <AdditionalDependencies>libobjc2.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>"$(WINOBJC_SDK_ROOT)\tools\deps\prebuilt\Universal Windows\x86\Debug\"</AdditionalLibraryDirectories>
     </Link>
     <ClangCompile>
       <UserIncludePaths>..</UserIncludePaths>
@@ -149,8 +133,8 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <LargeAddressAware>true</LargeAddressAware>
-      <AdditionalDependencies>libobjc2.lib;mincore.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>"$(WINOBJC_SDK_ROOT)\build\$(Platform)\$(Configuration)\Universal Windows"</AdditionalLibraryDirectories>
+      <AdditionalDependencies>libobjc2.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>"$(WINOBJC_SDK_ROOT)\tools\deps\prebuilt\Universal Windows\ARM\Debug\"</AdditionalLibraryDirectories>
     </Link>
     <ClangCompile>
       <UserIncludePaths>..</UserIncludePaths>
@@ -179,8 +163,8 @@
       <OptimizeReferences>true</OptimizeReferences>
       <LargeAddressAware>true</LargeAddressAware>
       <ImageHasSafeExceptionHandlers>true</ImageHasSafeExceptionHandlers>
-      <AdditionalDependencies>libobjc2.lib;mincore.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>"$(WINOBJC_SDK_ROOT)\build\$(Platform)\$(Configuration)\Universal Windows"</AdditionalLibraryDirectories>
+      <AdditionalDependencies>libobjc2.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>"$(WINOBJC_SDK_ROOT)\tools\deps\prebuilt\Universal Windows\x86\Release\"</AdditionalLibraryDirectories>
     </Link>
     <ClangCompile>
       <UserIncludePaths>..</UserIncludePaths>
@@ -209,8 +193,8 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <LargeAddressAware>true</LargeAddressAware>
-      <AdditionalDependencies>libobjc2.lib;mincore.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>"$(WINOBJC_SDK_ROOT)\build\$(Platform)\$(Configuration)\Universal Windows"</AdditionalLibraryDirectories>
+      <AdditionalDependencies>libobjc2.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>"$(WINOBJC_SDK_ROOT)\tools\deps\prebuilt\Universal Windows\ARM\Release\"</AdditionalLibraryDirectories>
     </Link>
     <ClangCompile>
       <UserIncludePaths>..</UserIncludePaths>
@@ -219,6 +203,20 @@
       <OptimizationLevel>Full</OptimizationLevel>
     </ClangCompile>
   </ItemDefinitionGroup>
+  <ItemGroup>
+      <ClInclude Include="..\dispatch\atomic.h" />
+      <ClInclude Include="..\dispatch\base.h" />
+      <ClInclude Include="..\dispatch\benchmark.h" />
+      <ClInclude Include="..\dispatch\dispatch.h" />
+      <ClInclude Include="..\dispatch\group.h" />
+      <ClInclude Include="..\dispatch\interop.h" />
+      <ClInclude Include="..\dispatch\object.h" />
+      <ClInclude Include="..\dispatch\once.h" />
+      <ClInclude Include="..\dispatch\queue.h" />
+      <ClInclude Include="..\dispatch\semaphore.h" />
+      <ClInclude Include="..\dispatch\source.h" />
+      <ClInclude Include="..\dispatch\time.h" />
+  </ItemGroup>
   <ItemGroup>
     <ClangCompile Include="..\platform\windows\libkern\OSAtomic.c" />
     <ClangCompile Include="..\platform\windows\platform.c" />
@@ -237,6 +235,7 @@
     <ClangCompile Include="..\src\source.c" />
     <ClangCompile Include="..\src\source_kevent.c" />
     <ClangCompile Include="..\src\time.c" />
+    <ClCompile Include="..\platform\windows\pthread.c" />
     <ClCompile Include="..\platform\windows\pthread_workqueue_winrt.cpp" />
     <ClangCompile Include="..\src\apply.c" />
     <ClangCompile Include="..\src\benchmark.c" />
@@ -249,19 +248,14 @@
     <ClangCompile Include="..\src\shims\mach.c" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
-
   <PropertyGroup>
     <PrebuiltPath Condition="'$(PrebuiltPath)' == ''">$(WINOBJC_SDK_ROOT)\deps\prebuilt\Universal Windows\$(PlatformTarget)\$(Configuration)\\</PrebuiltPath>
   </PropertyGroup>
-  <Target Name="CopyContent" AfterTargets="Build">
-    <ItemGroup>
-      <LibraryOutput Include="$(OutDir)\*.lib" />
-      <LibraryOutput Include="$(OutDir)\*.dll" />
-      <LibraryOutput Include="$(OutDir)\*.pdb" />
-      <Headers Include="..\dispatch\*.h" />
-      <Headers Include="..\src\*.h" />
-    </ItemGroup>
-    <Copy DestinationFolder="$(PrebuiltPath)" SkipUnchangedFiles="True" SourceFiles="@(LibraryOutput)" />
-    <Copy DestinationFolder="$(WINOBJC_SDK_ROOT)\deps\prebuilt\include\dispatch\\" SkipUnchangedFiles="True" SourceFiles="@(Headers)" />
-  </Target>
+    <Target Name="AddBuiltOutput" BeforeTargets="GetPackageContents">
+        <ItemGroup>
+            <PackageFile Include="@(BuiltProjectOutputGroupOutput -> '%(FinalOutputPath)')">
+                <PackagePath>build\bin\%(TargetPath)</PackagePath>
+            </PackageFile>
+        </ItemGroup>
+    </Target>
 </Project>

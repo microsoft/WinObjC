@@ -16,10 +16,10 @@
 
 #pragma once
 
+#include <cor.h>
 #include <Windows.h>
 #include <string>
 #include <memory>
-#include <cor.h>
 #include <wrl/def.h>
 #include <wrl/client.h>
 #include <atlbase.h>

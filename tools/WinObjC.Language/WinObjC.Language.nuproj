@@ -58,16 +58,14 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'" />
   <ItemGroup>
-    <None Include="project.json" />
     <None Include="WinObjC.Language.Packaging.targets" />
     <None Include="WinObjC.Language.props" />
     <None Include="WinObjC.Language.targets" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Readme.txt">
-      <IncludeInPackage>true</IncludeInPackage>
+    <PackageFile Include="Readme.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    </PackageFile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\AssetCatalogBuilder\AssetCatalogBuilder.csproj" />

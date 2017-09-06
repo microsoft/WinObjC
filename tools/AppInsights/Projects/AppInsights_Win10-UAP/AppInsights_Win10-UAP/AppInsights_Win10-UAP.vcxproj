@@ -25,6 +25,8 @@
     <RootNamespace>AppInsights_Win10_UAP</RootNamespace>
     <IncludeOutputsInPackage>false</IncludeOutputsInPackage>
     <IncludeContentInPackage>false</IncludeContentInPackage>
+    <WindowsTargetPlatformVersion>10.0.15063.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformMinVersion>10.0.15063.0</WindowsTargetPlatformMinVersion>
   </PropertyGroup>
   <PropertyGroup>
     <ConfigurationType>DynamicLibrary</ConfigurationType>
@@ -40,7 +42,7 @@
   <PropertyGroup>
     <GenerateManifest>false</GenerateManifest>
     <IgnoreImportLibrary>false</IgnoreImportLibrary>
-  </PropertyGroup> 
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>

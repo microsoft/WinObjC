@@ -18,6 +18,8 @@
  * @APPLE_APACHE_LICENSE_HEADER_END@
  */
 
+#pragma once
+
 #ifndef __DISPATCH_PUBLIC__
 #define __DISPATCH_PUBLIC__
 

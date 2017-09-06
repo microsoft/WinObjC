@@ -9,8 +9,10 @@
     <WindowsTargetPlatformVersion Condition="'$(WindowsTargetPlatformVersion)'==''">10.0.14393.0</WindowsTargetPlatformVersion>
     <WindowsTargetPlatformMinVersion Condition="'$(WindowsTargetPlatformMinVersion)'==''">10.0.10586.0</WindowsTargetPlatformMinVersion>
     <EnableDotNetNativeCompatibleProfile Condition="'$(EnableDotNetNativeCompatibleProfile)'==''">true</EnableDotNetNativeCompatibleProfile>
+    <InferPackageContents>false</InferPackageContents> <!-- DH: Exploratory fix for Nugetizer-3000 0.2.0 changes that cause DUPLICATE FILE errors. -->
     <IncludeOutputsInPackage>false</IncludeOutputsInPackage>
     <IncludeFrameworkReferencesInPackage>false</IncludeFrameworkReferencesInPackage>
+    <IncludeProjectReferencesInPackage>true</IncludeProjectReferencesInPackage> <!-- DH: Exploratory fix for Nugetizer-3000 0.2.0 changes that cause PACKAGES TO BE MISSING IMPORTANT FILES. -->
     <Platform Condition="'$(Platform)' == ''">Win32</Platform>
     <Configuration Condition="'$(Configuration)' == ''">Release</Configuration>
     <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\$(TargetOsAndVersion)\</OutDir>

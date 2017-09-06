@@ -17,25 +17,25 @@
   <PropertyGroup Label="Globals">
     <OutputPath>$(SolutionDir)\OutputPackages\$(Configuration)\</OutputPath>
     <ProjectGuid>ddc2aa5f-c8ae-48cb-adb7-9278985c3db7</ProjectGuid>
+    <SkipGetPackageContentsForOtherPlatforms>true</SkipGetPackageContentsForOtherPlatforms>
   </PropertyGroup>
   <PropertyGroup Label="Configuration" />
   <ItemGroup>
-    <None Include="Package.Default.props" />
-    <None Include="Package.Default.targets" />
-    <None Include="Package.props" />
-    <None Include="Package.targets" />
-    <None Include="WinObjC.Packager.props" />
-    <None Include="WinObjC.Packager.targets" />
-    <None Include="WinObjC.Packageable.props" />
-    <None Include="WinObjC.Packageable.targets" />
-    <None Include="project.json" />
-    <None Include="ImportedByThisProj.targets" />
-    <None Include="ImportedByThisProj.props" />
-    <None Include="ImportedByAnyDependent.targets" />
-    <None Include="ImportedByAnyDependent.props" />
-    <None Include="Readme.txt">
+    <PackageFile Include="Package.Default.props" />
+    <PackageFile Include="Package.Default.targets" />
+    <PackageFile Include="Package.props" />
+    <PackageFile Include="Package.targets" />
+    <PackageFile Include="WinObjC.Packager.props" />
+    <PackageFile Include="WinObjC.Packager.targets" />
+    <PackageFile Include="WinObjC.Packageable.props" />
+    <PackageFile Include="WinObjC.Packageable.targets" />
+    <PackageFile Include="ImportedByThisProj.targets" />
+    <PackageFile Include="ImportedByThisProj.props" />
+    <PackageFile Include="ImportedByAnyDependent.targets" />
+    <PackageFile Include="ImportedByAnyDependent.props" />
+    <PackageFile Include="Readme.txt">
       <IncludeInPackage>true</IncludeInPackage>
-    </None>
+    </PackageFile>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.Common.targets" />
   <Import Project="$(NuGetAuthoringPath)\NuGet.Packaging.Authoring.targets" Condition="Exists('$(NuGetAuthoringPath)\NuGet.Packaging.Authoring.targets')" />

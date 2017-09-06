@@ -70,4 +70,7 @@
       <Filter>Tests</Filter>
     </ClInclude>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="project.json" />
+  </ItemGroup>
 </Project>

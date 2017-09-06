@@ -34,16 +34,14 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x86'" />
   <ItemGroup>
-    <None Include="project.json" />
     <None Include="WinObjC.Tools.targets" />
     <None Include="tools\**\*.*" />
     <None Include="vsimporter-templates\**\*.*" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Readme.txt">
-      <IncludeInPackage>true</IncludeInPackage>
+    <PackageFile Include="Readme.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    </PackageFile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\vsimporter\vsimporter.vcxproj" />
