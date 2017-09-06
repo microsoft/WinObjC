@@ -16,4 +16,7 @@
     <ClInclude Include="PageTracking.h" />
     <ClInclude Include="TelemetryClient.h" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Project.json" />
+  </ItemGroup>
 </Project>

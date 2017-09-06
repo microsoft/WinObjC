@@ -25,7 +25,7 @@
   <ItemGroup>
     <PackageFile Include="NuGet.Build.Packaging">
       <Kind>Dependency</Kind>
-      <Version>0.1.186</Version>
+      <Version>0.2.0</Version>
     </PackageFile>
   </ItemGroup>
 </Project>

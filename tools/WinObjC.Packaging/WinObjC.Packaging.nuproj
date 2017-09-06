@@ -17,25 +17,54 @@
   <PropertyGroup Label="Globals">
     <OutputPath>$(SolutionDir)\OutputPackages\$(Configuration)\</OutputPath>
     <ProjectGuid>ddc2aa5f-c8ae-48cb-adb7-9278985c3db7</ProjectGuid>
+    <SkipGetPackageContentsForOtherPlatforms>true</SkipGetPackageContentsForOtherPlatforms>
+    <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
+    <TargetFramework>netstandard1.0</TargetFramework>
+    <PackageTargetFallback>net11;net20;net35;net40;net403;net45;net451;net452;net46;net461;net462;net47;netcore;netcore45;netcore451;netcore50;win8;win81;win10;sl4;sl5;wp;wp7;wp75;wp8;wp81;wpa81;uap;uap10;netstandard1.0;netstandard1.1;netstandard1.2;netstandard1.3;netstandard1.4;netstandard1.5;netstandard1.6;netstandard2.0;netcoreapp1.0;netcoreapp2.0;monoandroid;monotouch;monomac;xamarinios;xamarinmac;xamarinpsthree;xamarinpsfour;xamarinpsvita;xamarinwatchos;xamarintvos;xamarinxboxthreesixty;xamarinxboxone</PackageTargetFallback>
   </PropertyGroup>
   <PropertyGroup Label="Configuration" />
   <ItemGroup>
-    <None Include="Package.Default.props" />
-    <None Include="Package.Default.targets" />
-    <None Include="Package.props" />
-    <None Include="Package.targets" />
-    <None Include="WinObjC.Packager.props" />
-    <None Include="WinObjC.Packager.targets" />
-    <None Include="WinObjC.Packageable.props" />
-    <None Include="WinObjC.Packageable.targets" />
-    <None Include="project.json" />
+    <None Include="Package.Default.props" >
+      <IncludeInPackage>true</IncludeInPackage>
+    </None>
+    <None Include="Package.Default.targets" >
+      <IncludeInPackage>true</IncludeInPackage>
+    </None>
+    <None Include="Package.props" >
+      <IncludeInPackage>true</IncludeInPackage>
+    </None>
+    <None Include="Package.targets" >
+      <IncludeInPackage>true</IncludeInPackage>
+    </None>
+    <None Include="WinObjC.Packager.props" >
+      <IncludeInPackage>true</IncludeInPackage>
+    </None>
+    <None Include="WinObjC.Packager.targets" >
+      <IncludeInPackage>true</IncludeInPackage>
+    </None>
+    <None Include="WinObjC.Packageable.props" >
+      <IncludeInPackage>true</IncludeInPackage>
+    </None>
+    <None Include="WinObjC.Packageable.targets" >
+      <IncludeInPackage>true</IncludeInPackage>
+    </None>
     <None Include="ImportedByThisProj.targets" />
     <None Include="ImportedByThisProj.props" />
-    <None Include="ImportedByAnyDependent.targets" />
-    <None Include="ImportedByAnyDependent.props" />
+    <None Include="ImportedByAnyDependent.targets" >
+      <IncludeInPackage>true</IncludeInPackage>
+    </None>
+    <None Include="ImportedByAnyDependent.props" >
+      <IncludeInPackage>true</IncludeInPackage>
+    </None>
     <None Include="Readme.txt">
       <IncludeInPackage>true</IncludeInPackage>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="NuGet.Build.Packaging">
+      <Version>0.2.0</Version>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.Common.targets" />
   <Import Project="$(NuGetAuthoringPath)\NuGet.Packaging.Authoring.targets" Condition="Exists('$(NuGetAuthoringPath)\NuGet.Packaging.Authoring.targets')" />
