@@ -23,6 +23,6 @@
   <ItemGroup>
     <PackageReference Include="WinObjC.Language" Version="*" />
     <PackageReference Include="Taef.Redist.Wlk" Version="1.0.170206001-nativeTargets" />
-    <PackageReference Include="cppwinrt" Version="*" />
+    <PackageReference Include="cppwinrt" Version="2017.4.6.1" />
   </ItemGroup>
 </Project>
