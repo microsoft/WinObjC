@@ -34,7 +34,7 @@ To use the bridge you'll need:
 - **Visual Studio 2017** with Windows developer tools. Visual Studio 2017 Community is available for free [here](https://dev.windows.com/downloads).
 
   
-   Ensure the following individual components are selected during installation. Selecting the Universal Windows Platform development workflow should give most of the below 
+   Ensure the following individual components are selected during installation. Selecting the Universal Windows Platform development workflow should give most of the below: 
    
    **NOTE:** Please also install the **Mobile development with .NET** workflow option (Xamarin Tools) due to a bug in Nugetizer (See [Issue 5026](https://github.com/NuGet/Home/issues/5026))
 
@@ -59,7 +59,7 @@ To use the bridge you'll need:
 </p></details>
 
 To get started with an existing Xcode Project, you will also need:
-- **Chocolatey**, a package manager for windows. See how to install the latest version [here](https://chocolatey.org/)
+- **Chocolatey**, a package manager for Windows. See how to install the latest version [here](https://chocolatey.org/)
 - **winobjc-tools**, the command line tools for WinObjC. Run the below command from **powershell (Admin)** to get the latest version:
 ```
 choco upgrade winobjc-tools
@@ -70,7 +70,7 @@ choco upgrade winobjc-tools
 ### Importing your Xcode Project
 When using the bridge, the first thing you'll want to do is generate a Visual Studio solution from your Xcode project:
 
-1. Open Windows PowerShell (type **powershell** in the Start Menu to find it) and navigate to your Xcode project directory using the **cd** command. Note: use the directory containing your .workspace or .xcodeproj folder.
+1. Open Windows PowerShell (type **powershell** in the Start Menu to find it) and navigate to your Xcode project directory using the **cd** command. Note: use the directory containing your `.workspace` or `.xcodeproj folder.
 
   ```
     C:\> cd C:\MyProject
@@ -109,7 +109,7 @@ The following resources will help you get started. For more information, check o
 1. [Wiki](https://github.com/Microsoft/WinObjC/wiki), for documentation and tutorials
 2. [Development Roadmap](https://github.com/Microsoft/WinObjC/wiki/Roadmap), detailing our highest priorities
 3. [App Analysis Tool](https://developer.microsoft.com/en-us/windows/bridges/ios/app-analyzer-tool), to evaluate the compatibility of your app with the bridge
-4. [Website on Windows Dev Center](https://dev.windows.com/bridges/ios), for evaluation virtual machines
+4. [Website on Windows Dev Center](https://dev.windows.com/bridges/ios), for evaluation of virtual machines
 5. [Quick Start Challenge](https://github.com/Microsoft/WinObjC/wiki/Quick-Start-Tutorial), for a quick hands-on introduction to the bridge
 7. [FAQ](https://github.com/Microsoft/WinObjC/wiki/FAQ), with common questions and issues
 8. [The iOS Bridge Samples Repo](https://github.com/Microsoft/WinObjC-Samples), for sample apps and code using the bridge
@@ -120,7 +120,7 @@ There are many ways to contribute to the Windows Bridge for iOS:
 - Review source code changes.
 - Submit a bug fix or feature implementation via [pull request](https://github.com/Microsoft/WinObjC/pulls).
 - Follow [@WindowsDev on Twitter](https://twitter.com/windowsdev) and join the discussion using the [#WinObjC hashtag](https://twitter.com/hashtag/WinObjC).
-- Engage with other users and developers on [StackOverflow](http://stackoverflow.com/) and tag your questions with [WinObjC](http://stackoverflow.com/questions/tagged/winobjc).
+- Engage with other users and developers on [StackOverflow](https://stackoverflow.com/) and tag your questions with [WinObjC](https://stackoverflow.com/questions/tagged/winobjc).
 
 See our [contribution guidance in the wiki](https://github.com/Microsoft/WinObjC/wiki/How-to-Contribute) for more details on how to contribute to the project.
 
