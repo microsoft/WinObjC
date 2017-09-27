@@ -17,7 +17,6 @@
  * 
  * @APPLE_APACHE_LICENSE_HEADER_END@
  */
-#pragma once
 
 #ifndef __DISPATCH_SOURCE__
 #define __DISPATCH_SOURCE__
