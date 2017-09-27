@@ -21,13 +21,8 @@
       <_ImportLibraryFileNames Include="@(Link -> '%(ImportLibrary)')">
       </_ImportLibraryFileNames>
 
-      <_IWBuiltProjectOutputGroupOutput Include="@(BuiltProjectOutputGroupOutput -> '%(FinalOutputPath)')" />
-      <PackageFile Include="@(_IWBuiltProjectOutputGroupOutput->Distinct())" Condition="Exists('%(FullPath)')">
-        <PackagePath>$(PackageContentBasePath)\%(Filename)%(Extension)</PackagePath>
-      </PackageFile>
-
       <_IWImportLibraryPackageFiles Include="@(_ImportLibraryFileNames->Distinct())" Condition="Exists('%(FullPath)')" />
-      <PackageFile Include="@(_IWImportLibraryPackageFiles->'%(FullPath)'))">
+      <PackageFile Include="@(_IWImportLibraryPackageFiles -> '%(FullPath)')">
         <PackagePath>$(PackageContentBasePath)\%(Filename)%(Extension)</PackagePath>
       </PackageFile>
 

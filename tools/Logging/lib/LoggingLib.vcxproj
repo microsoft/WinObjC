@@ -38,7 +38,7 @@
     <AppContainerApplication>true</AppContainerApplication>
     <OutputName>LoggingLib</OutputName>
     <WindowsTargetPlatformVersion>10.0.15063.0</WindowsTargetPlatformVersion>
-    <WindowsTargetPlatformMinVersion>10.0.15063.0</WindowsTargetPlatformMinVersion>
+    <WindowsTargetPlatformMinVersion>10.0.14393.0</WindowsTargetPlatformMinVersion>
   </PropertyGroup>
   <ItemDefinitionGroup>
     <ClCompile>

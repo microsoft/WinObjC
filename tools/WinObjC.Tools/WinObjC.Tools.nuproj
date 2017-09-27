@@ -39,7 +39,8 @@
     <None Include="vsimporter-templates\**\*.*" />
   </ItemGroup>
   <ItemGroup>
-    <PackageFile Include="Readme.txt">
+    <None Include="Readme.txt">
+      <IncludeInPackage>true</IncludeInPackage>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </PackageFile>
   </ItemGroup>

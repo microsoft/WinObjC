@@ -21,21 +21,41 @@
   </PropertyGroup>
   <PropertyGroup Label="Configuration" />
   <ItemGroup>
-    <PackageFile Include="Package.Default.props" />
-    <PackageFile Include="Package.Default.targets" />
-    <PackageFile Include="Package.props" />
-    <PackageFile Include="Package.targets" />
-    <PackageFile Include="WinObjC.Packager.props" />
-    <PackageFile Include="WinObjC.Packager.targets" />
-    <PackageFile Include="WinObjC.Packageable.props" />
-    <PackageFile Include="WinObjC.Packageable.targets" />
-    <PackageFile Include="ImportedByThisProj.targets" />
-    <PackageFile Include="ImportedByThisProj.props" />
-    <PackageFile Include="ImportedByAnyDependent.targets" />
-    <PackageFile Include="ImportedByAnyDependent.props" />
-    <PackageFile Include="Readme.txt">
+    <None Include="Package.Default.props" >
       <IncludeInPackage>true</IncludeInPackage>
-    </PackageFile>
+    </None>
+    <None Include="Package.Default.targets" >
+      <IncludeInPackage>true</IncludeInPackage>
+    </None>
+    <None Include="Package.props" >
+      <IncludeInPackage>true</IncludeInPackage>
+    </None>
+    <None Include="Package.targets" >
+      <IncludeInPackage>true</IncludeInPackage>
+    </None>
+    <None Include="WinObjC.Packager.props" >
+      <IncludeInPackage>true</IncludeInPackage>
+    </None>
+    <None Include="WinObjC.Packager.targets" >
+      <IncludeInPackage>true</IncludeInPackage>
+    </None>
+    <None Include="WinObjC.Packageable.props" >
+      <IncludeInPackage>true</IncludeInPackage>
+    </None>
+    <None Include="WinObjC.Packageable.targets" >
+      <IncludeInPackage>true</IncludeInPackage>
+    </None>
+    <None Include="ImportedByThisProj.targets" />
+    <None Include="ImportedByThisProj.props" />
+    <None Include="ImportedByAnyDependent.targets" >
+      <IncludeInPackage>true</IncludeInPackage>
+    </None>
+    <None Include="ImportedByAnyDependent.props" >
+      <IncludeInPackage>true</IncludeInPackage>
+    </None>
+    <None Include="Readme.txt">
+      <IncludeInPackage>true</IncludeInPackage>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.Common.targets" />
   <Import Project="$(NuGetAuthoringPath)\NuGet.Packaging.Authoring.targets" Condition="Exists('$(NuGetAuthoringPath)\NuGet.Packaging.Authoring.targets')" />

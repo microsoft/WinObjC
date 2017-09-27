@@ -48,10 +48,10 @@
     <None Include="WinObjC.Logging.targets" />
   </ItemGroup>
   <ItemGroup>
-    <PackageFile Include="Readme.txt">
+    <None Include="Readme.txt">
       <IncludeInPackage>true</IncludeInPackage>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </PackageFile>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Logging\dll\Logging.vcxproj" />
