@@ -25,8 +25,9 @@
       <PackageFile Include="@(_IWBuiltProjectOutputGroupOutput->Distinct())" Condition="Exists('%(FullPath)')">
         <PackagePath>$(PackageContentBasePath)\%(Filename)%(Extension)</PackagePath>
       </PackageFile>
-      
-      <PackageFile Include="@(_ImportLibraryFileNames->Distinct())" Condition="Exists('%(FullPath)')">
+
+      <_IWImportLibraryPackageFiles Include="@(_ImportLibraryFileNames->Distinct())" Condition="Exists('%(FullPath)')" />
+      <PackageFile Include="@(_IWImportLibraryPackageFiles->'%(FullPath)'))">
         <PackagePath>$(PackageContentBasePath)\%(Filename)%(Extension)</PackagePath>
       </PackageFile>
 

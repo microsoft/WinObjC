@@ -6,6 +6,7 @@
     <IncludeSymbolsInPackage>false</IncludeSymbolsInPackage>
     <IncludeFrameworkReferencesInPackage>false</IncludeFrameworkReferencesInPackage>
     <InferLegacyPackageReferences>false</InferLegacyPackageReferences>
+    <InferPackageContents>false</InferPackageContents>
     <NoPackageAnalysis>true</NoPackageAnalysis>
     <GetPackageContentsDependsOn>ResolveReferences;$(GetPackageContentsDependsOn)</GetPackageContentsDependsOn>
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
