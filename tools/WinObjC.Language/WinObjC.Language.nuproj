@@ -63,10 +63,10 @@
     <None Include="WinObjC.Language.targets" />
   </ItemGroup>
   <ItemGroup>
-  <None Include="Readme.txt">
-    <IncludeInPackage>true</IncludeInPackage>
-    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-  </None>
+    <None Include="Readme.txt">
+      <IncludeInPackage>true</IncludeInPackage>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\AssetCatalogBuilder\AssetCatalogBuilder.csproj" />
