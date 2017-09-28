@@ -125,8 +125,8 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <LargeAddressAware>true</LargeAddressAware>
       <ImageHasSafeExceptionHandlers>true</ImageHasSafeExceptionHandlers>
-      <AdditionalDependencies>libobjc2.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>"$(WINOBJC_SDK_ROOT)\tools\deps\prebuilt\Universal Windows\x86\Debug\"</AdditionalLibraryDirectories>
+      <AdditionalDependencies>libobjc2.lib;mincore.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>"$(WINOBJC_SDK_ROOT)\build\$(Platform)\$(Configuration)\Universal Windows"</AdditionalLibraryDirectories>
     </Link>
     <ClangCompile>
       <UserIncludePaths>..</UserIncludePaths>
@@ -149,8 +149,8 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <LargeAddressAware>true</LargeAddressAware>
-      <AdditionalDependencies>libobjc2.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>"$(WINOBJC_SDK_ROOT)\tools\deps\prebuilt\Universal Windows\ARM\Debug\"</AdditionalLibraryDirectories>
+      <AdditionalDependencies>libobjc2.lib;mincore.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>"$(WINOBJC_SDK_ROOT)\build\$(Platform)\$(Configuration)\Universal Windows"</AdditionalLibraryDirectories>
     </Link>
     <ClangCompile>
       <UserIncludePaths>..</UserIncludePaths>
@@ -179,8 +179,8 @@
       <OptimizeReferences>true</OptimizeReferences>
       <LargeAddressAware>true</LargeAddressAware>
       <ImageHasSafeExceptionHandlers>true</ImageHasSafeExceptionHandlers>
-      <AdditionalDependencies>libobjc2.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>"$(WINOBJC_SDK_ROOT)\tools\deps\prebuilt\Universal Windows\x86\Release\"</AdditionalLibraryDirectories>
+      <AdditionalDependencies>libobjc2.lib;mincore.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>"$(WINOBJC_SDK_ROOT)\build\$(Platform)\$(Configuration)\Universal Windows"</AdditionalLibraryDirectories>
     </Link>
     <ClangCompile>
       <UserIncludePaths>..</UserIncludePaths>
@@ -209,8 +209,8 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <LargeAddressAware>true</LargeAddressAware>
-      <AdditionalDependencies>libobjc2.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>"$(WINOBJC_SDK_ROOT)\tools\deps\prebuilt\Universal Windows\ARM\Release\"</AdditionalLibraryDirectories>
+      <AdditionalDependencies>libobjc2.lib;mincore.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>"$(WINOBJC_SDK_ROOT)\build\$(Platform)\$(Configuration)\Universal Windows"</AdditionalLibraryDirectories>
     </Link>
     <ClangCompile>
       <UserIncludePaths>..</UserIncludePaths>
