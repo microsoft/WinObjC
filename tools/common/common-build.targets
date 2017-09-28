@@ -9,9 +9,8 @@
     <PackageContentBasePath Condition="'$(ShouldAssignPackageContentBasePath)' == 'true'">build\lib\$(TargetOsAndVersion)\$(PlatformTarget)</PackageContentBasePath>
     <PackageContentBasePath Condition="'$(ShouldAssignPackageContentBasePath)' == 'true' and '$(HasConfigurationSpecificPackageContents)' == 'true'">$(PackageContentBasePath)\$(Configuration)</PackageContentBasePath>
   </PropertyGroup>
+  <Target Name="AddBuiltOutput" BeforeTargets="GetPackageContents"  DependsOnTargets="BuiltProjectOutputGroup;$(GetPackageContentsDependsOn)" Condition="'$(ConfigurationType)' == 'DynamicLibrary' or '$(ConfigurationType)' == 'Application'">
 
-  <Target Name="AddBuiltOutput" BeforeTargets="GetPackageContents"  DependsOnTargets="$(GetPackageContentsDependsOn)" Condition="'$(ConfigurationType)' == 'DynamicLibrary' or '$(ConfigurationType)' == 'Application'">
-    
     <ItemGroup>
       <!-- Since GetPackageContents runs in a second pass outside of the normal build, add a tmp Link item -->
       <Link Include="tmp" Condition="'@(Link)'==''">
