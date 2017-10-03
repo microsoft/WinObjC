@@ -68,23 +68,30 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
-  <ItemGroup>
+  <ItemGroup Condition="'$(Platform)' == 'AnyCPU'">
     <ProjectReference Include="..\AssetCatalogBuilder\AssetCatalogBuilder.csproj" />
     <ProjectReference Include="..\ClangCompileTask\ClangCompile.csproj" />
     <ProjectReference Include="..\PropSchemaGen\PropSchemaGen.csproj" />
-    <ProjectReference Include="..\vsimporter\hmapmaker\hmapmaker.vcxproj" />
-    <ProjectReference Include="..\vsimporter\sb-expandvars\sb-expandvars.vcxproj" />
-    <ProjectReference Include="..\vsimporter\xib2nib\xib2nib.vcxproj" />
-    <ProjectReference Include="..\WOCStdLib\dll\WOCStdLib.vcxproj" />
+    <ProjectReference Include="..\vsimporter\hmapmaker\hmapmaker.vcxproj">
+      <Pack>true</Pack>
+    </ProjectReference>
+    <ProjectReference Include="..\vsimporter\sb-expandvars\sb-expandvars.vcxproj" >
+      <Pack>true</Pack>
+    </ProjectReference>
+    <ProjectReference Include="..\vsimporter\xib2nib\xib2nib.vcxproj" >
+      <Pack>true</Pack>
+    </ProjectReference>
     <ProjectReference Include="..\xib2xaml\xamltools\xamltools.csproj" />
     <ProjectReference Include="..\xib2xaml\xib2xaml\xib2xaml.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+      <ProjectReference Include="..\WOCStdLib\dll\WOCStdLib.vcxproj" />
+  </ItemGroup>
   <!-- NuProj Project References. Ensure that these only get evaluated once by checking that this isn't the second time through this project -->
   <ItemGroup Condition="'$(SkipGetPackageContentsForOtherPlatforms)' != 'true'">
     <ProjectReference Include="..\WinObjC.Logging\WinObjC.Logging.nuproj" />
   </ItemGroup>
-
   <Import Project="$(MSBuildToolsPath)\Microsoft.Common.targets" />
   <Import Project="$(NuGetAuthoringPath)\NuGet.Packaging.Authoring.targets" Condition="Exists('$(NuGetAuthoringPath)\NuGet.Packaging.Authoring.targets')" />
   <Import Project="WinObjC.Language.Packaging.targets" />
