@@ -76,6 +76,12 @@ UINT dispatch_get_thread_window_message(void);
 DISPATCH_EXPORT DISPATCH_NOTHROW
 UINT dispatch_get_main_window_message(void);
 
+DISPATCH_EXPORT
+void *(*_dispatch_begin_NSAutoReleasePool)(void);
+
+DISPATCH_EXPORT
+void(*_dispatch_end_NSAutoReleasePool)(void *);
+
 #else
 #if HAVE_MACH
 #define DISPATCH_COCOA_COMPAT 1
