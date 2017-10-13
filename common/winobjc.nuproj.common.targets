@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
+  <!-- 
+    The purpose of this target is to disable the Pack flag when we ourselves are attempting to create a nuget package with the AnyCPU build configuration.
+    Due to the recursive nature of building for AnyCPU, we must inform the nugetizer build that we do not need to pack any duplicate files again.
+    The project references that do not explicitly have the <Pack> metadata must be modified to have it or else the nugetizer calls to these projects will fail.
+    For this reason we must modify the project references before nugetizer depends on them to have the proper metadata.
+  -->
   <Target Name="DisableVcxprojPack" BeforeTargets="BeforeResolveReferences" Condition="'$(SkipGetPackageContentsForOtherPlatforms)' != 'true' AND '$(Platform)' == 'AnyCPU'">
     <ItemGroup>
       <_ProjectReferencesWithPack Include="@(ProjectReference->HasMetadata('Pack'))" />

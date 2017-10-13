@@ -20,6 +20,7 @@
     <IsPackable Condition="'$(SkipGetPackageContentsForOtherPlatforms)' == 'true'">false</IsPackable>
   </PropertyGroup>
 
+  <!-- Note, this package reference may not work on MSBuild invocations. Refer to Nugetizer issue NuGet/Home#5071 -->
   <ItemGroup>
     <PackageReference Include="NuGet.Build.Packaging">
       <Version>0.2.0</Version>
