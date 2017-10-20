@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|ARM">
@@ -75,7 +75,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
     <PackageCertificateKeyFile>CGCatalog_TemporaryKey.pfx</PackageCertificateKeyFile>
-    <PackageCertificateThumbprint>6299F65BD680571BC87B7C2DB1A951BA18256BE5</PackageCertificateThumbprint>
+    <PackageCertificateThumbprint>D095ED4071F7A0D93085697ECF15F78E76342CCF</PackageCertificateThumbprint>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -305,6 +305,7 @@
   <ItemGroup />
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />
+
   <!-- Begin NuGet Section -->
   <PropertyGroup>
     <TargetFramework>uap10.0</TargetFramework>
@@ -317,5 +318,6 @@
     <PackageReference Include="WinObjC.Logging" Version="*" />
   </ItemGroup>
   <!-- End NuGet Section -->
-  <Import Project="$(MSBuildThisFileDirectory)\..\..\..\..\..\common\winobjc.packagereference.override.targets" Condition="Exists('$(MSBuildThisFileDirectory)\..\..\..\..\..\common\winobjc.packagereference.override.targets')" />
+  
+  <Import Project="$(MSBuildThisFileDirectory)\..\..\..\..\..\common\winobjc.packagereference.override.targets" Condition="Exists('$(MSBuildThisFileDirectory)\..\..\..\..\..\common\winobjc.packagereference.override.targets')"/>
 </Project>

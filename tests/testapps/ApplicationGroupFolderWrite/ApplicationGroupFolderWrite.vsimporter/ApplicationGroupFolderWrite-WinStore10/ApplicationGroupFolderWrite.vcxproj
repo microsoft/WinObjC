@@ -75,7 +75,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
     <PackageCertificateKeyFile>ApplicationGroupFolderWrite_TemporaryKey.pfx</PackageCertificateKeyFile>
-    <PackageCertificateThumbprint>B7149F9633B1943C7AAE77E3C90A74F41309AF24</PackageCertificateThumbprint>
+    <PackageCertificateThumbprint>D095ED4071F7A0D93085697ECF15F78E76342CCF</PackageCertificateThumbprint>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -235,5 +235,6 @@
     <PackageReference Include="WinObjC.Logging" Version="*" />
   </ItemGroup>
   <!-- End NuGet Section -->
-  <Import Project="$(MSBuildThisFileDirectory)\..\..\..\..\..\common\winobjc.packagereference.override.targets" Condition="Exists('$(MSBuildThisFileDirectory)\..\..\..\..\..\common\winobjc.packagereference.override.targets')" />
+
+  <Import Project="$(MSBuildThisFileDirectory)\..\..\..\..\..\common\winobjc.packagereference.override.targets" Condition="Exists('$(MSBuildThisFileDirectory)\..\..\..\..\..\common\winobjc.packagereference.override.targets')"/>
 </Project>
