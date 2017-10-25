@@ -12,7 +12,7 @@ $toolsBetaDir = Join-Path -Resolve $repoRoot ".tools\beta"
 
 # Ensure nuget.exe is up-to-date
 $nugetDownloadName = "nuget.exe"
-. "$PSScriptRoot\Initialize-DownloadLatest.ps1" -OutDir $toolsDir -DownloadUrl "https://dist.nuget.org/win-x86-commandline/v4.0.0/nuget.exe" -DownloadName $nugetDownloadName -Unzip $false
+. "$PSScriptRoot\Initialize-DownloadLatest.ps1" -OutDir $toolsDir -DownloadUrl "https://dist.nuget.org/win-x86-commandline/v4.4.0/nuget.exe" -DownloadName $nugetDownloadName -Unzip $false
 
 # Ensure VSS.NuGet.AuthHelper is up-to-date
 $credProviderDownloadFeed = "https://nuget.org/api/v2/"
