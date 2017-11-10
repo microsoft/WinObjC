@@ -514,6 +514,12 @@ class NSURLConnectionTests {
 public:
     BEGIN_TEST_CLASS(NSURLConnectionTests)
     TEST_CLASS_PROPERTY(L"UAP:AppXManifest", L"NSURL.AppxManifest.xml")
+
+// Disable tests on ARM as it tries to hit a real endpoint and download significant data
+// and arm machines may not have a stable ethernet connection like a build server does.
+#ifdef _M_ARM
+    TEST_CLASS_PROPERTY(L"Ignore", L"true")
+#endif
     END_TEST_CLASS()
 
     TEST_CLASS_SETUP(NSURLClassSetup) {

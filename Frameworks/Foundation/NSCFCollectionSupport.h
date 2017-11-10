@@ -38,4 +38,16 @@ CFHashCode _NSCFCallbackHash(const void* value);
         }                                                                                                        \
     } while (false)
 
+#define NS_COLLECTION_VALIDATE_RANGE(range, count)                                                 \
+    do {                                                                                           \
+        if (range.location + range.length > (count)) {                                             \
+            [NSException raise:NSInvalidArgumentException                                          \
+                        format:@"*** %s: Range {%lu, %lu} out of bounds; legal range is {0, %lu}", \
+                               __PRETTY_FUNCTION__,                                                \
+                               (unsigned long)range.location,                                      \
+                               (unsigned long)range.length,                                        \
+                               (unsigned long)(count)];                                            \
+        }                                                                                          \
+    } while (false)
+
 #endif // __OBJC__

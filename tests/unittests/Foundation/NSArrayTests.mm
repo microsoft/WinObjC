@@ -16,6 +16,7 @@
 
 #include <TestFramework.h>
 #include <Foundation/Foundation.h>
+#include <Starboard/SmartTypes.h>
 
 void assertArrayContents(NSArray* array, NSObject* first, ...) {
     va_list args;
@@ -725,4 +726,91 @@ TEST(NSArray, EnumerateObjectsAtIndexesOptionsUsingBlock) {
 
     indexes = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(11, 11)];
     EXPECT_ANY_THROW([arr enumerateObjectsAtIndexes:indexes options:0 usingBlock:block]);
+}
+
+TEST(NSArray, RemoveObject) {
+    StrongId<NSMutableArray*> array {
+        woc::TakeOwnership, [@[ @1, @2, @1, @1, @3, @1, @4, @1, @5, @1, @1 ] mutableCopy]
+    };
+
+    [array removeObject:@1];
+    NSArray* expected = @[ @2, @3, @4, @5 ];
+    ASSERT_OBJCEQ(expected, array.get());
+}
+
+TEST(NSArray, RemoveObject_InRange) {
+    StrongId<NSMutableArray*> array {
+        woc::TakeOwnership, [@[ @1, @2, @1, @1, @3, @1, @4, @1, @5, @1, @1 ] mutableCopy]
+    };
+
+    [array removeObject:@1 inRange:NSRange{ 1, 9 }];
+    NSArray* expected = @[ @1, @2, @3, @4, @5, @1 ];
+    ASSERT_OBJCEQ(expected, array.get());
+}
+
+TEST(NSArray, RemoveObjectsInRange) {
+    StrongId<NSMutableArray*> array {
+        woc::TakeOwnership, [@[ @1, @2, @1, @3, @1, @4, @1, @5, @1 ] mutableCopy]
+    };
+
+    [array removeObjectsInRange:NSRange{ 1, 6 }];
+    NSArray* expected = @[ @1, @5, @1 ];
+    ASSERT_OBJCEQ(expected, array.get());
+}
+
+TEST(NSArray, RemoveObjectsInRange_Invalid) {
+    StrongId<NSMutableArray*> array {
+        woc::TakeOwnership, [@[ @1, @2, @1, @3, @1, @4, @1, @5, @1 ] mutableCopy]
+    };
+
+    NSRange range{ 10, 20 };
+    EXPECT_ANY_THROW([array removeObjectsInRange:range]);
+}
+
+TEST(NSArray, RemoveObjectIdenticalTo) {
+    NSNumber* one = @1; // Capture this here just to make sure it's the same pointer.
+    StrongId<NSMutableArray*> array {
+        woc::TakeOwnership, [@[ one, @2, one, one, @3, one, @4, one, @5, one, one ] mutableCopy]
+    };
+
+    [array removeObjectIdenticalTo:one];
+    NSArray* expected = @[ @2, @3, @4, @5 ];
+    ASSERT_OBJCEQ(expected, array.get());
+}
+
+TEST(NSArray, RemoveObjectIdenticalTo_InRange) {
+    NSNumber* one = @1; // Capture this here just to make sure it's the same pointer.
+    StrongId<NSMutableArray*> array {
+        woc::TakeOwnership, [@[ one, @2, one, one, @3, one, @4, one, @5, one, one ] mutableCopy]
+    };
+
+    [array removeObjectIdenticalTo:one inRange:NSRange{ 1, 9 }];
+    NSArray* expected = @[ one, @2, @3, @4, @5, one ];
+    ASSERT_OBJCEQ(expected, array.get());
+}
+
+TEST(NSArray, ExchangeObjects) {
+    StrongId<NSMutableArray*> array {
+        woc::TakeOwnership, [@[ @1, @2, @3 ] mutableCopy]
+    };
+
+    [array exchangeObjectAtIndex:0 withObjectAtIndex:2];
+    NSArray* expected = @[ @3, @2, @1 ];
+    ASSERT_OBJCEQ(expected, array.get());
+}
+
+TEST(NSArray, RemoveObjectsRange_Sanity) {
+    NSNumber* one = @1; // Capture this here just to make sure it's the same pointer.
+    NSArray* original = @[ one, @2, @3 ];
+    StrongId<NSMutableArray*> array{ woc::TakeOwnership, [original mutableCopy] };
+
+    NSRange emptyRange{ 1, 0 };
+    EXPECT_NO_THROW([array removeObjectsInRange:emptyRange]);
+    EXPECT_OBJCEQ(original, array.get());
+
+    EXPECT_NO_THROW([array removeObject:@2 inRange:emptyRange]);
+    EXPECT_OBJCEQ(original, array.get());
+
+    EXPECT_NO_THROW([array removeObjectIdenticalTo:one inRange:emptyRange]);
+    EXPECT_OBJCEQ(original, array.get());
 }

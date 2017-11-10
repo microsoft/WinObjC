@@ -17,6 +17,7 @@
 #include "Starboard.h"
 #include "CFHelpers.h"
 #include "CFFoundationInternal.h"
+#include "ForFoundationOnly.h"
 #include <CoreFoundation/CFArray.h>
 #include "NSCFArray.h"
 #include "BridgeHelpers.h"
@@ -84,7 +85,9 @@ BRIDGED_MUTABLE_CLASS_FOR_CODER(CFArrayRef, _CFArrayIsMutable, NSArray, NSMutabl
 - (id)objectAtIndex:(NSUInteger)index {
     if (index >= CFArrayGetCount((CFArrayRef)self)) {
         [NSException raise:@"Array out of bounds"
-                    format:@"objectAtIndex: index > count (%lu > %lu), throwing exception\n", (unsigned long)index, (unsigned long)CFArrayGetCount((CFArrayRef)self)];
+                    format:@"objectAtIndex: index > count (%lu > %lu), throwing exception\n",
+                           (unsigned long)index,
+                           (unsigned long)CFArrayGetCount((CFArrayRef)self)];
         return nil;
     }
     return (id)CFArrayGetValueAtIndex((CFArrayRef)self, index);
@@ -111,13 +114,18 @@ BRIDGED_MUTABLE_CLASS_FOR_CODER(CFArrayRef, _CFArrayIsMutable, NSArray, NSMutabl
     CFRange range;
     range.location = index;
     range.length = 1;
-    CFArrayReplaceValues(static_cast<CFMutableArrayRef>(self), range, (const void**)(&obj), 1);
+    _CFArrayReplaceValues(static_cast<CFMutableArrayRef>(self), range, (const void**)(&obj), 1);
 }
 
 - (void)insertObject:(NSObject*)objAddr atIndex:(NSUInteger)index {
     BRIDGED_THROW_IF_IMMUTABLE(_CFArrayIsMutable, CFArrayRef);
     NS_COLLECTION_THROW_IF_NULL_REASON(objAddr, [NSString stringWithFormat:@"*** %@ object cannot be nil", NSStringFromSelector(_cmd)]);
     CFArrayInsertValueAtIndex(static_cast<CFMutableArrayRef>(self), index, reinterpret_cast<const void*>(objAddr));
+}
+
+- (void)exchangeObjectAtIndex:(NSUInteger)atIndex withObjectAtIndex:(NSUInteger)withIndex {
+    BRIDGED_THROW_IF_IMMUTABLE(_CFArrayIsMutable, CFArrayRef);
+    CFArrayExchangeValuesAtIndices(static_cast<CFMutableArrayRef>(self), atIndex, withIndex);
 }
 
 - (void)removeAllObjects {

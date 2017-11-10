@@ -5,5 +5,6 @@ This includes the following:
 - VSIX
 - vsimporter
 - winmd2objc
+- objc2winmd
 
 See https://github.com/Microsoft/WinObjC for more information
