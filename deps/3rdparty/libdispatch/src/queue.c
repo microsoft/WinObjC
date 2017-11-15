@@ -262,6 +262,7 @@ struct dispatch_queue_s _dispatch_root_queues[] = {
 		/*.dq_items_head           = */	0,
 		/*.dq_serialnum            = */	4,
 		/*.dq_finalizer_ctxt       = */	0,
+		/*.dq_specific_q           = */	NULL,
 		/*.dq_manually_drained     = */	0,
 		/*.dq_is_manually_draining = */	false,
 		/*.dq_label                = */	"com.apple.root.low-priority",
@@ -281,6 +282,7 @@ struct dispatch_queue_s _dispatch_root_queues[] = {
 		/*.dq_items_head           = */	0,
 		/*.dq_serialnum            = */	5,
 		/*.dq_finalizer_ctxt       = */	0,
+		/*.dq_specific_q           = */	NULL,
 		/*.dq_manually_drained     = */	0,
 		/*.dq_is_manually_draining = */	false,
 		/*.dq_label                = */	"com.apple.root.low-overcommit-priority",
@@ -300,6 +302,7 @@ struct dispatch_queue_s _dispatch_root_queues[] = {
 		/*.dq_items_head           = */	0,
 		/*.dq_serialnum            = */	6,
 		/*.dq_finalizer_ctxt       = */	0,
+		/*.dq_specific_q           = */	NULL,
 		/*.dq_manually_drained     = */	0,
 		/*.dq_is_manually_draining = */	false,
 		/*.dq_label                = */	"com.apple.root.default-priority",
@@ -319,6 +322,7 @@ struct dispatch_queue_s _dispatch_root_queues[] = {
 		/*.dq_items_head           = */	0,
 		/*.dq_serialnum            = */	7,
 		/*.dq_finalizer_ctxt       = */	0,
+		/*.dq_specific_q           = */	NULL,
 		/*.dq_manually_drained     = */	0,
 		/*.dq_is_manually_draining = */	false,
 		/*.dq_label                = */	"com.apple.root.default-overcommit-priority",
@@ -338,6 +342,7 @@ struct dispatch_queue_s _dispatch_root_queues[] = {
 		/*.dq_items_head           = */	0,
 		/*.dq_serialnum            = */	8,
 		/*.dq_finalizer_ctxt       = */	0,
+		/*.dq_specific_q           = */	NULL,
 		/*.dq_manually_drained     = */	0,
 		/*.dq_is_manually_draining = */	false,
 		/*.dq_label                = */	"com.apple.root.high-priority",
@@ -357,6 +362,7 @@ struct dispatch_queue_s _dispatch_root_queues[] = {
 		/*.dq_items_head           = */	0,
 		/*.dq_serialnum            = */	9,
 		/*.dq_finalizer_ctxt       = */	0,
+		/*.dq_specific_q           = */	NULL,
 		/*.dq_manually_drained     = */	0,
 		/*.dq_is_manually_draining = */	false,
 		/*.dq_label                = */	"com.apple.root.high-overcommit-priority",
@@ -609,6 +615,7 @@ _dispatch_queue_init(dispatch_queue_t dq)
 	dq->dq_running = 0;
 	dq->dq_width = 1;
 	dq->dq_serialnum = dispatch_atomic_inc(&_dispatch_queue_serial_numbers) - 1;
+	dq->dq_specific_q = NULL;
 	dq->dq_manually_drained = 0;
 	dq->dq_is_manually_draining = false;
 }
@@ -665,12 +672,29 @@ out_bad:
 #endif
 }
 
+void _dispatch_queue_specific_release(dispatch_queue_t dq) {
+	dispatch_queue_specific_list_t dqsl = dq->dq_specific_q;
+	dispatch_queue_specific_t var;
+
+	TAILQ_FOREACH(var, &dqsl->contextList, specific) {
+		if (var->destructor) {
+			var->destructor(var->context);
+		}
+		free(var);
+	}
+
+	free(dqsl);
+}
+
 // 6618342 Contact the team that owns the Instrument DTrace probe before renaming this symbol
 void
 _dispatch_queue_dispose(dispatch_queue_t dq)
 {
 	if (slowpath(dq == _dispatch_queue_get_current())) {
 		DISPATCH_CRASH("Release of a queue by itself");
+	}
+	if (slowpath(dq->dq_items_tail)) {
+		DISPATCH_CRASH("Release of a queue while items are enqueued");
 	}
 	if (slowpath(dq->dq_items_tail)) {
 		DISPATCH_CRASH("Release of a queue while items are enqueued");
@@ -1978,3 +2002,68 @@ dispatch_after_f(dispatch_time_t when, dispatch_queue_t queue, void *ctxt, void 
 	dispatch_resume(as_do(ds));
 }
 
+static void _dispatch_queue_init_specific_list(dispatch_queue_t dq) {
+	dispatch_queue_specific_list_t dqsq;
+	dqsq = calloc(1, sizeof(struct dispatch_queue_specific_list_s));
+	TAILQ_INIT(&dqsq->contextList);
+	dq->dq_specific_q = dqsq;
+}
+
+static void _dispatch_queue_insert_specific(dispatch_queue_t dq, dispatch_queue_specific_t dqs) {
+	dispatch_queue_specific_list_t dqsl = dq->dq_specific_q;
+	dispatch_queue_specific_t var;
+
+	TAILQ_FOREACH(var, &dqsl->contextList, specific) {
+		if (var->key == dqs->key) {
+			if(var->destructor) {
+				var->destructor(var->context);
+			}
+
+			// If a context exists for this key, simply update the context on that specific
+			if(dqs->context) {
+				var->context = dqs->context;
+				var->destructor = dqs->destructor;
+			} else {
+				TAILQ_REMOVE(&dqsl->contextList, var, specific);
+				free(var);
+			}
+			free(dqs);
+			return;
+		}
+	}
+
+	TAILQ_INSERT_TAIL(&dqsl->contextList, dqs, specific);
+}
+
+void dispatch_queue_set_specific(dispatch_queue_t queue, const void *key, void *_Nullable context, dispatch_function_t _Nullable destructor) {
+	if (slowpath(!key)) {
+		return;
+	}
+	dispatch_queue_specific_t specific = calloc(1, sizeof(struct dispatch_queue_specific_s));
+	specific->key = key;
+	specific->context = context;
+	specific->destructor = destructor;
+
+	// Delayed initialization
+	if (slowpath(!queue->dq_specific_q)) {
+		_dispatch_queue_init_specific_list(queue);
+	}
+
+	_dispatch_queue_insert_specific(queue, specific);
+}
+
+void* _Nullable dispatch_queue_get_specific(dispatch_queue_t queue, const void *key) {
+	dispatch_queue_specific_list_t dqsl = queue->dq_specific_q;
+	dispatch_queue_specific_t var;
+
+	TAILQ_FOREACH(var, &dqsl->contextList, specific) {
+		if(var->key == key) {
+			return var->context;
+		}
+	}
+	return NULL;
+}
+
+void* _Nullable dispatch_get_specific(const void *key) {
+	return dispatch_queue_get_specific(_dispatch_queue_get_current(), key);
+}

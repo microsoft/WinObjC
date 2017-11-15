@@ -2,19 +2,19 @@
  * Copyright (c) 2008-2009 Apple Inc. All rights reserved.
  *
  * @APPLE_APACHE_LICENSE_HEADER_START@
- *
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * 
  *     http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
+ * 
  * @APPLE_APACHE_LICENSE_HEADER_END@
  */
 
@@ -28,7 +28,7 @@
 #define __DISPATCH_PRIVATE__
 
 #ifndef __DISPATCH_BUILDING_DISPATCH__
-#include <dispatch/dispatch.h>
+#include_next <dispatch/dispatch.h>
 
 // Workaround <rdar://problem/6597365/>
 #ifndef __DISPATCH_PUBLIC__
@@ -56,9 +56,10 @@
 
 __DISPATCH_BEGIN_DECLS
 
-DISPATCH_EXPORT DISPATCH_NOTHROW void
+DISPATCH_EXPORT DISPATCH_NOTHROW
+void
 #if USE_LIBDISPATCH_INIT_CONSTRUCTOR
-libdispatch_init(void) __attribute__((constructor));
+libdispatch_init(void) __attribute__ ((constructor));
 #else
 libdispatch_init(void);
 #endif
@@ -76,8 +77,9 @@ DISPATCH_NOTHROW void dispatch_init_pthread(pthread_t);
 /*
  * Extract the context pointer from a mach message trailer.
  */
-__OSX_AVAILABLE_STARTING(__MAC_10_6, __IPHONE_4_0)
-void* dispatch_mach_msg_get_context(mach_msg_header_t* msg);
+__OSX_AVAILABLE_STARTING(__MAC_10_6,__IPHONE_4_0)
+void *
+dispatch_mach_msg_get_context(mach_msg_header_t *msg);
 #endif
 
 __DISPATCH_END_DECLS

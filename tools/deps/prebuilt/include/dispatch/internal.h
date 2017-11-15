@@ -2,19 +2,19 @@
  * Copyright (c) 2008-2009 Apple Inc. All rights reserved.
  *
  * @APPLE_APACHE_LICENSE_HEADER_START@
- *
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * 
  *     http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
+ * 
  * @APPLE_APACHE_LICENSE_HEADER_END@
  */
 
@@ -99,8 +99,8 @@
 
 /* I wish we had __builtin_expect_range() */
 #if __GNUC__
-#define fastpath(x) ((typeof(x))__builtin_expect((long)(x), ~0l))
-#define slowpath(x) ((typeof(x))__builtin_expect((long)(x), 0l))
+#define fastpath(x)	((typeof(x))__builtin_expect((long)(x), ~0l))
+#define slowpath(x)	((typeof(x))__builtin_expect((long)(x), 0l))
 #else
 #define fastpath(x) (x)
 #define slowpath(x) (x)
@@ -109,15 +109,15 @@
 #include "debug.h"
 
 #if __GNUC__
-#define DO_CAST(x) ((struct dispatch_object_s*)(x)._do)
+#define DO_CAST(x) ((struct dispatch_object_s *)(x)._do)
 #else
-#define DO_CAST(x) ((struct dispatch_object_s*)(x))
+#define DO_CAST(x) ((struct dispatch_object_s *)(x))
 #endif
 
 #ifdef __BLOCKS__
 dispatch_block_t _dispatch_Block_copy(dispatch_block_t block);
-void _dispatch_call_block_and_release(void* block);
-void _dispatch_call_block_and_release2(void* block, void* ctxt);
+void _dispatch_call_block_and_release(void *block);
+void _dispatch_call_block_and_release2(void *block, void *ctxt);
 #endif /* __BLOCKS__ */
 
 void dummy_function(void);
@@ -126,15 +126,16 @@ long dummy_function_r0(void);
 uint64_t _dispatch_get_nanoseconds(void);
 
 #ifndef DISPATCH_NO_LEGACY
-dispatch_source_t _dispatch_source_create2(dispatch_source_t ds,
-                                           dispatch_source_attr_t attr,
-                                           void* context,
-                                           dispatch_source_handler_function_t handler);
+dispatch_source_t
+_dispatch_source_create2(dispatch_source_t ds,
+	dispatch_source_attr_t attr,
+	void *context,
+	dispatch_source_handler_function_t handler);
 #endif
 
 void _dispatch_run_timers(void);
 // Returns howsoon with updated time value, or NULL if no timers active.
-struct timespec* _dispatch_get_next_timer_fire(struct timespec* howsoon);
+struct timespec *_dispatch_get_next_timer_fire(struct timespec *howsoon);
 
 dispatch_semaphore_t _dispatch_get_thread_semaphore(void);
 void _dispatch_put_thread_semaphore(dispatch_semaphore_t);
@@ -149,9 +150,9 @@ struct timespec _dispatch_timeout_ts(dispatch_time_t when);
 __private_extern__ bool _dispatch_safe_fork;
 
 __private_extern__ struct _dispatch_hw_config_s {
-    uint32_t cc_max_active;
-    uint32_t cc_max_logical;
-    uint32_t cc_max_physical;
+	uint32_t cc_max_active;
+	uint32_t cc_max_logical;
+	uint32_t cc_max_physical;
 } _dispatch_hw_config;
 
 /* #includes dependent on internal.h */
