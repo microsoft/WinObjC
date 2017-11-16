@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|ARM">
       <Configuration>Debug</Configuration>
@@ -37,27 +37,27 @@
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
@@ -82,13 +82,11 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <IntDir>$(SolutionDir)obj\$(Platform)\$(TargetOsAndVersion)\$(Configuration)\</IntDir>
     <IncludePath>.;$(IncludePath)</IncludePath>
-    
     <TargetName>libdispatch</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
     <IntDir>$(SolutionDir)obj\$(Platform)\$(TargetOsAndVersion)\$(Configuration)\</IntDir>
     <IncludePath>.;$(IncludePath)</IncludePath>
-    
     <TargetName>libdispatch</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -100,13 +98,11 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <IntDir>$(SolutionDir)obj\$(Platform)\$(TargetOsAndVersion)\$(Configuration)\</IntDir>
     <IncludePath>.;$(IncludePath)</IncludePath>
-    
     <TargetName>libdispatch</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">
     <IntDir>$(SolutionDir)obj\$(Platform)\$(TargetOsAndVersion)\$(Configuration)\</IntDir>
     <IncludePath>.;$(IncludePath)</IncludePath>
-    
     <TargetName>libdispatch</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -220,6 +216,7 @@
     </ClangCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <None Include="project.json" />
     <ClangCompile Include="..\platform\windows\libkern\OSAtomic.c" />
     <ClangCompile Include="..\platform\windows\platform.c" />
     <ClangCompile Include="..\platform\windows\pthread.c" />
@@ -249,19 +246,13 @@
     <ClangCompile Include="..\src\shims\mach.c" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
-
   <PropertyGroup>
-    <PrebuiltPath Condition="'$(PrebuiltPath)' == ''">$(WINOBJC_SDK_ROOT)\deps\prebuilt\Universal Windows\$(PlatformTarget)\$(Configuration)\\</PrebuiltPath>
+    <PrebuiltRoot Condition="'$(PrebuiltRoot)' == ''">$(WINOBJC_SDK_ROOT)\tools\deps\prebuilt\\</PrebuiltRoot>
+    <PrebuiltPath Condition="'$(PrebuiltPath)' == ''">$(PrebuiltRoot)\Universal Windows\$(PlatformTarget)\$(Configuration)\\</PrebuiltPath>
   </PropertyGroup>
-  <Target Name="CopyContent" AfterTargets="Build">
+  <Target Name="RemovePackageBinaries" BeforeTargets="Build;Deploy;_CopyFilesMarkedCopyLocal">
     <ItemGroup>
-      <LibraryOutput Include="$(OutDir)\*.lib" />
-      <LibraryOutput Include="$(OutDir)\*.dll" />
-      <LibraryOutput Include="$(OutDir)\*.pdb" />
-      <Headers Include="..\dispatch\*.h" />
-      <Headers Include="..\src\*.h" />
+      <ReferenceCopyLocalPaths Remove="@(ReferenceCopyLocalPaths)" />
     </ItemGroup>
-    <Copy DestinationFolder="$(PrebuiltPath)" SkipUnchangedFiles="True" SourceFiles="@(LibraryOutput)" />
-    <Copy DestinationFolder="$(WINOBJC_SDK_ROOT)\deps\prebuilt\include\dispatch\\" SkipUnchangedFiles="True" SourceFiles="@(Headers)" />
   </Target>
 </Project>

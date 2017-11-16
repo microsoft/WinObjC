@@ -46,6 +46,9 @@ extern const struct dispatch_queue_vtable_s _dispatch_queue_vtable;
 
 #define DISPATCH_QUEUE_MIN_LABEL_SIZE	64
 
+DISPATCH_DECL(dispatch_queue_specific_list);
+DISPATCH_DECL(dispatch_queue_specific);
+
 #ifndef DISPATCH_NO_LEGACY
 #define DISPATCH_QUEUE_HEADER \
 	intptr_t dq_running; \
@@ -54,6 +57,8 @@ extern const struct dispatch_queue_vtable_s _dispatch_queue_vtable;
 	struct dispatch_object_s *volatile dq_items_head; \
 	intptr_t dq_serialnum; \
 	void *dq_finalizer_ctxt; \
+	struct dispatch_queue_s *dq_specific_q; \
+	struct dispatch_queue_specific_list_s *dq_specific_list; \
 	dispatch_queue_finalizer_function_t dq_finalizer_func
 #else
 #define DISPATCH_QUEUE_HEADER \
@@ -63,9 +68,22 @@ extern const struct dispatch_queue_vtable_s _dispatch_queue_vtable;
 	struct dispatch_object_s *volatile dq_items_head; \
 	intptr_t dq_serialnum; \
 	void *dq_finalizer_ctxt; \
+	struct dispatch_queue_s *dq_specific_q; \
+	struct dispatch_queue_specific_list_s *dq_specific_list; \
 	void* dq_manually_drained; \
 	bool dq_is_manually_draining
 #endif
+
+struct dispatch_queue_specific_list_s {
+	TAILQ_HEAD(dispatch_queue_specific_head_s, dispatch_queue_specific_s) context_list;
+};
+
+struct dispatch_queue_specific_s {
+	const void *key;
+	void *context;
+	dispatch_function_t destructor;
+	TAILQ_ENTRY(dispatch_queue_specific_s) specific;
+};
 
 struct dispatch_queue_s {
 	DISPATCH_STRUCT_HEADER(dispatch_queue_s, dispatch_queue_vtable_s);
