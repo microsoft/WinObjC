@@ -207,6 +207,7 @@ XIBObject* ObjectConverter::ConverterForStoryObject(const char* className, pugi:
     IS_CONVERTER(ret, className, "pongPressGestureRecognizer", UIPongPressGestureRecognizer)
 
     IS_CONVERTER(ret, className, "customObject", ObjectConverterSwapper)
+    IS_CONVERTER(ret, className, "nil", XIBObjectNil)
 
     if (ret == NULL) {
         TELEMETRY_EVENT_DATA(L"UnRecognizedTag", className);
