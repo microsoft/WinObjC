@@ -380,11 +380,9 @@ void NIBWriter::WriteData() {
     for (int i = 0; i < classNames._numStrings; i++) {
         char* pName = classNames._stringTable[i];
         int len = strlen(pName) + 1;
-        WriteInt(len, 2);
-        if (len == 0x1b) {
-            int filler = 6;
-            fwrite(&filler, 1, 4, fpOut);
-        }
+        WriteInt(len, 1);
+        int tp = 0x80;
+        fwrite(&tp, 1, 1, fpOut);
         fwrite(pName, 1, len, fpOut);
 
         header._numClassNames++;
@@ -403,7 +401,7 @@ void NIBWriter::WriteData() {
 
     for (int i = 0; i < keyNames._numStrings; i++) {
         char* pName = keyNames._stringTable[i];
-        int len = strlen(pName) + 1;
+        int len = strlen(pName);
         WriteInt(len, 1);
         fwrite(pName, 1, len, fpOut);
 
