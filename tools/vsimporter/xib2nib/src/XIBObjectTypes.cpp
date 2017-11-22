@@ -190,8 +190,14 @@ int XIBObjectBool::intValue() {
 }
 
 XIBObjectReal::XIBObjectReal(pugi::xml_node node) {
+    _val = strtod(node.child_value(), NULL);
     _node = node;
 }
+
+XIBObjectReal::XIBObjectReal(double val) {
+    _val = val;
+};
+
 
 bool XIBObjectReal::NeedsSerialization() {
     return false;
@@ -199,8 +205,7 @@ bool XIBObjectReal::NeedsSerialization() {
 
 void XIBObjectReal::WriteData(NIBWriter* writer) {
     writer->WriteByte(NIBOBJ_DOUBLE);
-    double dVal = 0.0f;
-    writer->WriteBytes(&dVal, 8);
+    writer->WriteBytes(&_val, 8);
 }
 
 XIBArray::XIBArray(pugi::xml_node node) {

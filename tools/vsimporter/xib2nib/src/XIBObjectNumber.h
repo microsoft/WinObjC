@@ -14,32 +14,18 @@
 //
 //******************************************************************************
 
-#ifndef __XIBOBJECT_INT
-#define __XIBOBJECT_INT
 
+#pragma once
 #include "XIBObject.h"
 
-class XIBObjectInt : public XIBObject {
-private:
-    long long _val;
-
+class XIBObjectNumber : public XIBObject {
+    XIBObject *_val;
+    const char *_keyName;
 public:
-    XIBObjectInt(long long val);
-    int intValue();
-    long long longValue();
-    virtual bool NeedsSerialization();
-    void WriteData(NIBWriter* writer);
+    explicit XIBObjectNumber(long long val);
+    explicit XIBObjectNumber(int val);
+    explicit XIBObjectNumber(bool val);
+    explicit XIBObjectNumber(double val);
+    void EmitObject(NIBWriter* writer);
 };
 
-class XIBObjectDataWriter : public XIBObject {
-public:
-    void* _binVal;
-    int _binLen;
-
-    XIBObjectDataWriter(const void* bin, int len);
-    bool NeedsSerialization();
-    void WriteData(NIBWriter* writer);
-};
-
-
-#endif
