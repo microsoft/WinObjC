@@ -148,6 +148,7 @@ NIBWriter::NIBWriter(FILE* out, XIBDictionary* externalReferences, XIBObject* ba
     _connections = new XIBArray();
     _topObjects = new XIBArray();
     _visibleWindows = new XIBArray();
+    _keyValuePairs = new XIBArray();
     _accessibilityObjects = new XIBAccessibilityArray();
 }
 
@@ -166,7 +167,7 @@ void NIBWriter::WriteObjects() {
     nibRoot->AddMember("UINibConnectionsKey", _connections);
     nibRoot->AddMember("UINibVisibleWindowsKey", _visibleWindows);
     nibRoot->AddMember("UINibAccessibilityConfigurationsKey", _accessibilityObjects);
-    nibRoot->AddMember("UINibKeyValuePairsKey", new XIBArray());
+    nibRoot->AddMember("UINibKeyValuePairsKey", _keyValuePairs);
 
     AddOutputObject(nibRoot);
     //  Sort connection records alphabetically using stable, uh, bubble sort

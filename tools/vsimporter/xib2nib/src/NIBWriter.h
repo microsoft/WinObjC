@@ -54,6 +54,7 @@ public:
     XIBObject* _topObjects;
     XIBObject* _accessibilityObjects;
     XIBObject* _visibleWindows;
+    XIBObject* _keyValuePairs;
 
     XIBDictionary* _externalReferencesDictionary;
 

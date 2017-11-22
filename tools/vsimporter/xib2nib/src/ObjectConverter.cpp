@@ -68,6 +68,7 @@
 #include "UIStackView.h"
 #include "UIProgressView.h"
 #include "UIPongPressGestureRecognizer.h"
+#include "UINibKeyValuePair.h"
 
 #include <map>
 #include <assert.h>
@@ -199,6 +200,9 @@ XIBObject* ObjectConverter::ConverterForStoryObject(const char* className, pugi:
     IS_CONVERTER(ret, className, "swipeGestureRecognizer", UISwipeGestureRecognizer)
     IS_CONVERTER(ret, className, "tapGestureRecognizer", UITapGestureRecognizer)
     IS_CONVERTER(ret, className, "window", UIWindow)
+    // support for user defined attributes (and IBInspectable)
+    IS_CONVERTER(ret, className, "userDefinedRuntimeAttribute", UINibKeyValuePair)
+    IS_CONVERTER(ret, className, "userDefinedRuntimeAttributes", XIBArray)
 
     // Stubbed mapping - full functionality is not provided but these stubs will unblock the import process
     IS_CONVERTER(ret, className, "pageControl", UIPageControl)
@@ -244,11 +248,13 @@ void ConvertOffset(struct _PropertyMapper* prop, NIBWriter* writer, XIBObject* p
 
 void ObjectConverter::InitFromXIB(XIBObject* obj) {
     _connections = NULL;
+    _userDefinedAttributes = NULL;
     _connectedObjects = NULL;
 }
 void ObjectConverter::InitFromStory(XIBObject* obj) {
     setSelfHandled();
     _connections = (XIBArray*)FindMemberClass("connections");
+    _userDefinedAttributes = (XIBArray*)FindMemberClass("userDefinedRuntimeAttributes");
 }
 void ObjectConverter::ConvertStaticMappings(NIBWriter* writer, XIBObject* obj) {
     if (_connections) {
@@ -301,6 +307,13 @@ void ObjectConverter::ConvertStaticMappings(NIBWriter* writer, XIBObject* obj) {
         }
     }
 
+    if (_userDefinedAttributes) {
+        for (int i = 0; i < _userDefinedAttributes->count(); i++) {
+            XIBObject *curObj = _userDefinedAttributes->objectAtIndex(i);
+            writer->_keyValuePairs->AddMember(NULL, curObj);
+            writer->AddOutputObject(curObj);
+        }
+    }
 }
 ObjectConverter* ObjectConverter::Clone() {
     return this;

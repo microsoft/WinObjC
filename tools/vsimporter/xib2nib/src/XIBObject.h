@@ -56,6 +56,8 @@ typedef struct {
 
 typedef struct { double x, y; } UIPoint;
 
+typedef struct { long long location, length; } NSRange;
+
 const char* getNodeAttrib(pugi::xml_node node, const char* name);
 
 class XIBObject {
