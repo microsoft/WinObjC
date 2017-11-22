@@ -79,7 +79,8 @@ XIBObject* NIBWriter::AddOutputObject(XIBObject* pObj) {
 }
 
 typedef struct {
-    int _a, _b;
+    int _numHeaders;
+    int _sizeDw;
     int _numObjects; //  2
     int _objectsOffset; //  3
     int _numKeyNames; //  4
@@ -450,6 +451,9 @@ void NIBWriter::WriteData() {
 
         header._numObjects++;
     }
+
+    header._numHeaders = 1;
+    header._sizeDw = 9;
 
     fseek(fpOut, headerPos, SEEK_SET);
     fwrite(&header, sizeof(header), 1, fpOut);
