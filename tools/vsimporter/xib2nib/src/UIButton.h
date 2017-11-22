@@ -19,10 +19,10 @@
 #include <cmath>
 
 struct EdgeInsets {
-    float top;
-    float left;
-    float bottom;
-    float right;
+    double top;
+    double left;
+    double bottom;
+    double right;
 
     EdgeInsets() : top(INFINITY), left(INFINITY), bottom(INFINITY), right(INFINITY) {
     }

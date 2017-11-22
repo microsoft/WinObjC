@@ -46,14 +46,15 @@ class XIBArray;
 
 #include "NIBWriter.h"
 
-typedef struct { float width, height; } CGSize;
+typedef struct {
+    double width, height; } CGSize;
 
 typedef struct {
-    float x, y;
-    float width, height;
+    double x, y;
+    double width, height;
 } UIRect;
 
-typedef struct { float x, y; } UIPoint;
+typedef struct { double x, y; } UIPoint;
 
 const char* getNodeAttrib(pugi::xml_node node, const char* name);
 
@@ -127,7 +128,7 @@ public:
     template <typename TData>
     void AddData(NIBWriter* writer, char* pPropName, const TData& data) {
         char* dataOut = (char*)malloc(sizeof(TData) + 1);
-        dataOut[0] = 6;
+        dataOut[0] = 7; // NIBOBJ_DOUBLE TODO: works only with DOUBLE entries
         memcpy(&dataOut[1], &data, sizeof(TData));
         AddOutputMember(writer, strdup(pPropName), createDataWriter(dataOut, sizeof(TData) + 1));
     }
