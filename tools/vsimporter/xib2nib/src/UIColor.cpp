@@ -152,19 +152,19 @@ void UIColor::InitFromStory(XIBObject* obj) {
 
 void UIColor::ConvertStaticMappings(NIBWriter* writer, XIBObject* obj) {
     if (!_outputClassName)
-        _outputClassName = "UIColor";
+        obj->_outputClassName = "UIColor";
     if (!_isStory) {
         switch (_colorSpaceOut) {
             case colorSpaceRGB:
             case colorSpaceFull:
                 if (_r == _g && _r == _b) {
-                    AddOutputMember(writer, "UIWhite", new XIBObjectFloat(_r));
+                    obj->AddOutputMember(writer, "UIWhite", new XIBObjectFloat(_r));
                 }
 
-                AddOutputMember(writer, "UIRed", new XIBObjectFloat(_r));
-                AddOutputMember(writer, "UIGreen", new XIBObjectFloat(_g));
-                AddOutputMember(writer, "UIBlue", new XIBObjectFloat(_b));
-                AddOutputMember(writer, "UIAlpha", new XIBObjectFloat(_a));
+                obj->AddOutputMember(writer, "UIRed", new XIBObjectFloat(_r));
+                obj->AddOutputMember(writer, "UIGreen", new XIBObjectFloat(_g));
+                obj->AddOutputMember(writer, "UIBlue", new XIBObjectFloat(_b));
+                obj->AddOutputMember(writer, "UIAlpha", new XIBObjectFloat(_a));
                 break;
 
             default:
@@ -172,27 +172,27 @@ void UIColor::ConvertStaticMappings(NIBWriter* writer, XIBObject* obj) {
         }
 
         if (_systemName) {
-            AddString(writer, "UISystemColorName", _systemName);
-            AddString(writer, "UIPatternSelector", _systemName);
+            obj->AddString(writer, "UISystemColorName", _systemName);
+            obj->AddString(writer, "UIPatternSelector", _systemName);
         }
     } else {
         switch (_colorSpaceOut) {
             case colorSpaceWhite:
-                AddOutputMember(writer, "UIWhite", new XIBObjectFloat(_white));
-                AddOutputMember(writer, "UIAlpha", new XIBObjectFloat(_a));
+                obj->AddOutputMember(writer, "UIWhite", new XIBObjectFloat(_white));
+                obj->AddOutputMember(writer, "UIAlpha", new XIBObjectFloat(_a));
                 break;
 
             case colorSpaceRGB:
             case colorSpaceFull:
-                AddOutputMember(writer, "UIAlpha", new XIBObjectFloat(_a));
-                AddOutputMember(writer, "UIRed", new XIBObjectFloat(_r));
-                AddOutputMember(writer, "UIGreen", new XIBObjectFloat(_g));
-                AddOutputMember(writer, "UIBlue", new XIBObjectFloat(_b));
+                obj->AddOutputMember(writer, "UIAlpha", new XIBObjectFloat(_a));
+                obj->AddOutputMember(writer, "UIRed", new XIBObjectFloat(_r));
+                obj->AddOutputMember(writer, "UIGreen", new XIBObjectFloat(_g));
+                obj->AddOutputMember(writer, "UIBlue", new XIBObjectFloat(_b));
                 break;
         }
 
         if (_systemName) {
-            AddString(writer, "UISystemColorName", _systemName);
+            obj->AddString(writer, "UISystemColorName", _systemName);
         }
     }
 }
