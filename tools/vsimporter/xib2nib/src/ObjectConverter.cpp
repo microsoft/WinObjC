@@ -69,6 +69,7 @@
 #include "UIProgressView.h"
 #include "UIPongPressGestureRecognizer.h"
 
+#include <map>
 #include <assert.h>
 
 #include "../WBITelemetry/WBITelemetry.h"
@@ -250,6 +251,56 @@ void ObjectConverter::InitFromStory(XIBObject* obj) {
     _connections = (XIBArray*)FindMemberClass("connections");
 }
 void ObjectConverter::ConvertStaticMappings(NIBWriter* writer, XIBObject* obj) {
+    if (_connections) {
+        std::map<std::string, UIRuntimeOutletCollectionConnection*> outletCollectionMap;
+
+        for (int i = 0; i < _connections->count(); i++) {
+            XIBObject* curObj = _connections->objectAtIndex(i);
+            if (strcmp(curObj->_outputClassName, "UIRuntimeOutletConnection") == 0) {
+                UIRuntimeOutletConnection* cur = (UIRuntimeOutletConnection*)curObj;
+
+                UIRuntimeOutletConnection* newOutlet = new UIRuntimeOutletConnection();
+                newOutlet->_label = cur->_label;
+                newOutlet->_source = cur->_source;
+                newOutlet->_destination = cur->_destination;
+                writer->_connections->AddMember(NULL, newOutlet);
+                writer->AddOutputObject(newOutlet);
+            } else if (strcmp(curObj->_outputClassName, "UIRuntimeEventConnection") == 0) {
+                UIRuntimeEventConnection* cur = (UIRuntimeEventConnection*)curObj;
+
+                UIRuntimeEventConnection* newOutlet = new UIRuntimeEventConnection();
+                newOutlet->_label = cur->_label;
+                newOutlet->_source = cur->_source;
+                newOutlet->_destination = cur->_destination;
+                newOutlet->_eventMask = cur->_eventMask;
+                writer->_connections->AddMember(NULL, newOutlet);
+                writer->AddOutputObject(newOutlet);
+            } else if (strcmp(curObj->_outputClassName, "UIRuntimeOutletCollectionConnection") == 0) {
+                UIRuntimeOutletCollectionConnection* cur = (UIRuntimeOutletCollectionConnection*)curObj;
+
+                UIRuntimeOutletCollectionConnection* collection = outletCollectionMap[cur->_label];
+                if (!collection) {
+                    collection = new UIRuntimeOutletCollectionConnection();
+                    collection->_label = cur->_label;
+                    collection->_source = cur->_source;
+                    collection->addDestinations(cur->_destinations);
+                    collection->_collectionClassName = cur->_collectionClassName;
+                    outletCollectionMap[cur->_label] = collection;
+                } else {
+                    collection->addDestinations(cur->_destinations);
+                }
+            } else {
+                assert(0);
+            }
+        }
+
+        // drop collections if any
+        for( const auto& entry : outletCollectionMap ) {
+            writer->_connections->AddMember(NULL, entry.second);
+            writer->AddOutputObject(entry.second);
+        }
+    }
+
 }
 ObjectConverter* ObjectConverter::Clone() {
     return this;
@@ -294,43 +345,5 @@ void ObjectConverterSwapper::ConvertStaticMappings(NIBWriter* writer, XIBObject*
         obj->AddOutputMember(writer, "UIOriginalClassName", new XIBObjectString(obj->_outputClassName));
         obj->AddOutputMember(writer, "UIClassName", new XIBObjectString(obj->_swappedClassName));
         obj->_outputClassName = "UIClassSwapper";
-    }
-
-    //  Add outlets
-    if (_connectedObjects) {
-        for (int i = 0; i < _connectedObjects->count(); i++) {
-            XIBObject* curObj = (UIRuntimeOutletConnection*)_connectedObjects->objectAtIndex(i);
-            if (strcmp(curObj->_outputClassName, "UIRuntimeOutletConnection") == 0) {
-                UIRuntimeOutletConnection* cur = (UIRuntimeOutletConnection*)curObj;
-
-                UIRuntimeOutletConnection* newOutlet = new UIRuntimeOutletConnection();
-                newOutlet->_label = cur->_label;
-                newOutlet->_source = cur->_source;
-                newOutlet->_destination = cur->_destination;
-                writer->_connections->AddMember(NULL, newOutlet);
-                writer->AddOutputObject(newOutlet);
-            } else if (strcmp(curObj->_outputClassName, "UIRuntimeEventConnection") == 0) {
-                UIRuntimeEventConnection* cur = (UIRuntimeEventConnection*)curObj;
-
-                UIRuntimeEventConnection* newOutlet = new UIRuntimeEventConnection();
-                newOutlet->_label = cur->_label;
-                newOutlet->_source = cur->_source;
-                newOutlet->_destination = cur->_destination;
-                newOutlet->_eventMask = cur->_eventMask;
-                writer->_connections->AddMember(NULL, newOutlet);
-                writer->AddOutputObject(newOutlet);
-            } else if (strcmp(curObj->_outputClassName, "UIRuntimeOutletCollectionConnection") == 0) {
-                UIRuntimeOutletCollectionConnection* cur = (UIRuntimeOutletCollectionConnection*)curObj;
-
-                UIRuntimeOutletCollectionConnection* newOutlet = new UIRuntimeOutletCollectionConnection();
-                newOutlet->_label = cur->_label;
-                newOutlet->_source = cur->_source;
-                newOutlet->_destination = cur->_destination;
-                writer->_connections->AddMember(NULL, newOutlet);
-                writer->AddOutputObject(newOutlet);
-            } else {
-                assert(0);
-            }
-        }
     }
 }

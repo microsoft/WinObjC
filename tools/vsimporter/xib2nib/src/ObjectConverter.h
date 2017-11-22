@@ -28,6 +28,9 @@ public:
     XIBArray* _connections;
     XIBArray* _variations;
 
+    ObjectConverter() {
+        _connections = NULL;
+    };
     virtual void InitFromXIB(XIBObject* obj);
     virtual void InitFromStory(XIBObject* obj);
     virtual void ConvertStaticMappings(NIBWriter* writer, XIBObject* obj);

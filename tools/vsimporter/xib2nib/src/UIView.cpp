@@ -285,22 +285,6 @@ void UIView::ConvertStaticMappings(NIBWriter* writer, XIBObject* obj) {
         writer->_allUIObjects->AddMember(NULL, this);
     }
 
-    if (_connections) {
-        for (int i = 0; i < _connections->count(); i++) {
-            XIBObject* curObj = _connections->objectAtIndex(i);
-            if (strcmp(curObj->_outputClassName, "UIRuntimeOutletCollectionConnection") == 0) {
-                UIRuntimeOutletCollectionConnection* cur = (UIRuntimeOutletCollectionConnection*)curObj;
-
-                UIRuntimeOutletCollectionConnection* newOutlet = new UIRuntimeOutletCollectionConnection();
-                newOutlet->_label = cur->_label;
-                newOutlet->_source = cur->_source;
-                newOutlet->_destination = cur->_destination;
-                writer->_connections->AddMember(NULL, newOutlet);
-                writer->AddOutputObject(newOutlet);
-            }
-        }
-    }
-
     if (_subviews->count() > 0) {
         int count = _subviews->count();
         for (int i = 0; i < count; i++) {
