@@ -19,10 +19,11 @@
 #include <stdio.h>
 #include <string.h>
 #include <vector>
-#include <direct.h>
+//#include <direct.h>
 #include <assert.h>
 #include <map>
-#include <filesystem>
+//#include <filesystem>
+#include <sys/stat.h>
 
 #include "XIBObject.h"
 #include "XIBObjectTypes.h"
@@ -32,7 +33,7 @@
 #include "miscutils.h"
 #include "versionutils.h"
 
-#include "..\WBITelemetry\WBITelemetry.h"
+#include "../WBITelemetry/WBITelemetry.h"
 
 // These globals should only be employed when dealing with storyboard files (.storyboard)
 // They are only set once when we determine that the input format is a storyboard
@@ -248,7 +249,7 @@ int main(int argc, char* argv[]) {
     }
 
     TELEMETRY_SET_INTERNAL(isMSFTInternalMachine());
-    string machineID = getMachineID();
+    std::string machineID = getMachineID();
     if (!machineID.empty()) {
         TELEMETRY_SET_MACHINEID(machineID.c_str());
     }

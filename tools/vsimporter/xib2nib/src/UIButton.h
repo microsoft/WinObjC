@@ -16,6 +16,7 @@
 
 #pragma once
 #include "UIControl.h"
+#include <cmath>
 
 struct EdgeInsets {
     float top;

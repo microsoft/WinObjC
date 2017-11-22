@@ -43,7 +43,7 @@ XIBObjectString::XIBObjectString(const char* str) {
 }
 
 void XIBObjectString::InitFromStory(XIBObject* obj) {
-    _strVal = _strdup(obj->_node.text().as_string());
+    _strVal = strdup(obj->_node.text().as_string());
 }
 
 const char* XIBObjectString::stringValue() {

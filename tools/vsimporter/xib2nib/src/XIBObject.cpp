@@ -659,3 +659,7 @@ void XIBObject::getDocumentCoverage(pugi::xml_document& doc) {
 
     doc.traverse(walker);
 }
+
+XIBObject *XIBObject::createDataWriter(char *dataOut, int size) {
+    return new XIBObjectDataWriter(dataOut, size);
+}

@@ -129,7 +129,7 @@ public:
         char* dataOut = (char*)malloc(sizeof(TData) + 1);
         dataOut[0] = 6;
         memcpy(&dataOut[1], &data, sizeof(TData));
-        AddOutputMember(writer, strdup(pPropName), new XIBObjectDataWriter(dataOut, sizeof(TData) + 1));
+        AddOutputMember(writer, strdup(pPropName), createDataWriter(dataOut, sizeof(TData) + 1));
     }
 
     void AddSize(NIBWriter* writer, char* pPropName, CGSize size);
@@ -151,5 +151,7 @@ public:
 
     const char* getAttrAndHandle(const char* name);
     XIBObject* FindMemberAndHandle(char* keyName);
+private:
+    XIBObject* createDataWriter(char *dataOut, int size);
 };
 #endif

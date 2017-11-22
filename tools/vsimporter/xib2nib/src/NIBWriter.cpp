@@ -22,7 +22,7 @@
 #include <assert.h>
 #include <map>
 #include "UIViewController.h"
-#include "..\WBITelemetry\WBITelemetry.h"
+#include "../WBITelemetry/WBITelemetry.h"
 
 int curPlaceholder = 1;
 

@@ -71,7 +71,7 @@
 
 #include <assert.h>
 
-#include "..\WBITelemetry\WBITelemetry.h"
+#include "../WBITelemetry/WBITelemetry.h"
 
 #define IS_CONVERTER(newinst, classnamevar, name, type) \
     if (strcmp(classnamevar, name) == 0) {              \

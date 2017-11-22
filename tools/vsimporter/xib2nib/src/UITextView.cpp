@@ -99,7 +99,7 @@ void UITextView::InitFromStory(XIBObject* obj) {
     //  InitFromStory is called on it
     XIBObject* textNode = (XIBObject*)obj->FindMemberAndHandle("text");
     if (textNode) {
-        _text = _strdup(textNode->_node.text().as_string());
+        _text = strdup(textNode->_node.text().as_string());
     }
     _font = (UIFont*)obj->FindMemberAndHandle("fontDescription");
 
