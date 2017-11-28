@@ -129,15 +129,15 @@ void UIColor::InitFromStory(XIBObject* obj) {
 
         if (strcmp(space, "calibratedWhite") == 0) {
             _colorSpaceOut = colorSpaceWhite;
-            _white = strtod(getAttrAndHandle("white"), NULL);
-            _a = strtod(getAttrAndHandle("alpha"), NULL);
+            _white = strtof(getAttrAndHandle("white"), NULL);
+            _a = strtof(getAttrAndHandle("alpha"), NULL);
         } else if (strcmp(space, "calibratedRGB") == 0 || strcmp(space, "deviceRGB") == 0 || strcmp(space, "adobeRGB1998") == 0 ||
                    strcmp(space, "sRGB") == 0) {
             _colorSpaceOut = colorSpaceRGB;
-            _a = strtod(getAttrAndHandle("alpha"), NULL);
-            _r = strtod(getAttrAndHandle("red"), NULL);
-            _g = strtod(getAttrAndHandle("green"), NULL);
-            _b = strtod(getAttrAndHandle("blue"), NULL);
+            _a = strtof(getAttrAndHandle("alpha"), NULL);
+            _r = strtof(getAttrAndHandle("red"), NULL);
+            _g = strtof(getAttrAndHandle("green"), NULL);
+            _b = strtof(getAttrAndHandle("blue"), NULL);
         } else {
             spaceIsHandled = false;
         }
@@ -177,18 +177,36 @@ void UIColor::ConvertStaticMappings(NIBWriter* writer, XIBObject* obj) {
         }
     } else {
         switch (_colorSpaceOut) {
-            case colorSpaceWhite:
+            case colorSpaceWhite: {
                 obj->AddOutputMember(writer, "UIWhite", new XIBObjectFloat(_white));
                 obj->AddOutputMember(writer, "UIAlpha", new XIBObjectFloat(_a));
+                char buf[128];
+                if (_a != 1)
+                    snprintf(buf, 128, "%.3f %.3f", _white, _a);
+                else
+                    snprintf(buf, 128, "%.3f", _white);
+                obj->AddString(writer, "NSWhite", strdup(buf));
+                obj->AddInt(writer, "NSColorSpace", 4);
+                obj->AddInt(writer, "UIColorComponentCount", 2);
                 break;
+            }
 
             case colorSpaceRGB:
-            case colorSpaceFull:
+            case colorSpaceFull: {
                 obj->AddOutputMember(writer, "UIAlpha", new XIBObjectFloat(_a));
                 obj->AddOutputMember(writer, "UIRed", new XIBObjectFloat(_r));
                 obj->AddOutputMember(writer, "UIGreen", new XIBObjectFloat(_g));
                 obj->AddOutputMember(writer, "UIBlue", new XIBObjectFloat(_b));
+                char buf[128];
+                if (_a != 1)
+                    snprintf(buf, 128, "%.3f %.3f %.3f %.3f", _r, _g, _b, _a);
+                else
+                    snprintf(buf, 128, "%.3f %.3f %.3f", _r, _g, _b);
+                obj->AddString(writer, "NSRGB", strdup(buf));
+                obj->AddInt(writer, "NSColorSpace", 2);
+                obj->AddInt(writer, "UIColorComponentCount", 4);
                 break;
+            }
         }
 
         if (_systemName) {
