@@ -262,7 +262,17 @@ void ObjectConverter::ConvertStaticMappings(NIBWriter* writer, XIBObject* obj) {
 
         for (int i = 0; i < _connections->count(); i++) {
             XIBObject* curObj = _connections->objectAtIndex(i);
-            if (strcmp(curObj->_outputClassName, "UIRuntimeOutletConnection") == 0) {
+            if (strcmp(curObj->_className, "segue") == 0) {
+                UIStoryboardSegue* segue = (UIStoryboardSegue*)curObj;
+
+                UIRuntimeEventConnection* newEvent = new UIRuntimeEventConnection();
+                newEvent->_label = "perform:";
+                newEvent->_source = this;
+                newEvent->_destination = segue;
+                newEvent->_eventMask = 0x40;
+                writer->_connections->AddMember(NULL, newEvent);
+                writer->AddOutputObject(newEvent);
+            } else if (strcmp(curObj->_outputClassName, "UIRuntimeOutletConnection") == 0) {
                 UIRuntimeOutletConnection* cur = (UIRuntimeOutletConnection*)curObj;
 
                 UIRuntimeOutletConnection* newOutlet = new UIRuntimeOutletConnection();

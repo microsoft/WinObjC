@@ -314,24 +314,6 @@ void UIButton::ConvertStaticMappings(NIBWriter* writer, XIBObject* obj) {
         obj->AddData(writer, "UITitleEdgeInsets", _titleEdgeInsets);
     }
 
-    if (_connections) {
-        for (int i = 0; i < _connections->count(); i++) {
-            XIBObject* curObj = _connections->objectAtIndex(i);
-
-            if (strcmp(curObj->_className, "segue") == 0) {
-                UIStoryboardSegue* segue = (UIStoryboardSegue*)curObj;
-
-                UIRuntimeEventConnection* newEvent = new UIRuntimeEventConnection();
-                newEvent->_label = "perform:";
-                newEvent->_source = this;
-                newEvent->_destination = segue;
-                newEvent->_eventMask = 0x40;
-                writer->_connections->AddMember(NULL, newEvent);
-                writer->AddOutputObject(newEvent);
-            }
-        }
-    }
-
     WriteStatefulContent(writer, this);
     UIControl::ConvertStaticMappings(writer, obj);
 }

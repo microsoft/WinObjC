@@ -235,6 +235,10 @@ void NIBWriter::AddOutletConnection(XIBObject* src, XIBObject* dst, char* propNa
 }
 
 XIBObject* NIBWriter::AddProxy(char* propName) {
+    XIBObject* existingProxy = NIBWriter::FindProxy(propName);
+    if (existingProxy)
+        return existingProxy;
+
     UIProxyObject* newProxy = new UIProxyObject();
     newProxy->_identifier = strdup(propName);
     _allUIObjects->AddMember(NULL, newProxy);
@@ -318,7 +322,7 @@ void NIBWriter::ExportController(const char* controllerId) {
     }
 
     //  Check if we've already written out the controller
-    if (_g_exportedControllers.find(controllerId) != _g_exportedControllers.end()) {
+    if (_g_exportedControllers.find(controllerIdentifier) != _g_exportedControllers.end()) {
         return;
     }
 
@@ -333,9 +337,9 @@ void NIBWriter::ExportController(const char* controllerId) {
 
     NIBWriter* writer = new NIBWriter(fpOut, NULL, NULL);
 
-    XIBObject* firstResponderProxy = writer->AddProxy("IBFirstResponder");
-    XIBObject* ownerProxy = writer->AddProxy("IBFilesOwner");
-    XIBObject* storyboard = writer->AddProxy("UIStoryboardPlaceholder");
+    XIBObject* ownerProxy = writer->FindProxy("IBFilesOwner");
+    if (!ownerProxy)
+        ownerProxy = writer->AddProxy("IBFilesOwner");
 
     XIBArray* arr = (XIBArray*)objects;
     for (int i = 0; i < arr->count(); i++) {
