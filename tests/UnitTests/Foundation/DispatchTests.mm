@@ -17,6 +17,7 @@
 #import <TestFramework.h>
 #import <Foundation/Foundation.h>
 #import <dispatch/dispatch.h>
+#import <libkern/OSAtomic.h>
 
 static const char* key = "Specific Key";
 static const char* key2 = "Specific Key2";
@@ -197,4 +198,45 @@ TEST(DispatchTests, MultipleQueues) {
 	dispatch_release(queue2);
 	dispatch_release(queue3);
 	dispatch_release(group);
+}
+
+static OSSpinLock lock1;
+static OSSpinLock lock2;
+static OSSpinLock lock3;
+static int spinValue;
+
+TEST(OSSpinLock, SpinLockTests) {
+	dispatch_queue_t queue = dispatch_queue_create("queue", nullptr);
+	dispatch_queue_set_specific(queue, key, context, nullptr);
+
+	lock1 = OS_SPINLOCK_INIT;
+	lock2 = OS_SPINLOCK_INIT;
+	lock3 = OS_SPINLOCK_INIT;
+
+	spinValue = 0;
+	OSSpinLockLock(&lock1);
+	OSSpinLockLock(&lock2);
+	OSSpinLockLock(&lock3);
+
+	dispatch_async(queue, ^{
+		ASSERT_EQ(false, OSSpinLockTry(&lock1));
+		ASSERT_EQ(0, spinValue);
+		spinValue++;
+		ASSERT_EQ(1, spinValue);
+		OSSpinLockUnlock(&lock2);
+    });
+
+	dispatch_async(queue, ^{
+		OSSpinLockLock(&lock2);
+		ASSERT_EQ(false, OSSpinLockTry(&lock1));
+		ASSERT_EQ(1, spinValue);
+		spinValue++;
+		ASSERT_EQ(2, spinValue);
+		OSSpinLockUnlock(&lock1);
+		OSSpinLockUnlock(&lock2);
+		OSSpinLockUnlock(&lock3);
+    });
+
+	OSSpinLockLock(&lock3);
+	OSSpinLockUnlock(&lock3);
 }
