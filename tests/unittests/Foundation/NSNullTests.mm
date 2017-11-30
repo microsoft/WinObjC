@@ -18,7 +18,7 @@
 #import <Foundation/Foundation.h>
 
 TEST(NSNull, Bridged) {
-    ASSERT_EQ([NSNull null], kCFNull); // Pointer equality required.
+    ASSERT_EQ((void*)[NSNull null], (void*)kCFNull); // Pointer equality required.
 }
 
 TEST(NSNull, Singleton) {
