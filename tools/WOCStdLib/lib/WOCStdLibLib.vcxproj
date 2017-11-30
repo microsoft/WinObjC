@@ -37,7 +37,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)inet.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)random.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)time.cpp" />
-    <ClCompile Include="OSSpinLock.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)OSSpinLock.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{17D1A01F-08ED-4903-BAE1-D446150CC7D5}</ProjectGuid>
