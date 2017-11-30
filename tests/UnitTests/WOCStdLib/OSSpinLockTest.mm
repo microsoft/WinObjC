@@ -23,9 +23,18 @@ static OSSpinLock lock1;
 static OSSpinLock lock2;
 static OSSpinLock lock3;
 static int spinValue;
+static dispatch_semaphore_t semaphore1;
+static dispatch_semaphore_t semaphore2;
+
+// Create a 1 second end time for the test to timeout.
+static dispatch_time_t _createEndTestTime() {
+    return dispatch_time(DISPATCH_TIME_NOW, 1000000000);
+}
 
 TEST(OSSpinLock, SpinLockTests) {
-    dispatch_queue_t queue = dispatch_queue_create("queue", nullptr);
+    // Use two queues for concurrency as DISPATCH_QUEUE_CONCURRENT is not yet supported.
+    dispatch_queue_t queue1 = dispatch_queue_create("queue", nullptr);
+    dispatch_queue_t queue2 = dispatch_queue_create("queue", nullptr);
 
     lock1 = OS_SPINLOCK_INIT;
     lock2 = OS_SPINLOCK_INIT;
@@ -36,15 +45,23 @@ TEST(OSSpinLock, SpinLockTests) {
     OSSpinLockLock(&lock2);
     OSSpinLockLock(&lock3);
 
-    dispatch_async(queue, ^{
+    semaphore1 = dispatch_semaphore_create(0);
+    semaphore2 = dispatch_semaphore_create(0);
+
+    dispatch_async(queue1, ^{
+        dispatch_semaphore_wait(semaphore1, _createEndTestTime());
+
         ASSERT_EQ(false, OSSpinLockTry(&lock1));
         ASSERT_EQ(0, spinValue);
         spinValue++;
         ASSERT_EQ(1, spinValue);
         OSSpinLockUnlock(&lock2);
+        dispatch_semaphore_signal(semaphore2);
     });
 
-    dispatch_async(queue, ^{
+    dispatch_async(queue2, ^{
+        dispatch_semaphore_signal(semaphore1);
+
         OSSpinLockLock(&lock2);
         ASSERT_EQ(false, OSSpinLockTry(&lock1));
         ASSERT_EQ(1, spinValue);
@@ -53,8 +70,16 @@ TEST(OSSpinLock, SpinLockTests) {
         OSSpinLockUnlock(&lock1);
         OSSpinLockUnlock(&lock2);
         OSSpinLockUnlock(&lock3);
+        dispatch_semaphore_signal(semaphore2);
     });
 
-    OSSpinLockLock(&lock3);
+    dispatch_semaphore_wait(semaphore2, _createEndTestTime());
+    dispatch_semaphore_wait(semaphore2, _createEndTestTime());
+
+    ASSERT_EQ(true, OSSpinLockTry(&lock3));
+    ASSERT_EQ(false, OSSpinLockTry(&lock3));
     OSSpinLockUnlock(&lock3);
+
+    dispatch_release(queue1);
+    dispatch_release(queue2);
 }

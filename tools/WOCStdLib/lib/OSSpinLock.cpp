@@ -20,16 +20,16 @@
 #include <intrin.h>
 #endif
 
-extern "C" void OSSpinLockLock(volatile OSSpinLock *lock) {
+extern "C" void OSSpinLockLock(volatile OSSpinLock* lock) {
     while (_InterlockedCompareExchange((volatile long*)lock, ~0, 0) != 0) {
-		Sleep(0);
+        Sleep(0);
     }
 }
 
-extern "C" void OSSpinLockUnlock(volatile OSSpinLock *lock) {
+extern "C" void OSSpinLockUnlock(volatile OSSpinLock* lock) {
     _InterlockedExchange((volatile long*)lock, 0);
 }
 
-extern "C" bool OSSpinLockTry(volatile OSSpinLock *lock) {
+extern "C" bool OSSpinLockTry(volatile OSSpinLock* lock) {
     return (_InterlockedCompareExchange((volatile long*)lock, ~0, 0) == 0);
 }
