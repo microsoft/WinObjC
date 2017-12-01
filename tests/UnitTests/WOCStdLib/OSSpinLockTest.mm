@@ -19,15 +19,8 @@
 #import <dispatch/dispatch.h>
 #import <libkern/OSAtomic.h>
 
-static OSSpinLock lock1;
-static OSSpinLock lock2;
-static OSSpinLock lock3;
-static int spinValue;
-static dispatch_semaphore_t semaphore1;
-static dispatch_semaphore_t semaphore2;
-
 // Create a 1 second end time for the test to timeout.
-static dispatch_time_t _createEndTestTime() {
+dispatch_time_t _createEndTestTime() {
     return dispatch_time(DISPATCH_TIME_NOW, 1000000000);
 }
 
@@ -36,17 +29,16 @@ TEST(OSSpinLock, SpinLockTests) {
     dispatch_queue_t queue1 = dispatch_queue_create("queue", nullptr);
     dispatch_queue_t queue2 = dispatch_queue_create("queue", nullptr);
 
-    lock1 = OS_SPINLOCK_INIT;
-    lock2 = OS_SPINLOCK_INIT;
-    lock3 = OS_SPINLOCK_INIT;
+    __block OSSpinLock lock1 = OS_SPINLOCK_INIT;
+    __block OSSpinLock lock2 = OS_SPINLOCK_INIT;
+    __block OSSpinLock lock3 = OS_SPINLOCK_INIT;
+    __block int spinValue = 0;
+    __block dispatch_semaphore_t semaphore1 = dispatch_semaphore_create(0);
+    __block dispatch_semaphore_t semaphore2 = dispatch_semaphore_create(0);
 
-    spinValue = 0;
     OSSpinLockLock(&lock1);
     OSSpinLockLock(&lock2);
     OSSpinLockLock(&lock3);
-
-    semaphore1 = dispatch_semaphore_create(0);
-    semaphore2 = dispatch_semaphore_create(0);
 
     dispatch_async(queue1, ^{
         dispatch_semaphore_wait(semaphore1, _createEndTestTime());
