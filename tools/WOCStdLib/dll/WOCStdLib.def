@@ -33,6 +33,9 @@ LIBRARY WOCStdLib
         OSSwapInt16
         OSSwapInt32
         OSSwapLittleToHostInt32
+        OSSpinLockLock
+        OSSpinLockUnlock
+        OSSpinLockTry
         arc4random
         arc4random_uniform
         mach_timebase_info
