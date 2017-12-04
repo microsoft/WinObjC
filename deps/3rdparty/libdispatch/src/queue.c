@@ -2039,7 +2039,7 @@ static void _dispatch_queue_insert_specific(dispatch_queue_specific_t dqs) {
 	TAILQ_FOREACH(var, &dqsl->context_list, specific) {
 		if (var->key == dqs->key) {
 			if(var->destructor) {
-				var->destructor(var->context);
+				dispatch_async_f(_dispatch_get_root_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, false), var->context, var->destructor);
 			}
 
 			// If a specific exists with this key, simply update the context on that specific
