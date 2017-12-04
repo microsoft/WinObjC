@@ -34,7 +34,9 @@ static dispatch_time_t _createEndTestTime() {
 static dispatch_semaphore_t destructorSemaphore;
 static void destructor(void* x) {
     destructorCount++;
-    dispatch_semaphore_signal(destructorSemaphore);
+    if (destructorSemaphore) {
+        dispatch_semaphore_signal(destructorSemaphore);
+    }
 }
 
 TEST(DispatchTests, SimpleSpecific) {
@@ -124,6 +126,7 @@ TEST(DispatchTests, SpecificDestructor) {
     dispatch_release(queue);
     dispatch_release(group);
     dispatch_release(destructorSemaphore);
+    destructorSemaphore = nullptr;
 }
 
 TEST(DispatchTests, RemoveSpecific) {
