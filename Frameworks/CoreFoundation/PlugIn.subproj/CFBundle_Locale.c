@@ -25,6 +25,11 @@
 #endif
 #include <ctype.h>
 
+// WINOBJC: Helper for retrieving list of preferred languages
+#if DEPLOYMENT_TARGET_WINDOWS
+#include "_CFLocaleInternal.h"
+#endif
+
 static CFStringRef _CFBundleCopyLanguageFoundInLocalizations(CFArrayRef localizations, CFStringRef language);
 
 #pragma mark -
@@ -531,6 +536,10 @@ CF_PRIVATE CFArrayRef _CFBundleCopyUserLanguages() {
     static CFArrayRef _CFBundleUserLanguages = NULL;
     static dispatch_once_t once = 0;
     dispatch_once(&once, ^{
+// WINOBJC: __CFAppleLanguages does not exist on Windows
+#if DEPLOYMENT_TARGET_WINDOWS
+        _CFBundleUserLanguages = EnumerateUserPreferredLanguages();
+#else
         CFArrayRef preferencesArray = NULL;
         if (__CFAppleLanguages) {
             CFDataRef data;
@@ -555,6 +564,7 @@ CF_PRIVATE CFArrayRef _CFBundleCopyUserLanguages() {
             _CFBundleUserLanguages = NULL;
         }
         if (preferencesArray) CFRelease(preferencesArray);
+#endif
     });
     
     if (_CFBundleUserLanguages) {
@@ -663,8 +673,66 @@ static CFStringRef _CFBundleCopyLanguageFoundInLocalizations(CFArrayRef localiza
     return NULL;
 }
 
+// WINOBJC: Helper functions for workaround in _CFBundleCreateMutableArrayOfFallbackLanguages
+static CFStringRef _copyStringTruncated(CFStringRef localization, CFRange cutoff) {
+    CFMutableStringRef truncatedString = CFStringCreateMutableCopy(NULL, 0, localization);
+    CFStringDelete(truncatedString, CFRangeMake(cutoff.location, CFStringGetLength(truncatedString) - cutoff.location));
+    return truncatedString;
+}
+
+static CFStringRef _copyStringWithUnderscores(CFStringRef localization) {
+    CFMutableStringRef underscoredString = CFStringCreateMutableCopy(NULL, 0, localization);
+    CFStringFindAndReplace(underscoredString, CFSTR("-"), CFSTR("_"), CFRangeMake(0, CFStringGetLength(underscoredString)), 0);
+    return underscoredString;
+}
+
 // Given a list of localizations (e.g., provided as argument to API, or present as .lproj directories), return a mutable array of localizations in preferred order. Returns NULL if nothing is found.
 static CFMutableArrayRef _CFBundleCreateMutableArrayOfFallbackLanguages(CFArrayRef availableLocalizations, CFArrayRef preferredLocalizations) {
+// WINOBJC: The API that performs the work described below does not exist in our 3rd party libraries
+#if DEPLOYMENT_TARGET_WINDOWS
+    // Here we need to intersect the preferred languages with the available localizations
+    // We know the user languages are in preferred order, add to this list in this order
+    // Prefer the full language locale, attempt to convert any hyphens to underscores as
+    // Windows language settings are retrieved with hyphens while underscores are commonly used for localization.
+    // Finally, attempt to truncate any underscores from the language to find a base localization.
+
+    CFMutableArrayRef resultArray = CFArrayCreateMutable(kCFAllocatorSystemDefault, 0, &kCFTypeArrayCallBacks);
+    
+    for (CFIndex i = 0, count = CFArrayGetCount(preferredLocalizations); i < count; i++) {
+        CFStringRef preferredLocalization = (CFStringRef)CFArrayGetValueAtIndex(preferredLocalizations, i);
+        for (CFIndex j = 0, count = CFArrayGetCount(availableLocalizations); j < count; j++) {
+            CFStringRef availableLocalization = (CFStringRef)CFArrayGetValueAtIndex(availableLocalizations, j);
+            if(CFStringCompare(preferredLocalization, availableLocalization, 0) == kCFCompareEqualTo) {
+                CFArrayAppendValue(resultArray, preferredLocalization);
+            }
+            CFRange hyphenation;
+            if (CFStringFindWithOptions(preferredLocalization, CFSTR("-"), CFRangeMake(0, CFStringGetLength(preferredLocalization)), kCFCompareCaseInsensitive, &hyphenation) == true) {
+                CFStringRef underscoreNotationLocalization = _copyStringWithUnderscores(preferredLocalization);
+                if (CFStringCompare(underscoreNotationLocalization, availableLocalization, 0) == kCFCompareEqualTo) {
+                    CFArrayAppendValue(resultArray, underscoreNotationLocalization);
+                }
+
+                CFStringRef truncatedLocalization = _copyStringTruncated(underscoreNotationLocalization, hyphenation);
+                if (CFStringCompare(truncatedLocalization, availableLocalization, 0) == kCFCompareEqualTo) {
+                    CFArrayAppendValue(resultArray, truncatedLocalization);
+                }
+
+                CFRelease(underscoreNotationLocalization);
+                CFRelease(truncatedLocalization);
+            } else if (CFStringFindWithOptions(preferredLocalization, CFSTR("_"), CFRangeMake(0, CFStringGetLength(preferredLocalization)), kCFCompareCaseInsensitive, &hyphenation) == true) {
+                CFStringRef truncatedLocalization = _copyStringTruncated(preferredLocalization, hyphenation);
+                if (CFStringCompare(truncatedLocalization, availableLocalization, 0) == kCFCompareEqualTo) {
+                    CFArrayAppendValue(resultArray, truncatedLocalization);
+                }
+                CFRelease(truncatedLocalization);
+            }
+        }
+    }
+    if (CFArrayGetCount(resultArray) > 0) {
+        return resultArray;
+    }
+    return NULL;
+#endif
     // stringPointers must be the length of list
     char * (^makeBuffer)(CFArrayRef, char **) = ^(CFArrayRef list, char *stringPointers[]) {
 #if !__HAS_APPLE_ICU__
@@ -785,6 +853,7 @@ static CFMutableArrayRef _CFBundleCopyPreferredLanguagesInList(CFArrayRef search
         }
     }
     
+
     if (!result) {
         // If we didn't find the main bundle's preferred language, look at the users' prefs again and find the best one.
         if (userLanguages) {
