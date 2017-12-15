@@ -76,6 +76,5 @@ TEST_F(NSBundleLocalization, LocalizedString) {
     NSString* helloWorldInGerman = NSLocalizedStringFromTableInBundle(helloWorld, nil, bundle, nil);
     NSString* codingInChinese = NSLocalizedStringFromTableInBundle(coding, nil, bundle, nil);
     ASSERT_OBJCEQ(@"Hallo Welt", helloWorldInGerman);
-    // Cannot use OBJCEQ as these unicode characters will cause a crash. isEqualToString is a code point literal comparison.
-    ASSERT_TRUE([codingInChinese isEqualToString:@"编码"]);
+    ASSERT_OBJCEQ(@"编码", codingInChinese);
 }
