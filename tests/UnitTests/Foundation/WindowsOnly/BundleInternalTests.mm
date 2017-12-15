@@ -29,10 +29,10 @@ protected:
         NSString* localizationResourceName = @"Localizable.strings";
         // Create a unique test directory
         _playground = [@"./tmp_TestFoundation" stringByAppendingPathComponent:[NSUUID UUID].UUIDString];
-        bundlePath = [_playground stringByAppendingPathComponent:@"MyBundle.bundle"];
+        _bundlePath = [_playground stringByAppendingPathComponent:@"MyBundle.bundle"];
         NSError* error = nil;
 
-        NSString* localizationPath = [NSString stringWithFormat:@"%@/%@", bundlePath.get(), _subDirectory];
+        NSString* localizationPath = [NSString stringWithFormat:@"%@/%@", _bundlePath.get(), _subDirectory];
         [[NSFileManager defaultManager] createDirectoryAtPath:localizationPath
                                   withIntermediateDirectories:true
                                                    attributes:nil
@@ -57,7 +57,7 @@ protected:
     }
 
     StrongId<NSString> _playground;
-    StrongId<NSString> bundlePath;
+    StrongId<NSString> _bundlePath;
 };
 
 TEST_F(NSBundleLocalization, LocalizedString) {
@@ -65,7 +65,7 @@ TEST_F(NSBundleLocalization, LocalizedString) {
         ASSERT_TRUE_MSG(false, @"Unable to create bundle resources");
     }
 
-    NSBundle* bundle = [NSBundle bundleWithPath:bundlePath];
+    NSBundle* bundle = [NSBundle bundleWithPath:_bundlePath];
     ASSERT_OBJCNE(bundle, nil);
 
     NSString* helloWorld = @"Hello World";

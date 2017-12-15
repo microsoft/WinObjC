@@ -25,11 +25,6 @@
 #endif
 #include <ctype.h>
 
-// WINOBJC: Helper for retrieving list of preferred languages
-#if DEPLOYMENT_TARGET_WINDOWS
-#include "_CFLocaleInternal.h"
-#endif
-
 static CFStringRef _CFBundleCopyLanguageFoundInLocalizations(CFArrayRef localizations, CFStringRef language);
 
 #pragma mark -
