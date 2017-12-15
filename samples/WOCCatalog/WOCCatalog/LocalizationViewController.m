@@ -28,6 +28,7 @@ static const CGFloat c_height = 50;
     UILabel* _pasteTextLabel;
 }
 - (void)viewDidLoad {
+    [super viewDidLoad];
     self.tableView.allowsSelection = YES;
 }
 

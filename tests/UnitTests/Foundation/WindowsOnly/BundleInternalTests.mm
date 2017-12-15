@@ -18,8 +18,6 @@
 #import <Foundation/Foundation.h>
 #import <objc/encoding.h>
 
-static NSString* _bundleName = @"MyBundle.bundle";
-
 class NSBundleLocalization : public ::testing::Test {
 public:
     explicit NSBundleLocalization() : ::testing::Test() {
@@ -30,11 +28,11 @@ protected:
         NSString* _subDirectory = @"en.lproj";
         NSString* localizationResourceName = @"Localizable.strings";
         // Create a unique test directory
-        NSString* tempDir = [[@"./tmp_TestFoundation" stringByAppendingPathComponent:[NSUUID UUID].UUIDString] stringByAppendingPathComponent:@"/"];
-        NSString* bundlePath = [tempDir stringByAppendingPathComponent:_bundleName];
+        _playground = [@"./tmp_TestFoundation" stringByAppendingPathComponent:[NSUUID UUID].UUIDString];
+        bundlePath = [_playground stringByAppendingPathComponent:@"MyBundle.bundle"];
         NSError* error = nil;
 
-        NSString* localizationPath = [NSString stringWithFormat:@"%@/%@", bundlePath, _subDirectory];
+        NSString* localizationPath = [NSString stringWithFormat:@"%@/%@", bundlePath.get(), _subDirectory];
         [[NSFileManager defaultManager] createDirectoryAtPath:localizationPath
                                   withIntermediateDirectories:true
                                                    attributes:nil
@@ -48,8 +46,6 @@ protected:
         // As translated by Bing translate using unicode escapes to properly write to file
         NSString* localization = @"\"Hello World\" = \"Hallo Welt\";\n\"Coding\" = \"\u7f16\u7801\";";
         [localization writeToFile:filepath atomically:YES encoding:NSUnicodeStringEncoding error:&error];
-
-        _playground = tempDir;
     }
 
     virtual void TearDown() {
@@ -61,6 +57,7 @@ protected:
     }
 
     StrongId<NSString> _playground;
+    StrongId<NSString> bundlePath;
 };
 
 TEST_F(NSBundleLocalization, LocalizedString) {
@@ -68,7 +65,7 @@ TEST_F(NSBundleLocalization, LocalizedString) {
         ASSERT_TRUE_MSG(false, @"Unable to create bundle resources");
     }
 
-    NSBundle* bundle = [NSBundle bundleWithPath:[_playground stringByAppendingPathComponent:_bundleName]];
+    NSBundle* bundle = [NSBundle bundleWithPath:bundlePath];
     ASSERT_OBJCNE(bundle, nil);
 
     NSString* helloWorld = @"Hello World";

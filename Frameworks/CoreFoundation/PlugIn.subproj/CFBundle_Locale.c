@@ -676,9 +676,6 @@ static CFStringRef _CFBundleCopyLanguageFoundInLocalizations(CFArrayRef localiza
 // WINOBJC: Helper functions for workaround in _CFBundleCreateMutableArrayOfFallbackLanguages
 static CFStringRef _copyStringTruncated(CFStringRef localization, CFRange cutoff) {
     return CFStringCreateWithSubstring(NULL, localization, CFRangeMake(0, cutoff.location));
-    //CFMutableStringRef truncatedString = CFStringCreateMutableCopy(NULL, 0, localization);
-    //CFStringDelete(truncatedString, CFRangeMake(cutoff.location, CFStringGetLength(truncatedString) - cutoff.location));
-    //return truncatedString;
 }
 
 static CFStringRef _copyStringWithUnderscores(CFStringRef localization) {
