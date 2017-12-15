@@ -30,7 +30,7 @@ protected:
         NSString* _subDirectory = @"en.lproj";
         NSString* localizationResourceName = @"Localizable.strings";
         // Create a unique test directory
-        NSString* tempDir = [[@"./tmp_TestFoundation" stringByAppendingString:[NSUUID UUID].UUIDString] stringByAppendingString:@"/"];
+        NSString* tempDir = [[@"./tmp_TestFoundation" stringByAppendingPathComponent:[NSUUID UUID].UUIDString] stringByAppendingPathComponent:@"/"];
         NSString* bundlePath = [tempDir stringByAppendingPathComponent:_bundleName];
         NSError* error = nil;
 
