@@ -292,6 +292,10 @@
       <FileType>Document</FileType>
       <VariantDir>zh-Hant-TW.lproj</VariantDir>
     </SBResourceCopy>
+    <SBResourceCopy Include="es_MX.lproj\Localizable.strings">
+      <FileType>Document</FileType>
+      <VariantDir>es_MX.lproj</VariantDir>
+    </SBResourceCopy>
     <SBResourceCopy Include="..\..\WOCCatalog\Images\blueButton.png" />
     <SBResourceCopy Include="..\..\WOCCatalog\Images\photo1.jpg" />
     <SBResourceCopy Include="..\..\WOCCatalog\Images\photo10.jpg" />

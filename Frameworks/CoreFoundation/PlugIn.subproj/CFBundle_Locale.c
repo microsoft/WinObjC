@@ -538,7 +538,7 @@ CF_PRIVATE CFArrayRef _CFBundleCopyUserLanguages() {
     dispatch_once(&once, ^{
 // WINOBJC: __CFAppleLanguages does not exist on Windows
 #if DEPLOYMENT_TARGET_WINDOWS
-        _CFBundleUserLanguages = EnumerateUserPreferredLanguages();
+        _CFBundleUserLanguages = CFLocaleCopyPreferredLanguages();
 #else
         CFArrayRef preferencesArray = NULL;
         if (__CFAppleLanguages) {
@@ -675,9 +675,10 @@ static CFStringRef _CFBundleCopyLanguageFoundInLocalizations(CFArrayRef localiza
 
 // WINOBJC: Helper functions for workaround in _CFBundleCreateMutableArrayOfFallbackLanguages
 static CFStringRef _copyStringTruncated(CFStringRef localization, CFRange cutoff) {
-    CFMutableStringRef truncatedString = CFStringCreateMutableCopy(NULL, 0, localization);
-    CFStringDelete(truncatedString, CFRangeMake(cutoff.location, CFStringGetLength(truncatedString) - cutoff.location));
-    return truncatedString;
+    return CFStringCreateWithSubstring(NULL, localization, CFRangeMake(0, cutoff.location));
+    //CFMutableStringRef truncatedString = CFStringCreateMutableCopy(NULL, 0, localization);
+    //CFStringDelete(truncatedString, CFRangeMake(cutoff.location, CFStringGetLength(truncatedString) - cutoff.location));
+    //return truncatedString;
 }
 
 static CFStringRef _copyStringWithUnderscores(CFStringRef localization) {
@@ -688,19 +689,21 @@ static CFStringRef _copyStringWithUnderscores(CFStringRef localization) {
 
 // Given a list of localizations (e.g., provided as argument to API, or present as .lproj directories), return a mutable array of localizations in preferred order. Returns NULL if nothing is found.
 static CFMutableArrayRef _CFBundleCreateMutableArrayOfFallbackLanguages(CFArrayRef availableLocalizations, CFArrayRef preferredLocalizations) {
-// WINOBJC: The API that performs the work described below does not exist in our 3rd party libraries
+// WINOBJC: The API that performs the work described below does not exist in our 3rd party libraries. ualoc_ is an Apple ICU addition.
 #if DEPLOYMENT_TARGET_WINDOWS
     // Here we need to intersect the preferred languages with the available localizations
     // We know the user languages are in preferred order, add to this list in this order
     // Prefer the full language locale, attempt to convert any hyphens to underscores as
     // Windows language settings are retrieved with hyphens while underscores are commonly used for localization.
     // Finally, attempt to truncate any underscores from the language to find a base localization.
+    // For example, an english locale will appear as "en-US" and a German locale will appear as "de-DE".
+    // A localization for "en-US" may be set up as "en-US", "en_US", or even just "en".
 
     CFMutableArrayRef resultArray = CFArrayCreateMutable(kCFAllocatorSystemDefault, 0, &kCFTypeArrayCallBacks);
     
-    for (CFIndex i = 0, count = CFArrayGetCount(preferredLocalizations); i < count; i++) {
+    for (CFIndex i = 0, preferredCount = CFArrayGetCount(preferredLocalizations); i < preferredCount; i++) {
         CFStringRef preferredLocalization = (CFStringRef)CFArrayGetValueAtIndex(preferredLocalizations, i);
-        for (CFIndex j = 0, count = CFArrayGetCount(availableLocalizations); j < count; j++) {
+        for (CFIndex j = 0, availableCount = CFArrayGetCount(availableLocalizations); j < availableCount; j++) {
             CFStringRef availableLocalization = (CFStringRef)CFArrayGetValueAtIndex(availableLocalizations, j);
             if(CFStringCompare(preferredLocalization, availableLocalization, 0) == kCFCompareEqualTo) {
                 CFArrayAppendValue(resultArray, preferredLocalization);
@@ -853,7 +856,6 @@ static CFMutableArrayRef _CFBundleCopyPreferredLanguagesInList(CFArrayRef search
         }
     }
     
-
     if (!result) {
         // If we didn't find the main bundle's preferred language, look at the users' prefs again and find the best one.
         if (userLanguages) {
