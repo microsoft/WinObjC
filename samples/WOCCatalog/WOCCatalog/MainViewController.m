@@ -44,6 +44,7 @@
 #import "GeocodingViewController.h"
 #import "CoreLocationViewController.h"
 #import "GesturesViewController.h"
+#import "LocalizationViewController.h"
 
 #ifdef WINOBJC
 #import "XamlViewController.h"
@@ -138,12 +139,15 @@
 
     // Accelerate 2
     [self addMenuItemViewController:[[AccelerateViewController2 alloc] init] andTitle:@"Accelerate 2"];
-    
+
     // Shadow
     [self addMenuItemViewController:[[ShadowViewController alloc] init] andTitle:@"Shadow"];
 
     // UIPasteboard
     [self addMenuItemViewController:[[UIPasteboardViewController alloc] init] andTitle:@"Copy And Paste"];
+
+    // Localization
+    [self addMenuItemViewController:[[LocalizationViewController alloc] init] andTitle:@"Localization"];
 }
 
 - (void)didReceiveMemoryWarning {

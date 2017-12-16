@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|ARM">
@@ -212,6 +212,7 @@
     <ClInclude Include="..\..\WOCCatalog\GeocodingViewController.h" />
     <ClInclude Include="..\..\WOCCatalog\GesturesViewController.h" />
     <ClInclude Include="..\..\WOCCatalog\ImagesViewController.h" />
+    <ClInclude Include="..\..\WOCCatalog\LocalizationViewController.h" />
     <ClInclude Include="..\..\WOCCatalog\MainViewController.h" />
     <ClInclude Include="..\..\WOCCatalog\MenuTableViewController.h" />
     <ClInclude Include="..\..\WOCCatalog\OpenGLES11Controller.h" />
@@ -248,6 +249,7 @@
     <ClangCompile Include="..\..\WOCCatalog\GeocodingViewController.m" />
     <ClangCompile Include="..\..\WOCCatalog\GesturesViewController.m" />
     <ClangCompile Include="..\..\WOCCatalog\ImagesViewController.m" />
+    <ClangCompile Include="..\..\WOCCatalog\LocalizationViewController.m" />
     <ClangCompile Include="..\..\WOCCatalog\MainViewController.m" />
     <ClangCompile Include="..\..\WOCCatalog\MenuTableViewController.m" />
     <ClangCompile Include="..\..\WOCCatalog\OpenGLES11Controller.m" />
@@ -274,6 +276,26 @@
       <VariableFile Condition="'$(Configuration)'=='Debug'">WOCCatalog-Debug-xcvars.txt</VariableFile>
       <VariableFile Condition="'$(Configuration)'=='Release'">WOCCatalog-Release-xcvars.txt</VariableFile>
     </SBInfoPlistCopy>
+    <SBResourceCopy Include="Base.lproj\Localizable.strings">
+      <FileType>Document</FileType>
+      <VariantDir>Base.lproj</VariantDir>
+    </SBResourceCopy>
+    <SBResourceCopy Include="de.lproj\Localizable.strings">
+      <FileType>Document</FileType>
+      <VariantDir>de.lproj</VariantDir>
+    </SBResourceCopy>
+    <SBResourceCopy Include="zh.lproj\Localizable.strings">
+      <FileType>Document</FileType>
+      <VariantDir>zh.lproj</VariantDir>
+    </SBResourceCopy>
+    <SBResourceCopy Include="zh-Hant-TW.lproj\Localizable.strings">
+      <FileType>Document</FileType>
+      <VariantDir>zh-Hant-TW.lproj</VariantDir>
+    </SBResourceCopy>
+    <SBResourceCopy Include="es_MX.lproj\Localizable.strings">
+      <FileType>Document</FileType>
+      <VariantDir>es_MX.lproj</VariantDir>
+    </SBResourceCopy>
     <SBResourceCopy Include="..\..\WOCCatalog\Images\blueButton.png" />
     <SBResourceCopy Include="..\..\WOCCatalog\Images\photo1.jpg" />
     <SBResourceCopy Include="..\..\WOCCatalog\Images\photo10.jpg" />
@@ -303,7 +325,6 @@
   <ItemGroup />
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />
-
   <!-- Begin NuGet Section -->
   <PropertyGroup>
     <TargetFramework>uap10.0</TargetFramework>
@@ -316,6 +337,5 @@
     <PackageReference Include="WinObjC.Logging" Version="*" />
   </ItemGroup>
   <!-- End NuGet Section -->
-  
-  <Import Project="$(MSBuildThisFileDirectory)\..\..\..\..\common\winobjc.packagereference.override.targets" Condition="Exists('$(MSBuildThisFileDirectory)\..\..\..\..\common\winobjc.packagereference.override.targets')"/>
+  <Import Project="$(MSBuildThisFileDirectory)\..\..\..\..\common\winobjc.packagereference.override.targets" Condition="Exists('$(MSBuildThisFileDirectory)\..\..\..\..\common\winobjc.packagereference.override.targets')" />
 </Project>
