@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="Common">
@@ -97,6 +97,9 @@
       <Filter>WOCCatalog</Filter>
     </ClInclude>
     <ClInclude Include="..\..\WOCCatalog\ImagesViewController.h">
+      <Filter>WOCCatalog</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\WOCCatalog\LocalizationViewController.h">
       <Filter>WOCCatalog</Filter>
     </ClInclude>
     <ClInclude Include="..\..\WOCCatalog\MainViewController.h">
@@ -205,6 +208,9 @@
       <Filter>WOCCatalog</Filter>
     </ClangCompile>
     <ClangCompile Include="..\..\WOCCatalog\ImagesViewController.m">
+      <Filter>WOCCatalog</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\WOCCatalog\LocalizationViewController.m">
       <Filter>WOCCatalog</Filter>
     </ClangCompile>
     <ClangCompile Include="..\..\WOCCatalog\MainViewController.m">
@@ -331,5 +337,22 @@
     <XibCompile Include="..\..\WOCCatalog\BezierViewController.xib">
       <Filter>WOCCatalog</Filter>
     </XibCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="App.xaml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="App.xaml.cpp" />
+    <ClCompile Include="pch.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="pch.h" />
+    <ClInclude Include="App.xaml.h" />
+      <Filter>WOCCatalog</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <SBResourceCopy Include="Base.lproj\Localizable.strings" />
+    <SBResourceCopy Include="de.lproj\Localizable.strings" />
   </ItemGroup>
 </Project>

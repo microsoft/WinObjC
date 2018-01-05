@@ -317,6 +317,7 @@
     <ClangCompile Include="$(StarboardBasePath)\tests\UnitTests\Foundation\NSObject_NSKeyValueSetAdaptersTests.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSUUIDTests.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSNotificationQueueTests.mm" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\DispatchTests.mm" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\..\..\tests\unittests\Foundation\NSFileManagerUT.txt">

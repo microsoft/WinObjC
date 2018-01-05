@@ -19,7 +19,13 @@
 #ifndef _OSATOMIC_H_
 #define _OSATOMIC_H_
 
+#define OS_SPINLOCK_INIT 0
+
+#include <inttypes.h>
+#include <sys/cdefs.h>
+
 typedef int         __int32_t;
+typedef __int32_t   OSSpinLock;
 
 __BEGIN_DECLS
 
@@ -49,6 +55,10 @@ static __inline __int32_t OSAtomicDecrement32Barrier(volatile __int32_t *val)
 {
     return OSAtomicAdd32Barrier(-1, val);
 }
+
+void OSSpinLockLock(volatile OSSpinLock *lock);
+void OSSpinLockUnlock(volatile OSSpinLock *lock);
+bool OSSpinLockTry(volatile OSSpinLock *lock);
 
 __END_DECLS
 

@@ -204,7 +204,8 @@
     <ClangCompile Include="..\..\..\..\tests\unittests\WOCStdLib\mach\mach_task_info_test.mm" />
     <ClangCompile Include="..\..\..\..\tests\unittests\WOCStdLib\mach\mach_test.mm" />
     <ClangCompile Include="..\..\..\..\tests\unittests\WOCStdLib\inettests.mm" />
+    <ClangCompile Include="..\..\..\..\tests\UnitTests\WOCStdLib\OSSpinLockTest.mm" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
-  <Import Project="$(StarboardBasePath)\common\winobjc.packagereference.override.targets" Condition="Exists('$(StarboardBasePath)\common\winobjc.packagereference.override.targets')"/>
+  <Import Project="$(StarboardBasePath)\common\winobjc.packagereference.override.targets" Condition="Exists('$(StarboardBasePath)\common\winobjc.packagereference.override.targets')" />
 </Project>
