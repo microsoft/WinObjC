@@ -110,24 +110,6 @@
     </ItemGroup>
   </Target>
 
-  <Import Project="$(MSBuildThisFileDirectory)\workaround\Microsoft.Nuget.Workaround.targets"/>
-
-  <!-- 
-       Work around issue with new PackageReference style of Restore. This style doesn't auto-restore in viusal studio when building (at least not for .vcxproj)
-       Instead of relying on the automatic behavior in Visual Studio, manually restore by having one project that all other projects depend on that does the restore. This should NOT be needed in the hopefully near future. 
-
-       NOTE: To make this work, this project MUST be added to the solution so that Visual Studio can see it and build it before building any projects that 
-       depend on it.
-  -->
-  <ItemGroup>
-    <ProjectReference Include="$(MSBuildThisFileDirectory)\NugetRestore.msbuildproj">
-      <Project>{B2C6186E-B340-49D8-888E-76ED83752E43}</Project>
-      <IncludeInPackage>false</IncludeInPackage>
-      <Private>false</Private>
-      <SkipGetTargetFrameworkProperties>true</SkipGetTargetFrameworkProperties>
-    </ProjectReference>
-  </ItemGroup>
-
   <!-- Check _WinObjCVersioningTargetsImported as a lazy way to avoid double imports. This isn't fool proof but most consumers add this override targets
        at the very bottom so other sources that may import the versioning targets should have already happened. Its not the end of the world to double import
        but msbuild will give out a warning.
