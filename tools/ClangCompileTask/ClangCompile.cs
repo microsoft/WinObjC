@@ -534,21 +534,8 @@ namespace ClangCompile
                 {
                     LogMessage(MessageImportance.Low, "Clang exe: {0}", GetClangExe());
 
-                    ProcessStartInfo clangPsi = new ProcessStartInfo(GetClangExe(), @"-v");
-                    Process clangVersionProc = new Process();
-
-                    clangPsi.CreateNoWindow = true;
-                    clangPsi.RedirectStandardError = true;
-                    clangPsi.UseShellExecute = false;
-                    clangVersionProc.StartInfo = clangPsi;
-                    clangVersionProc.Start();
-                    clangVersionProc.WaitForExit();
-
-                    string versionString = clangVersionProc.StandardError.ReadToEnd();
-                    LogMessage(MessageImportance.Low, "Clang version: {0}", versionString);
-                    // clang's version output: clang with Microsoft CodeGen version <version number>
-                    string version = versionString.Split(' ')[5];
-                    LLVMClangVersion = version;
+                    FileVersionInfo version = FileVersionInfo.GetVersionInfo(GetClangExe());
+                    LLVMClangVersionValue = string.Format("{0}.{1}.{2}", version.FileMajorPart, version.FileMinorPart, version.FileBuildPart);
                 }
                 return LLVMClangVersionValue;
             }
