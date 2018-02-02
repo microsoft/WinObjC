@@ -18,7 +18,7 @@
 #include "UIColor.h"
 
 static PropertyMapper propertyMappings[] = {
-    "IBUIShowsSelectionImmediatelyOnTouchBegin", "UIShowsSelectionImmediatelyOnTouchBegin", NULL,
+    {"IBUIShowsSelectionImmediatelyOnTouchBegin", "UIShowsSelectionImmediatelyOnTouchBegin", NULL},
 };
 static const int numPropertyMappings = sizeof(propertyMappings) / sizeof(PropertyMapper);
 

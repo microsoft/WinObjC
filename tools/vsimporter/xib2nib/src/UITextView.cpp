@@ -33,30 +33,14 @@ static void WriteLayoutWidth(struct _PropertyMapper* prop, NIBWriter* writer, XI
 }
 
 static PropertyMapper propertyMappings[] = {
-    "IBUIHighlightedColor",
-    "UIHighlightedColor",
-    NULL,
-    "IBUIShadowColor",
-    "UIShadowColor",
-    NULL,
-    "IBUIBaselineAdjustment",
-    "UIBaselineAdjustment",
-    NULL,
-    "IBUIMinimumFontSize",
-    "UIMinimumFontSize",
-    WriteMinimumFontSize,
-    "IBUINumberOfLines",
-    "UINumberOfLines",
-    NULL,
-    "IBUITextAlignment",
-    "UITextAlignment",
-    NULL,
-    "IBUILineBreakMode",
-    "UILineBreakMode",
-    NULL,
-    "preferredMaxLayoutWidth",
-    "UIPreferredMaxLayoutWidth",
-    WriteLayoutWidth,
+    {"IBUIHighlightedColor", "UIHighlightedColor", NULL},
+    {"IBUIShadowColor", "UIShadowColor", NULL},
+    {"IBUIBaselineAdjustment", "UIBaselineAdjustment", NULL},
+    {"IBUIMinimumFontSize", "UIMinimumFontSize", WriteMinimumFontSize},
+    {"IBUINumberOfLines", "UINumberOfLines", NULL},
+    {"IBUITextAlignment", "UITextAlignment", NULL},
+    {"IBUILineBreakMode", "UILineBreakMode", NULL},
+    {"preferredMaxLayoutWidth", "UIPreferredMaxLayoutWidth", WriteLayoutWidth},
 };
 static const int numPropertyMappings = sizeof(propertyMappings) / sizeof(PropertyMapper);
 

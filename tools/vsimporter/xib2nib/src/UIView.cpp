@@ -31,7 +31,9 @@ static void InvertBool(struct _PropertyMapper* prop, NIBWriter* writer, XIBObjec
 }
 
 static PropertyMapper propertyMappings[] = {
-    "IBUIUserInteractionEnabled", "UIUserInteractionDisabled", InvertBool, "IBUITag", "UITag", NULL, "IBUIAlpha", "UIAlpha", NULL,
+    {"IBUIUserInteractionEnabled", "UIUserInteractionDisabled", InvertBool},
+    {"IBUITag", "UITag", NULL},
+    {"IBUIAlpha", "UIAlpha", NULL},
 };
 static const int numPropertyMappings = sizeof(propertyMappings) / sizeof(PropertyMapper);
 

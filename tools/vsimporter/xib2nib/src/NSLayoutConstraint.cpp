@@ -95,18 +95,18 @@ void NSLayoutConstraint::InitFromStory(XIBObject* obj) {
     ObjectConverterSwapper::InitFromStory(obj);
 
     const char* attr;
-    if (attr = obj->getAttrAndHandle("firstAttribute")) {
+    if ((attr = obj->getAttrAndHandle("firstAttribute"))) {
         if (storyToLayout.find(attr) != storyToLayout.end()) {
             _firstAttribute = storyToLayout[attr];
         }
     }
-    if (attr = obj->getAttrAndHandle("secondAttribute")) {
+    if ((attr = obj->getAttrAndHandle("secondAttribute"))) {
         if (storyToLayout.find(attr) != storyToLayout.end()) {
             _secondAttribute = storyToLayout[attr];
         }
     }
 
-    if (attr = obj->getAttrAndHandle("constant")) {
+    if ((attr = obj->getAttrAndHandle("constant"))) {
         if (obj->getAttrAndHandle("symbolic") && strcmp(obj->getAttrAndHandle("symbolic"), "YES") == 0) {
             _hasSymbolicConstant = true;
             _symbolicConstant = strtod(attr, NULL);
