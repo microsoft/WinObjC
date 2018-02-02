@@ -75,6 +75,8 @@ public:
     float _constant;
     float _symbolicConstant;
     bool _hasSymbolicConstant;
+    const char* _layoutIdentifier;
+    bool _exportDefaultValues;
 
 public:
     NSLayoutConstraint();
@@ -83,4 +85,6 @@ public:
     virtual void InitFromStory(XIBObject* obj);
     virtual void Awaken();
     virtual void ConvertStaticMappings(NIBWriter* writer, XIBObject* obj);
+private:
+    XIBObject* substituteItemUnsupported(NIBWriter* writer, XIBObject* item);
 };

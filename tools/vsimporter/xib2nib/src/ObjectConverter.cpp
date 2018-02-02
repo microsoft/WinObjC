@@ -62,6 +62,7 @@
 #include "UICollectionViewController.h"
 #include "UIStepper.h"
 #include "_UILayoutGuide.h"
+#include "UILayoutGuide.h"
 #include "UIPanGestureRecognizer.h"
 #include "UISwipeGestureRecognizer.h"
 #include "UITapGestureRecognizer.h"
@@ -187,6 +188,7 @@ XIBObject* ObjectConverter::ConverterForStoryObject(const char* className, pugi:
     IS_CONVERTER(ret, className, "constraint", NSLayoutConstraint)
     IS_CONVERTER(ret, className, "layoutGuides", XIBVariation)
     IS_CONVERTER(ret, className, "viewControllerLayoutGuide", _UILayoutGuide)
+    IS_CONVERTER(ret, className, "viewLayoutGuide", UILayoutGuide)
     IS_CONVERTER(ret, className, "datePicker", UIDatePicker)
     IS_CONVERTER(ret, className, "slider", UISlider)
     IS_CONVERTER(ret, className, "collectionReusableView", UICollectionReusableView)
@@ -356,6 +358,15 @@ void ObjectConverterSwapper::InitFromStory(XIBObject* obj) {
 
     if (getAttrib("customClass")) {
         _swappedClassName = getAttrAndHandle("customClass");
+        const char* module = NULL;
+        if (getAttrib("customModule"))
+            module = getAttrAndHandle("customModule");
+        if (module) {
+            // its swift, mange class name with module
+            char buf[128]; // should be big enough
+            snprintf(buf, 128, "_TtC%zu%s%zu%s", strlen(module), module, strlen(_swappedClassName), _swappedClassName);
+            _swappedClassName = strdup(buf);
+        }
     }
 }
 

@@ -21,7 +21,6 @@
 #include "UIProxyObject.h"
 #include <assert.h>
 #include <map>
-#include "UIViewController.h"
 #include "../WBITelemetry/WBITelemetry.h"
 
 int curPlaceholder = 1;
@@ -130,6 +129,8 @@ NIBWriter::NIBWriter(FILE* out) {
     _baseObject = NULL;
     _connections = NULL;
     _visibleWindows = NULL;
+    _minimumDeploymentTarget = DEPLOYMENT_TARGET_RECENT;
+    _wasLimitedByDeplymentTarget = false;
     fpOut = out;
 }
 
@@ -139,6 +140,8 @@ NIBWriter::NIBWriter(FILE* out, XIBDictionary* externalReferences, XIBObject* ba
     _baseObject = NULL;
     _connections = NULL;
     _visibleWindows = NULL;
+    _minimumDeploymentTarget = DEPLOYMENT_TARGET_RECENT;
+    _wasLimitedByDeplymentTarget = false;
     fpOut = out;
 
     curPlaceholder = 1;
@@ -296,67 +299,6 @@ XIBObject* NIBWriter::GetProxyFor(XIBObject* obj) {
     return newProxy;
 }
 
-std::map<std::string, std::string> _g_exportedControllers;
-
-void NIBWriter::ExportAllControllers() {
-    for (const char* cur : UIViewController::_viewControllerNames) {
-        ExportController(cur);
-    }
-}
-
-void NIBWriter::ExportController(const char* controllerId) {
-    char szFilename[255];
-
-    XIBObject* controller = XIBObject::findReference(controllerId);
-    UIViewController* uiViewController = dynamic_cast<UIViewController*>(controller);
-    if (!uiViewController) {
-        // object isn't really a controller
-        printf("Object %s is not a controller\n", controller->stringValue());
-        return;
-    }
-
-    const char* controllerIdentifier = uiViewController->_storyboardIdentifier;
-    if (controllerIdentifier == NULL) {
-        // not all viewcontrollers will have a storyboard identifier. If they don't use the controller Id for the key.
-        controllerIdentifier = controllerId;
-    }
-
-    //  Check if we've already written out the controller
-    if (_g_exportedControllers.find(controllerIdentifier) != _g_exportedControllers.end()) {
-        return;
-    }
-
-    sprintf(szFilename, "%s.nib", controllerIdentifier);
-
-    _g_exportedControllers[controllerIdentifier] = controllerIdentifier;
-
-    XIBArray* objects = (XIBArray*)controller->_parent;
-
-    printf("Writing %s\n", GetOutputFilename(szFilename).c_str());
-    FILE* fpOut = fopen(GetOutputFilename(szFilename).c_str(), "wb");
-
-    NIBWriter* writer = new NIBWriter(fpOut, NULL, NULL);
-
-    XIBObject* ownerProxy = writer->FindProxy("IBFilesOwner");
-    if (!ownerProxy)
-        ownerProxy = writer->AddProxy("IBFilesOwner");
-
-    XIBArray* arr = (XIBArray*)objects;
-    for (int i = 0; i < arr->count(); i++) {
-        XIBObject* curObj = arr->objectAtIndex(i);
-
-        writer->ExportObject(curObj);
-        if (curObj->getAttrib("sceneMemberID")) {
-            if (strcmp(curObj->getAttrib("sceneMemberID"), "viewController") == 0) {
-                writer->AddOutletConnection(ownerProxy, curObj, "sceneViewController");
-            }
-        }
-    }
-
-    writer->WriteObjects();
-
-    fclose(fpOut);
-}
 
 void NIBWriter::WriteData() {
     fwrite("NIBArchive", 10, 1, fpOut);

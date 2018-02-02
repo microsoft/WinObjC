@@ -180,12 +180,6 @@ void UIViewController::ConvertStaticMappings(NIBWriter* writer, XIBObject* obj) 
                 writer->AddOutletConnection(curSegue, this, "viewController");
                 writer->_allUIObjects->AddMember(NULL, curSegue);
             }
-
-            for (int i = 0; i < segueTemplates->count(); i++) {
-                UIStoryboardSegue* curSegue = (UIStoryboardSegue*)segueTemplates->objectAtIndex(i);
-
-                NIBWriter::ExportController(curSegue->getAttrib("destination"));
-            }
         }
     }
     if (_childViewControllers->count() > 0) {

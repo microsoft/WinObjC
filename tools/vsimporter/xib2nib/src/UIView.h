@@ -48,6 +48,7 @@ class UIView : public ObjectConverterSwapper {
 public:
     XIBArray* _subviews;
     XIBArray* _constraints;
+    XIBArray* _layoutGuides;
     UIColor* _backgroundColor;
     UIRect _bounds;
     UIRect _contentStretch;

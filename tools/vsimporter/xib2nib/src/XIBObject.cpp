@@ -446,7 +446,7 @@ CGSize XIBObject::GetSize(char* pPropName, float defaultWidth, float defaultHeig
     if (pObj) {
         const char* pStr = pObj->stringValue();
 
-        sscanf(pStr, "{%f, %f}", &ret.width, &ret.height);
+        sscanf(pStr, "{%lf, %lf}", &ret.width, &ret.height);
     }
 
     return ret;

@@ -20,6 +20,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "UIRuntimeOutletCollectionConnection.h"
+#include "UILayoutGuide.h"
 
 static void InvertBool(struct _PropertyMapper* prop, NIBWriter* writer, XIBObject* propObj, XIBObject* obj) {
     XIBObjectBool* value = (XIBObjectBool*)propObj;
@@ -40,6 +41,7 @@ UIView::UIView() {
     memset(&_contentStretch, 0, sizeof(_contentStretch));
     _subviews = new XIBArray();
     _constraints = new XIBArray();
+    _layoutGuides = new XIBArray();
     _hidden = false;
     _opaque = true;
     _autoresizeSubviews = true;
@@ -72,7 +74,7 @@ void UIView::InitFromXIB(XIBObject* obj) {
         _bounds.height = 0;
         _center.x = 0;
         _center.y = 0;
-        sscanf(pszFramePos, "{{%f, %f}, {%f, %f}}", &_center.x, &_center.y, &_bounds.width, &_bounds.height);
+        sscanf(pszFramePos, "{{%lf, %lf}, {%lf, %lf}}", &_center.x, &_center.y, &_bounds.width, &_bounds.height);
         _center.x += _bounds.width / 2.0f;
         _center.y += _bounds.height / 2.0f;
     } else {
@@ -81,7 +83,7 @@ void UIView::InitFromXIB(XIBObject* obj) {
         _bounds.y = 0;
         _bounds.width = 0;
         _bounds.height = 0;
-        sscanf(pszFramePos, "{%f, %f}", &_bounds.width, &_bounds.height);
+        sscanf(pszFramePos, "{%lf, %lf}", &_bounds.width, &_bounds.height);
         _center.x = _bounds.width / 2.0f;
         _center.y = _bounds.height / 2.0f;
     }
@@ -136,6 +138,11 @@ void UIView::InitFromStory(XIBObject* obj) {
         _constraints = new XIBArray();
     }
 
+    UILayoutGuide *safeAreaGuide = (UILayoutGuide*)FindMemberAndHandle("safeArea");
+    if (safeAreaGuide) {
+        _layoutGuides->AddMember(NULL, safeAreaGuide);
+    }
+    
     if (getAttrib("tag")) {
         _tag = static_cast<int>(strtod(getAttrAndHandle("tag"), NULL));
     }
@@ -308,6 +315,14 @@ void UIView::ConvertStaticMappings(NIBWriter* writer, XIBObject* obj) {
 
     if (_constraints->count() > 0) {
         AddOutputMember(writer, "UIViewAutolayoutConstraints", _constraints);
+    }
+
+    if (_layoutGuides->count() > 0) {
+        if (writer->_minimumDeploymentTarget < DEPLOYMENT_TARGET_IOS11) {
+            writer->_wasLimitedByDeplymentTarget = true;
+        } else {
+            AddOutputMember(writer, "UIViewLayoutGuides", _layoutGuides);
+        }
     }
 
     if (_autoresizeSubviews) {

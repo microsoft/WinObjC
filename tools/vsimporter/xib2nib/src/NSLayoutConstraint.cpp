@@ -16,6 +16,7 @@
 
 #include "NSLayoutConstraint.h"
 #include "UIView.h"
+#include "UILayoutGuide.h"
 
 #include <assert.h>
 #include <map>
@@ -52,6 +53,8 @@ NSLayoutConstraint::NSLayoutConstraint() {
     _constant = 0.0f;
     _symbolicConstant = 0.0f;
     _hasSymbolicConstant = false;
+    _layoutIdentifier = NULL;
+    _exportDefaultValues = false;
 }
 
 void NSLayoutConstraint::InitFromXIB(XIBObject* obj) {
@@ -148,21 +151,40 @@ void NSLayoutConstraint::ConvertStaticMappings(NIBWriter* writer, XIBObject* obj
     AddInt(writer, "NSFirstAttribute", _firstAttribute);
     AddInt(writer, "NSSecondAttribute", _secondAttribute);
 
-    AddInt(writer, "NSRelation", _relation);
+    if (_exportDefaultValues || _relation != NSLayoutRelationEqual)
+        AddInt(writer, "NSRelation", _relation);
 
     if (_firstItem)
-        AddOutputMember(writer, "NSFirstItem", _firstItem);
+        AddOutputMember(writer, "NSFirstItem", substituteItemUnsupported(writer, _firstItem));
     if (_secondItem)
-        AddOutputMember(writer, "NSSecondItem", _secondItem);
+        AddOutputMember(writer, "NSSecondItem", substituteItemUnsupported(writer, _secondItem));
 
-    AddOutputMember(writer, "NSMultiplier", new XIBObjectFloat(_multiplier));
-    AddInt(writer, "NSPriority", _priority);
+    if (_exportDefaultValues || _multiplier != 1.0f)
+        AddOutputMember(writer, "NSMultiplier", new XIBObjectFloat(_multiplier));
+    if (_exportDefaultValues || _priority != NSLayoutPriorityRequired)
+        AddInt(writer, "NSPriority", _priority);
 
     if (_hasSymbolicConstant) {
         AddOutputMember(writer, "NSSymbolicConstant", new XIBObjectFloat(_symbolicConstant));
     } else {
-        AddOutputMember(writer, "NSConstant", new XIBObjectFloat(_constant));
+        if (_exportDefaultValues || _constant != 0)
+            AddOutputMember(writer, "NSConstant", new XIBObjectFloat(_constant));
     }
 
+    if (_layoutIdentifier)
+        AddString(writer, "NSLayoutIdentifier", _layoutIdentifier);
+
     ObjectConverterSwapper::ConvertStaticMappings(writer, obj);
+}
+
+XIBObject* NSLayoutConstraint::substituteItemUnsupported(NIBWriter* writer, XIBObject* item){
+    if (writer->_minimumDeploymentTarget < DEPLOYMENT_TARGET_IOS11 && (strcmp(item->_outputClassName, "UILayoutGuide") == 0)) {
+        writer->_wasLimitedByDeplymentTarget = true;
+        // constraint to layout guide that is not supported, replace them to view
+        UILayoutGuide *guide = (UILayoutGuide*)item;
+        if (guide->_owningView)
+            return guide->_owningView;
+    }
+    
+    return item;
 }
