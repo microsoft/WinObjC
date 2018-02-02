@@ -23,7 +23,6 @@
 #include "NSLayoutConstraint+AutoLayout.h"
 #include "AutoLayout.h"
 
-#include <regex>
 #include <list>
 #include <sstream>
 #include <regex>
@@ -56,6 +55,8 @@ struct Constraint {
 typedef vector<Constraint> ConstraintList;
 
 bool parsePredicates(string line, PredicateList& predicates) {
+    static std::regex s_predicateRex{"^\\s*(==|>=|<=)?([\\w.]+)(@([\\w]+))?\\s*$"};
+
     // Should this be parsed differently between connectors and constraints?
     vector<string> predStr;
 
@@ -77,9 +78,8 @@ bool parsePredicates(string line, PredicateList& predicates) {
     }
 
     for (int i = 0; i < predStr.size(); i++) {
-        regex rex = regex::basic_regex("^\\s*(==|>=|<=)?([\\w.]+)(@([\\w]+))?\\s*$");
         smatch m;
-        if (!regex_search(predStr[i], m, rex)) {
+        if (!regex_search(predStr[i], m, s_predicateRex)) {
             TraceError(TAG, L"Syntax Error! %hs", predStr[i].c_str());
             return false;
         } else {
@@ -415,6 +415,15 @@ NSString* identifierForFormatAttribute(NSLayoutFormatOptions opts) {
                                 options:(NSLayoutFormatOptions)opts
                                 metrics:(NSDictionary*)metrics
                                   views:(NSDictionary*)views {
+    // ([VH]:)
+    static std::regex s_vertizontalRex{"^([VH]:).*$"};
+    // Match all "]-(1,2,3)-["
+    static std::regex s_connectorRex{"(\\]|\\|)([^\\[]*)?(\\[|\\|)"};
+    // Match all "[one(>=two,three@4)]" or "|"
+    static std::regex s_constraintRex{"(\\[([^\\]]*)\\]|\\|)"};
+    // (sub-unit of a constraint)
+    static std::regex s_constraintPartRex{"^\\[([\\w]+)(\\(.*\\))?\\]$"};
+
     UIView* superview = nil;
     NSArray* items = views.allValues;
 
@@ -448,19 +457,15 @@ NSString* identifierForFormatAttribute(NSLayoutFormatOptions opts) {
     ConstraintList constraints;
 
     // Match constraint direction
-    // ([VH]:)
-    regex vertizontalRex = regex::basic_regex("^([VH]:).*$");
     smatch vertizontalMatch;
-    if (regex_match(line, vertizontalMatch, vertizontalRex)) {
+    if (regex_match(line, vertizontalMatch, s_vertizontalRex)) {
         if (vertizontalMatch[0].str()[0] == 'V') {
             vertical = true;
         }
         line = line.substr(2);
     }
 
-    // Match all "]-(1,2,3)-["
-    regex connectorRex = regex::basic_regex("(\\]|\\|)([^\\[]*)?(\\[|\\|)");
-    sregex_iterator connectorIt(line.begin(), line.end(), connectorRex);
+    sregex_iterator connectorIt(line.begin(), line.end(), s_connectorRex);
     sregex_iterator end;
 
     while (connectorIt != end) {
@@ -490,9 +495,7 @@ NSString* identifierForFormatAttribute(NSLayoutFormatOptions opts) {
         connectorIt++;
     }
 
-    // Match all "[one(>=two,three@4)]" or "|"
-    regex constraintRex = regex::basic_regex("(\\[([^\\]]*)\\]|\\|)");
-    sregex_iterator constraintIt(line.begin(), line.end(), constraintRex);
+    sregex_iterator constraintIt(line.begin(), line.end(), s_constraintRex);
     size_t matchEnd = 0;
 
     if (constraintIt->position() != 0) {
@@ -505,9 +508,8 @@ NSString* identifierForFormatAttribute(NSLayoutFormatOptions opts) {
 #ifdef DEBUG_VISUAL_FORMAT
         TraceVerbose(TAG, L"Constraint: %hs", conStr.c_str());
 #endif
-        regex rex = regex::basic_regex("^\\[([\\w]+)(\\(.*\\))?\\]$");
         smatch m;
-        if (!regex_search(conStr, m, rex)) {
+        if (!regex_search(conStr, m, s_constraintPartRex)) {
             if (conStr == "|") {
                 constraints.push_back(Constraint(PredicateList(), conStr));
             } else {
