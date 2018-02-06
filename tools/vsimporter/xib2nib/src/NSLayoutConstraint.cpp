@@ -48,10 +48,10 @@ NSLayoutConstraint::NSLayoutConstraint() {
     _firstAttribute = NSLayoutAttributeNotAnAttribute;
     _secondAttribute = NSLayoutAttributeNotAnAttribute;
     _relation = NSLayoutRelationEqual;
-    _multiplier = 1.0f;
+    _multiplier = 1.0;
     _priority = NSLayoutPriorityRequired;
-    _constant = 0.0f;
-    _symbolicConstant = 0.0f;
+    _constant = 0.0;
+    _symbolicConstant = 0.0;
     _hasSymbolicConstant = false;
     _layoutIdentifier = NULL;
     _exportDefaultValues = false;
@@ -72,10 +72,10 @@ void NSLayoutConstraint::InitFromXIB(XIBObject* obj) {
         _multiplier = obj->FindMember("multiplier")->floatValue();
     }
     if (obj->FindMember("priority")) {
-        _priority = obj->FindMember("priority")->floatValue();
+        _priority = obj->FindMember("priority")->intValue();
     }
     if (obj->FindMember("constant") && obj->FindMember("constant")->FindMember("value")) {
-        if (obj->FindMember("constant")->ClassName() == "IBLayoutConstant") {
+        if (strcmp(obj->FindMember("constant")->ClassName(), "IBLayoutConstant") == 0) {
             _constant = obj->FindMember("constant")->FindMember("value")->floatValue();
         } else {
             _hasSymbolicConstant = true;
@@ -114,19 +114,19 @@ void NSLayoutConstraint::InitFromStory(XIBObject* obj) {
             _constant = strtod(attr, NULL);
         }
     }
-    if (attr = obj->getAttrAndHandle("priority")) {
+    if ((attr = obj->getAttrAndHandle("priority"))) {
         _priority = strtod(attr, NULL);
     }
 
-    if (attr = obj->getAttrAndHandle("multiplier")) {
+    if ((attr = obj->getAttrAndHandle("multiplier"))) {
         _priority = strtod(attr, NULL);
     }
 
-    if (attr = getAttrAndHandle("secondItem")) {
+    if ((attr = getAttrAndHandle("secondItem"))) {
         _secondItem = findReference(attr);
         assert(_secondItem);
     }
-    if (attr = getAttrAndHandle("firstItem")) {
+    if ((attr = getAttrAndHandle("firstItem"))) {
         _firstItem = findReference(attr);
         assert(_firstItem);
     }
@@ -149,7 +149,8 @@ void NSLayoutConstraint::Awaken() {
 
 void NSLayoutConstraint::ConvertStaticMappings(NIBWriter* writer, XIBObject* obj) {
     AddInt(writer, "NSFirstAttribute", _firstAttribute);
-    AddInt(writer, "NSSecondAttribute", _secondAttribute);
+    if (_secondAttribute)
+        AddInt(writer, "NSSecondAttribute", _secondAttribute);
 
     if (_exportDefaultValues || _relation != NSLayoutRelationEqual)
         AddInt(writer, "NSRelation", _relation);
@@ -160,15 +161,15 @@ void NSLayoutConstraint::ConvertStaticMappings(NIBWriter* writer, XIBObject* obj
         AddOutputMember(writer, "NSSecondItem", substituteItemUnsupported(writer, _secondItem));
 
     if (_exportDefaultValues || _multiplier != 1.0f)
-        AddOutputMember(writer, "NSMultiplier", new XIBObjectFloat(_multiplier));
+        AddOutputMember(writer, "NSMultiplier", new XIBObjectDouble(_multiplier));
     if (_exportDefaultValues || _priority != NSLayoutPriorityRequired)
         AddInt(writer, "NSPriority", _priority);
 
     if (_hasSymbolicConstant) {
-        AddOutputMember(writer, "NSSymbolicConstant", new XIBObjectFloat(_symbolicConstant));
+        AddOutputMember(writer, "NSSymbolicConstant", new XIBObjectDouble(_symbolicConstant));
     } else {
         if (_exportDefaultValues || _constant != 0)
-            AddOutputMember(writer, "NSConstant", new XIBObjectFloat(_constant));
+            AddOutputMember(writer, "NSConstant", new XIBObjectDouble(_constant));
     }
 
     if (_layoutIdentifier)

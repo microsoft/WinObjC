@@ -70,10 +70,10 @@ public:
     int _firstAttribute;
     int _secondAttribute;
     int _relation;
-    float _multiplier;
-    float _priority;
-    float _constant;
-    float _symbolicConstant;
+    double _multiplier;
+    int _priority;
+    double _constant;
+    double _symbolicConstant;
     bool _hasSymbolicConstant;
     const char* _layoutIdentifier;
     bool _exportDefaultValues;
