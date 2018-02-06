@@ -1,0 +1,25 @@
+﻿{
+  "dependencies": {
+    "NuGet.Build.Packaging": "0.1.186"
+  },
+  "frameworks": {
+    ".NETFramework,Version=v4.0": {
+      "imports": [
+        "dotnet",
+        "netstandard1.0",
+        "netstandard1.1",
+        "netstandard1.2",
+        "netstandard1.3",
+        "netstandard1.4",
+        "netstandard1.5",
+        "netstandard1.6",
+        "net20",
+        "net35",
+        "net40",
+        "native",
+        "monoandroid",
+        "xamarinios10"
+      ]
+    }
+  }
+}
