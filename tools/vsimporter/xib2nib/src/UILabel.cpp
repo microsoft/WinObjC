@@ -185,8 +185,10 @@ void UILabel::ConvertStaticMappings(NIBWriter* writer, XIBObject* obj) {
     }
 
     if (_minimumFontSize != -1.0f) {
+        AddBool(writer, "UIAdjustsFontSizeToFit", true);
         AddOutputMember(writer, "UIMinimumFontSize", new XIBObjectFloat(_minimumFontSize));
     } else if (_minimumScaleFactor != -1.0f) {
+        AddBool(writer, "UIAdjustsFontSizeToFit", true);
         AddOutputMember(writer, "UIMinimumScaleFactor", new XIBObjectFloat(_minimumScaleFactor));
     } else {
         AddBool(writer, "UIAdjustsFontSizeToFit", false);
