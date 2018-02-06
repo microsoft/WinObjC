@@ -119,7 +119,7 @@ void NSLayoutConstraint::InitFromStory(XIBObject* obj) {
     }
 
     if ((attr = obj->getAttrAndHandle("multiplier"))) {
-        _priority = strtod(attr, NULL);
+        _multiplier = strtod(attr, NULL);
     }
 
     if ((attr = getAttrAndHandle("secondItem"))) {
