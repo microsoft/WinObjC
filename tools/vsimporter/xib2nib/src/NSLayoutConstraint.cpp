@@ -19,6 +19,7 @@
 #include "UILayoutGuide.h"
 
 #include <assert.h>
+#include <string>
 #include <map>
 
 std::map<std::string, NSLayoutAttribute> storyToLayout = { { "left", NSLayoutAttributeLeft },
@@ -115,7 +116,7 @@ void NSLayoutConstraint::InitFromStory(XIBObject* obj) {
         }
     }
     if ((attr = obj->getAttrAndHandle("priority"))) {
-        _priority = strtod(attr, NULL);
+        _priority = std::stoi(attr, NULL);
     }
 
     if ((attr = obj->getAttrAndHandle("multiplier"))) {
