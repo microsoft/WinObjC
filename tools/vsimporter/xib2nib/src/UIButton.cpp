@@ -20,6 +20,7 @@
 #include "UICustomResource.h"
 #include "UIRuntimeEventConnection.h"
 #include "UIFont.h"
+#include "UILabel.h"
 #include <assert.h>
 
 void ConvertInsets(struct _PropertyMapper* prop, NIBWriter* writer, XIBObject* propObj, XIBObject* obj) {
@@ -195,6 +196,9 @@ UIButton::UIButton() {
     _statefulContent = NULL;
     _font = NULL;
 
+    // default line break mode is middleTrucation
+    _lineBreakMode = UILineBreakModeMiddleTruncation;
+
     // Default is true for both of these, so no need to write to nib if that's the case
     _adjustsImageWhenHighlighted = true;
     _adjustsImageWhenDisabled = true;
@@ -239,6 +243,15 @@ void UIButton::InitFromStory(XIBObject* obj) {
 
     _font = (UIFont*)obj->FindMemberAndHandle("fontDescription");
 
+    const char* lineBreakModeAttributeValue = getAttrib("lineBreakMode");
+    if (lineBreakModeAttributeValue) {
+        if (storyToUILineBreakMode.find(lineBreakModeAttributeValue) != storyToUILineBreakMode.end()) {
+            _lineBreakMode = storyToUILineBreakMode[lineBreakModeAttributeValue];
+        } else {
+            printf("invalid linebreak value %s, using default (tailTruncation) \n", lineBreakModeAttributeValue);
+        }
+    }
+
     if (getAttrib("adjustsImageWhenDisabled")) {
         if (strcmp(getAttrAndHandle("adjustsImageWhenDisabled"), "NO") == 0) {
             _adjustsImageWhenDisabled = false;
@@ -267,6 +280,10 @@ void UIButton::ConvertStaticMappings(NIBWriter* writer, XIBObject* obj) {
 
     if (_font) {
         obj->AddOutputMember(writer, "UIFont", _font);
+    }
+
+    if (_lineBreakMode != UILineBreakModeMiddleTruncation) {
+        AddInt(writer, "UILineBreakMode", _lineBreakMode);
     }
 
     // Default is true, so no need to write to nib if that's the case

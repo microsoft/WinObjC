@@ -43,6 +43,7 @@ public:
     EdgeInsets _imageEdgeInsets;
     EdgeInsets _contentEdgeInsets;
     EdgeInsets _titleEdgeInsets;
+    int _lineBreakMode;
 
     UIButton();
     virtual void InitFromXIB(XIBObject* obj);
