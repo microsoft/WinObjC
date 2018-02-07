@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -27,8 +27,8 @@
 #endif
 #include <UWP/interopBase.h>
 
-@class WDSSmartCardTriggerDetails, WDSSmartCardEmulator, WDSSmartCardAppletIdGroupRegistration, WDSSmartCardAppletIdGroup, WDSSmartCardEmulatorApduReceivedEventArgs, WDSSmartCardEmulatorConnectionDeactivatedEventArgs, WDSSmartCardEmulatorConnectionProperties, WDSSmartCardAutomaticResponseApdu, WDSSmartCardCryptogramPlacementStep, WDSSmartCardCryptogramGenerator, WDSSmartCardCryptogramStorageKeyInfo, WDSSmartCardCryptogramMaterialPossessionProof, WDSSmartCardReader, WDSSmartCard, WDSCardAddedEventArgs, WDSCardRemovedEventArgs, WDSSmartCardProvisioning, WDSSmartCardPinPolicy, WDSSmartCardChallengeContext, WDSSmartCardPinResetRequest, WDSSmartCardPinResetDeferral, WDSSmartCardConnection;
-@protocol WDSISmartCardTriggerDetails, WDSISmartCardTriggerDetails2, WDSISmartCardEmulatorStatics, WDSISmartCardEmulatorStatics2, WDSISmartCardEmulator, WDSISmartCardEmulator2, WDSISmartCardEmulatorApduReceivedEventArgs, WDSISmartCardEmulatorApduReceivedEventArgs2, WDSISmartCardEmulatorConnectionProperties, WDSISmartCardEmulatorConnectionDeactivatedEventArgs, WDSISmartCardAppletIdGroup, WDSISmartCardAppletIdGroupFactory, WDSISmartCardAppletIdGroupStatics, WDSISmartCardAppletIdGroupRegistration, WDSISmartCardAutomaticResponseApdu, WDSISmartCardAutomaticResponseApdu2, WDSISmartCardAutomaticResponseApdu3, WDSISmartCardAutomaticResponseApduFactory, WDSISmartCardEmulatorApduReceivedEventArgsWithCryptograms, WDSISmartCardCryptogramStorageKeyInfo, WDSISmartCardCryptogramStorageKeyInfo2, WDSISmartCardCryptogramMaterialPossessionProof, WDSISmartCardCryptogramPlacementStep, WDSISmartCardCryptogramGeneratorStatics, WDSISmartCardCryptogramGenerator, WDSISmartCardReaderStatics, WDSISmartCardReader, WDSICardAddedEventArgs, WDSICardRemovedEventArgs, WDSISmartCard, WDSISmartCardProvisioningStatics, WDSISmartCardProvisioningStatics2, WDSISmartCardProvisioning, WDSISmartCardProvisioning2, WDSISmartCardPinResetRequest, WDSISmartCardPinResetDeferral, WDSISmartCardPinPolicy, WDSISmartCardConnect, WDSISmartCardChallengeContext, WDSISmartCardConnection;
+@class WDSSmartCardTriggerDetails, WDSSmartCardEmulator, WDSSmartCardAppletIdGroupRegistration, WDSSmartCardAppletIdGroup, WDSSmartCardEmulatorApduReceivedEventArgs, WDSSmartCardEmulatorConnectionDeactivatedEventArgs, WDSSmartCardEmulatorConnectionProperties, WDSSmartCardAutomaticResponseApdu, WDSSmartCardCryptogramPlacementStep, WDSSmartCardCryptogramStorageKeyCharacteristics, WDSSmartCardCryptogramMaterialPackageCharacteristics, WDSSmartCardCryptogramMaterialCharacteristics, WDSSmartCardCryptogramGenerator, WDSSmartCardCryptogramStorageKeyInfo, WDSSmartCardCryptogramMaterialPossessionProof, WDSSmartCardCryptogramGetAllCryptogramStorageKeyCharacteristicsResult, WDSSmartCardCryptogramGetAllCryptogramMaterialPackageCharacteristicsResult, WDSSmartCardCryptogramGetAllCryptogramMaterialCharacteristicsResult, WDSSmartCardReader, WDSSmartCard, WDSCardAddedEventArgs, WDSCardRemovedEventArgs, WDSSmartCardProvisioning, WDSSmartCardPinPolicy, WDSSmartCardChallengeContext, WDSSmartCardPinResetRequest, WDSSmartCardPinResetDeferral, WDSSmartCardConnection;
+@protocol WDSISmartCardTriggerDetails, WDSISmartCardTriggerDetails2, WDSISmartCardTriggerDetails3, WDSISmartCardEmulatorStatics, WDSISmartCardEmulatorStatics2, WDSISmartCardEmulatorStatics3, WDSISmartCardEmulator, WDSISmartCardEmulator2, WDSISmartCardEmulatorApduReceivedEventArgs, WDSISmartCardEmulatorApduReceivedEventArgs2, WDSISmartCardEmulatorConnectionProperties, WDSISmartCardEmulatorConnectionDeactivatedEventArgs, WDSISmartCardAppletIdGroup, WDSISmartCardAppletIdGroupFactory, WDSISmartCardAppletIdGroupStatics, WDSISmartCardAppletIdGroupRegistration, WDSISmartCardAutomaticResponseApdu, WDSISmartCardAutomaticResponseApdu2, WDSISmartCardAutomaticResponseApdu3, WDSISmartCardAutomaticResponseApduFactory, WDSISmartCardEmulatorApduReceivedEventArgsWithCryptograms, WDSISmartCardCryptogramStorageKeyInfo, WDSISmartCardCryptogramStorageKeyInfo2, WDSISmartCardCryptogramMaterialPossessionProof, WDSISmartCardCryptogramPlacementStep, WDSISmartCardCryptogramStorageKeyCharacteristics, WDSISmartCardCryptogramGetAllCryptogramStorageKeyCharacteristicsResult, WDSISmartCardCryptogramMaterialPackageCharacteristics, WDSISmartCardCryptogramGetAllCryptogramMaterialPackageCharacteristicsResult, WDSISmartCardCryptogramMaterialCharacteristics, WDSISmartCardCryptogramGetAllCryptogramMaterialCharacteristicsResult, WDSISmartCardCryptogramGeneratorStatics, WDSISmartCardCryptogramGeneratorStatics2, WDSISmartCardCryptogramGenerator, WDSISmartCardCryptogramGenerator2, WDSISmartCardReaderStatics, WDSISmartCardReader, WDSICardAddedEventArgs, WDSICardRemovedEventArgs, WDSISmartCard, WDSISmartCardProvisioningStatics, WDSISmartCardProvisioningStatics2, WDSISmartCardProvisioning, WDSISmartCardProvisioning2, WDSISmartCardPinResetRequest, WDSISmartCardPinResetDeferral, WDSISmartCardPinPolicy, WDSISmartCardConnect, WDSISmartCardChallengeContext, WDSISmartCardConnection;
 
 // Windows.Devices.SmartCards.SmartCardTriggerType
 enum _WDSSmartCardTriggerType {
@@ -134,6 +134,13 @@ enum _WDSSmartCardCryptogramMaterialType {
 };
 typedef unsigned WDSSmartCardCryptogramMaterialType;
 
+// Windows.Devices.SmartCards.SmartCardCryptogramMaterialProtectionMethod
+enum _WDSSmartCardCryptogramMaterialProtectionMethod {
+    WDSSmartCardCryptogramMaterialProtectionMethodNone = 0,
+    WDSSmartCardCryptogramMaterialProtectionMethodWhiteBoxing = 1,
+};
+typedef unsigned WDSSmartCardCryptogramMaterialProtectionMethod;
+
 // Windows.Devices.SmartCards.SmartCardCryptogramAlgorithm
 enum _WDSSmartCardCryptogramAlgorithm {
     WDSSmartCardCryptogramAlgorithmNone = 0,
@@ -144,6 +151,7 @@ enum _WDSSmartCardCryptogramAlgorithm {
     WDSSmartCardCryptogramAlgorithmSha1 = 5,
     WDSSmartCardCryptogramAlgorithmSignedDynamicApplicationData = 6,
     WDSSmartCardCryptogramAlgorithmRsaPkcs1 = 7,
+    WDSSmartCardCryptogramAlgorithmSha256Hmac = 8,
 };
 typedef unsigned WDSSmartCardCryptogramAlgorithm;
 
@@ -191,6 +199,8 @@ enum _WDSSmartCardCryptogramGeneratorOperationStatus {
     WDSSmartCardCryptogramGeneratorOperationStatusInvalidCryptogramMaterialUsage = 9,
     WDSSmartCardCryptogramGeneratorOperationStatusApduResponseNotSent = 10,
     WDSSmartCardCryptogramGeneratorOperationStatusOtherError = 11,
+    WDSSmartCardCryptogramGeneratorOperationStatusValidationFailed = 12,
+    WDSSmartCardCryptogramGeneratorOperationStatusNotSupported = 13,
 };
 typedef unsigned WDSSmartCardCryptogramGeneratorOperationStatus;
 
@@ -275,6 +285,7 @@ OBJCUWPWINDOWSDEVICESSMARTCARDSEXPORT
 @property (readonly) RTObject<WSSIBuffer>* triggerData;
 @property (readonly) WDSSmartCardTriggerType triggerType;
 @property (readonly) WDSSmartCardEmulator* emulator;
+@property (readonly) WDSSmartCard* smartCard;
 - (void)tryLaunchCurrentAppAsync:(NSString *)arguments success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 - (void)tryLaunchCurrentAppWithBehaviorAsync:(NSString *)arguments behavior:(WDSSmartCardLaunchBehavior)behavior success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 @end
@@ -287,6 +298,7 @@ OBJCUWPWINDOWSDEVICESSMARTCARDSEXPORT
 
 OBJCUWPWINDOWSDEVICESSMARTCARDSEXPORT
 @interface WDSSmartCardEmulator : RTObject
++ (BOOL)isSupported;
 + (void)getAppletIdGroupRegistrationsAsyncWithSuccess:(void (^)(NSArray* /* WDSSmartCardAppletIdGroupRegistration* */))success failure:(void (^)(NSError*))failure;
 + (void)registerAppletIdGroupAsync:(WDSSmartCardAppletIdGroup*)appletIdGroup success:(void (^)(WDSSmartCardAppletIdGroupRegistration*))success failure:(void (^)(NSError*))failure;
 + (RTObject<WFIAsyncAction>*)unregisterAppletIdGroupAsync:(WDSSmartCardAppletIdGroupRegistration*)registration;
@@ -330,8 +342,8 @@ OBJCUWPWINDOWSDEVICESSMARTCARDSEXPORT
 
 OBJCUWPWINDOWSDEVICESSMARTCARDSEXPORT
 @interface WDSSmartCardAppletIdGroup : RTObject
-+ (instancetype)make __attribute__ ((ns_returns_retained));
 + (WDSSmartCardAppletIdGroup*)make:(NSString *)displayName appletIds:(NSMutableArray* /* RTObject<WSSIBuffer>* */)appletIds emulationCategory:(WDSSmartCardEmulationCategory)emulationCategory emulationType:(WDSSmartCardEmulationType)emulationType ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
@@ -441,12 +453,71 @@ OBJCUWPWINDOWSDEVICESSMARTCARDSEXPORT
 
 #endif // __WDSSmartCardCryptogramPlacementStep_DEFINED__
 
+// Windows.Devices.SmartCards.SmartCardCryptogramStorageKeyCharacteristics
+#ifndef __WDSSmartCardCryptogramStorageKeyCharacteristics_DEFINED__
+#define __WDSSmartCardCryptogramStorageKeyCharacteristics_DEFINED__
+
+OBJCUWPWINDOWSDEVICESSMARTCARDSEXPORT
+@interface WDSSmartCardCryptogramStorageKeyCharacteristics : RTObject
++ (instancetype)make __attribute__ ((ns_returns_retained));
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (readonly) WDSSmartCardCryptogramStorageKeyAlgorithm algorithm;
+@property (readonly) WDSSmartCardCryptogramStorageKeyCapabilities capabilities;
+@property (readonly) WFDateTime* dateCreated;
+@property (readonly) NSString * storageKeyName;
+@end
+
+#endif // __WDSSmartCardCryptogramStorageKeyCharacteristics_DEFINED__
+
+// Windows.Devices.SmartCards.SmartCardCryptogramMaterialPackageCharacteristics
+#ifndef __WDSSmartCardCryptogramMaterialPackageCharacteristics_DEFINED__
+#define __WDSSmartCardCryptogramMaterialPackageCharacteristics_DEFINED__
+
+OBJCUWPWINDOWSDEVICESSMARTCARDSEXPORT
+@interface WDSSmartCardCryptogramMaterialPackageCharacteristics : RTObject
++ (instancetype)make __attribute__ ((ns_returns_retained));
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (readonly) WFDateTime* dateImported;
+@property (readonly) WDSSmartCardCryptogramMaterialPackageFormat packageFormat;
+@property (readonly) NSString * packageName;
+@property (readonly) NSString * storageKeyName;
+@end
+
+#endif // __WDSSmartCardCryptogramMaterialPackageCharacteristics_DEFINED__
+
+// Windows.Devices.SmartCards.SmartCardCryptogramMaterialCharacteristics
+#ifndef __WDSSmartCardCryptogramMaterialCharacteristics_DEFINED__
+#define __WDSSmartCardCryptogramMaterialCharacteristics_DEFINED__
+
+OBJCUWPWINDOWSDEVICESSMARTCARDSEXPORT
+@interface WDSSmartCardCryptogramMaterialCharacteristics : RTObject
++ (instancetype)make __attribute__ ((ns_returns_retained));
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (readonly) NSArray* /* WDSSmartCardCryptogramAlgorithm */ allowedAlgorithms;
+@property (readonly) NSArray* /* WDSSmartCardCryptogramMaterialPackageConfirmationResponseFormat */ allowedProofOfPossessionAlgorithms;
+@property (readonly) NSArray* /* WDSSmartCardCryptogramAlgorithm */ allowedValidations;
+@property (readonly) int materialLength;
+@property (readonly) NSString * materialName;
+@property (readonly) WDSSmartCardCryptogramMaterialType materialType;
+@property (readonly) WDSSmartCardCryptogramMaterialProtectionMethod protectionMethod;
+@property (readonly) int protectionVersion;
+@end
+
+#endif // __WDSSmartCardCryptogramMaterialCharacteristics_DEFINED__
+
 // Windows.Devices.SmartCards.SmartCardCryptogramGenerator
 #ifndef __WDSSmartCardCryptogramGenerator_DEFINED__
 #define __WDSSmartCardCryptogramGenerator_DEFINED__
 
 OBJCUWPWINDOWSDEVICESSMARTCARDSEXPORT
 @interface WDSSmartCardCryptogramGenerator : RTObject
++ (BOOL)isSupported;
 + (void)getSmartCardCryptogramGeneratorAsyncWithSuccess:(void (^)(WDSSmartCardCryptogramGenerator*))success failure:(void (^)(NSError*))failure;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -463,6 +534,11 @@ OBJCUWPWINDOWSDEVICESSMARTCARDSEXPORT
 - (void)tryProvePossessionOfCryptogramMaterialPackageAsync:(WDSSmartCardUnlockPromptingBehavior)promptingBehavior responseFormat:(WDSSmartCardCryptogramMaterialPackageConfirmationResponseFormat)responseFormat materialPackageName:(NSString *)materialPackageName materialName:(NSString *)materialName challenge:(RTObject<WSSIBuffer>*)challenge success:(void (^)(WDSSmartCardCryptogramMaterialPossessionProof*))success failure:(void (^)(NSError*))failure;
 - (void)requestUnlockCryptogramMaterialForUseAsync:(WDSSmartCardUnlockPromptingBehavior)promptingBehavior success:(void (^)(WDSSmartCardCryptogramGeneratorOperationStatus))success failure:(void (^)(NSError*))failure;
 - (void)deleteCryptogramMaterialPackageAsync:(NSString *)materialPackageName success:(void (^)(WDSSmartCardCryptogramGeneratorOperationStatus))success failure:(void (^)(NSError*))failure;
+- (void)validateRequestApduAsync:(WDSSmartCardUnlockPromptingBehavior)promptingBehavior apduToValidate:(RTObject<WSSIBuffer>*)apduToValidate cryptogramPlacementSteps:(id<NSFastEnumeration> /* WDSSmartCardCryptogramPlacementStep* */)cryptogramPlacementSteps success:(void (^)(WDSSmartCardCryptogramGeneratorOperationStatus))success failure:(void (^)(NSError*))failure;
+- (void)getAllCryptogramStorageKeyCharacteristicsAsyncWithSuccess:(void (^)(WDSSmartCardCryptogramGetAllCryptogramStorageKeyCharacteristicsResult*))success failure:(void (^)(NSError*))failure;
+- (void)getAllCryptogramMaterialPackageCharacteristicsAsyncWithSuccess:(void (^)(WDSSmartCardCryptogramGetAllCryptogramMaterialPackageCharacteristicsResult*))success failure:(void (^)(NSError*))failure;
+- (void)getAllCryptogramMaterialPackageCharacteristicsWithStorageKeyAsync:(NSString *)storageKeyName success:(void (^)(WDSSmartCardCryptogramGetAllCryptogramMaterialPackageCharacteristicsResult*))success failure:(void (^)(NSError*))failure;
+- (void)getAllCryptogramMaterialCharacteristicsAsync:(WDSSmartCardUnlockPromptingBehavior)promptingBehavior materialPackageName:(NSString *)materialPackageName success:(void (^)(WDSSmartCardCryptogramGetAllCryptogramMaterialCharacteristicsResult*))success failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WDSSmartCardCryptogramGenerator_DEFINED__
@@ -502,6 +578,54 @@ OBJCUWPWINDOWSDEVICESSMARTCARDSEXPORT
 @end
 
 #endif // __WDSSmartCardCryptogramMaterialPossessionProof_DEFINED__
+
+// Windows.Devices.SmartCards.SmartCardCryptogramGetAllCryptogramStorageKeyCharacteristicsResult
+#ifndef __WDSSmartCardCryptogramGetAllCryptogramStorageKeyCharacteristicsResult_DEFINED__
+#define __WDSSmartCardCryptogramGetAllCryptogramStorageKeyCharacteristicsResult_DEFINED__
+
+OBJCUWPWINDOWSDEVICESSMARTCARDSEXPORT
+@interface WDSSmartCardCryptogramGetAllCryptogramStorageKeyCharacteristicsResult : RTObject
++ (instancetype)make __attribute__ ((ns_returns_retained));
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (readonly) NSArray* /* WDSSmartCardCryptogramStorageKeyCharacteristics* */ characteristics;
+@property (readonly) WDSSmartCardCryptogramGeneratorOperationStatus operationStatus;
+@end
+
+#endif // __WDSSmartCardCryptogramGetAllCryptogramStorageKeyCharacteristicsResult_DEFINED__
+
+// Windows.Devices.SmartCards.SmartCardCryptogramGetAllCryptogramMaterialPackageCharacteristicsResult
+#ifndef __WDSSmartCardCryptogramGetAllCryptogramMaterialPackageCharacteristicsResult_DEFINED__
+#define __WDSSmartCardCryptogramGetAllCryptogramMaterialPackageCharacteristicsResult_DEFINED__
+
+OBJCUWPWINDOWSDEVICESSMARTCARDSEXPORT
+@interface WDSSmartCardCryptogramGetAllCryptogramMaterialPackageCharacteristicsResult : RTObject
++ (instancetype)make __attribute__ ((ns_returns_retained));
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (readonly) NSArray* /* WDSSmartCardCryptogramMaterialPackageCharacteristics* */ characteristics;
+@property (readonly) WDSSmartCardCryptogramGeneratorOperationStatus operationStatus;
+@end
+
+#endif // __WDSSmartCardCryptogramGetAllCryptogramMaterialPackageCharacteristicsResult_DEFINED__
+
+// Windows.Devices.SmartCards.SmartCardCryptogramGetAllCryptogramMaterialCharacteristicsResult
+#ifndef __WDSSmartCardCryptogramGetAllCryptogramMaterialCharacteristicsResult_DEFINED__
+#define __WDSSmartCardCryptogramGetAllCryptogramMaterialCharacteristicsResult_DEFINED__
+
+OBJCUWPWINDOWSDEVICESSMARTCARDSEXPORT
+@interface WDSSmartCardCryptogramGetAllCryptogramMaterialCharacteristicsResult : RTObject
++ (instancetype)make __attribute__ ((ns_returns_retained));
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (readonly) NSArray* /* WDSSmartCardCryptogramMaterialCharacteristics* */ characteristics;
+@property (readonly) WDSSmartCardCryptogramGeneratorOperationStatus operationStatus;
+@end
+
+#endif // __WDSSmartCardCryptogramGetAllCryptogramMaterialCharacteristicsResult_DEFINED__
 
 // Windows.Devices.SmartCards.SmartCardReader
 #ifndef __WDSSmartCardReader_DEFINED__

@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -29,7 +29,7 @@
 
 @class WSSStoreProduct, WSSStoreProductPagedQueryResult, WSSStorePurchaseProperties, WSSStoreLicense, WSSStoreImage, WSSStoreVideo, WSSStoreSku, WSSStorePrice, WSSStorePurchaseResult, WSSStoreAvailability, WSSStoreCollectionData, WSSStoreSubscriptionInfo, WSSStoreContext, WSSStoreSendRequestResult, WSSStoreAppLicense, WSSStoreProductResult, WSSStoreProductQueryResult, WSSStoreConsumableResult, WSSStoreAcquireLicenseResult, WSSStorePackageUpdate, WSSStorePackageUpdateResult, WSSStorePackageLicense, WSSStoreRequestHelper;
 @class WSSStorePackageUpdateStatus;
-@protocol WSSIStoreProductPagedQueryResult, WSSIStoreProductQueryResult, WSSIStoreProductResult, WSSIStorePurchaseProperties, WSSIStorePurchasePropertiesFactory, WSSIStoreCollectionData, WSSIStoreLicense, WSSIStoreAppLicense, WSSIStoreSendRequestResult, WSSIStoreProduct, WSSIStoreImage, WSSIStoreVideo, WSSIStoreSku, WSSIStoreAvailability, WSSIStorePrice, WSSIStoreSubscriptionInfo, WSSIStoreConsumableResult, WSSIStorePurchaseResult, WSSIStoreContextStatics, WSSIStoreRequestHelperStatics, WSSIStoreContext, WSSIStorePackageUpdate, WSSIStorePackageUpdateResult, WSSIStoreAcquireLicenseResult, WSSIStorePackageLicense;
+@protocol WSSIStoreProductPagedQueryResult, WSSIStoreProductQueryResult, WSSIStoreProductResult, WSSIStorePurchaseProperties, WSSIStorePurchasePropertiesFactory, WSSIStoreCollectionData, WSSIStoreLicense, WSSIStoreAppLicense, WSSIStoreSendRequestResult, WSSIStoreSendRequestResult2, WSSIStoreProduct, WSSIStoreImage, WSSIStoreVideo, WSSIStoreSku, WSSIStoreAvailability, WSSIStorePrice, WSSIStoreSubscriptionInfo, WSSIStoreConsumableResult, WSSIStorePurchaseResult, WSSIStoreContextStatics, WSSIStoreRequestHelperStatics, WSSIStoreContext, WSSIStoreContext2, WSSIStorePackageUpdate, WSSIStorePackageUpdateResult, WSSIStoreAcquireLicenseResult, WSSIStorePackageLicense;
 
 // Windows.Services.Store.StorePurchaseStatus
 enum _WSSStorePurchaseStatus {
@@ -76,6 +76,7 @@ enum _WSSStorePackageUpdateState {
 typedef unsigned WSSStorePackageUpdateState;
 
 #include "WindowsFoundation.h"
+#include "WindowsWebHttp.h"
 #include "WindowsApplicationModel.h"
 #include "WindowsSystem.h"
 
@@ -369,6 +370,7 @@ OBJCUWPWINDOWSSERVICESSTOREEXPORT
 - (void)requestDownloadStorePackageUpdatesAsync:(id<NSFastEnumeration> /* WSSStorePackageUpdate* */)storePackageUpdates success:(void (^)(WSSStorePackageUpdateResult*))success progress:(void (^)(WSSStorePackageUpdateStatus*))progress failure:(void (^)(NSError*))failure;
 - (void)requestDownloadAndInstallStorePackageUpdatesAsync:(id<NSFastEnumeration> /* WSSStorePackageUpdate* */)storePackageUpdates success:(void (^)(WSSStorePackageUpdateResult*))success progress:(void (^)(WSSStorePackageUpdateStatus*))progress failure:(void (^)(NSError*))failure;
 - (void)requestDownloadAndInstallStorePackagesAsync:(id<NSFastEnumeration> /* NSString * */)storeIds success:(void (^)(WSSStorePackageUpdateResult*))success progress:(void (^)(WSSStorePackageUpdateStatus*))progress failure:(void (^)(NSError*))failure;
+- (void)findStoreProductForPackageAsync:(id<NSFastEnumeration> /* NSString * */)productKinds package:(WAPackage*)package success:(void (^)(WSSStoreProductResult*))success failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WSSStoreContext_DEFINED__
@@ -384,6 +386,7 @@ OBJCUWPWINDOWSSERVICESSTOREEXPORT
 #endif
 @property (readonly) HRESULT extendedError;
 @property (readonly) NSString * response;
+@property (readonly) WWHHttpStatusCode httpStatusCode;
 @end
 
 #endif // __WSSStoreSendRequestResult_DEFINED__

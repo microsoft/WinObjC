@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -27,8 +27,8 @@
 #endif
 #include <UWP/interopBase.h>
 
-@class WUXMIDownloadProgressEventArgs, WUXMIBitmapSource, WUXMIRenderTargetBitmap, WUXMISurfaceImageSource, WUXMIBitmapImage, WUXMIVirtualSurfaceImageSource, WUXMIWriteableBitmap, WUXMIXamlRenderingBackgroundTask, WUXMISoftwareBitmapSource;
-@protocol WUXMIIDownloadProgressEventArgs, WUXMIIBitmapSource, WUXMIIBitmapSourceStatics, WUXMIIBitmapSourceFactory, WUXMIIRenderTargetBitmap, WUXMIIRenderTargetBitmapStatics, WUXMIISurfaceImageSource, WUXMIISurfaceImageSourceFactory, WUXMIIBitmapImage, WUXMIIBitmapImageStatics, WUXMIIBitmapImageFactory, WUXMIIBitmapImage2, WUXMIIBitmapImageStatics2, WUXMIIBitmapImage3, WUXMIIBitmapImageStatics3, WUXMIIVirtualSurfaceImageSource, WUXMIIVirtualSurfaceImageSourceFactory, WUXMIIWriteableBitmap, WUXMIIWriteableBitmapFactory, WUXMIIXamlRenderingBackgroundTask, WUXMIIXamlRenderingBackgroundTaskOverrides, WUXMIIXamlRenderingBackgroundTaskFactory, WUXMIISoftwareBitmapSource;
+@class WUXMIDownloadProgressEventArgs, WUXMIBitmapSource, WUXMIRenderTargetBitmap, WUXMISurfaceImageSource, WUXMIBitmapImage, WUXMIVirtualSurfaceImageSource, WUXMIWriteableBitmap, WUXMISvgImageSourceFailedEventArgs, WUXMISvgImageSourceOpenedEventArgs, WUXMIXamlRenderingBackgroundTask, WUXMISoftwareBitmapSource, WUXMISvgImageSource;
+@protocol WUXMIIDownloadProgressEventArgs, WUXMIIBitmapSource, WUXMIIBitmapSourceStatics, WUXMIIBitmapSourceFactory, WUXMIIRenderTargetBitmap, WUXMIIRenderTargetBitmapStatics, WUXMIISurfaceImageSource, WUXMIISurfaceImageSourceFactory, WUXMIIBitmapImage, WUXMIIBitmapImageStatics, WUXMIIBitmapImageFactory, WUXMIIBitmapImage2, WUXMIIBitmapImageStatics2, WUXMIIBitmapImage3, WUXMIIBitmapImageStatics3, WUXMIIVirtualSurfaceImageSource, WUXMIIVirtualSurfaceImageSourceFactory, WUXMIIWriteableBitmap, WUXMIIWriteableBitmapFactory, WUXMIISvgImageSourceFailedEventArgs, WUXMIISvgImageSourceOpenedEventArgs, WUXMIIXamlRenderingBackgroundTask, WUXMIIXamlRenderingBackgroundTaskOverrides, WUXMIIXamlRenderingBackgroundTaskFactory, WUXMIISoftwareBitmapSource, WUXMIISvgImageSource, WUXMIISvgImageSourceStatics, WUXMIISvgImageSourceFactory;
 
 // Windows.UI.Xaml.Media.Imaging.BitmapCreateOptions
 enum _WUXMIBitmapCreateOptions {
@@ -43,6 +43,15 @@ enum _WUXMIDecodePixelType {
     WUXMIDecodePixelTypeLogical = 1,
 };
 typedef unsigned WUXMIDecodePixelType;
+
+// Windows.UI.Xaml.Media.Imaging.SvgImageSourceLoadStatus
+enum _WUXMISvgImageSourceLoadStatus {
+    WUXMISvgImageSourceLoadStatusSuccess = 0,
+    WUXMISvgImageSourceLoadStatusNetworkError = 1,
+    WUXMISvgImageSourceLoadStatusInvalidFormat = 2,
+    WUXMISvgImageSourceLoadStatusOther = 3,
+};
+typedef unsigned WUXMISvgImageSourceLoadStatus;
 
 #include "WindowsUIXamlMedia.h"
 #include "WindowsStorageStreams.h"
@@ -207,8 +216,8 @@ OBJCUWPWINDOWSUIXAMLMEDIAIMAGINGEXPORT
 
 OBJCUWPWINDOWSUIXAMLMEDIAIMAGINGEXPORT
 @interface WUXMIBitmapImage : WUXMIBitmapSource
-+ (WUXMIBitmapImage*)makeInstanceWithUriSource:(WFUri*)uriSource ACTIVATOR;
 + (instancetype)make __attribute__ ((ns_returns_retained));
++ (WUXMIBitmapImage*)makeInstanceWithUriSource:(WFUri*)uriSource ACTIVATOR;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
@@ -271,6 +280,33 @@ OBJCUWPWINDOWSUIXAMLMEDIAIMAGINGEXPORT
 
 #endif // __WUXMIWriteableBitmap_DEFINED__
 
+// Windows.UI.Xaml.Media.Imaging.SvgImageSourceFailedEventArgs
+#ifndef __WUXMISvgImageSourceFailedEventArgs_DEFINED__
+#define __WUXMISvgImageSourceFailedEventArgs_DEFINED__
+
+OBJCUWPWINDOWSUIXAMLMEDIAIMAGINGEXPORT
+@interface WUXMISvgImageSourceFailedEventArgs : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (readonly) WUXMISvgImageSourceLoadStatus status;
+@end
+
+#endif // __WUXMISvgImageSourceFailedEventArgs_DEFINED__
+
+// Windows.UI.Xaml.Media.Imaging.SvgImageSourceOpenedEventArgs
+#ifndef __WUXMISvgImageSourceOpenedEventArgs_DEFINED__
+#define __WUXMISvgImageSourceOpenedEventArgs_DEFINED__
+
+OBJCUWPWINDOWSUIXAMLMEDIAIMAGINGEXPORT
+@interface WUXMISvgImageSourceOpenedEventArgs : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@end
+
+#endif // __WUXMISvgImageSourceOpenedEventArgs_DEFINED__
+
 // Windows.UI.Xaml.Media.Imaging.XamlRenderingBackgroundTask
 #ifndef __WUXMIXamlRenderingBackgroundTask_DEFINED__
 #define __WUXMIXamlRenderingBackgroundTask_DEFINED__
@@ -280,6 +316,7 @@ OBJCUWPWINDOWSUIXAMLMEDIAIMAGINGEXPORT
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
+- (void)onRun:(RTObject<WABIBackgroundTaskInstance>*)taskInstance;
 @end
 
 #endif // __WUXMIXamlRenderingBackgroundTask_DEFINED__
@@ -313,4 +350,29 @@ OBJCUWPWINDOWSUIXAMLMEDIAIMAGINGEXPORT
 @end
 
 #endif // __WUXMISoftwareBitmapSource_DEFINED__
+
+// Windows.UI.Xaml.Media.Imaging.SvgImageSource
+#ifndef __WUXMISvgImageSource_DEFINED__
+#define __WUXMISvgImageSource_DEFINED__
+
+OBJCUWPWINDOWSUIXAMLMEDIAIMAGINGEXPORT
+@interface WUXMISvgImageSource : WUXMImageSource
++ (instancetype)make __attribute__ ((ns_returns_retained));
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (retain) WFUri* uriSource;
+@property double rasterizePixelWidth;
+@property double rasterizePixelHeight;
++ (WXDependencyProperty*)rasterizePixelHeightProperty;
++ (WXDependencyProperty*)rasterizePixelWidthProperty;
++ (WXDependencyProperty*)uriSourceProperty;
+- (EventRegistrationToken)addOpenFailedEvent:(void(^)(WUXMISvgImageSource*, WUXMISvgImageSourceFailedEventArgs*))del;
+- (void)removeOpenFailedEvent:(EventRegistrationToken)tok;
+- (EventRegistrationToken)addOpenedEvent:(void(^)(WUXMISvgImageSource*, WUXMISvgImageSourceOpenedEventArgs*))del;
+- (void)removeOpenedEvent:(EventRegistrationToken)tok;
+- (void)setSourceAsync:(RTObject<WSSIRandomAccessStream>*)streamSource success:(void (^)(WUXMISvgImageSourceLoadStatus))success failure:(void (^)(NSError*))failure;
+@end
+
+#endif // __WUXMISvgImageSource_DEFINED__
 

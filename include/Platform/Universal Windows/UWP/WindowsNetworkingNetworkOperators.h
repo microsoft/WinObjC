@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -27,9 +27,9 @@
 #endif
 #include <UWP/interopBase.h>
 
-@class WNNMobileBroadbandAccount, WNNMobileBroadbandNetwork, WNNMobileBroadbandDeviceInformation, WNNMobileBroadbandPinManager, WNNMobileBroadbandUiccApp, WNNNetworkOperatorTetheringAccessPointConfiguration, WNNNetworkOperatorTetheringOperationResult, WNNNetworkOperatorTetheringManager, WNNNetworkOperatorTetheringClient, WNNMobileBroadbandAccountEventArgs, WNNMobileBroadbandAccountUpdatedEventArgs, WNNMobileBroadbandAccountWatcher, WNNMobileBroadbandModem, WNNMobileBroadbandUicc, WNNMobileBroadbandModemConfiguration, WNNMobileBroadbandDeviceServiceInformation, WNNMobileBroadbandDeviceService, WNNMobileBroadbandPin, WNNMobileBroadbandPinOperationResult, WNNMobileBroadbandDeviceServiceDataSession, WNNMobileBroadbandDeviceServiceCommandSession, WNNMobileBroadbandDeviceServiceDataReceivedEventArgs, WNNMobileBroadbandDeviceServiceCommandResult, WNNMobileBroadbandUiccAppsResult, WNNMobileBroadbandUiccAppRecordDetailsResult, WNNMobileBroadbandUiccAppReadRecordResult, WNNMobileBroadbandNetworkRegistrationStateChange, WNNMobileBroadbandNetworkRegistrationStateChangeTriggerDetails, WNNMobileBroadbandRadioStateChange, WNNMobileBroadbandRadioStateChangeTriggerDetails, WNNMobileBroadbandPinLockStateChange, WNNMobileBroadbandPinLockStateChangeTriggerDetails, WNNMobileBroadbandDeviceServiceTriggerDetails, WNNKnownCSimFilePaths, WNNKnownRuimFilePaths, WNNKnownSimFilePaths, WNNKnownUSimFilePaths, WNNHotspotAuthenticationEventDetails, WNNHotspotAuthenticationContext, WNNHotspotCredentialsAuthenticationResult, WNNProvisionFromXmlDocumentResults, WNNProvisionedProfile, WNNProvisioningAgent, WNNUssdMessage, WNNUssdReply, WNNUssdSession, WNNNetworkOperatorNotificationEventDetails, WNNFdnAccessManager;
+@class WNNMobileBroadbandAccount, WNNMobileBroadbandNetwork, WNNMobileBroadbandDeviceInformation, WNNMobileBroadbandPinManager, WNNMobileBroadbandUiccApp, WNNMobileBroadbandCellsInfo, WNNNetworkOperatorTetheringAccessPointConfiguration, WNNNetworkOperatorTetheringOperationResult, WNNNetworkOperatorTetheringManager, WNNNetworkOperatorTetheringClient, WNNMobileBroadbandAccountEventArgs, WNNMobileBroadbandAccountUpdatedEventArgs, WNNMobileBroadbandAccountWatcher, WNNMobileBroadbandModem, WNNMobileBroadbandUicc, WNNMobileBroadbandSarManager, WNNMobileBroadbandModemConfiguration, WNNMobileBroadbandDeviceServiceInformation, WNNMobileBroadbandDeviceService, WNNMobileBroadbandPin, WNNMobileBroadbandPinOperationResult, WNNMobileBroadbandDeviceServiceDataSession, WNNMobileBroadbandDeviceServiceCommandSession, WNNMobileBroadbandDeviceServiceDataReceivedEventArgs, WNNMobileBroadbandDeviceServiceCommandResult, WNNMobileBroadbandUiccAppsResult, WNNMobileBroadbandUiccAppRecordDetailsResult, WNNMobileBroadbandUiccAppReadRecordResult, WNNMobileBroadbandNetworkRegistrationStateChange, WNNMobileBroadbandNetworkRegistrationStateChangeTriggerDetails, WNNMobileBroadbandRadioStateChange, WNNMobileBroadbandRadioStateChangeTriggerDetails, WNNMobileBroadbandPinLockStateChange, WNNMobileBroadbandPinLockStateChangeTriggerDetails, WNNMobileBroadbandDeviceServiceTriggerDetails, WNNKnownCSimFilePaths, WNNKnownRuimFilePaths, WNNKnownSimFilePaths, WNNKnownUSimFilePaths, WNNMobileBroadbandCellCdma, WNNMobileBroadbandCellGsm, WNNMobileBroadbandCellLte, WNNMobileBroadbandCellTdscdma, WNNMobileBroadbandCellUmts, WNNMobileBroadbandAntennaSar, WNNMobileBroadbandTransmissionStateChangedEventArgs, WNNHotspotAuthenticationEventDetails, WNNHotspotAuthenticationContext, WNNHotspotCredentialsAuthenticationResult, WNNProvisionFromXmlDocumentResults, WNNProvisionedProfile, WNNProvisioningAgent, WNNUssdMessage, WNNUssdReply, WNNUssdSession, WNNNetworkOperatorNotificationEventDetails, WNNFdnAccessManager;
 @class WNNProfileUsage;
-@protocol WNNIMobileBroadbandAccountStatics, WNNIMobileBroadbandAccount, WNNIMobileBroadbandAccount2, WNNIMobileBroadbandDeviceInformation, WNNIMobileBroadbandDeviceInformation2, WNNIMobileBroadbandNetwork, WNNIMobileBroadbandNetwork2, WNNINetworkOperatorTetheringAccessPointConfiguration, WNNINetworkOperatorTetheringOperationResult, WNNINetworkOperatorTetheringManagerStatics, WNNINetworkOperatorTetheringManagerStatics2, WNNINetworkOperatorTetheringManagerStatics3, WNNINetworkOperatorTetheringManager, WNNINetworkOperatorTetheringClient, WNNINetworkOperatorTetheringClientManager, WNNIMobileBroadbandAccountEventArgs, WNNIMobileBroadbandAccountUpdatedEventArgs, WNNIMobileBroadbandAccountWatcher, WNNIMobileBroadbandModemStatics, WNNIMobileBroadbandModemConfiguration, WNNIMobileBroadbandModem, WNNIMobileBroadbandPinManager, WNNIMobileBroadbandPinOperationResult, WNNIMobileBroadbandPin, WNNIMobileBroadbandDeviceServiceInformation, WNNIMobileBroadbandDeviceService, WNNIMobileBroadbandDeviceServiceDataReceivedEventArgs, WNNIMobileBroadbandDeviceServiceDataSession, WNNIMobileBroadbandDeviceServiceCommandResult, WNNIMobileBroadbandDeviceServiceCommandSession, WNNIMobileBroadbandUiccAppsResult, WNNIMobileBroadbandUicc, WNNIMobileBroadbandUiccAppRecordDetailsResult, WNNIMobileBroadbandUiccAppReadRecordResult, WNNIMobileBroadbandUiccApp, WNNIMobileBroadbandNetworkRegistrationStateChange, WNNIMobileBroadbandNetworkRegistrationStateChangeTriggerDetails, WNNIMobileBroadbandRadioStateChange, WNNIMobileBroadbandRadioStateChangeTriggerDetails, WNNIMobileBroadbandPinLockStateChange, WNNIMobileBroadbandPinLockStateChangeTriggerDetails, WNNIMobileBroadbandDeviceServiceTriggerDetails, WNNIKnownCSimFilePathsStatics, WNNIKnownRuimFilePathsStatics, WNNIKnownSimFilePathsStatics, WNNIKnownUSimFilePathsStatics, WNNIHotspotAuthenticationEventDetails, WNNIHotspotAuthenticationContextStatics, WNNIHotspotAuthenticationContext, WNNIHotspotCredentialsAuthenticationResult, WNNIHotspotAuthenticationContext2, WNNIProvisionFromXmlDocumentResults, WNNIProvisionedProfile, WNNIProvisioningAgent, WNNIProvisioningAgentStaticMethods, WNNIUssdMessage, WNNIUssdMessageFactory, WNNIUssdReply, WNNIUssdSession, WNNIUssdSessionStatics, WNNINetworkOperatorNotificationEventDetails, WNNINetworkOperatorTetheringEntitlementCheck, WNNIFdnAccessManagerStatics;
+@protocol WNNIMobileBroadbandAccountStatics, WNNIMobileBroadbandAccount, WNNIMobileBroadbandAccount2, WNNIMobileBroadbandAccount3, WNNIMobileBroadbandDeviceInformation, WNNIMobileBroadbandDeviceInformation2, WNNIMobileBroadbandDeviceInformation3, WNNIMobileBroadbandNetwork, WNNIMobileBroadbandNetwork2, WNNIMobileBroadbandNetwork3, WNNINetworkOperatorTetheringAccessPointConfiguration, WNNINetworkOperatorTetheringOperationResult, WNNINetworkOperatorTetheringManagerStatics, WNNINetworkOperatorTetheringManagerStatics2, WNNINetworkOperatorTetheringManagerStatics3, WNNINetworkOperatorTetheringManager, WNNINetworkOperatorTetheringClient, WNNINetworkOperatorTetheringClientManager, WNNIMobileBroadbandAccountEventArgs, WNNIMobileBroadbandAccountUpdatedEventArgs, WNNIMobileBroadbandAccountWatcher, WNNIMobileBroadbandModemStatics, WNNIMobileBroadbandModemConfiguration, WNNIMobileBroadbandModemConfiguration2, WNNIMobileBroadbandModem, WNNIMobileBroadbandModem2, WNNIMobileBroadbandPinManager, WNNIMobileBroadbandPinOperationResult, WNNIMobileBroadbandPin, WNNIMobileBroadbandDeviceServiceInformation, WNNIMobileBroadbandDeviceService, WNNIMobileBroadbandDeviceServiceDataReceivedEventArgs, WNNIMobileBroadbandDeviceServiceDataSession, WNNIMobileBroadbandDeviceServiceCommandResult, WNNIMobileBroadbandDeviceServiceCommandSession, WNNIMobileBroadbandUiccAppsResult, WNNIMobileBroadbandUicc, WNNIMobileBroadbandUiccAppRecordDetailsResult, WNNIMobileBroadbandUiccAppReadRecordResult, WNNIMobileBroadbandUiccApp, WNNIMobileBroadbandNetworkRegistrationStateChange, WNNIMobileBroadbandNetworkRegistrationStateChangeTriggerDetails, WNNIMobileBroadbandRadioStateChange, WNNIMobileBroadbandRadioStateChangeTriggerDetails, WNNIMobileBroadbandPinLockStateChange, WNNIMobileBroadbandPinLockStateChangeTriggerDetails, WNNIMobileBroadbandDeviceServiceTriggerDetails, WNNIKnownCSimFilePathsStatics, WNNIKnownRuimFilePathsStatics, WNNIKnownSimFilePathsStatics, WNNIKnownUSimFilePathsStatics, WNNIMobileBroadbandCellCdma, WNNIMobileBroadbandCellGsm, WNNIMobileBroadbandCellLte, WNNIMobileBroadbandCellTdscdma, WNNIMobileBroadbandCellUmts, WNNIMobileBroadbandCellsInfo, WNNIMobileBroadbandAntennaSar, WNNIMobileBroadbandSarManager, WNNIMobileBroadbandTransmissionStateChangedEventArgs, WNNIHotspotAuthenticationEventDetails, WNNIHotspotAuthenticationContextStatics, WNNIHotspotAuthenticationContext, WNNIHotspotCredentialsAuthenticationResult, WNNIHotspotAuthenticationContext2, WNNIProvisionFromXmlDocumentResults, WNNIProvisionedProfile, WNNIProvisioningAgent, WNNIProvisioningAgentStaticMethods, WNNIUssdMessage, WNNIUssdMessageFactory, WNNIUssdReply, WNNIUssdSession, WNNIUssdSessionStatics, WNNINetworkOperatorNotificationEventDetails, WNNINetworkOperatorTetheringEntitlementCheck, WNNIFdnAccessManagerStatics;
 
 // Windows.Networking.NetworkOperators.DataClasses
 enum _WNNDataClasses {
@@ -231,6 +231,15 @@ enum _WNNUiccAccessCondition {
 };
 typedef unsigned WNNUiccAccessCondition;
 
+// Windows.Networking.NetworkOperators.MobileBroadbandModemStatus
+enum _WNNMobileBroadbandModemStatus {
+    WNNMobileBroadbandModemStatusSuccess = 0,
+    WNNMobileBroadbandModemStatusOtherFailure = 1,
+    WNNMobileBroadbandModemStatusBusy = 2,
+    WNNMobileBroadbandModemStatusNoDeviceSupport = 3,
+};
+typedef unsigned WNNMobileBroadbandModemStatus;
+
 // Windows.Networking.NetworkOperators.HotspotAuthenticationResponseCode
 enum _WNNHotspotAuthenticationResponseCode {
     WNNHotspotAuthenticationResponseCodeNoError = 0,
@@ -262,9 +271,9 @@ enum _WNNUssdResultCode {
 typedef unsigned WNNUssdResultCode;
 
 #include "WindowsNetworkingConnectivity.h"
+#include "WindowsFoundation.h"
 #include "WindowsStorageStreams.h"
 #include "WindowsDevicesSms.h"
-#include "WindowsFoundation.h"
 #include "WindowsNetworking.h"
 #include "WindowsDataXmlDom.h"
 
@@ -293,6 +302,7 @@ OBJCUWPWINDOWSNETWORKINGNETWORKOPERATORSEXPORT
 @property (readonly) NSString * networkAccountId;
 @property (readonly) WFGUID* serviceProviderGuid;
 @property (readonly) NSString * serviceProviderName;
+@property (readonly) WFUri* accountExperienceUrl;
 + (NSArray* /* NSString * */)availableNetworkAccountIds;
 - (NSArray* /* WNCConnectionProfile* */)getConnectionProfiles;
 @end
@@ -320,6 +330,7 @@ OBJCUWPWINDOWSNETWORKINGNETWORKOPERATORSEXPORT
 @property (readonly) NSArray* /* WNNMobileBroadbandUiccApp* */ registrationUiccApps;
 - (void)showConnectionUI;
 - (void)getVoiceCallSupportAsyncWithSuccess:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
+- (void)getCellsInfoAsyncWithSuccess:(void (^)(WNNMobileBroadbandCellsInfo*))success failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WNNMobileBroadbandNetwork_DEFINED__
@@ -350,6 +361,9 @@ OBJCUWPWINDOWSNETWORKINGNETWORKOPERATORSEXPORT
 @property (readonly) WNNMobileBroadbandPinManager* pinManager;
 @property (readonly) NSString * revision;
 @property (readonly) NSString * serialNumber;
+@property (readonly) NSString * simGid1;
+@property (readonly) NSString * simPnn;
+@property (readonly) NSString * simSpn;
 @end
 
 #endif // __WNNMobileBroadbandDeviceInformation_DEFINED__
@@ -385,6 +399,29 @@ OBJCUWPWINDOWSNETWORKINGNETWORKOPERATORSEXPORT
 @end
 
 #endif // __WNNMobileBroadbandUiccApp_DEFINED__
+
+// Windows.Networking.NetworkOperators.MobileBroadbandCellsInfo
+#ifndef __WNNMobileBroadbandCellsInfo_DEFINED__
+#define __WNNMobileBroadbandCellsInfo_DEFINED__
+
+OBJCUWPWINDOWSNETWORKINGNETWORKOPERATORSEXPORT
+@interface WNNMobileBroadbandCellsInfo : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (readonly) NSArray* /* WNNMobileBroadbandCellCdma* */ neighboringCellsCdma;
+@property (readonly) NSArray* /* WNNMobileBroadbandCellGsm* */ neighboringCellsGsm;
+@property (readonly) NSArray* /* WNNMobileBroadbandCellLte* */ neighboringCellsLte;
+@property (readonly) NSArray* /* WNNMobileBroadbandCellTdscdma* */ neighboringCellsTdscdma;
+@property (readonly) NSArray* /* WNNMobileBroadbandCellUmts* */ neighboringCellsUmts;
+@property (readonly) NSArray* /* WNNMobileBroadbandCellCdma* */ servingCellsCdma;
+@property (readonly) NSArray* /* WNNMobileBroadbandCellGsm* */ servingCellsGsm;
+@property (readonly) NSArray* /* WNNMobileBroadbandCellLte* */ servingCellsLte;
+@property (readonly) NSArray* /* WNNMobileBroadbandCellTdscdma* */ servingCellsTdscdma;
+@property (readonly) NSArray* /* WNNMobileBroadbandCellUmts* */ servingCellsUmts;
+@end
+
+#endif // __WNNMobileBroadbandCellsInfo_DEFINED__
 
 // Windows.Networking.NetworkOperators.NetworkOperatorTetheringAccessPointConfiguration
 #ifndef __WNNNetworkOperatorTetheringAccessPointConfiguration_DEFINED__
@@ -537,6 +574,8 @@ OBJCUWPWINDOWSNETWORKINGNETWORKOPERATORSEXPORT
 - (WNNMobileBroadbandDeviceService*)getDeviceService:(WFGUID*)deviceServiceId;
 - (RTObject<WFIAsyncAction>*)resetAsync;
 - (void)getCurrentConfigurationAsyncWithSuccess:(void (^)(WNNMobileBroadbandModemConfiguration*))success failure:(void (^)(NSError*))failure;
+- (void)getIsPassthroughEnabledAsyncWithSuccess:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
+- (void)setIsPassthroughEnabledAsync:(BOOL)value success:(void (^)(WNNMobileBroadbandModemStatus))success failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WNNMobileBroadbandModem_DEFINED__
@@ -556,6 +595,34 @@ OBJCUWPWINDOWSNETWORKINGNETWORKOPERATORSEXPORT
 
 #endif // __WNNMobileBroadbandUicc_DEFINED__
 
+// Windows.Networking.NetworkOperators.MobileBroadbandSarManager
+#ifndef __WNNMobileBroadbandSarManager_DEFINED__
+#define __WNNMobileBroadbandSarManager_DEFINED__
+
+OBJCUWPWINDOWSNETWORKINGNETWORKOPERATORSEXPORT
+@interface WNNMobileBroadbandSarManager : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (readonly) NSArray* /* WNNMobileBroadbandAntennaSar* */ antennas;
+@property (readonly) WFTimeSpan* hysteresisTimerPeriod;
+@property (readonly) BOOL isBackoffEnabled;
+@property (readonly) BOOL isSarControlledByHardware;
+@property (readonly) BOOL isWiFiHardwareIntegrated;
+- (EventRegistrationToken)addTransmissionStateChangedEvent:(void(^)(WNNMobileBroadbandSarManager*, WNNMobileBroadbandTransmissionStateChangedEventArgs*))del;
+- (void)removeTransmissionStateChangedEvent:(EventRegistrationToken)tok;
+- (RTObject<WFIAsyncAction>*)enableBackoffAsync;
+- (RTObject<WFIAsyncAction>*)disableBackoffAsync;
+- (RTObject<WFIAsyncAction>*)setConfigurationAsync:(id<NSFastEnumeration> /* WNNMobileBroadbandAntennaSar* */)antennas;
+- (RTObject<WFIAsyncAction>*)revertSarToHardwareControlAsync;
+- (RTObject<WFIAsyncAction>*)setTransmissionStateChangedHysteresisAsync:(WFTimeSpan*)timerPeriod;
+- (void)getIsTransmittingAsyncWithSuccess:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
+- (void)startTransmissionStateMonitoring;
+- (void)stopTransmissionStateMonitoring;
+@end
+
+#endif // __WNNMobileBroadbandSarManager_DEFINED__
+
 // Windows.Networking.NetworkOperators.MobileBroadbandModemConfiguration
 #ifndef __WNNMobileBroadbandModemConfiguration_DEFINED__
 #define __WNNMobileBroadbandModemConfiguration_DEFINED__
@@ -568,6 +635,7 @@ OBJCUWPWINDOWSNETWORKINGNETWORKOPERATORSEXPORT
 @property (readonly) NSString * homeProviderId;
 @property (readonly) NSString * homeProviderName;
 @property (readonly) WNNMobileBroadbandUicc* uicc;
+@property (readonly) WNNMobileBroadbandSarManager* sarManager;
 @end
 
 #endif // __WNNMobileBroadbandModemConfiguration_DEFINED__
@@ -914,6 +982,139 @@ OBJCUWPWINDOWSNETWORKINGNETWORKOPERATORSEXPORT
 @end
 
 #endif // __WNNKnownUSimFilePaths_DEFINED__
+
+// Windows.Networking.NetworkOperators.MobileBroadbandCellCdma
+#ifndef __WNNMobileBroadbandCellCdma_DEFINED__
+#define __WNNMobileBroadbandCellCdma_DEFINED__
+
+OBJCUWPWINDOWSNETWORKINGNETWORKOPERATORSEXPORT
+@interface WNNMobileBroadbandCellCdma : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (readonly) id /* int */ baseStationId;
+@property (readonly) id /* WFTimeSpan* */ baseStationLastBroadcastGpsTime;
+@property (readonly) id /* double */ baseStationLatitude;
+@property (readonly) id /* double */ baseStationLongitude;
+@property (readonly) id /* int */ baseStationPNCode;
+@property (readonly) id /* int */ networkId;
+@property (readonly) id /* double */ pilotSignalStrengthInDB;
+@property (readonly) id /* int */ systemId;
+@end
+
+#endif // __WNNMobileBroadbandCellCdma_DEFINED__
+
+// Windows.Networking.NetworkOperators.MobileBroadbandCellGsm
+#ifndef __WNNMobileBroadbandCellGsm_DEFINED__
+#define __WNNMobileBroadbandCellGsm_DEFINED__
+
+OBJCUWPWINDOWSNETWORKINGNETWORKOPERATORSEXPORT
+@interface WNNMobileBroadbandCellGsm : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (readonly) id /* int */ baseStationId;
+@property (readonly) id /* int */ cellId;
+@property (readonly) id /* int */ channelNumber;
+@property (readonly) id /* int */ locationAreaCode;
+@property (readonly) NSString * providerId;
+@property (readonly) id /* double */ receivedSignalStrengthInDBm;
+@property (readonly) id /* int */ timingAdvanceInBitPeriods;
+@end
+
+#endif // __WNNMobileBroadbandCellGsm_DEFINED__
+
+// Windows.Networking.NetworkOperators.MobileBroadbandCellLte
+#ifndef __WNNMobileBroadbandCellLte_DEFINED__
+#define __WNNMobileBroadbandCellLte_DEFINED__
+
+OBJCUWPWINDOWSNETWORKINGNETWORKOPERATORSEXPORT
+@interface WNNMobileBroadbandCellLte : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (readonly) id /* int */ cellId;
+@property (readonly) id /* int */ channelNumber;
+@property (readonly) id /* int */ physicalCellId;
+@property (readonly) NSString * providerId;
+@property (readonly) id /* double */ referenceSignalReceivedPowerInDBm;
+@property (readonly) id /* double */ referenceSignalReceivedQualityInDBm;
+@property (readonly) id /* int */ timingAdvanceInBitPeriods;
+@property (readonly) id /* int */ trackingAreaCode;
+@end
+
+#endif // __WNNMobileBroadbandCellLte_DEFINED__
+
+// Windows.Networking.NetworkOperators.MobileBroadbandCellTdscdma
+#ifndef __WNNMobileBroadbandCellTdscdma_DEFINED__
+#define __WNNMobileBroadbandCellTdscdma_DEFINED__
+
+OBJCUWPWINDOWSNETWORKINGNETWORKOPERATORSEXPORT
+@interface WNNMobileBroadbandCellTdscdma : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (readonly) id /* int */ cellId;
+@property (readonly) id /* int */ cellParameterId;
+@property (readonly) id /* int */ channelNumber;
+@property (readonly) id /* int */ locationAreaCode;
+@property (readonly) id /* double */ pathLossInDB;
+@property (readonly) NSString * providerId;
+@property (readonly) id /* double */ receivedSignalCodePowerInDBm;
+@property (readonly) id /* int */ timingAdvanceInBitPeriods;
+@end
+
+#endif // __WNNMobileBroadbandCellTdscdma_DEFINED__
+
+// Windows.Networking.NetworkOperators.MobileBroadbandCellUmts
+#ifndef __WNNMobileBroadbandCellUmts_DEFINED__
+#define __WNNMobileBroadbandCellUmts_DEFINED__
+
+OBJCUWPWINDOWSNETWORKINGNETWORKOPERATORSEXPORT
+@interface WNNMobileBroadbandCellUmts : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (readonly) id /* int */ cellId;
+@property (readonly) id /* int */ channelNumber;
+@property (readonly) id /* int */ locationAreaCode;
+@property (readonly) id /* double */ pathLossInDB;
+@property (readonly) id /* int */ primaryScramblingCode;
+@property (readonly) NSString * providerId;
+@property (readonly) id /* double */ receivedSignalCodePowerInDBm;
+@property (readonly) id /* double */ signalToNoiseRatioInDB;
+@end
+
+#endif // __WNNMobileBroadbandCellUmts_DEFINED__
+
+// Windows.Networking.NetworkOperators.MobileBroadbandAntennaSar
+#ifndef __WNNMobileBroadbandAntennaSar_DEFINED__
+#define __WNNMobileBroadbandAntennaSar_DEFINED__
+
+OBJCUWPWINDOWSNETWORKINGNETWORKOPERATORSEXPORT
+@interface WNNMobileBroadbandAntennaSar : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (readonly) int antennaIndex;
+@property (readonly) int sarBackoffIndex;
+@end
+
+#endif // __WNNMobileBroadbandAntennaSar_DEFINED__
+
+// Windows.Networking.NetworkOperators.MobileBroadbandTransmissionStateChangedEventArgs
+#ifndef __WNNMobileBroadbandTransmissionStateChangedEventArgs_DEFINED__
+#define __WNNMobileBroadbandTransmissionStateChangedEventArgs_DEFINED__
+
+OBJCUWPWINDOWSNETWORKINGNETWORKOPERATORSEXPORT
+@interface WNNMobileBroadbandTransmissionStateChangedEventArgs : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (readonly) BOOL isTransmitting;
+@end
+
+#endif // __WNNMobileBroadbandTransmissionStateChangedEventArgs_DEFINED__
 
 // Windows.Networking.NetworkOperators.HotspotAuthenticationEventDetails
 #ifndef __WNNHotspotAuthenticationEventDetails_DEFINED__

@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -27,8 +27,9 @@
 #endif
 #include <UWP/interopBase.h>
 
-@class WDGGpioPinValueChangedEventArgs, WDGGpioPin, WDGGpioController;
-@protocol WDGIGpioPinValueChangedEventArgs, WDGIGpioController, WDGIGpioControllerStatics, WDGIGpioControllerStatics2, WDGIGpioPin;
+@class WDGGpioPinValueChangedEventArgs, WDGGpioPin, WDGGpioController, WDGGpioChangeReader, WDGGpioChangeCounter;
+@class WDGGpioChangeRecord, WDGGpioChangeCount;
+@protocol WDGIGpioPinValueChangedEventArgs, WDGIGpioController, WDGIGpioControllerStatics, WDGIGpioControllerStatics2, WDGIGpioChangeReaderFactory, WDGIGpioChangeCounterFactory, WDGIGpioPin, WDGIGpioChangeReader, WDGIGpioChangeCounter;
 
 // Windows.Devices.Gpio.GpioSharingMode
 enum _WDGGpioSharingMode {
@@ -42,6 +43,8 @@ enum _WDGGpioOpenStatus {
     WDGGpioOpenStatusPinOpened = 0,
     WDGGpioOpenStatusPinUnavailable = 1,
     WDGGpioOpenStatusSharingViolation = 2,
+    WDGGpioOpenStatusMuxingConflict = 3,
+    WDGGpioOpenStatusUnknownError = 4,
 };
 typedef unsigned WDGGpioOpenStatus;
 
@@ -72,10 +75,34 @@ enum _WDGGpioPinEdge {
 };
 typedef unsigned WDGGpioPinEdge;
 
+// Windows.Devices.Gpio.GpioChangePolarity
+enum _WDGGpioChangePolarity {
+    WDGGpioChangePolarityFalling = 0,
+    WDGGpioChangePolarityRising = 1,
+    WDGGpioChangePolarityBoth = 2,
+};
+typedef unsigned WDGGpioChangePolarity;
+
 #include "WindowsFoundation.h"
 #include "WindowsDevicesGpioProvider.h"
 
 #import <Foundation/Foundation.h>
+
+// [struct] Windows.Devices.Gpio.GpioChangeRecord
+OBJCUWPWINDOWSDEVICESGPIOEXPORT
+@interface WDGGpioChangeRecord : NSObject
++ (instancetype)new;
+@property (retain) WFTimeSpan* relativeTime;
+@property WDGGpioPinEdge edge;
+@end
+
+// [struct] Windows.Devices.Gpio.GpioChangeCount
+OBJCUWPWINDOWSDEVICESGPIOEXPORT
+@interface WDGGpioChangeCount : NSObject
++ (instancetype)new;
+@property uint64_t count;
+@property (retain) WFTimeSpan* relativeTime;
+@end
 
 // Windows.Devices.Gpio.GpioPinValueChangedEventArgs
 #ifndef __WDGGpioPinValueChangedEventArgs_DEFINED__
@@ -135,9 +162,9 @@ OBJCUWPWINDOWSDEVICESGPIOEXPORT
 
 OBJCUWPWINDOWSDEVICESGPIOEXPORT
 @interface WDGGpioController : RTObject
-+ (WDGGpioController*)getDefault;
 + (void)getControllersAsync:(RTObject<WDGPIGpioProvider>*)provider success:(void (^)(NSArray* /* WDGGpioController* */))success failure:(void (^)(NSError*))failure;
 + (void)getDefaultAsyncWithSuccess:(void (^)(WDGGpioController*))success failure:(void (^)(NSError*))failure;
++ (WDGGpioController*)getDefault;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
@@ -148,4 +175,54 @@ OBJCUWPWINDOWSDEVICESGPIOEXPORT
 @end
 
 #endif // __WDGGpioController_DEFINED__
+
+// Windows.Devices.Gpio.GpioChangeReader
+#ifndef __WDGGpioChangeReader_DEFINED__
+#define __WDGGpioChangeReader_DEFINED__
+
+OBJCUWPWINDOWSDEVICESGPIOEXPORT
+@interface WDGGpioChangeReader : RTObject <WFIClosable>
++ (WDGGpioChangeReader*)make:(WDGGpioPin*)pin ACTIVATOR;
++ (WDGGpioChangeReader*)makeWithCapacity:(WDGGpioPin*)pin minCapacity:(int)minCapacity ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property WDGGpioChangePolarity polarity;
+@property (readonly) int capacity;
+@property (readonly) BOOL isEmpty;
+@property (readonly) BOOL isOverflowed;
+@property (readonly) BOOL isStarted;
+@property (readonly) int length;
+- (void)start;
+- (void)stop;
+- (void)clear;
+- (WDGGpioChangeRecord*)getNextItem;
+- (WDGGpioChangeRecord*)peekNextItem;
+- (NSMutableArray* /* WDGGpioChangeRecord* */)getAllItems;
+- (RTObject<WFIAsyncAction>*)waitForItemsAsync:(int)count;
+- (void)close;
+@end
+
+#endif // __WDGGpioChangeReader_DEFINED__
+
+// Windows.Devices.Gpio.GpioChangeCounter
+#ifndef __WDGGpioChangeCounter_DEFINED__
+#define __WDGGpioChangeCounter_DEFINED__
+
+OBJCUWPWINDOWSDEVICESGPIOEXPORT
+@interface WDGGpioChangeCounter : RTObject <WFIClosable>
++ (WDGGpioChangeCounter*)make:(WDGGpioPin*)pin ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property WDGGpioChangePolarity polarity;
+@property (readonly) BOOL isStarted;
+- (void)start;
+- (void)stop;
+- (WDGGpioChangeCount*)read;
+- (WDGGpioChangeCount*)reset;
+- (void)close;
+@end
+
+#endif // __WDGGpioChangeCounter_DEFINED__
 

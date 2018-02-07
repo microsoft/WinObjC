@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -28,7 +28,14 @@
 #include <UWP/interopBase.h>
 
 @class WASLLicenseSatisfactionInfo, WASLLicenseSatisfactionResult, WASLLicenseManager;
-@protocol WASLILicenseSatisfactionResult, WASLILicenseSatisfactionInfo, WASLILicenseManagerStatics;
+@protocol WASLILicenseSatisfactionResult, WASLILicenseSatisfactionInfo, WASLILicenseManagerStatics, WASLILicenseManagerStatics2;
+
+// Windows.ApplicationModel.Store.LicenseManagement.LicenseRefreshOption
+enum _WASLLicenseRefreshOption {
+    WASLLicenseRefreshOptionRunningLicenses = 0,
+    WASLLicenseRefreshOptionAllLicenses = 1,
+};
+typedef unsigned WASLLicenseRefreshOption;
 
 #include "WindowsFoundation.h"
 #include "WindowsStorageStreams.h"
@@ -76,6 +83,7 @@ OBJCUWPWINDOWSAPPLICATIONMODELSTORELICENSEMANAGEMENTEXPORT
 
 OBJCUWPWINDOWSAPPLICATIONMODELSTORELICENSEMANAGEMENTEXPORT
 @interface WASLLicenseManager : RTObject
++ (RTObject<WFIAsyncAction>*)refreshLicensesAsync:(WASLLicenseRefreshOption)refreshOption;
 + (RTObject<WFIAsyncAction>*)addLicenseAsync:(RTObject<WSSIBuffer>*)license;
 + (void)getSatisfactionInfosAsync:(id<NSFastEnumeration> /* NSString * */)contentIds keyIds:(id<NSFastEnumeration> /* NSString * */)keyIds success:(void (^)(WASLLicenseSatisfactionResult*))success failure:(void (^)(NSError*))failure;
 @end

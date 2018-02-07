@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -28,7 +28,7 @@
 #include <UWP/interopBase.h>
 
 @class WGCalendarIdentifiers, WGClockIdentifiers, WGNumeralSystemIdentifiers, WGCurrencyIdentifiers, WGGeographicRegion, WGLanguage, WGCalendar, WGApplicationLanguages, WGJapanesePhoneme, WGJapanesePhoneticAnalyzer;
-@protocol WGICalendarIdentifiersStatics, WGICalendarIdentifiersStatics2, WGICalendarIdentifiersStatics3, WGIClockIdentifiersStatics, WGINumeralSystemIdentifiersStatics, WGINumeralSystemIdentifiersStatics2, WGICurrencyIdentifiersStatics, WGIGeographicRegion, WGIGeographicRegionFactory, WGIGeographicRegionStatics, WGILanguage, WGILanguageExtensionSubtags, WGILanguageFactory, WGILanguageStatics, WGILanguageStatics2, WGICalendar, WGICalendarFactory2, WGITimeZoneOnCalendar, WGICalendarFactory, WGIApplicationLanguagesStatics, WGIJapanesePhoneticAnalyzerStatics, WGIJapanesePhoneme;
+@protocol WGICalendarIdentifiersStatics, WGICalendarIdentifiersStatics2, WGICalendarIdentifiersStatics3, WGIClockIdentifiersStatics, WGINumeralSystemIdentifiersStatics, WGINumeralSystemIdentifiersStatics2, WGICurrencyIdentifiersStatics, WGICurrencyIdentifiersStatics2, WGIGeographicRegion, WGIGeographicRegionFactory, WGIGeographicRegionStatics, WGILanguage, WGILanguageExtensionSubtags, WGILanguageFactory, WGILanguageStatics, WGILanguageStatics2, WGICalendar, WGICalendarFactory2, WGITimeZoneOnCalendar, WGICalendarFactory, WGIApplicationLanguagesStatics, WGIJapanesePhoneticAnalyzerStatics, WGIJapanesePhoneme;
 
 // Windows.Globalization.DayOfWeek
 enum _WGDayOfWeek {
@@ -147,6 +147,7 @@ OBJCUWPWINDOWSGLOBALIZATIONEXPORT
 
 OBJCUWPWINDOWSGLOBALIZATIONEXPORT
 @interface WGCurrencyIdentifiers : RTObject
++ (NSString *)iDR;
 + (NSString *)aED;
 + (NSString *)aFN;
 + (NSString *)aLL;
@@ -205,7 +206,7 @@ OBJCUWPWINDOWSGLOBALIZATIONEXPORT
 + (NSString *)hRK;
 + (NSString *)hTG;
 + (NSString *)hUF;
-+ (NSString *)iDR;
++ (NSString *)sAR;
 + (NSString *)iLS;
 + (NSString *)iNR;
 + (NSString *)iQD;
@@ -264,7 +265,6 @@ OBJCUWPWINDOWSGLOBALIZATIONEXPORT
 + (NSString *)rSD;
 + (NSString *)rUB;
 + (NSString *)rWF;
-+ (NSString *)sAR;
 + (NSString *)sBD;
 + (NSString *)sCR;
 + (NSString *)sDG;
@@ -304,6 +304,7 @@ OBJCUWPWINDOWSGLOBALIZATIONEXPORT
 + (NSString *)zAR;
 + (NSString *)zMW;
 + (NSString *)zWL;
++ (NSString *)bYN;
 @end
 
 #endif // __WGCurrencyIdentifiers_DEFINED__
@@ -337,8 +338,8 @@ OBJCUWPWINDOWSGLOBALIZATIONEXPORT
 
 OBJCUWPWINDOWSGLOBALIZATIONEXPORT
 @interface WGLanguage : RTObject
-+ (BOOL)trySetInputMethodLanguageTag:(NSString *)languageTag;
 + (BOOL)isWellFormed:(NSString *)languageTag;
++ (BOOL)trySetInputMethodLanguageTag:(NSString *)languageTag;
 + (WGLanguage*)makeLanguage:(NSString *)languageTag ACTIVATOR;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -359,10 +360,10 @@ OBJCUWPWINDOWSGLOBALIZATIONEXPORT
 
 OBJCUWPWINDOWSGLOBALIZATIONEXPORT
 @interface WGCalendar : RTObject
-+ (WGCalendar*)makeCalendarWithTimeZone:(id<NSFastEnumeration> /* NSString * */)languages calendar:(NSString *)calendar clock:(NSString *)clock timeZoneId:(NSString *)timeZoneId ACTIVATOR;
 + (instancetype)make __attribute__ ((ns_returns_retained));
 + (WGCalendar*)makeCalendarDefaultCalendarAndClock:(id<NSFastEnumeration> /* NSString * */)languages ACTIVATOR;
 + (WGCalendar*)makeCalendar:(id<NSFastEnumeration> /* NSString * */)languages calendar:(NSString *)calendar clock:(NSString *)clock ACTIVATOR;
++ (WGCalendar*)makeCalendarWithTimeZone:(id<NSFastEnumeration> /* NSString * */)languages calendar:(NSString *)calendar clock:(NSString *)clock timeZoneId:(NSString *)timeZoneId ACTIVATOR;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif

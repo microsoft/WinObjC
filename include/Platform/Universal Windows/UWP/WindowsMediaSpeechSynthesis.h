@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -27,8 +27,8 @@
 #endif
 #include <UWP/interopBase.h>
 
-@class WMSVoiceInformation, WMSSpeechSynthesisStream, WMSSpeechSynthesizer;
-@protocol WMSIVoiceInformation, WMSIInstalledVoicesStatic, WMSISpeechSynthesisStream, WMSISpeechSynthesizer;
+@class WMSVoiceInformation, WMSSpeechSynthesisStream, WMSSpeechSynthesizerOptions, WMSSpeechSynthesizer;
+@protocol WMSIVoiceInformation, WMSIInstalledVoicesStatic, WMSIInstalledVoicesStatic2, WMSISpeechSynthesisStream, WMSISpeechSynthesizer, WMSISpeechSynthesizer2, WMSISpeechSynthesizerOptions, WMSISpeechSynthesizerOptions2;
 
 // Windows.Media.SpeechSynthesis.VoiceGender
 enum _WMSVoiceGender {
@@ -40,6 +40,7 @@ typedef unsigned WMSVoiceGender;
 #include "WindowsStorageStreams.h"
 #include "WindowsFoundation.h"
 #include "WindowsMedia.h"
+#include "WindowsMediaCore.h"
 
 #import <Foundation/Foundation.h>
 
@@ -166,15 +167,30 @@ OBJCUWPWINDOWSMEDIASPEECHSYNTHESISEXPORT
 
 #endif // __WSSIRandomAccessStreamWithContentType_DEFINED__
 
+// Windows.Media.Core.ITimedMetadataTrackProvider
+#ifndef __WMCITimedMetadataTrackProvider_DEFINED__
+#define __WMCITimedMetadataTrackProvider_DEFINED__
+
+@protocol WMCITimedMetadataTrackProvider
+@property (readonly) NSArray* /* WMCTimedMetadataTrack* */ timedMetadataTracks;
+@end
+
+OBJCUWPWINDOWSMEDIASPEECHSYNTHESISEXPORT
+@interface WMCITimedMetadataTrackProvider : RTObject <WMCITimedMetadataTrackProvider>
+@end
+
+#endif // __WMCITimedMetadataTrackProvider_DEFINED__
+
 // Windows.Media.SpeechSynthesis.SpeechSynthesisStream
 #ifndef __WMSSpeechSynthesisStream_DEFINED__
 #define __WMSSpeechSynthesisStream_DEFINED__
 
 OBJCUWPWINDOWSMEDIASPEECHSYNTHESISEXPORT
-@interface WMSSpeechSynthesisStream : RTObject <WSSIRandomAccessStreamWithContentType, WSSIContentTypeProvider, WSSIRandomAccessStream, WSSIOutputStream, WFIClosable, WSSIInputStream>
+@interface WMSSpeechSynthesisStream : RTObject <WSSIRandomAccessStreamWithContentType, WSSIContentTypeProvider, WSSIRandomAccessStream, WSSIOutputStream, WFIClosable, WSSIInputStream, WMCITimedMetadataTrackProvider>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
+@property (readonly) NSArray* /* WMCTimedMetadataTrack* */ timedMetadataTracks;
 @property (readonly) NSArray* /* RTObject<WMIMediaMarker>* */ markers;
 @property (readonly) NSString * contentType;
 @property uint64_t size;
@@ -193,17 +209,37 @@ OBJCUWPWINDOWSMEDIASPEECHSYNTHESISEXPORT
 
 #endif // __WMSSpeechSynthesisStream_DEFINED__
 
+// Windows.Media.SpeechSynthesis.SpeechSynthesizerOptions
+#ifndef __WMSSpeechSynthesizerOptions_DEFINED__
+#define __WMSSpeechSynthesizerOptions_DEFINED__
+
+OBJCUWPWINDOWSMEDIASPEECHSYNTHESISEXPORT
+@interface WMSSpeechSynthesizerOptions : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property BOOL includeWordBoundaryMetadata;
+@property BOOL includeSentenceBoundaryMetadata;
+@property double speakingRate;
+@property double audioVolume;
+@property double audioPitch;
+@end
+
+#endif // __WMSSpeechSynthesizerOptions_DEFINED__
+
 // Windows.Media.SpeechSynthesis.SpeechSynthesizer
 #ifndef __WMSSpeechSynthesizer_DEFINED__
 #define __WMSSpeechSynthesizer_DEFINED__
 
 OBJCUWPWINDOWSMEDIASPEECHSYNTHESISEXPORT
 @interface WMSSpeechSynthesizer : RTObject <WFIClosable>
++ (void)trySetDefaultVoiceAsync:(WMSVoiceInformation*)voice success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) WMSVoiceInformation* voice;
+@property (readonly) WMSSpeechSynthesizerOptions* options;
 + (NSArray* /* WMSVoiceInformation* */)allVoices;
 + (WMSVoiceInformation*)defaultVoice;
 - (void)synthesizeTextToStreamAsync:(NSString *)text success:(void (^)(WMSSpeechSynthesisStream*))success failure:(void (^)(NSError*))failure;

@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -28,7 +28,7 @@
 #include <UWP/interopBase.h>
 
 @class WPSSSpatialSurfaceInfo, WPSSSpatialSurfaceMeshBuffer, WPSSSpatialSurfaceMesh, WPSSSpatialSurfaceMeshOptions, WPSSSpatialSurfaceObserver;
-@protocol WPSSISpatialSurfaceMeshBuffer, WPSSISpatialSurfaceMesh, WPSSISpatialSurfaceMeshOptionsStatics, WPSSISpatialSurfaceMeshOptions, WPSSISpatialSurfaceInfo, WPSSISpatialSurfaceObserverStatics, WPSSISpatialSurfaceObserver;
+@protocol WPSSISpatialSurfaceMeshBuffer, WPSSISpatialSurfaceMesh, WPSSISpatialSurfaceMeshOptionsStatics, WPSSISpatialSurfaceMeshOptions, WPSSISpatialSurfaceInfo, WPSSISpatialSurfaceObserverStatics, WPSSISpatialSurfaceObserverStatics2, WPSSISpatialSurfaceObserver;
 
 #include "WindowsPerceptionSpatial.h"
 #include "WindowsGraphicsDirectX.h"
@@ -119,6 +119,8 @@ OBJCUWPWINDOWSPERCEPTIONSPATIALSURFACESEXPORT
 
 OBJCUWPWINDOWSPERCEPTIONSPATIALSURFACESEXPORT
 @interface WPSSSpatialSurfaceObserver : RTObject
++ (BOOL)isSupported;
++ (void)requestAccessAsyncWithSuccess:(void (^)(WPSSpatialPerceptionAccessStatus))success failure:(void (^)(NSError*))failure;
 + (void)requestAccessAsyncWithSuccess:(void (^)(WPSSpatialPerceptionAccessStatus))success failure:(void (^)(NSError*))failure;
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)

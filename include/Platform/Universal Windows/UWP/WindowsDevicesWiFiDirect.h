@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -28,7 +28,7 @@
 #include <UWP/interopBase.h>
 
 @class WDWWiFiDirectDevice, WDWWiFiDirectConnectionParameters, WDWWiFiDirectInformationElement, WDWWiFiDirectLegacySettings, WDWWiFiDirectAdvertisement, WDWWiFiDirectAdvertisementPublisherStatusChangedEventArgs, WDWWiFiDirectAdvertisementPublisher, WDWWiFiDirectConnectionRequest, WDWWiFiDirectConnectionRequestedEventArgs, WDWWiFiDirectConnectionListener;
-@protocol WDWIWiFiDirectDeviceStatics, WDWIWiFiDirectDeviceStatics2, WDWIWiFiDirectInformationElementStatics, WDWIWiFiDirectInformationElement, WDWIWiFiDirectLegacySettings, WDWIWiFiDirectAdvertisement, WDWIWiFiDirectAdvertisement2, WDWIWiFiDirectAdvertisementPublisherStatusChangedEventArgs, WDWIWiFiDirectAdvertisementPublisher, WDWIWiFiDirectConnectionParametersStatics, WDWIWiFiDirectConnectionParameters, WDWIWiFiDirectConnectionParameters2, WDWIWiFiDirectConnectionRequestedEventArgs, WDWIWiFiDirectConnectionListener, WDWIWiFiDirectDevice, WDWIWiFiDirectConnectionRequest;
+@protocol WDWIWiFiDirectDeviceStatics, WDWIWiFiDirectDeviceStatics2, WDWIWiFiDirectDevice, WDWIWiFiDirectInformationElementStatics, WDWIWiFiDirectInformationElement, WDWIWiFiDirectLegacySettings, WDWIWiFiDirectAdvertisement, WDWIWiFiDirectAdvertisement2, WDWIWiFiDirectAdvertisementPublisherStatusChangedEventArgs, WDWIWiFiDirectAdvertisementPublisher, WDWIWiFiDirectConnectionParametersStatics, WDWIWiFiDirectConnectionParameters, WDWIWiFiDirectConnectionParameters2, WDWIWiFiDirectConnectionRequest, WDWIWiFiDirectConnectionRequestedEventArgs, WDWIWiFiDirectConnectionListener;
 
 // Windows.Devices.WiFiDirect.WiFiDirectConnectionStatus
 enum _WDWWiFiDirectConnectionStatus {
@@ -84,11 +84,11 @@ enum _WDWWiFiDirectPairingProcedure {
 };
 typedef unsigned WDWWiFiDirectPairingProcedure;
 
+#include "WindowsFoundation.h"
+#include "WindowsNetworking.h"
 #include "WindowsSecurityCredentials.h"
 #include "WindowsStorageStreams.h"
 #include "WindowsDevicesEnumeration.h"
-#include "WindowsFoundation.h"
-#include "WindowsNetworking.h"
 
 #import <Foundation/Foundation.h>
 
@@ -112,10 +112,10 @@ OBJCUWPWINDOWSDEVICESWIFIDIRECTEXPORT
 
 OBJCUWPWINDOWSDEVICESWIFIDIRECTEXPORT
 @interface WDWWiFiDirectDevice : RTObject <WFIClosable>
-+ (NSString *)getDeviceSelector:(WDWWiFiDirectDeviceSelectorType)type;
-+ (void)fromIdAsync:(NSString *)deviceId connectionParameters:(WDWWiFiDirectConnectionParameters*)connectionParameters success:(void (^)(WDWWiFiDirectDevice*))success failure:(void (^)(NSError*))failure;
 + (NSString *)getDeviceSelector;
 + (void)fromIdAsync:(NSString *)deviceId success:(void (^)(WDWWiFiDirectDevice*))success failure:(void (^)(NSError*))failure;
++ (NSString *)getDeviceSelector:(WDWWiFiDirectDeviceSelectorType)type;
++ (void)fromIdAsync:(NSString *)deviceId connectionParameters:(WDWWiFiDirectConnectionParameters*)connectionParameters success:(void (^)(WDWWiFiDirectDevice*))success failure:(void (^)(NSError*))failure;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif

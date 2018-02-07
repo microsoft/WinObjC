@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -243,10 +243,10 @@ OBJCUWPWINDOWSUIAPPLICATIONSETTINGSEXPORT
 
 OBJCUWPWINDOWSUIAPPLICATIONSETTINGSEXPORT
 @interface WUAAccountsSettingsPane : RTObject
-+ (RTObject<WFIAsyncAction>*)showManageAccountsAsync;
-+ (RTObject<WFIAsyncAction>*)showAddAccountAsync;
 + (WUAAccountsSettingsPane*)getForCurrentView;
 + (void)show;
++ (RTObject<WFIAsyncAction>*)showManageAccountsAsync;
++ (RTObject<WFIAsyncAction>*)showAddAccountAsync;
 + (WUAAccountsSettingsPane*)getForCurrentView;
 + (void)show;
 #if defined(__cplusplus)

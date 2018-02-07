@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -27,17 +27,8 @@
 #endif
 #include <UWP/interopBase.h>
 
-@class WSAppMemoryUsageLimitChangingEventArgs, WSAppMemoryReport, WSProcessMemoryReport, WSMemoryManager, WSProtocolForResultsOperation, WSUserWatcher, WSUser, WSUserChangedEventArgs, WSUserAuthenticationStatusChangingEventArgs, WSUserAuthenticationStatusChangeDeferral, WSKnownUserProperties, WSUserPicker, WSUserDeviceAssociationChangedEventArgs, WSUserDeviceAssociation, WSLaunchUriResult, WSLauncherUIOptions, WSLauncherOptions, WSRemoteLauncherOptions, WSFolderLauncherOptions, WSLauncher, WSRemoteLauncher, WSProcessLauncherOptions, WSProcessLauncherResult, WSProcessLauncher, WSShutdownManager, WSTimeZoneSettings;
-@protocol WSIAppMemoryReport, WSIProcessMemoryReport, WSIAppMemoryUsageLimitChangingEventArgs, WSIMemoryManagerStatics, WSIMemoryManagerStatics2, WSIMemoryManagerStatics3, WSIProtocolForResultsOperation, WSIUser, WSIUserStatics, WSIUserWatcher, WSIUserChangedEventArgs, WSIUserAuthenticationStatusChangeDeferral, WSIUserAuthenticationStatusChangingEventArgs, WSIKnownUserPropertiesStatics, WSIUserPickerStatics, WSIUserPicker, WSIUserDeviceAssociationChangedEventArgs, WSIUserDeviceAssociationStatics, WSILaunchUriResult, WSILauncherUIOptions, WSILauncherOptions, WSILauncherOptions2, WSILauncherOptions3, WSILauncherViewOptions, WSIRemoteLauncherOptions, WSIFolderLauncherOptions, WSILauncherStatics, WSILauncherStatics2, WSILauncherStatics3, WSILauncherStatics4, WSIRemoteLauncherStatics, WSIProcessLauncherOptions, WSIProcessLauncherStatics, WSIProcessLauncherResult, WSIShutdownManagerStatics, WSITimeZoneSettingsStatics;
-
-// Windows.System.AppMemoryUsageLevel
-enum _WSAppMemoryUsageLevel {
-    WSAppMemoryUsageLevelLow = 0,
-    WSAppMemoryUsageLevelMedium = 1,
-    WSAppMemoryUsageLevelHigh = 2,
-    WSAppMemoryUsageLevelOverLimit = 3,
-};
-typedef unsigned WSAppMemoryUsageLevel;
+@class WSDispatcherQueueTimer, WSDispatcherQueue, WSDispatcherQueueShutdownStartingEventArgs, WSDispatcherQueueController, WSUserWatcher, WSUser, WSUserChangedEventArgs, WSUserAuthenticationStatusChangingEventArgs, WSUserAuthenticationStatusChangeDeferral, WSKnownUserProperties, WSUserPicker, WSUserDeviceAssociationChangedEventArgs, WSUserDeviceAssociation, WSAppMemoryUsageLimitChangingEventArgs, WSAppMemoryReport, WSProcessMemoryReport, WSMemoryManager, WSProtocolForResultsOperation, WSAppDiagnosticInfo, WSAppDiagnosticInfoWatcher, WSAppResourceGroupInfo, WSAppResourceGroupInfoWatcher, WSAppDiagnosticInfoWatcherEventArgs, WSAppResourceGroupBackgroundTaskReport, WSAppResourceGroupMemoryReport, WSAppResourceGroupStateReport, WSAppResourceGroupInfoWatcherEventArgs, WSAppResourceGroupInfoWatcherExecutionStateChangedEventArgs, WSLaunchUriResult, WSLauncherUIOptions, WSLauncherOptions, WSRemoteLauncherOptions, WSFolderLauncherOptions, WSLauncher, WSRemoteLauncher, WSDateTimeSettings, WSProcessLauncherOptions, WSProcessLauncherResult, WSProcessLauncher, WSShutdownManager, WSTimeZoneSettings;
+@protocol WSIDispatcherQueueShutdownStartingEventArgs, WSIDispatcherQueue, WSIDispatcherQueueController, WSIDispatcherQueueControllerStatics, WSIDispatcherQueueStatics, WSIDispatcherQueueTimer, WSIUser, WSIUserStatics, WSIUserWatcher, WSIUserChangedEventArgs, WSIUserAuthenticationStatusChangeDeferral, WSIUserAuthenticationStatusChangingEventArgs, WSIKnownUserPropertiesStatics, WSIUserPickerStatics, WSIUserPicker, WSIUserDeviceAssociationChangedEventArgs, WSIUserDeviceAssociationStatics, WSIAppMemoryReport, WSIAppMemoryReport2, WSIProcessMemoryReport, WSIAppMemoryUsageLimitChangingEventArgs, WSIMemoryManagerStatics, WSIMemoryManagerStatics2, WSIMemoryManagerStatics3, WSIMemoryManagerStatics4, WSIProtocolForResultsOperation, WSIAppDiagnosticInfoStatics, WSIAppDiagnosticInfoStatics2, WSIAppDiagnosticInfo, WSIAppDiagnosticInfo2, WSIAppDiagnosticInfoWatcherEventArgs, WSIAppDiagnosticInfoWatcher, WSIAppResourceGroupBackgroundTaskReport, WSIAppResourceGroupMemoryReport, WSIAppResourceGroupInfo, WSIAppResourceGroupInfoWatcherEventArgs, WSIAppResourceGroupInfoWatcherExecutionStateChangedEventArgs, WSIAppResourceGroupInfoWatcher, WSIAppResourceGroupStateReport, WSILaunchUriResult, WSILauncherUIOptions, WSILauncherOptions, WSILauncherOptions2, WSILauncherOptions3, WSILauncherOptions4, WSILauncherViewOptions, WSIRemoteLauncherOptions, WSIFolderLauncherOptions, WSILauncherStatics, WSILauncherStatics2, WSILauncherStatics3, WSILauncherStatics4, WSIRemoteLauncherStatics, WSIDateTimeSettingsStatics, WSIProcessLauncherOptions, WSIProcessLauncherStatics, WSIProcessLauncherResult, WSIShutdownManagerStatics, WSIShutdownManagerStatics2, WSITimeZoneSettingsStatics;
 
 // Windows.System.ProcessorArchitecture
 enum _WSProcessorArchitecture {
@@ -48,6 +39,109 @@ enum _WSProcessorArchitecture {
     WSProcessorArchitectureUnknown = 65535,
 };
 typedef unsigned WSProcessorArchitecture;
+
+// Windows.System.DispatcherQueuePriority
+enum _WSDispatcherQueuePriority {
+    WSDispatcherQueuePriorityLow = -10,
+    WSDispatcherQueuePriorityNormal = 0,
+    WSDispatcherQueuePriorityHigh = 10,
+};
+typedef unsigned WSDispatcherQueuePriority;
+
+// Windows.System.UserAuthenticationStatus
+enum _WSUserAuthenticationStatus {
+    WSUserAuthenticationStatusUnauthenticated = 0,
+    WSUserAuthenticationStatusLocallyAuthenticated = 1,
+    WSUserAuthenticationStatusRemotelyAuthenticated = 2,
+};
+typedef unsigned WSUserAuthenticationStatus;
+
+// Windows.System.UserType
+enum _WSUserType {
+    WSUserTypeLocalUser = 0,
+    WSUserTypeRemoteUser = 1,
+    WSUserTypeLocalGuest = 2,
+    WSUserTypeRemoteGuest = 3,
+};
+typedef unsigned WSUserType;
+
+// Windows.System.UserPictureSize
+enum _WSUserPictureSize {
+    WSUserPictureSizeSize64x64 = 0,
+    WSUserPictureSizeSize208x208 = 1,
+    WSUserPictureSizeSize424x424 = 2,
+    WSUserPictureSizeSize1080x1080 = 3,
+};
+typedef unsigned WSUserPictureSize;
+
+// Windows.System.UserWatcherStatus
+enum _WSUserWatcherStatus {
+    WSUserWatcherStatusCreated = 0,
+    WSUserWatcherStatusStarted = 1,
+    WSUserWatcherStatusEnumerationCompleted = 2,
+    WSUserWatcherStatusStopping = 3,
+    WSUserWatcherStatusStopped = 4,
+    WSUserWatcherStatusAborted = 5,
+};
+typedef unsigned WSUserWatcherStatus;
+
+// Windows.System.AppMemoryUsageLevel
+enum _WSAppMemoryUsageLevel {
+    WSAppMemoryUsageLevelLow = 0,
+    WSAppMemoryUsageLevelMedium = 1,
+    WSAppMemoryUsageLevelHigh = 2,
+    WSAppMemoryUsageLevelOverLimit = 3,
+};
+typedef unsigned WSAppMemoryUsageLevel;
+
+// Windows.System.DiagnosticAccessStatus
+enum _WSDiagnosticAccessStatus {
+    WSDiagnosticAccessStatusUnspecified = 0,
+    WSDiagnosticAccessStatusDenied = 1,
+    WSDiagnosticAccessStatusLimited = 2,
+    WSDiagnosticAccessStatusAllowed = 3,
+};
+typedef unsigned WSDiagnosticAccessStatus;
+
+// Windows.System.AppDiagnosticInfoWatcherStatus
+enum _WSAppDiagnosticInfoWatcherStatus {
+    WSAppDiagnosticInfoWatcherStatusCreated = 0,
+    WSAppDiagnosticInfoWatcherStatusStarted = 1,
+    WSAppDiagnosticInfoWatcherStatusEnumerationCompleted = 2,
+    WSAppDiagnosticInfoWatcherStatusStopping = 3,
+    WSAppDiagnosticInfoWatcherStatusStopped = 4,
+    WSAppDiagnosticInfoWatcherStatusAborted = 5,
+};
+typedef unsigned WSAppDiagnosticInfoWatcherStatus;
+
+// Windows.System.AppResourceGroupInfoWatcherStatus
+enum _WSAppResourceGroupInfoWatcherStatus {
+    WSAppResourceGroupInfoWatcherStatusCreated = 0,
+    WSAppResourceGroupInfoWatcherStatusStarted = 1,
+    WSAppResourceGroupInfoWatcherStatusEnumerationCompleted = 2,
+    WSAppResourceGroupInfoWatcherStatusStopping = 3,
+    WSAppResourceGroupInfoWatcherStatusStopped = 4,
+    WSAppResourceGroupInfoWatcherStatusAborted = 5,
+};
+typedef unsigned WSAppResourceGroupInfoWatcherStatus;
+
+// Windows.System.AppResourceGroupExecutionState
+enum _WSAppResourceGroupExecutionState {
+    WSAppResourceGroupExecutionStateUnknown = 0,
+    WSAppResourceGroupExecutionStateRunning = 1,
+    WSAppResourceGroupExecutionStateSuspending = 2,
+    WSAppResourceGroupExecutionStateSuspended = 3,
+    WSAppResourceGroupExecutionStateNotRunning = 4,
+};
+typedef unsigned WSAppResourceGroupExecutionState;
+
+// Windows.System.AppResourceGroupEnergyQuotaState
+enum _WSAppResourceGroupEnergyQuotaState {
+    WSAppResourceGroupEnergyQuotaStateUnknown = 0,
+    WSAppResourceGroupEnergyQuotaStateOver = 1,
+    WSAppResourceGroupEnergyQuotaStateUnder = 2,
+};
+typedef unsigned WSAppResourceGroupEnergyQuotaState;
 
 // Windows.System.VirtualKeyModifiers
 enum _WSVirtualKeyModifiers {
@@ -234,43 +328,6 @@ enum _WSVirtualKey {
 };
 typedef unsigned WSVirtualKey;
 
-// Windows.System.UserAuthenticationStatus
-enum _WSUserAuthenticationStatus {
-    WSUserAuthenticationStatusUnauthenticated = 0,
-    WSUserAuthenticationStatusLocallyAuthenticated = 1,
-    WSUserAuthenticationStatusRemotelyAuthenticated = 2,
-};
-typedef unsigned WSUserAuthenticationStatus;
-
-// Windows.System.UserType
-enum _WSUserType {
-    WSUserTypeLocalUser = 0,
-    WSUserTypeRemoteUser = 1,
-    WSUserTypeLocalGuest = 2,
-    WSUserTypeRemoteGuest = 3,
-};
-typedef unsigned WSUserType;
-
-// Windows.System.UserPictureSize
-enum _WSUserPictureSize {
-    WSUserPictureSizeSize64x64 = 0,
-    WSUserPictureSizeSize208x208 = 1,
-    WSUserPictureSizeSize424x424 = 2,
-    WSUserPictureSizeSize1080x1080 = 3,
-};
-typedef unsigned WSUserPictureSize;
-
-// Windows.System.UserWatcherStatus
-enum _WSUserWatcherStatus {
-    WSUserWatcherStatusCreated = 0,
-    WSUserWatcherStatusStarted = 1,
-    WSUserWatcherStatusEnumerationCompleted = 2,
-    WSUserWatcherStatusStopping = 3,
-    WSUserWatcherStatusStopped = 4,
-    WSUserWatcherStatusAborted = 5,
-};
-typedef unsigned WSUserWatcherStatus;
-
 // Windows.System.LaunchQuerySupportType
 enum _WSLaunchQuerySupportType {
     WSLaunchQuerySupportTypeUri = 0,
@@ -327,17 +384,37 @@ enum _WSShutdownKind {
 };
 typedef unsigned WSShutdownKind;
 
+// Windows.System.PowerState
+enum _WSPowerState {
+    WSPowerStateConnectedStandby = 0,
+    WSPowerStateSleepS3 = 1,
+};
+typedef unsigned WSPowerState;
+
 #include "WindowsApplicationModel.h"
 #include "WindowsUIPopups.h"
 #include "WindowsFoundation.h"
 #include "WindowsStorageStreams.h"
 #include "WindowsFoundationCollections.h"
-#include "WindowsStorage.h"
+#include "WindowsSystemDiagnostics.h"
 #include "WindowsStorageSearch.h"
 #include "WindowsUIViewManagement.h"
+#include "WindowsStorage.h"
 #include "WindowsSystemRemoteSystems.h"
+// Windows.System.DispatcherQueueHandler
+#ifndef __WSDispatcherQueueHandler__DEFINED
+#define __WSDispatcherQueueHandler__DEFINED
+typedef void(^WSDispatcherQueueHandler)();
+#endif // __WSDispatcherQueueHandler__DEFINED
+
 
 #import <Foundation/Foundation.h>
+
+// Windows.System.DispatcherQueueHandler
+#ifndef __WSDispatcherQueueHandler__DEFINED
+#define __WSDispatcherQueueHandler__DEFINED
+typedef void(^WSDispatcherQueueHandler)();
+#endif // __WSDispatcherQueueHandler__DEFINED
 
 // Windows.System.ILauncherViewOptions
 #ifndef __WSILauncherViewOptions_DEFINED__
@@ -353,88 +430,76 @@ OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 
 #endif // __WSILauncherViewOptions_DEFINED__
 
-// Windows.System.AppMemoryUsageLimitChangingEventArgs
-#ifndef __WSAppMemoryUsageLimitChangingEventArgs_DEFINED__
-#define __WSAppMemoryUsageLimitChangingEventArgs_DEFINED__
+// Windows.System.DispatcherQueueTimer
+#ifndef __WSDispatcherQueueTimer_DEFINED__
+#define __WSDispatcherQueueTimer_DEFINED__
 
 OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
-@interface WSAppMemoryUsageLimitChangingEventArgs : RTObject
+@interface WSDispatcherQueueTimer : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
-@property (readonly) uint64_t newLimit;
-@property (readonly) uint64_t oldLimit;
+@property BOOL isRepeating;
+@property (retain) WFTimeSpan* interval;
+@property (readonly) BOOL isRunning;
+- (EventRegistrationToken)addTickEvent:(void(^)(WSDispatcherQueueTimer*, RTObject*))del;
+- (void)removeTickEvent:(EventRegistrationToken)tok;
+- (void)start;
+- (void)stop;
 @end
 
-#endif // __WSAppMemoryUsageLimitChangingEventArgs_DEFINED__
+#endif // __WSDispatcherQueueTimer_DEFINED__
 
-// Windows.System.AppMemoryReport
-#ifndef __WSAppMemoryReport_DEFINED__
-#define __WSAppMemoryReport_DEFINED__
+// Windows.System.DispatcherQueue
+#ifndef __WSDispatcherQueue_DEFINED__
+#define __WSDispatcherQueue_DEFINED__
 
 OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
-@interface WSAppMemoryReport : RTObject
+@interface WSDispatcherQueue : RTObject
++ (WSDispatcherQueue*)getForCurrentThread;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
-@property (readonly) uint64_t peakPrivateCommitUsage;
-@property (readonly) uint64_t privateCommitUsage;
-@property (readonly) uint64_t totalCommitLimit;
-@property (readonly) uint64_t totalCommitUsage;
+- (EventRegistrationToken)addShutdownCompletedEvent:(void(^)(WSDispatcherQueue*, RTObject*))del;
+- (void)removeShutdownCompletedEvent:(EventRegistrationToken)tok;
+- (EventRegistrationToken)addShutdownStartingEvent:(void(^)(WSDispatcherQueue*, WSDispatcherQueueShutdownStartingEventArgs*))del;
+- (void)removeShutdownStartingEvent:(EventRegistrationToken)tok;
+- (WSDispatcherQueueTimer*)createTimer;
+- (BOOL)tryEnqueue:(WSDispatcherQueueHandler)callback;
+- (BOOL)tryEnqueueWithPriority:(WSDispatcherQueuePriority)priority callback:(WSDispatcherQueueHandler)callback;
 @end
 
-#endif // __WSAppMemoryReport_DEFINED__
+#endif // __WSDispatcherQueue_DEFINED__
 
-// Windows.System.ProcessMemoryReport
-#ifndef __WSProcessMemoryReport_DEFINED__
-#define __WSProcessMemoryReport_DEFINED__
+// Windows.System.DispatcherQueueShutdownStartingEventArgs
+#ifndef __WSDispatcherQueueShutdownStartingEventArgs_DEFINED__
+#define __WSDispatcherQueueShutdownStartingEventArgs_DEFINED__
 
 OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
-@interface WSProcessMemoryReport : RTObject
+@interface WSDispatcherQueueShutdownStartingEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
-@property (readonly) uint64_t privateWorkingSetUsage;
-@property (readonly) uint64_t totalWorkingSetUsage;
+- (WFDeferral*)getDeferral;
 @end
 
-#endif // __WSProcessMemoryReport_DEFINED__
+#endif // __WSDispatcherQueueShutdownStartingEventArgs_DEFINED__
 
-// Windows.System.MemoryManager
-#ifndef __WSMemoryManager_DEFINED__
-#define __WSMemoryManager_DEFINED__
-
-OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
-@interface WSMemoryManager : RTObject
-+ (WSAppMemoryReport*)getAppMemoryReport;
-+ (WSProcessMemoryReport*)getProcessMemoryReport;
-+ (BOOL)trySetAppMemoryUsageLimit:(uint64_t)value;
-+ (uint64_t)appMemoryUsage;
-+ (WSAppMemoryUsageLevel)appMemoryUsageLevel;
-+ (uint64_t)appMemoryUsageLimit;
-+ (EventRegistrationToken)addAppMemoryUsageDecreasedEvent:(void(^)(RTObject*, RTObject*))del;
-+ (void)removeAppMemoryUsageDecreasedEvent:(EventRegistrationToken)tok;
-+ (EventRegistrationToken)addAppMemoryUsageIncreasedEvent:(void(^)(RTObject*, RTObject*))del;
-+ (void)removeAppMemoryUsageIncreasedEvent:(EventRegistrationToken)tok;
-+ (EventRegistrationToken)addAppMemoryUsageLimitChangingEvent:(void(^)(RTObject*, WSAppMemoryUsageLimitChangingEventArgs*))del;
-+ (void)removeAppMemoryUsageLimitChangingEvent:(EventRegistrationToken)tok;
-@end
-
-#endif // __WSMemoryManager_DEFINED__
-
-// Windows.System.ProtocolForResultsOperation
-#ifndef __WSProtocolForResultsOperation_DEFINED__
-#define __WSProtocolForResultsOperation_DEFINED__
+// Windows.System.DispatcherQueueController
+#ifndef __WSDispatcherQueueController_DEFINED__
+#define __WSDispatcherQueueController_DEFINED__
 
 OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
-@interface WSProtocolForResultsOperation : RTObject
+@interface WSDispatcherQueueController : RTObject
++ (WSDispatcherQueueController*)createOnDedicatedThread;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
-- (void)reportCompleted:(WFCValueSet*)data;
+@property (readonly) WSDispatcherQueue* dispatcherQueue;
+- (RTObject<WFIAsyncAction>*)shutdownQueueAsync;
 @end
 
-#endif // __WSProtocolForResultsOperation_DEFINED__
+#endif // __WSDispatcherQueueController_DEFINED__
 
 // Windows.System.UserWatcher
 #ifndef __WSUserWatcher_DEFINED__
@@ -601,6 +666,275 @@ OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 
 #endif // __WSUserDeviceAssociation_DEFINED__
 
+// Windows.System.AppMemoryUsageLimitChangingEventArgs
+#ifndef __WSAppMemoryUsageLimitChangingEventArgs_DEFINED__
+#define __WSAppMemoryUsageLimitChangingEventArgs_DEFINED__
+
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
+@interface WSAppMemoryUsageLimitChangingEventArgs : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (readonly) uint64_t newLimit;
+@property (readonly) uint64_t oldLimit;
+@end
+
+#endif // __WSAppMemoryUsageLimitChangingEventArgs_DEFINED__
+
+// Windows.System.AppMemoryReport
+#ifndef __WSAppMemoryReport_DEFINED__
+#define __WSAppMemoryReport_DEFINED__
+
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
+@interface WSAppMemoryReport : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (readonly) uint64_t peakPrivateCommitUsage;
+@property (readonly) uint64_t privateCommitUsage;
+@property (readonly) uint64_t totalCommitLimit;
+@property (readonly) uint64_t totalCommitUsage;
+@property (readonly) uint64_t expectedTotalCommitLimit;
+@end
+
+#endif // __WSAppMemoryReport_DEFINED__
+
+// Windows.System.ProcessMemoryReport
+#ifndef __WSProcessMemoryReport_DEFINED__
+#define __WSProcessMemoryReport_DEFINED__
+
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
+@interface WSProcessMemoryReport : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (readonly) uint64_t privateWorkingSetUsage;
+@property (readonly) uint64_t totalWorkingSetUsage;
+@end
+
+#endif // __WSProcessMemoryReport_DEFINED__
+
+// Windows.System.MemoryManager
+#ifndef __WSMemoryManager_DEFINED__
+#define __WSMemoryManager_DEFINED__
+
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
+@interface WSMemoryManager : RTObject
++ (BOOL)trySetAppMemoryUsageLimit:(uint64_t)value;
++ (WSAppMemoryReport*)getAppMemoryReport;
++ (WSProcessMemoryReport*)getProcessMemoryReport;
++ (uint64_t)appMemoryUsage;
++ (WSAppMemoryUsageLevel)appMemoryUsageLevel;
++ (uint64_t)appMemoryUsageLimit;
++ (uint64_t)expectedAppMemoryUsageLimit;
++ (EventRegistrationToken)addAppMemoryUsageDecreasedEvent:(void(^)(RTObject*, RTObject*))del;
++ (void)removeAppMemoryUsageDecreasedEvent:(EventRegistrationToken)tok;
++ (EventRegistrationToken)addAppMemoryUsageIncreasedEvent:(void(^)(RTObject*, RTObject*))del;
++ (void)removeAppMemoryUsageIncreasedEvent:(EventRegistrationToken)tok;
++ (EventRegistrationToken)addAppMemoryUsageLimitChangingEvent:(void(^)(RTObject*, WSAppMemoryUsageLimitChangingEventArgs*))del;
++ (void)removeAppMemoryUsageLimitChangingEvent:(EventRegistrationToken)tok;
+@end
+
+#endif // __WSMemoryManager_DEFINED__
+
+// Windows.System.ProtocolForResultsOperation
+#ifndef __WSProtocolForResultsOperation_DEFINED__
+#define __WSProtocolForResultsOperation_DEFINED__
+
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
+@interface WSProtocolForResultsOperation : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+- (void)reportCompleted:(WFCValueSet*)data;
+@end
+
+#endif // __WSProtocolForResultsOperation_DEFINED__
+
+// Windows.System.AppDiagnosticInfo
+#ifndef __WSAppDiagnosticInfo_DEFINED__
+#define __WSAppDiagnosticInfo_DEFINED__
+
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
+@interface WSAppDiagnosticInfo : RTObject
++ (WSAppDiagnosticInfoWatcher*)createWatcher;
++ (void)requestAccessAsyncWithSuccess:(void (^)(WSDiagnosticAccessStatus))success failure:(void (^)(NSError*))failure;
++ (void)requestInfoForPackageAsync:(NSString *)packageFamilyName success:(void (^)(NSMutableArray* /* WSAppDiagnosticInfo* */))success failure:(void (^)(NSError*))failure;
++ (void)requestInfoForAppAsyncWithSuccess:(void (^)(NSMutableArray* /* WSAppDiagnosticInfo* */))success failure:(void (^)(NSError*))failure;
++ (void)requestInfoForAppUserModelId:(NSString *)appUserModelId success:(void (^)(NSMutableArray* /* WSAppDiagnosticInfo* */))success failure:(void (^)(NSError*))failure;
++ (void)requestInfoAsyncWithSuccess:(void (^)(NSMutableArray* /* WSAppDiagnosticInfo* */))success failure:(void (^)(NSError*))failure;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (readonly) WAAppInfo* appInfo;
+- (NSMutableArray* /* WSAppResourceGroupInfo* */)getResourceGroups;
+- (WSAppResourceGroupInfoWatcher*)createResourceGroupWatcher;
+@end
+
+#endif // __WSAppDiagnosticInfo_DEFINED__
+
+// Windows.System.AppDiagnosticInfoWatcher
+#ifndef __WSAppDiagnosticInfoWatcher_DEFINED__
+#define __WSAppDiagnosticInfoWatcher_DEFINED__
+
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
+@interface WSAppDiagnosticInfoWatcher : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (readonly) WSAppDiagnosticInfoWatcherStatus status;
+- (EventRegistrationToken)addAddedEvent:(void(^)(WSAppDiagnosticInfoWatcher*, WSAppDiagnosticInfoWatcherEventArgs*))del;
+- (void)removeAddedEvent:(EventRegistrationToken)tok;
+- (EventRegistrationToken)addEnumerationCompletedEvent:(void(^)(WSAppDiagnosticInfoWatcher*, RTObject*))del;
+- (void)removeEnumerationCompletedEvent:(EventRegistrationToken)tok;
+- (EventRegistrationToken)addRemovedEvent:(void(^)(WSAppDiagnosticInfoWatcher*, WSAppDiagnosticInfoWatcherEventArgs*))del;
+- (void)removeRemovedEvent:(EventRegistrationToken)tok;
+- (EventRegistrationToken)addStoppedEvent:(void(^)(WSAppDiagnosticInfoWatcher*, RTObject*))del;
+- (void)removeStoppedEvent:(EventRegistrationToken)tok;
+- (void)start;
+- (void)stop;
+@end
+
+#endif // __WSAppDiagnosticInfoWatcher_DEFINED__
+
+// Windows.System.AppResourceGroupInfo
+#ifndef __WSAppResourceGroupInfo_DEFINED__
+#define __WSAppResourceGroupInfo_DEFINED__
+
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
+@interface WSAppResourceGroupInfo : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (readonly) WFGUID* instanceId;
+@property (readonly) BOOL isShared;
+- (NSMutableArray* /* WSAppResourceGroupBackgroundTaskReport* */)getBackgroundTaskReports;
+- (WSAppResourceGroupMemoryReport*)getMemoryReport;
+- (NSMutableArray* /* WSDProcessDiagnosticInfo* */)getProcessDiagnosticInfos;
+- (WSAppResourceGroupStateReport*)getStateReport;
+@end
+
+#endif // __WSAppResourceGroupInfo_DEFINED__
+
+// Windows.System.AppResourceGroupInfoWatcher
+#ifndef __WSAppResourceGroupInfoWatcher_DEFINED__
+#define __WSAppResourceGroupInfoWatcher_DEFINED__
+
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
+@interface WSAppResourceGroupInfoWatcher : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (readonly) WSAppResourceGroupInfoWatcherStatus status;
+- (EventRegistrationToken)addAddedEvent:(void(^)(WSAppResourceGroupInfoWatcher*, WSAppResourceGroupInfoWatcherEventArgs*))del;
+- (void)removeAddedEvent:(EventRegistrationToken)tok;
+- (EventRegistrationToken)addEnumerationCompletedEvent:(void(^)(WSAppResourceGroupInfoWatcher*, RTObject*))del;
+- (void)removeEnumerationCompletedEvent:(EventRegistrationToken)tok;
+- (EventRegistrationToken)addExecutionStateChangedEvent:(void(^)(WSAppResourceGroupInfoWatcher*, WSAppResourceGroupInfoWatcherExecutionStateChangedEventArgs*))del;
+- (void)removeExecutionStateChangedEvent:(EventRegistrationToken)tok;
+- (EventRegistrationToken)addRemovedEvent:(void(^)(WSAppResourceGroupInfoWatcher*, WSAppResourceGroupInfoWatcherEventArgs*))del;
+- (void)removeRemovedEvent:(EventRegistrationToken)tok;
+- (EventRegistrationToken)addStoppedEvent:(void(^)(WSAppResourceGroupInfoWatcher*, RTObject*))del;
+- (void)removeStoppedEvent:(EventRegistrationToken)tok;
+- (void)start;
+- (void)stop;
+@end
+
+#endif // __WSAppResourceGroupInfoWatcher_DEFINED__
+
+// Windows.System.AppDiagnosticInfoWatcherEventArgs
+#ifndef __WSAppDiagnosticInfoWatcherEventArgs_DEFINED__
+#define __WSAppDiagnosticInfoWatcherEventArgs_DEFINED__
+
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
+@interface WSAppDiagnosticInfoWatcherEventArgs : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (readonly) WSAppDiagnosticInfo* appDiagnosticInfo;
+@end
+
+#endif // __WSAppDiagnosticInfoWatcherEventArgs_DEFINED__
+
+// Windows.System.AppResourceGroupBackgroundTaskReport
+#ifndef __WSAppResourceGroupBackgroundTaskReport_DEFINED__
+#define __WSAppResourceGroupBackgroundTaskReport_DEFINED__
+
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
+@interface WSAppResourceGroupBackgroundTaskReport : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (readonly) NSString * entryPoint;
+@property (readonly) NSString * name;
+@property (readonly) WFGUID* taskId;
+@property (readonly) NSString * trigger;
+@end
+
+#endif // __WSAppResourceGroupBackgroundTaskReport_DEFINED__
+
+// Windows.System.AppResourceGroupMemoryReport
+#ifndef __WSAppResourceGroupMemoryReport_DEFINED__
+#define __WSAppResourceGroupMemoryReport_DEFINED__
+
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
+@interface WSAppResourceGroupMemoryReport : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (readonly) WSAppMemoryUsageLevel commitUsageLevel;
+@property (readonly) uint64_t commitUsageLimit;
+@property (readonly) uint64_t privateCommitUsage;
+@property (readonly) uint64_t totalCommitUsage;
+@end
+
+#endif // __WSAppResourceGroupMemoryReport_DEFINED__
+
+// Windows.System.AppResourceGroupStateReport
+#ifndef __WSAppResourceGroupStateReport_DEFINED__
+#define __WSAppResourceGroupStateReport_DEFINED__
+
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
+@interface WSAppResourceGroupStateReport : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (readonly) WSAppResourceGroupEnergyQuotaState energyQuotaState;
+@property (readonly) WSAppResourceGroupExecutionState executionState;
+@end
+
+#endif // __WSAppResourceGroupStateReport_DEFINED__
+
+// Windows.System.AppResourceGroupInfoWatcherEventArgs
+#ifndef __WSAppResourceGroupInfoWatcherEventArgs_DEFINED__
+#define __WSAppResourceGroupInfoWatcherEventArgs_DEFINED__
+
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
+@interface WSAppResourceGroupInfoWatcherEventArgs : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (readonly) NSArray* /* WSAppDiagnosticInfo* */ appDiagnosticInfos;
+@property (readonly) WSAppResourceGroupInfo* appResourceGroupInfo;
+@end
+
+#endif // __WSAppResourceGroupInfoWatcherEventArgs_DEFINED__
+
+// Windows.System.AppResourceGroupInfoWatcherExecutionStateChangedEventArgs
+#ifndef __WSAppResourceGroupInfoWatcherExecutionStateChangedEventArgs_DEFINED__
+#define __WSAppResourceGroupInfoWatcherExecutionStateChangedEventArgs_DEFINED__
+
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
+@interface WSAppResourceGroupInfoWatcherExecutionStateChangedEventArgs : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (readonly) NSArray* /* WSAppDiagnosticInfo* */ appDiagnosticInfos;
+@property (readonly) WSAppResourceGroupInfo* appResourceGroupInfo;
+@end
+
+#endif // __WSAppResourceGroupInfoWatcherExecutionStateChangedEventArgs_DEFINED__
+
 // Windows.System.LaunchUriResult
 #ifndef __WSLaunchUriResult_DEFINED__
 #define __WSLaunchUriResult_DEFINED__
@@ -652,6 +986,7 @@ OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @property (retain) NSString * targetApplicationPackageFamilyName;
 @property (retain) WSSStorageFileQueryResult* neighboringFilesQuery;
 @property BOOL ignoreAppUriHandlers;
+@property BOOL limitPickerToCurrentAppAndAppUriHandlers;
 @property WUVViewSizePreference desiredRemainingView;
 @end
 
@@ -736,6 +1071,17 @@ OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 
 #endif // __WSRemoteLauncher_DEFINED__
 
+// Windows.System.DateTimeSettings
+#ifndef __WSDateTimeSettings_DEFINED__
+#define __WSDateTimeSettings_DEFINED__
+
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
+@interface WSDateTimeSettings : RTObject
++ (void)setSystemDateTime:(WFDateTime*)utcDateTime;
+@end
+
+#endif // __WSDateTimeSettings_DEFINED__
+
 // Windows.System.ProcessLauncherOptions
 #ifndef __WSProcessLauncherOptions_DEFINED__
 #define __WSProcessLauncherOptions_DEFINED__
@@ -786,6 +1132,11 @@ OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 
 OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WSShutdownManager : RTObject
++ (BOOL)isPowerStateSupported:(WSPowerState)powerState;
++ (void)enterPowerState:(WSPowerState)powerState;
++ (void)enterPowerStateWithTimeSpan:(WSPowerState)powerState wakeUpAfter:(WFTimeSpan*)wakeUpAfter;
++ (void)beginShutdown:(WSShutdownKind)shutdownKind timeout:(WFTimeSpan*)timeout;
++ (void)cancelShutdown;
 + (void)beginShutdown:(WSShutdownKind)shutdownKind timeout:(WFTimeSpan*)timeout;
 + (void)cancelShutdown;
 @end

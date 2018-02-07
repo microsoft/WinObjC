@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -27,8 +27,8 @@
 #endif
 #include <UWP/interopBase.h>
 
-@class WSUAdvertisingManagerForUser, WSUAdvertisingManager, WSUUserProfilePersonalizationSettings, WSUGlobalizationPreferences, WSUFirstSignInSettings, WSUUserInformation, WSULockScreen;
-@protocol WSUIAdvertisingManagerStatics, WSUIAdvertisingManagerForUser, WSUIAdvertisingManagerStatics2, WSUIUserProfilePersonalizationSettings, WSUIUserProfilePersonalizationSettingsStatics, WSUIGlobalizationPreferencesStatics, WSUIFirstSignInSettings, WSUIFirstSignInSettingsStatics, WSUIUserInformationStatics, WSUILockScreenStatics, WSUILockScreenImageFeedStatics;
+@class WSUAdvertisingManagerForUser, WSUAdvertisingManager, WSUDiagnosticsSettings, WSUUserProfilePersonalizationSettings, WSUGlobalizationPreferences, WSUFirstSignInSettings, WSUUserInformation, WSULockScreen;
+@protocol WSUIAdvertisingManagerStatics, WSUIAdvertisingManagerForUser, WSUIAdvertisingManagerStatics2, WSUIDiagnosticsSettingsStatics, WSUIDiagnosticsSettings, WSUIUserProfilePersonalizationSettings, WSUIUserProfilePersonalizationSettingsStatics, WSUIGlobalizationPreferencesStatics, WSUIGlobalizationPreferencesStatics2, WSUIFirstSignInSettings, WSUIFirstSignInSettingsStatics, WSUIUserInformationStatics, WSUILockScreenStatics, WSUILockScreenImageFeedStatics;
 
 // Windows.System.UserProfile.AccountPictureKind
 enum _WSUAccountPictureKind {
@@ -92,6 +92,23 @@ OBJCUWPWINDOWSSYSTEMUSERPROFILEEXPORT
 
 #endif // __WSUAdvertisingManager_DEFINED__
 
+// Windows.System.UserProfile.DiagnosticsSettings
+#ifndef __WSUDiagnosticsSettings_DEFINED__
+#define __WSUDiagnosticsSettings_DEFINED__
+
+OBJCUWPWINDOWSSYSTEMUSERPROFILEEXPORT
+@interface WSUDiagnosticsSettings : RTObject
++ (WSUDiagnosticsSettings*)getDefault;
++ (WSUDiagnosticsSettings*)getForUser:(WSUser*)user;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (readonly) BOOL canUseDiagnosticsToTailorExperiences;
+@property (readonly) WSUser* user;
+@end
+
+#endif // __WSUDiagnosticsSettings_DEFINED__
+
 // Windows.System.UserProfile.UserProfilePersonalizationSettings
 #ifndef __WSUUserProfilePersonalizationSettings_DEFINED__
 #define __WSUUserProfilePersonalizationSettings_DEFINED__
@@ -115,6 +132,8 @@ OBJCUWPWINDOWSSYSTEMUSERPROFILEEXPORT
 
 OBJCUWPWINDOWSSYSTEMUSERPROFILEEXPORT
 @interface WSUGlobalizationPreferences : RTObject
++ (BOOL)trySetHomeGeographicRegion:(NSString *)region;
++ (BOOL)trySetLanguages:(id<NSFastEnumeration> /* NSString * */)languageTags;
 + (NSArray* /* NSString * */)calendars;
 + (NSArray* /* NSString * */)clocks;
 + (NSArray* /* NSString * */)currencies;

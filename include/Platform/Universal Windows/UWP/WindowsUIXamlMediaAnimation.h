@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -27,9 +27,9 @@
 #endif
 #include <UWP/interopBase.h>
 
-@class WUXMAKeyTimeHelper, WUXMARepeatBehaviorHelper, WUXMATransitionCollection, WUXMAColorKeyFrameCollection, WUXMADoubleKeyFrameCollection, WUXMAObjectKeyFrameCollection, WUXMAPointKeyFrameCollection, WUXMATimelineCollection, WUXMAColorKeyFrame, WUXMADoubleKeyFrame, WUXMAEasingFunctionBase, WUXMAKeySpline, WUXMANavigationTransitionInfo, WUXMAObjectKeyFrame, WUXMAPointKeyFrame, WUXMATimeline, WUXMATransition, WUXMAAddDeleteThemeTransition, WUXMABackEase, WUXMABeginStoryboard, WUXMABounceEase, WUXMACircleEase, WUXMAColorAnimation, WUXMAColorAnimationUsingKeyFrames, WUXMAContentThemeTransition, WUXMACubicEase, WUXMADiscreteColorKeyFrame, WUXMADiscreteDoubleKeyFrame, WUXMADiscreteObjectKeyFrame, WUXMADiscretePointKeyFrame, WUXMADoubleAnimation, WUXMADoubleAnimationUsingKeyFrames, WUXMADragItemThemeAnimation, WUXMADragOverThemeAnimation, WUXMADrillInThemeAnimation, WUXMADrillOutThemeAnimation, WUXMADropTargetItemThemeAnimation, WUXMAEasingColorKeyFrame, WUXMAEasingDoubleKeyFrame, WUXMAEasingPointKeyFrame, WUXMAEdgeUIThemeTransition, WUXMAElasticEase, WUXMAEntranceThemeTransition, WUXMAExponentialEase, WUXMAFadeInThemeAnimation, WUXMAFadeOutThemeAnimation, WUXMALinearColorKeyFrame, WUXMALinearDoubleKeyFrame, WUXMALinearPointKeyFrame, WUXMAObjectAnimationUsingKeyFrames, WUXMAPaneThemeTransition, WUXMAPointAnimation, WUXMAPointAnimationUsingKeyFrames, WUXMAPointerDownThemeAnimation, WUXMAPointerUpThemeAnimation, WUXMAPopInThemeAnimation, WUXMAPopOutThemeAnimation, WUXMAPopupThemeTransition, WUXMAPowerEase, WUXMAQuadraticEase, WUXMAQuarticEase, WUXMAQuinticEase, WUXMAReorderThemeTransition, WUXMARepositionThemeAnimation, WUXMARepositionThemeTransition, WUXMASineEase, WUXMASplineColorKeyFrame, WUXMASplineDoubleKeyFrame, WUXMASplinePointKeyFrame, WUXMASplitCloseThemeAnimation, WUXMASplitOpenThemeAnimation, WUXMAStoryboard, WUXMASwipeBackThemeAnimation, WUXMASwipeHintThemeAnimation, WUXMAConnectedAnimation, WUXMAConnectedAnimationService, WUXMACommonNavigationTransitionInfo, WUXMAContinuumNavigationTransitionInfo, WUXMADrillInNavigationTransitionInfo, WUXMAEntranceNavigationTransitionInfo, WUXMANavigationThemeTransition, WUXMASlideNavigationTransitionInfo, WUXMASuppressNavigationTransitionInfo;
+@class WUXMAKeyTimeHelper, WUXMARepeatBehaviorHelper, WUXMATransitionCollection, WUXMADoubleKeyFrameCollection, WUXMAObjectKeyFrameCollection, WUXMATimelineCollection, WUXMADoubleKeyFrame, WUXMAEasingFunctionBase, WUXMAKeySpline, WUXMANavigationTransitionInfo, WUXMAObjectKeyFrame, WUXMATimeline, WUXMATransition, WUXMAAddDeleteThemeTransition, WUXMABackEase, WUXMABeginStoryboard, WUXMABounceEase, WUXMACircleEase, WUXMAColorAnimation, WUXMAContentThemeTransition, WUXMACubicEase, WUXMADiscreteDoubleKeyFrame, WUXMADiscreteObjectKeyFrame, WUXMADoubleAnimation, WUXMADoubleAnimationUsingKeyFrames, WUXMAEasingDoubleKeyFrame, WUXMAEdgeUIThemeTransition, WUXMAElasticEase, WUXMAEntranceThemeTransition, WUXMAExponentialEase, WUXMALinearDoubleKeyFrame, WUXMAObjectAnimationUsingKeyFrames, WUXMAPaneThemeTransition, WUXMAPointAnimation, WUXMAPopupThemeTransition, WUXMAPowerEase, WUXMAQuadraticEase, WUXMAQuarticEase, WUXMAQuinticEase, WUXMAReorderThemeTransition, WUXMARepositionThemeTransition, WUXMASineEase, WUXMASplineDoubleKeyFrame, WUXMAStoryboard, WUXMAColorKeyFrameCollection, WUXMAConnectedAnimation, WUXMAConnectedAnimationService, WUXMAPointKeyFrameCollection, WUXMAColorKeyFrame, WUXMAPointKeyFrame, WUXMAColorAnimationUsingKeyFrames, WUXMADiscreteColorKeyFrame, WUXMADiscretePointKeyFrame, WUXMADragItemThemeAnimation, WUXMADragOverThemeAnimation, WUXMADrillInThemeAnimation, WUXMADrillOutThemeAnimation, WUXMADropTargetItemThemeAnimation, WUXMAEasingColorKeyFrame, WUXMAEasingPointKeyFrame, WUXMAFadeInThemeAnimation, WUXMAFadeOutThemeAnimation, WUXMALinearColorKeyFrame, WUXMALinearPointKeyFrame, WUXMAPointAnimationUsingKeyFrames, WUXMAPointerDownThemeAnimation, WUXMAPointerUpThemeAnimation, WUXMAPopInThemeAnimation, WUXMAPopOutThemeAnimation, WUXMARepositionThemeAnimation, WUXMASplineColorKeyFrame, WUXMASplinePointKeyFrame, WUXMASplitCloseThemeAnimation, WUXMASplitOpenThemeAnimation, WUXMASwipeBackThemeAnimation, WUXMASwipeHintThemeAnimation, WUXMACommonNavigationTransitionInfo, WUXMAContinuumNavigationTransitionInfo, WUXMADrillInNavigationTransitionInfo, WUXMAEntranceNavigationTransitionInfo, WUXMANavigationThemeTransition, WUXMASlideNavigationTransitionInfo, WUXMASuppressNavigationTransitionInfo;
 @class WUXMAKeyTime, WUXMARepeatBehavior;
-@protocol WUXMAIKeyTimeHelper, WUXMAIKeyTimeHelperStatics, WUXMAIRepeatBehaviorHelper, WUXMAIRepeatBehaviorHelperStatics, WUXMAIColorKeyFrame, WUXMAIColorKeyFrameStatics, WUXMAIColorKeyFrameFactory, WUXMAIDoubleKeyFrame, WUXMAIDoubleKeyFrameStatics, WUXMAIDoubleKeyFrameFactory, WUXMAIEasingFunctionBase, WUXMAIEasingFunctionBaseStatics, WUXMAIEasingFunctionBaseFactory, WUXMAIKeySpline, WUXMAINavigationTransitionInfo, WUXMAINavigationTransitionInfoOverrides, WUXMAINavigationTransitionInfoFactory, WUXMAIObjectKeyFrame, WUXMAIObjectKeyFrameStatics, WUXMAIObjectKeyFrameFactory, WUXMAIPointKeyFrame, WUXMAIPointKeyFrameStatics, WUXMAIPointKeyFrameFactory, WUXMAITimeline, WUXMAITimelineStatics, WUXMAITimelineFactory, WUXMAITransition, WUXMAITransitionFactory, WUXMAIAddDeleteThemeTransition, WUXMAIBackEase, WUXMAIBackEaseStatics, WUXMAIBeginStoryboard, WUXMAIBeginStoryboardStatics, WUXMAIBounceEase, WUXMAIBounceEaseStatics, WUXMAICircleEase, WUXMAIColorAnimation, WUXMAIColorAnimationStatics, WUXMAIColorAnimationUsingKeyFrames, WUXMAIColorAnimationUsingKeyFramesStatics, WUXMAIContentThemeTransition, WUXMAIContentThemeTransitionStatics, WUXMAICubicEase, WUXMAIDiscreteColorKeyFrame, WUXMAIDiscreteDoubleKeyFrame, WUXMAIDiscreteObjectKeyFrame, WUXMAIDiscretePointKeyFrame, WUXMAIDoubleAnimation, WUXMAIDoubleAnimationStatics, WUXMAIDoubleAnimationUsingKeyFrames, WUXMAIDoubleAnimationUsingKeyFramesStatics, WUXMAIDragItemThemeAnimation, WUXMAIDragItemThemeAnimationStatics, WUXMAIDragOverThemeAnimation, WUXMAIDragOverThemeAnimationStatics, WUXMAIDrillInThemeAnimation, WUXMAIDrillInThemeAnimationStatics, WUXMAIDrillOutThemeAnimation, WUXMAIDrillOutThemeAnimationStatics, WUXMAIDropTargetItemThemeAnimation, WUXMAIDropTargetItemThemeAnimationStatics, WUXMAIEasingColorKeyFrame, WUXMAIEasingColorKeyFrameStatics, WUXMAIEasingDoubleKeyFrame, WUXMAIEasingDoubleKeyFrameStatics, WUXMAIEasingPointKeyFrame, WUXMAIEasingPointKeyFrameStatics, WUXMAIEdgeUIThemeTransition, WUXMAIEdgeUIThemeTransitionStatics, WUXMAIElasticEase, WUXMAIElasticEaseStatics, WUXMAIEntranceThemeTransition, WUXMAIEntranceThemeTransitionStatics, WUXMAIExponentialEase, WUXMAIExponentialEaseStatics, WUXMAIFadeInThemeAnimation, WUXMAIFadeInThemeAnimationStatics, WUXMAIFadeOutThemeAnimation, WUXMAIFadeOutThemeAnimationStatics, WUXMAILinearColorKeyFrame, WUXMAILinearDoubleKeyFrame, WUXMAILinearPointKeyFrame, WUXMAIObjectAnimationUsingKeyFrames, WUXMAIObjectAnimationUsingKeyFramesStatics, WUXMAIPaneThemeTransition, WUXMAIPaneThemeTransitionStatics, WUXMAIPointAnimation, WUXMAIPointAnimationStatics, WUXMAIPointAnimationUsingKeyFrames, WUXMAIPointAnimationUsingKeyFramesStatics, WUXMAIPointerDownThemeAnimation, WUXMAIPointerDownThemeAnimationStatics, WUXMAIPointerUpThemeAnimation, WUXMAIPointerUpThemeAnimationStatics, WUXMAIPopInThemeAnimation, WUXMAIPopInThemeAnimationStatics, WUXMAIPopOutThemeAnimation, WUXMAIPopOutThemeAnimationStatics, WUXMAIPopupThemeTransition, WUXMAIPopupThemeTransitionStatics, WUXMAIPowerEase, WUXMAIPowerEaseStatics, WUXMAIQuadraticEase, WUXMAIQuarticEase, WUXMAIQuinticEase, WUXMAIReorderThemeTransition, WUXMAIRepositionThemeAnimation, WUXMAIRepositionThemeAnimationStatics, WUXMAIRepositionThemeTransition, WUXMAIRepositionThemeTransition2, WUXMAIRepositionThemeTransitionStatics2, WUXMAISineEase, WUXMAISplineColorKeyFrame, WUXMAISplineColorKeyFrameStatics, WUXMAISplineDoubleKeyFrame, WUXMAISplineDoubleKeyFrameStatics, WUXMAISplinePointKeyFrame, WUXMAISplinePointKeyFrameStatics, WUXMAISplitCloseThemeAnimation, WUXMAISplitCloseThemeAnimationStatics, WUXMAISplitOpenThemeAnimation, WUXMAISplitOpenThemeAnimationStatics, WUXMAIStoryboard, WUXMAIStoryboardStatics, WUXMAISwipeBackThemeAnimation, WUXMAISwipeBackThemeAnimationStatics, WUXMAISwipeHintThemeAnimation, WUXMAISwipeHintThemeAnimationStatics, WUXMAIConnectedAnimation, WUXMAIConnectedAnimationService, WUXMAIConnectedAnimationServiceStatics, WUXMAICommonNavigationTransitionInfo, WUXMAICommonNavigationTransitionInfoStatics, WUXMAIContinuumNavigationTransitionInfo, WUXMAIContinuumNavigationTransitionInfoStatics, WUXMAIDrillInNavigationTransitionInfo, WUXMAIEntranceNavigationTransitionInfo, WUXMAIEntranceNavigationTransitionInfoStatics, WUXMAINavigationThemeTransition, WUXMAINavigationThemeTransitionStatics, WUXMAISlideNavigationTransitionInfo, WUXMAISuppressNavigationTransitionInfo;
+@protocol WUXMAIKeyTimeHelper, WUXMAIKeyTimeHelperStatics, WUXMAIRepeatBehaviorHelper, WUXMAIRepeatBehaviorHelperStatics, WUXMAIDoubleKeyFrame, WUXMAIDoubleKeyFrameStatics, WUXMAIDoubleKeyFrameFactory, WUXMAIEasingFunctionBase, WUXMAIEasingFunctionBaseStatics, WUXMAIEasingFunctionBaseFactory, WUXMAIKeySpline, WUXMAINavigationTransitionInfo, WUXMAINavigationTransitionInfoOverrides, WUXMAINavigationTransitionInfoFactory, WUXMAIObjectKeyFrame, WUXMAIObjectKeyFrameStatics, WUXMAIObjectKeyFrameFactory, WUXMAITimeline, WUXMAITimelineStatics, WUXMAITimelineFactory, WUXMAITransition, WUXMAITransitionFactory, WUXMAIAddDeleteThemeTransition, WUXMAIBackEase, WUXMAIBackEaseStatics, WUXMAIBeginStoryboard, WUXMAIBeginStoryboardStatics, WUXMAIBounceEase, WUXMAIBounceEaseStatics, WUXMAICircleEase, WUXMAIColorAnimation, WUXMAIColorAnimationStatics, WUXMAIContentThemeTransition, WUXMAIContentThemeTransitionStatics, WUXMAICubicEase, WUXMAIDiscreteDoubleKeyFrame, WUXMAIDiscreteObjectKeyFrame, WUXMAIDoubleAnimation, WUXMAIDoubleAnimationStatics, WUXMAIDoubleAnimationUsingKeyFrames, WUXMAIDoubleAnimationUsingKeyFramesStatics, WUXMAIEasingDoubleKeyFrame, WUXMAIEasingDoubleKeyFrameStatics, WUXMAIEdgeUIThemeTransition, WUXMAIEdgeUIThemeTransitionStatics, WUXMAIElasticEase, WUXMAIElasticEaseStatics, WUXMAIEntranceThemeTransition, WUXMAIEntranceThemeTransitionStatics, WUXMAIExponentialEase, WUXMAIExponentialEaseStatics, WUXMAILinearDoubleKeyFrame, WUXMAIObjectAnimationUsingKeyFrames, WUXMAIObjectAnimationUsingKeyFramesStatics, WUXMAIPaneThemeTransition, WUXMAIPaneThemeTransitionStatics, WUXMAIPointAnimation, WUXMAIPointAnimationStatics, WUXMAIPopupThemeTransition, WUXMAIPopupThemeTransitionStatics, WUXMAIPowerEase, WUXMAIPowerEaseStatics, WUXMAIQuadraticEase, WUXMAIQuarticEase, WUXMAIQuinticEase, WUXMAIReorderThemeTransition, WUXMAIRepositionThemeTransition, WUXMAIRepositionThemeTransition2, WUXMAIRepositionThemeTransitionStatics2, WUXMAISineEase, WUXMAISplineDoubleKeyFrame, WUXMAISplineDoubleKeyFrameStatics, WUXMAIStoryboard, WUXMAIStoryboardStatics, WUXMAIConnectedAnimation, WUXMAIConnectedAnimation2, WUXMAIConnectedAnimationService, WUXMAIConnectedAnimationServiceStatics, WUXMAIColorKeyFrame, WUXMAIColorKeyFrameStatics, WUXMAIColorKeyFrameFactory, WUXMAIPointKeyFrame, WUXMAIPointKeyFrameStatics, WUXMAIPointKeyFrameFactory, WUXMAIColorAnimationUsingKeyFrames, WUXMAIColorAnimationUsingKeyFramesStatics, WUXMAIDiscreteColorKeyFrame, WUXMAIDiscretePointKeyFrame, WUXMAIDragItemThemeAnimation, WUXMAIDragItemThemeAnimationStatics, WUXMAIDragOverThemeAnimation, WUXMAIDragOverThemeAnimationStatics, WUXMAIDrillInThemeAnimation, WUXMAIDrillInThemeAnimationStatics, WUXMAIDrillOutThemeAnimation, WUXMAIDrillOutThemeAnimationStatics, WUXMAIDropTargetItemThemeAnimation, WUXMAIDropTargetItemThemeAnimationStatics, WUXMAIEasingColorKeyFrame, WUXMAIEasingColorKeyFrameStatics, WUXMAIEasingPointKeyFrame, WUXMAIEasingPointKeyFrameStatics, WUXMAIFadeInThemeAnimation, WUXMAIFadeInThemeAnimationStatics, WUXMAIFadeOutThemeAnimation, WUXMAIFadeOutThemeAnimationStatics, WUXMAILinearColorKeyFrame, WUXMAILinearPointKeyFrame, WUXMAIPointAnimationUsingKeyFrames, WUXMAIPointAnimationUsingKeyFramesStatics, WUXMAIPointerDownThemeAnimation, WUXMAIPointerDownThemeAnimationStatics, WUXMAIPointerUpThemeAnimation, WUXMAIPointerUpThemeAnimationStatics, WUXMAIPopInThemeAnimation, WUXMAIPopInThemeAnimationStatics, WUXMAIPopOutThemeAnimation, WUXMAIPopOutThemeAnimationStatics, WUXMAIRepositionThemeAnimation, WUXMAIRepositionThemeAnimationStatics, WUXMAISplineColorKeyFrame, WUXMAISplineColorKeyFrameStatics, WUXMAISplinePointKeyFrame, WUXMAISplinePointKeyFrameStatics, WUXMAISplitCloseThemeAnimation, WUXMAISplitCloseThemeAnimationStatics, WUXMAISplitOpenThemeAnimation, WUXMAISplitOpenThemeAnimationStatics, WUXMAISwipeBackThemeAnimation, WUXMAISwipeBackThemeAnimationStatics, WUXMAISwipeHintThemeAnimation, WUXMAISwipeHintThemeAnimationStatics, WUXMAICommonNavigationTransitionInfo, WUXMAICommonNavigationTransitionInfoStatics, WUXMAIContinuumNavigationTransitionInfo, WUXMAIContinuumNavigationTransitionInfoStatics, WUXMAIDrillInNavigationTransitionInfo, WUXMAIEntranceNavigationTransitionInfo, WUXMAIEntranceNavigationTransitionInfoStatics, WUXMAINavigationThemeTransition, WUXMAINavigationThemeTransitionStatics, WUXMAISlideNavigationTransitionInfo, WUXMAISuppressNavigationTransitionInfo;
 
 // Windows.UI.Xaml.Media.Animation.ClockState
 enum _WUXMAClockState {
@@ -62,12 +62,21 @@ enum _WUXMARepeatBehaviorType {
 };
 typedef unsigned WUXMARepeatBehaviorType;
 
+// Windows.UI.Xaml.Media.Animation.ConnectedAnimationComponent
+enum _WUXMAConnectedAnimationComponent {
+    WUXMAConnectedAnimationComponentOffsetX = 0,
+    WUXMAConnectedAnimationComponentOffsetY = 1,
+    WUXMAConnectedAnimationComponentCrossFade = 2,
+    WUXMAConnectedAnimationComponentScale = 3,
+};
+typedef unsigned WUXMAConnectedAnimationComponent;
+
 #include "WindowsUIXamlControls.h"
 #include "WindowsFoundation.h"
-#include "WindowsUIXamlControlsPrimitives.h"
-#include "WindowsUI.h"
 #include "WindowsUIComposition.h"
 #include "WindowsUIXaml.h"
+#include "WindowsUIXamlControlsPrimitives.h"
+#include "WindowsUI.h"
 #include "WindowsUICore.h"
 // Windows.UI.Xaml.DependencyPropertyChangedCallback
 #ifndef __WXDependencyPropertyChangedCallback__DEFINED
@@ -169,33 +178,6 @@ OBJCUWPWINDOWSUIXAMLEXPORT
 
 #endif // __WUXMATransitionCollection_DEFINED__
 
-// Windows.UI.Xaml.Media.Animation.ColorKeyFrameCollection
-#ifndef __WUXMAColorKeyFrameCollection_DEFINED__
-#define __WUXMAColorKeyFrameCollection_DEFINED__
-
-OBJCUWPWINDOWSUIXAMLEXPORT
-@interface WUXMAColorKeyFrameCollection : RTObject
-+ (instancetype)make __attribute__ ((ns_returns_retained));
-#if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
-#endif
-@property (readonly) unsigned int size;
-- (unsigned int)count;
-- (id)objectAtIndex:(unsigned)idx;
-- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState *)state
-                                  objects:(id __unsafe_unretained [])buffer
-                                    count:(NSUInteger)len;
-
-- (void)insertObject: (id)obj atIndex: (NSUInteger)idx;
-- (void)removeObjectAtIndex: (NSUInteger)idx;
-- (void)replaceObjectAtIndex: (NSUInteger)idx withObject: (id)obj;
-- (void)addObject: (id)obj;
-- (void)removeLastObject;
-
-@end
-
-#endif // __WUXMAColorKeyFrameCollection_DEFINED__
-
 // Windows.UI.Xaml.Media.Animation.DoubleKeyFrameCollection
 #ifndef __WUXMADoubleKeyFrameCollection_DEFINED__
 #define __WUXMADoubleKeyFrameCollection_DEFINED__
@@ -250,33 +232,6 @@ OBJCUWPWINDOWSUIXAMLEXPORT
 
 #endif // __WUXMAObjectKeyFrameCollection_DEFINED__
 
-// Windows.UI.Xaml.Media.Animation.PointKeyFrameCollection
-#ifndef __WUXMAPointKeyFrameCollection_DEFINED__
-#define __WUXMAPointKeyFrameCollection_DEFINED__
-
-OBJCUWPWINDOWSUIXAMLEXPORT
-@interface WUXMAPointKeyFrameCollection : RTObject
-+ (instancetype)make __attribute__ ((ns_returns_retained));
-#if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
-#endif
-@property (readonly) unsigned int size;
-- (unsigned int)count;
-- (id)objectAtIndex:(unsigned)idx;
-- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState *)state
-                                  objects:(id __unsafe_unretained [])buffer
-                                    count:(NSUInteger)len;
-
-- (void)insertObject: (id)obj atIndex: (NSUInteger)idx;
-- (void)removeObjectAtIndex: (NSUInteger)idx;
-- (void)replaceObjectAtIndex: (NSUInteger)idx withObject: (id)obj;
-- (void)addObject: (id)obj;
-- (void)removeLastObject;
-
-@end
-
-#endif // __WUXMAPointKeyFrameCollection_DEFINED__
-
 // Windows.UI.Xaml.Media.Animation.TimelineCollection
 #ifndef __WUXMATimelineCollection_DEFINED__
 #define __WUXMATimelineCollection_DEFINED__
@@ -324,23 +279,6 @@ OBJCUWPWINDOWSUIXAMLEXPORT
 @end
 
 #endif // __WXDependencyObject_DEFINED__
-
-// Windows.UI.Xaml.Media.Animation.ColorKeyFrame
-#ifndef __WUXMAColorKeyFrame_DEFINED__
-#define __WUXMAColorKeyFrame_DEFINED__
-
-OBJCUWPWINDOWSUIXAMLEXPORT
-@interface WUXMAColorKeyFrame : WXDependencyObject
-#if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
-#endif
-@property (retain) WUColor* value;
-@property (retain) WUXMAKeyTime* keyTime;
-+ (WXDependencyProperty*)keyTimeProperty;
-+ (WXDependencyProperty*)valueProperty;
-@end
-
-#endif // __WUXMAColorKeyFrame_DEFINED__
 
 // Windows.UI.Xaml.Media.Animation.DoubleKeyFrame
 #ifndef __WUXMADoubleKeyFrame_DEFINED__
@@ -400,6 +338,8 @@ OBJCUWPWINDOWSUIXAMLEXPORT
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
+- (NSString *)getNavigationStateCore;
+- (void)setNavigationStateCore:(NSString *)navigationState;
 @end
 
 #endif // __WUXMANavigationTransitionInfo_DEFINED__
@@ -420,23 +360,6 @@ OBJCUWPWINDOWSUIXAMLEXPORT
 @end
 
 #endif // __WUXMAObjectKeyFrame_DEFINED__
-
-// Windows.UI.Xaml.Media.Animation.PointKeyFrame
-#ifndef __WUXMAPointKeyFrame_DEFINED__
-#define __WUXMAPointKeyFrame_DEFINED__
-
-OBJCUWPWINDOWSUIXAMLEXPORT
-@interface WUXMAPointKeyFrame : WXDependencyObject
-#if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
-#endif
-@property (retain) WFPoint* value;
-@property (retain) WUXMAKeyTime* keyTime;
-+ (WXDependencyProperty*)keyTimeProperty;
-+ (WXDependencyProperty*)valueProperty;
-@end
-
-#endif // __WUXMAPointKeyFrame_DEFINED__
 
 // Windows.UI.Xaml.Media.Animation.Timeline
 #ifndef __WUXMATimeline_DEFINED__
@@ -595,23 +518,6 @@ OBJCUWPWINDOWSUIXAMLEXPORT
 
 #endif // __WUXMAColorAnimation_DEFINED__
 
-// Windows.UI.Xaml.Media.Animation.ColorAnimationUsingKeyFrames
-#ifndef __WUXMAColorAnimationUsingKeyFrames_DEFINED__
-#define __WUXMAColorAnimationUsingKeyFrames_DEFINED__
-
-OBJCUWPWINDOWSUIXAMLEXPORT
-@interface WUXMAColorAnimationUsingKeyFrames : WUXMATimeline
-+ (instancetype)make __attribute__ ((ns_returns_retained));
-#if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
-#endif
-@property BOOL enableDependentAnimation;
-@property (readonly) WUXMAColorKeyFrameCollection* keyFrames;
-+ (WXDependencyProperty*)enableDependentAnimationProperty;
-@end
-
-#endif // __WUXMAColorAnimationUsingKeyFrames_DEFINED__
-
 // Windows.UI.Xaml.Media.Animation.ContentThemeTransition
 #ifndef __WUXMAContentThemeTransition_DEFINED__
 #define __WUXMAContentThemeTransition_DEFINED__
@@ -644,20 +550,6 @@ OBJCUWPWINDOWSUIXAMLEXPORT
 
 #endif // __WUXMACubicEase_DEFINED__
 
-// Windows.UI.Xaml.Media.Animation.DiscreteColorKeyFrame
-#ifndef __WUXMADiscreteColorKeyFrame_DEFINED__
-#define __WUXMADiscreteColorKeyFrame_DEFINED__
-
-OBJCUWPWINDOWSUIXAMLEXPORT
-@interface WUXMADiscreteColorKeyFrame : WUXMAColorKeyFrame
-+ (instancetype)make __attribute__ ((ns_returns_retained));
-#if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
-#endif
-@end
-
-#endif // __WUXMADiscreteColorKeyFrame_DEFINED__
-
 // Windows.UI.Xaml.Media.Animation.DiscreteDoubleKeyFrame
 #ifndef __WUXMADiscreteDoubleKeyFrame_DEFINED__
 #define __WUXMADiscreteDoubleKeyFrame_DEFINED__
@@ -685,20 +577,6 @@ OBJCUWPWINDOWSUIXAMLEXPORT
 @end
 
 #endif // __WUXMADiscreteObjectKeyFrame_DEFINED__
-
-// Windows.UI.Xaml.Media.Animation.DiscretePointKeyFrame
-#ifndef __WUXMADiscretePointKeyFrame_DEFINED__
-#define __WUXMADiscretePointKeyFrame_DEFINED__
-
-OBJCUWPWINDOWSUIXAMLEXPORT
-@interface WUXMADiscretePointKeyFrame : WUXMAPointKeyFrame
-+ (instancetype)make __attribute__ ((ns_returns_retained));
-#if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
-#endif
-@end
-
-#endif // __WUXMADiscretePointKeyFrame_DEFINED__
 
 // Windows.UI.Xaml.Media.Animation.DoubleAnimation
 #ifndef __WUXMADoubleAnimation_DEFINED__
@@ -740,6 +618,501 @@ OBJCUWPWINDOWSUIXAMLEXPORT
 @end
 
 #endif // __WUXMADoubleAnimationUsingKeyFrames_DEFINED__
+
+// Windows.UI.Xaml.Media.Animation.EasingDoubleKeyFrame
+#ifndef __WUXMAEasingDoubleKeyFrame_DEFINED__
+#define __WUXMAEasingDoubleKeyFrame_DEFINED__
+
+OBJCUWPWINDOWSUIXAMLEXPORT
+@interface WUXMAEasingDoubleKeyFrame : WUXMADoubleKeyFrame
++ (instancetype)make __attribute__ ((ns_returns_retained));
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (retain) WUXMAEasingFunctionBase* easingFunction;
++ (WXDependencyProperty*)easingFunctionProperty;
+@end
+
+#endif // __WUXMAEasingDoubleKeyFrame_DEFINED__
+
+// Windows.UI.Xaml.Media.Animation.EdgeUIThemeTransition
+#ifndef __WUXMAEdgeUIThemeTransition_DEFINED__
+#define __WUXMAEdgeUIThemeTransition_DEFINED__
+
+OBJCUWPWINDOWSUIXAMLEXPORT
+@interface WUXMAEdgeUIThemeTransition : WUXMATransition
++ (instancetype)make __attribute__ ((ns_returns_retained));
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property WUXCPEdgeTransitionLocation edge;
++ (WXDependencyProperty*)edgeProperty;
+@end
+
+#endif // __WUXMAEdgeUIThemeTransition_DEFINED__
+
+// Windows.UI.Xaml.Media.Animation.ElasticEase
+#ifndef __WUXMAElasticEase_DEFINED__
+#define __WUXMAElasticEase_DEFINED__
+
+OBJCUWPWINDOWSUIXAMLEXPORT
+@interface WUXMAElasticEase : WUXMAEasingFunctionBase
++ (instancetype)make __attribute__ ((ns_returns_retained));
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property double springiness;
+@property int oscillations;
++ (WXDependencyProperty*)oscillationsProperty;
++ (WXDependencyProperty*)springinessProperty;
+@end
+
+#endif // __WUXMAElasticEase_DEFINED__
+
+// Windows.UI.Xaml.Media.Animation.EntranceThemeTransition
+#ifndef __WUXMAEntranceThemeTransition_DEFINED__
+#define __WUXMAEntranceThemeTransition_DEFINED__
+
+OBJCUWPWINDOWSUIXAMLEXPORT
+@interface WUXMAEntranceThemeTransition : WUXMATransition
++ (instancetype)make __attribute__ ((ns_returns_retained));
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property BOOL isStaggeringEnabled;
+@property double fromVerticalOffset;
+@property double fromHorizontalOffset;
++ (WXDependencyProperty*)fromHorizontalOffsetProperty;
++ (WXDependencyProperty*)fromVerticalOffsetProperty;
++ (WXDependencyProperty*)isStaggeringEnabledProperty;
+@end
+
+#endif // __WUXMAEntranceThemeTransition_DEFINED__
+
+// Windows.UI.Xaml.Media.Animation.ExponentialEase
+#ifndef __WUXMAExponentialEase_DEFINED__
+#define __WUXMAExponentialEase_DEFINED__
+
+OBJCUWPWINDOWSUIXAMLEXPORT
+@interface WUXMAExponentialEase : WUXMAEasingFunctionBase
++ (instancetype)make __attribute__ ((ns_returns_retained));
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property double exponent;
++ (WXDependencyProperty*)exponentProperty;
+@end
+
+#endif // __WUXMAExponentialEase_DEFINED__
+
+// Windows.UI.Xaml.Media.Animation.LinearDoubleKeyFrame
+#ifndef __WUXMALinearDoubleKeyFrame_DEFINED__
+#define __WUXMALinearDoubleKeyFrame_DEFINED__
+
+OBJCUWPWINDOWSUIXAMLEXPORT
+@interface WUXMALinearDoubleKeyFrame : WUXMADoubleKeyFrame
++ (instancetype)make __attribute__ ((ns_returns_retained));
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@end
+
+#endif // __WUXMALinearDoubleKeyFrame_DEFINED__
+
+// Windows.UI.Xaml.Media.Animation.ObjectAnimationUsingKeyFrames
+#ifndef __WUXMAObjectAnimationUsingKeyFrames_DEFINED__
+#define __WUXMAObjectAnimationUsingKeyFrames_DEFINED__
+
+OBJCUWPWINDOWSUIXAMLEXPORT
+@interface WUXMAObjectAnimationUsingKeyFrames : WUXMATimeline
++ (instancetype)make __attribute__ ((ns_returns_retained));
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property BOOL enableDependentAnimation;
+@property (readonly) WUXMAObjectKeyFrameCollection* keyFrames;
++ (WXDependencyProperty*)enableDependentAnimationProperty;
+@end
+
+#endif // __WUXMAObjectAnimationUsingKeyFrames_DEFINED__
+
+// Windows.UI.Xaml.Media.Animation.PaneThemeTransition
+#ifndef __WUXMAPaneThemeTransition_DEFINED__
+#define __WUXMAPaneThemeTransition_DEFINED__
+
+OBJCUWPWINDOWSUIXAMLEXPORT
+@interface WUXMAPaneThemeTransition : WUXMATransition
++ (instancetype)make __attribute__ ((ns_returns_retained));
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property WUXCPEdgeTransitionLocation edge;
++ (WXDependencyProperty*)edgeProperty;
+@end
+
+#endif // __WUXMAPaneThemeTransition_DEFINED__
+
+// Windows.UI.Xaml.Media.Animation.PointAnimation
+#ifndef __WUXMAPointAnimation_DEFINED__
+#define __WUXMAPointAnimation_DEFINED__
+
+OBJCUWPWINDOWSUIXAMLEXPORT
+@interface WUXMAPointAnimation : WUXMATimeline
++ (instancetype)make __attribute__ ((ns_returns_retained));
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (retain) id /* WFPoint* */ to;
+@property (retain) id /* WFPoint* */ from;
+@property BOOL enableDependentAnimation;
+@property (retain) WUXMAEasingFunctionBase* easingFunction;
+@property (retain) id /* WFPoint* */ by;
++ (WXDependencyProperty*)byProperty;
++ (WXDependencyProperty*)easingFunctionProperty;
++ (WXDependencyProperty*)enableDependentAnimationProperty;
++ (WXDependencyProperty*)fromProperty;
++ (WXDependencyProperty*)toProperty;
+@end
+
+#endif // __WUXMAPointAnimation_DEFINED__
+
+// Windows.UI.Xaml.Media.Animation.PopupThemeTransition
+#ifndef __WUXMAPopupThemeTransition_DEFINED__
+#define __WUXMAPopupThemeTransition_DEFINED__
+
+OBJCUWPWINDOWSUIXAMLEXPORT
+@interface WUXMAPopupThemeTransition : WUXMATransition
++ (instancetype)make __attribute__ ((ns_returns_retained));
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property double fromVerticalOffset;
+@property double fromHorizontalOffset;
++ (WXDependencyProperty*)fromHorizontalOffsetProperty;
++ (WXDependencyProperty*)fromVerticalOffsetProperty;
+@end
+
+#endif // __WUXMAPopupThemeTransition_DEFINED__
+
+// Windows.UI.Xaml.Media.Animation.PowerEase
+#ifndef __WUXMAPowerEase_DEFINED__
+#define __WUXMAPowerEase_DEFINED__
+
+OBJCUWPWINDOWSUIXAMLEXPORT
+@interface WUXMAPowerEase : WUXMAEasingFunctionBase
++ (instancetype)make __attribute__ ((ns_returns_retained));
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property double power;
++ (WXDependencyProperty*)powerProperty;
+@end
+
+#endif // __WUXMAPowerEase_DEFINED__
+
+// Windows.UI.Xaml.Media.Animation.QuadraticEase
+#ifndef __WUXMAQuadraticEase_DEFINED__
+#define __WUXMAQuadraticEase_DEFINED__
+
+OBJCUWPWINDOWSUIXAMLEXPORT
+@interface WUXMAQuadraticEase : WUXMAEasingFunctionBase
++ (instancetype)make __attribute__ ((ns_returns_retained));
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@end
+
+#endif // __WUXMAQuadraticEase_DEFINED__
+
+// Windows.UI.Xaml.Media.Animation.QuarticEase
+#ifndef __WUXMAQuarticEase_DEFINED__
+#define __WUXMAQuarticEase_DEFINED__
+
+OBJCUWPWINDOWSUIXAMLEXPORT
+@interface WUXMAQuarticEase : WUXMAEasingFunctionBase
++ (instancetype)make __attribute__ ((ns_returns_retained));
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@end
+
+#endif // __WUXMAQuarticEase_DEFINED__
+
+// Windows.UI.Xaml.Media.Animation.QuinticEase
+#ifndef __WUXMAQuinticEase_DEFINED__
+#define __WUXMAQuinticEase_DEFINED__
+
+OBJCUWPWINDOWSUIXAMLEXPORT
+@interface WUXMAQuinticEase : WUXMAEasingFunctionBase
++ (instancetype)make __attribute__ ((ns_returns_retained));
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@end
+
+#endif // __WUXMAQuinticEase_DEFINED__
+
+// Windows.UI.Xaml.Media.Animation.ReorderThemeTransition
+#ifndef __WUXMAReorderThemeTransition_DEFINED__
+#define __WUXMAReorderThemeTransition_DEFINED__
+
+OBJCUWPWINDOWSUIXAMLEXPORT
+@interface WUXMAReorderThemeTransition : WUXMATransition
++ (instancetype)make __attribute__ ((ns_returns_retained));
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@end
+
+#endif // __WUXMAReorderThemeTransition_DEFINED__
+
+// Windows.UI.Xaml.Media.Animation.RepositionThemeTransition
+#ifndef __WUXMARepositionThemeTransition_DEFINED__
+#define __WUXMARepositionThemeTransition_DEFINED__
+
+OBJCUWPWINDOWSUIXAMLEXPORT
+@interface WUXMARepositionThemeTransition : WUXMATransition
++ (instancetype)make __attribute__ ((ns_returns_retained));
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property BOOL isStaggeringEnabled;
++ (WXDependencyProperty*)isStaggeringEnabledProperty;
+@end
+
+#endif // __WUXMARepositionThemeTransition_DEFINED__
+
+// Windows.UI.Xaml.Media.Animation.SineEase
+#ifndef __WUXMASineEase_DEFINED__
+#define __WUXMASineEase_DEFINED__
+
+OBJCUWPWINDOWSUIXAMLEXPORT
+@interface WUXMASineEase : WUXMAEasingFunctionBase
++ (instancetype)make __attribute__ ((ns_returns_retained));
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@end
+
+#endif // __WUXMASineEase_DEFINED__
+
+// Windows.UI.Xaml.Media.Animation.SplineDoubleKeyFrame
+#ifndef __WUXMASplineDoubleKeyFrame_DEFINED__
+#define __WUXMASplineDoubleKeyFrame_DEFINED__
+
+OBJCUWPWINDOWSUIXAMLEXPORT
+@interface WUXMASplineDoubleKeyFrame : WUXMADoubleKeyFrame
++ (instancetype)make __attribute__ ((ns_returns_retained));
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (retain) WUXMAKeySpline* keySpline;
++ (WXDependencyProperty*)keySplineProperty;
+@end
+
+#endif // __WUXMASplineDoubleKeyFrame_DEFINED__
+
+// Windows.UI.Xaml.Media.Animation.Storyboard
+#ifndef __WUXMAStoryboard_DEFINED__
+#define __WUXMAStoryboard_DEFINED__
+
+OBJCUWPWINDOWSUIXAMLEXPORT
+@interface WUXMAStoryboard : WUXMATimeline
++ (NSString *)getTargetProperty:(WUXMATimeline*)element;
++ (void)setTargetProperty:(WUXMATimeline*)element path:(NSString *)path;
++ (NSString *)getTargetName:(WUXMATimeline*)element;
++ (void)setTargetName:(WUXMATimeline*)element name:(NSString *)name;
++ (void)setTarget:(WUXMATimeline*)timeline target:(WXDependencyObject*)target;
++ (instancetype)make __attribute__ ((ns_returns_retained));
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (readonly) WUXMATimelineCollection* children;
++ (WXDependencyProperty*)targetNameProperty;
++ (WXDependencyProperty*)targetPropertyProperty;
+- (void)seek:(WFTimeSpan*)offset;
+- (void)stop;
+- (void)begin;
+- (void)pause;
+- (void)resume;
+- (WUXMAClockState)getCurrentState;
+- (WFTimeSpan*)getCurrentTime;
+- (void)seekAlignedToLastTick:(WFTimeSpan*)offset;
+- (void)skipToFill;
+@end
+
+#endif // __WUXMAStoryboard_DEFINED__
+
+// Windows.UI.Xaml.Media.Animation.ColorKeyFrameCollection
+#ifndef __WUXMAColorKeyFrameCollection_DEFINED__
+#define __WUXMAColorKeyFrameCollection_DEFINED__
+
+OBJCUWPWINDOWSUIXAMLEXPORT
+@interface WUXMAColorKeyFrameCollection : RTObject
++ (instancetype)make __attribute__ ((ns_returns_retained));
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (readonly) unsigned int size;
+- (unsigned int)count;
+- (id)objectAtIndex:(unsigned)idx;
+- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState *)state
+                                  objects:(id __unsafe_unretained [])buffer
+                                    count:(NSUInteger)len;
+
+- (void)insertObject: (id)obj atIndex: (NSUInteger)idx;
+- (void)removeObjectAtIndex: (NSUInteger)idx;
+- (void)replaceObjectAtIndex: (NSUInteger)idx withObject: (id)obj;
+- (void)addObject: (id)obj;
+- (void)removeLastObject;
+
+@end
+
+#endif // __WUXMAColorKeyFrameCollection_DEFINED__
+
+// Windows.UI.Xaml.Media.Animation.ConnectedAnimation
+#ifndef __WUXMAConnectedAnimation_DEFINED__
+#define __WUXMAConnectedAnimation_DEFINED__
+
+OBJCUWPWINDOWSUIXAMLEXPORT
+@interface WUXMAConnectedAnimation : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property BOOL isScaleAnimationEnabled;
+- (EventRegistrationToken)addCompletedEvent:(void(^)(WUXMAConnectedAnimation*, RTObject*))del;
+- (void)removeCompletedEvent:(EventRegistrationToken)tok;
+- (BOOL)tryStart:(WXUIElement*)destination;
+- (void)cancel;
+- (BOOL)tryStartWithCoordinatedElements:(WXUIElement*)destination coordinatedElements:(id<NSFastEnumeration> /* WXUIElement* */)coordinatedElements;
+- (void)setAnimationComponent:(WUXMAConnectedAnimationComponent)component animation:(RTObject<WUCICompositionAnimationBase>*)animation;
+@end
+
+#endif // __WUXMAConnectedAnimation_DEFINED__
+
+// Windows.UI.Xaml.Media.Animation.ConnectedAnimationService
+#ifndef __WUXMAConnectedAnimationService_DEFINED__
+#define __WUXMAConnectedAnimationService_DEFINED__
+
+OBJCUWPWINDOWSUIXAMLEXPORT
+@interface WUXMAConnectedAnimationService : RTObject
++ (WUXMAConnectedAnimationService*)getForCurrentView;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (retain) WUCCompositionEasingFunction* defaultEasingFunction;
+@property (retain) WFTimeSpan* defaultDuration;
+- (WUXMAConnectedAnimation*)prepareToAnimate:(NSString *)key source:(WXUIElement*)source;
+- (WUXMAConnectedAnimation*)getAnimation:(NSString *)key;
+@end
+
+#endif // __WUXMAConnectedAnimationService_DEFINED__
+
+// Windows.UI.Xaml.Media.Animation.PointKeyFrameCollection
+#ifndef __WUXMAPointKeyFrameCollection_DEFINED__
+#define __WUXMAPointKeyFrameCollection_DEFINED__
+
+OBJCUWPWINDOWSUIXAMLEXPORT
+@interface WUXMAPointKeyFrameCollection : RTObject
++ (instancetype)make __attribute__ ((ns_returns_retained));
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (readonly) unsigned int size;
+- (unsigned int)count;
+- (id)objectAtIndex:(unsigned)idx;
+- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState *)state
+                                  objects:(id __unsafe_unretained [])buffer
+                                    count:(NSUInteger)len;
+
+- (void)insertObject: (id)obj atIndex: (NSUInteger)idx;
+- (void)removeObjectAtIndex: (NSUInteger)idx;
+- (void)replaceObjectAtIndex: (NSUInteger)idx withObject: (id)obj;
+- (void)addObject: (id)obj;
+- (void)removeLastObject;
+
+@end
+
+#endif // __WUXMAPointKeyFrameCollection_DEFINED__
+
+// Windows.UI.Xaml.Media.Animation.ColorKeyFrame
+#ifndef __WUXMAColorKeyFrame_DEFINED__
+#define __WUXMAColorKeyFrame_DEFINED__
+
+OBJCUWPWINDOWSUIXAMLEXPORT
+@interface WUXMAColorKeyFrame : WXDependencyObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (retain) WUColor* value;
+@property (retain) WUXMAKeyTime* keyTime;
++ (WXDependencyProperty*)keyTimeProperty;
++ (WXDependencyProperty*)valueProperty;
+@end
+
+#endif // __WUXMAColorKeyFrame_DEFINED__
+
+// Windows.UI.Xaml.Media.Animation.PointKeyFrame
+#ifndef __WUXMAPointKeyFrame_DEFINED__
+#define __WUXMAPointKeyFrame_DEFINED__
+
+OBJCUWPWINDOWSUIXAMLEXPORT
+@interface WUXMAPointKeyFrame : WXDependencyObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (retain) WFPoint* value;
+@property (retain) WUXMAKeyTime* keyTime;
++ (WXDependencyProperty*)keyTimeProperty;
++ (WXDependencyProperty*)valueProperty;
+@end
+
+#endif // __WUXMAPointKeyFrame_DEFINED__
+
+// Windows.UI.Xaml.Media.Animation.ColorAnimationUsingKeyFrames
+#ifndef __WUXMAColorAnimationUsingKeyFrames_DEFINED__
+#define __WUXMAColorAnimationUsingKeyFrames_DEFINED__
+
+OBJCUWPWINDOWSUIXAMLEXPORT
+@interface WUXMAColorAnimationUsingKeyFrames : WUXMATimeline
++ (instancetype)make __attribute__ ((ns_returns_retained));
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property BOOL enableDependentAnimation;
+@property (readonly) WUXMAColorKeyFrameCollection* keyFrames;
++ (WXDependencyProperty*)enableDependentAnimationProperty;
+@end
+
+#endif // __WUXMAColorAnimationUsingKeyFrames_DEFINED__
+
+// Windows.UI.Xaml.Media.Animation.DiscreteColorKeyFrame
+#ifndef __WUXMADiscreteColorKeyFrame_DEFINED__
+#define __WUXMADiscreteColorKeyFrame_DEFINED__
+
+OBJCUWPWINDOWSUIXAMLEXPORT
+@interface WUXMADiscreteColorKeyFrame : WUXMAColorKeyFrame
++ (instancetype)make __attribute__ ((ns_returns_retained));
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@end
+
+#endif // __WUXMADiscreteColorKeyFrame_DEFINED__
+
+// Windows.UI.Xaml.Media.Animation.DiscretePointKeyFrame
+#ifndef __WUXMADiscretePointKeyFrame_DEFINED__
+#define __WUXMADiscretePointKeyFrame_DEFINED__
+
+OBJCUWPWINDOWSUIXAMLEXPORT
+@interface WUXMADiscretePointKeyFrame : WUXMAPointKeyFrame
++ (instancetype)make __attribute__ ((ns_returns_retained));
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@end
+
+#endif // __WUXMADiscretePointKeyFrame_DEFINED__
 
 // Windows.UI.Xaml.Media.Animation.DragItemThemeAnimation
 #ifndef __WUXMADragItemThemeAnimation_DEFINED__
@@ -853,22 +1226,6 @@ OBJCUWPWINDOWSUIXAMLEXPORT
 
 #endif // __WUXMAEasingColorKeyFrame_DEFINED__
 
-// Windows.UI.Xaml.Media.Animation.EasingDoubleKeyFrame
-#ifndef __WUXMAEasingDoubleKeyFrame_DEFINED__
-#define __WUXMAEasingDoubleKeyFrame_DEFINED__
-
-OBJCUWPWINDOWSUIXAMLEXPORT
-@interface WUXMAEasingDoubleKeyFrame : WUXMADoubleKeyFrame
-+ (instancetype)make __attribute__ ((ns_returns_retained));
-#if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
-#endif
-@property (retain) WUXMAEasingFunctionBase* easingFunction;
-+ (WXDependencyProperty*)easingFunctionProperty;
-@end
-
-#endif // __WUXMAEasingDoubleKeyFrame_DEFINED__
-
 // Windows.UI.Xaml.Media.Animation.EasingPointKeyFrame
 #ifndef __WUXMAEasingPointKeyFrame_DEFINED__
 #define __WUXMAEasingPointKeyFrame_DEFINED__
@@ -884,76 +1241,6 @@ OBJCUWPWINDOWSUIXAMLEXPORT
 @end
 
 #endif // __WUXMAEasingPointKeyFrame_DEFINED__
-
-// Windows.UI.Xaml.Media.Animation.EdgeUIThemeTransition
-#ifndef __WUXMAEdgeUIThemeTransition_DEFINED__
-#define __WUXMAEdgeUIThemeTransition_DEFINED__
-
-OBJCUWPWINDOWSUIXAMLEXPORT
-@interface WUXMAEdgeUIThemeTransition : WUXMATransition
-+ (instancetype)make __attribute__ ((ns_returns_retained));
-#if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
-#endif
-@property WUXCPEdgeTransitionLocation edge;
-+ (WXDependencyProperty*)edgeProperty;
-@end
-
-#endif // __WUXMAEdgeUIThemeTransition_DEFINED__
-
-// Windows.UI.Xaml.Media.Animation.ElasticEase
-#ifndef __WUXMAElasticEase_DEFINED__
-#define __WUXMAElasticEase_DEFINED__
-
-OBJCUWPWINDOWSUIXAMLEXPORT
-@interface WUXMAElasticEase : WUXMAEasingFunctionBase
-+ (instancetype)make __attribute__ ((ns_returns_retained));
-#if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
-#endif
-@property double springiness;
-@property int oscillations;
-+ (WXDependencyProperty*)oscillationsProperty;
-+ (WXDependencyProperty*)springinessProperty;
-@end
-
-#endif // __WUXMAElasticEase_DEFINED__
-
-// Windows.UI.Xaml.Media.Animation.EntranceThemeTransition
-#ifndef __WUXMAEntranceThemeTransition_DEFINED__
-#define __WUXMAEntranceThemeTransition_DEFINED__
-
-OBJCUWPWINDOWSUIXAMLEXPORT
-@interface WUXMAEntranceThemeTransition : WUXMATransition
-+ (instancetype)make __attribute__ ((ns_returns_retained));
-#if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
-#endif
-@property BOOL isStaggeringEnabled;
-@property double fromVerticalOffset;
-@property double fromHorizontalOffset;
-+ (WXDependencyProperty*)fromHorizontalOffsetProperty;
-+ (WXDependencyProperty*)fromVerticalOffsetProperty;
-+ (WXDependencyProperty*)isStaggeringEnabledProperty;
-@end
-
-#endif // __WUXMAEntranceThemeTransition_DEFINED__
-
-// Windows.UI.Xaml.Media.Animation.ExponentialEase
-#ifndef __WUXMAExponentialEase_DEFINED__
-#define __WUXMAExponentialEase_DEFINED__
-
-OBJCUWPWINDOWSUIXAMLEXPORT
-@interface WUXMAExponentialEase : WUXMAEasingFunctionBase
-+ (instancetype)make __attribute__ ((ns_returns_retained));
-#if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
-#endif
-@property double exponent;
-+ (WXDependencyProperty*)exponentProperty;
-@end
-
-#endif // __WUXMAExponentialEase_DEFINED__
 
 // Windows.UI.Xaml.Media.Animation.FadeInThemeAnimation
 #ifndef __WUXMAFadeInThemeAnimation_DEFINED__
@@ -1001,20 +1288,6 @@ OBJCUWPWINDOWSUIXAMLEXPORT
 
 #endif // __WUXMALinearColorKeyFrame_DEFINED__
 
-// Windows.UI.Xaml.Media.Animation.LinearDoubleKeyFrame
-#ifndef __WUXMALinearDoubleKeyFrame_DEFINED__
-#define __WUXMALinearDoubleKeyFrame_DEFINED__
-
-OBJCUWPWINDOWSUIXAMLEXPORT
-@interface WUXMALinearDoubleKeyFrame : WUXMADoubleKeyFrame
-+ (instancetype)make __attribute__ ((ns_returns_retained));
-#if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
-#endif
-@end
-
-#endif // __WUXMALinearDoubleKeyFrame_DEFINED__
-
 // Windows.UI.Xaml.Media.Animation.LinearPointKeyFrame
 #ifndef __WUXMALinearPointKeyFrame_DEFINED__
 #define __WUXMALinearPointKeyFrame_DEFINED__
@@ -1028,63 +1301,6 @@ OBJCUWPWINDOWSUIXAMLEXPORT
 @end
 
 #endif // __WUXMALinearPointKeyFrame_DEFINED__
-
-// Windows.UI.Xaml.Media.Animation.ObjectAnimationUsingKeyFrames
-#ifndef __WUXMAObjectAnimationUsingKeyFrames_DEFINED__
-#define __WUXMAObjectAnimationUsingKeyFrames_DEFINED__
-
-OBJCUWPWINDOWSUIXAMLEXPORT
-@interface WUXMAObjectAnimationUsingKeyFrames : WUXMATimeline
-+ (instancetype)make __attribute__ ((ns_returns_retained));
-#if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
-#endif
-@property BOOL enableDependentAnimation;
-@property (readonly) WUXMAObjectKeyFrameCollection* keyFrames;
-+ (WXDependencyProperty*)enableDependentAnimationProperty;
-@end
-
-#endif // __WUXMAObjectAnimationUsingKeyFrames_DEFINED__
-
-// Windows.UI.Xaml.Media.Animation.PaneThemeTransition
-#ifndef __WUXMAPaneThemeTransition_DEFINED__
-#define __WUXMAPaneThemeTransition_DEFINED__
-
-OBJCUWPWINDOWSUIXAMLEXPORT
-@interface WUXMAPaneThemeTransition : WUXMATransition
-+ (instancetype)make __attribute__ ((ns_returns_retained));
-#if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
-#endif
-@property WUXCPEdgeTransitionLocation edge;
-+ (WXDependencyProperty*)edgeProperty;
-@end
-
-#endif // __WUXMAPaneThemeTransition_DEFINED__
-
-// Windows.UI.Xaml.Media.Animation.PointAnimation
-#ifndef __WUXMAPointAnimation_DEFINED__
-#define __WUXMAPointAnimation_DEFINED__
-
-OBJCUWPWINDOWSUIXAMLEXPORT
-@interface WUXMAPointAnimation : WUXMATimeline
-+ (instancetype)make __attribute__ ((ns_returns_retained));
-#if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
-#endif
-@property (retain) id /* WFPoint* */ to;
-@property (retain) id /* WFPoint* */ from;
-@property BOOL enableDependentAnimation;
-@property (retain) WUXMAEasingFunctionBase* easingFunction;
-@property (retain) id /* WFPoint* */ by;
-+ (WXDependencyProperty*)byProperty;
-+ (WXDependencyProperty*)easingFunctionProperty;
-+ (WXDependencyProperty*)enableDependentAnimationProperty;
-+ (WXDependencyProperty*)fromProperty;
-+ (WXDependencyProperty*)toProperty;
-@end
-
-#endif // __WUXMAPointAnimation_DEFINED__
 
 // Windows.UI.Xaml.Media.Animation.PointAnimationUsingKeyFrames
 #ifndef __WUXMAPointAnimationUsingKeyFrames_DEFINED__
@@ -1171,96 +1387,6 @@ OBJCUWPWINDOWSUIXAMLEXPORT
 
 #endif // __WUXMAPopOutThemeAnimation_DEFINED__
 
-// Windows.UI.Xaml.Media.Animation.PopupThemeTransition
-#ifndef __WUXMAPopupThemeTransition_DEFINED__
-#define __WUXMAPopupThemeTransition_DEFINED__
-
-OBJCUWPWINDOWSUIXAMLEXPORT
-@interface WUXMAPopupThemeTransition : WUXMATransition
-+ (instancetype)make __attribute__ ((ns_returns_retained));
-#if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
-#endif
-@property double fromVerticalOffset;
-@property double fromHorizontalOffset;
-+ (WXDependencyProperty*)fromHorizontalOffsetProperty;
-+ (WXDependencyProperty*)fromVerticalOffsetProperty;
-@end
-
-#endif // __WUXMAPopupThemeTransition_DEFINED__
-
-// Windows.UI.Xaml.Media.Animation.PowerEase
-#ifndef __WUXMAPowerEase_DEFINED__
-#define __WUXMAPowerEase_DEFINED__
-
-OBJCUWPWINDOWSUIXAMLEXPORT
-@interface WUXMAPowerEase : WUXMAEasingFunctionBase
-+ (instancetype)make __attribute__ ((ns_returns_retained));
-#if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
-#endif
-@property double power;
-+ (WXDependencyProperty*)powerProperty;
-@end
-
-#endif // __WUXMAPowerEase_DEFINED__
-
-// Windows.UI.Xaml.Media.Animation.QuadraticEase
-#ifndef __WUXMAQuadraticEase_DEFINED__
-#define __WUXMAQuadraticEase_DEFINED__
-
-OBJCUWPWINDOWSUIXAMLEXPORT
-@interface WUXMAQuadraticEase : WUXMAEasingFunctionBase
-+ (instancetype)make __attribute__ ((ns_returns_retained));
-#if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
-#endif
-@end
-
-#endif // __WUXMAQuadraticEase_DEFINED__
-
-// Windows.UI.Xaml.Media.Animation.QuarticEase
-#ifndef __WUXMAQuarticEase_DEFINED__
-#define __WUXMAQuarticEase_DEFINED__
-
-OBJCUWPWINDOWSUIXAMLEXPORT
-@interface WUXMAQuarticEase : WUXMAEasingFunctionBase
-+ (instancetype)make __attribute__ ((ns_returns_retained));
-#if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
-#endif
-@end
-
-#endif // __WUXMAQuarticEase_DEFINED__
-
-// Windows.UI.Xaml.Media.Animation.QuinticEase
-#ifndef __WUXMAQuinticEase_DEFINED__
-#define __WUXMAQuinticEase_DEFINED__
-
-OBJCUWPWINDOWSUIXAMLEXPORT
-@interface WUXMAQuinticEase : WUXMAEasingFunctionBase
-+ (instancetype)make __attribute__ ((ns_returns_retained));
-#if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
-#endif
-@end
-
-#endif // __WUXMAQuinticEase_DEFINED__
-
-// Windows.UI.Xaml.Media.Animation.ReorderThemeTransition
-#ifndef __WUXMAReorderThemeTransition_DEFINED__
-#define __WUXMAReorderThemeTransition_DEFINED__
-
-OBJCUWPWINDOWSUIXAMLEXPORT
-@interface WUXMAReorderThemeTransition : WUXMATransition
-+ (instancetype)make __attribute__ ((ns_returns_retained));
-#if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
-#endif
-@end
-
-#endif // __WUXMAReorderThemeTransition_DEFINED__
-
 // Windows.UI.Xaml.Media.Animation.RepositionThemeAnimation
 #ifndef __WUXMARepositionThemeAnimation_DEFINED__
 #define __WUXMARepositionThemeAnimation_DEFINED__
@@ -1281,36 +1407,6 @@ OBJCUWPWINDOWSUIXAMLEXPORT
 
 #endif // __WUXMARepositionThemeAnimation_DEFINED__
 
-// Windows.UI.Xaml.Media.Animation.RepositionThemeTransition
-#ifndef __WUXMARepositionThemeTransition_DEFINED__
-#define __WUXMARepositionThemeTransition_DEFINED__
-
-OBJCUWPWINDOWSUIXAMLEXPORT
-@interface WUXMARepositionThemeTransition : WUXMATransition
-+ (instancetype)make __attribute__ ((ns_returns_retained));
-#if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
-#endif
-@property BOOL isStaggeringEnabled;
-+ (WXDependencyProperty*)isStaggeringEnabledProperty;
-@end
-
-#endif // __WUXMARepositionThemeTransition_DEFINED__
-
-// Windows.UI.Xaml.Media.Animation.SineEase
-#ifndef __WUXMASineEase_DEFINED__
-#define __WUXMASineEase_DEFINED__
-
-OBJCUWPWINDOWSUIXAMLEXPORT
-@interface WUXMASineEase : WUXMAEasingFunctionBase
-+ (instancetype)make __attribute__ ((ns_returns_retained));
-#if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
-#endif
-@end
-
-#endif // __WUXMASineEase_DEFINED__
-
 // Windows.UI.Xaml.Media.Animation.SplineColorKeyFrame
 #ifndef __WUXMASplineColorKeyFrame_DEFINED__
 #define __WUXMASplineColorKeyFrame_DEFINED__
@@ -1326,22 +1422,6 @@ OBJCUWPWINDOWSUIXAMLEXPORT
 @end
 
 #endif // __WUXMASplineColorKeyFrame_DEFINED__
-
-// Windows.UI.Xaml.Media.Animation.SplineDoubleKeyFrame
-#ifndef __WUXMASplineDoubleKeyFrame_DEFINED__
-#define __WUXMASplineDoubleKeyFrame_DEFINED__
-
-OBJCUWPWINDOWSUIXAMLEXPORT
-@interface WUXMASplineDoubleKeyFrame : WUXMADoubleKeyFrame
-+ (instancetype)make __attribute__ ((ns_returns_retained));
-#if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
-#endif
-@property (retain) WUXMAKeySpline* keySpline;
-+ (WXDependencyProperty*)keySplineProperty;
-@end
-
-#endif // __WUXMASplineDoubleKeyFrame_DEFINED__
 
 // Windows.UI.Xaml.Media.Animation.SplinePointKeyFrame
 #ifndef __WUXMASplinePointKeyFrame_DEFINED__
@@ -1431,37 +1511,6 @@ OBJCUWPWINDOWSUIXAMLEXPORT
 
 #endif // __WUXMASplitOpenThemeAnimation_DEFINED__
 
-// Windows.UI.Xaml.Media.Animation.Storyboard
-#ifndef __WUXMAStoryboard_DEFINED__
-#define __WUXMAStoryboard_DEFINED__
-
-OBJCUWPWINDOWSUIXAMLEXPORT
-@interface WUXMAStoryboard : WUXMATimeline
-+ (NSString *)getTargetProperty:(WUXMATimeline*)element;
-+ (void)setTargetProperty:(WUXMATimeline*)element path:(NSString *)path;
-+ (NSString *)getTargetName:(WUXMATimeline*)element;
-+ (void)setTargetName:(WUXMATimeline*)element name:(NSString *)name;
-+ (void)setTarget:(WUXMATimeline*)timeline target:(WXDependencyObject*)target;
-+ (instancetype)make __attribute__ ((ns_returns_retained));
-#if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
-#endif
-@property (readonly) WUXMATimelineCollection* children;
-+ (WXDependencyProperty*)targetNameProperty;
-+ (WXDependencyProperty*)targetPropertyProperty;
-- (void)seek:(WFTimeSpan*)offset;
-- (void)stop;
-- (void)begin;
-- (void)pause;
-- (void)resume;
-- (WUXMAClockState)getCurrentState;
-- (WFTimeSpan*)getCurrentTime;
-- (void)seekAlignedToLastTick:(WFTimeSpan*)offset;
-- (void)skipToFill;
-@end
-
-#endif // __WUXMAStoryboard_DEFINED__
-
 // Windows.UI.Xaml.Media.Animation.SwipeBackThemeAnimation
 #ifndef __WUXMASwipeBackThemeAnimation_DEFINED__
 #define __WUXMASwipeBackThemeAnimation_DEFINED__
@@ -1501,41 +1550,6 @@ OBJCUWPWINDOWSUIXAMLEXPORT
 @end
 
 #endif // __WUXMASwipeHintThemeAnimation_DEFINED__
-
-// Windows.UI.Xaml.Media.Animation.ConnectedAnimation
-#ifndef __WUXMAConnectedAnimation_DEFINED__
-#define __WUXMAConnectedAnimation_DEFINED__
-
-OBJCUWPWINDOWSUIXAMLEXPORT
-@interface WUXMAConnectedAnimation : RTObject
-#if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
-#endif
-- (EventRegistrationToken)addCompletedEvent:(void(^)(WUXMAConnectedAnimation*, RTObject*))del;
-- (void)removeCompletedEvent:(EventRegistrationToken)tok;
-- (BOOL)tryStart:(WXUIElement*)destination;
-- (void)cancel;
-@end
-
-#endif // __WUXMAConnectedAnimation_DEFINED__
-
-// Windows.UI.Xaml.Media.Animation.ConnectedAnimationService
-#ifndef __WUXMAConnectedAnimationService_DEFINED__
-#define __WUXMAConnectedAnimationService_DEFINED__
-
-OBJCUWPWINDOWSUIXAMLEXPORT
-@interface WUXMAConnectedAnimationService : RTObject
-+ (WUXMAConnectedAnimationService*)getForCurrentView;
-#if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
-#endif
-@property (retain) WUCCompositionEasingFunction* defaultEasingFunction;
-@property (retain) WFTimeSpan* defaultDuration;
-- (WUXMAConnectedAnimation*)prepareToAnimate:(NSString *)key source:(WXUIElement*)source;
-- (WUXMAConnectedAnimation*)getAnimation:(NSString *)key;
-@end
-
-#endif // __WUXMAConnectedAnimationService_DEFINED__
 
 // Windows.UI.Xaml.Media.Animation.CommonNavigationTransitionInfo
 #ifndef __WUXMACommonNavigationTransitionInfo_DEFINED__

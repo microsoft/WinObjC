@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -27,25 +27,8 @@
 #endif
 #include <UWP/interopBase.h>
 
-@class WSCWebAccountProvider, WSCWebAccount, WSCKeyCredentialRetrievalResult, WSCKeyCredentialOperationResult, WSCKeyCredentialAttestationResult, WSCKeyCredential, WSCKeyCredentialManager, WSCPasswordCredential, WSCPasswordVault, WSCPasswordCredentialPropertyStore;
-@protocol WSCIWebAccountFactory, WSCIWebAccount, WSCIWebAccount2, WSCIWebAccountProviderFactory, WSCIWebAccountProvider, WSCIWebAccountProvider2, WSCIWebAccountProvider3, WSCIKeyCredentialManagerStatics, WSCIKeyCredential, WSCIKeyCredentialRetrievalResult, WSCIKeyCredentialOperationResult, WSCIKeyCredentialAttestationResult, WSCIPasswordCredential, WSCICredentialFactory, WSCIPasswordVault;
-
-// Windows.Security.Credentials.WebAccountState
-enum _WSCWebAccountState {
-    WSCWebAccountStateNone = 0,
-    WSCWebAccountStateConnected = 1,
-    WSCWebAccountStateError = 2,
-};
-typedef unsigned WSCWebAccountState;
-
-// Windows.Security.Credentials.WebAccountPictureSize
-enum _WSCWebAccountPictureSize {
-    WSCWebAccountPictureSizeSize64x64 = 64,
-    WSCWebAccountPictureSizeSize208x208 = 208,
-    WSCWebAccountPictureSizeSize424x424 = 424,
-    WSCWebAccountPictureSizeSize1080x1080 = 1080,
-};
-typedef unsigned WSCWebAccountPictureSize;
+@class WSCKeyCredentialRetrievalResult, WSCKeyCredentialOperationResult, WSCKeyCredentialAttestationResult, WSCKeyCredential, WSCKeyCredentialManager, WSCWebAccountProvider, WSCWebAccount, WSCPasswordCredential, WSCPasswordVault, WSCPasswordCredentialPropertyStore;
+@protocol WSCIKeyCredentialManagerStatics, WSCIKeyCredential, WSCIKeyCredentialRetrievalResult, WSCIKeyCredentialOperationResult, WSCIKeyCredentialAttestationResult, WSCIWebAccountFactory, WSCIWebAccount, WSCIWebAccount2, WSCIWebAccountProviderFactory, WSCIWebAccountProvider, WSCIWebAccountProvider2, WSCIWebAccountProvider3, WSCIPasswordCredential, WSCICredentialFactory, WSCIPasswordVault;
 
 // Windows.Security.Credentials.KeyCredentialStatus
 enum _WSCKeyCredentialStatus {
@@ -75,6 +58,23 @@ enum _WSCKeyCredentialCreationOption {
 };
 typedef unsigned WSCKeyCredentialCreationOption;
 
+// Windows.Security.Credentials.WebAccountState
+enum _WSCWebAccountState {
+    WSCWebAccountStateNone = 0,
+    WSCWebAccountStateConnected = 1,
+    WSCWebAccountStateError = 2,
+};
+typedef unsigned WSCWebAccountState;
+
+// Windows.Security.Credentials.WebAccountPictureSize
+enum _WSCWebAccountPictureSize {
+    WSCWebAccountPictureSizeSize64x64 = 64,
+    WSCWebAccountPictureSizeSize208x208 = 208,
+    WSCWebAccountPictureSizeSize424x424 = 424,
+    WSCWebAccountPictureSizeSize1080x1080 = 1080,
+};
+typedef unsigned WSCWebAccountPictureSize;
+
 #include "WindowsFoundationCollections.h"
 #include "WindowsStorageStreams.h"
 #include "WindowsSecurityCryptographyCore.h"
@@ -98,48 +98,6 @@ OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @end
 
 #endif // __WSCIWebAccount_DEFINED__
-
-// Windows.Security.Credentials.WebAccountProvider
-#ifndef __WSCWebAccountProvider_DEFINED__
-#define __WSCWebAccountProvider_DEFINED__
-
-OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
-@interface WSCWebAccountProvider : RTObject
-+ (WSCWebAccountProvider*)makeWebAccountProvider:(NSString *)id displayName:(NSString *)displayName iconUri:(WFUri*)iconUri ACTIVATOR;
-#if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
-#endif
-@property (readonly) NSString * displayName;
-@property (readonly) WFUri* iconUri;
-@property (readonly) NSString * id;
-@property (readonly) NSString * authority;
-@property (readonly) NSString * displayPurpose;
-@property (readonly) WSUser* user;
-@end
-
-#endif // __WSCWebAccountProvider_DEFINED__
-
-// Windows.Security.Credentials.WebAccount
-#ifndef __WSCWebAccount_DEFINED__
-#define __WSCWebAccount_DEFINED__
-
-OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
-@interface WSCWebAccount : RTObject <WSCIWebAccount>
-+ (WSCWebAccount*)makeWebAccount:(WSCWebAccountProvider*)webAccountProvider userName:(NSString *)userName state:(WSCWebAccountState)state ACTIVATOR;
-#if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
-#endif
-@property (readonly) WSCWebAccountState state;
-@property (readonly) NSString * userName;
-@property (readonly) WSCWebAccountProvider* webAccountProvider;
-@property (readonly) NSString * id;
-@property (readonly) NSDictionary* /* NSString *, NSString * */ properties;
-- (void)getPictureAsync:(WSCWebAccountPictureSize)desizedSize success:(void (^)(RTObject<WSSIRandomAccessStream>*))success failure:(void (^)(NSError*))failure;
-- (RTObject<WFIAsyncAction>*)signOutAsync;
-- (RTObject<WFIAsyncAction>*)signOutWithClientIdAsync:(NSString *)clientId;
-@end
-
-#endif // __WSCWebAccount_DEFINED__
 
 // Windows.Security.Credentials.KeyCredentialRetrievalResult
 #ifndef __WSCKeyCredentialRetrievalResult_DEFINED__
@@ -220,14 +178,56 @@ OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 
 #endif // __WSCKeyCredentialManager_DEFINED__
 
+// Windows.Security.Credentials.WebAccountProvider
+#ifndef __WSCWebAccountProvider_DEFINED__
+#define __WSCWebAccountProvider_DEFINED__
+
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
+@interface WSCWebAccountProvider : RTObject
++ (WSCWebAccountProvider*)makeWebAccountProvider:(NSString *)id displayName:(NSString *)displayName iconUri:(WFUri*)iconUri ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (readonly) NSString * displayName;
+@property (readonly) WFUri* iconUri;
+@property (readonly) NSString * id;
+@property (readonly) NSString * authority;
+@property (readonly) NSString * displayPurpose;
+@property (readonly) WSUser* user;
+@end
+
+#endif // __WSCWebAccountProvider_DEFINED__
+
+// Windows.Security.Credentials.WebAccount
+#ifndef __WSCWebAccount_DEFINED__
+#define __WSCWebAccount_DEFINED__
+
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
+@interface WSCWebAccount : RTObject <WSCIWebAccount>
++ (WSCWebAccount*)makeWebAccount:(WSCWebAccountProvider*)webAccountProvider userName:(NSString *)userName state:(WSCWebAccountState)state ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (readonly) WSCWebAccountState state;
+@property (readonly) NSString * userName;
+@property (readonly) WSCWebAccountProvider* webAccountProvider;
+@property (readonly) NSString * id;
+@property (readonly) NSDictionary* /* NSString *, NSString * */ properties;
+- (void)getPictureAsync:(WSCWebAccountPictureSize)desizedSize success:(void (^)(RTObject<WSSIRandomAccessStream>*))success failure:(void (^)(NSError*))failure;
+- (RTObject<WFIAsyncAction>*)signOutAsync;
+- (RTObject<WFIAsyncAction>*)signOutWithClientIdAsync:(NSString *)clientId;
+@end
+
+#endif // __WSCWebAccount_DEFINED__
+
 // Windows.Security.Credentials.PasswordCredential
 #ifndef __WSCPasswordCredential_DEFINED__
 #define __WSCPasswordCredential_DEFINED__
 
 OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WSCPasswordCredential : RTObject
-+ (WSCPasswordCredential*)makePasswordCredential:(NSString *)resource userName:(NSString *)userName password:(NSString *)password ACTIVATOR;
 + (instancetype)make __attribute__ ((ns_returns_retained));
++ (WSCPasswordCredential*)makePasswordCredential:(NSString *)resource userName:(NSString *)userName password:(NSString *)password ACTIVATOR;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif

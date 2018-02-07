@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -19,16 +19,16 @@
 
 #pragma once
 
-#ifndef OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
-#define OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT __declspec(dllimport)
+#ifndef OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREMEDIAPROPERTIESDEVICESCOREPLAYBACKPROTECTIONEXPORT
+#define OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREMEDIAPROPERTIESDEVICESCOREPLAYBACKPROTECTIONEXPORT __declspec(dllimport)
 #ifndef IN_WinObjC_Frameworks_UWP_BUILD
-#pragma comment(lib, "ObjCUWPWindowsMediaCaptureDevicesCorePlaybackProtection.lib")
+#pragma comment(lib, "ObjCUWPWindowsMediaCaptureDevicesCoreMediaPropertiesDevicesCorePlaybackProtection.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
 
-@class WMCFMediaFrameSourceGroup, WMCFMediaFrameSource, WMCFMediaFrameReader, WMCFMediaFrameSourceInfo, WMCFMediaFrameSourceController, WMCFMediaFrameFormat, WMCFMediaFrameArrivedEventArgs, WMCFMediaFrameReference, WMCFMediaFrameSourceGetPropertyResult, WMCFVideoMediaFrameFormat, WMCFDepthMediaFrameFormat, WMCFBufferMediaFrame, WMCFVideoMediaFrame, WMCFInfraredMediaFrame, WMCFDepthMediaFrame;
-@protocol WMCFIMediaFrameSourceGroup, WMCFIMediaFrameSourceGroupStatics, WMCFIMediaFrameSourceInfo, WMCFIMediaFrameSource, WMCFIMediaFrameArrivedEventArgs, WMCFIMediaFrameReader, WMCFIMediaFrameSourceController, WMCFIMediaFrameSourceGetPropertyResult, WMCFIMediaFrameFormat, WMCFIVideoMediaFrameFormat, WMCFIMediaFrameReference, WMCFIBufferMediaFrame, WMCFIVideoMediaFrame, WMCFIInfraredMediaFrame, WMCFIDepthMediaFrame, WMCFIDepthMediaFrameFormat;
+@class WMCFMediaFrameSourceGroup, WMCFMediaFrameSource, WMCFMediaFrameReader, WMCFMultiSourceMediaFrameReader, WMCFMediaFrameSourceInfo, WMCFMediaFrameSourceController, WMCFMediaFrameFormat, WMCFMediaFrameArrivedEventArgs, WMCFMediaFrameReference, WMCFMultiSourceMediaFrameArrivedEventArgs, WMCFMultiSourceMediaFrameReference, WMCFMediaFrameSourceGetPropertyResult, WMCFVideoMediaFrameFormat, WMCFDepthMediaFrameFormat, WMCFBufferMediaFrame, WMCFVideoMediaFrame, WMCFInfraredMediaFrame, WMCFDepthMediaFrame;
+@protocol WMCFIMediaFrameSourceGroup, WMCFIMediaFrameSourceGroupStatics, WMCFIMediaFrameSourceInfo, WMCFIMediaFrameSource, WMCFIMediaFrameArrivedEventArgs, WMCFIMediaFrameReader, WMCFIMediaFrameReader2, WMCFIMultiSourceMediaFrameArrivedEventArgs, WMCFIMultiSourceMediaFrameReader, WMCFIMultiSourceMediaFrameReader2, WMCFIMediaFrameSourceController, WMCFIMediaFrameSourceController2, WMCFIMediaFrameSourceGetPropertyResult, WMCFIMediaFrameFormat, WMCFIVideoMediaFrameFormat, WMCFIMediaFrameReference, WMCFIMultiSourceMediaFrameReference, WMCFIBufferMediaFrame, WMCFIVideoMediaFrame, WMCFIInfraredMediaFrame, WMCFIDepthMediaFrame, WMCFIDepthMediaFrame2, WMCFIDepthMediaFrameFormat;
 
 // Windows.Media.Capture.Frames.MediaFrameReaderStartStatus
 enum _WMCFMediaFrameReaderStartStatus {
@@ -36,6 +36,7 @@ enum _WMCFMediaFrameReaderStartStatus {
     WMCFMediaFrameReaderStartStatusUnknownFailure = 1,
     WMCFMediaFrameReaderStartStatusDeviceNotAvailable = 2,
     WMCFMediaFrameReaderStartStatusOutputFormatNotSupported = 3,
+    WMCFMediaFrameReaderStartStatusExclusiveControlNotAvailable = 4,
 };
 typedef unsigned WMCFMediaFrameReaderStartStatus;
 
@@ -56,6 +57,8 @@ enum _WMCFMediaFrameSourceGetPropertyStatus {
     WMCFMediaFrameSourceGetPropertyStatusUnknownFailure = 1,
     WMCFMediaFrameSourceGetPropertyStatusNotSupported = 2,
     WMCFMediaFrameSourceGetPropertyStatusDeviceNotAvailable = 3,
+    WMCFMediaFrameSourceGetPropertyStatusMaxPropertyValueSizeTooSmall = 4,
+    WMCFMediaFrameSourceGetPropertyStatusMaxPropertyValueSizeRequired = 5,
 };
 typedef unsigned WMCFMediaFrameSourceGetPropertyStatus;
 
@@ -67,6 +70,23 @@ enum _WMCFMediaFrameSourceKind {
     WMCFMediaFrameSourceKindDepth = 3,
 };
 typedef unsigned WMCFMediaFrameSourceKind;
+
+// Windows.Media.Capture.Frames.MultiSourceMediaFrameReaderStartStatus
+enum _WMCFMultiSourceMediaFrameReaderStartStatus {
+    WMCFMultiSourceMediaFrameReaderStartStatusSuccess = 0,
+    WMCFMultiSourceMediaFrameReaderStartStatusNotSupported = 1,
+    WMCFMultiSourceMediaFrameReaderStartStatusInsufficientResources = 2,
+    WMCFMultiSourceMediaFrameReaderStartStatusDeviceNotAvailable = 3,
+    WMCFMultiSourceMediaFrameReaderStartStatusUnknownFailure = 4,
+};
+typedef unsigned WMCFMultiSourceMediaFrameReaderStartStatus;
+
+// Windows.Media.Capture.Frames.MediaFrameReaderAcquisitionMode
+enum _WMCFMediaFrameReaderAcquisitionMode {
+    WMCFMediaFrameReaderAcquisitionModeRealtime = 0,
+    WMCFMediaFrameReaderAcquisitionModeBuffered = 1,
+};
+typedef unsigned WMCFMediaFrameReaderAcquisitionMode;
 
 #include "WindowsMediaCapture.h"
 #include "WindowsMediaDevicesCore.h"
@@ -86,7 +106,7 @@ typedef unsigned WMCFMediaFrameSourceKind;
 #ifndef __WMCFMediaFrameSourceGroup_DEFINED__
 #define __WMCFMediaFrameSourceGroup_DEFINED__
 
-OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREMEDIAPROPERTIESDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMCFMediaFrameSourceGroup : RTObject
 + (void)findAllAsyncWithSuccess:(void (^)(NSArray* /* WMCFMediaFrameSourceGroup* */))success failure:(void (^)(NSError*))failure;
 + (void)fromIdAsync:(NSString *)id success:(void (^)(WMCFMediaFrameSourceGroup*))success failure:(void (^)(NSError*))failure;
@@ -105,7 +125,7 @@ OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 #ifndef __WMCFMediaFrameSource_DEFINED__
 #define __WMCFMediaFrameSource_DEFINED__
 
-OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREMEDIAPROPERTIESDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMCFMediaFrameSource : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -130,7 +150,7 @@ OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 - (void)close;
 @end
 
-OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREMEDIAPROPERTIESDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WFIClosable : RTObject <WFIClosable>
 @end
 
@@ -140,11 +160,12 @@ OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 #ifndef __WMCFMediaFrameReader_DEFINED__
 #define __WMCFMediaFrameReader_DEFINED__
 
-OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREMEDIAPROPERTIESDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMCFMediaFrameReader : RTObject <WFIClosable>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
+@property WMCFMediaFrameReaderAcquisitionMode acquisitionMode;
 - (EventRegistrationToken)addFrameArrivedEvent:(void(^)(WMCFMediaFrameReader*, WMCFMediaFrameArrivedEventArgs*))del;
 - (void)removeFrameArrivedEvent:(EventRegistrationToken)tok;
 - (WMCFMediaFrameReference*)tryAcquireLatestFrame;
@@ -155,11 +176,31 @@ OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 
 #endif // __WMCFMediaFrameReader_DEFINED__
 
+// Windows.Media.Capture.Frames.MultiSourceMediaFrameReader
+#ifndef __WMCFMultiSourceMediaFrameReader_DEFINED__
+#define __WMCFMultiSourceMediaFrameReader_DEFINED__
+
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREMEDIAPROPERTIESDEVICESCOREPLAYBACKPROTECTIONEXPORT
+@interface WMCFMultiSourceMediaFrameReader : RTObject <WFIClosable>
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property WMCFMediaFrameReaderAcquisitionMode acquisitionMode;
+- (EventRegistrationToken)addFrameArrivedEvent:(void(^)(WMCFMultiSourceMediaFrameReader*, WMCFMultiSourceMediaFrameArrivedEventArgs*))del;
+- (void)removeFrameArrivedEvent:(EventRegistrationToken)tok;
+- (WMCFMultiSourceMediaFrameReference*)tryAcquireLatestFrame;
+- (void)startAsyncWithSuccess:(void (^)(WMCFMultiSourceMediaFrameReaderStartStatus))success failure:(void (^)(NSError*))failure;
+- (RTObject<WFIAsyncAction>*)stopAsync;
+- (void)close;
+@end
+
+#endif // __WMCFMultiSourceMediaFrameReader_DEFINED__
+
 // Windows.Media.Capture.Frames.MediaFrameSourceInfo
 #ifndef __WMCFMediaFrameSourceInfo_DEFINED__
 #define __WMCFMediaFrameSourceInfo_DEFINED__
 
-OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREMEDIAPROPERTIESDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMCFMediaFrameSourceInfo : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -179,7 +220,7 @@ OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 #ifndef __WMCFMediaFrameSourceController_DEFINED__
 #define __WMCFMediaFrameSourceController_DEFINED__
 
-OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREMEDIAPROPERTIESDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMCFMediaFrameSourceController : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -187,6 +228,8 @@ OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @property (readonly) WMDVideoDeviceController* videoDeviceController;
 - (void)getPropertyAsync:(NSString *)propertyId success:(void (^)(WMCFMediaFrameSourceGetPropertyResult*))success failure:(void (^)(NSError*))failure;
 - (void)setPropertyAsync:(NSString *)propertyId propertyValue:(RTObject*)propertyValue success:(void (^)(WMCFMediaFrameSourceSetPropertyStatus))success failure:(void (^)(NSError*))failure;
+- (void)getPropertyByExtendedIdAsync:(NSArray* /* uint8_t */)extendedPropertyId maxPropertyValueSize:(id /* unsigned int */)maxPropertyValueSize success:(void (^)(WMCFMediaFrameSourceGetPropertyResult*))success failure:(void (^)(NSError*))failure;
+- (void)setPropertyByExtendedIdAsync:(NSArray* /* uint8_t */)extendedPropertyId propertyValue:(NSArray* /* uint8_t */)propertyValue success:(void (^)(WMCFMediaFrameSourceSetPropertyStatus))success failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WMCFMediaFrameSourceController_DEFINED__
@@ -195,7 +238,7 @@ OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 #ifndef __WMCFMediaFrameFormat_DEFINED__
 #define __WMCFMediaFrameFormat_DEFINED__
 
-OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREMEDIAPROPERTIESDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMCFMediaFrameFormat : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -213,7 +256,7 @@ OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 #ifndef __WMCFMediaFrameArrivedEventArgs_DEFINED__
 #define __WMCFMediaFrameArrivedEventArgs_DEFINED__
 
-OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREMEDIAPROPERTIESDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMCFMediaFrameArrivedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -226,7 +269,7 @@ OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 #ifndef __WMCFMediaFrameReference_DEFINED__
 #define __WMCFMediaFrameReference_DEFINED__
 
-OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREMEDIAPROPERTIESDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMCFMediaFrameReference : RTObject <WFIClosable>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -244,11 +287,39 @@ OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 
 #endif // __WMCFMediaFrameReference_DEFINED__
 
+// Windows.Media.Capture.Frames.MultiSourceMediaFrameArrivedEventArgs
+#ifndef __WMCFMultiSourceMediaFrameArrivedEventArgs_DEFINED__
+#define __WMCFMultiSourceMediaFrameArrivedEventArgs_DEFINED__
+
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREMEDIAPROPERTIESDEVICESCOREPLAYBACKPROTECTIONEXPORT
+@interface WMCFMultiSourceMediaFrameArrivedEventArgs : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@end
+
+#endif // __WMCFMultiSourceMediaFrameArrivedEventArgs_DEFINED__
+
+// Windows.Media.Capture.Frames.MultiSourceMediaFrameReference
+#ifndef __WMCFMultiSourceMediaFrameReference_DEFINED__
+#define __WMCFMultiSourceMediaFrameReference_DEFINED__
+
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREMEDIAPROPERTIESDEVICESCOREPLAYBACKPROTECTIONEXPORT
+@interface WMCFMultiSourceMediaFrameReference : RTObject <WFIClosable>
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+- (WMCFMediaFrameReference*)tryGetFrameReferenceBySourceId:(NSString *)sourceId;
+- (void)close;
+@end
+
+#endif // __WMCFMultiSourceMediaFrameReference_DEFINED__
+
 // Windows.Media.Capture.Frames.MediaFrameSourceGetPropertyResult
 #ifndef __WMCFMediaFrameSourceGetPropertyResult_DEFINED__
 #define __WMCFMediaFrameSourceGetPropertyResult_DEFINED__
 
-OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREMEDIAPROPERTIESDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMCFMediaFrameSourceGetPropertyResult : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -263,7 +334,7 @@ OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 #ifndef __WMCFVideoMediaFrameFormat_DEFINED__
 #define __WMCFVideoMediaFrameFormat_DEFINED__
 
-OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREMEDIAPROPERTIESDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMCFVideoMediaFrameFormat : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -280,7 +351,7 @@ OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 #ifndef __WMCFDepthMediaFrameFormat_DEFINED__
 #define __WMCFDepthMediaFrameFormat_DEFINED__
 
-OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREMEDIAPROPERTIESDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMCFDepthMediaFrameFormat : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -295,7 +366,7 @@ OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 #ifndef __WMCFBufferMediaFrame_DEFINED__
 #define __WMCFBufferMediaFrame_DEFINED__
 
-OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREMEDIAPROPERTIESDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMCFBufferMediaFrame : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -310,7 +381,7 @@ OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 #ifndef __WMCFVideoMediaFrame_DEFINED__
 #define __WMCFVideoMediaFrame_DEFINED__
 
-OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREMEDIAPROPERTIESDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMCFVideoMediaFrame : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -331,7 +402,7 @@ OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 #ifndef __WMCFInfraredMediaFrame_DEFINED__
 #define __WMCFInfraredMediaFrame_DEFINED__
 
-OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREMEDIAPROPERTIESDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMCFInfraredMediaFrame : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -347,7 +418,7 @@ OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 #ifndef __WMCFDepthMediaFrame_DEFINED__
 #define __WMCFDepthMediaFrame_DEFINED__
 
-OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREMEDIAPROPERTIESDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMCFDepthMediaFrame : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -355,6 +426,8 @@ OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @property (readonly) WMCFDepthMediaFrameFormat* depthFormat;
 @property (readonly) WMCFMediaFrameReference* frameReference;
 @property (readonly) WMCFVideoMediaFrame* videoMediaFrame;
+@property (readonly) unsigned int maxReliableDepth;
+@property (readonly) unsigned int minReliableDepth;
 - (WMDCDepthCorrelatedCoordinateMapper*)tryCreateCoordinateMapper:(WMDCCameraIntrinsics*)cameraIntrinsics coordinateSystem:(WPSSpatialCoordinateSystem*)coordinateSystem;
 @end
 

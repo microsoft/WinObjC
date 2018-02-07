@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -28,9 +28,19 @@
 #include <UWP/interopBase.h>
 
 @class WACAppListEntry, WACCoreApplication, WACCoreApplicationView, WACCoreApplicationViewTitleBar, WACUnhandledErrorDetectedEventArgs, WACHostedViewClosingEventArgs, WACUnhandledError;
-@protocol WACIAppListEntry, WACIFrameworkView, WACIFrameworkViewSource, WACICoreApplication, WACICoreApplicationUseCount, WACICoreApplicationExit, WACICoreApplication2, WACICoreImmersiveApplication, WACICoreImmersiveApplication2, WACICoreImmersiveApplication3, WACICoreApplicationUnhandledError, WACICoreApplicationView, WACICoreApplicationView2, WACICoreApplicationView3, WACIHostedViewClosingEventArgs, WACICoreApplicationViewTitleBar, WACIUnhandledErrorDetectedEventArgs, WACIUnhandledError;
+@protocol WACIAppListEntry, WACIAppListEntry2, WACIFrameworkView, WACIFrameworkViewSource, WACICoreApplication, WACICoreApplicationUseCount, WACICoreApplicationExit, WACICoreApplication2, WACICoreApplication3, WACICoreImmersiveApplication, WACICoreImmersiveApplication2, WACICoreImmersiveApplication3, WACICoreApplicationUnhandledError, WACICoreApplicationView, WACICoreApplicationView2, WACICoreApplicationView3, WACICoreApplicationView5, WACICoreApplicationView6, WACIHostedViewClosingEventArgs, WACICoreApplicationViewTitleBar, WACIUnhandledErrorDetectedEventArgs, WACIUnhandledError;
+
+// Windows.ApplicationModel.Core.AppRestartFailureReason
+enum _WACAppRestartFailureReason {
+    WACAppRestartFailureReasonRestartPending = 0,
+    WACAppRestartFailureReasonNotInForeground = 1,
+    WACAppRestartFailureReasonInvalidUser = 2,
+    WACAppRestartFailureReasonOther = 3,
+};
+typedef unsigned WACAppRestartFailureReason;
 
 #include "WindowsFoundationCollections.h"
+#include "WindowsSystem.h"
 #include "WindowsApplicationModel.h"
 #include "WindowsUICore.h"
 #include "WindowsFoundation.h"
@@ -95,6 +105,7 @@ OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WAAppDisplayInfo* displayInfo;
+@property (readonly) NSString * appUserModelId;
 - (void)launchAsyncWithSuccess:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 @end
 
@@ -108,14 +119,16 @@ OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WACCoreApplication : RTObject
 + (void)exit;
 + (WACCoreApplicationView*)createNewView:(NSString *)runtimeType entryPoint:(NSString *)entryPoint;
-+ (void)incrementApplicationUseCount;
-+ (void)decrementApplicationUseCount;
 + (void)enablePrelaunch:(BOOL)value;
-+ (WACCoreApplicationView*)createNewViewFromMainView;
-+ (WACCoreApplicationView*)createNewViewWithViewSource:(RTObject<WACIFrameworkViewSource>*)viewSource;
++ (void)requestRestartAsync:(NSString *)launchArguments success:(void (^)(WACAppRestartFailureReason))success failure:(void (^)(NSError*))failure;
++ (void)requestRestartForUserAsync:(WSUser*)user launchArguments:(NSString *)launchArguments success:(void (^)(WACAppRestartFailureReason))success failure:(void (^)(NSError*))failure;
 + (WACCoreApplicationView*)getCurrentView;
 + (void)run:(RTObject<WACIFrameworkViewSource>*)viewSource;
 + (void)runWithActivationFactories:(RTObject<WFIGetActivationFactory>*)activationFactoryCallback;
++ (void)incrementApplicationUseCount;
++ (void)decrementApplicationUseCount;
++ (WACCoreApplicationView*)createNewViewFromMainView;
++ (WACCoreApplicationView*)createNewViewWithViewSource:(RTObject<WACIFrameworkViewSource>*)viewSource;
 + (NSString *)id;
 + (RTObject<WFCIPropertySet>*)properties;
 + (WACCoreApplicationView*)mainView;
@@ -153,6 +166,8 @@ OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @property (readonly) WUCCoreDispatcher* dispatcher;
 @property (readonly) BOOL isComponent;
 @property (readonly) WACCoreApplicationViewTitleBar* titleBar;
+@property (readonly) RTObject<WFCIPropertySet>* properties;
+@property (readonly) WSDispatcherQueue* dispatcherQueue;
 - (EventRegistrationToken)addActivatedEvent:(void(^)(WACCoreApplicationView*, RTObject<WAAIActivatedEventArgs>*))del;
 - (void)removeActivatedEvent:(EventRegistrationToken)tok;
 - (EventRegistrationToken)addHostedViewClosingEvent:(void(^)(WACCoreApplicationView*, WACHostedViewClosingEventArgs*))del;

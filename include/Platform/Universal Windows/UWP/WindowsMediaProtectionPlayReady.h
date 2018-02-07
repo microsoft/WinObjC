@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -27,8 +27,8 @@
 #endif
 #include <UWP/interopBase.h>
 
-@class WMPPPlayReadyContentHeader, WMPPPlayReadySoapMessage, WMPPPlayReadyContentResolver, WMPPPlayReadyIndividualizationServiceRequest, WMPPPlayReadyDomainJoinServiceRequest, WMPPPlayReadyDomainLeaveServiceRequest, WMPPPlayReadyLicenseAcquisitionServiceRequest, WMPPPlayReadyMeteringReportServiceRequest, WMPPPlayReadyRevocationServiceRequest, WMPPPlayReadyLicenseManagement, WMPPPlayReadyLicense, WMPPPlayReadyLicenseIterable, WMPPPlayReadyLicenseIterator, WMPPPlayReadyDomain, WMPPPlayReadyDomainIterable, WMPPPlayReadyDomainIterator, WMPPPlayReadyStatics, WMPPPlayReadySecureStopServiceRequest, WMPPPlayReadySecureStopIterable, WMPPPlayReadySecureStopIterator, WMPPPlayReadyITADataGenerator, WMPPPlayReadyLicenseSession, WMPPNDDownloadEngineNotifier, WMPPNDStreamParserNotifier, WMPPNDTCPMessenger, WMPPNDLicenseFetchDescriptor, WMPPNDCustomData, WMPPNDClient, WMPPNDStorageFileHelper;
-@protocol WMPPIPlayReadyContentHeader, WMPPIPlayReadyContentHeaderFactory, WMPPIPlayReadyContentHeader2, WMPPIPlayReadyContentHeaderFactory2, WMPPIPlayReadyContentResolver, WMPPIPlayReadyLicenseManagement, WMPPIPlayReadyLicense, WMPPIPlayReadyLicenseIterableFactory, WMPPIPlayReadyDomain, WMPPIPlayReadyDomainIterableFactory, WMPPIPlayReadyStatics, WMPPIPlayReadyStatics2, WMPPIPlayReadyStatics3, WMPPIPlayReadyStatics4, WMPPIPlayReadySecureStopServiceRequestFactory, WMPPIPlayReadySecureStopIterableFactory, WMPPIPlayReadySoapMessage, WMPPIPlayReadyITADataGenerator, WMPPIPlayReadyLicenseSession, WMPPIPlayReadyLicenseSessionFactory, WMPPINDDownloadEngine, WMPPINDDownloadEngineNotifier, WMPPINDLicenseFetchDescriptor, WMPPINDCustomData, WMPPINDStreamParser, WMPPINDStreamParserNotifier, WMPPINDSendResult, WMPPINDMessenger, WMPPINDTCPMessengerFactory, WMPPINDTransmitterProperties, WMPPINDStartResult, WMPPINDLicenseFetchResult, WMPPINDLicenseFetchDescriptorFactory, WMPPINDRegistrationCompletedEventArgs, WMPPINDCustomDataFactory, WMPPINDProximityDetectionCompletedEventArgs, WMPPINDLicenseFetchCompletedEventArgs, WMPPINDClient, WMPPINDClosedCaptionDataReceivedEventArgs, WMPPINDClientFactory, WMPPINDStorageFileHelper, WMPPIPlayReadyServiceRequest, WMPPIPlayReadyIndividualizationServiceRequest, WMPPIPlayReadyDomainJoinServiceRequest, WMPPIPlayReadyDomainLeaveServiceRequest, WMPPIPlayReadyLicenseAcquisitionServiceRequest, WMPPIPlayReadyLicenseAcquisitionServiceRequest2, WMPPIPlayReadyMeteringReportServiceRequest, WMPPIPlayReadyRevocationServiceRequest, WMPPIPlayReadySecureStopServiceRequest;
+@class WMPPPlayReadyContentHeader, WMPPPlayReadySoapMessage, WMPPPlayReadyContentResolver, WMPPPlayReadyIndividualizationServiceRequest, WMPPPlayReadyDomainJoinServiceRequest, WMPPPlayReadyDomainLeaveServiceRequest, WMPPPlayReadyLicenseIterable, WMPPPlayReadyLicenseAcquisitionServiceRequest, WMPPPlayReadyMeteringReportServiceRequest, WMPPPlayReadyRevocationServiceRequest, WMPPPlayReadyLicenseManagement, WMPPPlayReadyLicense, WMPPPlayReadyLicenseIterator, WMPPPlayReadyDomain, WMPPPlayReadyDomainIterable, WMPPPlayReadyDomainIterator, WMPPPlayReadyStatics, WMPPPlayReadySecureStopServiceRequest, WMPPPlayReadySecureStopIterable, WMPPPlayReadySecureStopIterator, WMPPPlayReadyITADataGenerator, WMPPPlayReadyLicenseSession, WMPPNDDownloadEngineNotifier, WMPPNDStreamParserNotifier, WMPPNDTCPMessenger, WMPPNDLicenseFetchDescriptor, WMPPNDCustomData, WMPPNDClient, WMPPNDStorageFileHelper;
+@protocol WMPPIPlayReadyContentHeader, WMPPIPlayReadyContentHeaderFactory, WMPPIPlayReadyContentHeader2, WMPPIPlayReadyContentHeaderFactory2, WMPPIPlayReadyContentResolver, WMPPIPlayReadyLicenseManagement, WMPPIPlayReadyLicense, WMPPIPlayReadyLicense2, WMPPIPlayReadyLicenseIterableFactory, WMPPIPlayReadyDomain, WMPPIPlayReadyDomainIterableFactory, WMPPIPlayReadyStatics, WMPPIPlayReadyStatics2, WMPPIPlayReadyStatics3, WMPPIPlayReadyStatics4, WMPPIPlayReadySecureStopServiceRequestFactory, WMPPIPlayReadySecureStopIterableFactory, WMPPIPlayReadySoapMessage, WMPPIPlayReadyITADataGenerator, WMPPIPlayReadyLicenseSession, WMPPIPlayReadyLicenseSession2, WMPPIPlayReadyLicenseSessionFactory, WMPPINDDownloadEngine, WMPPINDDownloadEngineNotifier, WMPPINDLicenseFetchDescriptor, WMPPINDCustomData, WMPPINDStreamParser, WMPPINDStreamParserNotifier, WMPPINDSendResult, WMPPINDMessenger, WMPPINDTCPMessengerFactory, WMPPINDTransmitterProperties, WMPPINDStartResult, WMPPINDLicenseFetchResult, WMPPINDLicenseFetchDescriptorFactory, WMPPINDRegistrationCompletedEventArgs, WMPPINDCustomDataFactory, WMPPINDProximityDetectionCompletedEventArgs, WMPPINDLicenseFetchCompletedEventArgs, WMPPINDClient, WMPPINDClosedCaptionDataReceivedEventArgs, WMPPINDClientFactory, WMPPINDStorageFileHelper, WMPPIPlayReadyServiceRequest, WMPPIPlayReadyIndividualizationServiceRequest, WMPPIPlayReadyDomainJoinServiceRequest, WMPPIPlayReadyDomainLeaveServiceRequest, WMPPIPlayReadyLicenseAcquisitionServiceRequest, WMPPIPlayReadyLicenseAcquisitionServiceRequest2, WMPPIPlayReadyLicenseAcquisitionServiceRequest3, WMPPIPlayReadyMeteringReportServiceRequest, WMPPIPlayReadyRevocationServiceRequest, WMPPIPlayReadySecureStopServiceRequest;
 
 // Windows.Media.Protection.PlayReady.PlayReadyDecryptorSetup
 enum _WMPPPlayReadyDecryptorSetup {
@@ -42,6 +42,8 @@ enum _WMPPPlayReadyEncryptionAlgorithm {
     WMPPPlayReadyEncryptionAlgorithmUnprotected = 0,
     WMPPPlayReadyEncryptionAlgorithmAes128Ctr = 1,
     WMPPPlayReadyEncryptionAlgorithmCocktail = 4,
+    WMPPPlayReadyEncryptionAlgorithmAes128Cbc = 5,
+    WMPPPlayReadyEncryptionAlgorithmUnspecified = 65535,
     WMPPPlayReadyEncryptionAlgorithmUninitialized = 2147483647,
 };
 typedef unsigned WMPPPlayReadyEncryptionAlgorithm;
@@ -50,6 +52,7 @@ typedef unsigned WMPPPlayReadyEncryptionAlgorithm;
 enum _WMPPPlayReadyHardwareDRMFeatures {
     WMPPPlayReadyHardwareDRMFeaturesHardwareDRM = 1,
     WMPPPlayReadyHardwareDRMFeaturesHEVC = 2,
+    WMPPPlayReadyHardwareDRMFeaturesAes128Cbc = 3,
 };
 typedef unsigned WMPPPlayReadyHardwareDRMFeatures;
 
@@ -205,6 +208,22 @@ OBJCUWPWINDOWSMEDIAPROTECTIONPLAYREADYEXPORT
 @end
 
 #endif // __WMPPIPlayReadyLicenseSession_DEFINED__
+
+// Windows.Media.Protection.PlayReady.IPlayReadyLicenseSession2
+#ifndef __WMPPIPlayReadyLicenseSession2_DEFINED__
+#define __WMPPIPlayReadyLicenseSession2_DEFINED__
+
+@protocol WMPPIPlayReadyLicenseSession2 <WMPPIPlayReadyLicenseSession>
+- (WMPPPlayReadyLicenseIterable*)createLicenseIterable:(WMPPPlayReadyContentHeader*)contentHeader fullyEvaluated:(BOOL)fullyEvaluated;
+- (RTObject<WMPPIPlayReadyLicenseAcquisitionServiceRequest>*)createLAServiceRequest;
+- (void)configureMediaProtectionManager:(WMPMediaProtectionManager*)mpm;
+@end
+
+OBJCUWPWINDOWSMEDIAPROTECTIONPLAYREADYEXPORT
+@interface WMPPIPlayReadyLicenseSession2 : RTObject <WMPPIPlayReadyLicenseSession2>
+@end
+
+#endif // __WMPPIPlayReadyLicenseSession2_DEFINED__
 
 // Windows.Media.Protection.PlayReady.INDDownloadEngine
 #ifndef __WMPPINDDownloadEngine_DEFINED__
@@ -552,10 +571,10 @@ OBJCUWPWINDOWSMEDIAPROTECTIONPLAYREADYEXPORT
 
 OBJCUWPWINDOWSMEDIAPROTECTIONPLAYREADYEXPORT
 @interface WMPPPlayReadyContentHeader : RTObject
++ (WMPPPlayReadyContentHeader*)makeInstanceFromComponents2:(unsigned int)dwFlags contentKeyIds:(NSArray* /* WFGUID* */)contentKeyIds contentKeyIdStrings:(NSArray* /* NSString * */)contentKeyIdStrings contentEncryptionAlgorithm:(WMPPPlayReadyEncryptionAlgorithm)contentEncryptionAlgorithm licenseAcquisitionUrl:(WFUri*)licenseAcquisitionUrl licenseAcquisitionUserInterfaceUrl:(WFUri*)licenseAcquisitionUserInterfaceUrl customAttributes:(NSString *)customAttributes domainServiceId:(WFGUID*)domainServiceId ACTIVATOR;
 + (WMPPPlayReadyContentHeader*)makeInstanceFromWindowsMediaDrmHeader:(NSArray* /* uint8_t */)headerBytes licenseAcquisitionUrl:(WFUri*)licenseAcquisitionUrl licenseAcquisitionUserInterfaceUrl:(WFUri*)licenseAcquisitionUserInterfaceUrl customAttributes:(NSString *)customAttributes domainServiceId:(WFGUID*)domainServiceId ACTIVATOR;
 + (WMPPPlayReadyContentHeader*)makeInstanceFromComponents:(WFGUID*)contentKeyId contentKeyIdString:(NSString *)contentKeyIdString contentEncryptionAlgorithm:(WMPPPlayReadyEncryptionAlgorithm)contentEncryptionAlgorithm licenseAcquisitionUrl:(WFUri*)licenseAcquisitionUrl licenseAcquisitionUserInterfaceUrl:(WFUri*)licenseAcquisitionUserInterfaceUrl customAttributes:(NSString *)customAttributes domainServiceId:(WFGUID*)domainServiceId ACTIVATOR;
 + (WMPPPlayReadyContentHeader*)makeInstanceFromPlayReadyHeader:(NSArray* /* uint8_t */)headerBytes ACTIVATOR;
-+ (WMPPPlayReadyContentHeader*)makeInstanceFromComponents2:(unsigned int)dwFlags contentKeyIds:(NSArray* /* WFGUID* */)contentKeyIds contentKeyIdStrings:(NSArray* /* NSString * */)contentKeyIdStrings contentEncryptionAlgorithm:(WMPPPlayReadyEncryptionAlgorithm)contentEncryptionAlgorithm licenseAcquisitionUrl:(WFUri*)licenseAcquisitionUrl licenseAcquisitionUserInterfaceUrl:(WFUri*)licenseAcquisitionUserInterfaceUrl customAttributes:(NSString *)customAttributes domainServiceId:(WFGUID*)domainServiceId ACTIVATOR;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
@@ -676,6 +695,21 @@ OBJCUWPWINDOWSMEDIAPROTECTIONPLAYREADYEXPORT
 
 #endif // __WMPPPlayReadyDomainLeaveServiceRequest_DEFINED__
 
+// Windows.Media.Protection.PlayReady.PlayReadyLicenseIterable
+#ifndef __WMPPPlayReadyLicenseIterable_DEFINED__
+#define __WMPPPlayReadyLicenseIterable_DEFINED__
+
+OBJCUWPWINDOWSMEDIAPROTECTIONPLAYREADYEXPORT
+@interface WMPPPlayReadyLicenseIterable : RTObject
++ (WMPPPlayReadyLicenseIterable*)makeInstance:(WMPPPlayReadyContentHeader*)contentHeader fullyEvaluated:(BOOL)fullyEvaluated ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@end
+
+#endif // __WMPPPlayReadyLicenseIterable_DEFINED__
+
 // Windows.Media.Protection.PlayReady.PlayReadyLicenseAcquisitionServiceRequest
 #ifndef __WMPPPlayReadyLicenseAcquisitionServiceRequest_DEFINED__
 #define __WMPPPlayReadyLicenseAcquisitionServiceRequest_DEFINED__
@@ -698,6 +732,7 @@ OBJCUWPWINDOWSMEDIAPROTECTIONPLAYREADYEXPORT
 - (RTObject<WMPPIPlayReadyServiceRequest>*)nextServiceRequest;
 - (WMPPPlayReadySoapMessage*)generateManualEnablingChallenge;
 - (HRESULT)processManualEnablingResponse:(NSArray* /* uint8_t */)responseBytes;
+- (WMPPPlayReadyLicenseIterable*)createLicenseIterable:(WMPPPlayReadyContentHeader*)contentHeader fullyEvaluated:(BOOL)fullyEvaluated;
 @end
 
 #endif // __WMPPPlayReadyLicenseAcquisitionServiceRequest_DEFINED__
@@ -775,25 +810,14 @@ OBJCUWPWINDOWSMEDIAPROTECTIONPLAYREADYEXPORT
 @property (readonly) unsigned int expireAfterFirstPlay;
 @property (readonly) BOOL fullyEvaluated;
 @property (readonly) BOOL usableForPlay;
+@property (readonly) BOOL expiresInRealTime;
+@property (readonly) BOOL inMemoryOnly;
+@property (readonly) WFGUID* secureStopId;
+@property (readonly) unsigned int securityLevel;
 - (WFGUID*)getKIDAtChainDepth:(unsigned int)chainDepth;
 @end
 
 #endif // __WMPPPlayReadyLicense_DEFINED__
-
-// Windows.Media.Protection.PlayReady.PlayReadyLicenseIterable
-#ifndef __WMPPPlayReadyLicenseIterable_DEFINED__
-#define __WMPPPlayReadyLicenseIterable_DEFINED__
-
-OBJCUWPWINDOWSMEDIAPROTECTIONPLAYREADYEXPORT
-@interface WMPPPlayReadyLicenseIterable : RTObject
-+ (WMPPPlayReadyLicenseIterable*)makeInstance:(WMPPPlayReadyContentHeader*)contentHeader fullyEvaluated:(BOOL)fullyEvaluated ACTIVATOR;
-+ (instancetype)make __attribute__ ((ns_returns_retained));
-#if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
-#endif
-@end
-
-#endif // __WMPPPlayReadyLicenseIterable_DEFINED__
 
 // Windows.Media.Protection.PlayReady.PlayReadyLicenseIterator
 #ifndef __WMPPPlayReadyLicenseIterator_DEFINED__
@@ -873,8 +897,8 @@ OBJCUWPWINDOWSMEDIAPROTECTIONPLAYREADYEXPORT
 + (WFGUID*)revocationServiceRequestType;
 + (unsigned int)playReadyCertificateSecurityLevel;
 + (WFGUID*)secureStopServiceRequestType;
-+ (NSString *)inputTrustAuthorityToCreate;
 + (WFGUID*)protectionSystemId;
++ (NSString *)inputTrustAuthorityToCreate;
 @end
 
 #endif // __WMPPPlayReadyStatics_DEFINED__
@@ -956,13 +980,14 @@ OBJCUWPWINDOWSMEDIAPROTECTIONPLAYREADYEXPORT
 #define __WMPPPlayReadyLicenseSession_DEFINED__
 
 OBJCUWPWINDOWSMEDIAPROTECTIONPLAYREADYEXPORT
-@interface WMPPPlayReadyLicenseSession : RTObject <WMPPIPlayReadyLicenseSession>
+@interface WMPPPlayReadyLicenseSession : RTObject <WMPPIPlayReadyLicenseSession, WMPPIPlayReadyLicenseSession2>
 + (WMPPPlayReadyLicenseSession*)makeInstance:(RTObject<WFCIPropertySet>*)configuration ACTIVATOR;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 - (RTObject<WMPPIPlayReadyLicenseAcquisitionServiceRequest>*)createLAServiceRequest;
 - (void)configureMediaProtectionManager:(WMPMediaProtectionManager*)mpm;
+- (WMPPPlayReadyLicenseIterable*)createLicenseIterable:(WMPPPlayReadyContentHeader*)contentHeader fullyEvaluated:(BOOL)fullyEvaluated;
 @end
 
 #endif // __WMPPPlayReadyLicenseSession_DEFINED__

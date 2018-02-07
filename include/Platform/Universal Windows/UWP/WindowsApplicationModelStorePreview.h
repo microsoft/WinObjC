@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -27,8 +27,8 @@
 #endif
 #include <UWP/interopBase.h>
 
-@class WASPStorePreviewSkuInfo, WASPStorePreviewPurchaseResults, WASPStorePreviewProductInfo, WASPStoreHardwareManufacturerInfo, WASPStorePreview, WASPStoreConfiguration;
-@protocol WASPIStorePreviewProductInfo, WASPIStorePreviewSkuInfo, WASPIStorePreviewPurchaseResults, WASPIStorePreview, WASPIStoreHardwareManufacturerInfo, WASPIStoreConfigurationStatics, WASPIStoreConfigurationStatics2, WASPIStoreConfigurationStatics3;
+@class WASPStorePreviewSkuInfo, WASPStorePreviewPurchaseResults, WASPStorePreviewProductInfo, WASPStoreHardwareManufacturerInfo, WASPStorePreview, WASPStoreConfiguration, WASPWebAuthenticationCoreManagerHelper;
+@protocol WASPIStorePreviewProductInfo, WASPIStorePreviewSkuInfo, WASPIStorePreviewPurchaseResults, WASPIStorePreview, WASPIStoreHardwareManufacturerInfo, WASPIStoreConfigurationStatics, WASPIStoreConfigurationStatics2, WASPIStoreConfigurationStatics3, WASPIStoreConfigurationStatics4, WASPIWebAuthenticationCoreManagerHelper;
 
 // Windows.ApplicationModel.Store.Preview.StorePreviewProductPurchaseStatus
 enum _WASPStorePreviewProductPurchaseStatus {
@@ -85,9 +85,12 @@ enum _WASPStoreLogOptions {
 };
 typedef unsigned WASPStoreLogOptions;
 
+#include "WindowsSecurityCredentials.h"
 #include "WindowsStorageStreams.h"
+#include "WindowsSecurityAuthenticationWebCore.h"
 #include "WindowsFoundation.h"
 #include "WindowsSystem.h"
+#include "WindowsUIXaml.h"
 
 #import <Foundation/Foundation.h>
 
@@ -180,11 +183,6 @@ OBJCUWPWINDOWSAPPLICATIONMODELSTOREPREVIEWEXPORT
 
 OBJCUWPWINDOWSAPPLICATIONMODELSTOREPREVIEWEXPORT
 @interface WASPStoreConfiguration : RTObject
-+ (void)setSystemConfiguration:(NSString *)catalogHardwareManufacturerId catalogStoreContentModifierId:(NSString *)catalogStoreContentModifierId systemConfigurationExpiration:(WFDateTime*)systemConfigurationExpiration catalogHardwareDescriptor:(NSString *)catalogHardwareDescriptor;
-+ (void)setMobileOperatorConfiguration:(NSString *)mobileOperatorId appDownloadLimitInMegabytes:(unsigned int)appDownloadLimitInMegabytes updateDownloadLimitInMegabytes:(unsigned int)updateDownloadLimitInMegabytes;
-+ (void)setStoreWebAccountId:(NSString *)webAccountId;
-+ (BOOL)isStoreWebAccountId:(NSString *)webAccountId;
-+ (void)filterUnsupportedSystemFeaturesAsync:(id<NSFastEnumeration> /* WASPStoreSystemFeature */)systemFeatures success:(void (^)(NSArray* /* WASPStoreSystemFeature */))success failure:(void (^)(NSError*))failure;
 + (BOOL)hasStoreWebAccount;
 + (BOOL)hasStoreWebAccountForUser:(WSUser*)user;
 + (void)getStoreLogDataAsync:(WASPStoreLogOptions)options success:(void (^)(RTObject<WSSIRandomAccessStreamReference>*))success failure:(void (^)(NSError*))failure;
@@ -192,10 +190,35 @@ OBJCUWPWINDOWSAPPLICATIONMODELSTOREPREVIEWEXPORT
 + (BOOL)isStoreWebAccountIdForUser:(WSUser*)user webAccountId:(NSString *)webAccountId;
 + (id /* unsigned int */)getPurchasePromptingPolicyForUser:(WSUser*)user;
 + (void)setPurchasePromptingPolicyForUser:(WSUser*)user value:(id /* unsigned int */)value;
++ (NSString *)getStoreWebAccountId;
++ (NSString *)getStoreWebAccountIdForUser:(WSUser*)user;
++ (void)setEnterpriseStoreWebAccountId:(NSString *)webAccountId;
++ (void)setEnterpriseStoreWebAccountIdForUser:(WSUser*)user webAccountId:(NSString *)webAccountId;
++ (NSString *)getEnterpriseStoreWebAccountId;
++ (NSString *)getEnterpriseStoreWebAccountIdForUser:(WSUser*)user;
++ (BOOL)shouldRestrictToEnterpriseStoreOnly;
++ (BOOL)shouldRestrictToEnterpriseStoreOnlyForUser:(WSUser*)user;
++ (void)setSystemConfiguration:(NSString *)catalogHardwareManufacturerId catalogStoreContentModifierId:(NSString *)catalogStoreContentModifierId systemConfigurationExpiration:(WFDateTime*)systemConfigurationExpiration catalogHardwareDescriptor:(NSString *)catalogHardwareDescriptor;
++ (void)setMobileOperatorConfiguration:(NSString *)mobileOperatorId appDownloadLimitInMegabytes:(unsigned int)appDownloadLimitInMegabytes updateDownloadLimitInMegabytes:(unsigned int)updateDownloadLimitInMegabytes;
++ (void)setStoreWebAccountId:(NSString *)webAccountId;
++ (BOOL)isStoreWebAccountId:(NSString *)webAccountId;
++ (void)filterUnsupportedSystemFeaturesAsync:(id<NSFastEnumeration> /* WASPStoreSystemFeature */)systemFeatures success:(void (^)(NSArray* /* WASPStoreSystemFeature */))success failure:(void (^)(NSError*))failure;
 + (WASPStoreHardwareManufacturerInfo*)hardwareManufacturerInfo;
 + (id /* unsigned int */)purchasePromptingPolicy;
 + (void)setPurchasePromptingPolicy:(id /* unsigned int */)value;
 @end
 
 #endif // __WASPStoreConfiguration_DEFINED__
+
+// Windows.ApplicationModel.Store.Preview.WebAuthenticationCoreManagerHelper
+#ifndef __WASPWebAuthenticationCoreManagerHelper_DEFINED__
+#define __WASPWebAuthenticationCoreManagerHelper_DEFINED__
+
+OBJCUWPWINDOWSAPPLICATIONMODELSTOREPREVIEWEXPORT
+@interface WASPWebAuthenticationCoreManagerHelper : RTObject
++ (void)requestTokenWithUIElementHostingAsync:(WSAWCWebTokenRequest*)request uiElement:(WXUIElement*)uiElement success:(void (^)(WSAWCWebTokenRequestResult*))success failure:(void (^)(NSError*))failure;
++ (void)requestTokenWithUIElementHostingAndWebAccountAsync:(WSAWCWebTokenRequest*)request webAccount:(WSCWebAccount*)webAccount uiElement:(WXUIElement*)uiElement success:(void (^)(WSAWCWebTokenRequestResult*))success failure:(void (^)(NSError*))failure;
+@end
+
+#endif // __WASPWebAuthenticationCoreManagerHelper_DEFINED__
 

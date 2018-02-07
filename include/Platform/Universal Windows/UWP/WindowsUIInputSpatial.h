@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -27,17 +27,8 @@
 #endif
 #include <UWP/interopBase.h>
 
-@class WUISSpatialInteractionSourceLocation, WUISSpatialPointerPose, WUISSpatialInteractionSource, WUISSpatialInteractionSourceProperties, WUISSpatialManipulationDelta, WUISSpatialInteractionSourceState, WUISSpatialGestureRecognizer, WUISSpatialRecognitionStartedEventArgs, WUISSpatialRecognitionEndedEventArgs, WUISSpatialTappedEventArgs, WUISSpatialHoldStartedEventArgs, WUISSpatialHoldCompletedEventArgs, WUISSpatialHoldCanceledEventArgs, WUISSpatialManipulationStartedEventArgs, WUISSpatialManipulationUpdatedEventArgs, WUISSpatialManipulationCompletedEventArgs, WUISSpatialManipulationCanceledEventArgs, WUISSpatialNavigationStartedEventArgs, WUISSpatialNavigationUpdatedEventArgs, WUISSpatialNavigationCompletedEventArgs, WUISSpatialNavigationCanceledEventArgs, WUISSpatialInteraction, WUISSpatialInteractionManager, WUISSpatialInteractionSourceEventArgs, WUISSpatialInteractionDetectedEventArgs;
-@protocol WUISISpatialInteractionSourceLocation, WUISISpatialInteractionSourceLocation2, WUISISpatialInteractionSource, WUISISpatialInteractionSourceProperties, WUISISpatialPointerPose, WUISISpatialPointerPoseStatics, WUISISpatialInteractionSourceState, WUISISpatialRecognitionStartedEventArgs, WUISISpatialRecognitionEndedEventArgs, WUISISpatialTappedEventArgs, WUISISpatialHoldStartedEventArgs, WUISISpatialHoldCompletedEventArgs, WUISISpatialHoldCanceledEventArgs, WUISISpatialManipulationDelta, WUISISpatialManipulationStartedEventArgs, WUISISpatialManipulationUpdatedEventArgs, WUISISpatialManipulationCompletedEventArgs, WUISISpatialManipulationCanceledEventArgs, WUISISpatialNavigationStartedEventArgs, WUISISpatialNavigationUpdatedEventArgs, WUISISpatialNavigationCompletedEventArgs, WUISISpatialNavigationCanceledEventArgs, WUISISpatialInteraction, WUISISpatialGestureRecognizer, WUISISpatialGestureRecognizerFactory, WUISISpatialInteractionDetectedEventArgs, WUISISpatialInteractionSourceEventArgs, WUISISpatialInteractionManager, WUISISpatialInteractionManagerStatics;
-
-// Windows.UI.Input.Spatial.SpatialInteractionSourceKind
-enum _WUISSpatialInteractionSourceKind {
-    WUISSpatialInteractionSourceKindOther = 0,
-    WUISSpatialInteractionSourceKindHand = 1,
-    WUISSpatialInteractionSourceKindVoice = 2,
-    WUISSpatialInteractionSourceKindController = 3,
-};
-typedef unsigned WUISSpatialInteractionSourceKind;
+@class WUISSpatialManipulationDelta, WUISSpatialGestureRecognizer, WUISSpatialRecognitionStartedEventArgs, WUISSpatialRecognitionEndedEventArgs, WUISSpatialTappedEventArgs, WUISSpatialHoldStartedEventArgs, WUISSpatialHoldCompletedEventArgs, WUISSpatialHoldCanceledEventArgs, WUISSpatialManipulationStartedEventArgs, WUISSpatialManipulationUpdatedEventArgs, WUISSpatialManipulationCompletedEventArgs, WUISSpatialManipulationCanceledEventArgs, WUISSpatialNavigationStartedEventArgs, WUISSpatialNavigationUpdatedEventArgs, WUISSpatialNavigationCompletedEventArgs, WUISSpatialNavigationCanceledEventArgs, WUISSpatialPointerInteractionSourcePose, WUISSpatialInteractionController, WUISSpatialInteractionSourceState, WUISSpatialInteractionSourceLocation, WUISSpatialInteractionSource, WUISSpatialPointerPose, WUISSpatialInteractionSourceProperties, WUISSpatialInteractionControllerProperties, WUISSpatialInteraction, WUISSpatialInteractionManager, WUISSpatialInteractionSourceEventArgs, WUISSpatialInteractionDetectedEventArgs;
+@protocol WUISISpatialRecognitionStartedEventArgs, WUISISpatialRecognitionEndedEventArgs, WUISISpatialTappedEventArgs, WUISISpatialHoldStartedEventArgs, WUISISpatialHoldCompletedEventArgs, WUISISpatialHoldCanceledEventArgs, WUISISpatialManipulationDelta, WUISISpatialManipulationStartedEventArgs, WUISISpatialManipulationUpdatedEventArgs, WUISISpatialManipulationCompletedEventArgs, WUISISpatialManipulationCanceledEventArgs, WUISISpatialNavigationStartedEventArgs, WUISISpatialNavigationUpdatedEventArgs, WUISISpatialNavigationCompletedEventArgs, WUISISpatialNavigationCanceledEventArgs, WUISISpatialGestureRecognizer, WUISISpatialGestureRecognizerFactory, WUISISpatialInteractionSourceLocation, WUISISpatialInteractionSourceLocation2, WUISISpatialInteractionSourceLocation3, WUISISpatialPointerInteractionSourcePose, WUISISpatialPointerInteractionSourcePose2, WUISISpatialInteractionSource, WUISISpatialInteractionSource2, WUISISpatialInteractionSource3, WUISISpatialInteractionSourceProperties, WUISISpatialInteractionController, WUISISpatialInteractionController2, WUISISpatialPointerPose, WUISISpatialPointerPose2, WUISISpatialPointerPoseStatics, WUISISpatialInteractionSourceState, WUISISpatialInteractionSourceState2, WUISISpatialInteractionControllerProperties, WUISISpatialInteraction, WUISISpatialInteractionDetectedEventArgs, WUISISpatialInteractionDetectedEventArgs2, WUISISpatialInteractionSourceEventArgs, WUISISpatialInteractionSourceEventArgs2, WUISISpatialInteractionManager, WUISISpatialInteractionManagerStatics;
 
 // Windows.UI.Input.Spatial.SpatialGestureSettings
 enum _WUISSpatialGestureSettings {
@@ -55,76 +46,50 @@ enum _WUISSpatialGestureSettings {
 };
 typedef unsigned WUISSpatialGestureSettings;
 
+// Windows.UI.Input.Spatial.SpatialInteractionSourceKind
+enum _WUISSpatialInteractionSourceKind {
+    WUISSpatialInteractionSourceKindOther = 0,
+    WUISSpatialInteractionSourceKindHand = 1,
+    WUISSpatialInteractionSourceKindVoice = 2,
+    WUISSpatialInteractionSourceKindController = 3,
+};
+typedef unsigned WUISSpatialInteractionSourceKind;
+
+// Windows.UI.Input.Spatial.SpatialInteractionPressKind
+enum _WUISSpatialInteractionPressKind {
+    WUISSpatialInteractionPressKindNone = 0,
+    WUISSpatialInteractionPressKindSelect = 1,
+    WUISSpatialInteractionPressKindMenu = 2,
+    WUISSpatialInteractionPressKindGrasp = 3,
+    WUISSpatialInteractionPressKindTouchpad = 4,
+    WUISSpatialInteractionPressKindThumbstick = 5,
+};
+typedef unsigned WUISSpatialInteractionPressKind;
+
+// Windows.UI.Input.Spatial.SpatialInteractionSourceHandedness
+enum _WUISSpatialInteractionSourceHandedness {
+    WUISSpatialInteractionSourceHandednessUnspecified = 0,
+    WUISSpatialInteractionSourceHandednessLeft = 1,
+    WUISSpatialInteractionSourceHandednessRight = 2,
+};
+typedef unsigned WUISSpatialInteractionSourceHandedness;
+
+// Windows.UI.Input.Spatial.SpatialInteractionSourcePositionAccuracy
+enum _WUISSpatialInteractionSourcePositionAccuracy {
+    WUISSpatialInteractionSourcePositionAccuracyHigh = 0,
+    WUISSpatialInteractionSourcePositionAccuracyApproximate = 1,
+};
+typedef unsigned WUISSpatialInteractionSourcePositionAccuracy;
+
 #include "WindowsPerceptionPeople.h"
+#include "WindowsStorageStreams.h"
+#include "WindowsDevicesHaptics.h"
+#include "WindowsPerceptionSpatial.h"
 #include "WindowsPerception.h"
 #include "WindowsFoundationNumerics.h"
-#include "WindowsPerceptionSpatial.h"
 #include "WindowsFoundation.h"
 
 #import <Foundation/Foundation.h>
-
-// Windows.UI.Input.Spatial.SpatialInteractionSourceLocation
-#ifndef __WUISSpatialInteractionSourceLocation_DEFINED__
-#define __WUISSpatialInteractionSourceLocation_DEFINED__
-
-OBJCUWPWINDOWSUIINPUTSPATIALEXPORT
-@interface WUISSpatialInteractionSourceLocation : RTObject
-#if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
-#endif
-@property (readonly) id /* WFNVector3* */ position;
-@property (readonly) id /* WFNVector3* */ velocity;
-@property (readonly) id /* WFNQuaternion* */ orientation;
-@end
-
-#endif // __WUISSpatialInteractionSourceLocation_DEFINED__
-
-// Windows.UI.Input.Spatial.SpatialPointerPose
-#ifndef __WUISSpatialPointerPose_DEFINED__
-#define __WUISSpatialPointerPose_DEFINED__
-
-OBJCUWPWINDOWSUIINPUTSPATIALEXPORT
-@interface WUISSpatialPointerPose : RTObject
-+ (WUISSpatialPointerPose*)tryGetAtTimestamp:(WPSSpatialCoordinateSystem*)coordinateSystem timestamp:(WPPerceptionTimestamp*)timestamp;
-#if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
-#endif
-@property (readonly) WPPHeadPose* head;
-@property (readonly) WPPerceptionTimestamp* timestamp;
-@end
-
-#endif // __WUISSpatialPointerPose_DEFINED__
-
-// Windows.UI.Input.Spatial.SpatialInteractionSource
-#ifndef __WUISSpatialInteractionSource_DEFINED__
-#define __WUISSpatialInteractionSource_DEFINED__
-
-OBJCUWPWINDOWSUIINPUTSPATIALEXPORT
-@interface WUISSpatialInteractionSource : RTObject
-#if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
-#endif
-@property (readonly) unsigned int id;
-@property (readonly) WUISSpatialInteractionSourceKind kind;
-@end
-
-#endif // __WUISSpatialInteractionSource_DEFINED__
-
-// Windows.UI.Input.Spatial.SpatialInteractionSourceProperties
-#ifndef __WUISSpatialInteractionSourceProperties_DEFINED__
-#define __WUISSpatialInteractionSourceProperties_DEFINED__
-
-OBJCUWPWINDOWSUIINPUTSPATIALEXPORT
-@interface WUISSpatialInteractionSourceProperties : RTObject
-#if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
-#endif
-@property (readonly) double sourceLossRisk;
-- (id /* WFNVector3* */)tryGetSourceLossMitigationDirection:(WPSSpatialCoordinateSystem*)coordinateSystem;
-- (WUISSpatialInteractionSourceLocation*)tryGetLocation:(WPSSpatialCoordinateSystem*)coordinateSystem;
-@end
-
-#endif // __WUISSpatialInteractionSourceProperties_DEFINED__
 
 // Windows.UI.Input.Spatial.SpatialManipulationDelta
 #ifndef __WUISSpatialManipulationDelta_DEFINED__
@@ -139,24 +104,6 @@ OBJCUWPWINDOWSUIINPUTSPATIALEXPORT
 @end
 
 #endif // __WUISSpatialManipulationDelta_DEFINED__
-
-// Windows.UI.Input.Spatial.SpatialInteractionSourceState
-#ifndef __WUISSpatialInteractionSourceState_DEFINED__
-#define __WUISSpatialInteractionSourceState_DEFINED__
-
-OBJCUWPWINDOWSUIINPUTSPATIALEXPORT
-@interface WUISSpatialInteractionSourceState : RTObject
-#if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
-#endif
-@property (readonly) BOOL isPressed;
-@property (readonly) WUISSpatialInteractionSourceProperties* properties;
-@property (readonly) WUISSpatialInteractionSource* source;
-@property (readonly) WPPerceptionTimestamp* timestamp;
-- (WUISSpatialPointerPose*)tryGetPointerPose:(WPSSpatialCoordinateSystem*)coordinateSystem;
-@end
-
-#endif // __WUISSpatialInteractionSourceState_DEFINED__
 
 // Windows.UI.Input.Spatial.SpatialGestureRecognizer
 #ifndef __WUISSpatialGestureRecognizer_DEFINED__
@@ -414,6 +361,160 @@ OBJCUWPWINDOWSUIINPUTSPATIALEXPORT
 
 #endif // __WUISSpatialNavigationCanceledEventArgs_DEFINED__
 
+// Windows.UI.Input.Spatial.SpatialPointerInteractionSourcePose
+#ifndef __WUISSpatialPointerInteractionSourcePose_DEFINED__
+#define __WUISSpatialPointerInteractionSourcePose_DEFINED__
+
+OBJCUWPWINDOWSUIINPUTSPATIALEXPORT
+@interface WUISSpatialPointerInteractionSourcePose : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (readonly) WFNVector3* forwardDirection;
+@property (readonly) WFNVector3* position;
+@property (readonly) WFNVector3* upDirection;
+@property (readonly) WFNQuaternion* orientation;
+@property (readonly) WUISSpatialInteractionSourcePositionAccuracy positionAccuracy;
+@end
+
+#endif // __WUISSpatialPointerInteractionSourcePose_DEFINED__
+
+// Windows.UI.Input.Spatial.SpatialInteractionController
+#ifndef __WUISSpatialInteractionController_DEFINED__
+#define __WUISSpatialInteractionController_DEFINED__
+
+OBJCUWPWINDOWSUIINPUTSPATIALEXPORT
+@interface WUISSpatialInteractionController : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (readonly) BOOL hasThumbstick;
+@property (readonly) BOOL hasTouchpad;
+@property (readonly) unsigned short productId;
+@property (readonly) WDHSimpleHapticsController* simpleHapticsController;
+@property (readonly) unsigned short vendorId;
+@property (readonly) unsigned short Version;
+- (void)tryGetRenderableModelAsyncWithSuccess:(void (^)(RTObject<WSSIRandomAccessStreamWithContentType>*))success failure:(void (^)(NSError*))failure;
+@end
+
+#endif // __WUISSpatialInteractionController_DEFINED__
+
+// Windows.UI.Input.Spatial.SpatialInteractionSourceState
+#ifndef __WUISSpatialInteractionSourceState_DEFINED__
+#define __WUISSpatialInteractionSourceState_DEFINED__
+
+OBJCUWPWINDOWSUIINPUTSPATIALEXPORT
+@interface WUISSpatialInteractionSourceState : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (readonly) BOOL isPressed;
+@property (readonly) WUISSpatialInteractionSourceProperties* properties;
+@property (readonly) WUISSpatialInteractionSource* source;
+@property (readonly) WPPerceptionTimestamp* timestamp;
+@property (readonly) WUISSpatialInteractionControllerProperties* controllerProperties;
+@property (readonly) BOOL isGrasped;
+@property (readonly) BOOL isMenuPressed;
+@property (readonly) BOOL isSelectPressed;
+@property (readonly) double selectPressedValue;
+- (WUISSpatialPointerPose*)tryGetPointerPose:(WPSSpatialCoordinateSystem*)coordinateSystem;
+@end
+
+#endif // __WUISSpatialInteractionSourceState_DEFINED__
+
+// Windows.UI.Input.Spatial.SpatialInteractionSourceLocation
+#ifndef __WUISSpatialInteractionSourceLocation_DEFINED__
+#define __WUISSpatialInteractionSourceLocation_DEFINED__
+
+OBJCUWPWINDOWSUIINPUTSPATIALEXPORT
+@interface WUISSpatialInteractionSourceLocation : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (readonly) id /* WFNVector3* */ position;
+@property (readonly) id /* WFNVector3* */ velocity;
+@property (readonly) id /* WFNQuaternion* */ orientation;
+@property (readonly) id /* WFNVector3* */ angularVelocity;
+@property (readonly) WUISSpatialInteractionSourcePositionAccuracy positionAccuracy;
+@property (readonly) WUISSpatialPointerInteractionSourcePose* sourcePointerPose;
+@end
+
+#endif // __WUISSpatialInteractionSourceLocation_DEFINED__
+
+// Windows.UI.Input.Spatial.SpatialInteractionSource
+#ifndef __WUISSpatialInteractionSource_DEFINED__
+#define __WUISSpatialInteractionSource_DEFINED__
+
+OBJCUWPWINDOWSUIINPUTSPATIALEXPORT
+@interface WUISSpatialInteractionSource : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (readonly) unsigned int id;
+@property (readonly) WUISSpatialInteractionSourceKind kind;
+@property (readonly) WUISSpatialInteractionController* controller;
+@property (readonly) BOOL isGraspSupported;
+@property (readonly) BOOL isMenuSupported;
+@property (readonly) BOOL isPointingSupported;
+@property (readonly) WUISSpatialInteractionSourceHandedness handedness;
+- (WUISSpatialInteractionSourceState*)tryGetStateAtTimestamp:(WPPerceptionTimestamp*)timestamp;
+@end
+
+#endif // __WUISSpatialInteractionSource_DEFINED__
+
+// Windows.UI.Input.Spatial.SpatialPointerPose
+#ifndef __WUISSpatialPointerPose_DEFINED__
+#define __WUISSpatialPointerPose_DEFINED__
+
+OBJCUWPWINDOWSUIINPUTSPATIALEXPORT
+@interface WUISSpatialPointerPose : RTObject
++ (WUISSpatialPointerPose*)tryGetAtTimestamp:(WPSSpatialCoordinateSystem*)coordinateSystem timestamp:(WPPerceptionTimestamp*)timestamp;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (readonly) WPPHeadPose* head;
+@property (readonly) WPPerceptionTimestamp* timestamp;
+- (WUISSpatialPointerInteractionSourcePose*)tryGetInteractionSourcePose:(WUISSpatialInteractionSource*)source;
+@end
+
+#endif // __WUISSpatialPointerPose_DEFINED__
+
+// Windows.UI.Input.Spatial.SpatialInteractionSourceProperties
+#ifndef __WUISSpatialInteractionSourceProperties_DEFINED__
+#define __WUISSpatialInteractionSourceProperties_DEFINED__
+
+OBJCUWPWINDOWSUIINPUTSPATIALEXPORT
+@interface WUISSpatialInteractionSourceProperties : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (readonly) double sourceLossRisk;
+- (id /* WFNVector3* */)tryGetSourceLossMitigationDirection:(WPSSpatialCoordinateSystem*)coordinateSystem;
+- (WUISSpatialInteractionSourceLocation*)tryGetLocation:(WPSSpatialCoordinateSystem*)coordinateSystem;
+@end
+
+#endif // __WUISSpatialInteractionSourceProperties_DEFINED__
+
+// Windows.UI.Input.Spatial.SpatialInteractionControllerProperties
+#ifndef __WUISSpatialInteractionControllerProperties_DEFINED__
+#define __WUISSpatialInteractionControllerProperties_DEFINED__
+
+OBJCUWPWINDOWSUIINPUTSPATIALEXPORT
+@interface WUISSpatialInteractionControllerProperties : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (readonly) BOOL isThumbstickPressed;
+@property (readonly) BOOL isTouchpadPressed;
+@property (readonly) BOOL isTouchpadTouched;
+@property (readonly) double thumbstickX;
+@property (readonly) double thumbstickY;
+@property (readonly) double touchpadX;
+@property (readonly) double touchpadY;
+@end
+
+#endif // __WUISSpatialInteractionControllerProperties_DEFINED__
+
 // Windows.UI.Input.Spatial.SpatialInteraction
 #ifndef __WUISSpatialInteraction_DEFINED__
 #define __WUISSpatialInteraction_DEFINED__
@@ -465,6 +566,7 @@ OBJCUWPWINDOWSUIINPUTSPATIALEXPORT
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WUISSpatialInteractionSourceState* state;
+@property (readonly) WUISSpatialInteractionPressKind pressKind;
 @end
 
 #endif // __WUISSpatialInteractionSourceEventArgs_DEFINED__
@@ -480,6 +582,7 @@ OBJCUWPWINDOWSUIINPUTSPATIALEXPORT
 #endif
 @property (readonly) WUISSpatialInteraction* interaction;
 @property (readonly) WUISSpatialInteractionSourceKind interactionSourceKind;
+@property (readonly) WUISSpatialInteractionSource* interactionSource;
 - (WUISSpatialPointerPose*)tryGetPointerPose:(WPSSpatialCoordinateSystem*)coordinateSystem;
 @end
 

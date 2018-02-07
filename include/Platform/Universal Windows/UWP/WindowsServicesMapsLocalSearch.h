@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -27,8 +27,8 @@
 #endif
 #include <UWP/interopBase.h>
 
-@class WSMLLocalLocation, WSMLLocalLocationFinderResult, WSMLLocalLocationRatingInfo, WSMLLocalLocationHoursOfOperationItem, WSMLLocalLocationFinder, WSMLLocalCategories;
-@protocol WSMLILocalLocation, WSMLILocalLocationFinderResult, WSMLILocalLocationFinderStatics, WSMLILocalCategoriesStatics, WSMLILocalLocationHoursOfOperationItem, WSMLILocalLocationRatingInfo, WSMLILocalLocation2;
+@class WSMLLocalLocation, WSMLLocalLocationFinderResult, WSMLLocalLocationRatingInfo, WSMLLocalLocationHoursOfOperationItem, WSMLLocalLocationFinder, WSMLLocalCategories, WSMLPlaceInfoHelper;
+@protocol WSMLILocalLocation, WSMLILocalLocationFinderResult, WSMLILocalLocationFinderStatics, WSMLILocalCategoriesStatics, WSMLILocalLocationHoursOfOperationItem, WSMLILocalLocationRatingInfo, WSMLILocalLocation2, WSMLIPlaceInfoHelperStatics;
 
 // Windows.Services.Maps.LocalSearch.LocalLocationFinderStatus
 enum _WSMLLocalLocationFinderStatus {
@@ -148,4 +148,15 @@ OBJCUWPWINDOWSSERVICESMAPSLOCALSEARCHEXPORT
 @end
 
 #endif // __WSMLLocalCategories_DEFINED__
+
+// Windows.Services.Maps.LocalSearch.PlaceInfoHelper
+#ifndef __WSMLPlaceInfoHelper_DEFINED__
+#define __WSMLPlaceInfoHelper_DEFINED__
+
+OBJCUWPWINDOWSSERVICESMAPSLOCALSEARCHEXPORT
+@interface WSMLPlaceInfoHelper : RTObject
++ (WSMPlaceInfo*)createFromLocalLocation:(WSMLLocalLocation*)location;
+@end
+
+#endif // __WSMLPlaceInfoHelper_DEFINED__
 

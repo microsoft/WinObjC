@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -27,8 +27,8 @@
 #endif
 #include <UWP/interopBase.h>
 
-@class WGPGGameListEntry, WGPGGameList;
-@protocol WGPGIGameListEntry, WGPGIGameListStatics;
+@class WGPGGameModeConfiguration, WGPGGameListEntry, WGPGGameModeUserConfiguration, WGPGGameList;
+@protocol WGPGIGameListEntry, WGPGIGameModeConfiguration, WGPGIGameListEntry2, WGPGIGameModeUserConfiguration, WGPGIGameModeUserConfigurationStatics, WGPGIGameListStatics, WGPGIGameListStatics2;
 
 // Windows.Gaming.Preview.GamesEnumeration.GameListCategory
 enum _WGPGGameListCategory {
@@ -38,8 +38,18 @@ enum _WGPGGameListCategory {
 };
 typedef unsigned WGPGGameListCategory;
 
+// Windows.Gaming.Preview.GamesEnumeration.GameListEntryLaunchableState
+enum _WGPGGameListEntryLaunchableState {
+    WGPGGameListEntryLaunchableStateNotLaunchable = 0,
+    WGPGGameListEntryLaunchableStateByLastRunningFullPath = 1,
+    WGPGGameListEntryLaunchableStateByUserProvidedPath = 2,
+    WGPGGameListEntryLaunchableStateByTile = 3,
+};
+typedef unsigned WGPGGameListEntryLaunchableState;
+
 #include "WindowsApplicationModel.h"
 #include "WindowsFoundation.h"
+#include "WindowsStorage.h"
 // Windows.Gaming.Preview.GamesEnumeration.GameListChangedEventHandler
 #ifndef __WGPGGameListChangedEventHandler__DEFINED
 #define __WGPGGameListChangedEventHandler__DEFINED
@@ -85,6 +95,29 @@ OBJCUWPWINDOWSGAMINGPREVIEWGAMESENUMERATIONEXPORT
 
 #endif // __WGPGIGameListEntry_DEFINED__
 
+// Windows.Gaming.Preview.GamesEnumeration.GameModeConfiguration
+#ifndef __WGPGGameModeConfiguration_DEFINED__
+#define __WGPGGameModeConfiguration_DEFINED__
+
+OBJCUWPWINDOWSGAMINGPREVIEWGAMESENUMERATIONEXPORT
+@interface WGPGGameModeConfiguration : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (retain) id /* int */ percentGpuTimeAllocatedToGame;
+@property (retain) id /* int */ percentGpuMemoryAllocatedToSystemCompositor;
+@property (retain) id /* int */ percentGpuMemoryAllocatedToGame;
+@property (retain) id /* int */ maxCpuCount;
+@property BOOL isEnabled;
+@property (retain) id /* int */ cpuExclusivityMaskLow;
+@property (retain) id /* int */ cpuExclusivityMaskHigh;
+@property BOOL affinitizeToExclusiveCpus;
+@property (readonly) NSMutableArray* /* NSString * */ relatedProcessNames;
+- (RTObject<WFIAsyncAction>*)saveAsync;
+@end
+
+#endif // __WGPGGameModeConfiguration_DEFINED__
+
 // Windows.Gaming.Preview.GamesEnumeration.GameListEntry
 #ifndef __WGPGGameListEntry_DEFINED__
 #define __WGPGGameListEntry_DEFINED__
@@ -97,11 +130,35 @@ OBJCUWPWINDOWSGAMINGPREVIEWGAMESENUMERATIONEXPORT
 @property (readonly) WGPGGameListCategory category;
 @property (readonly) WAAppDisplayInfo* displayInfo;
 @property (readonly) NSDictionary* /* NSString *, RTObject* */ properties;
+@property (readonly) WGPGGameModeConfiguration* gameModeConfiguration;
+@property (readonly) NSString * launchParameters;
+@property (readonly) WGPGGameListEntryLaunchableState launchableState;
+@property (readonly) RTObject<WSIStorageFile>* launcherExecutable;
+@property (readonly) NSString * titleId;
 - (void)launchAsyncWithSuccess:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 - (RTObject<WFIAsyncAction>*)setCategoryAsync:(WGPGGameListCategory)value;
+- (RTObject<WFIAsyncAction>*)setLauncherExecutableFileAsync:(RTObject<WSIStorageFile>*)executableFile;
+- (RTObject<WFIAsyncAction>*)setLauncherExecutableFileWithParamsAsync:(RTObject<WSIStorageFile>*)executableFile launchParams:(NSString *)launchParams;
+- (RTObject<WFIAsyncAction>*)setTitleIdAsync:(NSString *)id;
 @end
 
 #endif // __WGPGGameListEntry_DEFINED__
+
+// Windows.Gaming.Preview.GamesEnumeration.GameModeUserConfiguration
+#ifndef __WGPGGameModeUserConfiguration_DEFINED__
+#define __WGPGGameModeUserConfiguration_DEFINED__
+
+OBJCUWPWINDOWSGAMINGPREVIEWGAMESENUMERATIONEXPORT
+@interface WGPGGameModeUserConfiguration : RTObject
++ (WGPGGameModeUserConfiguration*)getDefault;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (readonly) NSMutableArray* /* NSString * */ gamingRelatedProcessNames;
+- (RTObject<WFIAsyncAction>*)saveAsync;
+@end
+
+#endif // __WGPGGameModeUserConfiguration_DEFINED__
 
 // Windows.Gaming.Preview.GamesEnumeration.GameList
 #ifndef __WGPGGameList_DEFINED__
@@ -109,6 +166,8 @@ OBJCUWPWINDOWSGAMINGPREVIEWGAMESENUMERATIONEXPORT
 
 OBJCUWPWINDOWSGAMINGPREVIEWGAMESENUMERATIONEXPORT
 @interface WGPGGameList : RTObject
++ (void)mergeEntriesAsync:(WGPGGameListEntry*)left right:(WGPGGameListEntry*)right success:(void (^)(WGPGGameListEntry*))success failure:(void (^)(NSError*))failure;
++ (void)unmergeEntryAsync:(WGPGGameListEntry*)mergedEntry success:(void (^)(NSArray* /* WGPGGameListEntry* */))success failure:(void (^)(NSError*))failure;
 + (void)findAllAsyncWithSuccess:(void (^)(NSArray* /* WGPGGameListEntry* */))success failure:(void (^)(NSError*))failure;
 + (void)findAllAsyncPackageFamilyName:(NSString *)packageFamilyName success:(void (^)(NSArray* /* WGPGGameListEntry* */))success failure:(void (^)(NSError*))failure;
 + (EventRegistrationToken)addGameAddedEvent:(WGPGGameListChangedEventHandler)del;

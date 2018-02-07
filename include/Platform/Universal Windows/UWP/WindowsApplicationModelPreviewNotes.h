@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -27,11 +27,12 @@
 #endif
 #include <UWP/interopBase.h>
 
-@class WAPNNotePlacementChangedPreviewEventArgs, WAPNNoteVisibilityChangedPreviewEventArgs, WAPNNotesWindowManagerPreview;
-@protocol WAPNINotePlacementChangedPreviewEventArgs, WAPNINoteVisibilityChangedPreviewEventArgs, WAPNINotesWindowManagerPreview, WAPNINotesWindowManagerPreviewStatics;
+@class WAPNNotePlacementChangedPreviewEventArgs, WAPNNoteVisibilityChangedPreviewEventArgs, WAPNNotesWindowManagerPreviewShowNoteOptions, WAPNNotesWindowManagerPreview;
+@protocol WAPNINotePlacementChangedPreviewEventArgs, WAPNINoteVisibilityChangedPreviewEventArgs, WAPNINotesWindowManagerPreviewShowNoteOptions, WAPNINotesWindowManagerPreview, WAPNINotesWindowManagerPreview2, WAPNINotesWindowManagerPreviewStatics;
 
 #include "WindowsStorageStreams.h"
 #include "WindowsFoundation.h"
+#include "WindowsGraphicsImaging.h"
 
 #import <Foundation/Foundation.h>
 
@@ -64,6 +65,21 @@ OBJCUWPWINDOWSAPPLICATIONMODELPREVIEWNOTESEXPORT
 
 #endif // __WAPNNoteVisibilityChangedPreviewEventArgs_DEFINED__
 
+// Windows.ApplicationModel.Preview.Notes.NotesWindowManagerPreviewShowNoteOptions
+#ifndef __WAPNNotesWindowManagerPreviewShowNoteOptions_DEFINED__
+#define __WAPNNotesWindowManagerPreviewShowNoteOptions_DEFINED__
+
+OBJCUWPWINDOWSAPPLICATIONMODELPREVIEWNOTESEXPORT
+@interface WAPNNotesWindowManagerPreviewShowNoteOptions : RTObject
++ (instancetype)make __attribute__ ((ns_returns_retained));
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property BOOL showWithFocus;
+@end
+
+#endif // __WAPNNotesWindowManagerPreviewShowNoteOptions_DEFINED__
+
 // Windows.ApplicationModel.Preview.Notes.NotesWindowManagerPreview
 #ifndef __WAPNNotesWindowManagerPreview_DEFINED__
 #define __WAPNNotesWindowManagerPreview_DEFINED__
@@ -89,6 +105,10 @@ OBJCUWPWINDOWSAPPLICATIONMODELPREVIEWNOTESEXPORT
 - (BOOL)trySetNoteSize:(int)noteViewId size:(WFSize*)size;
 - (void)setFocusToNextView;
 - (RTObject<WFIAsyncAction>*)setNotesThumbnailAsync:(RTObject<WSSIBuffer>*)thumbnail;
+- (void)showNoteRelativeToWithOptions:(int)noteViewId anchorNoteViewId:(int)anchorNoteViewId options:(WAPNNotesWindowManagerPreviewShowNoteOptions*)options;
+- (void)showNoteWithPlacementWithOptions:(int)noteViewId data:(RTObject<WSSIBuffer>*)data options:(WAPNNotesWindowManagerPreviewShowNoteOptions*)options;
+- (void)setFocusToPreviousView;
+- (RTObject<WFIAsyncAction>*)setThumbnailImageForTaskSwitcherAsync:(WGISoftwareBitmap*)bitmap;
 @end
 
 #endif // __WAPNNotesWindowManagerPreview_DEFINED__

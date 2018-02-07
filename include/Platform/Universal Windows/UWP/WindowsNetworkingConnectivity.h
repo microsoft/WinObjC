@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -27,9 +27,9 @@
 #endif
 #include <UWP/interopBase.h>
 
-@class WNCIPInformation, WNCDataPlanUsage, WNCConnectionCost, WNCDataPlanStatus, WNCNetworkAdapter, WNCDataUsage, WNCNetworkSecuritySettings, WNCWlanConnectionProfileDetails, WNCNetworkUsage, WNCConnectivityInterval, WNCAttributedNetworkUsage, WNCLanIdentifierData, WNCConnectionProfile, WNCLanIdentifier, WNCProxyConfiguration, WNCConnectionProfileFilter, WNCNetworkItem, WNCRoutePolicy, WNCCellularApnContext, WNCConnectionSession, WNCNetworkInformation, WNCConnectivityManager, WNCNetworkStateChangeEventDetails, WNCWwanConnectionProfileDetails;
+@class WNCIPInformation, WNCDataPlanUsage, WNCConnectionCost, WNCDataPlanStatus, WNCNetworkAdapter, WNCDataUsage, WNCNetworkSecuritySettings, WNCWlanConnectionProfileDetails, WNCNetworkUsage, WNCConnectivityInterval, WNCAttributedNetworkUsage, WNCProviderNetworkUsage, WNCLanIdentifierData, WNCConnectionProfile, WNCLanIdentifier, WNCProxyConfiguration, WNCConnectionProfileFilter, WNCNetworkItem, WNCRoutePolicy, WNCCellularApnContext, WNCConnectionSession, WNCNetworkInformation, WNCConnectivityManager, WNCNetworkStateChangeEventDetails, WNCWwanConnectionProfileDetails;
 @class WNCNetworkUsageStates;
-@protocol WNCIDataUsage, WNCIDataPlanUsage, WNCIDataPlanStatus, WNCIConnectionCost, WNCIConnectionCost2, WNCINetworkSecuritySettings, WNCIConnectionProfile, WNCIWlanConnectionProfileDetails, WNCIConnectivityInterval, WNCINetworkUsage, WNCIAttributedNetworkUsage, WNCIConnectionProfile2, WNCIConnectionProfile3, WNCILanIdentifierData, WNCILanIdentifier, WNCINetworkInformationStatics, WNCIConnectionProfileFilter, WNCIConnectionProfileFilter2, WNCINetworkInformationStatics2, WNCINetworkItem, WNCINetworkAdapter, WNCIIPInformation, WNCIProxyConfiguration, WNCIConnectionSession, WNCIRoutePolicy, WNCIRoutePolicyFactory, WNCICellularApnContext, WNCIConnectivityManagerStatics, WNCINetworkStateChangeEventDetails, WNCINetworkStateChangeEventDetails2, WNCIWwanConnectionProfileDetails;
+@protocol WNCIDataUsage, WNCIDataPlanUsage, WNCIDataPlanStatus, WNCIConnectionCost, WNCIConnectionCost2, WNCINetworkSecuritySettings, WNCIConnectionProfile, WNCIWlanConnectionProfileDetails, WNCIConnectivityInterval, WNCINetworkUsage, WNCIAttributedNetworkUsage, WNCIProviderNetworkUsage, WNCIConnectionProfile2, WNCIConnectionProfile3, WNCIConnectionProfile4, WNCILanIdentifierData, WNCILanIdentifier, WNCINetworkInformationStatics, WNCIConnectionProfileFilter, WNCIConnectionProfileFilter2, WNCINetworkInformationStatics2, WNCINetworkItem, WNCINetworkAdapter, WNCIIPInformation, WNCIProxyConfiguration, WNCIConnectionSession, WNCIRoutePolicy, WNCIRoutePolicyFactory, WNCICellularApnContext, WNCIConnectivityManagerStatics, WNCINetworkStateChangeEventDetails, WNCINetworkStateChangeEventDetails2, WNCIWwanConnectionProfileDetails;
 
 // Windows.Networking.Connectivity.NetworkCostType
 enum _WNCNetworkCostType {
@@ -366,6 +366,22 @@ OBJCUWPWINDOWSNETWORKINGEXPORT
 
 #endif // __WNCAttributedNetworkUsage_DEFINED__
 
+// Windows.Networking.Connectivity.ProviderNetworkUsage
+#ifndef __WNCProviderNetworkUsage_DEFINED__
+#define __WNCProviderNetworkUsage_DEFINED__
+
+OBJCUWPWINDOWSNETWORKINGEXPORT
+@interface WNCProviderNetworkUsage : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (readonly) uint64_t bytesReceived;
+@property (readonly) uint64_t bytesSent;
+@property (readonly) NSString * providerId;
+@end
+
+#endif // __WNCProviderNetworkUsage_DEFINED__
+
 // Windows.Networking.Connectivity.LanIdentifierData
 #ifndef __WNCLanIdentifierData_DEFINED__
 #define __WNCLanIdentifierData_DEFINED__
@@ -409,6 +425,7 @@ OBJCUWPWINDOWSNETWORKINGEXPORT
 - (void)getNetworkUsageAsync:(WFDateTime*)startTime endTime:(WFDateTime*)endTime granularity:(WNCDataUsageGranularity)granularity states:(WNCNetworkUsageStates*)states success:(void (^)(NSArray* /* WNCNetworkUsage* */))success failure:(void (^)(NSError*))failure;
 - (void)getConnectivityIntervalsAsync:(WFDateTime*)startTime endTime:(WFDateTime*)endTime states:(WNCNetworkUsageStates*)states success:(void (^)(NSArray* /* WNCConnectivityInterval* */))success failure:(void (^)(NSError*))failure;
 - (void)getAttributedNetworkUsageAsync:(WFDateTime*)startTime endTime:(WFDateTime*)endTime states:(WNCNetworkUsageStates*)states success:(void (^)(NSArray* /* WNCAttributedNetworkUsage* */))success failure:(void (^)(NSError*))failure;
+- (void)getProviderNetworkUsageAsync:(WFDateTime*)startTime endTime:(WFDateTime*)endTime states:(WNCNetworkUsageStates*)states success:(void (^)(NSArray* /* WNCProviderNetworkUsage* */))success failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WNCConnectionProfile_DEFINED__

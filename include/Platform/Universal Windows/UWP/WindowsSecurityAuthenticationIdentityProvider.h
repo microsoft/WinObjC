@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -28,7 +28,7 @@
 #include <UWP/interopBase.h>
 
 @class WSAIPSecondaryAuthenticationFactorRegistration, WSAIPSecondaryAuthenticationFactorRegistrationResult, WSAIPSecondaryAuthenticationFactorAuthentication, WSAIPSecondaryAuthenticationFactorAuthenticationResult, WSAIPSecondaryAuthenticationFactorInfo, WSAIPSecondaryAuthenticationFactorAuthenticationStageChangedEventArgs, WSAIPSecondaryAuthenticationFactorAuthenticationStageInfo;
-@protocol WSAIPISecondaryAuthenticationFactorRegistrationResult, WSAIPISecondaryAuthenticationFactorAuthenticationResult, WSAIPISecondaryAuthenticationFactorRegistrationStatics, WSAIPISecondaryAuthenticationFactorRegistration, WSAIPISecondaryAuthenticationFactorAuthenticationStatics, WSAIPISecondaryAuthenticationFactorAuthentication, WSAIPISecondaryAuthenticationFactorInfo, WSAIPISecondaryAuthenticationFactorAuthenticationStageInfo, WSAIPISecondaryAuthenticationFactorAuthenticationStageChangedEventArgs;
+@protocol WSAIPISecondaryAuthenticationFactorRegistrationResult, WSAIPISecondaryAuthenticationFactorAuthenticationResult, WSAIPISecondaryAuthenticationFactorRegistrationStatics, WSAIPISecondaryAuthenticationFactorDevicePresenceMonitoringRegistrationStatics, WSAIPISecondaryAuthenticationFactorRegistration, WSAIPISecondaryAuthenticationFactorAuthenticationStatics, WSAIPISecondaryAuthenticationFactorAuthentication, WSAIPISecondaryAuthenticationFactorInfo, WSAIPISecondaryAuthenticationFactorInfo2, WSAIPISecondaryAuthenticationFactorAuthenticationStageInfo, WSAIPISecondaryAuthenticationFactorAuthenticationStageChangedEventArgs;
 
 // Windows.Security.Authentication.Identity.Provider.SecondaryAuthenticationFactorDeviceCapabilities
 enum _WSAIPSecondaryAuthenticationFactorDeviceCapabilities {
@@ -39,6 +39,7 @@ enum _WSAIPSecondaryAuthenticationFactorDeviceCapabilities {
     WSAIPSecondaryAuthenticationFactorDeviceCapabilitiesSupportSecureUserPresenceCheck = 8,
     WSAIPSecondaryAuthenticationFactorDeviceCapabilitiesTransmittedDataIsEncrypted = 16,
     WSAIPSecondaryAuthenticationFactorDeviceCapabilitiesHMacSha256 = 32,
+    WSAIPSecondaryAuthenticationFactorDeviceCapabilitiesCloseRangeDataTransmission = 64,
 };
 typedef unsigned WSAIPSecondaryAuthenticationFactorDeviceCapabilities;
 
@@ -59,6 +60,7 @@ enum _WSAIPSecondaryAuthenticationFactorAuthenticationStage {
     WSAIPSecondaryAuthenticationFactorAuthenticationStageCredentialAuthenticated = 5,
     WSAIPSecondaryAuthenticationFactorAuthenticationStageStoppingAuthentication = 6,
     WSAIPSecondaryAuthenticationFactorAuthenticationStageReadyForLock = 7,
+    WSAIPSecondaryAuthenticationFactorAuthenticationStageCheckingDevicePresence = 8,
 };
 typedef unsigned WSAIPSecondaryAuthenticationFactorAuthenticationStage;
 
@@ -71,6 +73,14 @@ enum _WSAIPSecondaryAuthenticationFactorRegistrationStatus {
     WSAIPSecondaryAuthenticationFactorRegistrationStatusDisabledByPolicy = 4,
 };
 typedef unsigned WSAIPSecondaryAuthenticationFactorRegistrationStatus;
+
+// Windows.Security.Authentication.Identity.Provider.SecondaryAuthenticationFactorDevicePresenceMonitoringRegistrationStatus
+enum _WSAIPSecondaryAuthenticationFactorDevicePresenceMonitoringRegistrationStatus {
+    WSAIPSecondaryAuthenticationFactorDevicePresenceMonitoringRegistrationStatusUnsupported = 0,
+    WSAIPSecondaryAuthenticationFactorDevicePresenceMonitoringRegistrationStatusSucceeded = 1,
+    WSAIPSecondaryAuthenticationFactorDevicePresenceMonitoringRegistrationStatusDisabledByPolicy = 2,
+};
+typedef unsigned WSAIPSecondaryAuthenticationFactorDevicePresenceMonitoringRegistrationStatus;
 
 // Windows.Security.Authentication.Identity.Provider.SecondaryAuthenticationFactorAuthenticationStatus
 enum _WSAIPSecondaryAuthenticationFactorAuthenticationStatus {
@@ -122,6 +132,21 @@ enum _WSAIPSecondaryAuthenticationFactorAuthenticationMessage {
 };
 typedef unsigned WSAIPSecondaryAuthenticationFactorAuthenticationMessage;
 
+// Windows.Security.Authentication.Identity.Provider.SecondaryAuthenticationFactorDevicePresence
+enum _WSAIPSecondaryAuthenticationFactorDevicePresence {
+    WSAIPSecondaryAuthenticationFactorDevicePresenceAbsent = 0,
+    WSAIPSecondaryAuthenticationFactorDevicePresencePresent = 1,
+};
+typedef unsigned WSAIPSecondaryAuthenticationFactorDevicePresence;
+
+// Windows.Security.Authentication.Identity.Provider.SecondaryAuthenticationFactorDevicePresenceMonitoringMode
+enum _WSAIPSecondaryAuthenticationFactorDevicePresenceMonitoringMode {
+    WSAIPSecondaryAuthenticationFactorDevicePresenceMonitoringModeUnsupported = 0,
+    WSAIPSecondaryAuthenticationFactorDevicePresenceMonitoringModeAppManaged = 1,
+    WSAIPSecondaryAuthenticationFactorDevicePresenceMonitoringModeSystemManaged = 2,
+};
+typedef unsigned WSAIPSecondaryAuthenticationFactorDevicePresenceMonitoringMode;
+
 #include "WindowsStorageStreams.h"
 #include "WindowsFoundation.h"
 
@@ -137,6 +162,10 @@ OBJCUWPWINDOWSSECURITYAUTHENTICATIONIDENTITYPROVIDEREXPORT
 + (void)findAllRegisteredDeviceInfoAsync:(WSAIPSecondaryAuthenticationFactorDeviceFindScope)queryType success:(void (^)(NSArray* /* WSAIPSecondaryAuthenticationFactorInfo* */))success failure:(void (^)(NSError*))failure;
 + (RTObject<WFIAsyncAction>*)unregisterDeviceAsync:(NSString *)deviceId;
 + (RTObject<WFIAsyncAction>*)updateDeviceConfigurationDataAsync:(NSString *)deviceId deviceConfigurationData:(RTObject<WSSIBuffer>*)deviceConfigurationData;
++ (void)registerDevicePresenceMonitoringAsync:(NSString *)deviceId deviceInstancePath:(NSString *)deviceInstancePath monitoringMode:(WSAIPSecondaryAuthenticationFactorDevicePresenceMonitoringMode)monitoringMode success:(void (^)(WSAIPSecondaryAuthenticationFactorDevicePresenceMonitoringRegistrationStatus))success failure:(void (^)(NSError*))failure;
++ (void)registerDevicePresenceMonitoringWithNewDeviceAsync:(NSString *)deviceId deviceInstancePath:(NSString *)deviceInstancePath monitoringMode:(WSAIPSecondaryAuthenticationFactorDevicePresenceMonitoringMode)monitoringMode deviceFriendlyName:(NSString *)deviceFriendlyName deviceModelNumber:(NSString *)deviceModelNumber deviceConfigurationData:(RTObject<WSSIBuffer>*)deviceConfigurationData success:(void (^)(WSAIPSecondaryAuthenticationFactorDevicePresenceMonitoringRegistrationStatus))success failure:(void (^)(NSError*))failure;
++ (RTObject<WFIAsyncAction>*)unregisterDevicePresenceMonitoringAsync:(NSString *)deviceId;
++ (BOOL)isDevicePresenceMonitoringSupported;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
@@ -213,6 +242,9 @@ OBJCUWPWINDOWSSECURITYAUTHENTICATIONIDENTITYPROVIDEREXPORT
 @property (readonly) NSString * deviceFriendlyName;
 @property (readonly) NSString * deviceId;
 @property (readonly) NSString * deviceModelNumber;
+@property (readonly) BOOL isAuthenticationSupported;
+@property (readonly) WSAIPSecondaryAuthenticationFactorDevicePresenceMonitoringMode presenceMonitoringMode;
+- (RTObject<WFIAsyncAction>*)updateDevicePresenceAsync:(WSAIPSecondaryAuthenticationFactorDevicePresence)presenceState;
 @end
 
 #endif // __WSAIPSecondaryAuthenticationFactorInfo_DEFINED__

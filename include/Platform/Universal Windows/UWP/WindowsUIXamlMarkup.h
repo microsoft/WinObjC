@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -27,9 +27,9 @@
 #endif
 #include <UWP/interopBase.h>
 
-@class WUXMXamlBinaryWriter, WUXMXamlReader, WUXMXamlBindingHelper;
+@class WUXMMarkupExtension, WUXMXamlBinaryWriter, WUXMXamlBindingHelper, WUXMXamlMarkupHelper, WUXMXamlReader;
 @class WUXMXamlBinaryWriterErrorInformation, WUXMXmlnsDefinition;
-@protocol WUXMIComponentConnector, WUXMIComponentConnector2, WUXMIXamlMember, WUXMIXamlType, WUXMIXamlMetadataProvider, WUXMIXamlBinaryWriter, WUXMIXamlBinaryWriterStatics, WUXMIXamlReader, WUXMIXamlReaderStatics, WUXMIDataTemplateComponent, WUXMIXamlBindingHelper, WUXMIXamlBindingHelperStatics;
+@protocol WUXMIComponentConnector, WUXMIComponentConnector2, WUXMIDataTemplateComponent, WUXMIXamlMember, WUXMIXamlType, WUXMIXamlMetadataProvider, WUXMIMarkupExtension, WUXMIMarkupExtensionOverrides, WUXMIMarkupExtensionFactory, WUXMIXamlBinaryWriter, WUXMIXamlBinaryWriterStatics, WUXMIXamlBindingHelper, WUXMIXamlBindingHelperStatics, WUXMIXamlMarkupHelper, WUXMIXamlMarkupHelperStatics, WUXMIXamlReader, WUXMIXamlReaderStatics;
 
 #include "WindowsUIXamlInterop.h"
 #include "WindowsStorageStreams.h"
@@ -82,6 +82,21 @@ OBJCUWPWINDOWSUIXAMLMARKUPEXPORT
 @end
 
 #endif // __WUXMIComponentConnector2_DEFINED__
+
+// Windows.UI.Xaml.Markup.IDataTemplateComponent
+#ifndef __WUXMIDataTemplateComponent_DEFINED__
+#define __WUXMIDataTemplateComponent_DEFINED__
+
+@protocol WUXMIDataTemplateComponent
+- (void)recycle;
+- (void)processBindings:(RTObject*)item itemIndex:(int)itemIndex phase:(int)phase nextPhase:(int*)nextPhase;
+@end
+
+OBJCUWPWINDOWSUIXAMLMARKUPEXPORT
+@interface WUXMIDataTemplateComponent : RTObject <WUXMIDataTemplateComponent>
+@end
+
+#endif // __WUXMIDataTemplateComponent_DEFINED__
 
 // Windows.UI.Xaml.Markup.IXamlMember
 #ifndef __WUXMIXamlMember_DEFINED__
@@ -151,20 +166,34 @@ OBJCUWPWINDOWSUIXAMLMARKUPEXPORT
 
 #endif // __WUXMIXamlMetadataProvider_DEFINED__
 
-// Windows.UI.Xaml.Markup.IDataTemplateComponent
-#ifndef __WUXMIDataTemplateComponent_DEFINED__
-#define __WUXMIDataTemplateComponent_DEFINED__
+// Windows.UI.Xaml.Markup.IMarkupExtensionOverrides
+#ifndef __WUXMIMarkupExtensionOverrides_DEFINED__
+#define __WUXMIMarkupExtensionOverrides_DEFINED__
 
-@protocol WUXMIDataTemplateComponent
-- (void)recycle;
-- (void)processBindings:(RTObject*)item itemIndex:(int)itemIndex phase:(int)phase nextPhase:(int*)nextPhase;
+@protocol WUXMIMarkupExtensionOverrides
+- (RTObject*)provideValue;
 @end
 
 OBJCUWPWINDOWSUIXAMLMARKUPEXPORT
-@interface WUXMIDataTemplateComponent : RTObject <WUXMIDataTemplateComponent>
+@interface WUXMIMarkupExtensionOverrides : RTObject <WUXMIMarkupExtensionOverrides>
 @end
 
-#endif // __WUXMIDataTemplateComponent_DEFINED__
+#endif // __WUXMIMarkupExtensionOverrides_DEFINED__
+
+// Windows.UI.Xaml.Markup.MarkupExtension
+#ifndef __WUXMMarkupExtension_DEFINED__
+#define __WUXMMarkupExtension_DEFINED__
+
+OBJCUWPWINDOWSUIXAMLMARKUPEXPORT
+@interface WUXMMarkupExtension : RTObject
++ (instancetype)make __attribute__ ((ns_returns_retained));
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+- (RTObject*)provideValue;
+@end
+
+#endif // __WUXMMarkupExtension_DEFINED__
 
 // Windows.UI.Xaml.Markup.XamlBinaryWriter
 #ifndef __WUXMXamlBinaryWriter_DEFINED__
@@ -179,21 +208,6 @@ OBJCUWPWINDOWSUIXAMLMARKUPEXPORT
 @end
 
 #endif // __WUXMXamlBinaryWriter_DEFINED__
-
-// Windows.UI.Xaml.Markup.XamlReader
-#ifndef __WUXMXamlReader_DEFINED__
-#define __WUXMXamlReader_DEFINED__
-
-OBJCUWPWINDOWSUIXAMLMARKUPEXPORT
-@interface WUXMXamlReader : RTObject
-+ (RTObject*)Load:(NSString *)xaml;
-+ (RTObject*)loadWithInitialTemplateValidation:(NSString *)xaml;
-#if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
-#endif
-@end
-
-#endif // __WUXMXamlReader_DEFINED__
 
 // Windows.UI.Xaml.Markup.XamlBindingHelper
 #ifndef __WUXMXamlBindingHelper_DEFINED__
@@ -230,4 +244,33 @@ OBJCUWPWINDOWSUIXAMLMARKUPEXPORT
 @end
 
 #endif // __WUXMXamlBindingHelper_DEFINED__
+
+// Windows.UI.Xaml.Markup.XamlMarkupHelper
+#ifndef __WUXMXamlMarkupHelper_DEFINED__
+#define __WUXMXamlMarkupHelper_DEFINED__
+
+OBJCUWPWINDOWSUIXAMLMARKUPEXPORT
+@interface WUXMXamlMarkupHelper : RTObject
++ (void)unloadObject:(WXDependencyObject*)element;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@end
+
+#endif // __WUXMXamlMarkupHelper_DEFINED__
+
+// Windows.UI.Xaml.Markup.XamlReader
+#ifndef __WUXMXamlReader_DEFINED__
+#define __WUXMXamlReader_DEFINED__
+
+OBJCUWPWINDOWSUIXAMLMARKUPEXPORT
+@interface WUXMXamlReader : RTObject
++ (RTObject*)Load:(NSString *)xaml;
++ (RTObject*)loadWithInitialTemplateValidation:(NSString *)xaml;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@end
+
+#endif // __WUXMXamlReader_DEFINED__
 

@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -252,12 +252,12 @@ OBJCUWPWINDOWSNETWORKINGPROXIMITYEXPORT
 
 OBJCUWPWINDOWSNETWORKINGPROXIMITYEXPORT
 @interface WNPPeerFinder : RTObject
-+ (WNPPeerWatcher*)createWatcher;
 + (void)start;
 + (void)startWithMessage:(NSString *)peerMessage;
 + (void)stop;
 + (void)findAllPeersAsyncWithSuccess:(void (^)(NSArray* /* WNPPeerInformation* */))success failure:(void (^)(NSError*))failure;
 + (void)connectAsync:(WNPPeerInformation*)peerInformation success:(void (^)(WNSStreamSocket*))success failure:(void (^)(NSError*))failure;
++ (WNPPeerWatcher*)createWatcher;
 + (NSString *)displayName;
 + (void)setDisplayName:(NSString *)value;
 + (BOOL)allowWiFiDirect;

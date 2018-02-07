@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -54,6 +54,8 @@ enum _WWWebErrorStatus {
     WWWebErrorStatusUnexpectedRedirection = 19,
     WWWebErrorStatusUnexpectedClientError = 20,
     WWWebErrorStatusUnexpectedServerError = 21,
+    WWWebErrorStatusInsufficientRangeSupport = 22,
+    WWWebErrorStatusMissingContentLengthSupport = 23,
     WWWebErrorStatusMultipleChoices = 300,
     WWWebErrorStatusMovedPermanently = 301,
     WWWebErrorStatusFound = 302,

@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -27,8 +27,8 @@
 #endif
 #include <UWP/interopBase.h>
 
-@class WUCCompositionObject, WUCCompositionAnimation, WUCCompositionBatchCompletedEventArgs, WUCCompositionEasingFunction, WUCCompositionBrush, WUCCompositionEffectBrush, WUCCompositionEffectSourceParameter, WUCCompositionGraphicsDevice, WUCCompositor, WUCCompositionPropertySet, WUCCompositionDrawingSurface, WUCCompositionColorBrush, WUCCompositionEffectFactory, WUCCompositionScopedBatch, WUCCompositionSurfaceBrush, WUCCompositionTarget, WUCCompositionCommitBatch, WUCCompositionAnimationGroup, WUCCompositionBackdropBrush, WUCCompositionMaskBrush, WUCCompositionNineGridBrush, WUCCubicBezierEasingFunction, WUCExpressionAnimation, WUCImplicitAnimationCollection, WUCLinearEasingFunction, WUCRenderingDeviceReplacedEventArgs, WUCCompositionShadow, WUCDropShadow, WUCStepEasingFunction, WUCVisual, WUCContainerVisual, WUCSpriteVisual, WUCLayerVisual, WUCCompositionClip, WUCInsetClip, WUCVisualCollection, WUCVisualUnorderedCollection, WUCCompositionLight, WUCAmbientLight, WUCDistantLight, WUCPointLight, WUCSpotLight, WUCKeyFrameAnimation, WUCColorKeyFrameAnimation, WUCQuaternionKeyFrameAnimation, WUCScalarKeyFrameAnimation, WUCVector2KeyFrameAnimation, WUCVector3KeyFrameAnimation, WUCVector4KeyFrameAnimation;
-@protocol WUCIAmbientLight, WUCIColorKeyFrameAnimation, WUCICompositionAnimation, WUCICompositionAnimation2, WUCICompositionAnimationBase, WUCICompositionAnimationGroup, WUCICompositionBackdropBrush, WUCICompositionBatchCompletedEventArgs, WUCICompositionBrush, WUCICompositionClip, WUCICompositionClip2, WUCICompositionColorBrush, WUCICompositionCommitBatch, WUCICompositionDrawingSurface, WUCICompositionEasingFunction, WUCICompositionEffectBrush, WUCICompositionEffectFactory, WUCICompositionEffectSourceParameter, WUCICompositionEffectSourceParameterFactory, WUCICompositionGraphicsDevice, WUCICompositionLight, WUCICompositionMaskBrush, WUCICompositionNineGridBrush, WUCICompositionObject, WUCICompositionObject2, WUCICompositionPropertySet, WUCICompositionPropertySet2, WUCICompositionScopedBatch, WUCICompositionShadow, WUCICompositionSurface, WUCICompositionSurfaceBrush, WUCICompositionSurfaceBrush2, WUCICompositionTarget, WUCICompositor, WUCICompositor2, WUCIContainerVisual, WUCICubicBezierEasingFunction, WUCIDistantLight, WUCIDropShadow, WUCIExpressionAnimation, WUCIImplicitAnimationCollection, WUCIInsetClip, WUCIKeyFrameAnimation, WUCIKeyFrameAnimation2, WUCILayerVisual, WUCILinearEasingFunction, WUCIPointLight, WUCIQuaternionKeyFrameAnimation, WUCIRenderingDeviceReplacedEventArgs, WUCIScalarKeyFrameAnimation, WUCISpotLight, WUCISpriteVisual, WUCISpriteVisual2, WUCIStepEasingFunction, WUCIVector2KeyFrameAnimation, WUCIVector3KeyFrameAnimation, WUCIVector4KeyFrameAnimation, WUCIVisual, WUCIVisualCollection, WUCIVisualUnorderedCollection, WUCICompositionAnimationFactory, WUCICompositionBrushFactory, WUCICompositionClipFactory, WUCICompositionEasingFunctionFactory, WUCICompositionLightFactory, WUCICompositionObjectFactory, WUCICompositionShadowFactory, WUCIContainerVisualFactory, WUCIKeyFrameAnimationFactory, WUCIVisualFactory;
+@class WUCCompositionObject, WUCInitialValueExpressionCollection, WUCCompositionCapabilities, WUCCompositionColorGradientStop, WUCCompositionBatchCompletedEventArgs, WUCCompositionEasingFunction, WUCCompositionBrush, WUCCompositionEffectBrush, WUCCompositionEffectSourceParameter, WUCCompositionColorGradientStopCollection, WUCCompositionGraphicsDevice, WUCCompositor, WUCCompositionPropertySet, WUCCompositionDrawingSurface, WUCCompositionVirtualDrawingSurface, WUCCompositionColorBrush, WUCCompositionEffectFactory, WUCCompositionScopedBatch, WUCCompositionSurfaceBrush, WUCCompositionTarget, WUCCompositionCommitBatch, WUCCompositionAnimationGroup, WUCCompositionBackdropBrush, WUCCompositionMaskBrush, WUCCompositionNineGridBrush, WUCCubicBezierEasingFunction, WUCImplicitAnimationCollection, WUCCompositionShadow, WUCDropShadow, WUCLinearEasingFunction, WUCRenderingDeviceReplacedEventArgs, WUCStepEasingFunction, WUCCompositionClip, WUCInsetClip, WUCVisualCollection, WUCVisualUnorderedCollection, WUCCompositionAnimation, WUCExpressionAnimation, WUCVisual, WUCContainerVisual, WUCSpriteVisual, WUCLayerVisual, WUCCompositionGradientBrush, WUCCompositionLinearGradientBrush, WUCCompositionLight, WUCAmbientLight, WUCDistantLight, WUCPointLight, WUCSpotLight, WUCKeyFrameAnimation, WUCColorKeyFrameAnimation, WUCQuaternionKeyFrameAnimation, WUCScalarKeyFrameAnimation, WUCVector2KeyFrameAnimation, WUCVector3KeyFrameAnimation, WUCVector4KeyFrameAnimation, WUCNaturalMotionAnimation, WUCScalarNaturalMotionAnimation, WUCSpringScalarNaturalMotionAnimation, WUCVector2NaturalMotionAnimation, WUCSpringVector2NaturalMotionAnimation, WUCVector3NaturalMotionAnimation, WUCSpringVector3NaturalMotionAnimation;
+@protocol WUCIAmbientLight, WUCIAmbientLight2, WUCIColorKeyFrameAnimation, WUCICompositionAnimation, WUCICompositionAnimation2, WUCICompositionAnimation3, WUCICompositionAnimationBase, WUCICompositionAnimationGroup, WUCICompositionBackdropBrush, WUCICompositionBatchCompletedEventArgs, WUCICompositionBrush, WUCICompositionCapabilities, WUCICompositionCapabilitiesStatics, WUCICompositionClip, WUCICompositionClip2, WUCICompositionColorBrush, WUCICompositionColorGradientStop, WUCICompositionColorGradientStopCollection, WUCICompositionCommitBatch, WUCICompositionDrawingSurface, WUCICompositionDrawingSurface2, WUCICompositionEasingFunction, WUCICompositionEffectBrush, WUCICompositionEffectFactory, WUCICompositionEffectSourceParameter, WUCICompositionEffectSourceParameterFactory, WUCICompositionGradientBrush, WUCICompositionGraphicsDevice, WUCICompositionGraphicsDevice2, WUCICompositionLight, WUCICompositionLight2, WUCICompositionLinearGradientBrush, WUCICompositionMaskBrush, WUCICompositionNineGridBrush, WUCICompositionObject, WUCICompositionObject2, WUCICompositionObject3, WUCICompositionPropertySet, WUCICompositionPropertySet2, WUCICompositionScopedBatch, WUCICompositionShadow, WUCICompositionSurface, WUCICompositionSurfaceBrush, WUCICompositionSurfaceBrush2, WUCICompositionTarget, WUCICompositionVirtualDrawingSurface, WUCICompositor, WUCICompositor2, WUCICompositor3, WUCICompositor4, WUCIContainerVisual, WUCICubicBezierEasingFunction, WUCIDistantLight, WUCIDistantLight2, WUCIDropShadow, WUCIDropShadow2, WUCIExpressionAnimation, WUCIImplicitAnimationCollection, WUCIInsetClip, WUCIKeyFrameAnimation, WUCIKeyFrameAnimation2, WUCIKeyFrameAnimation3, WUCILayerVisual, WUCILayerVisual2, WUCILinearEasingFunction, WUCINaturalMotionAnimation, WUCIPointLight, WUCIPointLight2, WUCIQuaternionKeyFrameAnimation, WUCIRenderingDeviceReplacedEventArgs, WUCIScalarKeyFrameAnimation, WUCIScalarNaturalMotionAnimation, WUCISpotLight, WUCISpotLight2, WUCISpringScalarNaturalMotionAnimation, WUCISpringVector2NaturalMotionAnimation, WUCISpringVector3NaturalMotionAnimation, WUCISpriteVisual, WUCISpriteVisual2, WUCIStepEasingFunction, WUCIVector2KeyFrameAnimation, WUCIVector2NaturalMotionAnimation, WUCIVector3NaturalMotionAnimation, WUCIVector3KeyFrameAnimation, WUCIVector4KeyFrameAnimation, WUCIVisual, WUCIVisual2, WUCIVisualCollection, WUCIVisualUnorderedCollection, WUCICompositionAnimationFactory, WUCICompositionBrushFactory, WUCICompositionClipFactory, WUCICompositionGradientBrushFactory, WUCICompositionDrawingSurfaceFactory, WUCICompositionEasingFunctionFactory, WUCICompositionLightFactory, WUCICompositionObjectFactory, WUCICompositionShadowFactory, WUCICompositionTargetFactory, WUCICompositionVirtualDrawingSurfaceFactory, WUCIContainerVisualFactory, WUCIKeyFrameAnimationFactory, WUCINaturalMotionAnimationFactory, WUCIScalarNaturalMotionAnimationFactory, WUCIVector2NaturalMotionAnimationFactory, WUCIVector3NaturalMotionAnimationFactory, WUCIVisualFactory;
 
 // Windows.UI.Composition.AnimationDirection
 enum _WUCAnimationDirection {
@@ -45,6 +45,13 @@ enum _WUCAnimationIterationBehavior {
     WUCAnimationIterationBehaviorForever = 1,
 };
 typedef unsigned WUCAnimationIterationBehavior;
+
+// Windows.UI.Composition.AnimationDelayBehavior
+enum _WUCAnimationDelayBehavior {
+    WUCAnimationDelayBehaviorSetInitialValueAfterDelay = 0,
+    WUCAnimationDelayBehaviorSetInitialValueBeforeDelay = 1,
+};
+typedef unsigned WUCAnimationDelayBehavior;
 
 // Windows.UI.Composition.AnimationStopBehavior
 enum _WUCAnimationStopBehavior {
@@ -90,6 +97,8 @@ enum _WUCCompositionColorSpace {
     WUCCompositionColorSpaceAuto = 0,
     WUCCompositionColorSpaceHsl = 1,
     WUCCompositionColorSpaceRgb = 2,
+    WUCCompositionColorSpaceHslLinear = 3,
+    WUCCompositionColorSpaceRgbLinear = 4,
 };
 typedef unsigned WUCCompositionColorSpace;
 
@@ -101,6 +110,13 @@ enum _WUCCompositionCompositeMode {
     WUCCompositionCompositeModeMinBlend = 3,
 };
 typedef unsigned WUCCompositionCompositeMode;
+
+// Windows.UI.Composition.CompositionDropShadowSourcePolicy
+enum _WUCCompositionDropShadowSourcePolicy {
+    WUCCompositionDropShadowSourcePolicyDefault = 0,
+    WUCCompositionDropShadowSourcePolicyInheritFromVisualContent = 1,
+};
+typedef unsigned WUCCompositionDropShadowSourcePolicy;
 
 // Windows.UI.Composition.CompositionEffectFactoryLoadStatus
 enum _WUCCompositionEffectFactoryLoadStatus {
@@ -119,6 +135,14 @@ enum _WUCCompositionGetValueStatus {
 };
 typedef unsigned WUCCompositionGetValueStatus;
 
+// Windows.UI.Composition.CompositionGradientExtendMode
+enum _WUCCompositionGradientExtendMode {
+    WUCCompositionGradientExtendModeClamp = 0,
+    WUCCompositionGradientExtendModeWrap = 1,
+    WUCCompositionGradientExtendModeMirror = 2,
+};
+typedef unsigned WUCCompositionGradientExtendMode;
+
 // Windows.UI.Composition.CompositionStretch
 enum _WUCCompositionStretch {
     WUCCompositionStretchNone = 0,
@@ -129,6 +153,8 @@ enum _WUCCompositionStretch {
 typedef unsigned WUCCompositionStretch;
 
 #include "WindowsUI.h"
+#include "WindowsSystem.h"
+#include "WindowsGraphics.h"
 #include "WindowsFoundationNumerics.h"
 #include "WindowsFoundation.h"
 #include "WindowsGraphicsDirectX.h"
@@ -191,6 +217,7 @@ OBJCUWPWINDOWSUICOMPOSITIONEXPORT
 @property (readonly) WUCCompositionPropertySet* properties;
 @property (retain) WUCImplicitAnimationCollection* implicitAnimations;
 @property (retain) NSString * comment;
+@property (readonly) WSDispatcherQueue* dispatcherQueue;
 - (void)startAnimation:(NSString *)propertyName animation:(WUCCompositionAnimation*)animation;
 - (void)stopAnimation:(NSString *)propertyName;
 - (void)close;
@@ -200,31 +227,67 @@ OBJCUWPWINDOWSUICOMPOSITIONEXPORT
 
 #endif // __WUCCompositionObject_DEFINED__
 
-// Windows.UI.Composition.CompositionAnimation
-#ifndef __WUCCompositionAnimation_DEFINED__
-#define __WUCCompositionAnimation_DEFINED__
+// Windows.UI.Composition.InitialValueExpressionCollection
+#ifndef __WUCInitialValueExpressionCollection_DEFINED__
+#define __WUCInitialValueExpressionCollection_DEFINED__
 
 OBJCUWPWINDOWSUICOMPOSITIONEXPORT
-@interface WUCCompositionAnimation : WUCCompositionObject <WUCICompositionAnimationBase>
+@interface WUCInitialValueExpressionCollection : WUCCompositionObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
-@property (retain) NSString * target;
-- (void)clearAllParameters;
-- (void)clearParameter:(NSString *)key;
-- (void)setColorParameter:(NSString *)key value:(WUColor*)value;
-- (void)setMatrix3x2Parameter:(NSString *)key value:(WFNMatrix3x2*)value;
-- (void)setMatrix4x4Parameter:(NSString *)key value:(WFNMatrix4x4*)value;
-- (void)setQuaternionParameter:(NSString *)key value:(WFNQuaternion*)value;
-- (void)setReferenceParameter:(NSString *)key compositionObject:(WUCCompositionObject*)compositionObject;
-- (void)setScalarParameter:(NSString *)key value:(float)value;
-- (void)setVector2Parameter:(NSString *)key value:(WFNVector2*)value;
-- (void)setVector3Parameter:(NSString *)key value:(WFNVector3*)value;
-- (void)setVector4Parameter:(NSString *)key value:(WFNVector4*)value;
-- (void)setBooleanParameter:(NSString *)key value:(BOOL)value;
+@property (readonly) unsigned int size;
+- (id)objectForKey: (id)key;
+- (NSArray*)allKeys;
+- (NSArray*)allKeysForObject: (id)obj;
+- (NSArray*)allValues;
+- (id)keyEnumerator;
+- (unsigned int)count;
+
+-(void)setObject: (id)obj forKey: (id)key;
+-(void)setObject:(id)object forKeyedSubscript:(id)key;
+-(void)removeObjectForKey: (id)key;
+-(void)removeAllObjects;
+-(void)removeObjectsForKeys:(NSArray*)keys;
+-(void)addEntriesFromDictionary:(NSDictionary*)otherDict;
+-(void)addEntriesFromDictionaryNoReplace:(NSDictionary*)otherDict;
+-(void)setDictionary: (NSDictionary*)dict;
 @end
 
-#endif // __WUCCompositionAnimation_DEFINED__
+#endif // __WUCInitialValueExpressionCollection_DEFINED__
+
+// Windows.UI.Composition.CompositionCapabilities
+#ifndef __WUCCompositionCapabilities_DEFINED__
+#define __WUCCompositionCapabilities_DEFINED__
+
+OBJCUWPWINDOWSUICOMPOSITIONEXPORT
+@interface WUCCompositionCapabilities : RTObject
++ (WUCCompositionCapabilities*)getForCurrentView;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+- (EventRegistrationToken)addChangedEvent:(void(^)(WUCCompositionCapabilities*, RTObject*))del;
+- (void)removeChangedEvent:(EventRegistrationToken)tok;
+- (BOOL)areEffectsSupported;
+- (BOOL)areEffectsFast;
+@end
+
+#endif // __WUCCompositionCapabilities_DEFINED__
+
+// Windows.UI.Composition.CompositionColorGradientStop
+#ifndef __WUCCompositionColorGradientStop_DEFINED__
+#define __WUCCompositionColorGradientStop_DEFINED__
+
+OBJCUWPWINDOWSUICOMPOSITIONEXPORT
+@interface WUCCompositionColorGradientStop : WUCCompositionObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property float offset;
+@property (retain) WUColor* color;
+@end
+
+#endif // __WUCCompositionColorGradientStop_DEFINED__
 
 // Windows.UI.Composition.CompositionBatchCompletedEventArgs
 #ifndef __WUCCompositionBatchCompletedEventArgs_DEFINED__
@@ -308,6 +371,32 @@ OBJCUWPWINDOWSUICOMPOSITIONEXPORT
 
 #endif // __WUCCompositionEffectSourceParameter_DEFINED__
 
+// Windows.UI.Composition.CompositionColorGradientStopCollection
+#ifndef __WUCCompositionColorGradientStopCollection_DEFINED__
+#define __WUCCompositionColorGradientStopCollection_DEFINED__
+
+OBJCUWPWINDOWSUICOMPOSITIONEXPORT
+@interface WUCCompositionColorGradientStopCollection : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (readonly) unsigned int size;
+- (unsigned int)count;
+- (id)objectAtIndex:(unsigned)idx;
+- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState *)state
+                                  objects:(id __unsafe_unretained [])buffer
+                                    count:(NSUInteger)len;
+
+- (void)insertObject: (id)obj atIndex: (NSUInteger)idx;
+- (void)removeObjectAtIndex: (NSUInteger)idx;
+- (void)replaceObjectAtIndex: (NSUInteger)idx withObject: (id)obj;
+- (void)addObject: (id)obj;
+- (void)removeLastObject;
+
+@end
+
+#endif // __WUCCompositionColorGradientStopCollection_DEFINED__
+
 // Windows.UI.Composition.CompositionGraphicsDevice
 #ifndef __WUCCompositionGraphicsDevice_DEFINED__
 #define __WUCCompositionGraphicsDevice_DEFINED__
@@ -320,6 +409,8 @@ OBJCUWPWINDOWSUICOMPOSITIONEXPORT
 - (EventRegistrationToken)addRenderingDeviceReplacedEvent:(void(^)(WUCCompositionGraphicsDevice*, WUCRenderingDeviceReplacedEventArgs*))del;
 - (void)removeRenderingDeviceReplacedEvent:(EventRegistrationToken)tok;
 - (WUCCompositionDrawingSurface*)createDrawingSurface:(WFSize*)sizePixels pixelFormat:(WGDDirectXPixelFormat)pixelFormat alphaMode:(WGDDirectXAlphaMode)alphaMode;
+- (WUCCompositionDrawingSurface*)createDrawingSurface2:(WGSizeInt32*)sizePixels pixelFormat:(WGDDirectXPixelFormat)pixelFormat alphaMode:(WGDDirectXAlphaMode)alphaMode;
+- (WUCCompositionVirtualDrawingSurface*)createVirtualDrawingSurface:(WGSizeInt32*)sizePixels pixelFormat:(WGDDirectXPixelFormat)pixelFormat alphaMode:(WGDDirectXAlphaMode)alphaMode;
 @end
 
 #endif // __WUCCompositionGraphicsDevice_DEFINED__
@@ -372,6 +463,13 @@ OBJCUWPWINDOWSUICOMPOSITIONEXPORT
 - (WUCSpotLight*)createSpotLight;
 - (WUCStepEasingFunction*)createStepEasingFunction;
 - (WUCStepEasingFunction*)createStepEasingFunctionWithStepCount:(int)stepCount;
+- (WUCCompositionBackdropBrush*)createHostBackdropBrush;
+- (WUCCompositionColorGradientStop*)createColorGradientStop;
+- (WUCCompositionColorGradientStop*)createColorGradientStopWithOffsetAndColor:(float)offset color:(WUColor*)color;
+- (WUCCompositionLinearGradientBrush*)createLinearGradientBrush;
+- (WUCSpringScalarNaturalMotionAnimation*)createSpringScalarAnimation;
+- (WUCSpringVector2NaturalMotionAnimation*)createSpringVector2Animation;
+- (WUCSpringVector3NaturalMotionAnimation*)createSpringVector3Animation;
 @end
 
 #endif // __WUCCompositor_DEFINED__
@@ -419,9 +517,29 @@ OBJCUWPWINDOWSUICOMPOSITIONEXPORT
 @property (readonly) WGDDirectXAlphaMode alphaMode;
 @property (readonly) WGDDirectXPixelFormat pixelFormat;
 @property (readonly) WFSize* size;
+@property (readonly) WGSizeInt32* sizeInt32;
+- (void)resize:(WGSizeInt32*)sizePixels;
+- (void)scroll:(WGPointInt32*)offset;
+- (void)scrollRect:(WGPointInt32*)offset scrollRect:(WGRectInt32*)scrollRect;
+- (void)scrollWithClip:(WGPointInt32*)offset clipRect:(WGRectInt32*)clipRect;
+- (void)scrollRectWithClip:(WGPointInt32*)offset clipRect:(WGRectInt32*)clipRect scrollRect:(WGRectInt32*)scrollRect;
 @end
 
 #endif // __WUCCompositionDrawingSurface_DEFINED__
+
+// Windows.UI.Composition.CompositionVirtualDrawingSurface
+#ifndef __WUCCompositionVirtualDrawingSurface_DEFINED__
+#define __WUCCompositionVirtualDrawingSurface_DEFINED__
+
+OBJCUWPWINDOWSUICOMPOSITIONEXPORT
+@interface WUCCompositionVirtualDrawingSurface : WUCCompositionDrawingSurface
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+- (void)trim:(NSArray* /* WGRectInt32* */)rects;
+@end
+
+#endif // __WUCCompositionVirtualDrawingSurface_DEFINED__
 
 // Windows.UI.Composition.CompositionColorBrush
 #ifndef __WUCCompositionColorBrush_DEFINED__
@@ -616,20 +734,6 @@ OBJCUWPWINDOWSUICOMPOSITIONEXPORT
 
 #endif // __WUCCubicBezierEasingFunction_DEFINED__
 
-// Windows.UI.Composition.ExpressionAnimation
-#ifndef __WUCExpressionAnimation_DEFINED__
-#define __WUCExpressionAnimation_DEFINED__
-
-OBJCUWPWINDOWSUICOMPOSITIONEXPORT
-@interface WUCExpressionAnimation : WUCCompositionAnimation
-#if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
-#endif
-@property (retain) NSString * expression;
-@end
-
-#endif // __WUCExpressionAnimation_DEFINED__
-
 // Windows.UI.Composition.ImplicitAnimationCollection
 #ifndef __WUCImplicitAnimationCollection_DEFINED__
 #define __WUCImplicitAnimationCollection_DEFINED__
@@ -659,33 +763,6 @@ OBJCUWPWINDOWSUICOMPOSITIONEXPORT
 
 #endif // __WUCImplicitAnimationCollection_DEFINED__
 
-// Windows.UI.Composition.LinearEasingFunction
-#ifndef __WUCLinearEasingFunction_DEFINED__
-#define __WUCLinearEasingFunction_DEFINED__
-
-OBJCUWPWINDOWSUICOMPOSITIONEXPORT
-@interface WUCLinearEasingFunction : WUCCompositionEasingFunction
-#if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
-#endif
-@end
-
-#endif // __WUCLinearEasingFunction_DEFINED__
-
-// Windows.UI.Composition.RenderingDeviceReplacedEventArgs
-#ifndef __WUCRenderingDeviceReplacedEventArgs_DEFINED__
-#define __WUCRenderingDeviceReplacedEventArgs_DEFINED__
-
-OBJCUWPWINDOWSUICOMPOSITIONEXPORT
-@interface WUCRenderingDeviceReplacedEventArgs : WUCCompositionObject
-#if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
-#endif
-@property (readonly) WUCCompositionGraphicsDevice* graphicsDevice;
-@end
-
-#endif // __WUCRenderingDeviceReplacedEventArgs_DEFINED__
-
 // Windows.UI.Composition.CompositionShadow
 #ifndef __WUCCompositionShadow_DEFINED__
 #define __WUCCompositionShadow_DEFINED__
@@ -713,9 +790,37 @@ OBJCUWPWINDOWSUICOMPOSITIONEXPORT
 @property (retain) WUCCompositionBrush* mask;
 @property (retain) WUColor* color;
 @property float blurRadius;
+@property WUCCompositionDropShadowSourcePolicy sourcePolicy;
 @end
 
 #endif // __WUCDropShadow_DEFINED__
+
+// Windows.UI.Composition.LinearEasingFunction
+#ifndef __WUCLinearEasingFunction_DEFINED__
+#define __WUCLinearEasingFunction_DEFINED__
+
+OBJCUWPWINDOWSUICOMPOSITIONEXPORT
+@interface WUCLinearEasingFunction : WUCCompositionEasingFunction
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@end
+
+#endif // __WUCLinearEasingFunction_DEFINED__
+
+// Windows.UI.Composition.RenderingDeviceReplacedEventArgs
+#ifndef __WUCRenderingDeviceReplacedEventArgs_DEFINED__
+#define __WUCRenderingDeviceReplacedEventArgs_DEFINED__
+
+OBJCUWPWINDOWSUICOMPOSITIONEXPORT
+@interface WUCRenderingDeviceReplacedEventArgs : WUCCompositionObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (readonly) WUCCompositionGraphicsDevice* graphicsDevice;
+@end
+
+#endif // __WUCRenderingDeviceReplacedEventArgs_DEFINED__
 
 // Windows.UI.Composition.StepEasingFunction
 #ifndef __WUCStepEasingFunction_DEFINED__
@@ -734,79 +839,6 @@ OBJCUWPWINDOWSUICOMPOSITIONEXPORT
 @end
 
 #endif // __WUCStepEasingFunction_DEFINED__
-
-// Windows.UI.Composition.Visual
-#ifndef __WUCVisual_DEFINED__
-#define __WUCVisual_DEFINED__
-
-OBJCUWPWINDOWSUICOMPOSITIONEXPORT
-@interface WUCVisual : WUCCompositionObject
-#if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
-#endif
-@property (retain) WFNVector3* offset;
-@property BOOL isVisible;
-@property WUCCompositionCompositeMode compositeMode;
-@property (retain) WUCCompositionClip* clip;
-@property (retain) WFNVector3* centerPoint;
-@property WUCCompositionBorderMode borderMode;
-@property (retain) WFNVector3* scale;
-@property WUCCompositionBackfaceVisibility backfaceVisibility;
-@property (retain) WFNVector2* anchorPoint;
-@property float rotationAngleInDegrees;
-@property (retain) WFNVector2* size;
-@property (retain) WFNVector3* rotationAxis;
-@property (retain) WFNMatrix4x4* transformMatrix;
-@property float rotationAngle;
-@property (retain) WFNQuaternion* orientation;
-@property float opacity;
-@property (readonly) WUCContainerVisual* parent;
-@end
-
-#endif // __WUCVisual_DEFINED__
-
-// Windows.UI.Composition.ContainerVisual
-#ifndef __WUCContainerVisual_DEFINED__
-#define __WUCContainerVisual_DEFINED__
-
-OBJCUWPWINDOWSUICOMPOSITIONEXPORT
-@interface WUCContainerVisual : WUCVisual
-#if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
-#endif
-@property (readonly) WUCVisualCollection* children;
-@end
-
-#endif // __WUCContainerVisual_DEFINED__
-
-// Windows.UI.Composition.SpriteVisual
-#ifndef __WUCSpriteVisual_DEFINED__
-#define __WUCSpriteVisual_DEFINED__
-
-OBJCUWPWINDOWSUICOMPOSITIONEXPORT
-@interface WUCSpriteVisual : WUCContainerVisual
-#if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
-#endif
-@property (retain) WUCCompositionBrush* brush;
-@property (retain) WUCCompositionShadow* shadow;
-@end
-
-#endif // __WUCSpriteVisual_DEFINED__
-
-// Windows.UI.Composition.LayerVisual
-#ifndef __WUCLayerVisual_DEFINED__
-#define __WUCLayerVisual_DEFINED__
-
-OBJCUWPWINDOWSUICOMPOSITIONEXPORT
-@interface WUCLayerVisual : WUCContainerVisual
-#if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
-#endif
-@property (retain) WUCCompositionEffectBrush* effect;
-@end
-
-#endif // __WUCLayerVisual_DEFINED__
 
 // Windows.UI.Composition.CompositionClip
 #ifndef __WUCCompositionClip_DEFINED__
@@ -882,6 +914,162 @@ OBJCUWPWINDOWSUICOMPOSITIONEXPORT
 
 #endif // __WUCVisualUnorderedCollection_DEFINED__
 
+// Windows.UI.Composition.CompositionAnimation
+#ifndef __WUCCompositionAnimation_DEFINED__
+#define __WUCCompositionAnimation_DEFINED__
+
+OBJCUWPWINDOWSUICOMPOSITIONEXPORT
+@interface WUCCompositionAnimation : WUCCompositionObject <WUCICompositionAnimationBase>
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (retain) NSString * target;
+@property (readonly) WUCInitialValueExpressionCollection* initialValueExpressions;
+- (void)clearAllParameters;
+- (void)clearParameter:(NSString *)key;
+- (void)setColorParameter:(NSString *)key value:(WUColor*)value;
+- (void)setMatrix3x2Parameter:(NSString *)key value:(WFNMatrix3x2*)value;
+- (void)setMatrix4x4Parameter:(NSString *)key value:(WFNMatrix4x4*)value;
+- (void)setQuaternionParameter:(NSString *)key value:(WFNQuaternion*)value;
+- (void)setReferenceParameter:(NSString *)key compositionObject:(WUCCompositionObject*)compositionObject;
+- (void)setScalarParameter:(NSString *)key value:(float)value;
+- (void)setVector2Parameter:(NSString *)key value:(WFNVector2*)value;
+- (void)setVector3Parameter:(NSString *)key value:(WFNVector3*)value;
+- (void)setVector4Parameter:(NSString *)key value:(WFNVector4*)value;
+- (void)setBooleanParameter:(NSString *)key value:(BOOL)value;
+@end
+
+#endif // __WUCCompositionAnimation_DEFINED__
+
+// Windows.UI.Composition.ExpressionAnimation
+#ifndef __WUCExpressionAnimation_DEFINED__
+#define __WUCExpressionAnimation_DEFINED__
+
+OBJCUWPWINDOWSUICOMPOSITIONEXPORT
+@interface WUCExpressionAnimation : WUCCompositionAnimation
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (retain) NSString * expression;
+@end
+
+#endif // __WUCExpressionAnimation_DEFINED__
+
+// Windows.UI.Composition.Visual
+#ifndef __WUCVisual_DEFINED__
+#define __WUCVisual_DEFINED__
+
+OBJCUWPWINDOWSUICOMPOSITIONEXPORT
+@interface WUCVisual : WUCCompositionObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (retain) WFNQuaternion* orientation;
+@property float opacity;
+@property BOOL isVisible;
+@property WUCCompositionCompositeMode compositeMode;
+@property (retain) WFNVector3* centerPoint;
+@property WUCCompositionBorderMode borderMode;
+@property (retain) WFNVector3* offset;
+@property WUCCompositionBackfaceVisibility backfaceVisibility;
+@property (retain) WFNVector2* anchorPoint;
+@property (retain) WUCCompositionClip* clip;
+@property (retain) WFNMatrix4x4* transformMatrix;
+@property (retain) WFNVector2* size;
+@property (retain) WFNVector3* scale;
+@property (retain) WFNVector3* rotationAxis;
+@property float rotationAngleInDegrees;
+@property float rotationAngle;
+@property (readonly) WUCContainerVisual* parent;
+@property (retain) WFNVector3* relativeOffsetAdjustment;
+@property (retain) WUCVisual* parentForTransform;
+@property (retain) WFNVector2* relativeSizeAdjustment;
+@end
+
+#endif // __WUCVisual_DEFINED__
+
+// Windows.UI.Composition.ContainerVisual
+#ifndef __WUCContainerVisual_DEFINED__
+#define __WUCContainerVisual_DEFINED__
+
+OBJCUWPWINDOWSUICOMPOSITIONEXPORT
+@interface WUCContainerVisual : WUCVisual
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (readonly) WUCVisualCollection* children;
+@end
+
+#endif // __WUCContainerVisual_DEFINED__
+
+// Windows.UI.Composition.SpriteVisual
+#ifndef __WUCSpriteVisual_DEFINED__
+#define __WUCSpriteVisual_DEFINED__
+
+OBJCUWPWINDOWSUICOMPOSITIONEXPORT
+@interface WUCSpriteVisual : WUCContainerVisual
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (retain) WUCCompositionBrush* brush;
+@property (retain) WUCCompositionShadow* shadow;
+@end
+
+#endif // __WUCSpriteVisual_DEFINED__
+
+// Windows.UI.Composition.LayerVisual
+#ifndef __WUCLayerVisual_DEFINED__
+#define __WUCLayerVisual_DEFINED__
+
+OBJCUWPWINDOWSUICOMPOSITIONEXPORT
+@interface WUCLayerVisual : WUCContainerVisual
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (retain) WUCCompositionEffectBrush* effect;
+@property (retain) WUCCompositionShadow* shadow;
+@end
+
+#endif // __WUCLayerVisual_DEFINED__
+
+// Windows.UI.Composition.CompositionGradientBrush
+#ifndef __WUCCompositionGradientBrush_DEFINED__
+#define __WUCCompositionGradientBrush_DEFINED__
+
+OBJCUWPWINDOWSUICOMPOSITIONEXPORT
+@interface WUCCompositionGradientBrush : WUCCompositionBrush
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (retain) WFNMatrix3x2* transformMatrix;
+@property (retain) WFNVector2* scale;
+@property float rotationAngleInDegrees;
+@property float rotationAngle;
+@property (retain) WFNVector2* offset;
+@property WUCCompositionColorSpace interpolationSpace;
+@property WUCCompositionGradientExtendMode extendMode;
+@property (retain) WFNVector2* centerPoint;
+@property (retain) WFNVector2* anchorPoint;
+@property (readonly) WUCCompositionColorGradientStopCollection* colorStops;
+@end
+
+#endif // __WUCCompositionGradientBrush_DEFINED__
+
+// Windows.UI.Composition.CompositionLinearGradientBrush
+#ifndef __WUCCompositionLinearGradientBrush_DEFINED__
+#define __WUCCompositionLinearGradientBrush_DEFINED__
+
+OBJCUWPWINDOWSUICOMPOSITIONEXPORT
+@interface WUCCompositionLinearGradientBrush : WUCCompositionGradientBrush
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (retain) WFNVector2* startPoint;
+@property (retain) WFNVector2* endPoint;
+@end
+
+#endif // __WUCCompositionLinearGradientBrush_DEFINED__
+
 // Windows.UI.Composition.CompositionLight
 #ifndef __WUCCompositionLight_DEFINED__
 #define __WUCCompositionLight_DEFINED__
@@ -892,6 +1080,7 @@ OBJCUWPWINDOWSUICOMPOSITIONEXPORT
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WUCVisualUnorderedCollection* targets;
+@property (readonly) WUCVisualUnorderedCollection* exclusionsFromTargets;
 @end
 
 #endif // __WUCCompositionLight_DEFINED__
@@ -906,6 +1095,7 @@ OBJCUWPWINDOWSUICOMPOSITIONEXPORT
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) WUColor* color;
+@property float intensity;
 @end
 
 #endif // __WUCAmbientLight_DEFINED__
@@ -922,6 +1112,7 @@ OBJCUWPWINDOWSUICOMPOSITIONEXPORT
 @property (retain) WFNVector3* direction;
 @property (retain) WUCVisual* coordinateSpace;
 @property (retain) WUColor* color;
+@property float intensity;
 @end
 
 #endif // __WUCDistantLight_DEFINED__
@@ -941,6 +1132,7 @@ OBJCUWPWINDOWSUICOMPOSITIONEXPORT
 @property (retain) WUCVisual* coordinateSpace;
 @property float constantAttenuation;
 @property (retain) WUColor* color;
+@property float intensity;
 @end
 
 #endif // __WUCPointLight_DEFINED__
@@ -954,18 +1146,20 @@ OBJCUWPWINDOWSUICOMPOSITIONEXPORT
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
+@property float linearAttenuation;
 @property (retain) WUColor* innerConeColor;
+@property float outerConeAngle;
 @property float innerConeAngleInDegrees;
 @property float innerConeAngle;
 @property (retain) WFNVector3* direction;
-@property (retain) WUCVisual* coordinateSpace;
 @property float constantAttenuation;
+@property (retain) WUCVisual* coordinateSpace;
 @property float quadraticAttenuation;
 @property (retain) WUColor* outerConeColor;
 @property float outerConeAngleInDegrees;
-@property float outerConeAngle;
 @property (retain) WFNVector3* offset;
-@property float linearAttenuation;
+@property float innerConeIntensity;
+@property float outerConeIntensity;
 @end
 
 #endif // __WUCSpotLight_DEFINED__
@@ -986,6 +1180,7 @@ OBJCUWPWINDOWSUICOMPOSITIONEXPORT
 @property (retain) WFTimeSpan* delayTime;
 @property (readonly) int keyFrameCount;
 @property WUCAnimationDirection direction;
+@property WUCAnimationDelayBehavior delayBehavior;
 - (void)insertExpressionKeyFrame:(float)normalizedProgressKey value:(NSString *)value;
 - (void)insertExpressionKeyFrameWithEasingFunction:(float)normalizedProgressKey value:(NSString *)value easingFunction:(WUCCompositionEasingFunction*)easingFunction;
 @end
@@ -1082,4 +1277,113 @@ OBJCUWPWINDOWSUICOMPOSITIONEXPORT
 @end
 
 #endif // __WUCVector4KeyFrameAnimation_DEFINED__
+
+// Windows.UI.Composition.NaturalMotionAnimation
+#ifndef __WUCNaturalMotionAnimation_DEFINED__
+#define __WUCNaturalMotionAnimation_DEFINED__
+
+OBJCUWPWINDOWSUICOMPOSITIONEXPORT
+@interface WUCNaturalMotionAnimation : WUCCompositionAnimation
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property WUCAnimationStopBehavior stopBehavior;
+@property (retain) WFTimeSpan* delayTime;
+@property WUCAnimationDelayBehavior delayBehavior;
+@end
+
+#endif // __WUCNaturalMotionAnimation_DEFINED__
+
+// Windows.UI.Composition.ScalarNaturalMotionAnimation
+#ifndef __WUCScalarNaturalMotionAnimation_DEFINED__
+#define __WUCScalarNaturalMotionAnimation_DEFINED__
+
+OBJCUWPWINDOWSUICOMPOSITIONEXPORT
+@interface WUCScalarNaturalMotionAnimation : WUCNaturalMotionAnimation
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property float initialVelocity;
+@property (retain) id /* float */ initialValue;
+@property (retain) id /* float */ finalValue;
+@end
+
+#endif // __WUCScalarNaturalMotionAnimation_DEFINED__
+
+// Windows.UI.Composition.SpringScalarNaturalMotionAnimation
+#ifndef __WUCSpringScalarNaturalMotionAnimation_DEFINED__
+#define __WUCSpringScalarNaturalMotionAnimation_DEFINED__
+
+OBJCUWPWINDOWSUICOMPOSITIONEXPORT
+@interface WUCSpringScalarNaturalMotionAnimation : WUCScalarNaturalMotionAnimation
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (retain) WFTimeSpan* period;
+@property float dampingRatio;
+@end
+
+#endif // __WUCSpringScalarNaturalMotionAnimation_DEFINED__
+
+// Windows.UI.Composition.Vector2NaturalMotionAnimation
+#ifndef __WUCVector2NaturalMotionAnimation_DEFINED__
+#define __WUCVector2NaturalMotionAnimation_DEFINED__
+
+OBJCUWPWINDOWSUICOMPOSITIONEXPORT
+@interface WUCVector2NaturalMotionAnimation : WUCNaturalMotionAnimation
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (retain) WFNVector2* initialVelocity;
+@property (retain) id /* WFNVector2* */ initialValue;
+@property (retain) id /* WFNVector2* */ finalValue;
+@end
+
+#endif // __WUCVector2NaturalMotionAnimation_DEFINED__
+
+// Windows.UI.Composition.SpringVector2NaturalMotionAnimation
+#ifndef __WUCSpringVector2NaturalMotionAnimation_DEFINED__
+#define __WUCSpringVector2NaturalMotionAnimation_DEFINED__
+
+OBJCUWPWINDOWSUICOMPOSITIONEXPORT
+@interface WUCSpringVector2NaturalMotionAnimation : WUCVector2NaturalMotionAnimation
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (retain) WFTimeSpan* period;
+@property float dampingRatio;
+@end
+
+#endif // __WUCSpringVector2NaturalMotionAnimation_DEFINED__
+
+// Windows.UI.Composition.Vector3NaturalMotionAnimation
+#ifndef __WUCVector3NaturalMotionAnimation_DEFINED__
+#define __WUCVector3NaturalMotionAnimation_DEFINED__
+
+OBJCUWPWINDOWSUICOMPOSITIONEXPORT
+@interface WUCVector3NaturalMotionAnimation : WUCNaturalMotionAnimation
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (retain) WFNVector3* initialVelocity;
+@property (retain) id /* WFNVector3* */ initialValue;
+@property (retain) id /* WFNVector3* */ finalValue;
+@end
+
+#endif // __WUCVector3NaturalMotionAnimation_DEFINED__
+
+// Windows.UI.Composition.SpringVector3NaturalMotionAnimation
+#ifndef __WUCSpringVector3NaturalMotionAnimation_DEFINED__
+#define __WUCSpringVector3NaturalMotionAnimation_DEFINED__
+
+OBJCUWPWINDOWSUICOMPOSITIONEXPORT
+@interface WUCSpringVector3NaturalMotionAnimation : WUCVector3NaturalMotionAnimation
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (retain) WFTimeSpan* period;
+@property float dampingRatio;
+@end
+
+#endif // __WUCSpringVector3NaturalMotionAnimation_DEFINED__
 

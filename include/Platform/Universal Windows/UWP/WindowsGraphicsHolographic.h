@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -27,9 +27,9 @@
 #endif
 #include <UWP/interopBase.h>
 
-@class WGHHolographicCamera, WGHHolographicSpace, WGHHolographicSpaceCameraAddedEventArgs, WGHHolographicSpaceCameraRemovedEventArgs, WGHHolographicFrame, WGHHolographicCameraPose, WGHHolographicCameraRenderingParameters, WGHHolographicFramePrediction;
+@class WGHHolographicCamera, WGHHolographicSpace, WGHHolographicSpaceCameraAddedEventArgs, WGHHolographicSpaceCameraRemovedEventArgs, WGHHolographicFrame, WGHHolographicCameraPose, WGHHolographicCameraRenderingParameters, WGHHolographicFramePrediction, WGHHolographicQuadLayer, WGHHolographicQuadLayerUpdateParameters, WGHHolographicCameraViewportParameters, WGHHolographicDisplay;
 @class WGHHolographicStereoTransform, WGHHolographicAdapterId;
-@protocol WGHIHolographicCamera, WGHIHolographicSpaceCameraAddedEventArgs, WGHIHolographicSpaceCameraRemovedEventArgs, WGHIHolographicSpace, WGHIHolographicSpaceStatics, WGHIHolographicCameraPose, WGHIHolographicFramePrediction, WGHIHolographicCameraRenderingParameters, WGHIHolographicFrame;
+@protocol WGHIHolographicCamera, WGHIHolographicSpaceCameraAddedEventArgs, WGHIHolographicSpaceCameraRemovedEventArgs, WGHIHolographicSpace, WGHIHolographicSpaceStatics, WGHIHolographicSpaceStatics2, WGHIHolographicSpaceStatics3, WGHIHolographicCameraPose, WGHIHolographicFramePrediction, WGHIHolographicCameraRenderingParameters, WGHIHolographicFrame, WGHIHolographicFrame2, WGHIHolographicCameraRenderingParameters2, WGHIHolographicCameraRenderingParameters3, WGHIHolographicCameraViewportParameters, WGHIHolographicCamera2, WGHIHolographicCamera3, WGHIHolographicDisplay, WGHIHolographicDisplay2, WGHIHolographicDisplayStatics, WGHIHolographicQuadLayer, WGHIHolographicQuadLayerFactory, WGHIHolographicQuadLayerUpdateParameters;
 
 // Windows.Graphics.Holographic.HolographicFramePresentResult
 enum _WGHHolographicFramePresentResult {
@@ -45,12 +45,21 @@ enum _WGHHolographicFramePresentWaitBehavior {
 };
 typedef unsigned WGHHolographicFramePresentWaitBehavior;
 
+// Windows.Graphics.Holographic.HolographicReprojectionMode
+enum _WGHHolographicReprojectionMode {
+    WGHHolographicReprojectionModePositionAndOrientation = 0,
+    WGHHolographicReprojectionModeOrientationOnly = 1,
+    WGHHolographicReprojectionModeDisabled = 2,
+};
+typedef unsigned WGHHolographicReprojectionMode;
+
 #include "WindowsPerceptionSpatial.h"
 #include "WindowsUICore.h"
 #include "WindowsFoundation.h"
 #include "WindowsGraphicsDirectXDirect3D11.h"
 #include "WindowsFoundationNumerics.h"
 #include "WindowsPerception.h"
+#include "WindowsGraphicsDirectX.h"
 
 #import <Foundation/Foundation.h>
 
@@ -83,6 +92,12 @@ OBJCUWPWINDOWSGRAPHICSHOLOGRAPHICEXPORT
 @property (readonly) unsigned int id;
 @property (readonly) BOOL isStereo;
 @property (readonly) WFSize* renderTargetSize;
+@property (readonly) WGHHolographicDisplay* display;
+@property (readonly) WGHHolographicCameraViewportParameters* leftViewportParameters;
+@property (readonly) WGHHolographicCameraViewportParameters* rightViewportParameters;
+@property BOOL isPrimaryLayerEnabled;
+@property (readonly) unsigned int maxQuadLayerCount;
+@property (readonly) NSMutableArray* /* WGHHolographicQuadLayer* */ quadLayers;
 - (void)setNearPlaneDistance:(double)value;
 - (void)setFarPlaneDistance:(double)value;
 @end
@@ -100,10 +115,15 @@ OBJCUWPWINDOWSGRAPHICSHOLOGRAPHICEXPORT
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WGHHolographicAdapterId* primaryAdapterId;
++ (BOOL)isAvailable;
++ (BOOL)isSupported;
++ (BOOL)isConfigured;
 - (EventRegistrationToken)addCameraAddedEvent:(void(^)(WGHHolographicSpace*, WGHHolographicSpaceCameraAddedEventArgs*))del;
 - (void)removeCameraAddedEvent:(EventRegistrationToken)tok;
 - (EventRegistrationToken)addCameraRemovedEvent:(void(^)(WGHHolographicSpace*, WGHHolographicSpaceCameraRemovedEventArgs*))del;
 - (void)removeCameraRemovedEvent:(EventRegistrationToken)tok;
++ (EventRegistrationToken)addIsAvailableChangedEvent:(void(^)(RTObject*, RTObject*))del;
++ (void)removeIsAvailableChangedEvent:(EventRegistrationToken)tok;
 - (void)setDirect3D11Device:(RTObject<WGDDIDirect3DDevice>*)value;
 - (WGHHolographicFrame*)createNextFrame;
 @end
@@ -157,6 +177,7 @@ OBJCUWPWINDOWSGRAPHICSHOLOGRAPHICEXPORT
 - (WGHHolographicFramePresentResult)presentUsingCurrentPrediction;
 - (WGHHolographicFramePresentResult)presentUsingCurrentPredictionWithBehavior:(WGHHolographicFramePresentWaitBehavior)waitBehavior;
 - (void)waitForFrameToFinish;
+- (WGHHolographicQuadLayerUpdateParameters*)getQuadLayerUpdateParameters:(WGHHolographicQuadLayer*)layer;
 @end
 
 #endif // __WGHHolographicFrame_DEFINED__
@@ -193,9 +214,12 @@ OBJCUWPWINDOWSGRAPHICSHOLOGRAPHICEXPORT
 #endif
 @property (readonly) RTObject<WGDDIDirect3DSurface>* direct3D11BackBuffer;
 @property (readonly) RTObject<WGDDIDirect3DDevice>* direct3D11Device;
+@property WGHHolographicReprojectionMode reprojectionMode;
+@property BOOL isContentProtectionEnabled;
 - (void)setFocusPoint:(WPSSpatialCoordinateSystem*)coordinateSystem position:(WFNVector3*)position;
 - (void)setFocusPointWithNormal:(WPSSpatialCoordinateSystem*)coordinateSystem position:(WFNVector3*)position normal:(WFNVector3*)normal;
 - (void)setFocusPointWithNormalLinearVelocity:(WPSSpatialCoordinateSystem*)coordinateSystem position:(WFNVector3*)position normal:(WFNVector3*)normal linearVelocity:(WFNVector3*)linearVelocity;
+- (void)commitDirect3D11DepthBuffer:(RTObject<WGDDIDirect3DSurface>*)value;
 @end
 
 #endif // __WGHHolographicCameraRenderingParameters_DEFINED__
@@ -214,4 +238,91 @@ OBJCUWPWINDOWSGRAPHICSHOLOGRAPHICEXPORT
 @end
 
 #endif // __WGHHolographicFramePrediction_DEFINED__
+
+// Windows.Foundation.IClosable
+#ifndef __WFIClosable_DEFINED__
+#define __WFIClosable_DEFINED__
+
+@protocol WFIClosable
+- (void)close;
+@end
+
+OBJCUWPWINDOWSGRAPHICSHOLOGRAPHICEXPORT
+@interface WFIClosable : RTObject <WFIClosable>
+@end
+
+#endif // __WFIClosable_DEFINED__
+
+// Windows.Graphics.Holographic.HolographicQuadLayer
+#ifndef __WGHHolographicQuadLayer_DEFINED__
+#define __WGHHolographicQuadLayer_DEFINED__
+
+OBJCUWPWINDOWSGRAPHICSHOLOGRAPHICEXPORT
+@interface WGHHolographicQuadLayer : RTObject <WFIClosable>
++ (WGHHolographicQuadLayer*)make:(WFSize*)size ACTIVATOR;
++ (WGHHolographicQuadLayer*)makeWithPixelFormat:(WFSize*)size pixelFormat:(WGDDirectXPixelFormat)pixelFormat ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (readonly) WGDDirectXPixelFormat pixelFormat;
+@property (readonly) WFSize* size;
+- (void)close;
+@end
+
+#endif // __WGHHolographicQuadLayer_DEFINED__
+
+// Windows.Graphics.Holographic.HolographicQuadLayerUpdateParameters
+#ifndef __WGHHolographicQuadLayerUpdateParameters_DEFINED__
+#define __WGHHolographicQuadLayerUpdateParameters_DEFINED__
+
+OBJCUWPWINDOWSGRAPHICSHOLOGRAPHICEXPORT
+@interface WGHHolographicQuadLayerUpdateParameters : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+- (RTObject<WGDDIDirect3DSurface>*)acquireBufferToUpdateContent;
+- (void)updateViewport:(WFRect*)value;
+- (void)updateContentProtectionEnabled:(BOOL)value;
+- (void)updateExtents:(WFNVector2*)value;
+- (void)updateLocationWithStationaryMode:(WPSSpatialCoordinateSystem*)coordinateSystem position:(WFNVector3*)position orientation:(WFNQuaternion*)orientation;
+- (void)updateLocationWithDisplayRelativeMode:(WFNVector3*)position orientation:(WFNQuaternion*)orientation;
+@end
+
+#endif // __WGHHolographicQuadLayerUpdateParameters_DEFINED__
+
+// Windows.Graphics.Holographic.HolographicCameraViewportParameters
+#ifndef __WGHHolographicCameraViewportParameters_DEFINED__
+#define __WGHHolographicCameraViewportParameters_DEFINED__
+
+OBJCUWPWINDOWSGRAPHICSHOLOGRAPHICEXPORT
+@interface WGHHolographicCameraViewportParameters : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (readonly) NSArray* /* WFNVector2* */ hiddenAreaMesh;
+@property (readonly) NSArray* /* WFNVector2* */ visibleAreaMesh;
+@end
+
+#endif // __WGHHolographicCameraViewportParameters_DEFINED__
+
+// Windows.Graphics.Holographic.HolographicDisplay
+#ifndef __WGHHolographicDisplay_DEFINED__
+#define __WGHHolographicDisplay_DEFINED__
+
+OBJCUWPWINDOWSGRAPHICSHOLOGRAPHICEXPORT
+@interface WGHHolographicDisplay : RTObject
++ (WGHHolographicDisplay*)getDefault;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (readonly) WGHHolographicAdapterId* adapterId;
+@property (readonly) NSString * displayName;
+@property (readonly) BOOL isOpaque;
+@property (readonly) BOOL isStereo;
+@property (readonly) WFSize* maxViewportSize;
+@property (readonly) WPSSpatialLocator* spatialLocator;
+@property (readonly) double refreshRate;
+@end
+
+#endif // __WGHHolographicDisplay_DEFINED__
 

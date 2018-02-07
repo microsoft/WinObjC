@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -27,8 +27,8 @@
 #endif
 #include <UWP/interopBase.h>
 
-@class WDPUnifiedPosErrorData, WDPBarcodeScannerStatusUpdatedEventArgs, WDPBarcodeSymbologies, WDPBarcodeScannerReport, WDPBarcodeScannerDataReceivedEventArgs, WDPBarcodeScannerErrorOccurredEventArgs, WDPBarcodeScannerImagePreviewReceivedEventArgs, WDPBarcodeScannerCapabilities, WDPBarcodeScanner, WDPClaimedBarcodeScanner, WDPMagneticStripeReaderEncryptionAlgorithms, WDPMagneticStripeReaderCardTypes, WDPMagneticStripeReaderTrackData, WDPMagneticStripeReaderReport, WDPMagneticStripeReaderBankCardDataReceivedEventArgs, WDPMagneticStripeReaderAamvaCardDataReceivedEventArgs, WDPMagneticStripeReaderVendorSpecificCardDataReceivedEventArgs, WDPMagneticStripeReaderErrorOccurredEventArgs, WDPMagneticStripeReaderStatusUpdatedEventArgs, WDPMagneticStripeReaderCapabilities, WDPClaimedMagneticStripeReader, WDPMagneticStripeReader, WDPPosPrinterCharacterSetIds, WDPReceiptPrinterCapabilities, WDPSlipPrinterCapabilities, WDPJournalPrinterCapabilities, WDPPosPrinterCapabilities, WDPPosPrinterStatus, WDPPosPrinterStatusUpdatedEventArgs, WDPPosPrinterReleaseDeviceRequestedEventArgs, WDPPosPrinter, WDPClaimedPosPrinter, WDPReceiptPrintJob, WDPSlipPrintJob, WDPJournalPrintJob, WDPClaimedReceiptPrinter, WDPClaimedSlipPrinter, WDPClaimedJournalPrinter, WDPCashDrawerStatus, WDPCashDrawerStatusUpdatedEventArgs, WDPCashDrawerCapabilities, WDPCashDrawer, WDPCashDrawerClosedEventArgs, WDPCashDrawerOpenedEventArgs, WDPCashDrawerEventSource, WDPClaimedCashDrawer, WDPCashDrawerCloseAlarm;
-@protocol WDPIUnifiedPosErrorData, WDPIBarcodeScannerStatusUpdatedEventArgs, WDPIBarcodeSymbologiesStatics, WDPIBarcodeScannerDataReceivedEventArgs, WDPIBarcodeScannerReport, WDPIBarcodeScannerErrorOccurredEventArgs, WDPIBarcodeScannerImagePreviewReceivedEventArgs, WDPIBarcodeScannerCapabilities, WDPIBarcodeScannerCapabilities1, WDPIBarcodeScannerStatics, WDPIBarcodeScanner, WDPIBarcodeScanner2, WDPIMagneticStripeReaderEncryptionAlgorithmsStatics, WDPIMagneticStripeReaderCardTypesStatics, WDPIMagneticStripeReaderTrackData, WDPIMagneticStripeReaderReport, WDPIMagneticStripeReaderBankCardDataReceivedEventArgs, WDPIMagneticStripeReaderAamvaCardDataReceivedEventArgs, WDPIMagneticStripeReaderVendorSpecificCardDataReceivedEventArgs, WDPIMagneticStripeReaderErrorOccurredEventArgs, WDPIMagneticStripeReaderStatusUpdatedEventArgs, WDPIMagneticStripeReaderCapabilities, WDPIMagneticStripeReaderStatics, WDPIMagneticStripeReader, WDPIPosPrinterCharacterSetIdsStatics, WDPICommonPosPrintStationCapabilities, WDPICommonReceiptSlipCapabilities, WDPIReceiptPrinterCapabilities, WDPISlipPrinterCapabilities, WDPIJournalPrinterCapabilities, WDPIPosPrinterCapabilities, WDPIPosPrinterStatus, WDPIPosPrinterStatusUpdatedEventArgs, WDPIPosPrinterReleaseDeviceRequestedEventArgs, WDPIPosPrinterStatics, WDPIPosPrinter, WDPIPosPrinterJob, WDPIReceiptOrSlipJob, WDPIReceiptPrintJob, WDPICommonClaimedPosPrinterStation, WDPIClaimedReceiptPrinter, WDPIClaimedSlipPrinter, WDPIClaimedJournalPrinter, WDPICashDrawerStatusUpdatedEventArgs, WDPICashDrawerStatus, WDPICashDrawerCapabilities, WDPICashDrawerEventSourceEventArgs, WDPICashDrawerEventSource, WDPICashDrawerStatics, WDPICashDrawer, WDPICashDrawerCloseAlarm, WDPIClaimedBarcodeScanner, WDPIClaimedBarcodeScanner1, WDPIClaimedMagneticStripeReader, WDPIClaimedPosPrinter, WDPIClaimedCashDrawer;
+@class WDPUnifiedPosErrorData, WDPBarcodeScannerStatusUpdatedEventArgs, WDPBarcodeSymbologies, WDPBarcodeSymbologyAttributes, WDPBarcodeScannerReport, WDPBarcodeScannerDataReceivedEventArgs, WDPBarcodeScannerErrorOccurredEventArgs, WDPBarcodeScannerImagePreviewReceivedEventArgs, WDPBarcodeScannerCapabilities, WDPBarcodeScanner, WDPClaimedBarcodeScanner, WDPMagneticStripeReaderEncryptionAlgorithms, WDPMagneticStripeReaderCardTypes, WDPMagneticStripeReaderTrackData, WDPMagneticStripeReaderReport, WDPMagneticStripeReaderBankCardDataReceivedEventArgs, WDPMagneticStripeReaderAamvaCardDataReceivedEventArgs, WDPMagneticStripeReaderVendorSpecificCardDataReceivedEventArgs, WDPMagneticStripeReaderErrorOccurredEventArgs, WDPMagneticStripeReaderStatusUpdatedEventArgs, WDPMagneticStripeReaderCapabilities, WDPClaimedMagneticStripeReader, WDPMagneticStripeReader, WDPPosPrinterCharacterSetIds, WDPReceiptPrinterCapabilities, WDPSlipPrinterCapabilities, WDPJournalPrinterCapabilities, WDPPosPrinterCapabilities, WDPPosPrinterStatus, WDPPosPrinterStatusUpdatedEventArgs, WDPPosPrinterReleaseDeviceRequestedEventArgs, WDPPosPrinter, WDPClaimedPosPrinter, WDPReceiptPrintJob, WDPSlipPrintJob, WDPJournalPrintJob, WDPClaimedReceiptPrinter, WDPClaimedSlipPrinter, WDPClaimedJournalPrinter, WDPCashDrawerStatus, WDPCashDrawerStatusUpdatedEventArgs, WDPCashDrawerCapabilities, WDPCashDrawer, WDPCashDrawerClosedEventArgs, WDPCashDrawerOpenedEventArgs, WDPCashDrawerEventSource, WDPClaimedCashDrawer, WDPCashDrawerCloseAlarm, WDPLineDisplay, WDPLineDisplayStatisticsCategorySelector, WDPClaimedLineDisplay, WDPLineDisplayCursorAttributes, WDPLineDisplayCursor, WDPLineDisplayMarquee, WDPLineDisplayStoredBitmap, WDPLineDisplayWindow, WDPLineDisplayCustomGlyphs, WDPLineDisplayStatusUpdatedEventArgs, WDPLineDisplayCapabilities, WDPLineDisplayAttributes;
+@protocol WDPIUnifiedPosErrorData, WDPIBarcodeScannerStatusUpdatedEventArgs, WDPIBarcodeSymbologiesStatics, WDPIBarcodeSymbologiesStatics2, WDPIBarcodeSymbologyAttributes, WDPIBarcodeScannerDataReceivedEventArgs, WDPIBarcodeScannerReport, WDPIBarcodeScannerErrorOccurredEventArgs, WDPIBarcodeScannerImagePreviewReceivedEventArgs, WDPIBarcodeScannerCapabilities, WDPIBarcodeScannerCapabilities1, WDPIBarcodeScannerStatics, WDPIBarcodeScannerStatics2, WDPIBarcodeScanner, WDPIBarcodeScanner2, WDPIClaimedBarcodeScanner, WDPIClaimedBarcodeScanner1, WDPIClaimedBarcodeScanner2, WDPIMagneticStripeReaderEncryptionAlgorithmsStatics, WDPIMagneticStripeReaderCardTypesStatics, WDPIMagneticStripeReaderTrackData, WDPIMagneticStripeReaderReport, WDPIMagneticStripeReaderBankCardDataReceivedEventArgs, WDPIMagneticStripeReaderAamvaCardDataReceivedEventArgs, WDPIMagneticStripeReaderVendorSpecificCardDataReceivedEventArgs, WDPIMagneticStripeReaderErrorOccurredEventArgs, WDPIMagneticStripeReaderStatusUpdatedEventArgs, WDPIMagneticStripeReaderCapabilities, WDPIClaimedMagneticStripeReader, WDPIMagneticStripeReaderStatics, WDPIMagneticStripeReaderStatics2, WDPIMagneticStripeReader, WDPIPosPrinterCharacterSetIdsStatics, WDPICommonPosPrintStationCapabilities, WDPICommonReceiptSlipCapabilities, WDPIReceiptPrinterCapabilities, WDPISlipPrinterCapabilities, WDPIJournalPrinterCapabilities, WDPIPosPrinterCapabilities, WDPIPosPrinterStatus, WDPIPosPrinterStatusUpdatedEventArgs, WDPIPosPrinterReleaseDeviceRequestedEventArgs, WDPIPosPrinterStatics, WDPIPosPrinterStatics2, WDPIPosPrinter, WDPIPosPrinterJob, WDPIReceiptOrSlipJob, WDPIReceiptPrintJob, WDPICommonClaimedPosPrinterStation, WDPIClaimedReceiptPrinter, WDPIClaimedSlipPrinter, WDPIClaimedJournalPrinter, WDPIClaimedPosPrinter, WDPICashDrawerStatusUpdatedEventArgs, WDPICashDrawerStatus, WDPICashDrawerCapabilities, WDPICashDrawerEventSourceEventArgs, WDPICashDrawerEventSource, WDPICashDrawerStatics, WDPICashDrawerStatics2, WDPICashDrawer, WDPICashDrawerCloseAlarm, WDPIClaimedCashDrawer, WDPILineDisplayStatics, WDPILineDisplayStatics2, WDPIClaimedLineDisplayStatics, WDPILineDisplayStatisticsCategorySelector, WDPILineDisplayCursorAttributes, WDPILineDisplayCursor, WDPILineDisplayMarquee, WDPILineDisplayStoredBitmap, WDPILineDisplayWindow, WDPILineDisplayWindow2, WDPILineDisplayCustomGlyphs, WDPILineDisplayStatusUpdatedEventArgs, WDPILineDisplayCapabilities, WDPILineDisplay, WDPILineDisplay2, WDPIClaimedLineDisplay, WDPILineDisplayAttributes, WDPIClaimedLineDisplay2;
 
 // Windows.Devices.PointOfService.UnifiedPosErrorSeverity
 enum _WDPUnifiedPosErrorSeverity {
@@ -240,6 +240,102 @@ enum _WDPBarcodeScannerStatus {
 };
 typedef unsigned WDPBarcodeScannerStatus;
 
+// Windows.Devices.PointOfService.LineDisplayPowerStatus
+enum _WDPLineDisplayPowerStatus {
+    WDPLineDisplayPowerStatusUnknown = 0,
+    WDPLineDisplayPowerStatusOnline = 1,
+    WDPLineDisplayPowerStatusOff = 2,
+    WDPLineDisplayPowerStatusOffline = 3,
+    WDPLineDisplayPowerStatusOffOrOffline = 4,
+};
+typedef unsigned WDPLineDisplayPowerStatus;
+
+// Windows.Devices.PointOfService.LineDisplayHorizontalAlignment
+enum _WDPLineDisplayHorizontalAlignment {
+    WDPLineDisplayHorizontalAlignmentLeft = 0,
+    WDPLineDisplayHorizontalAlignmentCenter = 1,
+    WDPLineDisplayHorizontalAlignmentRight = 2,
+};
+typedef unsigned WDPLineDisplayHorizontalAlignment;
+
+// Windows.Devices.PointOfService.LineDisplayVerticalAlignment
+enum _WDPLineDisplayVerticalAlignment {
+    WDPLineDisplayVerticalAlignmentTop = 0,
+    WDPLineDisplayVerticalAlignmentCenter = 1,
+    WDPLineDisplayVerticalAlignmentBottom = 2,
+};
+typedef unsigned WDPLineDisplayVerticalAlignment;
+
+// Windows.Devices.PointOfService.LineDisplayScrollDirection
+enum _WDPLineDisplayScrollDirection {
+    WDPLineDisplayScrollDirectionUp = 0,
+    WDPLineDisplayScrollDirectionDown = 1,
+    WDPLineDisplayScrollDirectionLeft = 2,
+    WDPLineDisplayScrollDirectionRight = 3,
+};
+typedef unsigned WDPLineDisplayScrollDirection;
+
+// Windows.Devices.PointOfService.LineDisplayTextAttribute
+enum _WDPLineDisplayTextAttribute {
+    WDPLineDisplayTextAttributeNormal = 0,
+    WDPLineDisplayTextAttributeBlink = 1,
+    WDPLineDisplayTextAttributeReverse = 2,
+    WDPLineDisplayTextAttributeReverseBlink = 3,
+};
+typedef unsigned WDPLineDisplayTextAttribute;
+
+// Windows.Devices.PointOfService.LineDisplayCursorType
+enum _WDPLineDisplayCursorType {
+    WDPLineDisplayCursorTypeNone = 0,
+    WDPLineDisplayCursorTypeBlock = 1,
+    WDPLineDisplayCursorTypeHalfBlock = 2,
+    WDPLineDisplayCursorTypeUnderline = 3,
+    WDPLineDisplayCursorTypeReverse = 4,
+    WDPLineDisplayCursorTypeOther = 5,
+};
+typedef unsigned WDPLineDisplayCursorType;
+
+// Windows.Devices.PointOfService.LineDisplayMarqueeFormat
+enum _WDPLineDisplayMarqueeFormat {
+    WDPLineDisplayMarqueeFormatNone = 0,
+    WDPLineDisplayMarqueeFormatWalk = 1,
+    WDPLineDisplayMarqueeFormatPlace = 2,
+};
+typedef unsigned WDPLineDisplayMarqueeFormat;
+
+// Windows.Devices.PointOfService.LineDisplayDescriptorState
+enum _WDPLineDisplayDescriptorState {
+    WDPLineDisplayDescriptorStateOff = 0,
+    WDPLineDisplayDescriptorStateOn = 1,
+    WDPLineDisplayDescriptorStateBlink = 2,
+};
+typedef unsigned WDPLineDisplayDescriptorState;
+
+// Windows.Devices.PointOfService.LineDisplayTextAttributeGranularity
+enum _WDPLineDisplayTextAttributeGranularity {
+    WDPLineDisplayTextAttributeGranularityNotSupported = 0,
+    WDPLineDisplayTextAttributeGranularityEntireDisplay = 1,
+    WDPLineDisplayTextAttributeGranularityPerCharacter = 2,
+};
+typedef unsigned WDPLineDisplayTextAttributeGranularity;
+
+// Windows.Devices.PointOfService.PosConnectionTypes
+enum _WDPPosConnectionTypes {
+    WDPPosConnectionTypesLocal = 1,
+    WDPPosConnectionTypesIP = 2,
+    WDPPosConnectionTypesBluetooth = 4,
+    WDPPosConnectionTypesAll = -1,
+};
+typedef unsigned WDPPosConnectionTypes;
+
+// Windows.Devices.PointOfService.BarcodeSymbologyDecodeLengthKind
+enum _WDPBarcodeSymbologyDecodeLengthKind {
+    WDPBarcodeSymbologyDecodeLengthKindAnyLength = 0,
+    WDPBarcodeSymbologyDecodeLengthKindDiscrete = 1,
+    WDPBarcodeSymbologyDecodeLengthKindRange = 2,
+};
+typedef unsigned WDPBarcodeSymbologyDecodeLengthKind;
+
 // Windows.Devices.PointOfService.MagneticStripeReaderStatus
 enum _WDPMagneticStripeReaderStatus {
     WDPMagneticStripeReaderStatusUnauthenticated = 0,
@@ -285,6 +381,7 @@ typedef unsigned WDPMagneticStripeReaderTrackErrorType;
 
 #include "WindowsStorageStreams.h"
 #include "WindowsFoundation.h"
+#include "WindowsStorage.h"
 #include "WindowsGraphicsImaging.h"
 
 #import <Foundation/Foundation.h>
@@ -466,6 +563,7 @@ OBJCUWPWINDOWSDEVICESPOINTOFSERVICEEXPORT
 OBJCUWPWINDOWSDEVICESPOINTOFSERVICEEXPORT
 @interface WDPBarcodeSymbologies : RTObject
 + (NSString *)getName:(unsigned int)scanDataType;
++ (unsigned int)extendedBase;
 + (unsigned int)ausPost;
 + (unsigned int)aztec;
 + (unsigned int)canPost;
@@ -500,7 +598,7 @@ OBJCUWPWINDOWSDEVICESPOINTOFSERVICEEXPORT
 + (unsigned int)eanv;
 + (unsigned int)eanvAdd2;
 + (unsigned int)eanvAdd5;
-+ (unsigned int)extendedBase;
++ (unsigned int)telepen;
 + (unsigned int)gs1128;
 + (unsigned int)gs1128Coupon;
 + (unsigned int)gs1DatabarType1;
@@ -535,7 +633,6 @@ OBJCUWPWINDOWSDEVICESPOINTOFSERVICEEXPORT
 + (unsigned int)qr;
 + (unsigned int)sisac;
 + (unsigned int)swedenPost;
-+ (unsigned int)telepen;
 + (unsigned int)tfDis;
 + (unsigned int)tfIata;
 + (unsigned int)tfInd;
@@ -559,9 +656,31 @@ OBJCUWPWINDOWSDEVICESPOINTOFSERVICEEXPORT
 + (unsigned int)usIntelligentPkg;
 + (unsigned int)usPlanet;
 + (unsigned int)usPostNet;
++ (unsigned int)gs1DWCode;
 @end
 
 #endif // __WDPBarcodeSymbologies_DEFINED__
+
+// Windows.Devices.PointOfService.BarcodeSymbologyAttributes
+#ifndef __WDPBarcodeSymbologyAttributes_DEFINED__
+#define __WDPBarcodeSymbologyAttributes_DEFINED__
+
+OBJCUWPWINDOWSDEVICESPOINTOFSERVICEEXPORT
+@interface WDPBarcodeSymbologyAttributes : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property BOOL isCheckDigitValidationEnabled;
+@property BOOL isCheckDigitTransmissionEnabled;
+@property WDPBarcodeSymbologyDecodeLengthKind decodeLengthKind;
+@property unsigned int decodeLength2;
+@property unsigned int decodeLength1;
+@property (readonly) BOOL isCheckDigitTransmissionSupported;
+@property (readonly) BOOL isCheckDigitValidationSupported;
+@property (readonly) BOOL isDecodeLengthSupported;
+@end
+
+#endif // __WDPBarcodeSymbologyAttributes_DEFINED__
 
 // Windows.Devices.PointOfService.BarcodeScannerReport
 #ifndef __WDPBarcodeScannerReport_DEFINED__
@@ -641,12 +760,27 @@ OBJCUWPWINDOWSDEVICESPOINTOFSERVICEEXPORT
 
 #endif // __WDPBarcodeScannerCapabilities_DEFINED__
 
+// Windows.Foundation.IClosable
+#ifndef __WFIClosable_DEFINED__
+#define __WFIClosable_DEFINED__
+
+@protocol WFIClosable
+- (void)close;
+@end
+
+OBJCUWPWINDOWSDEVICESPOINTOFSERVICEEXPORT
+@interface WFIClosable : RTObject <WFIClosable>
+@end
+
+#endif // __WFIClosable_DEFINED__
+
 // Windows.Devices.PointOfService.BarcodeScanner
 #ifndef __WDPBarcodeScanner_DEFINED__
 #define __WDPBarcodeScanner_DEFINED__
 
 OBJCUWPWINDOWSDEVICESPOINTOFSERVICEEXPORT
-@interface WDPBarcodeScanner : RTObject
+@interface WDPBarcodeScanner : RTObject <WFIClosable>
++ (NSString *)getDeviceSelectorWithConnectionTypes:(WDPPosConnectionTypes)connectionTypes;
 + (void)getDefaultAsyncWithSuccess:(void (^)(WDPBarcodeScanner*))success failure:(void (^)(NSError*))failure;
 + (void)fromIdAsync:(NSString *)deviceId success:(void (^)(WDPBarcodeScanner*))success failure:(void (^)(NSError*))failure;
 + (NSString *)getDeviceSelector;
@@ -665,23 +799,10 @@ OBJCUWPWINDOWSDEVICESPOINTOFSERVICEEXPORT
 - (void)retrieveStatisticsAsync:(id<NSFastEnumeration> /* NSString * */)statisticsCategories success:(void (^)(RTObject<WSSIBuffer>*))success failure:(void (^)(NSError*))failure;
 - (NSArray* /* NSString * */)getSupportedProfiles;
 - (BOOL)isProfileSupported:(NSString *)profile;
-@end
-
-#endif // __WDPBarcodeScanner_DEFINED__
-
-// Windows.Foundation.IClosable
-#ifndef __WFIClosable_DEFINED__
-#define __WFIClosable_DEFINED__
-
-@protocol WFIClosable
 - (void)close;
 @end
 
-OBJCUWPWINDOWSDEVICESPOINTOFSERVICEEXPORT
-@interface WFIClosable : RTObject <WFIClosable>
-@end
-
-#endif // __WFIClosable_DEFINED__
+#endif // __WDPBarcodeScanner_DEFINED__
 
 // Windows.Devices.PointOfService.ClaimedBarcodeScanner
 #ifndef __WDPClaimedBarcodeScanner_DEFINED__
@@ -718,6 +839,8 @@ OBJCUWPWINDOWSDEVICESPOINTOFSERVICEEXPORT
 - (void)close;
 - (RTObject<WFIAsyncAction>*)startSoftwareTriggerAsync;
 - (RTObject<WFIAsyncAction>*)stopSoftwareTriggerAsync;
+- (void)getSymbologyAttributesAsync:(unsigned int)barcodeSymbology success:(void (^)(WDPBarcodeSymbologyAttributes*))success failure:(void (^)(NSError*))failure;
+- (void)setSymbologyAttributesAsync:(unsigned int)barcodeSymbology attributes:(WDPBarcodeSymbologyAttributes*)attributes success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WDPClaimedBarcodeScanner_DEFINED__
@@ -960,10 +1083,11 @@ OBJCUWPWINDOWSDEVICESPOINTOFSERVICEEXPORT
 #define __WDPMagneticStripeReader_DEFINED__
 
 OBJCUWPWINDOWSDEVICESPOINTOFSERVICEEXPORT
-@interface WDPMagneticStripeReader : RTObject
+@interface WDPMagneticStripeReader : RTObject <WFIClosable>
 + (void)getDefaultAsyncWithSuccess:(void (^)(WDPMagneticStripeReader*))success failure:(void (^)(NSError*))failure;
 + (void)fromIdAsync:(NSString *)deviceId success:(void (^)(WDPMagneticStripeReader*))success failure:(void (^)(NSError*))failure;
 + (NSString *)getDeviceSelector;
++ (NSString *)getDeviceSelectorWithConnectionTypes:(WDPPosConnectionTypes)connectionTypes;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
@@ -977,6 +1101,7 @@ OBJCUWPWINDOWSDEVICESPOINTOFSERVICEEXPORT
 - (void)claimReaderAsyncWithSuccess:(void (^)(WDPClaimedMagneticStripeReader*))success failure:(void (^)(NSError*))failure;
 - (void)retrieveStatisticsAsync:(id<NSFastEnumeration> /* NSString * */)statisticsCategories success:(void (^)(RTObject<WSSIBuffer>*))success failure:(void (^)(NSError*))failure;
 - (WDPMagneticStripeReaderErrorReportingType)getErrorReportingType;
+- (void)close;
 @end
 
 #endif // __WDPMagneticStripeReader_DEFINED__
@@ -1165,7 +1290,8 @@ OBJCUWPWINDOWSDEVICESPOINTOFSERVICEEXPORT
 #define __WDPPosPrinter_DEFINED__
 
 OBJCUWPWINDOWSDEVICESPOINTOFSERVICEEXPORT
-@interface WDPPosPrinter : RTObject
+@interface WDPPosPrinter : RTObject <WFIClosable>
++ (NSString *)getDeviceSelectorWithConnectionTypes:(WDPPosConnectionTypes)connectionTypes;
 + (void)getDefaultAsyncWithSuccess:(void (^)(WDPPosPrinter*))success failure:(void (^)(NSError*))failure;
 + (void)fromIdAsync:(NSString *)deviceId success:(void (^)(WDPPosPrinter*))success failure:(void (^)(NSError*))failure;
 + (NSString *)getDeviceSelector;
@@ -1182,6 +1308,7 @@ OBJCUWPWINDOWSDEVICESPOINTOFSERVICEEXPORT
 - (void)claimPrinterAsyncWithSuccess:(void (^)(WDPClaimedPosPrinter*))success failure:(void (^)(NSError*))failure;
 - (void)checkHealthAsync:(WDPUnifiedPosHealthCheckLevel)level success:(void (^)(NSString *))success failure:(void (^)(NSError*))failure;
 - (void)getStatisticsAsync:(id<NSFastEnumeration> /* NSString * */)statisticsCategories success:(void (^)(NSString *))success failure:(void (^)(NSError*))failure;
+- (void)close;
 @end
 
 #endif // __WDPPosPrinter_DEFINED__
@@ -1454,10 +1581,11 @@ OBJCUWPWINDOWSDEVICESPOINTOFSERVICEEXPORT
 #define __WDPCashDrawer_DEFINED__
 
 OBJCUWPWINDOWSDEVICESPOINTOFSERVICEEXPORT
-@interface WDPCashDrawer : RTObject
+@interface WDPCashDrawer : RTObject <WFIClosable>
 + (void)getDefaultAsyncWithSuccess:(void (^)(WDPCashDrawer*))success failure:(void (^)(NSError*))failure;
 + (void)fromIdAsync:(NSString *)deviceId success:(void (^)(WDPCashDrawer*))success failure:(void (^)(NSError*))failure;
 + (NSString *)getDeviceSelector;
++ (NSString *)getDeviceSelectorWithConnectionTypes:(WDPPosConnectionTypes)connectionTypes;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
@@ -1471,6 +1599,7 @@ OBJCUWPWINDOWSDEVICESPOINTOFSERVICEEXPORT
 - (void)claimDrawerAsyncWithSuccess:(void (^)(WDPClaimedCashDrawer*))success failure:(void (^)(NSError*))failure;
 - (void)checkHealthAsync:(WDPUnifiedPosHealthCheckLevel)level success:(void (^)(NSString *))success failure:(void (^)(NSError*))failure;
 - (void)getStatisticsAsync:(id<NSFastEnumeration> /* NSString * */)statisticsCategories success:(void (^)(NSString *))success failure:(void (^)(NSError*))failure;
+- (void)close;
 @end
 
 #endif // __WDPCashDrawer_DEFINED__
@@ -1565,4 +1694,277 @@ OBJCUWPWINDOWSDEVICESPOINTOFSERVICEEXPORT
 @end
 
 #endif // __WDPCashDrawerCloseAlarm_DEFINED__
+
+// Windows.Devices.PointOfService.LineDisplay
+#ifndef __WDPLineDisplay_DEFINED__
+#define __WDPLineDisplay_DEFINED__
+
+OBJCUWPWINDOWSDEVICESPOINTOFSERVICEEXPORT
+@interface WDPLineDisplay : RTObject <WFIClosable>
++ (void)fromIdAsync:(NSString *)deviceId success:(void (^)(WDPLineDisplay*))success failure:(void (^)(NSError*))failure;
++ (void)getDefaultAsyncWithSuccess:(void (^)(WDPLineDisplay*))success failure:(void (^)(NSError*))failure;
++ (NSString *)getDeviceSelector;
++ (NSString *)getDeviceSelectorWithConnectionTypes:(WDPPosConnectionTypes)connectionTypes;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (readonly) WDPLineDisplayCapabilities* capabilities;
+@property (readonly) NSString * deviceControlDescription;
+@property (readonly) NSString * deviceControlVersion;
+@property (readonly) NSString * deviceId;
+@property (readonly) NSString * deviceServiceVersion;
+@property (readonly) NSString * physicalDeviceDescription;
+@property (readonly) NSString * physicalDeviceName;
++ (WDPLineDisplayStatisticsCategorySelector*)statisticsCategorySelector;
+- (void)claimAsyncWithSuccess:(void (^)(WDPClaimedLineDisplay*))success failure:(void (^)(NSError*))failure;
+- (void)close;
+- (void)checkPowerStatusAsyncWithSuccess:(void (^)(WDPLineDisplayPowerStatus))success failure:(void (^)(NSError*))failure;
+@end
+
+#endif // __WDPLineDisplay_DEFINED__
+
+// Windows.Devices.PointOfService.LineDisplayStatisticsCategorySelector
+#ifndef __WDPLineDisplayStatisticsCategorySelector_DEFINED__
+#define __WDPLineDisplayStatisticsCategorySelector_DEFINED__
+
+OBJCUWPWINDOWSDEVICESPOINTOFSERVICEEXPORT
+@interface WDPLineDisplayStatisticsCategorySelector : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (readonly) NSString * allStatistics;
+@property (readonly) NSString * manufacturerStatistics;
+@property (readonly) NSString * unifiedPosStatistics;
+@end
+
+#endif // __WDPLineDisplayStatisticsCategorySelector_DEFINED__
+
+// Windows.Devices.PointOfService.ClaimedLineDisplay
+#ifndef __WDPClaimedLineDisplay_DEFINED__
+#define __WDPClaimedLineDisplay_DEFINED__
+
+OBJCUWPWINDOWSDEVICESPOINTOFSERVICEEXPORT
+@interface WDPClaimedLineDisplay : RTObject <WFIClosable>
++ (void)fromIdAsync:(NSString *)deviceId success:(void (^)(WDPClaimedLineDisplay*))success failure:(void (^)(NSError*))failure;
++ (NSString *)getDeviceSelector;
++ (NSString *)getDeviceSelectorWithConnectionTypes:(WDPPosConnectionTypes)connectionTypes;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (readonly) WDPLineDisplayCapabilities* capabilities;
+@property (readonly) WDPLineDisplayWindow* defaultWindow;
+@property (readonly) NSString * deviceControlDescription;
+@property (readonly) NSString * deviceControlVersion;
+@property (readonly) NSString * deviceId;
+@property (readonly) NSString * deviceServiceVersion;
+@property (readonly) NSString * physicalDeviceDescription;
+@property (readonly) NSString * physicalDeviceName;
+@property (readonly) WDPLineDisplayCustomGlyphs* customGlyphs;
+@property (readonly) WFSize* maxBitmapSizeInPixels;
+@property (readonly) NSArray* /* int */ supportedCharacterSets;
+@property (readonly) NSArray* /* WFSize* */ supportedScreenSizesInCharacters;
+- (EventRegistrationToken)addReleaseDeviceRequestedEvent:(void(^)(WDPClaimedLineDisplay*, RTObject*))del;
+- (void)removeReleaseDeviceRequestedEvent:(EventRegistrationToken)tok;
+- (EventRegistrationToken)addStatusUpdatedEvent:(void(^)(WDPClaimedLineDisplay*, WDPLineDisplayStatusUpdatedEventArgs*))del;
+- (void)removeStatusUpdatedEvent:(EventRegistrationToken)tok;
+- (void)retainDevice;
+- (void)close;
+- (void)getStatisticsAsync:(id<NSFastEnumeration> /* NSString * */)statisticsCategories success:(void (^)(NSString *))success failure:(void (^)(NSError*))failure;
+- (void)checkHealthAsync:(WDPUnifiedPosHealthCheckLevel)level success:(void (^)(NSString *))success failure:(void (^)(NSError*))failure;
+- (void)checkPowerStatusAsyncWithSuccess:(void (^)(WDPLineDisplayPowerStatus))success failure:(void (^)(NSError*))failure;
+- (WDPLineDisplayAttributes*)getAttributes;
+- (void)tryUpdateAttributesAsync:(WDPLineDisplayAttributes*)attributes success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
+- (void)trySetDescriptorAsync:(unsigned int)descriptor descriptorState:(WDPLineDisplayDescriptorState)descriptorState success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
+- (void)tryClearDescriptorsAsyncWithSuccess:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
+- (void)tryCreateWindowAsync:(WFRect*)viewport windowSize:(WFSize*)windowSize success:(void (^)(WDPLineDisplayWindow*))success failure:(void (^)(NSError*))failure;
+- (void)tryStoreStorageFileBitmapAsync:(WSStorageFile*)bitmap success:(void (^)(WDPLineDisplayStoredBitmap*))success failure:(void (^)(NSError*))failure;
+- (void)tryStoreStorageFileBitmapWithAlignmentAsync:(WSStorageFile*)bitmap horizontalAlignment:(WDPLineDisplayHorizontalAlignment)horizontalAlignment verticalAlignment:(WDPLineDisplayVerticalAlignment)verticalAlignment success:(void (^)(WDPLineDisplayStoredBitmap*))success failure:(void (^)(NSError*))failure;
+- (void)tryStoreStorageFileBitmapWithAlignmentAndWidthAsync:(WSStorageFile*)bitmap horizontalAlignment:(WDPLineDisplayHorizontalAlignment)horizontalAlignment verticalAlignment:(WDPLineDisplayVerticalAlignment)verticalAlignment widthInPixels:(int)widthInPixels success:(void (^)(WDPLineDisplayStoredBitmap*))success failure:(void (^)(NSError*))failure;
+@end
+
+#endif // __WDPClaimedLineDisplay_DEFINED__
+
+// Windows.Devices.PointOfService.LineDisplayCursorAttributes
+#ifndef __WDPLineDisplayCursorAttributes_DEFINED__
+#define __WDPLineDisplayCursorAttributes_DEFINED__
+
+OBJCUWPWINDOWSDEVICESPOINTOFSERVICEEXPORT
+@interface WDPLineDisplayCursorAttributes : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (retain) WFPoint* position;
+@property BOOL isBlinkEnabled;
+@property BOOL isAutoAdvanceEnabled;
+@property WDPLineDisplayCursorType cursorType;
+@end
+
+#endif // __WDPLineDisplayCursorAttributes_DEFINED__
+
+// Windows.Devices.PointOfService.LineDisplayCursor
+#ifndef __WDPLineDisplayCursor_DEFINED__
+#define __WDPLineDisplayCursor_DEFINED__
+
+OBJCUWPWINDOWSDEVICESPOINTOFSERVICEEXPORT
+@interface WDPLineDisplayCursor : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (readonly) BOOL canCustomize;
+@property (readonly) BOOL isBlinkSupported;
+@property (readonly) BOOL isBlockSupported;
+@property (readonly) BOOL isHalfBlockSupported;
+@property (readonly) BOOL isOtherSupported;
+@property (readonly) BOOL isReverseSupported;
+@property (readonly) BOOL isUnderlineSupported;
+- (WDPLineDisplayCursorAttributes*)getAttributes;
+- (void)tryUpdateAttributesAsync:(WDPLineDisplayCursorAttributes*)attributes success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
+@end
+
+#endif // __WDPLineDisplayCursor_DEFINED__
+
+// Windows.Devices.PointOfService.LineDisplayMarquee
+#ifndef __WDPLineDisplayMarquee_DEFINED__
+#define __WDPLineDisplayMarquee_DEFINED__
+
+OBJCUWPWINDOWSDEVICESPOINTOFSERVICEEXPORT
+@interface WDPLineDisplayMarquee : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (retain) WFTimeSpan* scrollWaitInterval;
+@property (retain) WFTimeSpan* repeatWaitInterval;
+@property WDPLineDisplayMarqueeFormat format;
+- (void)tryStartScrollingAsync:(WDPLineDisplayScrollDirection)direction success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
+- (void)tryStopScrollingAsyncWithSuccess:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
+@end
+
+#endif // __WDPLineDisplayMarquee_DEFINED__
+
+// Windows.Devices.PointOfService.LineDisplayStoredBitmap
+#ifndef __WDPLineDisplayStoredBitmap_DEFINED__
+#define __WDPLineDisplayStoredBitmap_DEFINED__
+
+OBJCUWPWINDOWSDEVICESPOINTOFSERVICEEXPORT
+@interface WDPLineDisplayStoredBitmap : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (readonly) NSString * escapeSequence;
+- (void)tryDeleteAsyncWithSuccess:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
+@end
+
+#endif // __WDPLineDisplayStoredBitmap_DEFINED__
+
+// Windows.Devices.PointOfService.LineDisplayWindow
+#ifndef __WDPLineDisplayWindow_DEFINED__
+#define __WDPLineDisplayWindow_DEFINED__
+
+OBJCUWPWINDOWSDEVICESPOINTOFSERVICEEXPORT
+@interface WDPLineDisplayWindow : RTObject <WFIClosable>
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (retain) WFTimeSpan* interCharacterWaitInterval;
+@property (readonly) WFSize* sizeInCharacters;
+@property (readonly) WDPLineDisplayCursor* cursor;
+@property (readonly) WDPLineDisplayMarquee* marquee;
+- (void)tryRefreshAsyncWithSuccess:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
+- (void)tryDisplayTextAsync:(NSString *)text displayAttribute:(WDPLineDisplayTextAttribute)displayAttribute success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
+- (void)tryDisplayTextAtPositionAsync:(NSString *)text displayAttribute:(WDPLineDisplayTextAttribute)displayAttribute startPosition:(WFPoint*)startPosition success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
+- (void)tryDisplayTextNormalAsync:(NSString *)text success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
+- (void)tryScrollTextAsync:(WDPLineDisplayScrollDirection)direction numberOfColumnsOrRows:(unsigned int)numberOfColumnsOrRows success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
+- (void)tryClearTextAsyncWithSuccess:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
+- (void)close;
+- (void)readCharacterAtCursorAsyncWithSuccess:(void (^)(unsigned int))success failure:(void (^)(NSError*))failure;
+- (void)tryDisplayStoredBitmapAtCursorAsync:(WDPLineDisplayStoredBitmap*)bitmap success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
+- (void)tryDisplayStorageFileBitmapAtCursorAsync:(WSStorageFile*)bitmap success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
+- (void)tryDisplayStorageFileBitmapAtCursorWithAlignmentAsync:(WSStorageFile*)bitmap horizontalAlignment:(WDPLineDisplayHorizontalAlignment)horizontalAlignment verticalAlignment:(WDPLineDisplayVerticalAlignment)verticalAlignment success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
+- (void)tryDisplayStorageFileBitmapAtCursorWithAlignmentAndWidthAsync:(WSStorageFile*)bitmap horizontalAlignment:(WDPLineDisplayHorizontalAlignment)horizontalAlignment verticalAlignment:(WDPLineDisplayVerticalAlignment)verticalAlignment widthInPixels:(int)widthInPixels success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
+- (void)tryDisplayStorageFileBitmapAtPointAsync:(WSStorageFile*)bitmap offsetInPixels:(WFPoint*)offsetInPixels success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
+- (void)tryDisplayStorageFileBitmapAtPointWithWidthAsync:(WSStorageFile*)bitmap offsetInPixels:(WFPoint*)offsetInPixels widthInPixels:(int)widthInPixels success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
+@end
+
+#endif // __WDPLineDisplayWindow_DEFINED__
+
+// Windows.Devices.PointOfService.LineDisplayCustomGlyphs
+#ifndef __WDPLineDisplayCustomGlyphs_DEFINED__
+#define __WDPLineDisplayCustomGlyphs_DEFINED__
+
+OBJCUWPWINDOWSDEVICESPOINTOFSERVICEEXPORT
+@interface WDPLineDisplayCustomGlyphs : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (readonly) WFSize* sizeInPixels;
+@property (readonly) NSArray* /* unsigned int */ supportedGlyphCodes;
+- (void)tryRedefineAsync:(unsigned int)glyphCode glyphData:(RTObject<WSSIBuffer>*)glyphData success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
+@end
+
+#endif // __WDPLineDisplayCustomGlyphs_DEFINED__
+
+// Windows.Devices.PointOfService.LineDisplayStatusUpdatedEventArgs
+#ifndef __WDPLineDisplayStatusUpdatedEventArgs_DEFINED__
+#define __WDPLineDisplayStatusUpdatedEventArgs_DEFINED__
+
+OBJCUWPWINDOWSDEVICESPOINTOFSERVICEEXPORT
+@interface WDPLineDisplayStatusUpdatedEventArgs : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (readonly) WDPLineDisplayPowerStatus status;
+@end
+
+#endif // __WDPLineDisplayStatusUpdatedEventArgs_DEFINED__
+
+// Windows.Devices.PointOfService.LineDisplayCapabilities
+#ifndef __WDPLineDisplayCapabilities_DEFINED__
+#define __WDPLineDisplayCapabilities_DEFINED__
+
+OBJCUWPWINDOWSDEVICESPOINTOFSERVICEEXPORT
+@interface WDPLineDisplayCapabilities : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (readonly) WDPLineDisplayTextAttributeGranularity canBlink;
+@property (readonly) BOOL canChangeBlinkRate;
+@property (readonly) BOOL canChangeScreenSize;
+@property (readonly) BOOL canDisplayBitmaps;
+@property (readonly) BOOL canDisplayCustomGlyphs;
+@property (readonly) BOOL canMapCharacterSets;
+@property (readonly) BOOL canReadCharacterAtCursor;
+@property (readonly) WDPLineDisplayTextAttributeGranularity canReverse;
+@property (readonly) BOOL isBrightnessSupported;
+@property (readonly) BOOL isCursorSupported;
+@property (readonly) BOOL isHorizontalMarqueeSupported;
+@property (readonly) BOOL isInterCharacterWaitSupported;
+@property (readonly) BOOL isStatisticsReportingSupported;
+@property (readonly) BOOL isStatisticsUpdatingSupported;
+@property (readonly) BOOL isVerticalMarqueeSupported;
+@property (readonly) WDPUnifiedPosPowerReportingType powerReportingType;
+@property (readonly) unsigned int supportedDescriptors;
+@property (readonly) unsigned int supportedWindows;
+@end
+
+#endif // __WDPLineDisplayCapabilities_DEFINED__
+
+// Windows.Devices.PointOfService.LineDisplayAttributes
+#ifndef __WDPLineDisplayAttributes_DEFINED__
+#define __WDPLineDisplayAttributes_DEFINED__
+
+OBJCUWPWINDOWSDEVICESPOINTOFSERVICEEXPORT
+@interface WDPLineDisplayAttributes : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (retain) WFSize* screenSizeInCharacters;
+@property BOOL isPowerNotifyEnabled;
+@property BOOL isCharacterSetMappingEnabled;
+@property (retain) WDPLineDisplayWindow* currentWindow;
+@property int characterSet;
+@property int brightness;
+@property (retain) WFTimeSpan* blinkRate;
+@end
+
+#endif // __WDPLineDisplayAttributes_DEFINED__
 

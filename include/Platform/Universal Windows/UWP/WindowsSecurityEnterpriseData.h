@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -27,8 +27,8 @@
 #endif
 #include <UWP/interopBase.h>
 
-@class WSEFileProtectionInfo, WSEProtectedContainerExportResult, WSEProtectedContainerImportResult, WSEProtectedFileCreateResult, WSEBufferProtectUnprotectResult, WSEDataProtectionInfo, WSEProtectionPolicyAuditInfo, WSEThreadNetworkContext, WSEProtectionPolicyManager, WSEProtectedAccessSuspendingEventArgs, WSEProtectedAccessResumedEventArgs, WSEProtectedContentRevokedEventArgs, WSEFileRevocationManager, WSEFileProtectionManager, WSEDataProtectionManager;
-@protocol WSEIFileRevocationManagerStatics, WSEIFileProtectionManagerStatics, WSEIFileProtectionManagerStatics2, WSEIProtectedFileCreateResult, WSEIFileProtectionInfo, WSEIProtectedContainerExportResult, WSEIProtectedContainerImportResult, WSEIDataProtectionManagerStatics, WSEIDataProtectionInfo, WSEIBufferProtectUnprotectResult, WSEIProtectionPolicyAuditInfoFactory, WSEIProtectionPolicyAuditInfo, WSEIProtectionPolicyManager, WSEIProtectionPolicyManager2, WSEIProtectionPolicyManagerStatics, WSEIProtectionPolicyManagerStatics2, WSEIProtectionPolicyManagerStatics3, WSEIThreadNetworkContext, WSEIProtectedAccessSuspendingEventArgs, WSEIProtectedAccessResumedEventArgs, WSEIProtectedContentRevokedEventArgs;
+@class WSEFileProtectionInfo, WSEProtectedContainerExportResult, WSEProtectedContainerImportResult, WSEProtectedFileCreateResult, WSEFileUnprotectOptions, WSEBufferProtectUnprotectResult, WSEDataProtectionInfo, WSEProtectionPolicyAuditInfo, WSEThreadNetworkContext, WSEProtectionPolicyManager, WSEProtectedAccessSuspendingEventArgs, WSEProtectedAccessResumedEventArgs, WSEProtectedContentRevokedEventArgs, WSEFileRevocationManager, WSEFileProtectionManager, WSEDataProtectionManager;
+@protocol WSEIFileRevocationManagerStatics, WSEIFileProtectionManagerStatics, WSEIFileProtectionManagerStatics2, WSEIFileUnprotectOptionsFactory, WSEIFileUnprotectOptions, WSEIFileProtectionManagerStatics3, WSEIProtectedFileCreateResult, WSEIFileProtectionInfo, WSEIFileProtectionInfo2, WSEIProtectedContainerExportResult, WSEIProtectedContainerImportResult, WSEIDataProtectionManagerStatics, WSEIDataProtectionInfo, WSEIBufferProtectUnprotectResult, WSEIProtectionPolicyAuditInfoFactory, WSEIProtectionPolicyAuditInfo, WSEIProtectionPolicyManager, WSEIProtectionPolicyManager2, WSEIProtectionPolicyManagerStatics, WSEIProtectionPolicyManagerStatics2, WSEIProtectionPolicyManagerStatics3, WSEIProtectionPolicyManagerStatics4, WSEIThreadNetworkContext, WSEIProtectedAccessSuspendingEventArgs, WSEIProtectedAccessResumedEventArgs, WSEIProtectedContentRevokedEventArgs;
 
 // Windows.Security.EnterpriseData.ProtectionPolicyEvaluationResult
 enum _WSEProtectionPolicyEvaluationResult {
@@ -123,6 +123,7 @@ OBJCUWPWINDOWSSECURITYENTERPRISEDATAEXPORT
 @property (readonly) NSString * identity;
 @property (readonly) BOOL isRoamable;
 @property (readonly) WSEFileProtectionStatus status;
+@property (readonly) BOOL isProtectWhileOpenSupported;
 @end
 
 #endif // __WSEFileProtectionInfo_DEFINED__
@@ -172,6 +173,21 @@ OBJCUWPWINDOWSSECURITYENTERPRISEDATAEXPORT
 @end
 
 #endif // __WSEProtectedFileCreateResult_DEFINED__
+
+// Windows.Security.EnterpriseData.FileUnprotectOptions
+#ifndef __WSEFileUnprotectOptions_DEFINED__
+#define __WSEFileUnprotectOptions_DEFINED__
+
+OBJCUWPWINDOWSSECURITYENTERPRISEDATAEXPORT
+@interface WSEFileUnprotectOptions : RTObject
++ (WSEFileUnprotectOptions*)make:(BOOL)audit ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property BOOL audit;
+@end
+
+#endif // __WSEFileUnprotectOptions_DEFINED__
 
 // Windows.Security.EnterpriseData.BufferProtectUnprotectResult
 #ifndef __WSEBufferProtectUnprotectResult_DEFINED__
@@ -256,15 +272,6 @@ OBJCUWPWINDOWSSECURITYENTERPRISEDATAEXPORT
 
 OBJCUWPWINDOWSSECURITYENTERPRISEDATAEXPORT
 @interface WSEProtectionPolicyManager : RTObject
-+ (BOOL)isIdentityManaged:(NSString *)identity;
-+ (BOOL)tryApplyProcessUIPolicy:(NSString *)identity;
-+ (void)clearProcessUIPolicy;
-+ (WSEThreadNetworkContext*)createCurrentThreadNetworkContext:(NSString *)identity;
-+ (void)getPrimaryManagedIdentityForNetworkEndpointAsync:(WNHostName*)endpointHost success:(void (^)(NSString *))success failure:(void (^)(NSError*))failure;
-+ (void)revokeContent:(NSString *)identity;
-+ (WSEProtectionPolicyManager*)getForCurrentView;
-+ (WSEProtectionPolicyEvaluationResult)checkAccess:(NSString *)sourceIdentity targetIdentity:(NSString *)targetIdentity;
-+ (void)requestAccessAsync:(NSString *)sourceIdentity targetIdentity:(NSString *)targetIdentity success:(void (^)(WSEProtectionPolicyEvaluationResult))success failure:(void (^)(NSError*))failure;
 + (BOOL)hasContentBeenRevokedSince:(NSString *)identity since:(WFDateTime*)since;
 + (WSEProtectionPolicyEvaluationResult)checkAccessForApp:(NSString *)sourceIdentity appPackageFamilyName:(NSString *)appPackageFamilyName;
 + (void)requestAccessForAppAsync:(NSString *)sourceIdentity appPackageFamilyName:(NSString *)appPackageFamilyName success:(void (^)(WSEProtectionPolicyEvaluationResult))success failure:(void (^)(NSError*))failure;
@@ -276,12 +283,32 @@ OBJCUWPWINDOWSSECURITYENTERPRISEDATAEXPORT
 + (void)requestAccessForAppWithAuditingInfoAsync:(NSString *)sourceIdentity appPackageFamilyName:(NSString *)appPackageFamilyName auditInfo:(WSEProtectionPolicyAuditInfo*)auditInfo success:(void (^)(WSEProtectionPolicyEvaluationResult))success failure:(void (^)(NSError*))failure;
 + (void)requestAccessForAppWithMessageAsync:(NSString *)sourceIdentity appPackageFamilyName:(NSString *)appPackageFamilyName auditInfo:(WSEProtectionPolicyAuditInfo*)auditInfo messageFromApp:(NSString *)messageFromApp success:(void (^)(WSEProtectionPolicyEvaluationResult))success failure:(void (^)(NSError*))failure;
 + (void)logAuditEvent:(NSString *)sourceIdentity targetIdentity:(NSString *)targetIdentity auditInfo:(WSEProtectionPolicyAuditInfo*)auditInfo;
++ (BOOL)isRoamableProtectionEnabled:(NSString *)identity;
++ (void)requestAccessWithBehaviorAsync:(NSString *)sourceIdentity targetIdentity:(NSString *)targetIdentity auditInfo:(WSEProtectionPolicyAuditInfo*)auditInfo messageFromApp:(NSString *)messageFromApp behavior:(WSEProtectionPolicyRequestAccessBehavior)behavior success:(void (^)(WSEProtectionPolicyEvaluationResult))success failure:(void (^)(NSError*))failure;
++ (void)requestAccessForAppWithBehaviorAsync:(NSString *)sourceIdentity appPackageFamilyName:(NSString *)appPackageFamilyName auditInfo:(WSEProtectionPolicyAuditInfo*)auditInfo messageFromApp:(NSString *)messageFromApp behavior:(WSEProtectionPolicyRequestAccessBehavior)behavior success:(void (^)(WSEProtectionPolicyEvaluationResult))success failure:(void (^)(NSError*))failure;
++ (void)requestAccessToFilesForAppAsync:(id<NSFastEnumeration> /* RTObject<WSIStorageItem>* */)sourceItemList appPackageFamilyName:(NSString *)appPackageFamilyName auditInfo:(WSEProtectionPolicyAuditInfo*)auditInfo success:(void (^)(WSEProtectionPolicyEvaluationResult))success failure:(void (^)(NSError*))failure;
++ (void)requestAccessToFilesForAppWithMessageAndBehaviorAsync:(id<NSFastEnumeration> /* RTObject<WSIStorageItem>* */)sourceItemList appPackageFamilyName:(NSString *)appPackageFamilyName auditInfo:(WSEProtectionPolicyAuditInfo*)auditInfo messageFromApp:(NSString *)messageFromApp behavior:(WSEProtectionPolicyRequestAccessBehavior)behavior success:(void (^)(WSEProtectionPolicyEvaluationResult))success failure:(void (^)(NSError*))failure;
++ (void)requestAccessToFilesForProcessAsync:(id<NSFastEnumeration> /* RTObject<WSIStorageItem>* */)sourceItemList processId:(unsigned int)processId auditInfo:(WSEProtectionPolicyAuditInfo*)auditInfo success:(void (^)(WSEProtectionPolicyEvaluationResult))success failure:(void (^)(NSError*))failure;
++ (void)requestAccessToFilesForProcessWithMessageAndBehaviorAsync:(id<NSFastEnumeration> /* RTObject<WSIStorageItem>* */)sourceItemList processId:(unsigned int)processId auditInfo:(WSEProtectionPolicyAuditInfo*)auditInfo messageFromApp:(NSString *)messageFromApp behavior:(WSEProtectionPolicyRequestAccessBehavior)behavior success:(void (^)(WSEProtectionPolicyEvaluationResult))success failure:(void (^)(NSError*))failure;
++ (void)isFileProtectionRequiredAsync:(RTObject<WSIStorageItem>*)target identity:(NSString *)identity success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
++ (void)isFileProtectionRequiredForNewFileAsync:(RTObject<WSIStorageFolder>*)parentFolder identity:(NSString *)identity desiredName:(NSString *)desiredName success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
++ (NSString *)getPrimaryManagedIdentityForIdentity:(NSString *)identity;
++ (BOOL)isIdentityManaged:(NSString *)identity;
++ (BOOL)tryApplyProcessUIPolicy:(NSString *)identity;
++ (void)clearProcessUIPolicy;
++ (WSEThreadNetworkContext*)createCurrentThreadNetworkContext:(NSString *)identity;
++ (void)getPrimaryManagedIdentityForNetworkEndpointAsync:(WNHostName*)endpointHost success:(void (^)(NSString *))success failure:(void (^)(NSError*))failure;
++ (void)revokeContent:(NSString *)identity;
++ (WSEProtectionPolicyManager*)getForCurrentView;
++ (WSEProtectionPolicyEvaluationResult)checkAccess:(NSString *)sourceIdentity targetIdentity:(NSString *)targetIdentity;
++ (void)requestAccessAsync:(NSString *)sourceIdentity targetIdentity:(NSString *)targetIdentity success:(void (^)(WSEProtectionPolicyEvaluationResult))success failure:(void (^)(NSError*))failure;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) NSString * identity;
 @property BOOL showEnterpriseIndicator;
 + (BOOL)isProtectionEnabled;
++ (NSString *)primaryManagedIdentity;
 + (EventRegistrationToken)addPolicyChangedEvent:(void(^)(RTObject*, RTObject*))del;
 + (void)removePolicyChangedEvent:(EventRegistrationToken)tok;
 + (EventRegistrationToken)addProtectedAccessResumedEvent:(void(^)(RTObject*, WSEProtectedAccessResumedEventArgs*))del;
@@ -358,6 +385,11 @@ OBJCUWPWINDOWSSECURITYENTERPRISEDATAEXPORT
 
 OBJCUWPWINDOWSSECURITYENTERPRISEDATAEXPORT
 @interface WSEFileProtectionManager : RTObject
++ (void)unprotectAsync:(RTObject<WSIStorageItem>*)target success:(void (^)(WSEFileProtectionInfo*))success failure:(void (^)(NSError*))failure;
++ (void)unprotectWithOptionsAsync:(RTObject<WSIStorageItem>*)target options:(WSEFileUnprotectOptions*)options success:(void (^)(WSEFileProtectionInfo*))success failure:(void (^)(NSError*))failure;
++ (void)isContainerAsync:(RTObject<WSIStorageFile>*)file success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
++ (void)loadFileFromContainerWithTargetAndNameCollisionOptionAsync:(RTObject<WSIStorageFile>*)containerFile target:(RTObject<WSIStorageItem>*)target collisionOption:(WSNameCollisionOption)collisionOption success:(void (^)(WSEProtectedContainerImportResult*))success failure:(void (^)(NSError*))failure;
++ (void)saveFileAsContainerWithSharingAsync:(RTObject<WSIStorageFile>*)protectedFile sharedWithIdentities:(id<NSFastEnumeration> /* NSString * */)sharedWithIdentities success:(void (^)(WSEProtectedContainerExportResult*))success failure:(void (^)(NSError*))failure;
 + (void)protectAsync:(RTObject<WSIStorageItem>*)target identity:(NSString *)identity success:(void (^)(WSEFileProtectionInfo*))success failure:(void (^)(NSError*))failure;
 + (void)copyProtectionAsync:(RTObject<WSIStorageItem>*)source target:(RTObject<WSIStorageItem>*)target success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 + (void)getProtectionInfoAsync:(RTObject<WSIStorageItem>*)source success:(void (^)(WSEFileProtectionInfo*))success failure:(void (^)(NSError*))failure;
@@ -365,9 +397,6 @@ OBJCUWPWINDOWSSECURITYENTERPRISEDATAEXPORT
 + (void)loadFileFromContainerAsync:(RTObject<WSIStorageFile>*)containerFile success:(void (^)(WSEProtectedContainerImportResult*))success failure:(void (^)(NSError*))failure;
 + (void)loadFileFromContainerWithTargetAsync:(RTObject<WSIStorageFile>*)containerFile target:(RTObject<WSIStorageItem>*)target success:(void (^)(WSEProtectedContainerImportResult*))success failure:(void (^)(NSError*))failure;
 + (void)createProtectedAndOpenAsync:(RTObject<WSIStorageFolder>*)parentFolder desiredName:(NSString *)desiredName identity:(NSString *)identity collisionOption:(WSCreationCollisionOption)collisionOption success:(void (^)(WSEProtectedFileCreateResult*))success failure:(void (^)(NSError*))failure;
-+ (void)isContainerAsync:(RTObject<WSIStorageFile>*)file success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
-+ (void)loadFileFromContainerWithTargetAndNameCollisionOptionAsync:(RTObject<WSIStorageFile>*)containerFile target:(RTObject<WSIStorageItem>*)target collisionOption:(WSNameCollisionOption)collisionOption success:(void (^)(WSEProtectedContainerImportResult*))success failure:(void (^)(NSError*))failure;
-+ (void)saveFileAsContainerWithSharingAsync:(RTObject<WSIStorageFile>*)protectedFile sharedWithIdentities:(id<NSFastEnumeration> /* NSString * */)sharedWithIdentities success:(void (^)(WSEProtectedContainerExportResult*))success failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WSEFileProtectionManager_DEFINED__

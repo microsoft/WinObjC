@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -28,7 +28,7 @@
 #include <UWP/interopBase.h>
 
 @class WDMMidiNoteOffMessage, WDMMidiNoteOnMessage, WDMMidiPolyphonicKeyPressureMessage, WDMMidiControlChangeMessage, WDMMidiProgramChangeMessage, WDMMidiChannelPressureMessage, WDMMidiPitchBendChangeMessage, WDMMidiSystemExclusiveMessage, WDMMidiTimeCodeMessage, WDMMidiSongPositionPointerMessage, WDMMidiSongSelectMessage, WDMMidiTuneRequestMessage, WDMMidiTimingClockMessage, WDMMidiStartMessage, WDMMidiContinueMessage, WDMMidiStopMessage, WDMMidiActiveSensingMessage, WDMMidiSystemResetMessage, WDMMidiMessageReceivedEventArgs, WDMMidiInPort, WDMMidiOutPort, WDMMidiSynthesizer;
-@protocol WDMIMidiMessage, WDMIMidiNoteOffMessage, WDMIMidiNoteOnMessage, WDMIMidiPolyphonicKeyPressureMessage, WDMIMidiControlChangeMessage, WDMIMidiProgramChangeMessage, WDMIMidiChannelPressureMessage, WDMIMidiPitchBendChangeMessage, WDMIMidiTimeCodeMessage, WDMIMidiSongPositionPointerMessage, WDMIMidiSongSelectMessage, WDMIMidiNoteOffMessageFactory, WDMIMidiNoteOnMessageFactory, WDMIMidiPolyphonicKeyPressureMessageFactory, WDMIMidiControlChangeMessageFactory, WDMIMidiProgramChangeMessageFactory, WDMIMidiChannelPressureMessageFactory, WDMIMidiPitchBendChangeMessageFactory, WDMIMidiSystemExclusiveMessageFactory, WDMIMidiTimeCodeMessageFactory, WDMIMidiSongPositionPointerMessageFactory, WDMIMidiSongSelectMessageFactory, WDMIMidiMessageReceivedEventArgs, WDMIMidiInPortStatics, WDMIMidiOutPortStatics, WDMIMidiSynthesizerStatics, WDMIMidiOutPort, WDMIMidiInPort, WDMIMidiSynthesizer;
+@protocol WDMIMidiMessage, WDMIMidiNoteOffMessage, WDMIMidiNoteOnMessage, WDMIMidiPolyphonicKeyPressureMessage, WDMIMidiControlChangeMessage, WDMIMidiProgramChangeMessage, WDMIMidiChannelPressureMessage, WDMIMidiPitchBendChangeMessage, WDMIMidiTimeCodeMessage, WDMIMidiSongPositionPointerMessage, WDMIMidiSongSelectMessage, WDMIMidiNoteOffMessageFactory, WDMIMidiNoteOnMessageFactory, WDMIMidiPolyphonicKeyPressureMessageFactory, WDMIMidiControlChangeMessageFactory, WDMIMidiProgramChangeMessageFactory, WDMIMidiChannelPressureMessageFactory, WDMIMidiPitchBendChangeMessageFactory, WDMIMidiSystemExclusiveMessageFactory, WDMIMidiTimeCodeMessageFactory, WDMIMidiSongPositionPointerMessageFactory, WDMIMidiSongSelectMessageFactory, WDMIMidiMessageReceivedEventArgs, WDMIMidiInPortStatics, WDMIMidiOutPortStatics, WDMIMidiOutPort, WDMIMidiInPort, WDMIMidiSynthesizerStatics, WDMIMidiSynthesizer;
 
 // Windows.Devices.Midi.MidiMessageType
 enum _WDMMidiMessageType {
