@@ -21,6 +21,7 @@
 #include <stdlib.h>
 #include "UIRuntimeOutletCollectionConnection.h"
 #include "UILayoutGuide.h"
+#include "NSLayoutConstraint.h"
 
 static void InvertBool(struct _PropertyMapper* prop, NIBWriter* writer, XIBObject* propObj, XIBObject* obj) {
     XIBObjectBool* value = (XIBObjectBool*)propObj;
@@ -316,7 +317,23 @@ void UIView::ConvertStaticMappings(NIBWriter* writer, XIBObject* obj) {
     }
 
     if (_constraints->count() > 0) {
-        AddOutputMember(writer, "UIViewAutolayoutConstraints", _constraints);
+        // remove placeholders
+        XIBArray *tmp = new XIBArray();
+        for (int i = 0; i < _constraints->count(); i++) {
+            XIBObject *obj = _constraints->objectAtIndex(i);
+            if (obj->_outputClassName && strcmp(obj->_outputClassName, "NSLayoutConstraint") == 0) {
+                NSLayoutConstraint *constraint = (NSLayoutConstraint*)obj;
+                if (constraint->_placeholder)
+                    continue;
+            }
+            tmp->AddMember(NULL, obj);
+        }
+        if (tmp->count())
+            AddOutputMember(writer, "UIViewAutolayoutConstraints", tmp);
+        // FIXME: commented out as it produce a warning that XIBArrays is not final
+        // so tmp will leak here
+        // else
+        //    delete tmp;
     }
 
     if (_layoutGuides->count() > 0) {

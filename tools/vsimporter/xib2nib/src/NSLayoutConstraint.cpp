@@ -59,6 +59,7 @@ NSLayoutConstraint::NSLayoutConstraint() {
     _symbolicConstant = 0.0;
     _hasSymbolicConstant = false;
     _layoutIdentifier = NULL;
+    _placeholder = false;
     _exportDefaultValues = false;
 }
 
@@ -141,6 +142,10 @@ void NSLayoutConstraint::InitFromStory(XIBObject* obj) {
         if (storyToRelation.find(attr) != storyToRelation.end()) {
             _relation = storyToRelation[attr];
         }
+    }
+
+    if ((attr = obj->getAttrAndHandle("placeholder"))) {
+        _placeholder = strcmp(attr, "YES") == 0;
     }
 
     _outputClassName = "NSLayoutConstraint";

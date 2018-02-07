@@ -27,6 +27,7 @@ enum {
     NSLayoutPriorityDefaultLow = 250,
     NSLayoutPriorityFittingSizeCompression = 50,
 };
+
 typedef float NSLayoutPriority;
 
 typedef enum {
@@ -76,6 +77,7 @@ public:
     double _symbolicConstant;
     bool _hasSymbolicConstant;
     const char* _layoutIdentifier;
+    bool _placeholder;
     bool _exportDefaultValues;
 
 public:
