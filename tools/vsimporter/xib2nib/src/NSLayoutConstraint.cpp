@@ -154,13 +154,8 @@ void NSLayoutConstraint::InitFromStory(XIBObject* obj) {
 void NSLayoutConstraint::Awaken() {
     if (!_firstItem) {
         // Alludes to superview.
-        if (_secondItem && _secondItem->_parent) {
-            _firstItem = dynamic_cast<UIView*>(_secondItem->_parent->_parent);
-            assert(_firstItem);
-        } else {
-            _firstItem = dynamic_cast<UIView*>(_parent->_parent);
-            assert(_firstItem);
-        }
+        _firstItem = dynamic_cast<UIView*>(_parent->_parent);
+        assert(_firstItem);
     }
 }
 

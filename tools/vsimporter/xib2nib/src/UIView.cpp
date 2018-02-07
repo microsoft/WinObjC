@@ -19,6 +19,7 @@
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "UIRuntimeOutletCollectionConnection.h"
 #include "UILayoutGuide.h"
 #include "NSLayoutConstraint.h"
@@ -37,6 +38,11 @@ static PropertyMapper propertyMappings[] = {
     {"IBUIAlpha", "UIAlpha", NULL},
 };
 static const int numPropertyMappings = sizeof(propertyMappings) / sizeof(PropertyMapper);
+
+enum {
+    NSContentHugginPriorityDefault = 250,
+    NSContentCompressionResistancePriorityDefault = 750
+};
 
 UIView::UIView() {
     memset(&_bounds, 0, sizeof(_bounds));
@@ -58,10 +64,10 @@ UIView::UIView() {
     _enabled = true;
     _translatesAutoresizeToConstraints = true;
     _tag = -1;
-    _horizontalHuggingPriority = -1.0;
-    _verticalHuggingPriority = -1.0;
-    _horizontalCompressionResistancePriority = -1.0;
-    _verticalCompressionResistancePriority = -1.0;
+    _horizontalHuggingPriority = NSContentHugginPriorityDefault;
+    _verticalHuggingPriority = NSContentHugginPriorityDefault;
+    _horizontalCompressionResistancePriority = NSContentCompressionResistancePriorityDefault;
+    _verticalCompressionResistancePriority = NSContentCompressionResistancePriorityDefault;
 }
 
 void UIView::InitFromXIB(XIBObject* obj) {
@@ -272,19 +278,19 @@ void UIView::InitFromStory(XIBObject* obj) {
     }
 
     if (getAttrib("horizontalHuggingPriority")) {
-        _horizontalHuggingPriority = strtof(getAttrAndHandle("horizontalHuggingPriority"), NULL);
+        _horizontalHuggingPriority = std::stoi(getAttrAndHandle("horizontalHuggingPriority"), NULL);
     }
 
     if (getAttrib("verticalHuggingPriority")) {
-        _verticalHuggingPriority = strtof(getAttrAndHandle("verticalHuggingPriority"), NULL);
+        _verticalHuggingPriority = std::stoi(getAttrAndHandle("verticalHuggingPriority"), NULL);
     }
 
     if (getAttrib("horizontalCompressionResistancePriority")) {
-        _horizontalCompressionResistancePriority = strtof(getAttrAndHandle("horizontalCompressionResistancePriority"), NULL);
+        _horizontalCompressionResistancePriority = std::stoi(getAttrAndHandle("horizontalCompressionResistancePriority"), NULL);
     }
 
     if (getAttrib("verticalCompressionResistancePriority")) {
-        _verticalCompressionResistancePriority = strtof(getAttrAndHandle("verticalCompressionResistancePriority"), NULL);
+        _verticalCompressionResistancePriority = std::stoi(getAttrAndHandle("verticalCompressionResistancePriority"), NULL);
     }
 
     _outputClassName = "UIView";
@@ -397,22 +403,17 @@ void UIView::ConvertStaticMappings(NIBWriter* writer, XIBObject* obj) {
         obj->AddInt(writer, "UITag", _tag);
     }
 
-    if (_horizontalHuggingPriority >= 0.0) {
-        AddOutputMember(writer, "UIViewHorizontalHuggingPriority", new XIBObjectFloat(_horizontalHuggingPriority));
+    if (_horizontalHuggingPriority != NSContentHugginPriorityDefault || _verticalHuggingPriority != NSContentHugginPriorityDefault) {
+        char buf[128];
+        snprintf(buf, 128, "{%d, %d}", _horizontalHuggingPriority, _verticalHuggingPriority);
+        obj->AddString(writer, "UIViewContentHuggingPriority", strdup(buf));
     }
 
-    if (_verticalHuggingPriority >= 0.0) {
-        AddOutputMember(writer, "UIViewVerticalHuggingPriority", new XIBObjectFloat(_verticalHuggingPriority));
-    }
-
-    if (_horizontalCompressionResistancePriority >= 0.0) {
-        AddOutputMember(writer,
-                        "UIViewHorizontalCompressionResistancePriority",
-                        new XIBObjectFloat(_horizontalCompressionResistancePriority));
-    }
-
-    if (_verticalCompressionResistancePriority >= 0.0) {
-        AddOutputMember(writer, "UIViewVerticalCompressionResistancePriority", new XIBObjectFloat(_verticalCompressionResistancePriority));
+    if (_horizontalCompressionResistancePriority != NSContentCompressionResistancePriorityDefault ||
+        _verticalCompressionResistancePriority != NSContentCompressionResistancePriorityDefault) {
+        char buf[128];
+        snprintf(buf, 128, "{%d, %d}", _horizontalCompressionResistancePriority, _verticalCompressionResistancePriority);
+        obj->AddString(writer, "UIViewContentCompressionResistancePriority", strdup(buf));
     }
 
     ObjectConverterSwapper::ConvertStaticMappings(writer, obj);
