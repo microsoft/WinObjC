@@ -43,6 +43,10 @@ std::map<std::string, NSLayoutAttribute> storyToLayout = { { "left", NSLayoutAtt
                                                            { "centerXWithinMargins", NSLayoutAttributeCenterXWithinMargins },
                                                            { "centerYWithinMargins", NSLayoutAttributeCenterYWithinMargins } };
 
+static std::map<std::string, NSLayoutRelation> storyToRelation = {
+    { "greaterThanOrEqual", NSLayoutRelationGreaterThanOrEqual },
+    { "lessThanOrEqual", NSLayoutRelationLessThanOrEqual }};
+
 NSLayoutConstraint::NSLayoutConstraint() {
     _firstItem = NULL;
     _secondItem = NULL;
@@ -127,9 +131,16 @@ void NSLayoutConstraint::InitFromStory(XIBObject* obj) {
         _secondItem = findReference(attr);
         assert(_secondItem);
     }
+
     if ((attr = getAttrAndHandle("firstItem"))) {
         _firstItem = findReference(attr);
         assert(_firstItem);
+    }
+
+    if ((attr = obj->getAttrAndHandle("relation"))) {
+        if (storyToRelation.find(attr) != storyToRelation.end()) {
+            _relation = storyToRelation[attr];
+        }
     }
 
     _outputClassName = "NSLayoutConstraint";
