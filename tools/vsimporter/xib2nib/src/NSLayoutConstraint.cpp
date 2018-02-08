@@ -125,7 +125,13 @@ void NSLayoutConstraint::InitFromStory(XIBObject* obj) {
     }
 
     if ((attr = obj->getAttrAndHandle("multiplier"))) {
-        _multiplier = strtod(attr, NULL);
+        char *separator;
+        _multiplier = strtod(attr, &separator);
+        if (*separator == ':') {
+            // it is multiplier in form of "100:200"
+            double div = strtod(separator + 1, NULL);
+            _multiplier /= div;
+        }
     }
 
     if ((attr = getAttrAndHandle("secondItem"))) {
