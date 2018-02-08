@@ -17,6 +17,7 @@
 #include "UITextField.h"
 #include "UIColor.h"
 #include "UIFont.h"
+#include "UITextInputTraits.h"
 
 static void MakeMutable(struct _PropertyMapper* prop, NIBWriter* writer, XIBObject* propObj, XIBObject* obj) {
     propObj->_className = "NSMutableString";
@@ -52,8 +53,7 @@ UITextField::UITextField() {
     _placeholder = NULL;
     _borderStyle = 0;
     _font = NULL;
-    _autoCorrectionType = 0;
-    _returnKeyType = 0;
+    _textInputTraits = NULL;
     _clearsOnBeginEditing = false;
     _clearButtonOffset.width = 0.0f;
     _clearButtonOffset.height = 0.0f;
@@ -72,12 +72,6 @@ void UITextField::InitFromXIB(XIBObject* obj) {
         _font = (UIFont*)obj->FindMember("IBUIFont");
     }
 
-    XIBObject* inputTraits = obj->FindMember("IBUITextInputTraits");
-    if (inputTraits) {
-        _autoCorrectionType = inputTraits->GetInt("IBUIAutocorrectionType", 0);
-        _returnKeyType = inputTraits->GetInt("IBUIReturnKeyType", 0);
-    }
-
     _clearsOnBeginEditing = obj->GetBool("IBUIClearsOnBeginEditing", false);
     if (_clearsOnBeginEditing) {
         _clearButtonOffset.width = 3.0f;
@@ -90,7 +84,7 @@ void UITextField::InitFromStory(XIBObject* obj) {
     UIControl::InitFromStory(obj);
 
     _font = (UIFont*)obj->FindMemberAndHandle("fontDescription");
-
+    _textInputTraits = (UITextInputTraits*)obj->FindMemberAndHandle("textInputTraits");
     // This is default if borderStyle isn't present
     _borderStyle = 0;
     const char* borderStyle = obj->getAttrAndHandle("borderStyle");
@@ -140,12 +134,8 @@ void UITextField::ConvertStaticMappings(NIBWriter* writer, XIBObject* obj) {
         obj->AddOutputMember(writer, "UITextColor", color->CreateObject(writer));
     }
 
-    if (_autoCorrectionType) {
-        AddInt(writer, "UIAutocorrectionType", _autoCorrectionType);
-    }
-
-    if (_returnKeyType) {
-        AddInt(writer, "UIReturnKeyType", _returnKeyType);
+    if (_textInputTraits) {
+        _textInputTraits->ConvertStaticMappings(writer, this);
     }
 
     if (_clearsOnBeginEditing) {

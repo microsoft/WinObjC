@@ -21,6 +21,7 @@
 #include "UIColor.h"
 #include "UIButton.h"
 #include "UIFont.h"
+#include "UITextInputTraits.h"
 #include "UIRuntimeEventConnection.h"
 #include "UIRuntimeOutletConnection.h"
 #include "UIRuntimeOutletCollectionConnection.h"
@@ -171,6 +172,7 @@ XIBObject* ObjectConverter::ConverterForStoryObject(const char* className, pugi:
     IS_CONVERTER(ret, className, "outletCollection", UIRuntimeOutletCollectionConnection)
     IS_CONVERTER(ret, className, "segue", UIStoryboardSegue)
     IS_CONVERTER(ret, className, "fontDescription", UIFont)
+    IS_CONVERTER(ret, className, "textInputTraits", UITextInputTraits)
     IS_CONVERTER(ret, className, "tableViewController", UITableViewController)
     IS_CONVERTER(ret, className, "tableView", UITableView)
     IS_CONVERTER(ret, className, "tableViewCell", UITableViewCell)
