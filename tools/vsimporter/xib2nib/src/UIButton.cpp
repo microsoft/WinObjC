@@ -195,6 +195,7 @@ UIButton::UIButton() {
     _buttonType = 0;
     _statefulContent = NULL;
     _font = NULL;
+    _tintColor = NULL;
 
     // default line break mode is middleTrucation
     _lineBreakMode = UILineBreakModeMiddleTruncation;
@@ -242,6 +243,7 @@ void UIButton::InitFromStory(XIBObject* obj) {
     }
 
     _font = (UIFont*)obj->FindMemberAndHandle("fontDescription");
+    _tintColor = (UIColor*)FindMemberAndHandle("tintColor");
 
     const char* lineBreakModeAttributeValue = getAttrib("lineBreakMode");
     if (lineBreakModeAttributeValue) {
@@ -282,18 +284,22 @@ void UIButton::ConvertStaticMappings(NIBWriter* writer, XIBObject* obj) {
         obj->AddOutputMember(writer, "UIFont", _font);
     }
 
+    if (_tintColor) {
+        AddOutputMember(writer, "UITintColor", _tintColor);
+    }
+    
     if (_lineBreakMode != UILineBreakModeMiddleTruncation) {
         AddInt(writer, "UILineBreakMode", _lineBreakMode);
     }
 
-    // Default is true, so no need to write to nib if that's the case
-    if (!_adjustsImageWhenHighlighted) {
-        AddBool(writer, "UIAdjustsImageWhenHighlighted", false);
+    // Default in NIB is false, so no need to write to nib if that's the case
+    if (_adjustsImageWhenHighlighted) {
+        AddBool(writer, "UIAdjustsImageWhenHighlighted", true);
     }
 
-    // Default is true, so no need to write to nib if that's the case
-    if (!_adjustsImageWhenDisabled) {
-        AddBool(writer, "UIAdjustsImageWhenDisabled", false);
+    // Default in NIB is false, so no need to write to nib if that's the case
+    if (_adjustsImageWhenDisabled) {
+        AddBool(writer, "UIAdjustsImageWhenDisabled", true);
     }
 
     // Insets

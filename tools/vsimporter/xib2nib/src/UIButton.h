@@ -37,6 +37,7 @@ class UIButton : public UIControl {
 public:
     int _buttonType;
     UIFont* _font;
+    UIColor* _tintColor;
     XIBObject* _statefulContent;
     bool _adjustsImageWhenHighlighted;
     bool _adjustsImageWhenDisabled;
