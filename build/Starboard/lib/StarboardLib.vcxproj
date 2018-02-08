@@ -45,6 +45,7 @@
     <ProjectName>StarboardLib</ProjectName>
     <RootNamespace>StarboardLib</RootNamespace>
     <AppContainerApplication>true</AppContainerApplication>
+    <BuildingFrameworksCore>true</BuildingFrameworksCore>
     <StarboardBasePath>$(MSBuildThisFileDirectory)..\..\..</StarboardBasePath>
     <OutputName>StarboardLib</OutputName>
   </PropertyGroup>

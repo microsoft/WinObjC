@@ -293,6 +293,7 @@
     <ProjectName>FoundationLib</ProjectName>
     <RootNamespace>FoundationLib</RootNamespace>
     <AppContainerApplication>true</AppContainerApplication>
+    <BuildingFrameworksCore>true</BuildingFrameworksCore>
     <StarboardBasePath>$(MSBuildThisFileDirectory)..\..\..</StarboardBasePath>
     <OutputName>FoundationLib</OutputName>
   </PropertyGroup>

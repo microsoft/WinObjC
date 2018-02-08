@@ -29,6 +29,7 @@
     <ProjectName>MobileCoreservicesLib</ProjectName>
     <RootNamespace>MobileCoreservicesLib</RootNamespace>
     <AppContainerApplication>true</AppContainerApplication>
+    <BuildingFrameworksCore>true</BuildingFrameworksCore>
     <StarboardBasePath>$(MSBuildThisFileDirectory)..\..\..</StarboardBasePath>
     <OutputName>MobileCoreservicesLib</OutputName>
   </PropertyGroup>
