@@ -486,6 +486,25 @@ bool XIBObject::GetBool(char* pPropName, bool defaultValue) {
     return defaultValue;
 }
 
+
+void XIBObject::PopulateInsetsFromStoryboard(const char* insetType, UIEdgeInsets& insets) {
+    XIBObject* insetNode = FindMemberAndHandle(const_cast<char*>(insetType));
+    if (insetNode) {
+        insets.top = strtof(insetNode->getAttrAndHandle("minY"), NULL);
+        insets.left = strtof(insetNode->getAttrAndHandle("minX"), NULL);
+        insets.bottom = strtof(insetNode->getAttrAndHandle("maxY"), NULL);
+        insets.right = strtof(insetNode->getAttrAndHandle("maxX"), NULL);
+    }
+}
+
+void XIBObject::PopulateSizeFromStoryboard(const char* sizeType, CGSize& size) {
+    XIBObject* sizeNode = FindMemberAndHandle(const_cast<char*>(sizeType));
+    if (sizeNode) {
+        size.width = strtof(sizeNode->getAttrAndHandle("width"), NULL);
+        size.height = strtof(sizeNode->getAttrAndHandle("height"), NULL);
+    }
+}
+
 void XIBObject::AddSize(NIBWriter* writer, char* pPropName, CGSize size) {
     AddData<CGSize>(writer, pPropName, size);
 }

@@ -24,7 +24,7 @@
 #include <assert.h>
 
 void ConvertInsets(struct _PropertyMapper* prop, NIBWriter* writer, XIBObject* propObj, XIBObject* obj) {
-    EdgeInsets edgeInsets;
+    UIEdgeInsets edgeInsets;
     char szName[255];
 
     sprintf(szName, "IBUI%sEdgeInsets.top", prop->nibName);
@@ -217,16 +217,6 @@ void UIButton::InitFromXIB(XIBObject* obj) {
     obj->_outputClassName = "UIButton";
 }
 
-void PopulateInsetsFromStoryboard(XIBObject* obj, const char* insetType, EdgeInsets& insets) {
-    XIBObject* insetNode = obj->FindMemberAndHandle(const_cast<char*>(insetType));
-    if (insetNode) {
-        insets.top = strtof(insetNode->getAttrAndHandle("minY"), NULL);
-        insets.left = strtof(insetNode->getAttrAndHandle("minX"), NULL);
-        insets.bottom = strtof(insetNode->getAttrAndHandle("maxY"), NULL);
-        insets.right = strtof(insetNode->getAttrAndHandle("maxX"), NULL);
-    }
-}
-
 void UIButton::InitFromStory(XIBObject* obj) {
     UIControl::InitFromStory(obj);
 
@@ -267,9 +257,9 @@ void UIButton::InitFromStory(XIBObject* obj) {
     }
 
     // Insets
-    PopulateInsetsFromStoryboard(obj, "imageEdgeInsets", _imageEdgeInsets);
-    PopulateInsetsFromStoryboard(obj, "contentEdgeInsets", _contentEdgeInsets);
-    PopulateInsetsFromStoryboard(obj, "titleEdgeInsets", _titleEdgeInsets);
+    PopulateInsetsFromStoryboard("imageEdgeInsets", _imageEdgeInsets);
+    PopulateInsetsFromStoryboard("contentEdgeInsets", _contentEdgeInsets);
+    PopulateInsetsFromStoryboard("titleEdgeInsets", _titleEdgeInsets);
 
     obj->_outputClassName = "UIButton";
 }

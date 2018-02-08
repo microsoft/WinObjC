@@ -70,7 +70,7 @@ void UINibKeyValuePair::InitFromStory(XIBObject* obj) {
     } else if (strcmp(type , "size") == 0) {
         XIBObject *obj= FindMemberAndHandle("value");
         if (obj) {
-            CGSize size = {0};
+            CGSize size;
             size.width = static_cast<float>(strtod(obj->getAttrAndHandle("width"), NULL));
             size.height = static_cast<float>(strtod(obj->getAttrAndHandle("height"), NULL));
             _value = new XIBObjectValue<CGSize>(size);
@@ -78,7 +78,7 @@ void UINibKeyValuePair::InitFromStory(XIBObject* obj) {
     } else if (strcmp(type , "rect") == 0) {
         XIBObject *obj= FindMemberAndHandle("value");
         if (obj) {
-            UIRect rect = {0};
+            UIRect rect;
             rect.x = static_cast<float>(strtod(obj->getAttrAndHandle("x"), NULL));
             rect.y = static_cast<float>(strtod(obj->getAttrAndHandle("y"), NULL));
             rect.width = static_cast<float>(strtod(obj->getAttrAndHandle("width"), NULL));

@@ -18,19 +18,6 @@
 #include "UIControl.h"
 #include <cmath>
 
-struct EdgeInsets {
-    double top;
-    double left;
-    double bottom;
-    double right;
-
-    EdgeInsets() : top(INFINITY), left(INFINITY), bottom(INFINITY), right(INFINITY) {
-    }
-
-    bool IsValid() {
-        return top != INFINITY && left != INFINITY && bottom != INFINITY && right != INFINITY;
-    }
-};
 
 class UIFont;
 class UIButton : public UIControl {
@@ -41,9 +28,9 @@ public:
     XIBObject* _statefulContent;
     bool _adjustsImageWhenHighlighted;
     bool _adjustsImageWhenDisabled;
-    EdgeInsets _imageEdgeInsets;
-    EdgeInsets _contentEdgeInsets;
-    EdgeInsets _titleEdgeInsets;
+    UIEdgeInsets _imageEdgeInsets;
+    UIEdgeInsets _contentEdgeInsets;
+    UIEdgeInsets _titleEdgeInsets;
     int _lineBreakMode;
 
     UIButton();

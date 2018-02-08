@@ -46,17 +46,52 @@ class XIBArray;
 
 #include "NIBWriter.h"
 
-typedef struct {
-    double width, height; } CGSize;
+typedef struct CGSize{
+    double width, height;
+    
+    CGSize() : width(INFINITY), height(INFINITY) {
+    }
 
-typedef struct {
+    CGSize(double width, double height) : width(width), height(height) {
+    }
+
+    bool IsValid() {
+        return width != INFINITY && height != INFINITY;
+    }
+} CGSize;
+
+typedef struct UIRect {
     double x, y;
     double width, height;
+
+    UIRect() : x(INFINITY), y(INFINITY), width(INFINITY), height(INFINITY) {
+    }
+
+    UIRect(double x, double y, double width, double height) : x(x), y(y), width(width), height(height) {
+    }
+
+    bool IsValid() {
+        return x != INFINITY && y != INFINITY && width != INFINITY && height != INFINITY;
+    }
 } UIRect;
 
 typedef struct { double x, y; } UIPoint;
 
 typedef struct { long long location, length; } NSRange;
+
+typedef struct UIEdgeInsets {
+    double top;
+    double left;
+    double bottom;
+    double right;
+    
+    UIEdgeInsets() : top(INFINITY), left(INFINITY), bottom(INFINITY), right(INFINITY) {
+    }
+    
+    bool IsValid() {
+        return top != INFINITY && left != INFINITY && bottom != INFINITY && right != INFINITY;
+    }
+} UIEdgeInsets;
 
 const char* getNodeAttrib(pugi::xml_node node, const char* name);
 
@@ -126,6 +161,9 @@ public:
     const char* GetString(char* pPropName, char* defaultValue);
     int GetInt(char* pPropName, int defaultValue);
     bool GetBool(char* pPropName, bool defaultValue);
+    
+    void PopulateInsetsFromStoryboard(const char* insetType, UIEdgeInsets& insets);
+    void PopulateSizeFromStoryboard(const char* sizeType, CGSize& size);
 
     template <typename TData>
     void AddData(NIBWriter* writer, char* pPropName, const TData& data) {
