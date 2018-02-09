@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -27,10 +27,40 @@
 #endif
 #include <UWP/interopBase.h>
 
-@class WSPSSmbiosInformation;
-@protocol WSPSISmbiosInformationStatics;
+@class WSPSOemSupportInfo, WSPSSystemSupportInfo, WSPSSmbiosInformation;
+@protocol WSPSIOemSupportInfo, WSPSISystemSupportInfoStatics, WSPSISmbiosInformationStatics;
+
+#include "WindowsFoundation.h"
 
 #import <Foundation/Foundation.h>
+
+// Windows.System.Profile.SystemManufacturers.OemSupportInfo
+#ifndef __WSPSOemSupportInfo_DEFINED__
+#define __WSPSOemSupportInfo_DEFINED__
+
+OBJCUWPWINDOWSSYSTEMPROFILESYSTEMMANUFACTURERSEXPORT
+@interface WSPSOemSupportInfo : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (readonly) WFUri* supportAppLink;
+@property (readonly) WFUri* supportLink;
+@property (readonly) NSString * supportProvider;
+@end
+
+#endif // __WSPSOemSupportInfo_DEFINED__
+
+// Windows.System.Profile.SystemManufacturers.SystemSupportInfo
+#ifndef __WSPSSystemSupportInfo_DEFINED__
+#define __WSPSSystemSupportInfo_DEFINED__
+
+OBJCUWPWINDOWSSYSTEMPROFILESYSTEMMANUFACTURERSEXPORT
+@interface WSPSSystemSupportInfo : RTObject
++ (NSString *)localSystemEdition;
++ (WSPSOemSupportInfo*)oemSupportInfo;
+@end
+
+#endif // __WSPSSystemSupportInfo_DEFINED__
 
 // Windows.System.Profile.SystemManufacturers.SmbiosInformation
 #ifndef __WSPSSmbiosInformation_DEFINED__

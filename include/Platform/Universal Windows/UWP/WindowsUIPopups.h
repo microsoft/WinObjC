@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -107,10 +107,10 @@ OBJCUWPWINDOWSUIPOPUPSEXPORT
 
 OBJCUWPWINDOWSUIPOPUPSEXPORT
 @interface WUPUICommand : RTObject <WUPIUICommand>
-+ (instancetype)make __attribute__ ((ns_returns_retained));
 + (WUPUICommand*)make:(NSString *)label ACTIVATOR;
 + (WUPUICommand*)makeWithHandler:(NSString *)label action:(WUPUICommandInvokedHandler)action ACTIVATOR;
 + (WUPUICommand*)makeWithHandlerAndId:(NSString *)label action:(WUPUICommandInvokedHandler)action commandId:(RTObject*)commandId ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif

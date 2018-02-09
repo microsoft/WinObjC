@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -28,7 +28,7 @@
 #include <UWP/interopBase.h>
 
 @class WSAWPWebProviderTokenRequest, WSAWPWebProviderTokenResponse, WSAWPWebAccountClientView, WSAWPWebAccountManager, WSAWPWebAccountProviderRequestTokenOperation, WSAWPWebAccountProviderGetTokenSilentOperation, WSAWPWebAccountProviderAddAccountOperation, WSAWPWebAccountProviderManageAccountOperation, WSAWPWebAccountProviderDeleteAccountOperation, WSAWPWebAccountProviderSignOutAccountOperation, WSAWPWebAccountProviderRetrieveCookiesOperation, WSAWPWebAccountProviderTriggerDetails;
-@protocol WSAWPIWebAccountProviderOperation, WSAWPIWebProviderTokenRequest, WSAWPIWebProviderTokenRequest2, WSAWPIWebProviderTokenResponse, WSAWPIWebProviderTokenResponseFactory, WSAWPIWebAccountClientView, WSAWPIWebAccountClientViewFactory, WSAWPIWebAccountManagerStatics, WSAWPIWebAccountManagerStatics2, WSAWPIWebAccountScopeManagerStatics, WSAWPIWebAccountMapManagerStatics, WSAWPIWebAccountProviderBaseReportOperation, WSAWPIWebAccountProviderUIReportOperation, WSAWPIWebAccountProviderSilentReportOperation, WSAWPIWebAccountProviderTokenOperation, WSAWPIWebAccountProviderAddAccountOperation, WSAWPIWebAccountProviderManageAccountOperation, WSAWPIWebAccountProviderDeleteAccountOperation, WSAWPIWebAccountProviderSignOutAccountOperation, WSAWPIWebAccountProviderRetrieveCookiesOperation, WSAWPIWebAccountProviderTokenObjects;
+@protocol WSAWPIWebAccountProviderOperation, WSAWPIWebProviderTokenRequest, WSAWPIWebProviderTokenRequest2, WSAWPIWebProviderTokenResponse, WSAWPIWebProviderTokenResponseFactory, WSAWPIWebAccountClientView, WSAWPIWebAccountClientViewFactory, WSAWPIWebAccountManagerStatics, WSAWPIWebAccountManagerStatics2, WSAWPIWebAccountScopeManagerStatics, WSAWPIWebAccountMapManagerStatics, WSAWPIWebAccountManagerStatics3, WSAWPIWebAccountManagerStatics4, WSAWPIWebAccountProviderBaseReportOperation, WSAWPIWebAccountProviderUIReportOperation, WSAWPIWebAccountProviderSilentReportOperation, WSAWPIWebAccountProviderTokenOperation, WSAWPIWebAccountProviderAddAccountOperation, WSAWPIWebAccountProviderManageAccountOperation, WSAWPIWebAccountProviderDeleteAccountOperation, WSAWPIWebAccountProviderSignOutAccountOperation, WSAWPIWebAccountProviderRetrieveCookiesOperation, WSAWPIWebAccountProviderTokenObjects, WSAWPIWebAccountProviderTokenObjects2;
 
 // Windows.Security.Authentication.Web.Provider.WebAccountProviderOperationKind
 enum _WSAWPWebAccountProviderOperationKind {
@@ -63,13 +63,14 @@ enum _WSAWPWebAccountScope {
 };
 typedef unsigned WSAWPWebAccountScope;
 
+#include "WindowsSecurityAuthenticationWebCore.h"
 #include "WindowsSecurityCryptographyCore.h"
 #include "WindowsFoundation.h"
-#include "WindowsSecurityAuthenticationWebCore.h"
 #include "WindowsStorageStreams.h"
 #include "WindowsSecurityCredentials.h"
 #include "WindowsWebHttp.h"
 #include "WindowsSecurityAuthenticationWeb.h"
+#include "WindowsSystem.h"
 
 #import <Foundation/Foundation.h>
 
@@ -165,6 +166,20 @@ OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 
 #endif // __WSAWPIWebAccountProviderTokenObjects_DEFINED__
 
+// Windows.Security.Authentication.Web.Provider.IWebAccountProviderTokenObjects2
+#ifndef __WSAWPIWebAccountProviderTokenObjects2_DEFINED__
+#define __WSAWPIWebAccountProviderTokenObjects2_DEFINED__
+
+@protocol WSAWPIWebAccountProviderTokenObjects2 <WSAWPIWebAccountProviderTokenObjects>
+@property (readonly) WSUser* user;
+@end
+
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
+@interface WSAWPIWebAccountProviderTokenObjects2 : RTObject <WSAWPIWebAccountProviderTokenObjects2>
+@end
+
+#endif // __WSAWPIWebAccountProviderTokenObjects2_DEFINED__
+
 // Windows.Security.Authentication.Web.Provider.WebProviderTokenRequest
 #ifndef __WSAWPWebProviderTokenRequest_DEFINED__
 #define __WSAWPWebProviderTokenRequest_DEFINED__
@@ -227,10 +242,6 @@ OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 + (void)addWebAccountWithScopeAsync:(NSString *)webAccountId webAccountUserName:(NSString *)webAccountUserName props:(NSDictionary* /* NSString *, NSString * */)props scope:(WSAWPWebAccountScope)scope success:(void (^)(WSCWebAccount*))success failure:(void (^)(NSError*))failure;
 + (RTObject<WFIAsyncAction>*)setScopeAsync:(WSCWebAccount*)webAccount scope:(WSAWPWebAccountScope)scope;
 + (WSAWPWebAccountScope)getScope:(WSCWebAccount*)webAccount;
-+ (void)addWebAccountWithScopeAndMapAsync:(NSString *)webAccountId webAccountUserName:(NSString *)webAccountUserName props:(NSDictionary* /* NSString *, NSString * */)props scope:(WSAWPWebAccountScope)scope perUserWebAccountId:(NSString *)perUserWebAccountId success:(void (^)(WSCWebAccount*))success failure:(void (^)(NSError*))failure;
-+ (RTObject<WFIAsyncAction>*)setPerAppToPerUserAccountAsync:(WSCWebAccount*)perAppAccount perUserWebAccountId:(NSString *)perUserWebAccountId;
-+ (void)getPerUserFromPerAppAccountAsync:(WSCWebAccount*)perAppAccount success:(void (^)(WSCWebAccount*))success failure:(void (^)(NSError*))failure;
-+ (RTObject<WFIAsyncAction>*)clearPerUserFromPerAppAccountAsync:(WSCWebAccount*)perAppAccount;
 + (RTObject<WFIAsyncAction>*)updateWebAccountPropertiesAsync:(WSCWebAccount*)webAccount webAccountUserName:(NSString *)webAccountUserName additionalProperties:(NSDictionary* /* NSString *, NSString * */)additionalProperties;
 + (void)addWebAccountAsync:(NSString *)webAccountId webAccountUserName:(NSString *)webAccountUserName props:(NSDictionary* /* NSString *, NSString * */)props success:(void (^)(WSCWebAccount*))success failure:(void (^)(NSError*))failure;
 + (RTObject<WFIAsyncAction>*)deleteWebAccountAsync:(WSCWebAccount*)webAccount;
@@ -241,6 +252,16 @@ OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 + (void)getViewsAsync:(WSCWebAccount*)webAccount success:(void (^)(NSArray* /* WSAWPWebAccountClientView* */))success failure:(void (^)(NSError*))failure;
 + (RTObject<WFIAsyncAction>*)setWebAccountPictureAsync:(WSCWebAccount*)webAccount webAccountPicture:(RTObject<WSSIRandomAccessStream>*)webAccountPicture;
 + (RTObject<WFIAsyncAction>*)clearWebAccountPictureAsync:(WSCWebAccount*)webAccount;
++ (void)findAllProviderWebAccountsForUserAsync:(WSUser*)user success:(void (^)(NSArray* /* WSCWebAccount* */))success failure:(void (^)(NSError*))failure;
++ (void)addWebAccountForUserAsync:(WSUser*)user webAccountId:(NSString *)webAccountId webAccountUserName:(NSString *)webAccountUserName props:(NSDictionary* /* NSString *, NSString * */)props success:(void (^)(WSCWebAccount*))success failure:(void (^)(NSError*))failure;
++ (void)addWebAccountWithScopeForUserAsync:(WSUser*)user webAccountId:(NSString *)webAccountId webAccountUserName:(NSString *)webAccountUserName props:(NSDictionary* /* NSString *, NSString * */)props scope:(WSAWPWebAccountScope)scope success:(void (^)(WSCWebAccount*))success failure:(void (^)(NSError*))failure;
++ (void)addWebAccountWithScopeAndMapForUserAsync:(WSUser*)user webAccountId:(NSString *)webAccountId webAccountUserName:(NSString *)webAccountUserName props:(NSDictionary* /* NSString *, NSString * */)props scope:(WSAWPWebAccountScope)scope perUserWebAccountId:(NSString *)perUserWebAccountId success:(void (^)(WSCWebAccount*))success failure:(void (^)(NSError*))failure;
++ (RTObject<WFIAsyncAction>*)invalidateAppCacheForAllAccountsAsync;
++ (RTObject<WFIAsyncAction>*)invalidateAppCacheForAccountAsync:(WSCWebAccount*)webAccount;
++ (void)addWebAccountWithScopeAndMapAsync:(NSString *)webAccountId webAccountUserName:(NSString *)webAccountUserName props:(NSDictionary* /* NSString *, NSString * */)props scope:(WSAWPWebAccountScope)scope perUserWebAccountId:(NSString *)perUserWebAccountId success:(void (^)(WSCWebAccount*))success failure:(void (^)(NSError*))failure;
++ (RTObject<WFIAsyncAction>*)setPerAppToPerUserAccountAsync:(WSCWebAccount*)perAppAccount perUserWebAccountId:(NSString *)perUserWebAccountId;
++ (void)getPerUserFromPerAppAccountAsync:(WSCWebAccount*)perAppAccount success:(void (^)(WSCWebAccount*))success failure:(void (^)(NSError*))failure;
++ (RTObject<WFIAsyncAction>*)clearPerUserFromPerAppAccountAsync:(WSCWebAccount*)perAppAccount;
 @end
 
 #endif // __WSAWPWebAccountManager_DEFINED__
@@ -378,11 +399,12 @@ OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 #define __WSAWPWebAccountProviderTriggerDetails_DEFINED__
 
 OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
-@interface WSAWPWebAccountProviderTriggerDetails : RTObject <WSAWPIWebAccountProviderTokenObjects>
+@interface WSAWPWebAccountProviderTriggerDetails : RTObject <WSAWPIWebAccountProviderTokenObjects, WSAWPIWebAccountProviderTokenObjects2>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) RTObject<WSAWPIWebAccountProviderOperation>* operation;
+@property (readonly) WSUser* user;
 @end
 
 #endif // __WSAWPWebAccountProviderTriggerDetails_DEFINED__

@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -27,25 +27,8 @@
 #endif
 #include <UWP/interopBase.h>
 
-@class WACContact, WACContactCardDelayedDataLoader, WACContactStore, WACContactAnnotationStore, WACContactCardOptions, WACFullContactCardOptions, WACContactManagerForUser, WACContactAnnotation, WACContactAnnotationList, WACContactChangeTracker, WACContactChangedEventArgs, WACAggregateContactManager, WACContactList, WACContactReader, WACContactQueryOptions, WACContactListSyncManager, WACContactListSyncConstraints, WACContactPhone, WACContactEmail, WACContactAddress, WACContactConnectedServiceAccount, WACContactDate, WACContactJobInfo, WACContactSignificantOther, WACContactWebsite, WACContactChangedDeferral, WACContactChange, WACContactChangeReader, WACContactBatch, WACContactMatchReason, WACContactQueryTextSearch, WACContactStoreNotificationTriggerDetails, WACContactManager, WACContactLaunchActionVerbs, WACContactField, WACContactLocationField, WACContactInstantMessageField, WACKnownContactField, WACContactInformation, WACContactFieldFactory, WACContactPicker;
-@protocol WACIContactCardOptions, WACIContactCardOptions2, WACIFullContactCardOptions, WACIContactManagerStatics, WACIContactManagerStatics2, WACIContactManagerStatics3, WACIContactManagerStatics4, WACIContactManagerForUser, WACIAggregateContactManager, WACIAggregateContactManager2, WACIContactAnnotationStore, WACIContactAnnotationList, WACIContactAnnotation, WACIContactStoreNotificationTriggerDetails, WACIContactStore, WACIContactStore2, WACIContactList, WACIContactList2, WACIContactListSyncManager, WACIContactListSyncManager2, WACIContactListSyncConstraints, WACIContactConnectedServiceAccount, WACIContactSignificantOther, WACIContactSignificantOther2, WACIContactWebsite, WACIContactWebsite2, WACIContactEmail, WACIContactPhone, WACIContactAddress, WACIContactDate, WACIContactJobInfo, WACIContact, WACIContactField, WACIContactName, WACIContact2, WACIContact3, WACIContactChange, WACIContactChangedDeferral, WACIContactChangedEventArgs, WACIContactChangeReader, WACIContactChangeTracker, WACIContactReader, WACIContactQueryTextSearch, WACIContactQueryOptionsFactory, WACIContactQueryOptions, WACIContactBatch, WACIContactMatchReason, WACIContactLaunchActionVerbsStatics, WACIContactLocationField, WACIContactInstantMessageField, WACIKnownContactFieldStatics, WACIContactInformation, WACIContactFieldFactory, WACIContactLocationFieldFactory, WACIContactInstantMessageFieldFactory, WACIContactPicker, WACIContactPicker2, WACIContactCardDelayedDataLoader;
-
-// Windows.ApplicationModel.Contacts.ContactFieldType
-enum _WACContactFieldType {
-    WACContactFieldTypeEmail = 0,
-    WACContactFieldTypePhoneNumber = 1,
-    WACContactFieldTypeLocation = 2,
-    WACContactFieldTypeInstantMessage = 3,
-    WACContactFieldTypeCustom = 4,
-    WACContactFieldTypeConnectedServiceAccount = 5,
-    WACContactFieldTypeImportantDate = 6,
-    WACContactFieldTypeAddress = 7,
-    WACContactFieldTypeSignificantOther = 8,
-    WACContactFieldTypeNotes = 9,
-    WACContactFieldTypeWebsite = 10,
-    WACContactFieldTypeJobInfo = 11,
-};
-typedef unsigned WACContactFieldType;
+@class WACContactCardDelayedDataLoader, WACContactStore, WACContactAnnotationStore, WACContactCardOptions, WACFullContactCardOptions, WACContactManagerForUser, WACContactAnnotation, WACContactAnnotationList, WACContactChangeTracker, WACContactChangedEventArgs, WACAggregateContactManager, WACContactList, WACContactReader, WACContactQueryOptions, WACContactListSyncManager, WACContactListSyncConstraints, WACContactListLimitedWriteOperations, WACContactChangedDeferral, WACContactChange, WACContactChangeReader, WACContactBatch, WACContactMatchReason, WACContactQueryTextSearch, WACContactStoreNotificationTriggerDetails, WACContactManager, WACContactLaunchActionVerbs, WACContactGroup, WACContactPicker, WACContactPhone, WACContactEmail, WACContactAddress, WACContactConnectedServiceAccount, WACContactDate, WACContactJobInfo, WACContactSignificantOther, WACContactWebsite, WACContact, WACContactField, WACContactLocationField, WACContactInstantMessageField, WACKnownContactField, WACContactInformation, WACContactFieldFactory, WACPinnedContactIdsQueryResult, WACPinnedContactManager, WACContactPanelLaunchFullAppRequestedEventArgs, WACContactPanelClosingEventArgs, WACContactPanel;
+@protocol WACIContactCardOptions, WACIContactCardOptions2, WACIFullContactCardOptions, WACIContactCardDelayedDataLoader, WACIContactManagerStatics, WACIContactManagerStatics2, WACIContactManagerStatics3, WACIContactManagerStatics4, WACIContactManagerStatics5, WACIContactManagerForUser, WACIContactManagerForUser2, WACIAggregateContactManager, WACIAggregateContactManager2, WACIContactAnnotationStore, WACIContactAnnotationStore2, WACIContactAnnotationList, WACIContactAnnotation, WACIContactAnnotation2, WACIContactStoreNotificationTriggerDetails, WACIContactStore, WACIContactStore2, WACIContactStore3, WACIContactList, WACIContactList2, WACIContactList3, WACIContactListLimitedWriteOperations, WACIContactListSyncManager, WACIContactListSyncManager2, WACIContactListSyncConstraints, WACIContactChange, WACIContactChangedDeferral, WACIContactChangedEventArgs, WACIContactChangeReader, WACIContactChangeTracker, WACIContactChangeTracker2, WACIContactReader, WACIContactQueryTextSearch, WACIContactQueryOptionsFactory, WACIContactQueryOptions, WACIContactBatch, WACIContactMatchReason, WACIContactLaunchActionVerbsStatics, WACIContactGroup, WACIContactPicker, WACIContactPicker2, WACIContactPicker3, WACIContactPickerStatics, WACIContactConnectedServiceAccount, WACIContactSignificantOther, WACIContactSignificantOther2, WACIContactWebsite, WACIContactWebsite2, WACIContactEmail, WACIContactPhone, WACIContactAddress, WACIContactDate, WACIContactJobInfo, WACIContact, WACIContactField, WACIContactName, WACIContact2, WACIContact3, WACIContactLocationField, WACIContactInstantMessageField, WACIKnownContactFieldStatics, WACIContactInformation, WACIContactFieldFactory, WACIContactLocationFieldFactory, WACIContactInstantMessageFieldFactory, WACIPinnedContactIdsQueryResult, WACIPinnedContactManagerStatics, WACIPinnedContactManager, WACIContactPanelLaunchFullAppRequestedEventArgs, WACIContactPanelClosingEventArgs, WACIContactPanel;
 
 // Windows.ApplicationModel.Contacts.ContactSelectionMode
 enum _WACContactSelectionMode {
@@ -53,45 +36,6 @@ enum _WACContactSelectionMode {
     WACContactSelectionModeFields = 1,
 };
 typedef unsigned WACContactSelectionMode;
-
-// Windows.ApplicationModel.Contacts.ContactEmailKind
-enum _WACContactEmailKind {
-    WACContactEmailKindPersonal = 0,
-    WACContactEmailKindWork = 1,
-    WACContactEmailKindOther = 2,
-};
-typedef unsigned WACContactEmailKind;
-
-// Windows.ApplicationModel.Contacts.ContactPhoneKind
-enum _WACContactPhoneKind {
-    WACContactPhoneKindHome = 0,
-    WACContactPhoneKindMobile = 1,
-    WACContactPhoneKindWork = 2,
-    WACContactPhoneKindOther = 3,
-    WACContactPhoneKindPager = 4,
-    WACContactPhoneKindBusinessFax = 5,
-    WACContactPhoneKindHomeFax = 6,
-    WACContactPhoneKindCompany = 7,
-    WACContactPhoneKindAssistant = 8,
-    WACContactPhoneKindRadio = 9,
-};
-typedef unsigned WACContactPhoneKind;
-
-// Windows.ApplicationModel.Contacts.ContactAddressKind
-enum _WACContactAddressKind {
-    WACContactAddressKindHome = 0,
-    WACContactAddressKindWork = 1,
-    WACContactAddressKindOther = 2,
-};
-typedef unsigned WACContactAddressKind;
-
-// Windows.ApplicationModel.Contacts.ContactDateKind
-enum _WACContactDateKind {
-    WACContactDateKindBirthday = 0,
-    WACContactDateKindAnniversary = 1,
-    WACContactDateKindOther = 2,
-};
-typedef unsigned WACContactDateKind;
 
 // Windows.ApplicationModel.Contacts.ContactChangeType
 enum _WACContactChangeType {
@@ -101,17 +45,6 @@ enum _WACContactChangeType {
     WACContactChangeTypeChangeTrackingLost = 3,
 };
 typedef unsigned WACContactChangeType;
-
-// Windows.ApplicationModel.Contacts.ContactRelationship
-enum _WACContactRelationship {
-    WACContactRelationshipOther = 0,
-    WACContactRelationshipSpouse = 1,
-    WACContactRelationshipPartner = 2,
-    WACContactRelationshipSibling = 3,
-    WACContactRelationshipParent = 4,
-    WACContactRelationshipChild = 5,
-};
-typedef unsigned WACContactRelationship;
 
 // Windows.ApplicationModel.Contacts.ContactQueryDesiredFields
 enum _WACContactQueryDesiredFields {
@@ -167,6 +100,7 @@ typedef unsigned WACContactListOtherAppReadAccess;
 enum _WACContactListOtherAppWriteAccess {
     WACContactListOtherAppWriteAccessNone = 0,
     WACContactListOtherAppWriteAccessSystemOnly = 1,
+    WACContactListOtherAppWriteAccessLimited = 2,
 };
 typedef unsigned WACContactListOtherAppWriteAccess;
 
@@ -197,6 +131,7 @@ enum _WACContactAnnotationOperations {
     WACContactAnnotationOperationsAudioCall = 4,
     WACContactAnnotationOperationsVideoCall = 8,
     WACContactAnnotationOperationsSocialFeeds = 16,
+    WACContactAnnotationOperationsShare = 32,
 };
 typedef unsigned WACContactAnnotationOperations;
 
@@ -238,6 +173,73 @@ enum _WACContactCardTabKind {
 };
 typedef unsigned WACContactCardTabKind;
 
+// Windows.ApplicationModel.Contacts.ContactFieldType
+enum _WACContactFieldType {
+    WACContactFieldTypeEmail = 0,
+    WACContactFieldTypePhoneNumber = 1,
+    WACContactFieldTypeLocation = 2,
+    WACContactFieldTypeInstantMessage = 3,
+    WACContactFieldTypeCustom = 4,
+    WACContactFieldTypeConnectedServiceAccount = 5,
+    WACContactFieldTypeImportantDate = 6,
+    WACContactFieldTypeAddress = 7,
+    WACContactFieldTypeSignificantOther = 8,
+    WACContactFieldTypeNotes = 9,
+    WACContactFieldTypeWebsite = 10,
+    WACContactFieldTypeJobInfo = 11,
+};
+typedef unsigned WACContactFieldType;
+
+// Windows.ApplicationModel.Contacts.ContactEmailKind
+enum _WACContactEmailKind {
+    WACContactEmailKindPersonal = 0,
+    WACContactEmailKindWork = 1,
+    WACContactEmailKindOther = 2,
+};
+typedef unsigned WACContactEmailKind;
+
+// Windows.ApplicationModel.Contacts.ContactPhoneKind
+enum _WACContactPhoneKind {
+    WACContactPhoneKindHome = 0,
+    WACContactPhoneKindMobile = 1,
+    WACContactPhoneKindWork = 2,
+    WACContactPhoneKindOther = 3,
+    WACContactPhoneKindPager = 4,
+    WACContactPhoneKindBusinessFax = 5,
+    WACContactPhoneKindHomeFax = 6,
+    WACContactPhoneKindCompany = 7,
+    WACContactPhoneKindAssistant = 8,
+    WACContactPhoneKindRadio = 9,
+};
+typedef unsigned WACContactPhoneKind;
+
+// Windows.ApplicationModel.Contacts.ContactAddressKind
+enum _WACContactAddressKind {
+    WACContactAddressKindHome = 0,
+    WACContactAddressKindWork = 1,
+    WACContactAddressKindOther = 2,
+};
+typedef unsigned WACContactAddressKind;
+
+// Windows.ApplicationModel.Contacts.ContactDateKind
+enum _WACContactDateKind {
+    WACContactDateKindBirthday = 0,
+    WACContactDateKindAnniversary = 1,
+    WACContactDateKindOther = 2,
+};
+typedef unsigned WACContactDateKind;
+
+// Windows.ApplicationModel.Contacts.ContactRelationship
+enum _WACContactRelationship {
+    WACContactRelationshipOther = 0,
+    WACContactRelationshipSpouse = 1,
+    WACContactRelationshipPartner = 2,
+    WACContactRelationshipSibling = 3,
+    WACContactRelationshipParent = 4,
+    WACContactRelationshipChild = 5,
+};
+typedef unsigned WACContactRelationship;
+
 // Windows.ApplicationModel.Contacts.ContactFieldCategory
 enum _WACContactFieldCategory {
     WACContactFieldCategoryNone = 0,
@@ -248,8 +250,16 @@ enum _WACContactFieldCategory {
 };
 typedef unsigned WACContactFieldCategory;
 
+// Windows.ApplicationModel.Contacts.PinnedContactSurface
+enum _WACPinnedContactSurface {
+    WACPinnedContactSurfaceStartMenu = 0,
+    WACPinnedContactSurfaceTaskbar = 1,
+};
+typedef unsigned WACPinnedContactSurface;
+
 #include "WindowsFoundationCollections.h"
 #include "WindowsStorageStreams.h"
+#include "WindowsUI.h"
 #include "WindowsUIViewManagement.h"
 #include "WindowsDataText.h"
 #include "WindowsUIPopups.h"
@@ -323,60 +333,6 @@ OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 
 #endif // __WACIContactInstantMessageFieldFactory_DEFINED__
 
-// Windows.ApplicationModel.Contacts.Contact
-#ifndef __WACContact_DEFINED__
-#define __WACContact_DEFINED__
-
-OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
-@interface WACContact : RTObject
-+ (instancetype)make __attribute__ ((ns_returns_retained));
-#if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
-#endif
-@property (retain) RTObject<WSSIRandomAccessStreamReference>* thumbnail;
-@property (retain) NSString * name;
-@property (readonly) NSMutableArray* /* RTObject<WACIContactField>* */ fields;
-@property (retain) NSString * id;
-@property (retain) NSString * notes;
-@property (readonly) NSMutableArray* /* WACContactConnectedServiceAccount* */ connectedServiceAccounts;
-@property (readonly) NSMutableArray* /* WACContactEmail* */ emails;
-@property (readonly) NSMutableArray* /* WACContactAddress* */ addresses;
-@property (readonly) NSMutableArray* /* WACContactDate* */ importantDates;
-@property (readonly) NSMutableArray* /* WACContactJobInfo* */ jobInfo;
-@property (readonly) NSMutableArray* /* NSString * */ dataSuppliers;
-@property (readonly) NSMutableArray* /* WACContactPhone* */ phones;
-@property (readonly) RTObject<WFCIPropertySet>* providerProperties;
-@property (readonly) NSMutableArray* /* WACContactSignificantOther* */ significantOthers;
-@property (readonly) NSMutableArray* /* WACContactWebsite* */ websites;
-@property (retain) RTObject<WSSIRandomAccessStreamReference>* sourceDisplayPicture;
-@property (retain) NSString * textToneToken;
-@property (retain) NSString * displayNameOverride;
-@property (retain) WFDateTime* displayPictureUserUpdateTime;
-@property (retain) NSString * nickname;
-@property (retain) NSString * remoteId;
-@property (retain) NSString * ringToneToken;
-@property (readonly) NSString * contactListId;
-@property (readonly) RTObject<WSSIRandomAccessStreamReference>* largeDisplayPicture;
-@property (readonly) RTObject<WSSIRandomAccessStreamReference>* smallDisplayPicture;
-@property (readonly) NSString * sortName;
-@property (readonly) NSString * aggregateId;
-@property (readonly) NSString * fullName;
-@property (readonly) BOOL isAggregate;
-@property (readonly) BOOL isDisplayPictureManuallySet;
-@property (readonly) BOOL isMe;
-@property (retain) NSString * yomiGivenName;
-@property (retain) NSString * honorificNameSuffix;
-@property (retain) NSString * yomiFamilyName;
-@property (retain) NSString * middleName;
-@property (retain) NSString * lastName;
-@property (retain) NSString * honorificNamePrefix;
-@property (retain) NSString * firstName;
-@property (readonly) NSString * displayName;
-@property (readonly) NSString * yomiDisplayName;
-@end
-
-#endif // __WACContact_DEFINED__
-
 // Windows.Foundation.IClosable
 #ifndef __WFIClosable_DEFINED__
 #define __WFIClosable_DEFINED__
@@ -429,6 +385,7 @@ OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 - (WACContactReader*)getContactReader;
 - (WACContactReader*)getContactReaderWithOptions:(WACContactQueryOptions*)options;
 - (void)createContactListInAccountAsync:(NSString *)displayName userDataAccountId:(NSString *)userDataAccountId success:(void (^)(WACContactList*))success failure:(void (^)(NSError*))failure;
+- (WACContactChangeTracker*)getChangeTracker:(NSString *)identity;
 @end
 
 #endif // __WACContactStore_DEFINED__
@@ -450,6 +407,7 @@ OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 - (void)createAnnotationListInAccountAsync:(NSString *)userDataAccountId success:(void (^)(WACContactAnnotationList*))success failure:(void (^)(NSError*))failure;
 - (void)getAnnotationListAsync:(NSString *)annotationListId success:(void (^)(WACContactAnnotationList*))success failure:(void (^)(NSError*))failure;
 - (void)findAnnotationListsAsyncWithSuccess:(void (^)(NSArray* /* WACContactAnnotationList* */))success failure:(void (^)(NSError*))failure;
+- (void)findAnnotationsForContactListAsync:(NSString *)contactListId success:(void (^)(NSArray* /* WACContactAnnotation* */))success failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WACContactAnnotationStore_DEFINED__
@@ -503,6 +461,7 @@ OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 - (void)convertVCardToContactAsync:(RTObject<WSSIRandomAccessStreamReference>*)vCard success:(void (^)(WACContact*))success failure:(void (^)(NSError*))failure;
 - (void)requestStoreAsync:(WACContactStoreAccessType)accessType success:(void (^)(WACContactStore*))success failure:(void (^)(NSError*))failure;
 - (void)requestAnnotationStoreAsync:(WACContactAnnotationStoreAccessType)accessType success:(void (^)(WACContactAnnotationStore*))success failure:(void (^)(NSError*))failure;
+- (void)showFullContactCard:(WACContact*)contact fullContactCardOptions:(WACFullContactCardOptions*)fullContactCardOptions;
 @end
 
 #endif // __WACContactManagerForUser_DEFINED__
@@ -524,6 +483,7 @@ OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @property (readonly) NSString * id;
 @property (readonly) BOOL isDisabled;
 @property (readonly) WFCValueSet* providerProperties;
+@property (retain) NSString * contactListId;
 @end
 
 #endif // __WACContactAnnotation_DEFINED__
@@ -559,6 +519,7 @@ OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
+@property (readonly) BOOL isTracking;
 - (void)enable;
 - (WACContactChangeReader*)getChangeReader;
 - (void)reset;
@@ -618,6 +579,7 @@ OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @property (readonly) WACContactListSyncManager* syncManager;
 @property (readonly) NSString * userDataAccountId;
 @property (readonly) WACContactListSyncConstraints* syncConstraints;
+@property (readonly) WACContactListLimitedWriteOperations* limitedWriteOperations;
 - (EventRegistrationToken)addContactChangedEvent:(void(^)(WACContactList*, WACContactChangedEventArgs*))del;
 - (void)removeContactChangedEvent:(EventRegistrationToken)tok;
 - (RTObject<WFIAsyncAction>*)saveAsync;
@@ -630,6 +592,7 @@ OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 - (RTObject<WFIAsyncAction>*)deleteContactAsync:(WACContact*)contact;
 - (void)getContactAsync:(NSString *)contactId success:(void (^)(WACContact*))success failure:(void (^)(NSError*))failure;
 - (RTObject<WFIAsyncAction>*)registerSyncManagerAsync;
+- (WACContactChangeTracker*)getChangeTracker:(NSString *)identity;
 @end
 
 #endif // __WACContactList_DEFINED__
@@ -655,9 +618,9 @@ OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 
 OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WACContactQueryOptions : RTObject
-+ (instancetype)make __attribute__ ((ns_returns_retained));
 + (WACContactQueryOptions*)makeWithText:(NSString *)text ACTIVATOR;
 + (WACContactQueryOptions*)makeWithTextAndFields:(NSString *)text fields:(WACContactQuerySearchFields)fields ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
@@ -730,6 +693,218 @@ OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @end
 
 #endif // __WACContactListSyncConstraints_DEFINED__
+
+// Windows.ApplicationModel.Contacts.ContactListLimitedWriteOperations
+#ifndef __WACContactListLimitedWriteOperations_DEFINED__
+#define __WACContactListLimitedWriteOperations_DEFINED__
+
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
+@interface WACContactListLimitedWriteOperations : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+- (void)tryCreateOrUpdateContactAsync:(WACContact*)contact success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
+- (void)tryDeleteContactAsync:(NSString *)contactId success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
+@end
+
+#endif // __WACContactListLimitedWriteOperations_DEFINED__
+
+// Windows.ApplicationModel.Contacts.ContactChangedDeferral
+#ifndef __WACContactChangedDeferral_DEFINED__
+#define __WACContactChangedDeferral_DEFINED__
+
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
+@interface WACContactChangedDeferral : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+- (void)complete;
+@end
+
+#endif // __WACContactChangedDeferral_DEFINED__
+
+// Windows.ApplicationModel.Contacts.ContactChange
+#ifndef __WACContactChange_DEFINED__
+#define __WACContactChange_DEFINED__
+
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
+@interface WACContactChange : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (readonly) WACContactChangeType changeType;
+@property (readonly) WACContact* contact;
+@end
+
+#endif // __WACContactChange_DEFINED__
+
+// Windows.ApplicationModel.Contacts.ContactChangeReader
+#ifndef __WACContactChangeReader_DEFINED__
+#define __WACContactChangeReader_DEFINED__
+
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
+@interface WACContactChangeReader : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+- (void)acceptChanges;
+- (void)acceptChangesThrough:(WACContactChange*)lastChangeToAccept;
+- (void)readBatchAsyncWithSuccess:(void (^)(NSArray* /* WACContactChange* */))success failure:(void (^)(NSError*))failure;
+@end
+
+#endif // __WACContactChangeReader_DEFINED__
+
+// Windows.ApplicationModel.Contacts.ContactBatch
+#ifndef __WACContactBatch_DEFINED__
+#define __WACContactBatch_DEFINED__
+
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
+@interface WACContactBatch : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (readonly) NSArray* /* WACContact* */ contacts;
+@property (readonly) WACContactBatchStatus status;
+@end
+
+#endif // __WACContactBatch_DEFINED__
+
+// Windows.ApplicationModel.Contacts.ContactMatchReason
+#ifndef __WACContactMatchReason_DEFINED__
+#define __WACContactMatchReason_DEFINED__
+
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
+@interface WACContactMatchReason : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (readonly) WACContactMatchReasonKind field;
+@property (readonly) NSArray* /* WDTTextSegment* */ segments;
+@property (readonly) NSString * text;
+@end
+
+#endif // __WACContactMatchReason_DEFINED__
+
+// Windows.ApplicationModel.Contacts.ContactQueryTextSearch
+#ifndef __WACContactQueryTextSearch_DEFINED__
+#define __WACContactQueryTextSearch_DEFINED__
+
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
+@interface WACContactQueryTextSearch : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (retain) NSString * text;
+@property WACContactQuerySearchScope searchScope;
+@property WACContactQuerySearchFields fields;
+@end
+
+#endif // __WACContactQueryTextSearch_DEFINED__
+
+// Windows.ApplicationModel.Contacts.ContactStoreNotificationTriggerDetails
+#ifndef __WACContactStoreNotificationTriggerDetails_DEFINED__
+#define __WACContactStoreNotificationTriggerDetails_DEFINED__
+
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
+@interface WACContactStoreNotificationTriggerDetails : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@end
+
+#endif // __WACContactStoreNotificationTriggerDetails_DEFINED__
+
+// Windows.ApplicationModel.Contacts.ContactManager
+#ifndef __WACContactManager_DEFINED__
+#define __WACContactManager_DEFINED__
+
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
+@interface WACContactManager : RTObject
++ (void)showContactCard:(WACContact*)contact selection:(WFRect*)selection;
++ (void)showContactCardWithPlacement:(WACContact*)contact selection:(WFRect*)selection preferredPlacement:(WUPPlacement)preferredPlacement;
++ (WACContactCardDelayedDataLoader*)showDelayLoadedContactCard:(WACContact*)contact selection:(WFRect*)selection preferredPlacement:(WUPPlacement)preferredPlacement;
++ (void)convertContactToVCardAsync:(WACContact*)contact success:(void (^)(WSSRandomAccessStreamReference*))success failure:(void (^)(NSError*))failure;
++ (void)convertContactToVCardAsyncWithMaxBytes:(WACContact*)contact maxBytes:(unsigned int)maxBytes success:(void (^)(WSSRandomAccessStreamReference*))success failure:(void (^)(NSError*))failure;
++ (void)convertVCardToContactAsync:(RTObject<WSSIRandomAccessStreamReference>*)vCard success:(void (^)(WACContact*))success failure:(void (^)(NSError*))failure;
++ (void)requestStoreAsyncWithAccessType:(WACContactStoreAccessType)accessType success:(void (^)(WACContactStore*))success failure:(void (^)(NSError*))failure;
++ (void)requestAnnotationStoreAsync:(WACContactAnnotationStoreAccessType)accessType success:(void (^)(WACContactAnnotationStore*))success failure:(void (^)(NSError*))failure;
++ (BOOL)isShowContactCardSupported;
++ (void)showContactCardWithOptions:(WACContact*)contact selection:(WFRect*)selection preferredPlacement:(WUPPlacement)preferredPlacement contactCardOptions:(WACContactCardOptions*)contactCardOptions;
++ (BOOL)isShowDelayLoadedContactCardSupported;
++ (WACContactCardDelayedDataLoader*)showDelayLoadedContactCardWithOptions:(WACContact*)contact selection:(WFRect*)selection preferredPlacement:(WUPPlacement)preferredPlacement contactCardOptions:(WACContactCardOptions*)contactCardOptions;
++ (void)showFullContactCard:(WACContact*)contact fullContactCardOptions:(WACFullContactCardOptions*)fullContactCardOptions;
++ (void)requestStoreAsyncWithSuccess:(void (^)(WACContactStore*))success failure:(void (^)(NSError*))failure;
++ (void)showContactCard:(WACContact*)contact selection:(WFRect*)selection;
++ (void)showContactCardWithPlacement:(WACContact*)contact selection:(WFRect*)selection preferredPlacement:(WUPPlacement)preferredPlacement;
++ (WACContactCardDelayedDataLoader*)showDelayLoadedContactCard:(WACContact*)contact selection:(WFRect*)selection preferredPlacement:(WUPPlacement)preferredPlacement;
++ (void)isShowFullContactCardSupportedAsyncWithSuccess:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
++ (WACContactManagerForUser*)getForUser:(WSUser*)user;
++ (void)requestStoreAsyncWithSuccess:(void (^)(WACContactStore*))success failure:(void (^)(NSError*))failure;
++ (void)showContactCard:(WACContact*)contact selection:(WFRect*)selection;
++ (void)showContactCardWithPlacement:(WACContact*)contact selection:(WFRect*)selection preferredPlacement:(WUPPlacement)preferredPlacement;
++ (WACContactCardDelayedDataLoader*)showDelayLoadedContactCard:(WACContact*)contact selection:(WFRect*)selection preferredPlacement:(WUPPlacement)preferredPlacement;
++ (WACContactNameOrder)systemSortOrder;
++ (void)setSystemSortOrder:(WACContactNameOrder)value;
++ (WACContactNameOrder)systemDisplayNameOrder;
++ (void)setSystemDisplayNameOrder:(WACContactNameOrder)value;
++ (BOOL)includeMiddleNameInSystemDisplayAndSort;
++ (void)setIncludeMiddleNameInSystemDisplayAndSort:(BOOL)value;
+@end
+
+#endif // __WACContactManager_DEFINED__
+
+// Windows.ApplicationModel.Contacts.ContactLaunchActionVerbs
+#ifndef __WACContactLaunchActionVerbs_DEFINED__
+#define __WACContactLaunchActionVerbs_DEFINED__
+
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
+@interface WACContactLaunchActionVerbs : RTObject
++ (NSString *)call;
++ (NSString *)map;
++ (NSString *)message;
++ (NSString *)post;
++ (NSString *)videoCall;
+@end
+
+#endif // __WACContactLaunchActionVerbs_DEFINED__
+
+// Windows.ApplicationModel.Contacts.ContactGroup
+#ifndef __WACContactGroup_DEFINED__
+#define __WACContactGroup_DEFINED__
+
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
+@interface WACContactGroup : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@end
+
+#endif // __WACContactGroup_DEFINED__
+
+// Windows.ApplicationModel.Contacts.ContactPicker
+#ifndef __WACContactPicker_DEFINED__
+#define __WACContactPicker_DEFINED__
+
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
+@interface WACContactPicker : RTObject
++ (WACContactPicker*)createForUser:(WSUser*)user;
++ (void)isSupportedAsyncWithSuccess:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
++ (instancetype)make __attribute__ ((ns_returns_retained));
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property WACContactSelectionMode selectionMode;
+@property (retain) NSString * commitButtonText;
+@property (readonly) NSMutableArray* /* NSString * */ desiredFields;
+@property (readonly) NSMutableArray* /* WACContactFieldType */ desiredFieldsWithContactFieldType;
+@property (readonly) WSUser* user;
+- (void)pickSingleContactAsyncWithSuccess:(void (^)(WACContactInformation*))success failure:(void (^)(NSError*))failure;
+- (void)pickMultipleContactsAsyncWithSuccess:(void (^)(NSArray* /* WACContactInformation* */))success failure:(void (^)(NSError*))failure;
+- (void)pickContactAsyncWithSuccess:(void (^)(WACContact*))success failure:(void (^)(NSError*))failure;
+- (void)pickContactsAsyncWithSuccess:(void (^)(NSMutableArray* /* WACContact* */))success failure:(void (^)(NSError*))failure;
+@end
+
+#endif // __WACContactPicker_DEFINED__
 
 // Windows.ApplicationModel.Contacts.ContactPhone
 #ifndef __WACContactPhone_DEFINED__
@@ -877,161 +1052,59 @@ OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 
 #endif // __WACContactWebsite_DEFINED__
 
-// Windows.ApplicationModel.Contacts.ContactChangedDeferral
-#ifndef __WACContactChangedDeferral_DEFINED__
-#define __WACContactChangedDeferral_DEFINED__
+// Windows.ApplicationModel.Contacts.Contact
+#ifndef __WACContact_DEFINED__
+#define __WACContact_DEFINED__
 
 OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
-@interface WACContactChangedDeferral : RTObject
+@interface WACContact : RTObject
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
-- (void)complete;
+@property (retain) RTObject<WSSIRandomAccessStreamReference>* thumbnail;
+@property (retain) NSString * name;
+@property (readonly) NSMutableArray* /* RTObject<WACIContactField>* */ fields;
+@property (retain) NSString * id;
+@property (retain) NSString * notes;
+@property (readonly) NSMutableArray* /* WACContactConnectedServiceAccount* */ connectedServiceAccounts;
+@property (readonly) NSMutableArray* /* WACContactEmail* */ emails;
+@property (readonly) NSMutableArray* /* WACContactAddress* */ addresses;
+@property (readonly) NSMutableArray* /* WACContactDate* */ importantDates;
+@property (readonly) NSMutableArray* /* WACContactJobInfo* */ jobInfo;
+@property (readonly) NSMutableArray* /* NSString * */ dataSuppliers;
+@property (readonly) NSMutableArray* /* WACContactPhone* */ phones;
+@property (readonly) RTObject<WFCIPropertySet>* providerProperties;
+@property (readonly) NSMutableArray* /* WACContactSignificantOther* */ significantOthers;
+@property (readonly) NSMutableArray* /* WACContactWebsite* */ websites;
+@property (retain) RTObject<WSSIRandomAccessStreamReference>* sourceDisplayPicture;
+@property (retain) NSString * textToneToken;
+@property (retain) NSString * displayNameOverride;
+@property (retain) WFDateTime* displayPictureUserUpdateTime;
+@property (retain) NSString * nickname;
+@property (retain) NSString * remoteId;
+@property (retain) NSString * ringToneToken;
+@property (readonly) NSString * contactListId;
+@property (readonly) RTObject<WSSIRandomAccessStreamReference>* largeDisplayPicture;
+@property (readonly) RTObject<WSSIRandomAccessStreamReference>* smallDisplayPicture;
+@property (readonly) NSString * sortName;
+@property (readonly) NSString * aggregateId;
+@property (readonly) NSString * fullName;
+@property (readonly) BOOL isAggregate;
+@property (readonly) BOOL isDisplayPictureManuallySet;
+@property (readonly) BOOL isMe;
+@property (retain) NSString * yomiGivenName;
+@property (retain) NSString * honorificNameSuffix;
+@property (retain) NSString * yomiFamilyName;
+@property (retain) NSString * middleName;
+@property (retain) NSString * lastName;
+@property (retain) NSString * honorificNamePrefix;
+@property (retain) NSString * firstName;
+@property (readonly) NSString * displayName;
+@property (readonly) NSString * yomiDisplayName;
 @end
 
-#endif // __WACContactChangedDeferral_DEFINED__
-
-// Windows.ApplicationModel.Contacts.ContactChange
-#ifndef __WACContactChange_DEFINED__
-#define __WACContactChange_DEFINED__
-
-OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
-@interface WACContactChange : RTObject
-#if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
-#endif
-@property (readonly) WACContactChangeType changeType;
-@property (readonly) WACContact* contact;
-@end
-
-#endif // __WACContactChange_DEFINED__
-
-// Windows.ApplicationModel.Contacts.ContactChangeReader
-#ifndef __WACContactChangeReader_DEFINED__
-#define __WACContactChangeReader_DEFINED__
-
-OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
-@interface WACContactChangeReader : RTObject
-#if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
-#endif
-- (void)acceptChanges;
-- (void)acceptChangesThrough:(WACContactChange*)lastChangeToAccept;
-- (void)readBatchAsyncWithSuccess:(void (^)(NSArray* /* WACContactChange* */))success failure:(void (^)(NSError*))failure;
-@end
-
-#endif // __WACContactChangeReader_DEFINED__
-
-// Windows.ApplicationModel.Contacts.ContactBatch
-#ifndef __WACContactBatch_DEFINED__
-#define __WACContactBatch_DEFINED__
-
-OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
-@interface WACContactBatch : RTObject
-#if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
-#endif
-@property (readonly) NSArray* /* WACContact* */ contacts;
-@property (readonly) WACContactBatchStatus status;
-@end
-
-#endif // __WACContactBatch_DEFINED__
-
-// Windows.ApplicationModel.Contacts.ContactMatchReason
-#ifndef __WACContactMatchReason_DEFINED__
-#define __WACContactMatchReason_DEFINED__
-
-OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
-@interface WACContactMatchReason : RTObject
-#if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
-#endif
-@property (readonly) WACContactMatchReasonKind field;
-@property (readonly) NSArray* /* WDTTextSegment* */ segments;
-@property (readonly) NSString * text;
-@end
-
-#endif // __WACContactMatchReason_DEFINED__
-
-// Windows.ApplicationModel.Contacts.ContactQueryTextSearch
-#ifndef __WACContactQueryTextSearch_DEFINED__
-#define __WACContactQueryTextSearch_DEFINED__
-
-OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
-@interface WACContactQueryTextSearch : RTObject
-#if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
-#endif
-@property (retain) NSString * text;
-@property WACContactQuerySearchScope searchScope;
-@property WACContactQuerySearchFields fields;
-@end
-
-#endif // __WACContactQueryTextSearch_DEFINED__
-
-// Windows.ApplicationModel.Contacts.ContactStoreNotificationTriggerDetails
-#ifndef __WACContactStoreNotificationTriggerDetails_DEFINED__
-#define __WACContactStoreNotificationTriggerDetails_DEFINED__
-
-OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
-@interface WACContactStoreNotificationTriggerDetails : RTObject
-#if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
-#endif
-@end
-
-#endif // __WACContactStoreNotificationTriggerDetails_DEFINED__
-
-// Windows.ApplicationModel.Contacts.ContactManager
-#ifndef __WACContactManager_DEFINED__
-#define __WACContactManager_DEFINED__
-
-OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
-@interface WACContactManager : RTObject
-+ (void)convertContactToVCardAsync:(WACContact*)contact success:(void (^)(WSSRandomAccessStreamReference*))success failure:(void (^)(NSError*))failure;
-+ (void)convertContactToVCardAsyncWithMaxBytes:(WACContact*)contact maxBytes:(unsigned int)maxBytes success:(void (^)(WSSRandomAccessStreamReference*))success failure:(void (^)(NSError*))failure;
-+ (void)convertVCardToContactAsync:(RTObject<WSSIRandomAccessStreamReference>*)vCard success:(void (^)(WACContact*))success failure:(void (^)(NSError*))failure;
-+ (void)requestStoreAsyncWithAccessType:(WACContactStoreAccessType)accessType success:(void (^)(WACContactStore*))success failure:(void (^)(NSError*))failure;
-+ (void)requestAnnotationStoreAsync:(WACContactAnnotationStoreAccessType)accessType success:(void (^)(WACContactAnnotationStore*))success failure:(void (^)(NSError*))failure;
-+ (BOOL)isShowContactCardSupported;
-+ (void)showContactCardWithOptions:(WACContact*)contact selection:(WFRect*)selection preferredPlacement:(WUPPlacement)preferredPlacement contactCardOptions:(WACContactCardOptions*)contactCardOptions;
-+ (BOOL)isShowDelayLoadedContactCardSupported;
-+ (WACContactCardDelayedDataLoader*)showDelayLoadedContactCardWithOptions:(WACContact*)contact selection:(WFRect*)selection preferredPlacement:(WUPPlacement)preferredPlacement contactCardOptions:(WACContactCardOptions*)contactCardOptions;
-+ (void)showFullContactCard:(WACContact*)contact fullContactCardOptions:(WACFullContactCardOptions*)fullContactCardOptions;
-+ (void)requestStoreAsyncWithSuccess:(void (^)(WACContactStore*))success failure:(void (^)(NSError*))failure;
-+ (void)showContactCard:(WACContact*)contact selection:(WFRect*)selection;
-+ (void)showContactCardWithPlacement:(WACContact*)contact selection:(WFRect*)selection preferredPlacement:(WUPPlacement)preferredPlacement;
-+ (WACContactCardDelayedDataLoader*)showDelayLoadedContactCard:(WACContact*)contact selection:(WFRect*)selection preferredPlacement:(WUPPlacement)preferredPlacement;
-+ (WACContactManagerForUser*)getForUser:(WSUser*)user;
-+ (void)showContactCard:(WACContact*)contact selection:(WFRect*)selection;
-+ (void)showContactCardWithPlacement:(WACContact*)contact selection:(WFRect*)selection preferredPlacement:(WUPPlacement)preferredPlacement;
-+ (WACContactCardDelayedDataLoader*)showDelayLoadedContactCard:(WACContact*)contact selection:(WFRect*)selection preferredPlacement:(WUPPlacement)preferredPlacement;
-+ (void)requestStoreAsyncWithSuccess:(void (^)(WACContactStore*))success failure:(void (^)(NSError*))failure;
-+ (void)showContactCard:(WACContact*)contact selection:(WFRect*)selection;
-+ (void)showContactCardWithPlacement:(WACContact*)contact selection:(WFRect*)selection preferredPlacement:(WUPPlacement)preferredPlacement;
-+ (WACContactCardDelayedDataLoader*)showDelayLoadedContactCard:(WACContact*)contact selection:(WFRect*)selection preferredPlacement:(WUPPlacement)preferredPlacement;
-+ (WACContactNameOrder)systemSortOrder;
-+ (void)setSystemSortOrder:(WACContactNameOrder)value;
-+ (WACContactNameOrder)systemDisplayNameOrder;
-+ (void)setSystemDisplayNameOrder:(WACContactNameOrder)value;
-@end
-
-#endif // __WACContactManager_DEFINED__
-
-// Windows.ApplicationModel.Contacts.ContactLaunchActionVerbs
-#ifndef __WACContactLaunchActionVerbs_DEFINED__
-#define __WACContactLaunchActionVerbs_DEFINED__
-
-OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
-@interface WACContactLaunchActionVerbs : RTObject
-+ (NSString *)call;
-+ (NSString *)map;
-+ (NSString *)message;
-+ (NSString *)post;
-+ (NSString *)videoCall;
-@end
-
-#endif // __WACContactLaunchActionVerbs_DEFINED__
+#endif // __WACContact_DEFINED__
 
 // Windows.ApplicationModel.Contacts.ContactField
 #ifndef __WACContactField_DEFINED__
@@ -1163,25 +1236,88 @@ OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 
 #endif // __WACContactFieldFactory_DEFINED__
 
-// Windows.ApplicationModel.Contacts.ContactPicker
-#ifndef __WACContactPicker_DEFINED__
-#define __WACContactPicker_DEFINED__
+// Windows.ApplicationModel.Contacts.PinnedContactIdsQueryResult
+#ifndef __WACPinnedContactIdsQueryResult_DEFINED__
+#define __WACPinnedContactIdsQueryResult_DEFINED__
 
 OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
-@interface WACContactPicker : RTObject
-+ (instancetype)make __attribute__ ((ns_returns_retained));
+@interface WACPinnedContactIdsQueryResult : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
-@property WACContactSelectionMode selectionMode;
-@property (retain) NSString * commitButtonText;
-@property (readonly) NSMutableArray* /* NSString * */ desiredFields;
-@property (readonly) NSMutableArray* /* WACContactFieldType */ desiredFieldsWithContactFieldType;
-- (void)pickSingleContactAsyncWithSuccess:(void (^)(WACContactInformation*))success failure:(void (^)(NSError*))failure;
-- (void)pickMultipleContactsAsyncWithSuccess:(void (^)(NSArray* /* WACContactInformation* */))success failure:(void (^)(NSError*))failure;
-- (void)pickContactAsyncWithSuccess:(void (^)(WACContact*))success failure:(void (^)(NSError*))failure;
-- (void)pickContactsAsyncWithSuccess:(void (^)(NSMutableArray* /* WACContact* */))success failure:(void (^)(NSError*))failure;
+@property (readonly) NSMutableArray* /* NSString * */ contactIds;
 @end
 
-#endif // __WACContactPicker_DEFINED__
+#endif // __WACPinnedContactIdsQueryResult_DEFINED__
+
+// Windows.ApplicationModel.Contacts.PinnedContactManager
+#ifndef __WACPinnedContactManager_DEFINED__
+#define __WACPinnedContactManager_DEFINED__
+
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
+@interface WACPinnedContactManager : RTObject
++ (WACPinnedContactManager*)getDefault;
++ (WACPinnedContactManager*)getForUser:(WSUser*)user;
++ (BOOL)isSupported;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (readonly) WSUser* user;
+- (BOOL)isPinSurfaceSupported:(WACPinnedContactSurface)surface;
+- (BOOL)isContactPinned:(WACContact*)contact surface:(WACPinnedContactSurface)surface;
+- (void)requestPinContactAsync:(WACContact*)contact surface:(WACPinnedContactSurface)surface success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
+- (void)requestPinContactsAsync:(id<NSFastEnumeration> /* WACContact* */)contacts surface:(WACPinnedContactSurface)surface success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
+- (void)requestUnpinContactAsync:(WACContact*)contact surface:(WACPinnedContactSurface)surface success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
+- (void)signalContactActivity:(WACContact*)contact;
+- (void)getPinnedContactIdsAsyncWithSuccess:(void (^)(WACPinnedContactIdsQueryResult*))success failure:(void (^)(NSError*))failure;
+@end
+
+#endif // __WACPinnedContactManager_DEFINED__
+
+// Windows.ApplicationModel.Contacts.ContactPanelLaunchFullAppRequestedEventArgs
+#ifndef __WACContactPanelLaunchFullAppRequestedEventArgs_DEFINED__
+#define __WACContactPanelLaunchFullAppRequestedEventArgs_DEFINED__
+
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
+@interface WACContactPanelLaunchFullAppRequestedEventArgs : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property BOOL handled;
+@end
+
+#endif // __WACContactPanelLaunchFullAppRequestedEventArgs_DEFINED__
+
+// Windows.ApplicationModel.Contacts.ContactPanelClosingEventArgs
+#ifndef __WACContactPanelClosingEventArgs_DEFINED__
+#define __WACContactPanelClosingEventArgs_DEFINED__
+
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
+@interface WACContactPanelClosingEventArgs : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+- (WFDeferral*)getDeferral;
+@end
+
+#endif // __WACContactPanelClosingEventArgs_DEFINED__
+
+// Windows.ApplicationModel.Contacts.ContactPanel
+#ifndef __WACContactPanel_DEFINED__
+#define __WACContactPanel_DEFINED__
+
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
+@interface WACContactPanel : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (retain) id /* WUColor* */ headerColor;
+- (EventRegistrationToken)addClosingEvent:(void(^)(WACContactPanel*, WACContactPanelClosingEventArgs*))del;
+- (void)removeClosingEvent:(EventRegistrationToken)tok;
+- (EventRegistrationToken)addLaunchFullAppRequestedEvent:(void(^)(WACContactPanel*, WACContactPanelLaunchFullAppRequestedEventArgs*))del;
+- (void)removeLaunchFullAppRequestedEvent:(EventRegistrationToken)tok;
+- (void)closePanel;
+@end
+
+#endif // __WACContactPanel_DEFINED__
 

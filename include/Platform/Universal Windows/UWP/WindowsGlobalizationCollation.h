@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -28,7 +28,7 @@
 #include <UWP/interopBase.h>
 
 @class WGCCharacterGrouping, WGCCharacterGroupings;
-@protocol WGCICharacterGrouping, WGCICharacterGroupings;
+@protocol WGCICharacterGrouping, WGCICharacterGroupingsFactory, WGCICharacterGroupings;
 
 #import <Foundation/Foundation.h>
 
@@ -53,6 +53,7 @@ OBJCUWPWINDOWSGLOBALIZATIONCOLLATIONEXPORT
 
 OBJCUWPWINDOWSGLOBALIZATIONCOLLATIONEXPORT
 @interface WGCCharacterGroupings : RTObject
++ (WGCCharacterGroupings*)make:(NSString *)language ACTIVATOR;
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));

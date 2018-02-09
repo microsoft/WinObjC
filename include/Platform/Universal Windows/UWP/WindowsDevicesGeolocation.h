@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -27,9 +27,9 @@
 #endif
 #include <UWP/interopBase.h>
 
-@class WDGGeopoint, WDGGeopath, WDGGeoboundingBox, WDGGeocoordinateSatelliteData, WDGVenueData, WDGGeocoordinate, WDGCivicAddress, WDGGeoposition, WDGPositionChangedEventArgs, WDGStatusChangedEventArgs, WDGGeolocator, WDGGeocircle;
+@class WDGGeopoint, WDGGeopath, WDGGeoboundingBox, WDGGeocoordinateSatelliteData, WDGVenueData, WDGGeocoordinate, WDGCivicAddress, WDGGeoposition, WDGPositionChangedEventArgs, WDGStatusChangedEventArgs, WDGGeolocator, WDGGeocircle, WDGGeovisit, WDGGeovisitStateChangedEventArgs, WDGGeovisitMonitor, WDGGeovisitTriggerDetails;
 @class WDGBasicGeoposition;
-@protocol WDGIGeoshape, WDGIGeopoint, WDGIGeopointFactory, WDGIGeopath, WDGIGeopathFactory, WDGIGeoboundingBox, WDGIGeoboundingBoxFactory, WDGIGeoboundingBoxStatics, WDGIGeocoordinateSatelliteData, WDGIVenueData, WDGIGeocoordinate, WDGIGeocoordinateWithPositionData, WDGIGeocoordinateWithPoint, WDGIGeocoordinateWithPositionSourceTimestamp, WDGIGeoposition, WDGIGeoposition2, WDGICivicAddress, WDGIPositionChangedEventArgs, WDGIStatusChangedEventArgs, WDGIGeolocator, WDGIGeolocatorWithScalarAccuracy, WDGIGeolocator2, WDGIGeolocatorStatics, WDGIGeolocatorStatics2, WDGIGeocircle, WDGIGeocircleFactory;
+@protocol WDGIGeoshape, WDGIGeopoint, WDGIGeopointFactory, WDGIGeopath, WDGIGeopathFactory, WDGIGeoboundingBox, WDGIGeoboundingBoxFactory, WDGIGeoboundingBoxStatics, WDGIGeocoordinateSatelliteData, WDGIVenueData, WDGIGeocoordinate, WDGIGeocoordinateWithPositionData, WDGIGeocoordinateWithPoint, WDGIGeocoordinateWithPositionSourceTimestamp, WDGIGeoposition, WDGIGeoposition2, WDGICivicAddress, WDGIPositionChangedEventArgs, WDGIStatusChangedEventArgs, WDGIGeolocator, WDGIGeolocatorWithScalarAccuracy, WDGIGeolocator2, WDGIGeolocatorStatics, WDGIGeolocatorStatics2, WDGIGeocircle, WDGIGeocircleFactory, WDGIGeovisit, WDGIGeovisitStateChangedEventArgs, WDGIGeovisitMonitor, WDGIGeovisitMonitorStatics, WDGIGeovisitTriggerDetails;
 
 // Windows.Devices.Geolocation.PositionAccuracy
 enum _WDGPositionAccuracy {
@@ -87,6 +87,22 @@ enum _WDGGeolocationAccessStatus {
     WDGGeolocationAccessStatusDenied = 2,
 };
 typedef unsigned WDGGeolocationAccessStatus;
+
+// Windows.Devices.Geolocation.VisitMonitoringScope
+enum _WDGVisitMonitoringScope {
+    WDGVisitMonitoringScopeVenue = 0,
+    WDGVisitMonitoringScopeCity = 1,
+};
+typedef unsigned WDGVisitMonitoringScope;
+
+// Windows.Devices.Geolocation.VisitStateChange
+enum _WDGVisitStateChange {
+    WDGVisitStateChangeTrackingLost = 0,
+    WDGVisitStateChangeArrived = 1,
+    WDGVisitStateChangeDeparted = 2,
+    WDGVisitStateChangeOtherMovement = 3,
+};
+typedef unsigned WDGVisitStateChange;
 
 #include "WindowsFoundation.h"
 
@@ -354,4 +370,68 @@ OBJCUWPWINDOWSDEVICESGEOLOCATIONEXPORT
 @end
 
 #endif // __WDGGeocircle_DEFINED__
+
+// Windows.Devices.Geolocation.Geovisit
+#ifndef __WDGGeovisit_DEFINED__
+#define __WDGGeovisit_DEFINED__
+
+OBJCUWPWINDOWSDEVICESGEOLOCATIONEXPORT
+@interface WDGGeovisit : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (readonly) WDGGeoposition* position;
+@property (readonly) WDGVisitStateChange stateChange;
+@property (readonly) WFDateTime* timestamp;
+@end
+
+#endif // __WDGGeovisit_DEFINED__
+
+// Windows.Devices.Geolocation.GeovisitStateChangedEventArgs
+#ifndef __WDGGeovisitStateChangedEventArgs_DEFINED__
+#define __WDGGeovisitStateChangedEventArgs_DEFINED__
+
+OBJCUWPWINDOWSDEVICESGEOLOCATIONEXPORT
+@interface WDGGeovisitStateChangedEventArgs : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (readonly) WDGGeovisit* visit;
+@end
+
+#endif // __WDGGeovisitStateChangedEventArgs_DEFINED__
+
+// Windows.Devices.Geolocation.GeovisitMonitor
+#ifndef __WDGGeovisitMonitor_DEFINED__
+#define __WDGGeovisitMonitor_DEFINED__
+
+OBJCUWPWINDOWSDEVICESGEOLOCATIONEXPORT
+@interface WDGGeovisitMonitor : RTObject
++ (void)getLastReportAsyncWithSuccess:(void (^)(WDGGeovisit*))success failure:(void (^)(NSError*))failure;
++ (instancetype)make __attribute__ ((ns_returns_retained));
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (readonly) WDGVisitMonitoringScope monitoringScope;
+- (EventRegistrationToken)addVisitStateChangedEvent:(void(^)(WDGGeovisitMonitor*, WDGGeovisitStateChangedEventArgs*))del;
+- (void)removeVisitStateChangedEvent:(EventRegistrationToken)tok;
+- (void)start:(WDGVisitMonitoringScope)value;
+- (void)stop;
+@end
+
+#endif // __WDGGeovisitMonitor_DEFINED__
+
+// Windows.Devices.Geolocation.GeovisitTriggerDetails
+#ifndef __WDGGeovisitTriggerDetails_DEFINED__
+#define __WDGGeovisitTriggerDetails_DEFINED__
+
+OBJCUWPWINDOWSDEVICESGEOLOCATIONEXPORT
+@interface WDGGeovisitTriggerDetails : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+- (NSArray* /* WDGGeovisit* */)readReports;
+@end
+
+#endif // __WDGGeovisitTriggerDetails_DEFINED__
 

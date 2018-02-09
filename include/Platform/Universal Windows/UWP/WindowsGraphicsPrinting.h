@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -680,9 +680,9 @@ OBJCUWPWINDOWSGRAPHICSPRINTINGEXPORT
 
 OBJCUWPWINDOWSGRAPHICSPRINTINGEXPORT
 @interface WGPPrintManager : RTObject
-+ (BOOL)isSupported;
 + (WGPPrintManager*)getForCurrentView;
 + (void)showPrintUIAsyncWithSuccess:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
++ (BOOL)isSupported;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif

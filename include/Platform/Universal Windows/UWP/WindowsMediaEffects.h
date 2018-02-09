@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -27,8 +27,8 @@
 #endif
 #include <UWP/interopBase.h>
 
-@class WMEVideoCompositorDefinition, WMECompositeVideoFrameContext, WMEAudioEffect, WMEAudioRenderEffectsManager, WMEAudioCaptureEffectsManager, WMEAudioEffectsManager, WMEVideoEffectDefinition, WMEAudioEffectDefinition, WMEProcessVideoFrameContext, WMEProcessAudioFrameContext, WMEVideoTransformEffectDefinition, WMESlowMotionEffectDefinition;
-@protocol WMEIVideoCompositorDefinition, WMEIVideoCompositorDefinitionFactory, WMEICompositeVideoFrameContext, WMEIAudioEffect, WMEIAudioEffectsManagerStatics, WMEIAudioRenderEffectsManager, WMEIAudioRenderEffectsManager2, WMEIAudioCaptureEffectsManager, WMEIVideoCompositor, WMEIAudioEffectDefinition, WMEIVideoEffectDefinition, WMEIVideoEffectDefinitionFactory, WMEIAudioEffectDefinitionFactory, WMEIProcessVideoFrameContext, WMEIBasicVideoEffect, WMEIProcessAudioFrameContext, WMEIBasicAudioEffect, WMEIVideoTransformEffectDefinition, WMEISlowMotionEffectDefinition;
+@class WMEVideoCompositorDefinition, WMECompositeVideoFrameContext, WMEAudioEffect, WMEAudioRenderEffectsManager, WMEAudioCaptureEffectsManager, WMEAudioEffectsManager, WMEVideoEffectDefinition, WMEAudioEffectDefinition, WMEProcessVideoFrameContext, WMEProcessAudioFrameContext, WMEVideoTransformEffectDefinition;
+@protocol WMEIVideoCompositorDefinition, WMEIVideoCompositorDefinitionFactory, WMEICompositeVideoFrameContext, WMEIAudioEffect, WMEIAudioEffectsManagerStatics, WMEIAudioRenderEffectsManager, WMEIAudioRenderEffectsManager2, WMEIAudioCaptureEffectsManager, WMEIVideoCompositor, WMEIVideoEffectDefinition, WMEIVideoEffectDefinitionFactory, WMEIAudioEffectDefinition, WMEIAudioEffectDefinitionFactory, WMEIProcessVideoFrameContext, WMEIBasicVideoEffect, WMEIProcessAudioFrameContext, WMEIBasicAudioEffect, WMEIVideoTransformEffectDefinition;
 
 // Windows.Media.Effects.AudioEffectType
 enum _WMEAudioEffectType {
@@ -132,21 +132,6 @@ OBJCUWPWINDOWSMEDIAEDITINGEFFECTSEXPORT
 
 #endif // __WMEIVideoCompositor_DEFINED__
 
-// Windows.Media.Effects.IAudioEffectDefinition
-#ifndef __WMEIAudioEffectDefinition_DEFINED__
-#define __WMEIAudioEffectDefinition_DEFINED__
-
-@protocol WMEIAudioEffectDefinition
-@property (readonly) NSString * activatableClassId;
-@property (readonly) RTObject<WFCIPropertySet>* properties;
-@end
-
-OBJCUWPWINDOWSMEDIAEDITINGEFFECTSEXPORT
-@interface WMEIAudioEffectDefinition : RTObject <WMEIAudioEffectDefinition>
-@end
-
-#endif // __WMEIAudioEffectDefinition_DEFINED__
-
 // Windows.Media.Effects.IVideoEffectDefinition
 #ifndef __WMEIVideoEffectDefinition_DEFINED__
 #define __WMEIVideoEffectDefinition_DEFINED__
@@ -161,6 +146,21 @@ OBJCUWPWINDOWSMEDIAEDITINGEFFECTSEXPORT
 @end
 
 #endif // __WMEIVideoEffectDefinition_DEFINED__
+
+// Windows.Media.Effects.IAudioEffectDefinition
+#ifndef __WMEIAudioEffectDefinition_DEFINED__
+#define __WMEIAudioEffectDefinition_DEFINED__
+
+@protocol WMEIAudioEffectDefinition
+@property (readonly) NSString * activatableClassId;
+@property (readonly) RTObject<WFCIPropertySet>* properties;
+@end
+
+OBJCUWPWINDOWSMEDIAEDITINGEFFECTSEXPORT
+@interface WMEIAudioEffectDefinition : RTObject <WMEIAudioEffectDefinition>
+@end
+
+#endif // __WMEIAudioEffectDefinition_DEFINED__
 
 // Windows.Media.Effects.IBasicVideoEffect
 #ifndef __WMEIBasicVideoEffect_DEFINED__
@@ -386,21 +386,4 @@ OBJCUWPWINDOWSMEDIAEDITINGEFFECTSEXPORT
 @end
 
 #endif // __WMEVideoTransformEffectDefinition_DEFINED__
-
-// Windows.Media.Effects.SlowMotionEffectDefinition
-#ifndef __WMESlowMotionEffectDefinition_DEFINED__
-#define __WMESlowMotionEffectDefinition_DEFINED__
-
-OBJCUWPWINDOWSMEDIAEDITINGEFFECTSEXPORT
-@interface WMESlowMotionEffectDefinition : RTObject <WMEIVideoEffectDefinition>
-+ (instancetype)make __attribute__ ((ns_returns_retained));
-#if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
-#endif
-@property double timeStretchRate;
-@property (readonly) NSString * activatableClassId;
-@property (readonly) RTObject<WFCIPropertySet>* properties;
-@end
-
-#endif // __WMESlowMotionEffectDefinition_DEFINED__
 

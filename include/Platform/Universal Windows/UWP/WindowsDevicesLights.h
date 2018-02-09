@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -28,7 +28,7 @@
 #include <UWP/interopBase.h>
 
 @class WDLLamp, WDLLampAvailabilityChangedEventArgs;
-@protocol WDLILampStatics, WDLILampAvailabilityChangedEventArgs, WDLILamp;
+@protocol WDLILampStatics, WDLILamp, WDLILampAvailabilityChangedEventArgs;
 
 #include "WindowsFoundation.h"
 #include "WindowsUI.h"

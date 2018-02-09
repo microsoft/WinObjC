@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -139,8 +139,8 @@ OBJCUWPWINDOWSAPPLICATIONMODELSTOREEXPORT
 
 OBJCUWPWINDOWSAPPLICATIONMODELSTOREEXPORT
 @interface WSProductPurchaseDisplayProperties : RTObject
-+ (WSProductPurchaseDisplayProperties*)makeProductPurchaseDisplayProperties:(NSString *)name ACTIVATOR;
 + (instancetype)make __attribute__ ((ns_returns_retained));
++ (WSProductPurchaseDisplayProperties*)makeProductPurchaseDisplayProperties:(NSString *)name ACTIVATOR;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
@@ -215,9 +215,13 @@ OBJCUWPWINDOWSAPPLICATIONMODELSTOREEXPORT
 
 OBJCUWPWINDOWSAPPLICATIONMODELSTOREEXPORT
 @interface WSCurrentApp : RTObject
-+ (void)getAppPurchaseCampaignIdAsyncWithSuccess:(void (^)(NSString *))success failure:(void (^)(NSError*))failure;
 + (void)getCustomerPurchaseIdAsync:(NSString *)serviceTicket publisherUserId:(NSString *)publisherUserId success:(void (^)(NSString *))success failure:(void (^)(NSError*))failure;
 + (void)getCustomerCollectionsIdAsync:(NSString *)serviceTicket publisherUserId:(NSString *)publisherUserId success:(void (^)(NSString *))success failure:(void (^)(NSError*))failure;
++ (void)reportConsumableFulfillmentAsync:(NSString *)productId transactionId:(WFGUID*)transactionId success:(void (^)(WSFulfillmentResult))success failure:(void (^)(NSError*))failure;
++ (void)requestProductPurchaseWithResultsAsync:(NSString *)productId success:(void (^)(WSPurchaseResults*))success failure:(void (^)(NSError*))failure;
++ (void)requestProductPurchaseWithDisplayPropertiesAsync:(NSString *)productId offerId:(NSString *)offerId displayProperties:(WSProductPurchaseDisplayProperties*)displayProperties success:(void (^)(WSPurchaseResults*))success failure:(void (^)(NSError*))failure;
++ (void)getUnfulfilledConsumablesAsyncWithSuccess:(void (^)(NSArray* /* WSUnfulfilledConsumable* */))success failure:(void (^)(NSError*))failure;
++ (void)getAppPurchaseCampaignIdAsyncWithSuccess:(void (^)(NSString *))success failure:(void (^)(NSError*))failure;
 + (void)loadListingInformationByProductIdsAsync:(id<NSFastEnumeration> /* NSString * */)productIds success:(void (^)(WSListingInformation*))success failure:(void (^)(NSError*))failure;
 + (void)loadListingInformationByKeywordsAsync:(id<NSFastEnumeration> /* NSString * */)keywords success:(void (^)(WSListingInformation*))success failure:(void (^)(NSError*))failure;
 + (void)reportProductFulfillment:(NSString *)productId;
@@ -226,10 +230,6 @@ OBJCUWPWINDOWSAPPLICATIONMODELSTOREEXPORT
 + (void)loadListingInformationAsyncWithSuccess:(void (^)(WSListingInformation*))success failure:(void (^)(NSError*))failure;
 + (void)getAppReceiptAsyncWithSuccess:(void (^)(NSString *))success failure:(void (^)(NSError*))failure;
 + (void)getProductReceiptAsync:(NSString *)productId success:(void (^)(NSString *))success failure:(void (^)(NSError*))failure;
-+ (void)reportConsumableFulfillmentAsync:(NSString *)productId transactionId:(WFGUID*)transactionId success:(void (^)(WSFulfillmentResult))success failure:(void (^)(NSError*))failure;
-+ (void)requestProductPurchaseWithResultsAsync:(NSString *)productId success:(void (^)(WSPurchaseResults*))success failure:(void (^)(NSError*))failure;
-+ (void)requestProductPurchaseWithDisplayPropertiesAsync:(NSString *)productId offerId:(NSString *)offerId displayProperties:(WSProductPurchaseDisplayProperties*)displayProperties success:(void (^)(WSPurchaseResults*))success failure:(void (^)(NSError*))failure;
-+ (void)getUnfulfilledConsumablesAsyncWithSuccess:(void (^)(NSArray* /* WSUnfulfilledConsumable* */))success failure:(void (^)(NSError*))failure;
 + (WFGUID*)appId;
 + (WSLicenseInformation*)licenseInformation;
 + (WFUri*)linkUri;
@@ -243,10 +243,6 @@ OBJCUWPWINDOWSAPPLICATIONMODELSTOREEXPORT
 
 OBJCUWPWINDOWSAPPLICATIONMODELSTOREEXPORT
 @interface WSCurrentAppSimulator : RTObject
-+ (void)reportConsumableFulfillmentAsync:(NSString *)productId transactionId:(WFGUID*)transactionId success:(void (^)(WSFulfillmentResult))success failure:(void (^)(NSError*))failure;
-+ (void)requestProductPurchaseWithResultsAsync:(NSString *)productId success:(void (^)(WSPurchaseResults*))success failure:(void (^)(NSError*))failure;
-+ (void)requestProductPurchaseWithDisplayPropertiesAsync:(NSString *)productId offerId:(NSString *)offerId displayProperties:(WSProductPurchaseDisplayProperties*)displayProperties success:(void (^)(WSPurchaseResults*))success failure:(void (^)(NSError*))failure;
-+ (void)getUnfulfilledConsumablesAsyncWithSuccess:(void (^)(NSArray* /* WSUnfulfilledConsumable* */))success failure:(void (^)(NSError*))failure;
 + (void)getAppPurchaseCampaignIdAsyncWithSuccess:(void (^)(NSString *))success failure:(void (^)(NSError*))failure;
 + (void)requestAppPurchaseAsync:(BOOL)includeReceipt success:(void (^)(NSString *))success failure:(void (^)(NSError*))failure;
 + (void)requestProductPurchaseAsync:(NSString *)productId includeReceipt:(BOOL)includeReceipt success:(void (^)(NSString *))success failure:(void (^)(NSError*))failure;
@@ -254,6 +250,10 @@ OBJCUWPWINDOWSAPPLICATIONMODELSTOREEXPORT
 + (void)getAppReceiptAsyncWithSuccess:(void (^)(NSString *))success failure:(void (^)(NSError*))failure;
 + (void)getProductReceiptAsync:(NSString *)productId success:(void (^)(NSString *))success failure:(void (^)(NSError*))failure;
 + (RTObject<WFIAsyncAction>*)reloadSimulatorAsync:(WSStorageFile*)simulatorSettingsFile;
++ (void)reportConsumableFulfillmentAsync:(NSString *)productId transactionId:(WFGUID*)transactionId success:(void (^)(WSFulfillmentResult))success failure:(void (^)(NSError*))failure;
++ (void)requestProductPurchaseWithResultsAsync:(NSString *)productId success:(void (^)(WSPurchaseResults*))success failure:(void (^)(NSError*))failure;
++ (void)requestProductPurchaseWithDisplayPropertiesAsync:(NSString *)productId offerId:(NSString *)offerId displayProperties:(WSProductPurchaseDisplayProperties*)displayProperties success:(void (^)(WSPurchaseResults*))success failure:(void (^)(NSError*))failure;
++ (void)getUnfulfilledConsumablesAsyncWithSuccess:(void (^)(NSArray* /* WSUnfulfilledConsumable* */))success failure:(void (^)(NSError*))failure;
 + (void)loadListingInformationByProductIdsAsync:(id<NSFastEnumeration> /* NSString * */)productIds success:(void (^)(WSListingInformation*))success failure:(void (^)(NSError*))failure;
 + (void)loadListingInformationByKeywordsAsync:(id<NSFastEnumeration> /* NSString * */)keywords success:(void (^)(WSListingInformation*))success failure:(void (^)(NSError*))failure;
 + (WFGUID*)appId;

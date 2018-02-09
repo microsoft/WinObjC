@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -149,8 +149,8 @@ OBJCUWPWINDOWSWEBSYNDICATIONEXPORT
 
 OBJCUWPWINDOWSWEBSYNDICATIONEXPORT
 @interface WWSSyndicationAttribute : RTObject
-+ (WWSSyndicationAttribute*)makeSyndicationAttribute:(NSString *)attributeName attributeNamespace:(NSString *)attributeNamespace attributeValue:(NSString *)attributeValue ACTIVATOR;
 + (instancetype)make __attribute__ ((ns_returns_retained));
++ (WWSSyndicationAttribute*)makeSyndicationAttribute:(NSString *)attributeName attributeNamespace:(NSString *)attributeNamespace attributeValue:(NSString *)attributeValue ACTIVATOR;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
@@ -190,8 +190,8 @@ OBJCUWPWINDOWSWEBSYNDICATIONEXPORT
 
 OBJCUWPWINDOWSWEBSYNDICATIONEXPORT
 @interface WWSSyndicationGenerator : RTObject <WWSISyndicationNode>
-+ (WWSSyndicationGenerator*)makeSyndicationGenerator:(NSString *)text ACTIVATOR;
 + (instancetype)make __attribute__ ((ns_returns_retained));
++ (WWSSyndicationGenerator*)makeSyndicationGenerator:(NSString *)text ACTIVATOR;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
@@ -271,9 +271,9 @@ OBJCUWPWINDOWSWEBSYNDICATIONEXPORT
 
 OBJCUWPWINDOWSWEBSYNDICATIONEXPORT
 @interface WWSSyndicationLink : RTObject <WWSISyndicationNode>
-+ (instancetype)make __attribute__ ((ns_returns_retained));
 + (WWSSyndicationLink*)makeSyndicationLink:(WFUri*)uri ACTIVATOR;
 + (WWSSyndicationLink*)makeSyndicationLinkEx:(WFUri*)uri relationship:(NSString *)relationship title:(NSString *)title mediaType:(NSString *)mediaType length:(unsigned int)length ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
@@ -328,9 +328,9 @@ OBJCUWPWINDOWSWEBSYNDICATIONEXPORT
 
 OBJCUWPWINDOWSWEBSYNDICATIONEXPORT
 @interface WWSSyndicationCategory : RTObject <WWSISyndicationNode>
++ (instancetype)make __attribute__ ((ns_returns_retained));
 + (WWSSyndicationCategory*)makeSyndicationCategory:(NSString *)term ACTIVATOR;
 + (WWSSyndicationCategory*)makeSyndicationCategoryEx:(NSString *)term scheme:(NSString *)scheme label:(NSString *)label ACTIVATOR;
-+ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
@@ -355,8 +355,8 @@ OBJCUWPWINDOWSWEBSYNDICATIONEXPORT
 
 OBJCUWPWINDOWSWEBSYNDICATIONEXPORT
 @interface WWSSyndicationFeed : RTObject <WWSISyndicationNode>
-+ (instancetype)make __attribute__ ((ns_returns_retained));
 + (WWSSyndicationFeed*)makeSyndicationFeed:(NSString *)title subtitle:(NSString *)subtitle uri:(WFUri*)uri ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
@@ -440,8 +440,8 @@ OBJCUWPWINDOWSWEBSYNDICATIONEXPORT
 
 OBJCUWPWINDOWSWEBSYNDICATIONEXPORT
 @interface WWSSyndicationClient : RTObject <WWSISyndicationClient>
-+ (instancetype)make __attribute__ ((ns_returns_retained));
 + (WWSSyndicationClient*)makeSyndicationClient:(WSCPasswordCredential*)serverCredential ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif

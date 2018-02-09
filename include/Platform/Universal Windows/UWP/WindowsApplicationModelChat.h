@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -771,12 +771,12 @@ OBJCUWPWINDOWSAPPLICATIONMODELCHATEXPORT
 
 OBJCUWPWINDOWSAPPLICATIONMODELCHATEXPORT
 @interface WACChatMessageManager : RTObject
-+ (void)registerTransportAsyncWithSuccess:(void (^)(NSString *))success failure:(void (^)(NSError*))failure;
-+ (void)getTransportAsync:(NSString *)transportId success:(void (^)(WACChatMessageTransport*))success failure:(void (^)(NSError*))failure;
 + (void)getTransportsAsyncWithSuccess:(void (^)(NSArray* /* WACChatMessageTransport* */))success failure:(void (^)(NSError*))failure;
 + (void)requestStoreAsyncWithSuccess:(void (^)(WACChatMessageStore*))success failure:(void (^)(NSError*))failure;
 + (RTObject<WFIAsyncAction>*)showComposeSmsMessageAsync:(WACChatMessage*)message;
 + (void)showSmsSettings;
++ (void)registerTransportAsyncWithSuccess:(void (^)(NSString *))success failure:(void (^)(NSError*))failure;
++ (void)getTransportAsync:(NSString *)transportId success:(void (^)(WACChatMessageTransport*))success failure:(void (^)(NSError*))failure;
 + (void)getTransportsAsyncWithSuccess:(void (^)(NSArray* /* WACChatMessageTransport* */))success failure:(void (^)(NSError*))failure;
 + (void)requestStoreAsyncWithSuccess:(void (^)(WACChatMessageStore*))success failure:(void (^)(NSError*))failure;
 + (RTObject<WFIAsyncAction>*)showComposeSmsMessageAsync:(WACChatMessage*)message;

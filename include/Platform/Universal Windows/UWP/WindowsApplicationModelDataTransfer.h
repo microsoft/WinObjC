@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -27,8 +27,8 @@
 #endif
 #include <UWP/interopBase.h>
 
-@class WADStandardDataFormats, WADDataPackagePropertySetView, WADDataPackagePropertySet, WADDataProviderDeferral, WADDataProviderRequest, WADOperationCompletedEventArgs, WADDataPackageView, WADDataPackage, WADHtmlFormatHelper, WADClipboard, WADDataRequestDeferral, WADDataRequest, WADDataRequestedEventArgs, WADTargetApplicationChosenEventArgs, WADDataTransferManager, WADSharedStorageAccessManager;
-@protocol WADIStandardDataFormatsStatics, WADIStandardDataFormatsStatics2, WADIDataPackagePropertySetView, WADIDataPackagePropertySetView2, WADIDataPackagePropertySetView3, WADIDataPackagePropertySet, WADIDataPackagePropertySet2, WADIDataPackagePropertySet3, WADIDataProviderDeferral, WADIDataProviderRequest, WADIOperationCompletedEventArgs, WADIOperationCompletedEventArgs2, WADIDataPackageView, WADIDataPackageView2, WADIDataPackageView3, WADIDataPackageView4, WADIDataPackage, WADIDataPackage2, WADIHtmlFormatHelperStatics, WADIClipboardStatics, WADIDataRequestDeferral, WADIDataRequest, WADIDataRequestedEventArgs, WADITargetApplicationChosenEventArgs, WADIDataTransferManager, WADIDataTransferManagerStatics, WADIDataTransferManagerStatics2, WADISharedStorageAccessManagerStatics;
+@class WADStandardDataFormats, WADDataPackagePropertySetView, WADDataPackagePropertySet, WADDataProviderDeferral, WADDataProviderRequest, WADOperationCompletedEventArgs, WADShareProviderOperation, WADShareProvider, WADDataPackageView, WADShareTargetInfo, WADShareCompletedEventArgs, WADDataPackage, WADHtmlFormatHelper, WADClipboard, WADShareUIOptions, WADDataRequestDeferral, WADDataRequest, WADDataRequestedEventArgs, WADShareProvidersRequestedEventArgs, WADTargetApplicationChosenEventArgs, WADDataTransferManager, WADSharedStorageAccessManager;
+@protocol WADIStandardDataFormatsStatics, WADIStandardDataFormatsStatics2, WADIDataPackagePropertySetView, WADIDataPackagePropertySetView2, WADIDataPackagePropertySetView3, WADIDataPackagePropertySet, WADIDataPackagePropertySet2, WADIDataPackagePropertySet3, WADIDataProviderDeferral, WADIDataProviderRequest, WADIOperationCompletedEventArgs, WADIOperationCompletedEventArgs2, WADIShareProvider, WADIShareProviderFactory, WADIShareProviderOperation, WADIShareTargetInfo, WADIShareCompletedEventArgs, WADIDataPackageView, WADIDataPackageView2, WADIDataPackageView3, WADIDataPackageView4, WADIDataPackage, WADIDataPackage2, WADIDataPackage3, WADIHtmlFormatHelperStatics, WADIClipboardStatics, WADIShareUIOptions, WADIDataRequestDeferral, WADIDataRequest, WADIDataRequestedEventArgs, WADIShareProvidersRequestedEventArgs, WADITargetApplicationChosenEventArgs, WADIDataTransferManager, WADIDataTransferManager2, WADIDataTransferManagerStatics, WADIDataTransferManagerStatics2, WADIDataTransferManagerStatics3, WADISharedStorageAccessManagerStatics;
 
 // Windows.ApplicationModel.DataTransfer.DataPackageOperation
 enum _WADDataPackageOperation {
@@ -38,6 +38,14 @@ enum _WADDataPackageOperation {
     WADDataPackageOperationLink = 4,
 };
 typedef unsigned WADDataPackageOperation;
+
+// Windows.ApplicationModel.DataTransfer.ShareUITheme
+enum _WADShareUITheme {
+    WADShareUIThemeDefault = 0,
+    WADShareUIThemeLight = 1,
+    WADShareUIThemeDark = 2,
+};
+typedef unsigned WADShareUITheme;
 
 #include "WindowsStorageStreams.h"
 #include "WindowsFoundation.h"
@@ -50,6 +58,12 @@ typedef unsigned WADDataPackageOperation;
 typedef void(^WADDataProviderHandler)(WADDataProviderRequest* request);
 #endif // __WADDataProviderHandler__DEFINED
 
+// Windows.ApplicationModel.DataTransfer.ShareProviderHandler
+#ifndef __WADShareProviderHandler__DEFINED
+#define __WADShareProviderHandler__DEFINED
+typedef void(^WADShareProviderHandler)(WADShareProviderOperation* operation);
+#endif // __WADShareProviderHandler__DEFINED
+
 
 #import <Foundation/Foundation.h>
 
@@ -58,6 +72,12 @@ typedef void(^WADDataProviderHandler)(WADDataProviderRequest* request);
 #define __WADDataProviderHandler__DEFINED
 typedef void(^WADDataProviderHandler)(WADDataProviderRequest* request);
 #endif // __WADDataProviderHandler__DEFINED
+
+// Windows.ApplicationModel.DataTransfer.ShareProviderHandler
+#ifndef __WADShareProviderHandler__DEFINED
+#define __WADShareProviderHandler__DEFINED
+typedef void(^WADShareProviderHandler)(WADShareProviderOperation* operation);
+#endif // __WADShareProviderHandler__DEFINED
 
 // Windows.ApplicationModel.DataTransfer.StandardDataFormats
 #ifndef __WADStandardDataFormats_DEFINED__
@@ -197,6 +217,40 @@ OBJCUWPWINDOWSAPPLICATIONMODELDATATRANSFEREXPORT
 
 #endif // __WADOperationCompletedEventArgs_DEFINED__
 
+// Windows.ApplicationModel.DataTransfer.ShareProviderOperation
+#ifndef __WADShareProviderOperation_DEFINED__
+#define __WADShareProviderOperation_DEFINED__
+
+OBJCUWPWINDOWSAPPLICATIONMODELDATATRANSFEREXPORT
+@interface WADShareProviderOperation : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (readonly) WADDataPackageView* data;
+@property (readonly) WADShareProvider* provider;
+- (void)reportCompleted;
+@end
+
+#endif // __WADShareProviderOperation_DEFINED__
+
+// Windows.ApplicationModel.DataTransfer.ShareProvider
+#ifndef __WADShareProvider_DEFINED__
+#define __WADShareProvider_DEFINED__
+
+OBJCUWPWINDOWSAPPLICATIONMODELDATATRANSFEREXPORT
+@interface WADShareProvider : RTObject
++ (WADShareProvider*)make:(NSString *)title displayIcon:(WSSRandomAccessStreamReference*)displayIcon backgroundColor:(WUColor*)backgroundColor handler:(WADShareProviderHandler)handler ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (retain) RTObject* tag;
+@property (readonly) WUColor* backgroundColor;
+@property (readonly) WSSRandomAccessStreamReference* displayIcon;
+@property (readonly) NSString * title;
+@end
+
+#endif // __WADShareProvider_DEFINED__
+
 // Windows.ApplicationModel.DataTransfer.DataPackageView
 #ifndef __WADDataPackageView_DEFINED__
 #define __WADDataPackageView_DEFINED__
@@ -230,6 +284,35 @@ OBJCUWPWINDOWSAPPLICATIONMODELDATATRANSFEREXPORT
 
 #endif // __WADDataPackageView_DEFINED__
 
+// Windows.ApplicationModel.DataTransfer.ShareTargetInfo
+#ifndef __WADShareTargetInfo_DEFINED__
+#define __WADShareTargetInfo_DEFINED__
+
+OBJCUWPWINDOWSAPPLICATIONMODELDATATRANSFEREXPORT
+@interface WADShareTargetInfo : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (readonly) NSString * appUserModelId;
+@property (readonly) WADShareProvider* shareProvider;
+@end
+
+#endif // __WADShareTargetInfo_DEFINED__
+
+// Windows.ApplicationModel.DataTransfer.ShareCompletedEventArgs
+#ifndef __WADShareCompletedEventArgs_DEFINED__
+#define __WADShareCompletedEventArgs_DEFINED__
+
+OBJCUWPWINDOWSAPPLICATIONMODELDATATRANSFEREXPORT
+@interface WADShareCompletedEventArgs : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (readonly) WADShareTargetInfo* shareTarget;
+@end
+
+#endif // __WADShareCompletedEventArgs_DEFINED__
+
 // Windows.ApplicationModel.DataTransfer.DataPackage
 #ifndef __WADDataPackage_DEFINED__
 #define __WADDataPackage_DEFINED__
@@ -247,6 +330,8 @@ OBJCUWPWINDOWSAPPLICATIONMODELDATATRANSFEREXPORT
 - (void)removeDestroyedEvent:(EventRegistrationToken)tok;
 - (EventRegistrationToken)addOperationCompletedEvent:(void(^)(WADDataPackage*, WADOperationCompletedEventArgs*))del;
 - (void)removeOperationCompletedEvent:(EventRegistrationToken)tok;
+- (EventRegistrationToken)addShareCompletedEvent:(void(^)(WADDataPackage*, WADShareCompletedEventArgs*))del;
+- (void)removeShareCompletedEvent:(EventRegistrationToken)tok;
 - (WADDataPackageView*)getView;
 - (void)setData:(NSString *)formatId value:(RTObject*)value;
 - (void)setDataProvider:(NSString *)formatId delayRenderer:(WADDataProviderHandler)delayRenderer;
@@ -290,6 +375,22 @@ OBJCUWPWINDOWSAPPLICATIONMODELDATATRANSFEREXPORT
 @end
 
 #endif // __WADClipboard_DEFINED__
+
+// Windows.ApplicationModel.DataTransfer.ShareUIOptions
+#ifndef __WADShareUIOptions_DEFINED__
+#define __WADShareUIOptions_DEFINED__
+
+OBJCUWPWINDOWSAPPLICATIONMODELDATATRANSFEREXPORT
+@interface WADShareUIOptions : RTObject
++ (instancetype)make __attribute__ ((ns_returns_retained));
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property WADShareUITheme theme;
+@property (retain) id /* WFRect* */ selectionRect;
+@end
+
+#endif // __WADShareUIOptions_DEFINED__
 
 // Windows.ApplicationModel.DataTransfer.DataRequestDeferral
 #ifndef __WADDataRequestDeferral_DEFINED__
@@ -336,6 +437,22 @@ OBJCUWPWINDOWSAPPLICATIONMODELDATATRANSFEREXPORT
 
 #endif // __WADDataRequestedEventArgs_DEFINED__
 
+// Windows.ApplicationModel.DataTransfer.ShareProvidersRequestedEventArgs
+#ifndef __WADShareProvidersRequestedEventArgs_DEFINED__
+#define __WADShareProvidersRequestedEventArgs_DEFINED__
+
+OBJCUWPWINDOWSAPPLICATIONMODELDATATRANSFEREXPORT
+@interface WADShareProvidersRequestedEventArgs : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (readonly) WADDataPackageView* data;
+@property (readonly) NSMutableArray* /* WADShareProvider* */ providers;
+- (WFDeferral*)getDeferral;
+@end
+
+#endif // __WADShareProvidersRequestedEventArgs_DEFINED__
+
 // Windows.ApplicationModel.DataTransfer.TargetApplicationChosenEventArgs
 #ifndef __WADTargetApplicationChosenEventArgs_DEFINED__
 #define __WADTargetApplicationChosenEventArgs_DEFINED__
@@ -356,9 +473,10 @@ OBJCUWPWINDOWSAPPLICATIONMODELDATATRANSFEREXPORT
 
 OBJCUWPWINDOWSAPPLICATIONMODELDATATRANSFEREXPORT
 @interface WADDataTransferManager : RTObject
++ (BOOL)isSupported;
++ (void)showShareUIWithOptions:(WADShareUIOptions*)options;
 + (void)showShareUI;
 + (WADDataTransferManager*)getForCurrentView;
-+ (BOOL)isSupported;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
@@ -366,6 +484,8 @@ OBJCUWPWINDOWSAPPLICATIONMODELDATATRANSFEREXPORT
 - (void)removeDataRequestedEvent:(EventRegistrationToken)tok;
 - (EventRegistrationToken)addTargetApplicationChosenEvent:(void(^)(WADDataTransferManager*, WADTargetApplicationChosenEventArgs*))del;
 - (void)removeTargetApplicationChosenEvent:(EventRegistrationToken)tok;
+- (EventRegistrationToken)addShareProvidersRequestedEvent:(void(^)(WADDataTransferManager*, WADShareProvidersRequestedEventArgs*))del;
+- (void)removeShareProvidersRequestedEvent:(EventRegistrationToken)tok;
 @end
 
 #endif // __WADDataTransferManager_DEFINED__

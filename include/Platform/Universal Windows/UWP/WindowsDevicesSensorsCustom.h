@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -28,7 +28,7 @@
 #include <UWP/interopBase.h>
 
 @class WDSCCustomSensor, WDSCCustomSensorReading, WDSCCustomSensorReadingChangedEventArgs;
-@protocol WDSCICustomSensorStatics, WDSCICustomSensor, WDSCICustomSensorReading, WDSCICustomSensorReadingChangedEventArgs;
+@protocol WDSCICustomSensorStatics, WDSCICustomSensor, WDSCICustomSensor2, WDSCICustomSensorReading, WDSCICustomSensorReading2, WDSCICustomSensorReadingChangedEventArgs;
 
 #include "WindowsFoundation.h"
 
@@ -48,6 +48,8 @@ OBJCUWPWINDOWSDEVICESSENSORSCUSTOMEXPORT
 @property unsigned int reportInterval;
 @property (readonly) NSString * deviceId;
 @property (readonly) unsigned int minimumReportInterval;
+@property unsigned int reportLatency;
+@property (readonly) unsigned int maxBatchSize;
 - (EventRegistrationToken)addReadingChangedEvent:(void(^)(WDSCCustomSensor*, WDSCCustomSensorReadingChangedEventArgs*))del;
 - (void)removeReadingChangedEvent:(EventRegistrationToken)tok;
 - (WDSCCustomSensorReading*)getCurrentReading;
@@ -66,6 +68,7 @@ OBJCUWPWINDOWSDEVICESSENSORSCUSTOMEXPORT
 #endif
 @property (readonly) NSDictionary* /* NSString *, RTObject* */ properties;
 @property (readonly) WFDateTime* timestamp;
+@property (readonly) id /* WFTimeSpan* */ performanceCount;
 @end
 
 #endif // __WDSCCustomSensorReading_DEFINED__

@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -27,8 +27,8 @@
 #endif
 #include <UWP/interopBase.h>
 
-@class WUIICCoreInkIndependentInputSource, WUIICCoreWetStrokeUpdateEventArgs, WUIICCoreWetStrokeUpdateSource;
-@protocol WUIICICoreInkIndependentInputSource, WUIICICoreInkIndependentInputSourceStatics, WUIICICoreWetStrokeUpdateEventArgs, WUIICICoreWetStrokeUpdateSource, WUIICICoreWetStrokeUpdateSourceStatics;
+@class WUIICCoreInkIndependentInputSource, WUIICCoreWetStrokeUpdateEventArgs, WUIICCoreWetStrokeUpdateSource, WUIICCoreInkPresenterHost, WUIICCoreIncrementalInkStroke;
+@protocol WUIICICoreInkIndependentInputSource, WUIICICoreInkIndependentInputSourceStatics, WUIICICoreWetStrokeUpdateEventArgs, WUIICICoreWetStrokeUpdateSource, WUIICICoreWetStrokeUpdateSourceStatics, WUIICICoreInkPresenterHost, WUIICICoreIncrementalInkStroke, WUIICICoreIncrementalInkStrokeFactory;
 
 // Windows.UI.Input.Inking.Core.CoreWetStrokeDisposition
 enum _WUIICCoreWetStrokeDisposition {
@@ -41,6 +41,8 @@ typedef unsigned WUIICCoreWetStrokeDisposition;
 #include "WindowsFoundation.h"
 #include "WindowsUICore.h"
 #include "WindowsUIInputInking.h"
+#include "WindowsUIComposition.h"
+#include "WindowsFoundationNumerics.h"
 
 #import <Foundation/Foundation.h>
 
@@ -113,4 +115,39 @@ OBJCUWPWINDOWSUIINPUTINKINGCOREEXPORT
 @end
 
 #endif // __WUIICCoreWetStrokeUpdateSource_DEFINED__
+
+// Windows.UI.Input.Inking.Core.CoreInkPresenterHost
+#ifndef __WUIICCoreInkPresenterHost_DEFINED__
+#define __WUIICCoreInkPresenterHost_DEFINED__
+
+OBJCUWPWINDOWSUIINPUTINKINGCOREEXPORT
+@interface WUIICCoreInkPresenterHost : RTObject
++ (instancetype)make __attribute__ ((ns_returns_retained));
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (retain) WUCContainerVisual* rootVisual;
+@property (readonly) WUIIInkPresenter* inkPresenter;
+@end
+
+#endif // __WUIICCoreInkPresenterHost_DEFINED__
+
+// Windows.UI.Input.Inking.Core.CoreIncrementalInkStroke
+#ifndef __WUIICCoreIncrementalInkStroke_DEFINED__
+#define __WUIICCoreIncrementalInkStroke_DEFINED__
+
+OBJCUWPWINDOWSUIINPUTINKINGCOREEXPORT
+@interface WUIICCoreIncrementalInkStroke : RTObject
++ (WUIICCoreIncrementalInkStroke*)make:(WUIIInkDrawingAttributes*)drawingAttributes pointTransform:(WFNMatrix3x2*)pointTransform ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (readonly) WFRect* boundingRect;
+@property (readonly) WUIIInkDrawingAttributes* drawingAttributes;
+@property (readonly) WFNMatrix3x2* pointTransform;
+- (WFRect*)appendInkPoints:(id<NSFastEnumeration> /* WUIIInkPoint* */)inkPoints;
+- (WUIIInkStroke*)createInkStroke;
+@end
+
+#endif // __WUIICCoreIncrementalInkStroke_DEFINED__
 

@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -27,8 +27,8 @@
 #endif
 #include <UWP/interopBase.h>
 
-@class WSAWCWebAccountEventArgs, WSAWCWebTokenRequest, WSAWCWebAccountMonitor, WSAWCWebAuthenticationCoreManager, WSAWCWebProviderError, WSAWCWebTokenResponse, WSAWCWebTokenRequestResult;
-@protocol WSAWCIWebTokenRequest, WSAWCIWebTokenRequest2, WSAWCIWebAccountEventArgs, WSAWCIWebTokenRequestFactory, WSAWCIWebAuthenticationCoreManagerStatics, WSAWCIWebAuthenticationCoreManagerStatics2, WSAWCIWebAuthenticationCoreManagerStatics3, WSAWCIWebAccountMonitor, WSAWCIWebProviderError, WSAWCIWebProviderErrorFactory, WSAWCIWebTokenRequestResult, WSAWCIWebTokenResponse, WSAWCIWebTokenResponseFactory;
+@class WSAWCWebTokenRequest, WSAWCWebAccountEventArgs, WSAWCWebAccountMonitor, WSAWCWebAuthenticationCoreManager, WSAWCWebProviderError, WSAWCWebTokenResponse, WSAWCWebTokenRequestResult;
+@protocol WSAWCIWebTokenRequest, WSAWCIWebTokenRequest2, WSAWCIWebTokenRequest3, WSAWCIWebTokenRequestFactory, WSAWCIWebAccountEventArgs, WSAWCIWebAuthenticationCoreManagerStatics, WSAWCIWebAuthenticationCoreManagerStatics2, WSAWCIWebAuthenticationCoreManagerStatics3, WSAWCIWebAccountMonitor, WSAWCIWebProviderError, WSAWCIWebProviderErrorFactory, WSAWCIWebTokenRequestResult, WSAWCIWebTokenResponse, WSAWCIWebTokenResponseFactory;
 
 // Windows.Security.Authentication.Web.Core.WebTokenRequestPromptType
 enum _WSAWCWebTokenRequestPromptType {
@@ -54,20 +54,6 @@ typedef unsigned WSAWCWebTokenRequestStatus;
 
 #import <Foundation/Foundation.h>
 
-// Windows.Security.Authentication.Web.Core.WebAccountEventArgs
-#ifndef __WSAWCWebAccountEventArgs_DEFINED__
-#define __WSAWCWebAccountEventArgs_DEFINED__
-
-OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
-@interface WSAWCWebAccountEventArgs : RTObject
-#if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
-#endif
-@property (readonly) WSCWebAccount* account;
-@end
-
-#endif // __WSAWCWebAccountEventArgs_DEFINED__
-
 // Windows.Security.Authentication.Web.Core.WebTokenRequest
 #ifndef __WSAWCWebTokenRequest_DEFINED__
 #define __WSAWCWebTokenRequest_DEFINED__
@@ -87,9 +73,24 @@ OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @property (readonly) NSString * scope;
 @property (readonly) WSCWebAccountProvider* webAccountProvider;
 @property (readonly) NSMutableDictionary* /* NSString *, NSString * */ appProperties;
+@property (retain) NSString * correlationId;
 @end
 
 #endif // __WSAWCWebTokenRequest_DEFINED__
+
+// Windows.Security.Authentication.Web.Core.WebAccountEventArgs
+#ifndef __WSAWCWebAccountEventArgs_DEFINED__
+#define __WSAWCWebAccountEventArgs_DEFINED__
+
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
+@interface WSAWCWebAccountEventArgs : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (readonly) WSCWebAccount* account;
+@end
+
+#endif // __WSAWCWebAccountEventArgs_DEFINED__
 
 // Windows.Security.Authentication.Web.Core.WebAccountMonitor
 #ifndef __WSAWCWebAccountMonitor_DEFINED__
@@ -116,6 +117,13 @@ OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 
 OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WSAWCWebAuthenticationCoreManager : RTObject
++ (void)getTokenSilentlyAsync:(WSAWCWebTokenRequest*)request success:(void (^)(WSAWCWebTokenRequestResult*))success failure:(void (^)(NSError*))failure;
++ (void)getTokenSilentlyWithWebAccountAsync:(WSAWCWebTokenRequest*)request webAccount:(WSCWebAccount*)webAccount success:(void (^)(WSAWCWebTokenRequestResult*))success failure:(void (^)(NSError*))failure;
++ (void)requestTokenAsync:(WSAWCWebTokenRequest*)request success:(void (^)(WSAWCWebTokenRequestResult*))success failure:(void (^)(NSError*))failure;
++ (void)requestTokenWithWebAccountAsync:(WSAWCWebTokenRequest*)request webAccount:(WSCWebAccount*)webAccount success:(void (^)(WSAWCWebTokenRequestResult*))success failure:(void (^)(NSError*))failure;
++ (void)findAccountAsync:(WSCWebAccountProvider*)provider webAccountId:(NSString *)webAccountId success:(void (^)(WSCWebAccount*))success failure:(void (^)(NSError*))failure;
++ (void)findAccountProviderAsync:(NSString *)webAccountProviderId success:(void (^)(WSCWebAccountProvider*))success failure:(void (^)(NSError*))failure;
++ (void)findAccountProviderWithAuthorityAsync:(NSString *)webAccountProviderId authority:(NSString *)authority success:(void (^)(WSCWebAccountProvider*))success failure:(void (^)(NSError*))failure;
 + (WSAWCWebAccountMonitor*)createWebAccountMonitor:(id<NSFastEnumeration> /* WSCWebAccount* */)webAccounts;
 + (void)getTokenSilentlyAsync:(WSAWCWebTokenRequest*)request success:(void (^)(WSAWCWebTokenRequestResult*))success failure:(void (^)(NSError*))failure;
 + (void)getTokenSilentlyWithWebAccountAsync:(WSAWCWebTokenRequest*)request webAccount:(WSCWebAccount*)webAccount success:(void (^)(WSAWCWebTokenRequestResult*))success failure:(void (^)(NSError*))failure;
@@ -125,13 +133,6 @@ OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 + (void)findAccountProviderAsync:(NSString *)webAccountProviderId success:(void (^)(WSCWebAccountProvider*))success failure:(void (^)(NSError*))failure;
 + (void)findAccountProviderWithAuthorityAsync:(NSString *)webAccountProviderId authority:(NSString *)authority success:(void (^)(WSCWebAccountProvider*))success failure:(void (^)(NSError*))failure;
 + (void)findAccountProviderWithAuthorityForUserAsync:(NSString *)webAccountProviderId authority:(NSString *)authority user:(WSUser*)user success:(void (^)(WSCWebAccountProvider*))success failure:(void (^)(NSError*))failure;
-+ (void)getTokenSilentlyAsync:(WSAWCWebTokenRequest*)request success:(void (^)(WSAWCWebTokenRequestResult*))success failure:(void (^)(NSError*))failure;
-+ (void)getTokenSilentlyWithWebAccountAsync:(WSAWCWebTokenRequest*)request webAccount:(WSCWebAccount*)webAccount success:(void (^)(WSAWCWebTokenRequestResult*))success failure:(void (^)(NSError*))failure;
-+ (void)requestTokenAsync:(WSAWCWebTokenRequest*)request success:(void (^)(WSAWCWebTokenRequestResult*))success failure:(void (^)(NSError*))failure;
-+ (void)requestTokenWithWebAccountAsync:(WSAWCWebTokenRequest*)request webAccount:(WSCWebAccount*)webAccount success:(void (^)(WSAWCWebTokenRequestResult*))success failure:(void (^)(NSError*))failure;
-+ (void)findAccountAsync:(WSCWebAccountProvider*)provider webAccountId:(NSString *)webAccountId success:(void (^)(WSCWebAccount*))success failure:(void (^)(NSError*))failure;
-+ (void)findAccountProviderAsync:(NSString *)webAccountProviderId success:(void (^)(WSCWebAccountProvider*))success failure:(void (^)(NSError*))failure;
-+ (void)findAccountProviderWithAuthorityAsync:(NSString *)webAccountProviderId authority:(NSString *)authority success:(void (^)(WSCWebAccountProvider*))success failure:(void (^)(NSError*))failure;
 + (void)getTokenSilentlyAsync:(WSAWCWebTokenRequest*)request success:(void (^)(WSAWCWebTokenRequestResult*))success failure:(void (^)(NSError*))failure;
 + (void)getTokenSilentlyWithWebAccountAsync:(WSAWCWebTokenRequest*)request webAccount:(WSCWebAccount*)webAccount success:(void (^)(WSAWCWebTokenRequestResult*))success failure:(void (^)(NSError*))failure;
 + (void)requestTokenAsync:(WSAWCWebTokenRequest*)request success:(void (^)(WSAWCWebTokenRequestResult*))success failure:(void (^)(NSError*))failure;
@@ -166,10 +167,10 @@ OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 
 OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WSAWCWebTokenResponse : RTObject
++ (instancetype)make __attribute__ ((ns_returns_retained));
 + (WSAWCWebTokenResponse*)makeWithToken:(NSString *)token ACTIVATOR;
 + (WSAWCWebTokenResponse*)makeWithTokenAndAccount:(NSString *)token webAccount:(WSCWebAccount*)webAccount ACTIVATOR;
 + (WSAWCWebTokenResponse*)makeWithTokenAccountAndError:(NSString *)token webAccount:(WSCWebAccount*)webAccount error:(WSAWCWebProviderError*)error ACTIVATOR;
-+ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif

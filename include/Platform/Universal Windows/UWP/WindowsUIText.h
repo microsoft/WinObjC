@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -27,9 +27,9 @@
 #endif
 #include <UWP/interopBase.h>
 
-@class WUTTextConstants, WUTFontWeights;
+@class WUTTextConstants, WUTRichEditTextDocument, WUTFontWeights;
 @class WUTFontWeight;
-@protocol WUTITextConstantsStatics, WUTITextDocument, WUTITextRange, WUTITextSelection, WUTITextCharacterFormat, WUTITextParagraphFormat, WUTIFontWeights, WUTIFontWeightsStatics;
+@protocol WUTITextConstantsStatics, WUTITextDocument, WUTITextRange, WUTITextSelection, WUTITextCharacterFormat, WUTITextParagraphFormat, WUTITextDocument2, WUTIFontWeights, WUTIFontWeightsStatics;
 
 // Windows.UI.Text.CaretType
 enum _WUTCaretType {
@@ -249,6 +249,7 @@ enum _WUTTextGetOptions {
     WUTTextGetOptionsNoHidden = 32,
     WUTTextGetOptionsIncludeNumbering = 64,
     WUTTextGetOptionsFormatRtf = 8192,
+    WUTTextGetOptionsUseLf = 16777216,
 };
 typedef unsigned WUTTextGetOptions;
 
@@ -425,6 +426,14 @@ enum _WUTFontStyle {
     WUTFontStyleItalic = 2,
 };
 typedef unsigned WUTFontStyle;
+
+// Windows.UI.Text.TextDecorations
+enum _WUTTextDecorations {
+    WUTTextDecorationsNone = 0,
+    WUTTextDecorationsUnderline = 1,
+    WUTTextDecorationsStrikethrough = 2,
+};
+typedef unsigned WUTTextDecorations;
 
 #include "WindowsUI.h"
 #include "WindowsFoundation.h"
@@ -687,6 +696,45 @@ OBJCUWPWINDOWSUITEXTEXPORT
 @end
 
 #endif // __WUTTextConstants_DEFINED__
+
+// Windows.UI.Text.RichEditTextDocument
+#ifndef __WUTRichEditTextDocument_DEFINED__
+#define __WUTRichEditTextDocument_DEFINED__
+
+OBJCUWPWINDOWSUITEXTEXPORT
+@interface WUTRichEditTextDocument : RTObject <WUTITextDocument>
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property unsigned int undoLimit;
+@property float defaultTabStop;
+@property WUTCaretType caretType;
+@property (readonly) RTObject<WUTITextSelection>* selection;
+@property BOOL ignoreTrailingCharacterSpacing;
+@property BOOL alignmentIncludesTrailingWhitespace;
+- (BOOL)canCopy;
+- (BOOL)canPaste;
+- (BOOL)canRedo;
+- (BOOL)canUndo;
+- (int)applyDisplayUpdates;
+- (int)batchDisplayUpdates;
+- (void)beginUndoGroup;
+- (void)endUndoGroup;
+- (RTObject<WUTITextCharacterFormat>*)getDefaultCharacterFormat;
+- (RTObject<WUTITextParagraphFormat>*)getDefaultParagraphFormat;
+- (RTObject<WUTITextRange>*)getRange:(int)startPosition endPosition:(int)endPosition;
+- (RTObject<WUTITextRange>*)getRangeFromPoint:(WFPoint*)point options:(WUTPointOptions)options;
+- (void)getText:(WUTTextGetOptions)options value:(NSString **)value;
+- (void)loadFromStream:(WUTTextSetOptions)options value:(RTObject<WSSIRandomAccessStream>*)value;
+- (void)redo;
+- (void)saveToStream:(WUTTextGetOptions)options value:(RTObject<WSSIRandomAccessStream>*)value;
+- (void)setDefaultCharacterFormat:(RTObject<WUTITextCharacterFormat>*)value;
+- (void)setDefaultParagraphFormat:(RTObject<WUTITextParagraphFormat>*)value;
+- (void)setText:(WUTTextSetOptions)options value:(NSString *)value;
+- (void)undo;
+@end
+
+#endif // __WUTRichEditTextDocument_DEFINED__
 
 // Windows.UI.Text.FontWeights
 #ifndef __WUTFontWeights_DEFINED__

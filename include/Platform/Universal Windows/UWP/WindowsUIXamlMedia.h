@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -27,9 +27,24 @@
 #endif
 #include <UWP/interopBase.h>
 
-@class WUXMVisualTreeHelper, WUXMPartialMediaFailureDetectedEventArgs, WUXMMatrixHelper, WUXMBrushCollection, WUXMCompositionTarget, WUXMDoubleCollection, WUXMFontFamily, WUXMMediaTransportControlsThumbnailRequestedEventArgs, WUXMPointCollection, WUXMRenderingEventArgs, WUXMTimelineMarkerCollection, WUXMTransformCollection, WUXMBrush, WUXMCacheMode, WUXMGeneralTransform, WUXMGeometry, WUXMImageSource, WUXMPathSegment, WUXMProjection, WUXMRateChangedRoutedEventArgs, WUXMTimelineMarker, WUXMTimelineMarkerRoutedEventArgs, WUXMBitmapCache, WUXMMatrix3DProjection, WUXMPlaneProjection, WUXMRectangleGeometry, WUXMSolidColorBrush, WUXMTransform, WUXMCompositeTransform, WUXMMatrixTransform, WUXMRotateTransform, WUXMScaleTransform, WUXMSkewTransform, WUXMTransformGroup, WUXMTranslateTransform, WUXMGeometryCollection, WUXMGradientStopCollection, WUXMPathFigureCollection, WUXMPathSegmentCollection, WUXMGradientStop, WUXMPathFigure, WUXMArcSegment, WUXMBezierSegment, WUXMEllipseGeometry, WUXMGeometryGroup, WUXMGradientBrush, WUXMLineGeometry, WUXMLineSegment, WUXMPathGeometry, WUXMPolyBezierSegment, WUXMPolyLineSegment, WUXMPolyQuadraticBezierSegment, WUXMQuadraticBezierSegment, WUXMTileBrush, WUXMImageBrush, WUXMLinearGradientBrush;
+@class WUXMVisualTreeHelper, WUXMPartialMediaFailureDetectedEventArgs, WUXMMatrixHelper, WUXMBrushCollection, WUXMCompositionTarget, WUXMDoubleCollection, WUXMFontFamily, WUXMMediaTransportControlsThumbnailRequestedEventArgs, WUXMPointCollection, WUXMRenderingEventArgs, WUXMTimelineMarkerCollection, WUXMTransformCollection, WUXMBrush, WUXMCacheMode, WUXMGeneralTransform, WUXMGeometry, WUXMImageSource, WUXMPathSegment, WUXMProjection, WUXMRateChangedRoutedEventArgs, WUXMTimelineMarker, WUXMTimelineMarkerRoutedEventArgs, WUXMXamlLight, WUXMBitmapCache, WUXMMatrix3DProjection, WUXMPlaneProjection, WUXMRectangleGeometry, WUXMSolidColorBrush, WUXMTransform, WUXMCompositeTransform, WUXMMatrixTransform, WUXMRotateTransform, WUXMScaleTransform, WUXMSkewTransform, WUXMTransformGroup, WUXMTranslateTransform, WUXMGeometryCollection, WUXMGradientStopCollection, WUXMLoadedImageSourceLoadCompletedEventArgs, WUXMLoadedImageSurface, WUXMPathFigureCollection, WUXMPathSegmentCollection, WUXMGradientStop, WUXMPathFigure, WUXMArcSegment, WUXMBezierSegment, WUXMEllipseGeometry, WUXMGeometryGroup, WUXMGradientBrush, WUXMLineGeometry, WUXMLineSegment, WUXMPathGeometry, WUXMPolyBezierSegment, WUXMPolyLineSegment, WUXMPolyQuadraticBezierSegment, WUXMQuadraticBezierSegment, WUXMTileBrush, WUXMXamlCompositionBrushBase, WUXMAcrylicBrush, WUXMRevealBrush, WUXMRevealBorderBrush, WUXMRevealBackgroundBrush, WUXMImageBrush, WUXMLinearGradientBrush;
 @class WUXMMatrix;
-@protocol WUXMIVisualTreeHelper, WUXMIVisualTreeHelperStatics, WUXMIVisualTreeHelperStatics2, WUXMIPartialMediaFailureDetectedEventArgs, WUXMIPartialMediaFailureDetectedEventArgs2, WUXMIMatrixHelper, WUXMIMatrixHelperStatics, WUXMICompositionTarget, WUXMICompositionTargetStatics, WUXMIFontFamily, WUXMIFontFamilyFactory, WUXMIFontFamilyStatics2, WUXMIMediaTransportControlsThumbnailRequestedEventArgs, WUXMIRenderingEventArgs, WUXMIBrush, WUXMIBrushStatics, WUXMIBrushFactory, WUXMICacheMode, WUXMICacheModeFactory, WUXMIGeneralTransform, WUXMIGeneralTransformOverrides, WUXMIGeneralTransformFactory, WUXMIGeometry, WUXMIGeometryStatics, WUXMIGeometryFactory, WUXMIImageSource, WUXMIImageSourceFactory, WUXMIPathSegment, WUXMIPathSegmentFactory, WUXMIProjection, WUXMIProjectionFactory, WUXMIRateChangedRoutedEventArgs, WUXMITimelineMarker, WUXMITimelineMarkerStatics, WUXMITimelineMarkerRoutedEventArgs, WUXMIBitmapCache, WUXMIMatrix3DProjection, WUXMIMatrix3DProjectionStatics, WUXMIPlaneProjection, WUXMIPlaneProjectionStatics, WUXMIRectangleGeometry, WUXMIRectangleGeometryStatics, WUXMISolidColorBrush, WUXMISolidColorBrushStatics, WUXMISolidColorBrushFactory, WUXMITransform, WUXMITransformFactory, WUXMICompositeTransform, WUXMICompositeTransformStatics, WUXMIMatrixTransform, WUXMIMatrixTransformStatics, WUXMIRotateTransform, WUXMIRotateTransformStatics, WUXMIScaleTransform, WUXMIScaleTransformStatics, WUXMISkewTransform, WUXMISkewTransformStatics, WUXMITransformGroup, WUXMITransformGroupStatics, WUXMITranslateTransform, WUXMITranslateTransformStatics, WUXMIGradientStop, WUXMIGradientStopStatics, WUXMIPathFigure, WUXMIPathFigureStatics, WUXMIArcSegment, WUXMIArcSegmentStatics, WUXMIBezierSegment, WUXMIBezierSegmentStatics, WUXMIEllipseGeometry, WUXMIEllipseGeometryStatics, WUXMIGeometryGroup, WUXMIGeometryGroupStatics, WUXMIGradientBrush, WUXMIGradientBrushStatics, WUXMIGradientBrushFactory, WUXMILineGeometry, WUXMILineGeometryStatics, WUXMILineSegment, WUXMILineSegmentStatics, WUXMIPathGeometry, WUXMIPathGeometryStatics, WUXMIPolyBezierSegment, WUXMIPolyBezierSegmentStatics, WUXMIPolyLineSegment, WUXMIPolyLineSegmentStatics, WUXMIPolyQuadraticBezierSegment, WUXMIPolyQuadraticBezierSegmentStatics, WUXMIQuadraticBezierSegment, WUXMIQuadraticBezierSegmentStatics, WUXMITileBrush, WUXMITileBrushStatics, WUXMITileBrushFactory, WUXMIImageBrush, WUXMIImageBrushStatics, WUXMILinearGradientBrush, WUXMILinearGradientBrushStatics, WUXMILinearGradientBrushFactory;
+@protocol WUXMIAcrylicBrush, WUXMIAcrylicBrushStatics, WUXMIAcrylicBrushFactory, WUXMIRevealBrush, WUXMIRevealBrushFactory, WUXMIRevealBrushStatics, WUXMIRevealBorderBrushFactory, WUXMIRevealBorderBrush, WUXMIRevealBackgroundBrushFactory, WUXMIRevealBackgroundBrush, WUXMIVisualTreeHelper, WUXMIVisualTreeHelperStatics, WUXMIVisualTreeHelperStatics2, WUXMIPartialMediaFailureDetectedEventArgs, WUXMIPartialMediaFailureDetectedEventArgs2, WUXMIMatrixHelper, WUXMIMatrixHelperStatics, WUXMICompositionTarget, WUXMICompositionTargetStatics, WUXMIFontFamily, WUXMIFontFamilyFactory, WUXMIFontFamilyStatics2, WUXMIMediaTransportControlsThumbnailRequestedEventArgs, WUXMIRenderingEventArgs, WUXMIBrush, WUXMIBrushStatics, WUXMIBrushFactory, WUXMICacheMode, WUXMICacheModeFactory, WUXMIGeneralTransform, WUXMIGeneralTransformOverrides, WUXMIGeneralTransformFactory, WUXMIGeometry, WUXMIGeometryStatics, WUXMIGeometryFactory, WUXMIImageSource, WUXMIImageSourceFactory, WUXMIPathSegment, WUXMIPathSegmentFactory, WUXMIProjection, WUXMIProjectionFactory, WUXMIRateChangedRoutedEventArgs, WUXMITimelineMarker, WUXMITimelineMarkerStatics, WUXMITimelineMarkerRoutedEventArgs, WUXMIXamlLight, WUXMIXamlLightOverrides, WUXMIXamlLightProtected, WUXMIXamlLightStatics, WUXMIXamlLightFactory, WUXMIBitmapCache, WUXMIMatrix3DProjection, WUXMIMatrix3DProjectionStatics, WUXMIPlaneProjection, WUXMIPlaneProjectionStatics, WUXMIRectangleGeometry, WUXMIRectangleGeometryStatics, WUXMISolidColorBrush, WUXMISolidColorBrushStatics, WUXMISolidColorBrushFactory, WUXMITransform, WUXMITransformFactory, WUXMICompositeTransform, WUXMICompositeTransformStatics, WUXMIMatrixTransform, WUXMIMatrixTransformStatics, WUXMIRotateTransform, WUXMIRotateTransformStatics, WUXMIScaleTransform, WUXMIScaleTransformStatics, WUXMISkewTransform, WUXMISkewTransformStatics, WUXMITransformGroup, WUXMITransformGroupStatics, WUXMITranslateTransform, WUXMITranslateTransformStatics, WUXMILoadedImageSourceLoadCompletedEventArgs, WUXMILoadedImageSurface, WUXMILoadedImageSurfaceStatics, WUXMIGradientStop, WUXMIGradientStopStatics, WUXMIPathFigure, WUXMIPathFigureStatics, WUXMIArcSegment, WUXMIArcSegmentStatics, WUXMIBezierSegment, WUXMIBezierSegmentStatics, WUXMIEllipseGeometry, WUXMIEllipseGeometryStatics, WUXMIGeometryGroup, WUXMIGeometryGroupStatics, WUXMIGradientBrush, WUXMIGradientBrushStatics, WUXMIGradientBrushFactory, WUXMILineGeometry, WUXMILineGeometryStatics, WUXMILineSegment, WUXMILineSegmentStatics, WUXMIPathGeometry, WUXMIPathGeometryStatics, WUXMIPolyBezierSegment, WUXMIPolyBezierSegmentStatics, WUXMIPolyLineSegment, WUXMIPolyLineSegmentStatics, WUXMIPolyQuadraticBezierSegment, WUXMIPolyQuadraticBezierSegmentStatics, WUXMIQuadraticBezierSegment, WUXMIQuadraticBezierSegmentStatics, WUXMITileBrush, WUXMITileBrushStatics, WUXMITileBrushFactory, WUXMIXamlCompositionBrushBase, WUXMIXamlCompositionBrushBaseOverrides, WUXMIXamlCompositionBrushBaseProtected, WUXMIXamlCompositionBrushBaseStatics, WUXMIXamlCompositionBrushBaseFactory, WUXMIImageBrush, WUXMIImageBrushStatics, WUXMILinearGradientBrush, WUXMILinearGradientBrushStatics, WUXMILinearGradientBrushFactory;
+
+// Windows.UI.Xaml.Media.AcrylicBackgroundSource
+enum _WUXMAcrylicBackgroundSource {
+    WUXMAcrylicBackgroundSourceHostBackdrop = 0,
+    WUXMAcrylicBackgroundSourceBackdrop = 1,
+};
+typedef unsigned WUXMAcrylicBackgroundSource;
+
+// Windows.UI.Xaml.Media.RevealBrushState
+enum _WUXMRevealBrushState {
+    WUXMRevealBrushStateNormal = 0,
+    WUXMRevealBrushStatePointerOver = 1,
+    WUXMRevealBrushStatePressed = 2,
+};
+typedef unsigned WUXMRevealBrushState;
 
 // Windows.UI.Xaml.Media.MediaElementState
 enum _WUXMMediaElementState {
@@ -193,11 +208,21 @@ enum _WUXMAlignmentY {
 };
 typedef unsigned WUXMAlignmentY;
 
+// Windows.UI.Xaml.Media.LoadedImageSourceLoadStatus
+enum _WUXMLoadedImageSourceLoadStatus {
+    WUXMLoadedImageSourceLoadStatusSuccess = 0,
+    WUXMLoadedImageSourceLoadStatusNetworkError = 1,
+    WUXMLoadedImageSourceLoadStatusInvalidFormat = 2,
+    WUXMLoadedImageSourceLoadStatusOther = 3,
+};
+typedef unsigned WUXMLoadedImageSourceLoadStatus;
+
 #include "WindowsStorageStreams.h"
-#include "WindowsFoundation.h"
-#include "WindowsUIXaml.h"
-#include "WindowsUIXamlControlsPrimitives.h"
 #include "WindowsUI.h"
+#include "WindowsUIXamlControlsPrimitives.h"
+#include "WindowsFoundation.h"
+#include "WindowsUIComposition.h"
+#include "WindowsUIXaml.h"
 #include "WindowsUIXamlMediaMedia3D.h"
 #include "WindowsMediaPlayback.h"
 #include "WindowsUICore.h"
@@ -261,6 +286,37 @@ OBJCUWPWINDOWSUIXAMLEXPORT
 @end
 
 #endif // __WUXMIGeneralTransformOverrides_DEFINED__
+
+// Windows.UI.Xaml.Media.IXamlLightOverrides
+#ifndef __WUXMIXamlLightOverrides_DEFINED__
+#define __WUXMIXamlLightOverrides_DEFINED__
+
+@protocol WUXMIXamlLightOverrides
+- (NSString *)getId;
+- (void)onConnected:(WXUIElement*)newElement;
+- (void)onDisconnected:(WXUIElement*)oldElement;
+@end
+
+OBJCUWPWINDOWSUIXAMLEXPORT
+@interface WUXMIXamlLightOverrides : RTObject <WUXMIXamlLightOverrides>
+@end
+
+#endif // __WUXMIXamlLightOverrides_DEFINED__
+
+// Windows.UI.Xaml.Media.IXamlCompositionBrushBaseOverrides
+#ifndef __WUXMIXamlCompositionBrushBaseOverrides_DEFINED__
+#define __WUXMIXamlCompositionBrushBaseOverrides_DEFINED__
+
+@protocol WUXMIXamlCompositionBrushBaseOverrides
+- (void)onConnected;
+- (void)onDisconnected;
+@end
+
+OBJCUWPWINDOWSUIXAMLEXPORT
+@interface WUXMIXamlCompositionBrushBaseOverrides : RTObject <WUXMIXamlCompositionBrushBaseOverrides>
+@end
+
+#endif // __WUXMIXamlCompositionBrushBaseOverrides_DEFINED__
 
 // Windows.UI.Xaml.Media.VisualTreeHelper
 #ifndef __WUXMVisualTreeHelper_DEFINED__
@@ -580,6 +636,8 @@ OBJCUWPWINDOWSUIXAMLEXPORT
 - (WFPoint*)transformPoint:(WFPoint*)point;
 - (BOOL)tryTransform:(WFPoint*)inPoint outPoint:(WFPoint**)outPoint;
 - (WFRect*)transformBounds:(WFRect*)rect;
+- (BOOL)tryTransformCore:(WFPoint*)inPoint outPoint:(WFPoint**)outPoint;
+- (WFRect*)transformBoundsCore:(WFRect*)rect;
 @end
 
 #endif // __WUXMGeneralTransform_DEFINED__
@@ -705,6 +763,27 @@ OBJCUWPWINDOWSUIXAMLEXPORT
 
 #endif // __WUXMTimelineMarkerRoutedEventArgs_DEFINED__
 
+// Windows.UI.Xaml.Media.XamlLight
+#ifndef __WUXMXamlLight_DEFINED__
+#define __WUXMXamlLight_DEFINED__
+
+OBJCUWPWINDOWSUIXAMLEXPORT
+@interface WUXMXamlLight : WXDependencyObject
++ (void)addTargetElement:(NSString *)lightId element:(WXUIElement*)element;
++ (void)removeTargetElement:(NSString *)lightId element:(WXUIElement*)element;
++ (void)addTargetBrush:(NSString *)lightId brush:(WUXMBrush*)brush;
++ (void)removeTargetBrush:(NSString *)lightId brush:(WUXMBrush*)brush;
++ (instancetype)make __attribute__ ((ns_returns_retained));
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+- (NSString *)getId;
+- (void)onConnected:(WXUIElement*)newElement;
+- (void)onDisconnected:(WXUIElement*)oldElement;
+@end
+
+#endif // __WUXMXamlLight_DEFINED__
+
 // Windows.UI.Xaml.Media.BitmapCache
 #ifndef __WUXMBitmapCache_DEFINED__
 #define __WUXMBitmapCache_DEFINED__
@@ -797,8 +876,8 @@ OBJCUWPWINDOWSUIXAMLEXPORT
 
 OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMSolidColorBrush : WUXMBrush
-+ (instancetype)make __attribute__ ((ns_returns_retained));
 + (WUXMSolidColorBrush*)makeInstanceWithColor:(WUColor*)color ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
@@ -1021,6 +1100,70 @@ OBJCUWPWINDOWSUIXAMLEXPORT
 @end
 
 #endif // __WUXMGradientStopCollection_DEFINED__
+
+// Windows.UI.Xaml.Media.LoadedImageSourceLoadCompletedEventArgs
+#ifndef __WUXMLoadedImageSourceLoadCompletedEventArgs_DEFINED__
+#define __WUXMLoadedImageSourceLoadCompletedEventArgs_DEFINED__
+
+OBJCUWPWINDOWSUIXAMLEXPORT
+@interface WUXMLoadedImageSourceLoadCompletedEventArgs : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (readonly) WUXMLoadedImageSourceLoadStatus status;
+@end
+
+#endif // __WUXMLoadedImageSourceLoadCompletedEventArgs_DEFINED__
+
+// Windows.Foundation.IClosable
+#ifndef __WFIClosable_DEFINED__
+#define __WFIClosable_DEFINED__
+
+@protocol WFIClosable
+- (void)close;
+@end
+
+OBJCUWPWINDOWSUIXAMLEXPORT
+@interface WFIClosable : RTObject <WFIClosable>
+@end
+
+#endif // __WFIClosable_DEFINED__
+
+// Windows.UI.Composition.ICompositionSurface
+#ifndef __WUCICompositionSurface_DEFINED__
+#define __WUCICompositionSurface_DEFINED__
+
+@protocol WUCICompositionSurface
+@end
+
+OBJCUWPWINDOWSUIXAMLEXPORT
+@interface WUCICompositionSurface : RTObject <WUCICompositionSurface>
+@end
+
+#endif // __WUCICompositionSurface_DEFINED__
+
+// Windows.UI.Xaml.Media.LoadedImageSurface
+#ifndef __WUXMLoadedImageSurface_DEFINED__
+#define __WUXMLoadedImageSurface_DEFINED__
+
+OBJCUWPWINDOWSUIXAMLEXPORT
+@interface WUXMLoadedImageSurface : RTObject <WFIClosable, WUCICompositionSurface>
++ (WUXMLoadedImageSurface*)startLoadFromUriWithSize:(WFUri*)uri desiredMaxSize:(WFSize*)desiredMaxSize;
++ (WUXMLoadedImageSurface*)startLoadFromUri:(WFUri*)uri;
++ (WUXMLoadedImageSurface*)startLoadFromStreamWithSize:(RTObject<WSSIRandomAccessStream>*)stream desiredMaxSize:(WFSize*)desiredMaxSize;
++ (WUXMLoadedImageSurface*)startLoadFromStream:(RTObject<WSSIRandomAccessStream>*)stream;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (readonly) WFSize* decodedPhysicalSize;
+@property (readonly) WFSize* decodedSize;
+@property (readonly) WFSize* naturalSize;
+- (EventRegistrationToken)addLoadCompletedEvent:(void(^)(WUXMLoadedImageSurface*, WUXMLoadedImageSourceLoadCompletedEventArgs*))del;
+- (void)removeLoadCompletedEvent:(EventRegistrationToken)tok;
+- (void)close;
+@end
+
+#endif // __WUXMLoadedImageSurface_DEFINED__
 
 // Windows.UI.Xaml.Media.PathFigureCollection
 #ifndef __WUXMPathFigureCollection_DEFINED__
@@ -1355,6 +1498,97 @@ OBJCUWPWINDOWSUIXAMLEXPORT
 @end
 
 #endif // __WUXMTileBrush_DEFINED__
+
+// Windows.UI.Xaml.Media.XamlCompositionBrushBase
+#ifndef __WUXMXamlCompositionBrushBase_DEFINED__
+#define __WUXMXamlCompositionBrushBase_DEFINED__
+
+OBJCUWPWINDOWSUIXAMLEXPORT
+@interface WUXMXamlCompositionBrushBase : WUXMBrush
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (retain) WUColor* fallbackColor;
++ (WXDependencyProperty*)fallbackColorProperty;
+- (void)onConnected;
+- (void)onDisconnected;
+@end
+
+#endif // __WUXMXamlCompositionBrushBase_DEFINED__
+
+// Windows.UI.Xaml.Media.AcrylicBrush
+#ifndef __WUXMAcrylicBrush_DEFINED__
+#define __WUXMAcrylicBrush_DEFINED__
+
+OBJCUWPWINDOWSUIXAMLEXPORT
+@interface WUXMAcrylicBrush : WUXMXamlCompositionBrushBase
++ (instancetype)make __attribute__ ((ns_returns_retained));
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (retain) WFTimeSpan* tintTransitionDuration;
+@property double tintOpacity;
+@property (retain) WUColor* tintColor;
+@property WUXMAcrylicBackgroundSource backgroundSource;
+@property BOOL alwaysUseFallback;
++ (WXDependencyProperty*)alwaysUseFallbackProperty;
++ (WXDependencyProperty*)backgroundSourceProperty;
++ (WXDependencyProperty*)tintColorProperty;
++ (WXDependencyProperty*)tintOpacityProperty;
++ (WXDependencyProperty*)tintTransitionDurationProperty;
+@end
+
+#endif // __WUXMAcrylicBrush_DEFINED__
+
+// Windows.UI.Xaml.Media.RevealBrush
+#ifndef __WUXMRevealBrush_DEFINED__
+#define __WUXMRevealBrush_DEFINED__
+
+OBJCUWPWINDOWSUIXAMLEXPORT
+@interface WUXMRevealBrush : WUXMXamlCompositionBrushBase
++ (void)setState:(WXUIElement*)element value:(WUXMRevealBrushState)value;
++ (WUXMRevealBrushState)getState:(WXUIElement*)element;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property WXApplicationTheme targetTheme;
+@property (retain) WUColor* color;
+@property BOOL alwaysUseFallback;
++ (WXDependencyProperty*)alwaysUseFallbackProperty;
++ (WXDependencyProperty*)colorProperty;
++ (WXDependencyProperty*)stateProperty;
++ (WXDependencyProperty*)targetThemeProperty;
+@end
+
+#endif // __WUXMRevealBrush_DEFINED__
+
+// Windows.UI.Xaml.Media.RevealBorderBrush
+#ifndef __WUXMRevealBorderBrush_DEFINED__
+#define __WUXMRevealBorderBrush_DEFINED__
+
+OBJCUWPWINDOWSUIXAMLEXPORT
+@interface WUXMRevealBorderBrush : WUXMRevealBrush
++ (instancetype)make __attribute__ ((ns_returns_retained));
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@end
+
+#endif // __WUXMRevealBorderBrush_DEFINED__
+
+// Windows.UI.Xaml.Media.RevealBackgroundBrush
+#ifndef __WUXMRevealBackgroundBrush_DEFINED__
+#define __WUXMRevealBackgroundBrush_DEFINED__
+
+OBJCUWPWINDOWSUIXAMLEXPORT
+@interface WUXMRevealBackgroundBrush : WUXMRevealBrush
++ (instancetype)make __attribute__ ((ns_returns_retained));
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@end
+
+#endif // __WUXMRevealBackgroundBrush_DEFINED__
 
 // Windows.UI.Xaml.Media.ImageBrush
 #ifndef __WUXMImageBrush_DEFINED__

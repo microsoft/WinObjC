@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -27,9 +27,9 @@
 #endif
 #include <UWP/interopBase.h>
 
-@class WGIHeadset, WGIArcadeStick, WGIGamepad, WGIRacingWheel, WGIUINavigationController;
-@class WGIArcadeStickReading, WGIGamepadReading, WGIGamepadVibration, WGIRacingWheelReading, WGIUINavigationReading;
-@protocol WGIIGameController, WGIIArcadeStick, WGIIArcadeStickStatics, WGIIGamepad, WGIIGamepad2, WGIIGamepadStatics, WGIIHeadset, WGIIRacingWheel, WGIIRacingWheelStatics, WGIIUINavigationController, WGIIUINavigationControllerStatics;
+@class WGIHeadset, WGIArcadeStick, WGIFlightStick, WGIGamepad, WGIRacingWheel, WGIRawGameController, WGIUINavigationController;
+@class WGIArcadeStickReading, WGIFlightStickReading, WGIGamepadReading, WGIGamepadVibration, WGIRacingWheelReading, WGIUINavigationReading;
+@protocol WGIIGameController, WGIIGameControllerBatteryInfo, WGIIArcadeStick, WGIIArcadeStickStatics, WGIIArcadeStickStatics2, WGIIFlightStick, WGIIFlightStickStatics, WGIIGamepad, WGIIGamepad2, WGIIGamepadStatics, WGIIGamepadStatics2, WGIIHeadset, WGIIRacingWheel, WGIIRacingWheelStatics, WGIIRacingWheelStatics2, WGIIRawGameController, WGIIRawGameController2, WGIIRawGameControllerStatics, WGIIUINavigationController, WGIIUINavigationControllerStatics, WGIIUINavigationControllerStatics2;
 
 // Windows.Gaming.Input.ArcadeStickButtons
 enum _WGIArcadeStickButtons {
@@ -48,6 +48,14 @@ enum _WGIArcadeStickButtons {
     WGIArcadeStickButtonsSpecial2 = 2048,
 };
 typedef unsigned WGIArcadeStickButtons;
+
+// Windows.Gaming.Input.FlightStickButtons
+enum _WGIFlightStickButtons {
+    WGIFlightStickButtonsNone = 0,
+    WGIFlightStickButtonsFirePrimary = 1,
+    WGIFlightStickButtonsFireSecondary = 2,
+};
+typedef unsigned WGIFlightStickButtons;
 
 // Windows.Gaming.Input.GameControllerButtonLabel
 enum _WGIGameControllerButtonLabel {
@@ -122,6 +130,28 @@ enum _WGIGameControllerButtonLabel {
     WGIGameControllerButtonLabelSuspension = 68,
 };
 typedef unsigned WGIGameControllerButtonLabel;
+
+// Windows.Gaming.Input.GameControllerSwitchKind
+enum _WGIGameControllerSwitchKind {
+    WGIGameControllerSwitchKindTwoWay = 0,
+    WGIGameControllerSwitchKindFourWay = 1,
+    WGIGameControllerSwitchKindEightWay = 2,
+};
+typedef unsigned WGIGameControllerSwitchKind;
+
+// Windows.Gaming.Input.GameControllerSwitchPosition
+enum _WGIGameControllerSwitchPosition {
+    WGIGameControllerSwitchPositionCenter = 0,
+    WGIGameControllerSwitchPositionUp = 1,
+    WGIGameControllerSwitchPositionUpRight = 2,
+    WGIGameControllerSwitchPositionRight = 3,
+    WGIGameControllerSwitchPositionDownRight = 4,
+    WGIGameControllerSwitchPositionDown = 5,
+    WGIGameControllerSwitchPositionDownLeft = 6,
+    WGIGameControllerSwitchPositionLeft = 7,
+    WGIGameControllerSwitchPositionUpLeft = 8,
+};
+typedef unsigned WGIGameControllerSwitchPosition;
 
 // Windows.Gaming.Input.GamepadButtons
 enum _WGIGamepadButtons {
@@ -209,6 +239,8 @@ typedef unsigned WGIOptionalUINavigationButtons;
 
 #include "WindowsFoundation.h"
 #include "WindowsSystem.h"
+#include "WindowsDevicesPower.h"
+#include "WindowsDevicesHaptics.h"
 #include "WindowsGamingInputForceFeedback.h"
 
 #import <Foundation/Foundation.h>
@@ -219,6 +251,19 @@ OBJCUWPWINDOWSGAMINGINPUTEXPORT
 + (instancetype)new;
 @property uint64_t timestamp;
 @property WGIArcadeStickButtons buttons;
+@end
+
+// [struct] Windows.Gaming.Input.FlightStickReading
+OBJCUWPWINDOWSGAMINGINPUTEXPORT
+@interface WGIFlightStickReading : NSObject
++ (instancetype)new;
+@property uint64_t timestamp;
+@property WGIFlightStickButtons buttons;
+@property WGIGameControllerSwitchPosition hatSwitch;
+@property double roll;
+@property double pitch;
+@property double yaw;
+@property double throttle;
 @end
 
 // [struct] Windows.Gaming.Input.GamepadReading
@@ -290,17 +335,32 @@ OBJCUWPWINDOWSGAMINGINPUTEXPORT
 
 #endif // __WGIIGameController_DEFINED__
 
+// Windows.Gaming.Input.IGameControllerBatteryInfo
+#ifndef __WGIIGameControllerBatteryInfo_DEFINED__
+#define __WGIIGameControllerBatteryInfo_DEFINED__
+
+@protocol WGIIGameControllerBatteryInfo
+- (WDPBatteryReport*)tryGetBatteryReport;
+@end
+
+OBJCUWPWINDOWSGAMINGINPUTEXPORT
+@interface WGIIGameControllerBatteryInfo : RTObject <WGIIGameControllerBatteryInfo>
+@end
+
+#endif // __WGIIGameControllerBatteryInfo_DEFINED__
+
 // Windows.Gaming.Input.Headset
 #ifndef __WGIHeadset_DEFINED__
 #define __WGIHeadset_DEFINED__
 
 OBJCUWPWINDOWSGAMINGINPUTEXPORT
-@interface WGIHeadset : RTObject
+@interface WGIHeadset : RTObject <WGIIGameControllerBatteryInfo>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSString * captureDeviceId;
 @property (readonly) NSString * renderDeviceId;
+- (WDPBatteryReport*)tryGetBatteryReport;
 @end
 
 #endif // __WGIHeadset_DEFINED__
@@ -310,7 +370,8 @@ OBJCUWPWINDOWSGAMINGINPUTEXPORT
 #define __WGIArcadeStick_DEFINED__
 
 OBJCUWPWINDOWSGAMINGINPUTEXPORT
-@interface WGIArcadeStick : RTObject <WGIIGameController>
+@interface WGIArcadeStick : RTObject <WGIIGameController, WGIIGameControllerBatteryInfo>
++ (WGIArcadeStick*)fromGameController:(RTObject<WGIIGameController>*)gameController;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
@@ -330,16 +391,50 @@ OBJCUWPWINDOWSGAMINGINPUTEXPORT
 + (void)removeArcadeStickRemovedEvent:(EventRegistrationToken)tok;
 - (WGIGameControllerButtonLabel)getButtonLabel:(WGIArcadeStickButtons)button;
 - (WGIArcadeStickReading*)getCurrentReading;
+- (WDPBatteryReport*)tryGetBatteryReport;
 @end
 
 #endif // __WGIArcadeStick_DEFINED__
+
+// Windows.Gaming.Input.FlightStick
+#ifndef __WGIFlightStick_DEFINED__
+#define __WGIFlightStick_DEFINED__
+
+OBJCUWPWINDOWSGAMINGINPUTEXPORT
+@interface WGIFlightStick : RTObject <WGIIGameController, WGIIGameControllerBatteryInfo>
++ (WGIFlightStick*)fromGameController:(RTObject<WGIIGameController>*)gameController;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (readonly) WGIGameControllerSwitchKind hatSwitchKind;
+@property (readonly) WGIHeadset* headset;
+@property (readonly) BOOL isWireless;
+@property (readonly) WSUser* user;
++ (NSArray* /* WGIFlightStick* */)flightSticks;
+- (EventRegistrationToken)addHeadsetConnectedEvent:(void(^)(RTObject<WGIIGameController>*, WGIHeadset*))del;
+- (void)removeHeadsetConnectedEvent:(EventRegistrationToken)tok;
+- (EventRegistrationToken)addHeadsetDisconnectedEvent:(void(^)(RTObject<WGIIGameController>*, WGIHeadset*))del;
+- (void)removeHeadsetDisconnectedEvent:(EventRegistrationToken)tok;
+- (EventRegistrationToken)addUserChangedEvent:(void(^)(RTObject<WGIIGameController>*, WSUserChangedEventArgs*))del;
+- (void)removeUserChangedEvent:(EventRegistrationToken)tok;
++ (EventRegistrationToken)addFlightStickAddedEvent:(void(^)(RTObject*, WGIFlightStick*))del;
++ (void)removeFlightStickAddedEvent:(EventRegistrationToken)tok;
++ (EventRegistrationToken)addFlightStickRemovedEvent:(void(^)(RTObject*, WGIFlightStick*))del;
++ (void)removeFlightStickRemovedEvent:(EventRegistrationToken)tok;
+- (WGIGameControllerButtonLabel)getButtonLabel:(WGIFlightStickButtons)button;
+- (WGIFlightStickReading*)getCurrentReading;
+- (WDPBatteryReport*)tryGetBatteryReport;
+@end
+
+#endif // __WGIFlightStick_DEFINED__
 
 // Windows.Gaming.Input.Gamepad
 #ifndef __WGIGamepad_DEFINED__
 #define __WGIGamepad_DEFINED__
 
 OBJCUWPWINDOWSGAMINGINPUTEXPORT
-@interface WGIGamepad : RTObject <WGIIGameController>
+@interface WGIGamepad : RTObject <WGIIGameController, WGIIGameControllerBatteryInfo>
++ (WGIGamepad*)fromGameController:(RTObject<WGIIGameController>*)gameController;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
@@ -360,6 +455,7 @@ OBJCUWPWINDOWSGAMINGINPUTEXPORT
 + (void)removeGamepadRemovedEvent:(EventRegistrationToken)tok;
 - (WGIGamepadReading*)getCurrentReading;
 - (WGIGameControllerButtonLabel)getButtonLabel:(WGIGamepadButtons)button;
+- (WDPBatteryReport*)tryGetBatteryReport;
 @end
 
 #endif // __WGIGamepad_DEFINED__
@@ -369,7 +465,8 @@ OBJCUWPWINDOWSGAMINGINPUTEXPORT
 #define __WGIRacingWheel_DEFINED__
 
 OBJCUWPWINDOWSGAMINGINPUTEXPORT
-@interface WGIRacingWheel : RTObject <WGIIGameController>
+@interface WGIRacingWheel : RTObject <WGIIGameController, WGIIGameControllerBatteryInfo>
++ (WGIRacingWheel*)fromGameController:(RTObject<WGIIGameController>*)gameController;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
@@ -395,16 +492,59 @@ OBJCUWPWINDOWSGAMINGINPUTEXPORT
 + (void)removeRacingWheelRemovedEvent:(EventRegistrationToken)tok;
 - (WGIGameControllerButtonLabel)getButtonLabel:(WGIRacingWheelButtons)button;
 - (WGIRacingWheelReading*)getCurrentReading;
+- (WDPBatteryReport*)tryGetBatteryReport;
 @end
 
 #endif // __WGIRacingWheel_DEFINED__
+
+// Windows.Gaming.Input.RawGameController
+#ifndef __WGIRawGameController_DEFINED__
+#define __WGIRawGameController_DEFINED__
+
+OBJCUWPWINDOWSGAMINGINPUTEXPORT
+@interface WGIRawGameController : RTObject <WGIIGameController, WGIIGameControllerBatteryInfo>
++ (WGIRawGameController*)fromGameController:(RTObject<WGIIGameController>*)gameController;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (readonly) WGIHeadset* headset;
+@property (readonly) BOOL isWireless;
+@property (readonly) WSUser* user;
+@property (readonly) int axisCount;
+@property (readonly) int buttonCount;
+@property (readonly) NSArray* /* WGIFForceFeedbackMotor* */ forceFeedbackMotors;
+@property (readonly) unsigned short hardwareProductId;
+@property (readonly) unsigned short hardwareVendorId;
+@property (readonly) int switchCount;
+@property (readonly) NSString * displayName;
+@property (readonly) NSString * nonRoamableId;
+@property (readonly) NSArray* /* WDHSimpleHapticsController* */ simpleHapticsControllers;
++ (NSArray* /* WGIRawGameController* */)rawGameControllers;
+- (EventRegistrationToken)addHeadsetConnectedEvent:(void(^)(RTObject<WGIIGameController>*, WGIHeadset*))del;
+- (void)removeHeadsetConnectedEvent:(EventRegistrationToken)tok;
+- (EventRegistrationToken)addHeadsetDisconnectedEvent:(void(^)(RTObject<WGIIGameController>*, WGIHeadset*))del;
+- (void)removeHeadsetDisconnectedEvent:(EventRegistrationToken)tok;
+- (EventRegistrationToken)addUserChangedEvent:(void(^)(RTObject<WGIIGameController>*, WSUserChangedEventArgs*))del;
+- (void)removeUserChangedEvent:(EventRegistrationToken)tok;
++ (EventRegistrationToken)addRawGameControllerAddedEvent:(void(^)(RTObject*, WGIRawGameController*))del;
++ (void)removeRawGameControllerAddedEvent:(EventRegistrationToken)tok;
++ (EventRegistrationToken)addRawGameControllerRemovedEvent:(void(^)(RTObject*, WGIRawGameController*))del;
++ (void)removeRawGameControllerRemovedEvent:(EventRegistrationToken)tok;
+- (WGIGameControllerButtonLabel)getButtonLabel:(int)buttonIndex;
+- (uint64_t)getCurrentReading:(NSArray* /* BOOL */*)buttonArray switchArray:(NSArray* /* WGIGameControllerSwitchPosition */*)switchArray axisArray:(NSArray* /* double */*)axisArray;
+- (WGIGameControllerSwitchKind)getSwitchKind:(int)switchIndex;
+- (WDPBatteryReport*)tryGetBatteryReport;
+@end
+
+#endif // __WGIRawGameController_DEFINED__
 
 // Windows.Gaming.Input.UINavigationController
 #ifndef __WGIUINavigationController_DEFINED__
 #define __WGIUINavigationController_DEFINED__
 
 OBJCUWPWINDOWSGAMINGINPUTEXPORT
-@interface WGIUINavigationController : RTObject <WGIIGameController>
+@interface WGIUINavigationController : RTObject <WGIIGameController, WGIIGameControllerBatteryInfo>
++ (WGIUINavigationController*)fromGameController:(RTObject<WGIIGameController>*)gameController;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
@@ -425,6 +565,7 @@ OBJCUWPWINDOWSGAMINGINPUTEXPORT
 - (WGIUINavigationReading*)getCurrentReading;
 - (WGIGameControllerButtonLabel)getOptionalButtonLabel:(WGIOptionalUINavigationButtons)button;
 - (WGIGameControllerButtonLabel)getRequiredButtonLabel:(WGIRequiredUINavigationButtons)button;
+- (WDPBatteryReport*)tryGetBatteryReport;
 @end
 
 #endif // __WGIUINavigationController_DEFINED__

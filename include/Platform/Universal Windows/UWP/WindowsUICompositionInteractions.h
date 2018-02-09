@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -27,8 +27,8 @@
 #endif
 #include <UWP/interopBase.h>
 
-@class WUCIInteractionTrackerCustomAnimationStateEnteredArgs, WUCIInteractionTrackerIdleStateEnteredArgs, WUCIInteractionTrackerInertiaStateEnteredArgs, WUCIInteractionTrackerInteractingStateEnteredArgs, WUCIInteractionTrackerRequestIgnoredArgs, WUCIInteractionTrackerValuesChangedArgs, WUCIInteractionTracker, WUCICompositionInteractionSourceCollection, WUCIInteractionTrackerInertiaModifier, WUCIInteractionTrackerInertiaRestingValue, WUCIInteractionTrackerInertiaMotion, WUCIVisualInteractionSource;
-@protocol WUCIICompositionInteractionSource, WUCIICompositionInteractionSourceCollection, WUCIIInteractionTrackerStatics, WUCIIInteractionTrackerOwner, WUCIIInteractionTracker, WUCIIInteractionTrackerCustomAnimationStateEnteredArgs, WUCIIInteractionTrackerIdleStateEnteredArgs, WUCIIInteractionTrackerInteractingStateEnteredArgs, WUCIIInteractionTrackerInertiaModifier, WUCIIInteractionTrackerInertiaRestingValueStatics, WUCIIInteractionTrackerInertiaRestingValue, WUCIIInteractionTrackerInertiaMotionStatics, WUCIIInteractionTrackerInertiaMotion, WUCIIInteractionTrackerInertiaStateEnteredArgs, WUCIIInteractionTrackerRequestIgnoredArgs, WUCIIInteractionTrackerValuesChangedArgs, WUCIIVisualInteractionSourceStatics, WUCIIVisualInteractionSource, WUCIIInteractionTrackerInertiaModifierFactory;
+@class WUCIInteractionTrackerCustomAnimationStateEnteredArgs, WUCIInteractionTrackerIdleStateEnteredArgs, WUCIInteractionTrackerInertiaStateEnteredArgs, WUCIInteractionTrackerInteractingStateEnteredArgs, WUCIInteractionTrackerRequestIgnoredArgs, WUCIInteractionTrackerValuesChangedArgs, WUCICompositionConditionalValue, WUCICompositionInteractionSourceCollection, WUCIInteractionTracker, WUCIInteractionTrackerInertiaModifier, WUCIInteractionTrackerVector2InertiaModifier, WUCIInteractionTrackerInertiaNaturalMotion, WUCIInteractionTrackerInertiaRestingValue, WUCIInteractionTrackerInertiaMotion, WUCIVisualInteractionSource, WUCIInteractionTrackerVector2InertiaNaturalMotion;
+@protocol WUCIICompositionConditionalValue, WUCIICompositionConditionalValueStatics, WUCIICompositionInteractionSource, WUCIICompositionInteractionSourceCollection, WUCIIInteractionTracker, WUCIIInteractionTrackerOwner, WUCIIInteractionTrackerStatics, WUCIIInteractionTracker2, WUCIIInteractionTracker3, WUCIIInteractionTrackerCustomAnimationStateEnteredArgs, WUCIIInteractionTrackerIdleStateEnteredArgs, WUCIIInteractionTrackerInteractingStateEnteredArgs, WUCIIInteractionTrackerInertiaModifier, WUCIIInteractionTrackerInertiaNaturalMotion, WUCIIInteractionTrackerInertiaNaturalMotionStatics, WUCIIInteractionTrackerInertiaRestingValue, WUCIIInteractionTrackerInertiaRestingValueStatics, WUCIIInteractionTrackerInertiaMotion, WUCIIInteractionTrackerInertiaMotionStatics, WUCIIInteractionTrackerInertiaStateEnteredArgs, WUCIIInteractionTrackerRequestIgnoredArgs, WUCIIInteractionTrackerValuesChangedArgs, WUCIIInteractionTrackerVector2InertiaModifier, WUCIIVisualInteractionSource, WUCIIVisualInteractionSourceStatics, WUCIIVisualInteractionSource2, WUCIIInteractionTrackerInertiaModifierFactory, WUCIIInteractionTrackerVector2InertiaModifierFactory, WUCIIInteractionTrackerVector2InertiaNaturalMotion, WUCIIInteractionTrackerVector2InertiaNaturalMotionStatics, WUCIIVisualInteractionSourceObjectFactory;
 
 // Windows.UI.Composition.Interactions.InteractionChainingMode
 enum _WUCIInteractionChainingMode {
@@ -53,6 +53,7 @@ enum _WUCIVisualInteractionSourceRedirectionMode {
 };
 typedef unsigned WUCIVisualInteractionSourceRedirectionMode;
 
+#include "WindowsSystem.h"
 #include "WindowsFoundationNumerics.h"
 #include "WindowsUIComposition.h"
 #include "WindowsUIInput.h"
@@ -213,6 +214,7 @@ OBJCUWPWINDOWSUICOMPOSITIONINTERACTIONSEXPORT
 @property (readonly) WUCCompositionPropertySet* properties;
 @property (retain) WUCImplicitAnimationCollection* implicitAnimations;
 @property (retain) NSString * comment;
+@property (readonly) WSDispatcherQueue* dispatcherQueue;
 - (void)startAnimation:(NSString *)propertyName animation:(WUCCompositionAnimation*)animation;
 - (void)stopAnimation:(NSString *)propertyName;
 - (void)close;
@@ -221,6 +223,39 @@ OBJCUWPWINDOWSUICOMPOSITIONINTERACTIONSEXPORT
 @end
 
 #endif // __WUCCompositionObject_DEFINED__
+
+// Windows.UI.Composition.Interactions.CompositionConditionalValue
+#ifndef __WUCICompositionConditionalValue_DEFINED__
+#define __WUCICompositionConditionalValue_DEFINED__
+
+OBJCUWPWINDOWSUICOMPOSITIONINTERACTIONSEXPORT
+@interface WUCICompositionConditionalValue : WUCCompositionObject
++ (WUCICompositionConditionalValue*)create:(WUCCompositor*)compositor;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (retain) WUCExpressionAnimation* value;
+@property (retain) WUCExpressionAnimation* condition;
+@end
+
+#endif // __WUCICompositionConditionalValue_DEFINED__
+
+// Windows.UI.Composition.Interactions.CompositionInteractionSourceCollection
+#ifndef __WUCICompositionInteractionSourceCollection_DEFINED__
+#define __WUCICompositionInteractionSourceCollection_DEFINED__
+
+OBJCUWPWINDOWSUICOMPOSITIONINTERACTIONSEXPORT
+@interface WUCICompositionInteractionSourceCollection : WUCCompositionObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (readonly) int count;
+- (void)add:(RTObject<WUCIICompositionInteractionSource>*)value;
+- (void)remove:(RTObject<WUCIICompositionInteractionSource>*)value;
+- (void)removeAll;
+@end
+
+#endif // __WUCICompositionInteractionSourceCollection_DEFINED__
 
 // Windows.UI.Composition.Interactions.InteractionTracker
 #ifndef __WUCIInteractionTracker_DEFINED__
@@ -260,26 +295,12 @@ OBJCUWPWINDOWSUICOMPOSITIONINTERACTIONSEXPORT
 - (int)tryUpdateScale:(float)value centerPoint:(WFNVector3*)centerPoint;
 - (int)tryUpdateScaleWithAnimation:(WUCCompositionAnimation*)animation centerPoint:(WFNVector3*)centerPoint;
 - (int)tryUpdateScaleWithAdditionalVelocity:(float)velocityInPercentPerSecond centerPoint:(WFNVector3*)centerPoint;
+- (void)configureCenterPointXInertiaModifiers:(id<NSFastEnumeration> /* WUCICompositionConditionalValue* */)conditionalValues;
+- (void)configureCenterPointYInertiaModifiers:(id<NSFastEnumeration> /* WUCICompositionConditionalValue* */)conditionalValues;
+- (void)configureVector2PositionInertiaModifiers:(id<NSFastEnumeration> /* WUCIInteractionTrackerVector2InertiaModifier* */)modifiers;
 @end
 
 #endif // __WUCIInteractionTracker_DEFINED__
-
-// Windows.UI.Composition.Interactions.CompositionInteractionSourceCollection
-#ifndef __WUCICompositionInteractionSourceCollection_DEFINED__
-#define __WUCICompositionInteractionSourceCollection_DEFINED__
-
-OBJCUWPWINDOWSUICOMPOSITIONINTERACTIONSEXPORT
-@interface WUCICompositionInteractionSourceCollection : WUCCompositionObject
-#if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
-#endif
-@property (readonly) int count;
-- (void)add:(RTObject<WUCIICompositionInteractionSource>*)value;
-- (void)remove:(RTObject<WUCIICompositionInteractionSource>*)value;
-- (void)removeAll;
-@end
-
-#endif // __WUCICompositionInteractionSourceCollection_DEFINED__
 
 // Windows.UI.Composition.Interactions.InteractionTrackerInertiaModifier
 #ifndef __WUCIInteractionTrackerInertiaModifier_DEFINED__
@@ -293,6 +314,35 @@ OBJCUWPWINDOWSUICOMPOSITIONINTERACTIONSEXPORT
 @end
 
 #endif // __WUCIInteractionTrackerInertiaModifier_DEFINED__
+
+// Windows.UI.Composition.Interactions.InteractionTrackerVector2InertiaModifier
+#ifndef __WUCIInteractionTrackerVector2InertiaModifier_DEFINED__
+#define __WUCIInteractionTrackerVector2InertiaModifier_DEFINED__
+
+OBJCUWPWINDOWSUICOMPOSITIONINTERACTIONSEXPORT
+@interface WUCIInteractionTrackerVector2InertiaModifier : WUCCompositionObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@end
+
+#endif // __WUCIInteractionTrackerVector2InertiaModifier_DEFINED__
+
+// Windows.UI.Composition.Interactions.InteractionTrackerInertiaNaturalMotion
+#ifndef __WUCIInteractionTrackerInertiaNaturalMotion_DEFINED__
+#define __WUCIInteractionTrackerInertiaNaturalMotion_DEFINED__
+
+OBJCUWPWINDOWSUICOMPOSITIONINTERACTIONSEXPORT
+@interface WUCIInteractionTrackerInertiaNaturalMotion : WUCIInteractionTrackerInertiaModifier
++ (WUCIInteractionTrackerInertiaNaturalMotion*)create:(WUCCompositor*)compositor;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (retain) WUCScalarNaturalMotionAnimation* naturalMotion;
+@property (retain) WUCExpressionAnimation* condition;
+@end
+
+#endif // __WUCIInteractionTrackerInertiaNaturalMotion_DEFINED__
 
 // Windows.UI.Composition.Interactions.InteractionTrackerInertiaRestingValue
 #ifndef __WUCIInteractionTrackerInertiaRestingValue_DEFINED__
@@ -336,7 +386,6 @@ OBJCUWPWINDOWSUICOMPOSITIONINTERACTIONSEXPORT
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
-@property WUCIInteractionSourceMode scaleSourceMode;
 @property WUCIInteractionChainingMode scaleChainingMode;
 @property WUCIInteractionSourceMode positionYSourceMode;
 @property WUCIInteractionChainingMode positionYChainingMode;
@@ -345,9 +394,37 @@ OBJCUWPWINDOWSUICOMPOSITIONINTERACTIONSEXPORT
 @property WUCIVisualInteractionSourceRedirectionMode manipulationRedirectionMode;
 @property BOOL isPositionYRailsEnabled;
 @property BOOL isPositionXRailsEnabled;
+@property WUCIInteractionSourceMode scaleSourceMode;
 @property (readonly) WUCVisual* source;
+@property (readonly) WFNVector3* deltaPosition;
+@property (readonly) float deltaScale;
+@property (readonly) WFNVector3* position;
+@property (readonly) WFNVector3* positionVelocity;
+@property (readonly) float scale;
+@property (readonly) float scaleVelocity;
 - (void)tryRedirectForManipulation:(WUIPointerPoint*)pointerPoint;
+- (void)configureCenterPointXModifiers:(id<NSFastEnumeration> /* WUCICompositionConditionalValue* */)conditionalValues;
+- (void)configureCenterPointYModifiers:(id<NSFastEnumeration> /* WUCICompositionConditionalValue* */)conditionalValues;
+- (void)configureDeltaPositionXModifiers:(id<NSFastEnumeration> /* WUCICompositionConditionalValue* */)conditionalValues;
+- (void)configureDeltaPositionYModifiers:(id<NSFastEnumeration> /* WUCICompositionConditionalValue* */)conditionalValues;
+- (void)configureDeltaScaleModifiers:(id<NSFastEnumeration> /* WUCICompositionConditionalValue* */)conditionalValues;
 @end
 
 #endif // __WUCIVisualInteractionSource_DEFINED__
+
+// Windows.UI.Composition.Interactions.InteractionTrackerVector2InertiaNaturalMotion
+#ifndef __WUCIInteractionTrackerVector2InertiaNaturalMotion_DEFINED__
+#define __WUCIInteractionTrackerVector2InertiaNaturalMotion_DEFINED__
+
+OBJCUWPWINDOWSUICOMPOSITIONINTERACTIONSEXPORT
+@interface WUCIInteractionTrackerVector2InertiaNaturalMotion : WUCIInteractionTrackerVector2InertiaModifier
++ (WUCIInteractionTrackerVector2InertiaNaturalMotion*)create:(WUCCompositor*)compositor;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (retain) WUCVector2NaturalMotionAnimation* naturalMotion;
+@property (retain) WUCExpressionAnimation* condition;
+@end
+
+#endif // __WUCIInteractionTrackerVector2InertiaNaturalMotion_DEFINED__
 

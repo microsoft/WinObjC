@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -27,8 +27,8 @@
 #endif
 #include <UWP/interopBase.h>
 
-@class WUIIInkUnprocessedInput, WUIIInkStrokeInput, WUIIInkInputProcessingConfiguration, WUIIInkSynchronizer, WUIIInkPresenter, WUIIInkStrokesCollectedEventArgs, WUIIInkStrokesErasedEventArgs, WUIIInkPresenterRuler, WUIIInkPoint, WUIIInkDrawingAttributesPencilProperties, WUIIInkDrawingAttributes, WUIIInkStrokeRenderingSegment, WUIIInkStroke, WUIIInkStrokeBuilder, WUIIInkRecognitionResult, WUIIInkStrokeContainer, WUIIInkRecognizer, WUIIInkRecognizerContainer, WUIIInkManager;
-@protocol WUIIIInkStrokesCollectedEventArgs, WUIIIInkStrokesErasedEventArgs, WUIIIInkPresenter, WUIIIInkInputProcessingConfiguration, WUIIIInkSynchronizer, WUIIIInkUnprocessedInput, WUIIIInkStrokeInput, WUIIIInkPresenterStencil, WUIIIInkPresenterRuler, WUIIIInkPresenterRulerFactory, WUIIIInkPoint, WUIIIInkPointFactory, WUIIIInkDrawingAttributes, WUIIIInkDrawingAttributes2, WUIIIInkDrawingAttributesPencilProperties, WUIIIInkDrawingAttributes3, WUIIIInkDrawingAttributesStatics, WUIIIInkStrokeRenderingSegment, WUIIIInkStroke, WUIIIInkStroke2, WUIIIInkStrokeBuilder, WUIIIInkStrokeBuilder2, WUIIIInkRecognitionResult, WUIIIInkStrokeContainer, WUIIIInkStrokeContainer2, WUIIIInkRecognizer, WUIIIInkRecognizerContainer, WUIIIInkManager;
+@class WUIIInkUnprocessedInput, WUIIInkStrokeInput, WUIIInkInputProcessingConfiguration, WUIIInkSynchronizer, WUIIInkPresenter, WUIIInkStrokesCollectedEventArgs, WUIIInkStrokesErasedEventArgs, WUIIInkPresenterRuler, WUIIInkPresenterProtractor, WUIIInkPoint, WUIIInkDrawingAttributesPencilProperties, WUIIInkDrawingAttributes, WUIIInkStrokeRenderingSegment, WUIIInkStroke, WUIIInkStrokeBuilder, WUIIInkRecognitionResult, WUIIInkStrokeContainer, WUIIInkRecognizer, WUIIInkRecognizerContainer, WUIIInkManager;
+@protocol WUIIIInkStrokesCollectedEventArgs, WUIIIInkStrokesErasedEventArgs, WUIIIInkPresenter, WUIIIInkPresenter2, WUIIIInkInputProcessingConfiguration, WUIIIInkSynchronizer, WUIIIInkUnprocessedInput, WUIIIInkStrokeInput, WUIIIInkPresenterStencil, WUIIIInkPresenterRuler, WUIIIInkPresenterRuler2, WUIIIInkPresenterProtractor, WUIIIInkPresenterRulerFactory, WUIIIInkPresenterProtractorFactory, WUIIIInkPoint, WUIIIInkPoint2, WUIIIInkPointFactory, WUIIIInkPointFactory2, WUIIIInkDrawingAttributes, WUIIIInkDrawingAttributes2, WUIIIInkDrawingAttributesPencilProperties, WUIIIInkDrawingAttributes3, WUIIIInkDrawingAttributes4, WUIIIInkDrawingAttributesStatics, WUIIIInkStrokeRenderingSegment, WUIIIInkStroke, WUIIIInkStroke2, WUIIIInkStroke3, WUIIIInkStrokeBuilder, WUIIIInkStrokeBuilder2, WUIIIInkStrokeBuilder3, WUIIIInkRecognitionResult, WUIIIInkStrokeContainer, WUIIIInkStrokeContainer2, WUIIIInkStrokeContainer3, WUIIIInkRecognizer, WUIIIInkRecognizerContainer, WUIIIInkManager;
 
 // Windows.UI.Input.Inking.InkPresenterPredefinedConfiguration
 enum _WUIIInkPresenterPredefinedConfiguration {
@@ -56,8 +56,17 @@ typedef unsigned WUIIInkInputProcessingMode;
 enum _WUIIInkPresenterStencilKind {
     WUIIInkPresenterStencilKindOther = 0,
     WUIIInkPresenterStencilKindRuler = 1,
+    WUIIInkPresenterStencilKindProtractor = 2,
 };
 typedef unsigned WUIIInkPresenterStencilKind;
+
+// Windows.UI.Input.Inking.InkHighContrastAdjustment
+enum _WUIIInkHighContrastAdjustment {
+    WUIIInkHighContrastAdjustmentUseSystemColorsWhenNecessary = 0,
+    WUIIInkHighContrastAdjustmentUseSystemColors = 1,
+    WUIIInkHighContrastAdjustmentUseOriginalColors = 2,
+};
+typedef unsigned WUIIInkHighContrastAdjustment;
 
 // Windows.UI.Input.Inking.InkManipulationMode
 enum _WUIIInkManipulationMode {
@@ -88,6 +97,13 @@ enum _WUIIInkDrawingAttributesKind {
     WUIIInkDrawingAttributesKindPencil = 1,
 };
 typedef unsigned WUIIInkDrawingAttributesKind;
+
+// Windows.UI.Input.Inking.InkPersistenceFormat
+enum _WUIIInkPersistenceFormat {
+    WUIIInkPersistenceFormatGifWithEmbeddedIsf = 0,
+    WUIIInkPersistenceFormatIsf = 1,
+};
+typedef unsigned WUIIInkPersistenceFormat;
 
 #include "WindowsUICore.h"
 #include "WindowsFoundation.h"
@@ -282,6 +298,7 @@ OBJCUWPWINDOWSUIINPUTINKINGEXPORT
 @property (readonly) WUIIInkInputProcessingConfiguration* inputProcessingConfiguration;
 @property (readonly) WUIIInkStrokeInput* strokeInput;
 @property (readonly) WUIIInkUnprocessedInput* unprocessedInput;
+@property WUIIInkHighContrastAdjustment highContrastAdjustment;
 - (EventRegistrationToken)addStrokesCollectedEvent:(void(^)(WUIIInkPresenter*, WUIIInkStrokesCollectedEventArgs*))del;
 - (void)removeStrokesCollectedEvent:(EventRegistrationToken)tok;
 - (EventRegistrationToken)addStrokesErasedEvent:(void(^)(WUIIInkPresenter*, WUIIInkStrokesErasedEventArgs*))del;
@@ -334,6 +351,8 @@ OBJCUWPWINDOWSUIINPUTINKINGEXPORT
 #endif
 @property double width;
 @property double length;
+@property BOOL isCompassVisible;
+@property BOOL areTickMarksVisible;
 @property (retain) WFNMatrix3x2* transform;
 @property BOOL isVisible;
 @property (retain) WUColor* foregroundColor;
@@ -343,6 +362,32 @@ OBJCUWPWINDOWSUIINPUTINKINGEXPORT
 
 #endif // __WUIIInkPresenterRuler_DEFINED__
 
+// Windows.UI.Input.Inking.InkPresenterProtractor
+#ifndef __WUIIInkPresenterProtractor_DEFINED__
+#define __WUIIInkPresenterProtractor_DEFINED__
+
+OBJCUWPWINDOWSUIINPUTINKINGEXPORT
+@interface WUIIInkPresenterProtractor : RTObject <WUIIIInkPresenterStencil>
++ (WUIIInkPresenterProtractor*)make:(WUIIInkPresenter*)inkPresenter ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property double radius;
+@property BOOL isResizable;
+@property BOOL isCenterMarkerVisible;
+@property BOOL isAngleReadoutVisible;
+@property BOOL areTickMarksVisible;
+@property BOOL areRaysVisible;
+@property (retain) WUColor* accentColor;
+@property (retain) WFNMatrix3x2* transform;
+@property BOOL isVisible;
+@property (retain) WUColor* foregroundColor;
+@property (retain) WUColor* backgroundColor;
+@property (readonly) WUIIInkPresenterStencilKind kind;
+@end
+
+#endif // __WUIIInkPresenterProtractor_DEFINED__
+
 // Windows.UI.Input.Inking.InkPoint
 #ifndef __WUIIInkPoint_DEFINED__
 #define __WUIIInkPoint_DEFINED__
@@ -350,11 +395,15 @@ OBJCUWPWINDOWSUIINPUTINKINGEXPORT
 OBJCUWPWINDOWSUIINPUTINKINGEXPORT
 @interface WUIIInkPoint : RTObject
 + (WUIIInkPoint*)makeInkPoint:(WFPoint*)position pressure:(float)pressure ACTIVATOR;
++ (WUIIInkPoint*)makeInkPointWithTiltAndTimestamp:(WFPoint*)position pressure:(float)pressure tiltX:(float)tiltX tiltY:(float)tiltY timestamp:(uint64_t)timestamp ACTIVATOR;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WFPoint* position;
 @property (readonly) float pressure;
+@property (readonly) float tiltX;
+@property (readonly) float tiltY;
+@property (readonly) uint64_t timestamp;
 @end
 
 #endif // __WUIIInkPoint_DEFINED__
@@ -393,6 +442,7 @@ OBJCUWPWINDOWSUIINPUTINKINGEXPORT
 @property BOOL drawAsHighlighter;
 @property (readonly) WUIIInkDrawingAttributesKind kind;
 @property (readonly) WUIIInkDrawingAttributesPencilProperties* pencilProperties;
+@property BOOL ignoreTilt;
 @end
 
 #endif // __WUIIInkDrawingAttributes_DEFINED__
@@ -431,6 +481,9 @@ OBJCUWPWINDOWSUIINPUTINKINGEXPORT
 @property (readonly) WFRect* boundingRect;
 @property (readonly) BOOL recognized;
 @property (retain) WFNMatrix3x2* pointTransform;
+@property (retain) id /* WFDateTime* */ strokeStartedTime;
+@property (retain) id /* WFTimeSpan* */ strokeDuration;
+@property (readonly) unsigned int id;
 - (NSArray* /* WUIIInkStrokeRenderingSegment* */)getRenderingSegments;
 - (WUIIInkStroke*)clone;
 - (NSArray* /* WUIIInkPoint* */)getInkPoints;
@@ -454,6 +507,7 @@ OBJCUWPWINDOWSUIINPUTINKINGEXPORT
 - (WUIIInkStroke*)createStroke:(id<NSFastEnumeration> /* WFPoint* */)points;
 - (void)setDefaultDrawingAttributes:(WUIIInkDrawingAttributes*)drawingAttributes;
 - (WUIIInkStroke*)createStrokeFromInkPoints:(id<NSFastEnumeration> /* WUIIInkPoint* */)inkPoints transform:(WFNMatrix3x2*)transform;
+- (WUIIInkStroke*)createStrokeFromInkPoints:(id<NSFastEnumeration> /* WUIIInkPoint* */)inkPoints transform:(WFNMatrix3x2*)transform strokeStartedTime:(id /* WFDateTime* */)strokeStartedTime strokeDuration:(id /* WFTimeSpan* */)strokeDuration;
 @end
 
 #endif // __WUIIInkStrokeBuilder_DEFINED__
@@ -500,6 +554,8 @@ OBJCUWPWINDOWSUIINPUTINKINGEXPORT
 - (NSArray* /* WUIIInkRecognitionResult* */)getRecognitionResults;
 - (void)addStrokes:(id<NSFastEnumeration> /* WUIIInkStroke* */)strokes;
 - (void)clear;
+- (void)saveWithFormatAsync:(RTObject<WSSIOutputStream>*)outputStream inkPersistenceFormat:(WUIIInkPersistenceFormat)inkPersistenceFormat success:(void (^)(unsigned int))success progress:(void (^)(unsigned int))progress failure:(void (^)(NSError*))failure;
+- (WUIIInkStroke*)getStrokeById:(unsigned int)id;
 @end
 
 #endif // __WUIIInkStrokeContainer_DEFINED__

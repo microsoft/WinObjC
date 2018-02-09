@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -59,12 +59,12 @@ OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 
 OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WDBRRfcommDeviceService : RTObject <WFIClosable>
++ (void)fromIdAsync:(NSString *)deviceId success:(void (^)(WDBRRfcommDeviceService*))success failure:(void (^)(NSError*))failure;
++ (NSString *)getDeviceSelector:(WDBRRfcommServiceId*)serviceId;
 + (NSString *)getDeviceSelectorForBluetoothDevice:(WDBBluetoothDevice*)bluetoothDevice;
 + (NSString *)getDeviceSelectorForBluetoothDeviceWithCacheMode:(WDBBluetoothDevice*)bluetoothDevice cacheMode:(WDBBluetoothCacheMode)cacheMode;
 + (NSString *)getDeviceSelectorForBluetoothDeviceAndServiceId:(WDBBluetoothDevice*)bluetoothDevice serviceId:(WDBRRfcommServiceId*)serviceId;
 + (NSString *)getDeviceSelectorForBluetoothDeviceAndServiceIdWithCacheMode:(WDBBluetoothDevice*)bluetoothDevice serviceId:(WDBRRfcommServiceId*)serviceId cacheMode:(WDBBluetoothCacheMode)cacheMode;
-+ (void)fromIdAsync:(NSString *)deviceId success:(void (^)(WDBRRfcommDeviceService*))success failure:(void (^)(NSError*))failure;
-+ (NSString *)getDeviceSelector:(WDBRRfcommServiceId*)serviceId;
 + (void)fromIdAsync:(NSString *)deviceId success:(void (^)(WDBRRfcommDeviceService*))success failure:(void (^)(NSError*))failure;
 + (NSString *)getDeviceSelector:(WDBRRfcommServiceId*)serviceId;
 #if defined(__cplusplus)

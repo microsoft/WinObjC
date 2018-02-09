@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -27,9 +27,9 @@
 #endif
 #include <UWP/interopBase.h>
 
-@class WUXCPItemsChangedEventArgs, WUXCPLayoutInformation, WUXCPGeneratorPositionHelper, WUXCPProgressRingTemplateSettings, WUXCPToggleSwitchTemplateSettings, WUXCPProgressBarTemplateSettings, WUXCPSettingsFlyoutTemplateSettings, WUXCPToolTipTemplateSettings, WUXCPComboBoxTemplateSettings, WUXCPGridViewItemTemplateSettings, WUXCPListViewItemTemplateSettings, WUXCPMenuFlyoutPresenterTemplateSettings, WUXCPCalendarViewTemplateSettings, WUXCPSplitViewTemplateSettings, WUXCPAppBarTemplateSettings, WUXCPCommandBarTemplateSettings, WUXCPDragCompletedEventArgs, WUXCPDragDeltaEventArgs, WUXCPDragStartedEventArgs, WUXCPRangeBaseValueChangedEventArgs, WUXCPScrollEventArgs, WUXCPPopup, WUXCPTickBar, WUXCPCarouselPanel, WUXCPOrientedVirtualizingPanel, WUXCPCalendarPanel, WUXCPGridViewItemPresenter, WUXCPListViewItemPresenter, WUXCPSelectorItem, WUXCPRangeBase, WUXCPThumb, WUXCPButtonBase, WUXCPScrollBar, WUXCPSelector, WUXCPRepeatButton, WUXCPToggleButton, WUXCPFlyoutBaseClosingEventArgs, WUXCPFlyoutBase, WUXCPJumpListItemBackgroundConverter, WUXCPJumpListItemForegroundConverter, WUXCPPickerFlyoutBase, WUXCPLoopingSelector, WUXCPPivotPanel, WUXCPLoopingSelectorItem, WUXCPLoopingSelectorPanel, WUXCPPivotHeaderItem, WUXCPPivotHeaderPanel;
+@class WUXCPItemsChangedEventArgs, WUXCPLayoutInformation, WUXCPGeneratorPositionHelper, WUXCPProgressRingTemplateSettings, WUXCPToggleSwitchTemplateSettings, WUXCPProgressBarTemplateSettings, WUXCPSettingsFlyoutTemplateSettings, WUXCPToolTipTemplateSettings, WUXCPComboBoxTemplateSettings, WUXCPGridViewItemTemplateSettings, WUXCPListViewItemTemplateSettings, WUXCPMenuFlyoutPresenterTemplateSettings, WUXCPCalendarViewTemplateSettings, WUXCPSplitViewTemplateSettings, WUXCPAppBarTemplateSettings, WUXCPCommandBarTemplateSettings, WUXCPDragCompletedEventArgs, WUXCPDragDeltaEventArgs, WUXCPDragStartedEventArgs, WUXCPRangeBaseValueChangedEventArgs, WUXCPScrollEventArgs, WUXCPPopup, WUXCPTickBar, WUXCPCarouselPanel, WUXCPOrientedVirtualizingPanel, WUXCPCalendarPanel, WUXCPGridViewItemPresenter, WUXCPListViewItemPresenter, WUXCPColorSpectrum, WUXCPSelectorItem, WUXCPRangeBase, WUXCPColorPickerSlider, WUXCPThumb, WUXCPButtonBase, WUXCPScrollBar, WUXCPSelector, WUXCPRepeatButton, WUXCPToggleButton, WUXCPFlyoutBaseClosingEventArgs, WUXCPFlyoutBase, WUXCPJumpListItemBackgroundConverter, WUXCPJumpListItemForegroundConverter, WUXCPPickerFlyoutBase, WUXCPLoopingSelector, WUXCPPivotPanel, WUXCPLoopingSelectorItem, WUXCPLoopingSelectorPanel, WUXCPPivotHeaderItem, WUXCPPivotHeaderPanel;
 @class WUXCPGeneratorPosition;
-@protocol WUXCPIScrollSnapPointsInfo, WUXCPIItemsChangedEventArgs, WUXCPILayoutInformation, WUXCPILayoutInformationStatics, WUXCPIComboBoxTemplateSettings, WUXCPIComboBoxTemplateSettings2, WUXCPIDragCompletedEventArgs, WUXCPIDragCompletedEventArgsFactory, WUXCPIDragDeltaEventArgs, WUXCPIDragDeltaEventArgsFactory, WUXCPIDragStartedEventArgs, WUXCPIDragStartedEventArgsFactory, WUXCPIGridViewItemTemplateSettings, WUXCPIListViewItemTemplateSettings, WUXCPIMenuFlyoutPresenterTemplateSettings, WUXCPIProgressBarTemplateSettings, WUXCPIProgressRingTemplateSettings, WUXCPIRangeBaseValueChangedEventArgs, WUXCPIScrollEventArgs, WUXCPISettingsFlyoutTemplateSettings, WUXCPIToggleSwitchTemplateSettings, WUXCPIToolTipTemplateSettings, WUXCPIPopup, WUXCPIPopupStatics, WUXCPIPopup2, WUXCPIPopupStatics2, WUXCPITickBar, WUXCPITickBarStatics, WUXCPIRangeBase, WUXCPIRangeBaseOverrides, WUXCPIRangeBaseStatics, WUXCPIRangeBaseFactory, WUXCPIThumb, WUXCPIThumbStatics, WUXCPIButtonBase, WUXCPIButtonBaseStatics, WUXCPIButtonBaseFactory, WUXCPICarouselPanel, WUXCPICarouselPanelFactory, WUXCPIOrientedVirtualizingPanel, WUXCPIOrientedVirtualizingPanelFactory, WUXCPIScrollBar, WUXCPIScrollBarStatics, WUXCPISelector, WUXCPISelectorStatics, WUXCPISelectorFactory, WUXCPISelectorItem, WUXCPISelectorItemStatics, WUXCPISelectorItemFactory, WUXCPIRepeatButton, WUXCPIRepeatButtonStatics, WUXCPIToggleButton, WUXCPIToggleButtonOverrides, WUXCPIToggleButtonStatics, WUXCPIToggleButtonFactory, WUXCPIAppBarTemplateSettings, WUXCPICalendarViewTemplateSettings, WUXCPICommandBarTemplateSettings, WUXCPICommandBarTemplateSettings2, WUXCPICommandBarTemplateSettings3, WUXCPISplitViewTemplateSettings, WUXCPICalendarPanel, WUXCPIGridViewItemPresenter, WUXCPIGridViewItemPresenterStatics, WUXCPIGridViewItemPresenterFactory, WUXCPIListViewItemPresenter, WUXCPIListViewItemPresenterStatics, WUXCPIListViewItemPresenterFactory, WUXCPIListViewItemPresenter2, WUXCPIListViewItemPresenterStatics2, WUXCPIGeneratorPositionHelper, WUXCPIGeneratorPositionHelperStatics, WUXCPIFlyoutBaseClosingEventArgs, WUXCPIFlyoutBase, WUXCPIFlyoutBaseOverrides, WUXCPIFlyoutBaseStatics, WUXCPIFlyoutBaseFactory, WUXCPIFlyoutBase2, WUXCPIFlyoutBaseStatics2, WUXCPIJumpListItemBackgroundConverter, WUXCPIJumpListItemBackgroundConverterStatics, WUXCPIJumpListItemForegroundConverter, WUXCPIJumpListItemForegroundConverterStatics, WUXCPIPickerFlyoutBase, WUXCPIPickerFlyoutBaseOverrides, WUXCPIPickerFlyoutBaseStatics, WUXCPIPickerFlyoutBaseFactory, WUXCPILoopingSelector, WUXCPILoopingSelectorStatics, WUXCPIPivotPanel, WUXCPILoopingSelectorItem, WUXCPILoopingSelectorPanel, WUXCPIPivotHeaderItem, WUXCPIPivotHeaderItemFactory, WUXCPIPivotHeaderPanel;
+@protocol WUXCPIColorSpectrum, WUXCPIColorSpectrumStatics, WUXCPIColorSpectrumFactory, WUXCPIColorPickerSlider, WUXCPIColorPickerSliderStatics, WUXCPIColorPickerSliderFactory, WUXCPIScrollSnapPointsInfo, WUXCPIItemsChangedEventArgs, WUXCPILayoutInformation, WUXCPILayoutInformationStatics, WUXCPILayoutInformationStatics2, WUXCPIComboBoxTemplateSettings, WUXCPIComboBoxTemplateSettings2, WUXCPIDragCompletedEventArgs, WUXCPIDragCompletedEventArgsFactory, WUXCPIDragDeltaEventArgs, WUXCPIDragDeltaEventArgsFactory, WUXCPIDragStartedEventArgs, WUXCPIDragStartedEventArgsFactory, WUXCPIGridViewItemTemplateSettings, WUXCPIListViewItemTemplateSettings, WUXCPIMenuFlyoutPresenterTemplateSettings, WUXCPIProgressBarTemplateSettings, WUXCPIProgressRingTemplateSettings, WUXCPIRangeBaseValueChangedEventArgs, WUXCPIScrollEventArgs, WUXCPISettingsFlyoutTemplateSettings, WUXCPIToggleSwitchTemplateSettings, WUXCPIToolTipTemplateSettings, WUXCPIPopup, WUXCPIPopupStatics, WUXCPIPopup2, WUXCPIPopupStatics2, WUXCPITickBar, WUXCPITickBarStatics, WUXCPIRangeBase, WUXCPIRangeBaseOverrides, WUXCPIRangeBaseStatics, WUXCPIRangeBaseFactory, WUXCPIThumb, WUXCPIThumbStatics, WUXCPIButtonBase, WUXCPIButtonBaseStatics, WUXCPIButtonBaseFactory, WUXCPICarouselPanel, WUXCPICarouselPanelFactory, WUXCPIOrientedVirtualizingPanel, WUXCPIOrientedVirtualizingPanelFactory, WUXCPIScrollBar, WUXCPIScrollBarStatics, WUXCPISelector, WUXCPISelectorStatics, WUXCPISelectorFactory, WUXCPISelectorItem, WUXCPISelectorItemStatics, WUXCPISelectorItemFactory, WUXCPIRepeatButton, WUXCPIRepeatButtonStatics, WUXCPIToggleButton, WUXCPIToggleButtonOverrides, WUXCPIToggleButtonStatics, WUXCPIToggleButtonFactory, WUXCPIAppBarTemplateSettings, WUXCPICalendarViewTemplateSettings, WUXCPICommandBarTemplateSettings, WUXCPICommandBarTemplateSettings2, WUXCPICommandBarTemplateSettings3, WUXCPISplitViewTemplateSettings, WUXCPICalendarPanel, WUXCPIGridViewItemPresenter, WUXCPIGridViewItemPresenterStatics, WUXCPIGridViewItemPresenterFactory, WUXCPIListViewItemPresenter, WUXCPIListViewItemPresenterStatics, WUXCPIListViewItemPresenterFactory, WUXCPIListViewItemPresenter2, WUXCPIListViewItemPresenterStatics2, WUXCPIListViewItemPresenter3, WUXCPIListViewItemPresenterStatics3, WUXCPIGeneratorPositionHelper, WUXCPIGeneratorPositionHelperStatics, WUXCPIFlyoutBaseClosingEventArgs, WUXCPIFlyoutBase, WUXCPIFlyoutBaseOverrides, WUXCPIFlyoutBaseStatics, WUXCPIFlyoutBaseFactory, WUXCPIFlyoutBase2, WUXCPIFlyoutBaseStatics2, WUXCPIFlyoutBase3, WUXCPIFlyoutBaseStatics3, WUXCPIFlyoutBase4, WUXCPIFlyoutBaseOverrides4, WUXCPIJumpListItemBackgroundConverter, WUXCPIJumpListItemBackgroundConverterStatics, WUXCPIJumpListItemForegroundConverter, WUXCPIJumpListItemForegroundConverterStatics, WUXCPIPickerFlyoutBase, WUXCPIPickerFlyoutBaseOverrides, WUXCPIPickerFlyoutBaseStatics, WUXCPIPickerFlyoutBaseFactory, WUXCPILoopingSelector, WUXCPILoopingSelectorStatics, WUXCPIPivotPanel, WUXCPILoopingSelectorItem, WUXCPILoopingSelectorPanel, WUXCPIPivotHeaderItem, WUXCPIPivotHeaderItemFactory, WUXCPIPivotHeaderPanel;
 
 // Windows.UI.Xaml.Controls.Primitives.GeneratorDirection
 enum _WUXCPGeneratorDirection {
@@ -145,11 +145,13 @@ enum _WUXCPFlyoutPlacementMode {
 typedef unsigned WUXCPFlyoutPlacementMode;
 
 #include "WindowsUIXamlData.h"
-#include "WindowsFoundation.h"
+#include "WindowsUI.h"
+#include "WindowsFoundationNumerics.h"
 #include "WindowsUIXamlControls.h"
 #include "WindowsUIXamlMediaAnimation.h"
 #include "WindowsApplicationModelDataTransfer.h"
 #include "WindowsUIXamlMedia.h"
+#include "WindowsFoundation.h"
 #include "WindowsUIXamlInput.h"
 #include "WindowsUIXaml.h"
 #include "WindowsUICore.h"
@@ -402,6 +404,20 @@ OBJCUWPWINDOWSUIXAMLEXPORT
 
 #endif // __WUXCPIFlyoutBaseOverrides_DEFINED__
 
+// Windows.UI.Xaml.Controls.Primitives.IFlyoutBaseOverrides4
+#ifndef __WUXCPIFlyoutBaseOverrides4_DEFINED__
+#define __WUXCPIFlyoutBaseOverrides4_DEFINED__
+
+@protocol WUXCPIFlyoutBaseOverrides4
+- (void)onProcessKeyboardAccelerators:(WUXIProcessKeyboardAcceleratorEventArgs*)args;
+@end
+
+OBJCUWPWINDOWSUIXAMLEXPORT
+@interface WUXCPIFlyoutBaseOverrides4 : RTObject <WUXCPIFlyoutBaseOverrides4>
+@end
+
+#endif // __WUXCPIFlyoutBaseOverrides4_DEFINED__
+
 // Windows.UI.Xaml.Controls.Primitives.IPickerFlyoutBaseOverrides
 #ifndef __WUXCPIPickerFlyoutBaseOverrides_DEFINED__
 #define __WUXCPIPickerFlyoutBaseOverrides_DEFINED__
@@ -443,6 +459,7 @@ OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXCPLayoutInformation : RTObject
 + (WXUIElement*)getLayoutExceptionElement:(RTObject*)dispatcher;
 + (WFRect*)getLayoutSlot:(WXFrameworkElement*)element;
++ (WFSize*)getAvailableSize:(WXUIElement*)element;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
@@ -866,6 +883,21 @@ OBJCUWPWINDOWSUIXAMLEXPORT
 
 #endif // __WXIUIElementOverrides_DEFINED__
 
+// Windows.UI.Xaml.IUIElementOverrides7
+#ifndef __WXIUIElementOverrides7_DEFINED__
+#define __WXIUIElementOverrides7_DEFINED__
+
+@protocol WXIUIElementOverrides7
+- (id<NSFastEnumeration> /* WXDependencyObject* */)getChildrenInTabFocusOrder;
+- (void)onProcessKeyboardAccelerators:(WUXIProcessKeyboardAcceleratorEventArgs*)args;
+@end
+
+OBJCUWPWINDOWSUIXAMLEXPORT
+@interface WXIUIElementOverrides7 : RTObject <WXIUIElementOverrides7>
+@end
+
+#endif // __WXIUIElementOverrides7_DEFINED__
+
 // Windows.UI.Xaml.UIElement
 #ifndef __WXUIElement_DEFINED__
 #define __WXUIElement_DEFINED__
@@ -876,24 +908,24 @@ OBJCUWPWINDOWSUIXAMLEXPORT
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
-@property BOOL isHitTestVisible;
-@property BOOL isDoubleTapEnabled;
-@property double opacity;
-@property (retain) WUXMProjection* projection;
-@property (retain) WUXMRectangleGeometry* clip;
-@property (retain) WUXMCacheMode* cacheMode;
-@property WUXIManipulationModes manipulationMode;
 @property BOOL isTapEnabled;
+@property (retain) WUXMProjection* projection;
 @property BOOL isRightTapEnabled;
 @property BOOL isHoldingEnabled;
+@property BOOL isHitTestVisible;
+@property BOOL isDoubleTapEnabled;
 @property BOOL allowDrop;
+@property WUXIManipulationModes manipulationMode;
+@property (retain) WUXMRectangleGeometry* clip;
+@property (retain) WUXMCacheMode* cacheMode;
 @property WXVisibility visibility;
 @property BOOL useLayoutRounding;
 @property (retain) WUXMATransitionCollection* transitions;
 @property (retain) WFPoint* renderTransformOrigin;
 @property (retain) WUXMTransform* renderTransform;
-@property (readonly) NSArray* /* WUXIPointer* */ pointerCaptures;
+@property double opacity;
 @property (readonly) WFSize* desiredSize;
+@property (readonly) NSArray* /* WUXIPointer* */ pointerCaptures;
 @property (readonly) WFSize* renderSize;
 @property WUXMElementCompositeMode compositeMode;
 @property (retain) WUXMMTransform3D* transform3D;
@@ -903,7 +935,19 @@ OBJCUWPWINDOWSUIXAMLEXPORT
 @property (retain) WUXCPFlyoutBase* contextFlyout;
 @property (retain) WXDependencyObject* accessKeyScopeOwner;
 @property (retain) NSString * accessKey;
-+ (WXDependencyProperty*)isRightTapEnabledProperty;
+@property double keyTipHorizontalOffset;
+@property WXElementHighContrastAdjustment highContrastAdjustment;
+@property WUXIXYFocusNavigationStrategy xYFocusUpNavigationStrategy;
+@property WUXIXYFocusNavigationStrategy xYFocusRightNavigationStrategy;
+@property WUXIXYFocusNavigationStrategy xYFocusLeftNavigationStrategy;
+@property WUXIXYFocusKeyboardNavigationMode xYFocusKeyboardNavigation;
+@property WUXIXYFocusNavigationStrategy xYFocusDownNavigationStrategy;
+@property WUXIKeyboardNavigationMode tabFocusNavigation;
+@property double keyTipVerticalOffset;
+@property WUXIKeyTipPlacementMode keyTipPlacementMode;
+@property (readonly) NSMutableArray* /* WUXMXamlLight* */ lights;
+@property (readonly) NSMutableArray* /* WUXIKeyboardAccelerator* */ keyboardAccelerators;
++ (WXDependencyProperty*)opacityProperty;
 + (WXDependencyProperty*)allowDropProperty;
 + (WXDependencyProperty*)cacheModeProperty;
 + (WXDependencyProperty*)clipProperty;
@@ -916,6 +960,7 @@ OBJCUWPWINDOWSUIXAMLEXPORT
 + (WXDependencyProperty*)isDoubleTapEnabledProperty;
 + (WXDependencyProperty*)isHitTestVisibleProperty;
 + (WXDependencyProperty*)isHoldingEnabledProperty;
++ (WXDependencyProperty*)isRightTapEnabledProperty;
 + (WXDependencyProperty*)isTapEnabledProperty;
 + (WXRoutedEvent*)keyDownEvent;
 + (WXRoutedEvent*)keyUpEvent;
@@ -925,7 +970,6 @@ OBJCUWPWINDOWSUIXAMLEXPORT
 + (WXDependencyProperty*)manipulationModeProperty;
 + (WXRoutedEvent*)manipulationStartedEvent;
 + (WXRoutedEvent*)manipulationStartingEvent;
-+ (WXDependencyProperty*)opacityProperty;
 + (WXRoutedEvent*)pointerCanceledEvent;
 + (WXRoutedEvent*)pointerCaptureLostEvent;
 + (WXDependencyProperty*)pointerCapturesProperty;
@@ -944,13 +988,30 @@ OBJCUWPWINDOWSUIXAMLEXPORT
 + (WXDependencyProperty*)useLayoutRoundingProperty;
 + (WXDependencyProperty*)visibilityProperty;
 + (WXDependencyProperty*)compositeModeProperty;
-+ (WXDependencyProperty*)canDragProperty;
 + (WXDependencyProperty*)transform3DProperty;
-+ (WXDependencyProperty*)accessKeyScopeOwnerProperty;
-+ (WXDependencyProperty*)contextFlyoutProperty;
-+ (WXDependencyProperty*)exitDisplayModeOnAccessKeyInvokedProperty;
-+ (WXDependencyProperty*)isAccessKeyScopeProperty;
++ (WXDependencyProperty*)canDragProperty;
 + (WXDependencyProperty*)accessKeyProperty;
++ (WXDependencyProperty*)isAccessKeyScopeProperty;
++ (WXDependencyProperty*)exitDisplayModeOnAccessKeyInvokedProperty;
++ (WXDependencyProperty*)contextFlyoutProperty;
++ (WXDependencyProperty*)accessKeyScopeOwnerProperty;
++ (WXDependencyProperty*)xYFocusKeyboardNavigationProperty;
++ (WXDependencyProperty*)xYFocusLeftNavigationStrategyProperty;
++ (WXDependencyProperty*)xYFocusRightNavigationStrategyProperty;
++ (WXDependencyProperty*)xYFocusUpNavigationStrategyProperty;
++ (WXDependencyProperty*)highContrastAdjustmentProperty;
++ (WXDependencyProperty*)xYFocusDownNavigationStrategyProperty;
++ (WXDependencyProperty*)keyTipHorizontalOffsetProperty;
++ (WXDependencyProperty*)keyTipPlacementModeProperty;
++ (WXDependencyProperty*)keyTipVerticalOffsetProperty;
++ (WXDependencyProperty*)lightsProperty;
++ (WXDependencyProperty*)tabFocusNavigationProperty;
++ (WXRoutedEvent*)noFocusCandidateFoundEvent;
++ (WXRoutedEvent*)losingFocusEvent;
++ (WXRoutedEvent*)gettingFocusEvent;
++ (WXRoutedEvent*)characterReceivedEvent;
++ (WXRoutedEvent*)previewKeyUpEvent;
++ (WXRoutedEvent*)previewKeyDownEvent;
 - (EventRegistrationToken)addDoubleTappedEvent:(WUXIDoubleTappedEventHandler)del;
 - (void)removeDoubleTappedEvent:(EventRegistrationToken)tok;
 - (EventRegistrationToken)addDragEnterEvent:(WXDragEventHandler)del;
@@ -1015,6 +1076,20 @@ OBJCUWPWINDOWSUIXAMLEXPORT
 - (void)removeContextCanceledEvent:(EventRegistrationToken)tok;
 - (EventRegistrationToken)addContextRequestedEvent:(void(^)(WXUIElement*, WUXIContextRequestedEventArgs*))del;
 - (void)removeContextRequestedEvent:(EventRegistrationToken)tok;
+- (EventRegistrationToken)addGettingFocusEvent:(void(^)(WXUIElement*, WUXIGettingFocusEventArgs*))del;
+- (void)removeGettingFocusEvent:(EventRegistrationToken)tok;
+- (EventRegistrationToken)addLosingFocusEvent:(void(^)(WXUIElement*, WUXILosingFocusEventArgs*))del;
+- (void)removeLosingFocusEvent:(EventRegistrationToken)tok;
+- (EventRegistrationToken)addNoFocusCandidateFoundEvent:(void(^)(WXUIElement*, WUXINoFocusCandidateFoundEventArgs*))del;
+- (void)removeNoFocusCandidateFoundEvent:(EventRegistrationToken)tok;
+- (EventRegistrationToken)addCharacterReceivedEvent:(void(^)(WXUIElement*, WUXICharacterReceivedRoutedEventArgs*))del;
+- (void)removeCharacterReceivedEvent:(EventRegistrationToken)tok;
+- (EventRegistrationToken)addPreviewKeyDownEvent:(WUXIKeyEventHandler)del;
+- (void)removePreviewKeyDownEvent:(EventRegistrationToken)tok;
+- (EventRegistrationToken)addPreviewKeyUpEvent:(WUXIKeyEventHandler)del;
+- (void)removePreviewKeyUpEvent:(EventRegistrationToken)tok;
+- (EventRegistrationToken)addProcessKeyboardAcceleratorsEvent:(void(^)(WXUIElement*, WUXIProcessKeyboardAcceleratorEventArgs*))del;
+- (void)removeProcessKeyboardAcceleratorsEvent:(EventRegistrationToken)tok;
 - (void)measure:(WFSize*)availableSize;
 - (void)arrange:(WFRect*)finalRect;
 - (BOOL)capturePointer:(WUXIPointer*)value;
@@ -1026,8 +1101,16 @@ OBJCUWPWINDOWSUIXAMLEXPORT
 - (void)invalidateMeasure;
 - (void)invalidateArrange;
 - (void)updateLayout;
+- (WUXAPAutomationPeer*)onCreateAutomationPeer;
+- (void)onDisconnectVisualChildren;
+- (id<NSFastEnumeration> /* id<NSFastEnumeration> < WFPoint* > */)findSubElementsForTouchTargeting:(WFPoint*)point boundingRect:(WFRect*)boundingRect;
 - (BOOL)cancelDirectManipulations;
 - (void)startDragAsync:(WUIPointerPoint*)pointerPoint success:(void (^)(WADDataPackageOperation))success failure:(void (^)(NSError*))failure;
+- (void)startBringIntoView;
+- (void)startBringIntoViewWithOptions:(WXBringIntoViewOptions*)options;
+- (void)tryInvokeKeyboardAccelerator:(WUXIProcessKeyboardAcceleratorEventArgs*)args;
+- (id<NSFastEnumeration> /* WXDependencyObject* */)getChildrenInTabFocusOrder;
+- (void)onProcessKeyboardAccelerators:(WUXIProcessKeyboardAcceleratorEventArgs*)args;
 @end
 
 #endif // __WXUIElement_DEFINED__
@@ -1038,39 +1121,41 @@ OBJCUWPWINDOWSUIXAMLEXPORT
 
 OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXFrameworkElement : WXUIElement
++ (void)deferTree:(WXDependencyObject*)element;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property double height;
 @property WXFlowDirection flowDirection;
-@property double minHeight;
 @property (retain) RTObject* dataContext;
 @property (retain) NSString * name;
 @property double minWidth;
+@property (retain) WXResourceDictionary* resources;
+@property double minHeight;
 @property double maxWidth;
 @property double maxHeight;
 @property (retain) WXThickness* margin;
 @property (retain) NSString * language;
 @property WXHorizontalAlignment horizontalAlignment;
-@property (retain) WXResourceDictionary* resources;
-@property double width;
 @property WXVerticalAlignment verticalAlignment;
+@property double width;
 @property (retain) RTObject* tag;
 @property (retain) WXStyle* style;
+@property (readonly) double actualWidth;
 @property (readonly) WFUri* baseUri;
 @property (readonly) double actualHeight;
 @property (readonly) WXDependencyObject* parent;
 @property (readonly) WXTriggerCollection* triggers;
-@property (readonly) double actualWidth;
 @property WXElementTheme requestedTheme;
-@property (retain) WXThickness* focusVisualMargin;
+@property (retain) WXThickness* focusVisualSecondaryThickness;
 @property (retain) WUXMBrush* focusVisualSecondaryBrush;
 @property (retain) WXThickness* focusVisualPrimaryThickness;
 @property (retain) WUXMBrush* focusVisualPrimaryBrush;
+@property (retain) WXThickness* focusVisualMargin;
 @property BOOL allowFocusWhenDisabled;
 @property BOOL allowFocusOnInteraction;
-@property (retain) WXThickness* focusVisualSecondaryThickness;
-+ (WXDependencyProperty*)styleProperty;
+@property (readonly) WXElementTheme actualTheme;
++ (WXDependencyProperty*)nameProperty;
 + (WXDependencyProperty*)actualHeightProperty;
 + (WXDependencyProperty*)actualWidthProperty;
 + (WXDependencyProperty*)dataContextProperty;
@@ -1083,18 +1168,19 @@ OBJCUWPWINDOWSUIXAMLEXPORT
 + (WXDependencyProperty*)maxWidthProperty;
 + (WXDependencyProperty*)minHeightProperty;
 + (WXDependencyProperty*)minWidthProperty;
-+ (WXDependencyProperty*)nameProperty;
++ (WXDependencyProperty*)styleProperty;
 + (WXDependencyProperty*)tagProperty;
 + (WXDependencyProperty*)verticalAlignmentProperty;
 + (WXDependencyProperty*)widthProperty;
 + (WXDependencyProperty*)requestedThemeProperty;
++ (WXDependencyProperty*)focusVisualSecondaryThicknessProperty;
 + (WXDependencyProperty*)allowFocusOnInteractionProperty;
 + (WXDependencyProperty*)allowFocusWhenDisabledProperty;
 + (WXDependencyProperty*)focusVisualMarginProperty;
 + (WXDependencyProperty*)focusVisualPrimaryBrushProperty;
 + (WXDependencyProperty*)focusVisualPrimaryThicknessProperty;
 + (WXDependencyProperty*)focusVisualSecondaryBrushProperty;
-+ (WXDependencyProperty*)focusVisualSecondaryThicknessProperty;
++ (WXDependencyProperty*)actualThemeProperty;
 - (EventRegistrationToken)addLayoutUpdatedEvent:(void(^)(RTObject*, RTObject*))del;
 - (void)removeLayoutUpdatedEvent:(EventRegistrationToken)tok;
 - (EventRegistrationToken)addLoadedEvent:(WXRoutedEventHandler)del;
@@ -1107,9 +1193,15 @@ OBJCUWPWINDOWSUIXAMLEXPORT
 - (void)removeDataContextChangedEvent:(EventRegistrationToken)tok;
 - (EventRegistrationToken)addLoadingEvent:(void(^)(WXFrameworkElement*, RTObject*))del;
 - (void)removeLoadingEvent:(EventRegistrationToken)tok;
+- (EventRegistrationToken)addActualThemeChangedEvent:(void(^)(WXFrameworkElement*, RTObject*))del;
+- (void)removeActualThemeChangedEvent:(EventRegistrationToken)tok;
 - (RTObject*)findName:(NSString *)name;
 - (void)setBinding:(WXDependencyProperty*)dp binding:(WUXDBindingBase*)binding;
+- (WFSize*)measureOverride:(WFSize*)availableSize;
+- (WFSize*)arrangeOverride:(WFSize*)finalSize;
+- (void)onApplyTemplate;
 - (WUXDBindingExpression*)getBindingExpression:(WXDependencyProperty*)dp;
+- (BOOL)goToElementStateCore:(NSString *)stateName useTransitions:(BOOL)useTransitions;
 @end
 
 #endif // __WXFrameworkElement_DEFINED__
@@ -1208,6 +1300,12 @@ OBJCUWPWINDOWSUIXAMLEXPORT
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WXCItemContainerGenerator* itemContainerGenerator;
+- (void)onItemsChanged:(RTObject*)sender args:(WUXCPItemsChangedEventArgs*)args;
+- (void)onClearChildren;
+- (void)bringIndexIntoView:(int)index;
+- (void)addInternalChild:(WXUIElement*)child;
+- (void)insertInternalChild:(int)index child:(WXUIElement*)child;
+- (void)removeInternalChildRange:(int)index range:(int)range;
 @end
 
 #endif // __WXCVirtualizingPanel_DEFINED__
@@ -1407,6 +1505,8 @@ OBJCUWPWINDOWSUIXAMLEXPORT
 + (WXDependencyProperty*)lineHeightProperty;
 + (WXDependencyProperty*)horizontalContentAlignmentProperty;
 + (WXDependencyProperty*)cornerRadiusProperty;
+- (void)onContentTemplateChanged:(WXDataTemplate*)oldContentTemplate newContentTemplate:(WXDataTemplate*)newContentTemplate;
+- (void)onContentTemplateSelectorChanged:(WXCDataTemplateSelector*)oldContentTemplateSelector newContentTemplateSelector:(WXCDataTemplateSelector*)newContentTemplateSelector;
 @end
 
 #endif // __WXCContentPresenter_DEFINED__
@@ -1479,37 +1579,42 @@ OBJCUWPWINDOWSUIXAMLEXPORT
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
-@property (retain) WUXMBrush* checkBrush;
-@property (retain) WUXMBrush* dragForeground;
-@property (retain) WUXMBrush* dragBackground;
-@property double disabledOpacity;
-@property (retain) WXThickness* contentMargin;
-@property (retain) WUXMBrush* checkSelectingBrush;
-@property (retain) WUXMBrush* placeholderBackground;
-@property (retain) WUXMBrush* checkHintBrush;
-@property (retain) WXThickness* pointerOverBackgroundMargin;
 @property double dragOpacity;
-@property (retain) WUXMBrush* pointerOverBackground;
-@property WXVerticalAlignment listViewItemPresenterVerticalContentAlignment;
 @property (retain) WXThickness* listViewItemPresenterPadding;
-@property WXHorizontalAlignment listViewItemPresenterHorizontalContentAlignment;
+@property (retain) WUXMBrush* dragBackground;
 @property (retain) WUXMBrush* focusBorderBrush;
+@property (retain) WXThickness* contentMargin;
+@property (retain) WUXMBrush* checkHintBrush;
+@property (retain) WUXMBrush* selectedBackground;
+@property (retain) WUXMBrush* checkBrush;
+@property double reorderHintOffset;
+@property (retain) WXThickness* pointerOverBackgroundMargin;
+@property (retain) WUXMBrush* checkSelectingBrush;
+@property (retain) WUXMBrush* pointerOverBackground;
 @property (retain) WUXMBrush* selectedPointerOverBorderBrush;
+@property WXVerticalAlignment listViewItemPresenterVerticalContentAlignment;
+@property (retain) WUXMBrush* dragForeground;
+@property WXHorizontalAlignment listViewItemPresenterHorizontalContentAlignment;
+@property double disabledOpacity;
+@property BOOL selectionCheckMarkVisualEnabled;
+@property (retain) WUXMBrush* placeholderBackground;
 @property (retain) WUXMBrush* selectedPointerOverBackground;
 @property (retain) WUXMBrush* selectedForeground;
 @property (retain) WXThickness* selectedBorderThickness;
-@property (retain) WUXMBrush* selectedBackground;
-@property double reorderHintOffset;
-@property BOOL selectionCheckMarkVisualEnabled;
-@property (retain) WUXMBrush* pressedBackground;
-@property (retain) WUXMBrush* pointerOverForeground;
-@property (retain) WUXMBrush* focusSecondaryBorderBrush;
 @property (retain) WUXMBrush* selectedPressedBackground;
-@property WUXCPListViewItemPresenterCheckMode checkMode;
 @property (retain) WUXMBrush* checkBoxBrush;
-+ (WXDependencyProperty*)checkSelectingBrushProperty;
+@property (retain) WUXMBrush* pointerOverForeground;
+@property WUXCPListViewItemPresenterCheckMode checkMode;
+@property (retain) WUXMBrush* pressedBackground;
+@property (retain) WUXMBrush* focusSecondaryBorderBrush;
+@property (retain) WUXMBrush* revealBorderBrush;
+@property BOOL revealBackgroundShowsAboveContent;
+@property (retain) WUXMBrush* revealBackground;
+@property (retain) WXThickness* revealBorderThickness;
++ (WXDependencyProperty*)selectedForegroundProperty;
 + (WXDependencyProperty*)checkBrushProperty;
 + (WXDependencyProperty*)checkHintBrushProperty;
++ (WXDependencyProperty*)checkSelectingBrushProperty;
 + (WXDependencyProperty*)contentMarginProperty;
 + (WXDependencyProperty*)disabledOpacityProperty;
 + (WXDependencyProperty*)dragBackgroundProperty;
@@ -1525,35 +1630,22 @@ OBJCUWPWINDOWSUIXAMLEXPORT
 + (WXDependencyProperty*)reorderHintOffsetProperty;
 + (WXDependencyProperty*)selectedBackgroundProperty;
 + (WXDependencyProperty*)selectedBorderThicknessProperty;
-+ (WXDependencyProperty*)selectedForegroundProperty;
 + (WXDependencyProperty*)selectedPointerOverBackgroundProperty;
 + (WXDependencyProperty*)selectedPointerOverBorderBrushProperty;
 + (WXDependencyProperty*)selectionCheckMarkVisualEnabledProperty;
++ (WXDependencyProperty*)checkBoxBrushProperty;
 + (WXDependencyProperty*)checkModeProperty;
 + (WXDependencyProperty*)focusSecondaryBorderBrushProperty;
 + (WXDependencyProperty*)pointerOverForegroundProperty;
 + (WXDependencyProperty*)pressedBackgroundProperty;
 + (WXDependencyProperty*)selectedPressedBackgroundProperty;
-+ (WXDependencyProperty*)checkBoxBrushProperty;
++ (WXDependencyProperty*)revealBackgroundShowsAboveContentProperty;
++ (WXDependencyProperty*)revealBorderBrushProperty;
++ (WXDependencyProperty*)revealBorderThicknessProperty;
++ (WXDependencyProperty*)revealBackgroundProperty;
 @end
 
 #endif // __WUXCPListViewItemPresenter_DEFINED__
-
-// Windows.UI.Xaml.Controls.IContentControlOverrides
-#ifndef __WXCIContentControlOverrides_DEFINED__
-#define __WXCIContentControlOverrides_DEFINED__
-
-@protocol WXCIContentControlOverrides
-- (void)onContentChanged:(RTObject*)oldContent newContent:(RTObject*)newContent;
-- (void)onContentTemplateChanged:(WXDataTemplate*)oldContentTemplate newContentTemplate:(WXDataTemplate*)newContentTemplate;
-- (void)onContentTemplateSelectorChanged:(WXCDataTemplateSelector*)oldContentTemplateSelector newContentTemplateSelector:(WXCDataTemplateSelector*)newContentTemplateSelector;
-@end
-
-OBJCUWPWINDOWSUIXAMLEXPORT
-@interface WXCIContentControlOverrides : RTObject <WXCIContentControlOverrides>
-@end
-
-#endif // __WXCIContentControlOverrides_DEFINED__
 
 // Windows.UI.Xaml.Controls.IControlOverrides
 #ifndef __WXCIControlOverrides_DEFINED__
@@ -1593,6 +1685,22 @@ OBJCUWPWINDOWSUIXAMLEXPORT
 
 #endif // __WXCIControlOverrides_DEFINED__
 
+// Windows.UI.Xaml.Controls.IControlOverrides6
+#ifndef __WXCIControlOverrides6_DEFINED__
+#define __WXCIControlOverrides6_DEFINED__
+
+@protocol WXCIControlOverrides6
+- (void)onPreviewKeyDown:(WUXIKeyRoutedEventArgs*)e;
+- (void)onPreviewKeyUp:(WUXIKeyRoutedEventArgs*)e;
+- (void)onCharacterReceived:(WUXICharacterReceivedRoutedEventArgs*)e;
+@end
+
+OBJCUWPWINDOWSUIXAMLEXPORT
+@interface WXCIControlOverrides6 : RTObject <WXCIControlOverrides6>
+@end
+
+#endif // __WXCIControlOverrides6_DEFINED__
+
 // Windows.UI.Xaml.Controls.Control
 #ifndef __WXCControl_DEFINED__
 #define __WXCControl_DEFINED__
@@ -1601,20 +1709,22 @@ OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCControl : WXFrameworkElement
 + (BOOL)getIsTemplateFocusTarget:(WXFrameworkElement*)element;
 + (void)setIsTemplateFocusTarget:(WXFrameworkElement*)element value:(BOOL)value;
++ (BOOL)getIsTemplateKeyTipTarget:(WXDependencyObject*)element;
++ (void)setIsTemplateKeyTipTarget:(WXDependencyObject*)element value:(BOOL)value;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property double fontSize;
 @property (retain) WUXMFontFamily* fontFamily;
-@property (retain) WXThickness* padding;
 @property int tabIndex;
 @property int characterSpacing;
 @property (retain) WXThickness* borderThickness;
-@property BOOL isEnabled;
 @property (retain) WUXMBrush* borderBrush;
 @property WUTFontStretch fontStretch;
 @property BOOL isTabStop;
+@property BOOL isEnabled;
 @property WXHorizontalAlignment horizontalContentAlignment;
+@property (retain) WXThickness* padding;
 @property (retain) WUXMBrush* foreground;
 @property (retain) WUTFontWeight* fontWeight;
 @property WUTFontStyle fontStyle;
@@ -1625,15 +1735,16 @@ OBJCUWPWINDOWSUIXAMLEXPORT
 @property (readonly) WXFocusState focusState;
 @property BOOL isTextScaleFactorEnabled;
 @property BOOL useSystemFocusVisuals;
-@property (retain) WXDependencyObject* xYFocusRight;
-@property BOOL isFocusEngaged;
-@property (retain) WXDependencyObject* xYFocusLeft;
 @property (retain) WXDependencyObject* xYFocusDown;
-@property WXCRequiresPointer requiresPointer;
-@property BOOL isFocusEngagementEnabled;
-@property WXElementSoundMode elementSoundMode;
 @property (retain) WXDependencyObject* xYFocusUp;
-+ (WXDependencyProperty*)isEnabledProperty;
+@property BOOL isFocusEngagementEnabled;
+@property (retain) WXDependencyObject* xYFocusLeft;
+@property (retain) WXDependencyObject* xYFocusRight;
+@property WXCRequiresPointer requiresPointer;
+@property WXElementSoundMode elementSoundMode;
+@property BOOL isFocusEngaged;
+@property (retain) WFUri* defaultStyleResourceUri;
++ (WXDependencyProperty*)fontWeightProperty;
 + (WXDependencyProperty*)backgroundProperty;
 + (WXDependencyProperty*)borderBrushProperty;
 + (WXDependencyProperty*)borderThicknessProperty;
@@ -1644,9 +1755,9 @@ OBJCUWPWINDOWSUIXAMLEXPORT
 + (WXDependencyProperty*)fontSizeProperty;
 + (WXDependencyProperty*)fontStretchProperty;
 + (WXDependencyProperty*)fontStyleProperty;
-+ (WXDependencyProperty*)fontWeightProperty;
 + (WXDependencyProperty*)foregroundProperty;
 + (WXDependencyProperty*)horizontalContentAlignmentProperty;
++ (WXDependencyProperty*)isEnabledProperty;
 + (WXDependencyProperty*)isTabStopProperty;
 + (WXDependencyProperty*)paddingProperty;
 + (WXDependencyProperty*)tabIndexProperty;
@@ -1656,14 +1767,16 @@ OBJCUWPWINDOWSUIXAMLEXPORT
 + (WXDependencyProperty*)isTextScaleFactorEnabledProperty;
 + (WXDependencyProperty*)isTemplateFocusTargetProperty;
 + (WXDependencyProperty*)useSystemFocusVisualsProperty;
-+ (WXDependencyProperty*)elementSoundModeProperty;
-+ (WXDependencyProperty*)isFocusEngagedProperty;
-+ (WXDependencyProperty*)isFocusEngagementEnabledProperty;
 + (WXDependencyProperty*)requiresPointerProperty;
 + (WXDependencyProperty*)xYFocusDownProperty;
 + (WXDependencyProperty*)xYFocusLeftProperty;
-+ (WXDependencyProperty*)xYFocusRightProperty;
 + (WXDependencyProperty*)xYFocusUpProperty;
++ (WXDependencyProperty*)xYFocusRightProperty;
++ (WXDependencyProperty*)elementSoundModeProperty;
++ (WXDependencyProperty*)isFocusEngagedProperty;
++ (WXDependencyProperty*)isFocusEngagementEnabledProperty;
++ (WXDependencyProperty*)isTemplateKeyTipTargetProperty;
++ (WXDependencyProperty*)defaultStyleResourceUriProperty;
 - (EventRegistrationToken)addIsEnabledChangedEvent:(WXDependencyPropertyChangedEventHandler)del;
 - (void)removeIsEnabledChangedEvent:(EventRegistrationToken)tok;
 - (EventRegistrationToken)addFocusDisengagedEvent:(void(^)(WXCControl*, WXCFocusDisengagedEventArgs*))del;
@@ -1672,10 +1785,91 @@ OBJCUWPWINDOWSUIXAMLEXPORT
 - (void)removeFocusEngagedEvent:(EventRegistrationToken)tok;
 - (BOOL)applyTemplate;
 - (BOOL)focus:(WXFocusState)value;
+- (void)onPointerEntered:(WUXIPointerRoutedEventArgs*)e;
+- (void)onPointerPressed:(WUXIPointerRoutedEventArgs*)e;
+- (void)onPointerMoved:(WUXIPointerRoutedEventArgs*)e;
+- (void)onPointerReleased:(WUXIPointerRoutedEventArgs*)e;
+- (void)onPointerExited:(WUXIPointerRoutedEventArgs*)e;
+- (void)onPointerCaptureLost:(WUXIPointerRoutedEventArgs*)e;
+- (void)onPointerCanceled:(WUXIPointerRoutedEventArgs*)e;
+- (void)onPointerWheelChanged:(WUXIPointerRoutedEventArgs*)e;
+- (void)onTapped:(WUXITappedRoutedEventArgs*)e;
+- (void)onDoubleTapped:(WUXIDoubleTappedRoutedEventArgs*)e;
+- (void)onHolding:(WUXIHoldingRoutedEventArgs*)e;
+- (void)onRightTapped:(WUXIRightTappedRoutedEventArgs*)e;
+- (void)onManipulationStarting:(WUXIManipulationStartingRoutedEventArgs*)e;
+- (void)onManipulationInertiaStarting:(WUXIManipulationInertiaStartingRoutedEventArgs*)e;
+- (void)onManipulationStarted:(WUXIManipulationStartedRoutedEventArgs*)e;
+- (void)onManipulationDelta:(WUXIManipulationDeltaRoutedEventArgs*)e;
+- (void)onManipulationCompleted:(WUXIManipulationCompletedRoutedEventArgs*)e;
+- (void)onKeyUp:(WUXIKeyRoutedEventArgs*)e;
+- (void)onKeyDown:(WUXIKeyRoutedEventArgs*)e;
+- (void)onGotFocus:(WXRoutedEventArgs*)e;
+- (void)onLostFocus:(WXRoutedEventArgs*)e;
+- (void)onDragEnter:(WXDragEventArgs*)e;
+- (void)onDragLeave:(WXDragEventArgs*)e;
+- (void)onDragOver:(WXDragEventArgs*)e;
+- (void)onDrop:(WXDragEventArgs*)e;
+- (WXDependencyObject*)getTemplateChild:(NSString *)childName;
 - (void)removeFocusEngagement;
+- (void)onPreviewKeyDown:(WUXIKeyRoutedEventArgs*)e;
+- (void)onPreviewKeyUp:(WUXIKeyRoutedEventArgs*)e;
+- (void)onCharacterReceived:(WUXICharacterReceivedRoutedEventArgs*)e;
 @end
 
 #endif // __WXCControl_DEFINED__
+
+// Windows.UI.Xaml.Controls.Primitives.ColorSpectrum
+#ifndef __WUXCPColorSpectrum_DEFINED__
+#define __WUXCPColorSpectrum_DEFINED__
+
+OBJCUWPWINDOWSUIXAMLEXPORT
+@interface WUXCPColorSpectrum : WXCControl
++ (instancetype)make __attribute__ ((ns_returns_retained));
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property WXCColorSpectrumShape shape;
+@property int minValue;
+@property int minSaturation;
+@property int minHue;
+@property int maxValue;
+@property int maxSaturation;
+@property int maxHue;
+@property (retain) WFNVector4* hsvColor;
+@property WXCColorSpectrumComponents components;
+@property (retain) WUColor* color;
++ (WXDependencyProperty*)colorProperty;
++ (WXDependencyProperty*)componentsProperty;
++ (WXDependencyProperty*)hsvColorProperty;
++ (WXDependencyProperty*)maxHueProperty;
++ (WXDependencyProperty*)maxSaturationProperty;
++ (WXDependencyProperty*)maxValueProperty;
++ (WXDependencyProperty*)minHueProperty;
++ (WXDependencyProperty*)minSaturationProperty;
++ (WXDependencyProperty*)minValueProperty;
++ (WXDependencyProperty*)shapeProperty;
+- (EventRegistrationToken)addColorChangedEvent:(void(^)(WUXCPColorSpectrum*, WXCColorChangedEventArgs*))del;
+- (void)removeColorChangedEvent:(EventRegistrationToken)tok;
+@end
+
+#endif // __WUXCPColorSpectrum_DEFINED__
+
+// Windows.UI.Xaml.Controls.IContentControlOverrides
+#ifndef __WXCIContentControlOverrides_DEFINED__
+#define __WXCIContentControlOverrides_DEFINED__
+
+@protocol WXCIContentControlOverrides
+- (void)onContentChanged:(RTObject*)oldContent newContent:(RTObject*)newContent;
+- (void)onContentTemplateChanged:(WXDataTemplate*)oldContentTemplate newContentTemplate:(WXDataTemplate*)newContentTemplate;
+- (void)onContentTemplateSelectorChanged:(WXCDataTemplateSelector*)oldContentTemplateSelector newContentTemplateSelector:(WXCDataTemplateSelector*)newContentTemplateSelector;
+@end
+
+OBJCUWPWINDOWSUIXAMLEXPORT
+@interface WXCIContentControlOverrides : RTObject <WXCIContentControlOverrides>
+@end
+
+#endif // __WXCIContentControlOverrides_DEFINED__
 
 // Windows.UI.Xaml.Controls.ContentControl
 #ifndef __WXCContentControl_DEFINED__
@@ -1696,6 +1890,9 @@ OBJCUWPWINDOWSUIXAMLEXPORT
 + (WXDependencyProperty*)contentTemplateProperty;
 + (WXDependencyProperty*)contentTemplateSelectorProperty;
 + (WXDependencyProperty*)contentTransitionsProperty;
+- (void)onContentChanged:(RTObject*)oldContent newContent:(RTObject*)newContent;
+- (void)onContentTemplateChanged:(WXDataTemplate*)oldContentTemplate newContentTemplate:(WXDataTemplate*)newContentTemplate;
+- (void)onContentTemplateSelectorChanged:(WXCDataTemplateSelector*)oldContentTemplateSelector newContentTemplateSelector:(WXCDataTemplateSelector*)newContentTemplateSelector;
 @end
 
 #endif // __WXCContentControl_DEFINED__
@@ -1736,9 +1933,64 @@ OBJCUWPWINDOWSUIXAMLEXPORT
 + (WXDependencyProperty*)valueProperty;
 - (EventRegistrationToken)addValueChangedEvent:(WUXCPRangeBaseValueChangedEventHandler)del;
 - (void)removeValueChangedEvent:(EventRegistrationToken)tok;
+- (void)onMinimumChanged:(double)oldMinimum newMinimum:(double)newMinimum;
+- (void)onMaximumChanged:(double)oldMaximum newMaximum:(double)newMaximum;
+- (void)onValueChanged:(double)oldValue newValue:(double)newValue;
 @end
 
 #endif // __WUXCPRangeBase_DEFINED__
+
+// Windows.UI.Xaml.Controls.Slider
+#ifndef __WXCSlider_DEFINED__
+#define __WXCSlider_DEFINED__
+
+OBJCUWPWINDOWSUIXAMLEXPORT
+@interface WXCSlider : WUXCPRangeBase
++ (instancetype)make __attribute__ ((ns_returns_retained));
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property double stepFrequency;
+@property WUXCPSliderSnapsTo snapsTo;
+@property WXCOrientation orientation;
+@property BOOL isThumbToolTipEnabled;
+@property BOOL isDirectionReversed;
+@property double intermediateValue;
+@property WUXCPTickPlacement tickPlacement;
+@property double tickFrequency;
+@property (retain) RTObject<WUXDIValueConverter>* thumbToolTipValueConverter;
+@property (retain) WXDataTemplate* headerTemplate;
+@property (retain) RTObject* header;
++ (WXDependencyProperty*)intermediateValueProperty;
++ (WXDependencyProperty*)isDirectionReversedProperty;
++ (WXDependencyProperty*)isThumbToolTipEnabledProperty;
++ (WXDependencyProperty*)orientationProperty;
++ (WXDependencyProperty*)snapsToProperty;
++ (WXDependencyProperty*)stepFrequencyProperty;
++ (WXDependencyProperty*)thumbToolTipValueConverterProperty;
++ (WXDependencyProperty*)tickFrequencyProperty;
++ (WXDependencyProperty*)tickPlacementProperty;
++ (WXDependencyProperty*)headerTemplateProperty;
++ (WXDependencyProperty*)headerProperty;
+@end
+
+#endif // __WXCSlider_DEFINED__
+
+// Windows.UI.Xaml.Controls.Primitives.ColorPickerSlider
+#ifndef __WUXCPColorPickerSlider_DEFINED__
+#define __WUXCPColorPickerSlider_DEFINED__
+
+OBJCUWPWINDOWSUIXAMLEXPORT
+@interface WUXCPColorPickerSlider : WXCSlider
++ (instancetype)make __attribute__ ((ns_returns_retained));
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property WXCColorPickerHsvChannel colorChannel;
++ (WXDependencyProperty*)colorChannelProperty;
+@end
+
+#endif // __WUXCPColorPickerSlider_DEFINED__
 
 // Windows.UI.Xaml.Controls.Primitives.Thumb
 #ifndef __WUXCPThumb_DEFINED__
@@ -1886,6 +2138,16 @@ OBJCUWPWINDOWSUIXAMLEXPORT
 + (WXDependencyProperty*)itemTemplateSelectorProperty;
 + (WXDependencyProperty*)itemsPanelProperty;
 + (WXDependencyProperty*)itemsSourceProperty;
+- (BOOL)isItemItsOwnContainerOverride:(RTObject*)item;
+- (WXDependencyObject*)getContainerForItemOverride;
+- (void)clearContainerForItemOverride:(WXDependencyObject*)element item:(RTObject*)item;
+- (void)prepareContainerForItemOverride:(WXDependencyObject*)element item:(RTObject*)item;
+- (void)onItemsChanged:(RTObject*)e;
+- (void)onItemContainerStyleChanged:(WXStyle*)oldItemContainerStyle newItemContainerStyle:(WXStyle*)newItemContainerStyle;
+- (void)onItemContainerStyleSelectorChanged:(WXCStyleSelector*)oldItemContainerStyleSelector newItemContainerStyleSelector:(WXCStyleSelector*)newItemContainerStyleSelector;
+- (void)onItemTemplateChanged:(WXDataTemplate*)oldItemTemplate newItemTemplate:(WXDataTemplate*)newItemTemplate;
+- (void)onItemTemplateSelectorChanged:(WXCDataTemplateSelector*)oldItemTemplateSelector newItemTemplateSelector:(WXCDataTemplateSelector*)newItemTemplateSelector;
+- (void)onGroupStyleSelectorChanged:(WXCGroupStyleSelector*)oldGroupStyleSelector newGroupStyleSelector:(WXCGroupStyleSelector*)newGroupStyleSelector;
 - (RTObject*)itemFromContainer:(WXDependencyObject*)container;
 - (WXDependencyObject*)containerFromItem:(RTObject*)item;
 - (int)indexFromContainer:(WXDependencyObject*)container;
@@ -1959,6 +2221,7 @@ OBJCUWPWINDOWSUIXAMLEXPORT
 - (void)removeIndeterminateEvent:(EventRegistrationToken)tok;
 - (EventRegistrationToken)addUncheckedEvent:(WXRoutedEventHandler)del;
 - (void)removeUncheckedEvent:(EventRegistrationToken)tok;
+- (void)onToggle;
 @end
 
 #endif // __WUXCPToggleButton_DEFINED__
@@ -1995,12 +2258,14 @@ OBJCUWPWINDOWSUIXAMLEXPORT
 @property BOOL allowFocusWhenDisabled;
 @property BOOL allowFocusOnInteraction;
 @property (readonly) WXFrameworkElement* target;
+@property (retain) WXDependencyObject* overlayInputPassThroughElement;
 + (WXDependencyProperty*)attachedFlyoutProperty;
 + (WXDependencyProperty*)placementProperty;
 + (WXDependencyProperty*)allowFocusOnInteractionProperty;
 + (WXDependencyProperty*)allowFocusWhenDisabledProperty;
 + (WXDependencyProperty*)elementSoundModeProperty;
 + (WXDependencyProperty*)lightDismissOverlayModeProperty;
++ (WXDependencyProperty*)overlayInputPassThroughElementProperty;
 - (EventRegistrationToken)addClosedEvent:(void(^)(RTObject*, RTObject*))del;
 - (void)removeClosedEvent:(EventRegistrationToken)tok;
 - (EventRegistrationToken)addOpenedEvent:(void(^)(RTObject*, RTObject*))del;
@@ -2011,6 +2276,9 @@ OBJCUWPWINDOWSUIXAMLEXPORT
 - (void)removeClosingEvent:(EventRegistrationToken)tok;
 - (void)showAt:(WXFrameworkElement*)placementTarget;
 - (void)hide;
+- (WXCControl*)createPresenter;
+- (void)tryInvokeKeyboardAccelerator:(WUXIProcessKeyboardAcceleratorEventArgs*)args;
+- (void)onProcessKeyboardAccelerators:(WUXIProcessKeyboardAcceleratorEventArgs*)args;
 @end
 
 #endif // __WUXCPFlyoutBase_DEFINED__
@@ -2082,6 +2350,8 @@ OBJCUWPWINDOWSUIXAMLEXPORT
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 + (WXDependencyProperty*)titleProperty;
+- (void)onConfirmed;
+- (BOOL)shouldShowConfirmationButtons;
 @end
 
 #endif // __WUXCPPickerFlyoutBase_DEFINED__

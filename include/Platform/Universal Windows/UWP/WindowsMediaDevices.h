@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -19,16 +19,16 @@
 
 #pragma once
 
-#ifndef OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
-#define OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT __declspec(dllimport)
+#ifndef OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREMEDIAPROPERTIESDEVICESCOREPLAYBACKPROTECTIONEXPORT
+#define OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREMEDIAPROPERTIESDEVICESCOREPLAYBACKPROTECTIONEXPORT __declspec(dllimport)
 #ifndef IN_WinObjC_Frameworks_UWP_BUILD
-#pragma comment(lib, "ObjCUWPWindowsMediaCaptureDevicesCorePlaybackProtection.lib")
+#pragma comment(lib, "ObjCUWPWindowsMediaCaptureDevicesCoreMediaPropertiesDevicesCorePlaybackProtection.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
 
-@class WMDDefaultAudioCaptureDeviceChangedEventArgs, WMDDefaultAudioRenderDeviceChangedEventArgs, WMDMediaDevice, WMDAudioDeviceController, WMDVideoDeviceController, WMDSceneModeControl, WMDTorchControl, WMDFlashControl, WMDExposureCompensationControl, WMDIsoSpeedControl, WMDWhiteBalanceControl, WMDExposureControl, WMDZoomSettings, WMDZoomControl, WMDFocusSettings, WMDFocusControl, WMDRegionOfInterest, WMDRegionsOfInterestControl, WMDExposurePriorityVideoControl, WMDHdrVideoControl, WMDAdvancedPhotoCaptureSettings, WMDAdvancedPhotoControl, WMDOpticalImageStabilizationControl, WMDMediaDeviceControl, WMDLowLagPhotoSequenceControl, WMDLowLagPhotoControl, WMDPhotoConfirmationControl, WMDMediaDeviceControlCapabilities, WMDDialRequestedEventArgs, WMDRedialRequestedEventArgs, WMDKeypadPressedEventArgs, WMDCallControl;
-@protocol WMDIDefaultAudioDeviceChangedEventArgs, WMDIMediaDeviceStatics, WMDISceneModeControl, WMDITorchControl, WMDIFlashControl, WMDIFlashControl2, WMDIExposureCompensationControl, WMDIIsoSpeedControl, WMDIIsoSpeedControl2, WMDIWhiteBalanceControl, WMDIExposureControl, WMDIZoomSettings, WMDIZoomControl, WMDIZoomControl2, WMDIFocusSettings, WMDIFocusControl, WMDIFocusControl2, WMDIRegionOfInterest, WMDIRegionOfInterest2, WMDIRegionsOfInterestControl, WMDIExposurePriorityVideoControl, WMDIHdrVideoControl, WMDIAdvancedPhotoCaptureSettings, WMDIAdvancedPhotoControl, WMDIOpticalImageStabilizationControl, WMDIMediaDeviceController, WMDIAudioDeviceController, WMDIVideoDeviceController, WMDIAdvancedVideoCaptureDeviceController2, WMDIAdvancedVideoCaptureDeviceController3, WMDIAdvancedVideoCaptureDeviceController4, WMDIMediaDeviceControl, WMDIMediaDeviceControlCapabilities, WMDIAdvancedVideoCaptureDeviceController, WMDILowLagPhotoSequenceControl, WMDILowLagPhotoControl, WMDIPhotoConfirmationControl, WMDIDialRequestedEventArgs, WMDIRedialRequestedEventArgs, WMDIKeypadPressedEventArgs, WMDICallControl, WMDICallControlStatics;
+@class WMDDefaultAudioCaptureDeviceChangedEventArgs, WMDDefaultAudioRenderDeviceChangedEventArgs, WMDModuleCommandResult, WMDAudioDeviceModulesManager, WMDAudioDeviceModuleNotificationEventArgs, WMDAudioDeviceModule, WMDMediaDevice, WMDSceneModeControl, WMDTorchControl, WMDFlashControl, WMDExposureCompensationControl, WMDIsoSpeedControl, WMDWhiteBalanceControl, WMDExposureControl, WMDZoomSettings, WMDZoomControl, WMDFocusSettings, WMDFocusControl, WMDRegionOfInterest, WMDRegionsOfInterestControl, WMDExposurePriorityVideoControl, WMDHdrVideoControl, WMDAdvancedPhotoCaptureSettings, WMDAdvancedPhotoControl, WMDOpticalImageStabilizationControl, WMDMediaDeviceControl, WMDLowLagPhotoSequenceControl, WMDLowLagPhotoControl, WMDPhotoConfirmationControl, WMDVideoDeviceControllerGetDevicePropertyResult, WMDMediaDeviceControlCapabilities, WMDVideoDeviceController, WMDAudioDeviceController, WMDDialRequestedEventArgs, WMDRedialRequestedEventArgs, WMDKeypadPressedEventArgs, WMDCallControl;
+@protocol WMDIDefaultAudioDeviceChangedEventArgs, WMDIMediaDeviceStatics, WMDIModuleCommandResult, WMDIAudioDeviceModule, WMDIAudioDeviceModulesManager, WMDIAudioDeviceModulesManagerFactory, WMDIAudioDeviceModuleNotificationEventArgs, WMDISceneModeControl, WMDITorchControl, WMDIFlashControl, WMDIFlashControl2, WMDIExposureCompensationControl, WMDIIsoSpeedControl, WMDIIsoSpeedControl2, WMDIWhiteBalanceControl, WMDIExposureControl, WMDIZoomSettings, WMDIZoomControl, WMDIZoomControl2, WMDIFocusSettings, WMDIFocusControl, WMDIFocusControl2, WMDIRegionOfInterest, WMDIRegionOfInterest2, WMDIRegionsOfInterestControl, WMDIExposurePriorityVideoControl, WMDIHdrVideoControl, WMDIAdvancedPhotoCaptureSettings, WMDIAdvancedPhotoControl, WMDIOpticalImageStabilizationControl, WMDIMediaDeviceController, WMDIAudioDeviceController, WMDIVideoDeviceController, WMDIAdvancedVideoCaptureDeviceController2, WMDIAdvancedVideoCaptureDeviceController3, WMDIAdvancedVideoCaptureDeviceController4, WMDIVideoDeviceControllerGetDevicePropertyResult, WMDIAdvancedVideoCaptureDeviceController5, WMDIMediaDeviceControl, WMDIMediaDeviceControlCapabilities, WMDIAdvancedVideoCaptureDeviceController, WMDILowLagPhotoSequenceControl, WMDILowLagPhotoControl, WMDIPhotoConfirmationControl, WMDIDialRequestedEventArgs, WMDIRedialRequestedEventArgs, WMDIKeypadPressedEventArgs, WMDICallControl, WMDICallControlStatics;
 
 // Windows.Media.Devices.AudioDeviceRole
 enum _WMDAudioDeviceRole {
@@ -36,6 +36,13 @@ enum _WMDAudioDeviceRole {
     WMDAudioDeviceRoleCommunications = 1,
 };
 typedef unsigned WMDAudioDeviceRole;
+
+// Windows.Media.Devices.SendCommandStatus
+enum _WMDSendCommandStatus {
+    WMDSendCommandStatusSuccess = 0,
+    WMDSendCommandStatusDeviceNotAvailable = 1,
+};
+typedef unsigned WMDSendCommandStatus;
 
 // Windows.Media.Devices.IsoSpeedPreset
 enum _WMDIsoSpeedPreset {
@@ -207,6 +214,29 @@ enum _WMDMediaCaptureOptimization {
 };
 typedef unsigned WMDMediaCaptureOptimization;
 
+// Windows.Media.Devices.VideoDeviceControllerSetDevicePropertyStatus
+enum _WMDVideoDeviceControllerSetDevicePropertyStatus {
+    WMDVideoDeviceControllerSetDevicePropertyStatusSuccess = 0,
+    WMDVideoDeviceControllerSetDevicePropertyStatusUnknownFailure = 1,
+    WMDVideoDeviceControllerSetDevicePropertyStatusNotSupported = 2,
+    WMDVideoDeviceControllerSetDevicePropertyStatusInvalidValue = 3,
+    WMDVideoDeviceControllerSetDevicePropertyStatusDeviceNotAvailable = 4,
+    WMDVideoDeviceControllerSetDevicePropertyStatusNotInControl = 5,
+};
+typedef unsigned WMDVideoDeviceControllerSetDevicePropertyStatus;
+
+// Windows.Media.Devices.VideoDeviceControllerGetDevicePropertyStatus
+enum _WMDVideoDeviceControllerGetDevicePropertyStatus {
+    WMDVideoDeviceControllerGetDevicePropertyStatusSuccess = 0,
+    WMDVideoDeviceControllerGetDevicePropertyStatusUnknownFailure = 1,
+    WMDVideoDeviceControllerGetDevicePropertyStatusBufferTooSmall = 2,
+    WMDVideoDeviceControllerGetDevicePropertyStatusNotSupported = 3,
+    WMDVideoDeviceControllerGetDevicePropertyStatusDeviceNotAvailable = 4,
+    WMDVideoDeviceControllerGetDevicePropertyStatusMaxPropertyValueSizeTooSmall = 5,
+    WMDVideoDeviceControllerGetDevicePropertyStatusMaxPropertyValueSizeRequired = 6,
+};
+typedef unsigned WMDVideoDeviceControllerGetDevicePropertyStatus;
+
 // Windows.Media.Devices.TelephonyKey
 enum _WMDTelephonyKey {
     WMDTelephonyKeyD0 = 0,
@@ -229,6 +259,7 @@ enum _WMDTelephonyKey {
 typedef unsigned WMDTelephonyKey;
 
 #include "WindowsFoundation.h"
+#include "WindowsStorageStreams.h"
 #include "WindowsMediaCapture.h"
 #include "WindowsMediaMediaProperties.h"
 #include "WindowsMediaDevicesCore.h"
@@ -292,7 +323,7 @@ typedef void(^WMDKeypadPressedEventHandler)(WMDCallControl* sender, WMDKeypadPre
 @property (readonly) WMDAudioDeviceRole role;
 @end
 
-OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREMEDIAPROPERTIESDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMDIDefaultAudioDeviceChangedEventArgs : RTObject <WMDIDefaultAudioDeviceChangedEventArgs>
 @end
 
@@ -308,7 +339,7 @@ OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 - (RTObject<WFIAsyncAction>*)setMediaStreamPropertiesAsync:(WMCMediaStreamType)mediaStreamType mediaEncodingProperties:(RTObject<WMMIMediaEncodingProperties>*)mediaEncodingProperties;
 @end
 
-OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREMEDIAPROPERTIESDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMDIMediaDeviceController : RTObject <WMDIMediaDeviceController>
 @end
 
@@ -318,7 +349,7 @@ OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 #ifndef __WMDDefaultAudioCaptureDeviceChangedEventArgs_DEFINED__
 #define __WMDDefaultAudioCaptureDeviceChangedEventArgs_DEFINED__
 
-OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREMEDIAPROPERTIESDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMDDefaultAudioCaptureDeviceChangedEventArgs : RTObject <WMDIDefaultAudioDeviceChangedEventArgs>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -333,7 +364,7 @@ OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 #ifndef __WMDDefaultAudioRenderDeviceChangedEventArgs_DEFINED__
 #define __WMDDefaultAudioRenderDeviceChangedEventArgs_DEFINED__
 
-OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREMEDIAPROPERTIESDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMDDefaultAudioRenderDeviceChangedEventArgs : RTObject <WMDIDefaultAudioDeviceChangedEventArgs>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -344,11 +375,78 @@ OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 
 #endif // __WMDDefaultAudioRenderDeviceChangedEventArgs_DEFINED__
 
+// Windows.Media.Devices.ModuleCommandResult
+#ifndef __WMDModuleCommandResult_DEFINED__
+#define __WMDModuleCommandResult_DEFINED__
+
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREMEDIAPROPERTIESDEVICESCOREPLAYBACKPROTECTIONEXPORT
+@interface WMDModuleCommandResult : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (readonly) RTObject<WSSIBuffer>* result;
+@property (readonly) WMDSendCommandStatus status;
+@end
+
+#endif // __WMDModuleCommandResult_DEFINED__
+
+// Windows.Media.Devices.AudioDeviceModulesManager
+#ifndef __WMDAudioDeviceModulesManager_DEFINED__
+#define __WMDAudioDeviceModulesManager_DEFINED__
+
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREMEDIAPROPERTIESDEVICESCOREPLAYBACKPROTECTIONEXPORT
+@interface WMDAudioDeviceModulesManager : RTObject
++ (WMDAudioDeviceModulesManager*)make:(NSString *)deviceId ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+- (EventRegistrationToken)addModuleNotificationReceivedEvent:(void(^)(WMDAudioDeviceModulesManager*, WMDAudioDeviceModuleNotificationEventArgs*))del;
+- (void)removeModuleNotificationReceivedEvent:(EventRegistrationToken)tok;
+- (NSArray* /* WMDAudioDeviceModule* */)findAllById:(NSString *)moduleId;
+- (NSArray* /* WMDAudioDeviceModule* */)findAll;
+@end
+
+#endif // __WMDAudioDeviceModulesManager_DEFINED__
+
+// Windows.Media.Devices.AudioDeviceModuleNotificationEventArgs
+#ifndef __WMDAudioDeviceModuleNotificationEventArgs_DEFINED__
+#define __WMDAudioDeviceModuleNotificationEventArgs_DEFINED__
+
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREMEDIAPROPERTIESDEVICESCOREPLAYBACKPROTECTIONEXPORT
+@interface WMDAudioDeviceModuleNotificationEventArgs : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (readonly) WMDAudioDeviceModule* module;
+@property (readonly) RTObject<WSSIBuffer>* notificationData;
+@end
+
+#endif // __WMDAudioDeviceModuleNotificationEventArgs_DEFINED__
+
+// Windows.Media.Devices.AudioDeviceModule
+#ifndef __WMDAudioDeviceModule_DEFINED__
+#define __WMDAudioDeviceModule_DEFINED__
+
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREMEDIAPROPERTIESDEVICESCOREPLAYBACKPROTECTIONEXPORT
+@interface WMDAudioDeviceModule : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (readonly) NSString * classId;
+@property (readonly) NSString * displayName;
+@property (readonly) unsigned int instanceId;
+@property (readonly) unsigned int majorVersion;
+@property (readonly) unsigned int minorVersion;
+- (void)sendCommandAsync:(RTObject<WSSIBuffer>*)Command success:(void (^)(WMDModuleCommandResult*))success failure:(void (^)(NSError*))failure;
+@end
+
+#endif // __WMDAudioDeviceModule_DEFINED__
+
 // Windows.Media.Devices.MediaDevice
 #ifndef __WMDMediaDevice_DEFINED__
 #define __WMDMediaDevice_DEFINED__
 
-OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREMEDIAPROPERTIESDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMDMediaDevice : RTObject
 + (NSString *)getAudioCaptureSelector;
 + (NSString *)getAudioRenderSelector;
@@ -363,80 +461,11 @@ OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 
 #endif // __WMDMediaDevice_DEFINED__
 
-// Windows.Media.Devices.AudioDeviceController
-#ifndef __WMDAudioDeviceController_DEFINED__
-#define __WMDAudioDeviceController_DEFINED__
-
-OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
-@interface WMDAudioDeviceController : RTObject <WMDIMediaDeviceController>
-#if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
-#endif
-@property float volumePercent;
-@property BOOL muted;
-- (NSArray* /* RTObject<WMMIMediaEncodingProperties>* */)getAvailableMediaStreamProperties:(WMCMediaStreamType)mediaStreamType;
-- (RTObject<WMMIMediaEncodingProperties>*)getMediaStreamProperties:(WMCMediaStreamType)mediaStreamType;
-- (RTObject<WFIAsyncAction>*)setMediaStreamPropertiesAsync:(WMCMediaStreamType)mediaStreamType mediaEncodingProperties:(RTObject<WMMIMediaEncodingProperties>*)mediaEncodingProperties;
-@end
-
-#endif // __WMDAudioDeviceController_DEFINED__
-
-// Windows.Media.Devices.VideoDeviceController
-#ifndef __WMDVideoDeviceController_DEFINED__
-#define __WMDVideoDeviceController_DEFINED__
-
-OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
-@interface WMDVideoDeviceController : RTObject <WMDIMediaDeviceController>
-#if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
-#endif
-@property WMDCaptureUse primaryUse;
-@property (readonly) WMDIsoSpeedControl* isoSpeedControl;
-@property (readonly) WMDFlashControl* flashControl;
-@property (readonly) WMDFocusControl* focusControl;
-@property (readonly) WMDWhiteBalanceControl* whiteBalanceControl;
-@property (readonly) WMDTorchControl* torchControl;
-@property (readonly) WMDSceneModeControl* sceneModeControl;
-@property (readonly) WMDRegionsOfInterestControl* regionsOfInterestControl;
-@property (readonly) WMDLowLagPhotoSequenceControl* lowLagPhotoSequence;
-@property (readonly) WMDLowLagPhotoControl* lowLagPhoto;
-@property (readonly) WMDExposureCompensationControl* exposureCompensationControl;
-@property (readonly) WMDExposureControl* exposureControl;
-@property (readonly) WMDZoomControl* zoomControl;
-@property (readonly) WMDCVariablePhotoSequenceController* variablePhotoSequenceController;
-@property (readonly) WMDPhotoConfirmationControl* photoConfirmationControl;
-@property WMDMediaCaptureOptimization desiredOptimization;
-@property (readonly) WMDHdrVideoControl* hdrVideoControl;
-@property (readonly) WMDAdvancedPhotoControl* advancedPhotoControl;
-@property (readonly) WMDExposurePriorityVideoControl* exposurePriorityVideoControl;
-@property (readonly) WMDOpticalImageStabilizationControl* opticalImageStabilizationControl;
-@property (readonly) WMDMediaDeviceControl* pan;
-@property (readonly) WMDMediaDeviceControl* hue;
-@property (readonly) WMDMediaDeviceControl* focus;
-@property (readonly) WMDMediaDeviceControl* contrast;
-@property (readonly) WMDMediaDeviceControl* brightness;
-@property (readonly) WMDMediaDeviceControl* backlightCompensation;
-@property (readonly) WMDMediaDeviceControl* zoom;
-@property (readonly) WMDMediaDeviceControl* whiteBalance;
-@property (readonly) WMDMediaDeviceControl* exposure;
-@property (readonly) WMDMediaDeviceControl* tilt;
-@property (readonly) WMDMediaDeviceControl* roll;
-- (BOOL)trySetPowerlineFrequency:(WMCPowerlineFrequency)value;
-- (BOOL)tryGetPowerlineFrequency:(WMCPowerlineFrequency*)value;
-- (NSArray* /* RTObject<WMMIMediaEncodingProperties>* */)getAvailableMediaStreamProperties:(WMCMediaStreamType)mediaStreamType;
-- (RTObject<WMMIMediaEncodingProperties>*)getMediaStreamProperties:(WMCMediaStreamType)mediaStreamType;
-- (RTObject<WFIAsyncAction>*)setMediaStreamPropertiesAsync:(WMCMediaStreamType)mediaStreamType mediaEncodingProperties:(RTObject<WMMIMediaEncodingProperties>*)mediaEncodingProperties;
-- (void)setDeviceProperty:(NSString *)propertyId propertyValue:(RTObject*)propertyValue;
-- (RTObject*)getDeviceProperty:(NSString *)propertyId;
-@end
-
-#endif // __WMDVideoDeviceController_DEFINED__
-
 // Windows.Media.Devices.SceneModeControl
 #ifndef __WMDSceneModeControl_DEFINED__
 #define __WMDSceneModeControl_DEFINED__
 
-OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREMEDIAPROPERTIESDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMDSceneModeControl : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -452,7 +481,7 @@ OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 #ifndef __WMDTorchControl_DEFINED__
 #define __WMDTorchControl_DEFINED__
 
-OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREMEDIAPROPERTIESDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMDTorchControl : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -469,7 +498,7 @@ OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 #ifndef __WMDFlashControl_DEFINED__
 #define __WMDFlashControl_DEFINED__
 
-OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREMEDIAPROPERTIESDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMDFlashControl : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -491,7 +520,7 @@ OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 #ifndef __WMDExposureCompensationControl_DEFINED__
 #define __WMDExposureCompensationControl_DEFINED__
 
-OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREMEDIAPROPERTIESDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMDExposureCompensationControl : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -510,7 +539,7 @@ OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 #ifndef __WMDIsoSpeedControl_DEFINED__
 #define __WMDIsoSpeedControl_DEFINED__
 
-OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREMEDIAPROPERTIESDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMDIsoSpeedControl : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -534,7 +563,7 @@ OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 #ifndef __WMDWhiteBalanceControl_DEFINED__
 #define __WMDWhiteBalanceControl_DEFINED__
 
-OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREMEDIAPROPERTIESDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMDWhiteBalanceControl : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -555,7 +584,7 @@ OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 #ifndef __WMDExposureControl_DEFINED__
 #define __WMDExposureControl_DEFINED__
 
-OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREMEDIAPROPERTIESDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMDExposureControl : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -576,7 +605,7 @@ OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 #ifndef __WMDZoomSettings_DEFINED__
 #define __WMDZoomSettings_DEFINED__
 
-OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREMEDIAPROPERTIESDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMDZoomSettings : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -592,7 +621,7 @@ OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 #ifndef __WMDZoomControl_DEFINED__
 #define __WMDZoomControl_DEFINED__
 
-OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREMEDIAPROPERTIESDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMDZoomControl : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -613,7 +642,7 @@ OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 #ifndef __WMDFocusSettings_DEFINED__
 #define __WMDFocusSettings_DEFINED__
 
-OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREMEDIAPROPERTIESDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMDFocusSettings : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -633,7 +662,7 @@ OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 #ifndef __WMDFocusControl_DEFINED__
 #define __WMDFocusControl_DEFINED__
 
-OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREMEDIAPROPERTIESDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMDFocusControl : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -667,7 +696,7 @@ OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 #ifndef __WMDRegionOfInterest_DEFINED__
 #define __WMDRegionOfInterest_DEFINED__
 
-OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREMEDIAPROPERTIESDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMDRegionOfInterest : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -688,7 +717,7 @@ OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 #ifndef __WMDRegionsOfInterestControl_DEFINED__
 #define __WMDRegionsOfInterestControl_DEFINED__
 
-OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREMEDIAPROPERTIESDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMDRegionsOfInterestControl : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -708,7 +737,7 @@ OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 #ifndef __WMDExposurePriorityVideoControl_DEFINED__
 #define __WMDExposurePriorityVideoControl_DEFINED__
 
-OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREMEDIAPROPERTIESDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMDExposurePriorityVideoControl : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -723,7 +752,7 @@ OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 #ifndef __WMDHdrVideoControl_DEFINED__
 #define __WMDHdrVideoControl_DEFINED__
 
-OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREMEDIAPROPERTIESDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMDHdrVideoControl : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -739,7 +768,7 @@ OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 #ifndef __WMDAdvancedPhotoCaptureSettings_DEFINED__
 #define __WMDAdvancedPhotoCaptureSettings_DEFINED__
 
-OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREMEDIAPROPERTIESDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMDAdvancedPhotoCaptureSettings : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -754,7 +783,7 @@ OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 #ifndef __WMDAdvancedPhotoControl_DEFINED__
 #define __WMDAdvancedPhotoControl_DEFINED__
 
-OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREMEDIAPROPERTIESDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMDAdvancedPhotoControl : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -771,7 +800,7 @@ OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 #ifndef __WMDOpticalImageStabilizationControl_DEFINED__
 #define __WMDOpticalImageStabilizationControl_DEFINED__
 
-OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREMEDIAPROPERTIESDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMDOpticalImageStabilizationControl : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -787,7 +816,7 @@ OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 #ifndef __WMDMediaDeviceControl_DEFINED__
 #define __WMDMediaDeviceControl_DEFINED__
 
-OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREMEDIAPROPERTIESDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMDMediaDeviceControl : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -805,7 +834,7 @@ OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 #ifndef __WMDLowLagPhotoSequenceControl_DEFINED__
 #define __WMDLowLagPhotoSequenceControl_DEFINED__
 
-OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREMEDIAPROPERTIESDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMDLowLagPhotoSequenceControl : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -829,7 +858,7 @@ OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 #ifndef __WMDLowLagPhotoControl_DEFINED__
 #define __WMDLowLagPhotoControl_DEFINED__
 
-OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREMEDIAPROPERTIESDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMDLowLagPhotoControl : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -848,7 +877,7 @@ OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 #ifndef __WMDPhotoConfirmationControl_DEFINED__
 #define __WMDPhotoConfirmationControl_DEFINED__
 
-OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREMEDIAPROPERTIESDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMDPhotoConfirmationControl : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -860,11 +889,26 @@ OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 
 #endif // __WMDPhotoConfirmationControl_DEFINED__
 
+// Windows.Media.Devices.VideoDeviceControllerGetDevicePropertyResult
+#ifndef __WMDVideoDeviceControllerGetDevicePropertyResult_DEFINED__
+#define __WMDVideoDeviceControllerGetDevicePropertyResult_DEFINED__
+
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREMEDIAPROPERTIESDEVICESCOREPLAYBACKPROTECTIONEXPORT
+@interface WMDVideoDeviceControllerGetDevicePropertyResult : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (readonly) WMDVideoDeviceControllerGetDevicePropertyStatus status;
+@property (readonly) RTObject* value;
+@end
+
+#endif // __WMDVideoDeviceControllerGetDevicePropertyResult_DEFINED__
+
 // Windows.Media.Devices.MediaDeviceControlCapabilities
 #ifndef __WMDMediaDeviceControlCapabilities_DEFINED__
 #define __WMDMediaDeviceControlCapabilities_DEFINED__
 
-OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREMEDIAPROPERTIESDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMDMediaDeviceControlCapabilities : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -879,11 +923,85 @@ OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 
 #endif // __WMDMediaDeviceControlCapabilities_DEFINED__
 
+// Windows.Media.Devices.VideoDeviceController
+#ifndef __WMDVideoDeviceController_DEFINED__
+#define __WMDVideoDeviceController_DEFINED__
+
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREMEDIAPROPERTIESDEVICESCOREPLAYBACKPROTECTIONEXPORT
+@interface WMDVideoDeviceController : RTObject <WMDIMediaDeviceController>
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property WMDCaptureUse primaryUse;
+@property (readonly) WMDIsoSpeedControl* isoSpeedControl;
+@property (readonly) WMDFocusControl* focusControl;
+@property (readonly) WMDWhiteBalanceControl* whiteBalanceControl;
+@property (readonly) WMDTorchControl* torchControl;
+@property (readonly) WMDSceneModeControl* sceneModeControl;
+@property (readonly) WMDFlashControl* flashControl;
+@property (readonly) WMDRegionsOfInterestControl* regionsOfInterestControl;
+@property (readonly) WMDLowLagPhotoSequenceControl* lowLagPhotoSequence;
+@property (readonly) WMDLowLagPhotoControl* lowLagPhoto;
+@property (readonly) WMDExposureCompensationControl* exposureCompensationControl;
+@property (readonly) WMDExposureControl* exposureControl;
+@property (readonly) WMDZoomControl* zoomControl;
+@property (readonly) WMDCVariablePhotoSequenceController* variablePhotoSequenceController;
+@property (readonly) WMDPhotoConfirmationControl* photoConfirmationControl;
+@property WMDMediaCaptureOptimization desiredOptimization;
+@property (readonly) WMDHdrVideoControl* hdrVideoControl;
+@property (readonly) WMDAdvancedPhotoControl* advancedPhotoControl;
+@property (readonly) WMDExposurePriorityVideoControl* exposurePriorityVideoControl;
+@property (readonly) WMDOpticalImageStabilizationControl* opticalImageStabilizationControl;
+@property (readonly) NSString * id;
+@property (readonly) WMDMediaDeviceControl* pan;
+@property (readonly) WMDMediaDeviceControl* hue;
+@property (readonly) WMDMediaDeviceControl* focus;
+@property (readonly) WMDMediaDeviceControl* contrast;
+@property (readonly) WMDMediaDeviceControl* brightness;
+@property (readonly) WMDMediaDeviceControl* backlightCompensation;
+@property (readonly) WMDMediaDeviceControl* zoom;
+@property (readonly) WMDMediaDeviceControl* whiteBalance;
+@property (readonly) WMDMediaDeviceControl* exposure;
+@property (readonly) WMDMediaDeviceControl* tilt;
+@property (readonly) WMDMediaDeviceControl* roll;
+- (BOOL)trySetPowerlineFrequency:(WMCPowerlineFrequency)value;
+- (BOOL)tryGetPowerlineFrequency:(WMCPowerlineFrequency*)value;
+- (NSArray* /* RTObject<WMMIMediaEncodingProperties>* */)getAvailableMediaStreamProperties:(WMCMediaStreamType)mediaStreamType;
+- (RTObject<WMMIMediaEncodingProperties>*)getMediaStreamProperties:(WMCMediaStreamType)mediaStreamType;
+- (RTObject<WFIAsyncAction>*)setMediaStreamPropertiesAsync:(WMCMediaStreamType)mediaStreamType mediaEncodingProperties:(RTObject<WMMIMediaEncodingProperties>*)mediaEncodingProperties;
+- (void)setDeviceProperty:(NSString *)propertyId propertyValue:(RTObject*)propertyValue;
+- (RTObject*)getDeviceProperty:(NSString *)propertyId;
+- (WMDVideoDeviceControllerGetDevicePropertyResult*)getDevicePropertyById:(NSString *)propertyId maxPropertyValueSize:(id /* unsigned int */)maxPropertyValueSize;
+- (WMDVideoDeviceControllerSetDevicePropertyStatus)setDevicePropertyById:(NSString *)propertyId propertyValue:(RTObject*)propertyValue;
+- (WMDVideoDeviceControllerGetDevicePropertyResult*)getDevicePropertyByExtendedId:(NSArray* /* uint8_t */)extendedPropertyId maxPropertyValueSize:(id /* unsigned int */)maxPropertyValueSize;
+- (WMDVideoDeviceControllerSetDevicePropertyStatus)setDevicePropertyByExtendedId:(NSArray* /* uint8_t */)extendedPropertyId propertyValue:(NSArray* /* uint8_t */)propertyValue;
+@end
+
+#endif // __WMDVideoDeviceController_DEFINED__
+
+// Windows.Media.Devices.AudioDeviceController
+#ifndef __WMDAudioDeviceController_DEFINED__
+#define __WMDAudioDeviceController_DEFINED__
+
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREMEDIAPROPERTIESDEVICESCOREPLAYBACKPROTECTIONEXPORT
+@interface WMDAudioDeviceController : RTObject <WMDIMediaDeviceController>
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property float volumePercent;
+@property BOOL muted;
+- (NSArray* /* RTObject<WMMIMediaEncodingProperties>* */)getAvailableMediaStreamProperties:(WMCMediaStreamType)mediaStreamType;
+- (RTObject<WMMIMediaEncodingProperties>*)getMediaStreamProperties:(WMCMediaStreamType)mediaStreamType;
+- (RTObject<WFIAsyncAction>*)setMediaStreamPropertiesAsync:(WMCMediaStreamType)mediaStreamType mediaEncodingProperties:(RTObject<WMMIMediaEncodingProperties>*)mediaEncodingProperties;
+@end
+
+#endif // __WMDAudioDeviceController_DEFINED__
+
 // Windows.Media.Devices.DialRequestedEventArgs
 #ifndef __WMDDialRequestedEventArgs_DEFINED__
 #define __WMDDialRequestedEventArgs_DEFINED__
 
-OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREMEDIAPROPERTIESDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMDDialRequestedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -898,7 +1016,7 @@ OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 #ifndef __WMDRedialRequestedEventArgs_DEFINED__
 #define __WMDRedialRequestedEventArgs_DEFINED__
 
-OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREMEDIAPROPERTIESDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMDRedialRequestedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -912,7 +1030,7 @@ OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 #ifndef __WMDKeypadPressedEventArgs_DEFINED__
 #define __WMDKeypadPressedEventArgs_DEFINED__
 
-OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREMEDIAPROPERTIESDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMDKeypadPressedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -926,7 +1044,7 @@ OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 #ifndef __WMDCallControl_DEFINED__
 #define __WMDCallControl_DEFINED__
 
-OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREMEDIAPROPERTIESDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMDCallControl : RTObject
 + (WMDCallControl*)getDefault;
 + (WMDCallControl*)fromId:(NSString *)deviceId;

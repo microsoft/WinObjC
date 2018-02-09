@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -27,9 +27,9 @@
 #endif
 #include <UWP/interopBase.h>
 
-@class WFPropertyValue, WFDeferral, WFWwwFormUrlDecoder, WFUri, WFWwwFormUrlDecoderEntry, WFMemoryBuffer;
+@class WFPropertyValue, WFDeferral, WFMemoryBuffer, WFWwwFormUrlDecoder, WFUri, WFWwwFormUrlDecoderEntry;
 @class WFPoint, WFSize, WFRect, WFDateTime, WFTimeSpan;
-@protocol WFIClosable, WFIPropertyValue, WFIPropertyValueStatics, WFIStringable, WFIDeferral, WFIDeferralFactory, WFIAsyncInfo, WFIAsyncAction, WFIAsyncOperationWithProgress, WFIAsyncOperation, WFIAsyncActionWithProgress, WFIReference, WFIReferenceArray, WFIUriRuntimeClass, WFIUriRuntimeClassWithAbsoluteCanonicalUri, WFIUriEscapeStatics, WFIUriRuntimeClassFactory, WFIWwwFormUrlDecoderEntry, WFIWwwFormUrlDecoderRuntimeClass, WFIWwwFormUrlDecoderRuntimeClassFactory, WFIGetActivationFactory, WFIMemoryBufferReference, WFIMemoryBuffer, WFIMemoryBufferFactory;
+@protocol WFIClosable, WFIPropertyValue, WFIPropertyValueStatics, WFIStringable, WFIDeferral, WFIDeferralFactory, WFIAsyncInfo, WFIAsyncAction, WFIAsyncOperationWithProgress, WFIAsyncOperation, WFIAsyncActionWithProgress, WFIReference, WFIReferenceArray, WFIMemoryBufferReference, WFIMemoryBuffer, WFIMemoryBufferFactory, WFIUriRuntimeClass, WFIUriRuntimeClassWithAbsoluteCanonicalUri, WFIUriEscapeStatics, WFIUriRuntimeClassFactory, WFIWwwFormUrlDecoderEntry, WFIWwwFormUrlDecoderRuntimeClass, WFIWwwFormUrlDecoderRuntimeClassFactory, WFIGetActivationFactory;
 
 // Windows.Foundation.PropertyType
 enum _WFPropertyType {
@@ -266,35 +266,6 @@ OBJCUWPWINDOWSFOUNDATIONEXPORT
 
 #endif // __WFIAsyncAction_DEFINED__
 
-// Windows.Foundation.IWwwFormUrlDecoderEntry
-#ifndef __WFIWwwFormUrlDecoderEntry_DEFINED__
-#define __WFIWwwFormUrlDecoderEntry_DEFINED__
-
-@protocol WFIWwwFormUrlDecoderEntry
-@property (readonly) NSString * name;
-@property (readonly) NSString * value;
-@end
-
-OBJCUWPWINDOWSFOUNDATIONEXPORT
-@interface WFIWwwFormUrlDecoderEntry : RTObject <WFIWwwFormUrlDecoderEntry>
-@end
-
-#endif // __WFIWwwFormUrlDecoderEntry_DEFINED__
-
-// Windows.Foundation.IGetActivationFactory
-#ifndef __WFIGetActivationFactory_DEFINED__
-#define __WFIGetActivationFactory_DEFINED__
-
-@protocol WFIGetActivationFactory
-- (RTObject*)getActivationFactory:(NSString *)activatableClassId;
-@end
-
-OBJCUWPWINDOWSFOUNDATIONEXPORT
-@interface WFIGetActivationFactory : RTObject <WFIGetActivationFactory>
-@end
-
-#endif // __WFIGetActivationFactory_DEFINED__
-
 // Windows.Foundation.IMemoryBufferReference
 #ifndef __WFIMemoryBufferReference_DEFINED__
 #define __WFIMemoryBufferReference_DEFINED__
@@ -326,6 +297,35 @@ OBJCUWPWINDOWSFOUNDATIONEXPORT
 @end
 
 #endif // __WFIMemoryBuffer_DEFINED__
+
+// Windows.Foundation.IWwwFormUrlDecoderEntry
+#ifndef __WFIWwwFormUrlDecoderEntry_DEFINED__
+#define __WFIWwwFormUrlDecoderEntry_DEFINED__
+
+@protocol WFIWwwFormUrlDecoderEntry
+@property (readonly) NSString * name;
+@property (readonly) NSString * value;
+@end
+
+OBJCUWPWINDOWSFOUNDATIONEXPORT
+@interface WFIWwwFormUrlDecoderEntry : RTObject <WFIWwwFormUrlDecoderEntry>
+@end
+
+#endif // __WFIWwwFormUrlDecoderEntry_DEFINED__
+
+// Windows.Foundation.IGetActivationFactory
+#ifndef __WFIGetActivationFactory_DEFINED__
+#define __WFIGetActivationFactory_DEFINED__
+
+@protocol WFIGetActivationFactory
+- (RTObject*)getActivationFactory:(NSString *)activatableClassId;
+@end
+
+OBJCUWPWINDOWSFOUNDATIONEXPORT
+@interface WFIGetActivationFactory : RTObject <WFIGetActivationFactory>
+@end
+
+#endif // __WFIGetActivationFactory_DEFINED__
 
 // Windows.Foundation.PropertyValue
 #ifndef __WFPropertyValue_DEFINED__
@@ -391,6 +391,22 @@ OBJCUWPWINDOWSFOUNDATIONEXPORT
 @end
 
 #endif // __WFDeferral_DEFINED__
+
+// Windows.Foundation.MemoryBuffer
+#ifndef __WFMemoryBuffer_DEFINED__
+#define __WFMemoryBuffer_DEFINED__
+
+OBJCUWPWINDOWSFOUNDATIONEXPORT
+@interface WFMemoryBuffer : RTObject <WFIMemoryBuffer, WFIClosable>
++ (WFMemoryBuffer*)make:(unsigned int)capacity ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+- (RTObject<WFIMemoryBufferReference>*)createReference;
+- (void)close;
+@end
+
+#endif // __WFMemoryBuffer_DEFINED__
 
 // Windows.Foundation.WwwFormUrlDecoder
 #ifndef __WFWwwFormUrlDecoder_DEFINED__
@@ -465,20 +481,4 @@ OBJCUWPWINDOWSFOUNDATIONEXPORT
 @end
 
 #endif // __WFWwwFormUrlDecoderEntry_DEFINED__
-
-// Windows.Foundation.MemoryBuffer
-#ifndef __WFMemoryBuffer_DEFINED__
-#define __WFMemoryBuffer_DEFINED__
-
-OBJCUWPWINDOWSFOUNDATIONEXPORT
-@interface WFMemoryBuffer : RTObject <WFIMemoryBuffer, WFIClosable>
-+ (WFMemoryBuffer*)make:(unsigned int)capacity ACTIVATOR;
-#if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
-#endif
-- (RTObject<WFIMemoryBufferReference>*)createReference;
-- (void)close;
-@end
-
-#endif // __WFMemoryBuffer_DEFINED__
 

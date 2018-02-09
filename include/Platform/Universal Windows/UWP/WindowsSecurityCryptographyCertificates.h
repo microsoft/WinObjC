@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -27,8 +27,8 @@
 #endif
 #include <UWP/interopBase.h>
 
-@class WSCCCertificate, WSCCCertificateRequestProperties, WSCCUserCertificateEnrollmentManager, WSCCPfxImportParameters, WSCCCertificateEnrollmentManager, WSCCKeyAttestationHelper, WSCCCertificateQuery, WSCCCertificateStore, WSCCUserCertificateStore, WSCCCertificateStores, WSCCStandardCertificateStoreNames, WSCCKeyAlgorithmNames, WSCCKeyStorageProviderNames, WSCCChainBuildingParameters, WSCCChainValidationParameters, WSCCCertificateChain, WSCCCertificateKeyUsages, WSCCSubjectAlternativeNameInfo, WSCCCmsTimestampInfo, WSCCCmsSignerInfo, WSCCCmsAttachedSignature, WSCCCmsDetachedSignature;
-@protocol WSCCICertificateRequestProperties, WSCCICertificateRequestProperties2, WSCCICertificateRequestProperties3, WSCCICertificateEnrollmentManagerStatics, WSCCICertificateEnrollmentManagerStatics2, WSCCICertificateEnrollmentManagerStatics3, WSCCIKeyAttestationHelperStatics, WSCCIKeyAttestationHelperStatics2, WSCCICertificateStoresStatics, WSCCICertificateStoresStatics2, WSCCIUserCertificateEnrollmentManager, WSCCIUserCertificateEnrollmentManager2, WSCCICertificateStore, WSCCICertificateStore2, WSCCIUserCertificateStore, WSCCIStandardCertificateStoreNamesStatics, WSCCIKeyAlgorithmNamesStatics, WSCCIKeyAlgorithmNamesStatics2, WSCCIKeyStorageProviderNamesStatics, WSCCIKeyStorageProviderNamesStatics2, WSCCIChainBuildingParameters, WSCCIChainValidationParameters, WSCCICertificateQuery, WSCCICertificateQuery2, WSCCICertificateChain, WSCCICertificate, WSCCICertificate2, WSCCICertificate3, WSCCICertificateFactory, WSCCICmsTimestampInfo, WSCCICmsSignerInfo, WSCCISubjectAlternativeNameInfo, WSCCIPfxImportParameters, WSCCICertificateKeyUsages, WSCCICmsAttachedSignature, WSCCICmsAttachedSignatureFactory, WSCCICmsAttachedSignatureStatics, WSCCICmsDetachedSignature, WSCCICmsDetachedSignatureFactory, WSCCICmsDetachedSignatureStatics;
+@class WSCCCertificateExtension, WSCCCertificate, WSCCSubjectAlternativeNameInfo, WSCCCertificateRequestProperties, WSCCUserCertificateEnrollmentManager, WSCCPfxImportParameters, WSCCCertificateEnrollmentManager, WSCCKeyAttestationHelper, WSCCCertificateQuery, WSCCCertificateStore, WSCCUserCertificateStore, WSCCCertificateStores, WSCCStandardCertificateStoreNames, WSCCKeyAlgorithmNames, WSCCKeyStorageProviderNames, WSCCChainBuildingParameters, WSCCChainValidationParameters, WSCCCertificateChain, WSCCCertificateKeyUsages, WSCCCmsTimestampInfo, WSCCCmsSignerInfo, WSCCCmsAttachedSignature, WSCCCmsDetachedSignature;
+@protocol WSCCICertificateExtension, WSCCICertificateRequestProperties, WSCCICertificateRequestProperties2, WSCCICertificateRequestProperties3, WSCCICertificateRequestProperties4, WSCCICertificateEnrollmentManagerStatics, WSCCICertificateEnrollmentManagerStatics2, WSCCICertificateEnrollmentManagerStatics3, WSCCIKeyAttestationHelperStatics, WSCCIKeyAttestationHelperStatics2, WSCCICertificateStoresStatics, WSCCICertificateStoresStatics2, WSCCIUserCertificateEnrollmentManager, WSCCIUserCertificateEnrollmentManager2, WSCCICertificateStore, WSCCICertificateStore2, WSCCIUserCertificateStore, WSCCIStandardCertificateStoreNamesStatics, WSCCIKeyAlgorithmNamesStatics, WSCCIKeyAlgorithmNamesStatics2, WSCCIKeyStorageProviderNamesStatics, WSCCIKeyStorageProviderNamesStatics2, WSCCIChainBuildingParameters, WSCCIChainValidationParameters, WSCCICertificateQuery, WSCCICertificateQuery2, WSCCICertificateChain, WSCCICertificate, WSCCICertificate2, WSCCICertificate3, WSCCICertificateFactory, WSCCICmsTimestampInfo, WSCCICmsSignerInfo, WSCCISubjectAlternativeNameInfo, WSCCISubjectAlternativeNameInfo2, WSCCIPfxImportParameters, WSCCICertificateKeyUsages, WSCCICmsAttachedSignature, WSCCICmsAttachedSignatureFactory, WSCCICmsAttachedSignatureStatics, WSCCICmsDetachedSignature, WSCCICmsDetachedSignatureFactory, WSCCICmsDetachedSignatureStatics;
 
 // Windows.Security.Cryptography.Certificates.EnrollKeyUsages
 enum _WSCCEnrollKeyUsages {
@@ -115,6 +115,24 @@ typedef unsigned WSCCSignatureValidationResult;
 
 #import <Foundation/Foundation.h>
 
+// Windows.Security.Cryptography.Certificates.CertificateExtension
+#ifndef __WSCCCertificateExtension_DEFINED__
+#define __WSCCCertificateExtension_DEFINED__
+
+OBJCUWPWINDOWSSECURITYCRYPTOGRAPHYCERTIFICATESEXPORT
+@interface WSCCCertificateExtension : RTObject
++ (instancetype)make __attribute__ ((ns_returns_retained));
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (retain) NSArray* /* uint8_t */ value;
+@property (retain) NSString * objectId;
+@property BOOL isCritical;
+- (void)encodeValue:(NSString *)value;
+@end
+
+#endif // __WSCCCertificateExtension_DEFINED__
+
 // Windows.Security.Cryptography.Certificates.Certificate
 #ifndef __WSCCCertificate_DEFINED__
 #define __WSCCCertificate_DEFINED__
@@ -152,6 +170,33 @@ OBJCUWPWINDOWSSECURITYCRYPTOGRAPHYCERTIFICATESEXPORT
 
 #endif // __WSCCCertificate_DEFINED__
 
+// Windows.Security.Cryptography.Certificates.SubjectAlternativeNameInfo
+#ifndef __WSCCSubjectAlternativeNameInfo_DEFINED__
+#define __WSCCSubjectAlternativeNameInfo_DEFINED__
+
+OBJCUWPWINDOWSSECURITYCRYPTOGRAPHYCERTIFICATESEXPORT
+@interface WSCCSubjectAlternativeNameInfo : RTObject
++ (instancetype)make __attribute__ ((ns_returns_retained));
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (readonly) NSArray* /* NSString * */ distinguishedName;
+@property (readonly) NSArray* /* NSString * */ dnsName;
+@property (readonly) NSArray* /* NSString * */ emailName;
+@property (readonly) NSArray* /* NSString * */ iPAddress;
+@property (readonly) NSArray* /* NSString * */ principalName;
+@property (readonly) NSArray* /* NSString * */ url;
+@property (readonly) NSMutableArray* /* NSString * */ distinguishedNames;
+@property (readonly) NSMutableArray* /* NSString * */ dnsNames;
+@property (readonly) NSMutableArray* /* NSString * */ emailNames;
+@property (readonly) WSCCCertificateExtension* extension;
+@property (readonly) NSMutableArray* /* NSString * */ iPAddresses;
+@property (readonly) NSMutableArray* /* NSString * */ principalNames;
+@property (readonly) NSMutableArray* /* NSString * */ urls;
+@end
+
+#endif // __WSCCSubjectAlternativeNameInfo_DEFINED__
+
 // Windows.Security.Cryptography.Certificates.CertificateRequestProperties
 #ifndef __WSCCCertificateRequestProperties_DEFINED__
 #define __WSCCCertificateRequestProperties_DEFINED__
@@ -167,18 +212,21 @@ OBJCUWPWINDOWSSECURITYCRYPTOGRAPHYCERTIFICATESEXPORT
 @property (retain) NSString * keyStorageProviderName;
 @property unsigned int keySize;
 @property WSCCExportOption exportable;
-@property (retain) NSString * keyAlgorithmName;
-@property (retain) NSString * friendlyName;
 @property WSCCKeyProtectionLevel keyProtectionLevel;
+@property (retain) NSString * keyAlgorithmName;
 @property (retain) NSString * hashAlgorithmName;
-@property (retain) NSString * smartcardReaderName;
-@property (retain) WSCCCertificate* signingCertificate;
+@property (retain) NSString * friendlyName;
 @property (retain) WSCCCertificate* attestationCredentialCertificate;
+@property (retain) WSCCCertificate* signingCertificate;
+@property (retain) NSString * smartcardReaderName;
 @property BOOL useExistingKey;
 @property (retain) NSArray* /* uint8_t */ curveParameters;
 @property (retain) NSString * curveName;
 @property (retain) NSString * containerNamePrefix;
 @property (retain) NSString * containerName;
+@property (readonly) NSMutableArray* /* WSCCCertificateExtension* */ extensions;
+@property (readonly) WSCCSubjectAlternativeNameInfo* subjectAlternativeName;
+@property (readonly) NSMutableArray* /* NSString * */ suppressedDefaults;
 @end
 
 #endif // __WSCCCertificateRequestProperties_DEFINED__
@@ -229,10 +277,10 @@ OBJCUWPWINDOWSSECURITYCRYPTOGRAPHYCERTIFICATESEXPORT
 OBJCUWPWINDOWSSECURITYCRYPTOGRAPHYCERTIFICATESEXPORT
 @interface WSCCCertificateEnrollmentManager : RTObject
 + (RTObject<WFIAsyncAction>*)importPfxDataToKspAsync:(NSString *)pfxData password:(NSString *)password exportable:(WSCCExportOption)exportable keyProtectionLevel:(WSCCKeyProtectionLevel)keyProtectionLevel installOption:(WSCCInstallOptions)installOption friendlyName:(NSString *)friendlyName keyStorageProvider:(NSString *)keyStorageProvider;
++ (RTObject<WFIAsyncAction>*)importPfxDataToKspWithParametersAsync:(NSString *)pfxData password:(NSString *)password pfxImportParameters:(WSCCPfxImportParameters*)pfxImportParameters;
 + (void)createRequestAsync:(WSCCCertificateRequestProperties*)request success:(void (^)(NSString *))success failure:(void (^)(NSError*))failure;
 + (RTObject<WFIAsyncAction>*)installCertificateAsync:(NSString *)certificate installOption:(WSCCInstallOptions)installOption;
 + (RTObject<WFIAsyncAction>*)importPfxDataAsync:(NSString *)pfxData password:(NSString *)password exportable:(WSCCExportOption)exportable keyProtectionLevel:(WSCCKeyProtectionLevel)keyProtectionLevel installOption:(WSCCInstallOptions)installOption friendlyName:(NSString *)friendlyName;
-+ (RTObject<WFIAsyncAction>*)importPfxDataToKspWithParametersAsync:(NSString *)pfxData password:(NSString *)password pfxImportParameters:(WSCCPfxImportParameters*)pfxImportParameters;
 + (WSCCUserCertificateEnrollmentManager*)userCertificateEnrollmentManager;
 @end
 
@@ -244,9 +292,9 @@ OBJCUWPWINDOWSSECURITYCRYPTOGRAPHYCERTIFICATESEXPORT
 
 OBJCUWPWINDOWSSECURITYCRYPTOGRAPHYCERTIFICATESEXPORT
 @interface WSCCKeyAttestationHelper : RTObject
-+ (void)decryptTpmAttestationCredentialWithContainerNameAsync:(NSString *)credential containerName:(NSString *)containerName success:(void (^)(NSString *))success failure:(void (^)(NSError*))failure;
 + (void)decryptTpmAttestationCredentialAsync:(NSString *)credential success:(void (^)(NSString *))success failure:(void (^)(NSError*))failure;
 + (NSString *)getTpmAttestationCredentialId:(NSString *)credential;
++ (void)decryptTpmAttestationCredentialWithContainerNameAsync:(NSString *)credential containerName:(NSString *)containerName success:(void (^)(NSString *))success failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WSCCKeyAttestationHelper_DEFINED__
@@ -442,26 +490,6 @@ OBJCUWPWINDOWSSECURITYCRYPTOGRAPHYCERTIFICATESEXPORT
 @end
 
 #endif // __WSCCCertificateKeyUsages_DEFINED__
-
-// Windows.Security.Cryptography.Certificates.SubjectAlternativeNameInfo
-#ifndef __WSCCSubjectAlternativeNameInfo_DEFINED__
-#define __WSCCSubjectAlternativeNameInfo_DEFINED__
-
-OBJCUWPWINDOWSSECURITYCRYPTOGRAPHYCERTIFICATESEXPORT
-@interface WSCCSubjectAlternativeNameInfo : RTObject
-+ (instancetype)make __attribute__ ((ns_returns_retained));
-#if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
-#endif
-@property (readonly) NSArray* /* NSString * */ distinguishedName;
-@property (readonly) NSArray* /* NSString * */ dnsName;
-@property (readonly) NSArray* /* NSString * */ emailName;
-@property (readonly) NSArray* /* NSString * */ iPAddress;
-@property (readonly) NSArray* /* NSString * */ principalName;
-@property (readonly) NSArray* /* NSString * */ url;
-@end
-
-#endif // __WSCCSubjectAlternativeNameInfo_DEFINED__
 
 // Windows.Security.Cryptography.Certificates.CmsTimestampInfo
 #ifndef __WSCCCmsTimestampInfo_DEFINED__

@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -27,8 +27,8 @@
 #endif
 #include <UWP/interopBase.h>
 
-@class WMSSpeechRecognitionSemanticInterpretation, WMSSpeechRecognitionResult, WMSSpeechRecognitionTopicConstraint, WMSSpeechRecognitionListConstraint, WMSSpeechRecognitionGrammarFileConstraint, WMSSpeechRecognizerTimeouts, WMSSpeechRecognizerUIOptions, WMSSpeechRecognitionCompilationResult, WMSSpeechRecognizer, WMSSpeechRecognitionQualityDegradingEventArgs, WMSSpeechRecognizerStateChangedEventArgs, WMSSpeechRecognitionVoiceCommandDefinitionConstraint, WMSSpeechContinuousRecognitionSession, WMSSpeechRecognitionHypothesisGeneratedEventArgs, WMSSpeechRecognitionHypothesis, WMSSpeechContinuousRecognitionCompletedEventArgs, WMSSpeechContinuousRecognitionResultGeneratedEventArgs, WMSVoiceCommandManager, WMSVoiceCommandSet;
-@protocol WMSISpeechRecognitionCompilationResult, WMSISpeechRecognizerTimeouts, WMSISpeechRecognizerUIOptions, WMSISpeechRecognitionResult, WMSISpeechRecognitionConstraint, WMSISpeechRecognitionResult2, WMSISpeechRecognitionSemanticInterpretation, WMSISpeechRecognitionTopicConstraint, WMSISpeechRecognitionTopicConstraintFactory, WMSISpeechRecognitionListConstraint, WMSISpeechRecognitionListConstraintFactory, WMSISpeechRecognitionGrammarFileConstraint, WMSISpeechRecognitionGrammarFileConstraintFactory, WMSISpeechRecognitionVoiceCommandDefinitionConstraint, WMSISpeechRecognitionQualityDegradingEventArgs, WMSISpeechRecognizerStateChangedEventArgs, WMSISpeechRecognizer, WMSISpeechRecognizerFactory, WMSISpeechRecognizerStatics, WMSISpeechRecognizer2, WMSISpeechRecognitionHypothesis, WMSISpeechRecognitionHypothesisGeneratedEventArgs, WMSISpeechContinuousRecognitionSession, WMSISpeechContinuousRecognitionCompletedEventArgs, WMSISpeechContinuousRecognitionResultGeneratedEventArgs, WMSIVoiceCommandManager, WMSIVoiceCommandSet;
+@class WMSSpeechRecognitionSemanticInterpretation, WMSSpeechRecognitionResult, WMSSpeechRecognitionTopicConstraint, WMSSpeechRecognitionListConstraint, WMSSpeechRecognitionGrammarFileConstraint, WMSSpeechRecognizerTimeouts, WMSSpeechRecognizerUIOptions, WMSSpeechRecognitionCompilationResult, WMSSpeechRecognizer, WMSSpeechRecognitionQualityDegradingEventArgs, WMSSpeechRecognizerStateChangedEventArgs, WMSSpeechRecognitionVoiceCommandDefinitionConstraint, WMSSpeechContinuousRecognitionSession, WMSSpeechRecognitionHypothesisGeneratedEventArgs, WMSSpeechRecognitionHypothesis, WMSSpeechContinuousRecognitionCompletedEventArgs, WMSSpeechContinuousRecognitionResultGeneratedEventArgs;
+@protocol WMSISpeechRecognitionCompilationResult, WMSISpeechRecognizerTimeouts, WMSISpeechRecognizerUIOptions, WMSISpeechRecognitionResult, WMSISpeechRecognitionConstraint, WMSISpeechRecognitionResult2, WMSISpeechRecognitionSemanticInterpretation, WMSISpeechRecognitionTopicConstraint, WMSISpeechRecognitionTopicConstraintFactory, WMSISpeechRecognitionListConstraint, WMSISpeechRecognitionListConstraintFactory, WMSISpeechRecognitionGrammarFileConstraint, WMSISpeechRecognitionGrammarFileConstraintFactory, WMSISpeechRecognitionVoiceCommandDefinitionConstraint, WMSISpeechRecognitionQualityDegradingEventArgs, WMSISpeechRecognizerStateChangedEventArgs, WMSISpeechRecognizer, WMSISpeechRecognizerFactory, WMSISpeechRecognizerStatics, WMSISpeechRecognizerStatics2, WMSISpeechRecognizer2, WMSISpeechRecognitionHypothesis, WMSISpeechRecognitionHypothesisGeneratedEventArgs, WMSISpeechContinuousRecognitionSession, WMSISpeechContinuousRecognitionCompletedEventArgs, WMSISpeechContinuousRecognitionResultGeneratedEventArgs;
 
 // Windows.Media.SpeechRecognition.SpeechRecognitionConstraintProbability
 enum _WMSSpeechRecognitionConstraintProbability {
@@ -299,8 +299,9 @@ OBJCUWPWINDOWSMEDIASPEECHRECOGNITIONEXPORT
 
 OBJCUWPWINDOWSMEDIASPEECHRECOGNITIONEXPORT
 @interface WMSSpeechRecognizer : RTObject <WFIClosable>
-+ (WMSSpeechRecognizer*)make:(WGLanguage*)language ACTIVATOR;
++ (void)trySetSystemSpeechLanguageAsync:(WGLanguage*)speechLanguage success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 + (instancetype)make __attribute__ ((ns_returns_retained));
++ (WMSSpeechRecognizer*)make:(WGLanguage*)language ACTIVATOR;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
@@ -452,32 +453,4 @@ OBJCUWPWINDOWSMEDIASPEECHRECOGNITIONEXPORT
 @end
 
 #endif // __WMSSpeechContinuousRecognitionResultGeneratedEventArgs_DEFINED__
-
-// Windows.Media.SpeechRecognition.VoiceCommandManager
-#ifndef __WMSVoiceCommandManager_DEFINED__
-#define __WMSVoiceCommandManager_DEFINED__
-
-OBJCUWPWINDOWSMEDIASPEECHRECOGNITIONEXPORT
-@interface WMSVoiceCommandManager : RTObject
-+ (RTObject<WFIAsyncAction>*)installCommandSetsFromStorageFileAsync:(WSStorageFile*)file;
-+ (NSDictionary* /* NSString *, WMSVoiceCommandSet* */)installedCommandSets;
-@end
-
-#endif // __WMSVoiceCommandManager_DEFINED__
-
-// Windows.Media.SpeechRecognition.VoiceCommandSet
-#ifndef __WMSVoiceCommandSet_DEFINED__
-#define __WMSVoiceCommandSet_DEFINED__
-
-OBJCUWPWINDOWSMEDIASPEECHRECOGNITIONEXPORT
-@interface WMSVoiceCommandSet : RTObject
-#if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
-#endif
-@property (readonly) NSString * language;
-@property (readonly) NSString * name;
-- (RTObject<WFIAsyncAction>*)setPhraseListAsync:(NSString *)phraseListName phraseList:(id<NSFastEnumeration> /* NSString * */)phraseList;
-@end
-
-#endif // __WMSVoiceCommandSet_DEFINED__
 

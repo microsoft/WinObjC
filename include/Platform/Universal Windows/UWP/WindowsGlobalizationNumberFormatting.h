@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -371,8 +371,8 @@ OBJCUWPWINDOWSGLOBALIZATIONNUMBERFORMATTINGEXPORT
 
 OBJCUWPWINDOWSGLOBALIZATIONNUMBERFORMATTINGEXPORT
 @interface WGNNumeralSystemTranslator : RTObject
-+ (instancetype)make __attribute__ ((ns_returns_retained));
 + (WGNNumeralSystemTranslator*)make:(id<NSFastEnumeration> /* NSString * */)languages ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif

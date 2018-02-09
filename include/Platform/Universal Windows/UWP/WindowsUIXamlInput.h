@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -27,8 +27,19 @@
 #endif
 #include <UWP/interopBase.h>
 
-@class WUXIPointer, WUXIAccessKeyDisplayRequestedEventArgs, WUXIAccessKeyDisplayDismissedEventArgs, WUXIAccessKeyInvokedEventArgs, WUXIAccessKeyManager, WUXIFocusManager, WUXIInertiaExpansionBehavior, WUXIInertiaRotationBehavior, WUXIInertiaTranslationBehavior, WUXIManipulationPivot, WUXIContextRequestedEventArgs, WUXIDoubleTappedRoutedEventArgs, WUXIHoldingRoutedEventArgs, WUXIInputScope, WUXIInputScopeName, WUXIKeyRoutedEventArgs, WUXIManipulationCompletedRoutedEventArgs, WUXIManipulationDeltaRoutedEventArgs, WUXIManipulationInertiaStartingRoutedEventArgs, WUXIManipulationStartedRoutedEventArgs, WUXIManipulationStartingRoutedEventArgs, WUXIPointerRoutedEventArgs, WUXIRightTappedRoutedEventArgs, WUXITappedRoutedEventArgs;
-@protocol WUXIICommand, WUXIIAccessKeyDisplayDismissedEventArgs, WUXIIAccessKeyDisplayRequestedEventArgs, WUXIIAccessKeyInvokedEventArgs, WUXIIAccessKeyManager, WUXIIAccessKeyManagerStatics, WUXIIFocusManager, WUXIIFocusManagerStatics, WUXIIFocusManagerStatics2, WUXIIFocusManagerStatics3, WUXIIInertiaExpansionBehavior, WUXIIInertiaRotationBehavior, WUXIIInertiaTranslationBehavior, WUXIIManipulationPivot, WUXIIManipulationPivotFactory, WUXIIPointer, WUXIIContextRequestedEventArgs, WUXIIDoubleTappedRoutedEventArgs, WUXIIHoldingRoutedEventArgs, WUXIIInputScope, WUXIIInputScopeName, WUXIIInputScopeNameFactory, WUXIIKeyRoutedEventArgs, WUXIIKeyRoutedEventArgs2, WUXIIKeyRoutedEventArgs3, WUXIIManipulationCompletedRoutedEventArgs, WUXIIManipulationDeltaRoutedEventArgs, WUXIIManipulationInertiaStartingRoutedEventArgs, WUXIIManipulationStartedRoutedEventArgs, WUXIIManipulationStartedRoutedEventArgsFactory, WUXIIManipulationStartingRoutedEventArgs, WUXIIPointerRoutedEventArgs, WUXIIRightTappedRoutedEventArgs, WUXIITappedRoutedEventArgs;
+@class WUXIPointer, WUXIAccessKeyDisplayRequestedEventArgs, WUXIAccessKeyDisplayDismissedEventArgs, WUXIAccessKeyInvokedEventArgs, WUXIProcessKeyboardAcceleratorEventArgs, WUXIAccessKeyManager, WUXIInertiaExpansionBehavior, WUXIInertiaRotationBehavior, WUXIInertiaTranslationBehavior, WUXIKeyboardAcceleratorInvokedEventArgs, WUXIManipulationPivot, WUXICharacterReceivedRoutedEventArgs, WUXIContextRequestedEventArgs, WUXIDoubleTappedRoutedEventArgs, WUXIGettingFocusEventArgs, WUXIHoldingRoutedEventArgs, WUXIInputScope, WUXIInputScopeName, WUXIKeyboardAccelerator, WUXIKeyRoutedEventArgs, WUXILosingFocusEventArgs, WUXIManipulationCompletedRoutedEventArgs, WUXIManipulationDeltaRoutedEventArgs, WUXIManipulationInertiaStartingRoutedEventArgs, WUXIManipulationStartedRoutedEventArgs, WUXIManipulationStartingRoutedEventArgs, WUXINoFocusCandidateFoundEventArgs, WUXIPointerRoutedEventArgs, WUXIRightTappedRoutedEventArgs, WUXITappedRoutedEventArgs, WUXIFindNextElementOptions, WUXIFocusManager;
+@protocol WUXIICommand, WUXIIAccessKeyDisplayDismissedEventArgs, WUXIIAccessKeyDisplayRequestedEventArgs, WUXIIAccessKeyInvokedEventArgs, WUXIIAccessKeyManager, WUXIIAccessKeyManagerStatics, WUXIIAccessKeyManagerStatics2, WUXIIInertiaExpansionBehavior, WUXIIInertiaRotationBehavior, WUXIIInertiaTranslationBehavior, WUXIIKeyboardAcceleratorInvokedEventArgs, WUXIIManipulationPivot, WUXIIManipulationPivotFactory, WUXIIPointer, WUXIIProcessKeyboardAcceleratorEventArgs, WUXIICharacterReceivedRoutedEventArgs, WUXIIContextRequestedEventArgs, WUXIIDoubleTappedRoutedEventArgs, WUXIIGettingFocusEventArgs, WUXIIHoldingRoutedEventArgs, WUXIIInputScope, WUXIIInputScopeName, WUXIIInputScopeNameFactory, WUXIIKeyboardAccelerator, WUXIIKeyboardAcceleratorStatics, WUXIIKeyboardAcceleratorFactory, WUXIIKeyRoutedEventArgs, WUXIIKeyRoutedEventArgs2, WUXIIKeyRoutedEventArgs3, WUXIILosingFocusEventArgs, WUXIIManipulationCompletedRoutedEventArgs, WUXIIManipulationDeltaRoutedEventArgs, WUXIIManipulationInertiaStartingRoutedEventArgs, WUXIIManipulationStartedRoutedEventArgs, WUXIIManipulationStartedRoutedEventArgsFactory, WUXIIManipulationStartingRoutedEventArgs, WUXIINoFocusCandidateFoundEventArgs, WUXIIPointerRoutedEventArgs, WUXIIPointerRoutedEventArgs2, WUXIIRightTappedRoutedEventArgs, WUXIITappedRoutedEventArgs, WUXIIFindNextElementOptions, WUXIIFocusManager, WUXIIFocusManagerStatics, WUXIIFocusManagerStatics2, WUXIIFocusManagerStatics3, WUXIIFocusManagerStatics4;
+
+// Windows.UI.Xaml.Input.FocusInputDeviceKind
+enum _WUXIFocusInputDeviceKind {
+    WUXIFocusInputDeviceKindNone = 0,
+    WUXIFocusInputDeviceKindMouse = 1,
+    WUXIFocusInputDeviceKindTouch = 2,
+    WUXIFocusInputDeviceKindPen = 3,
+    WUXIFocusInputDeviceKindKeyboard = 4,
+    WUXIFocusInputDeviceKindGameController = 5,
+};
+typedef unsigned WUXIFocusInputDeviceKind;
 
 // Windows.UI.Xaml.Input.FocusNavigationDirection
 enum _WUXIFocusNavigationDirection {
@@ -98,6 +109,18 @@ enum _WUXIKeyboardNavigationMode {
 };
 typedef unsigned WUXIKeyboardNavigationMode;
 
+// Windows.UI.Xaml.Input.KeyTipPlacementMode
+enum _WUXIKeyTipPlacementMode {
+    WUXIKeyTipPlacementModeAuto = 0,
+    WUXIKeyTipPlacementModeBottom = 1,
+    WUXIKeyTipPlacementModeTop = 2,
+    WUXIKeyTipPlacementModeLeft = 3,
+    WUXIKeyTipPlacementModeRight = 4,
+    WUXIKeyTipPlacementModeCenter = 5,
+    WUXIKeyTipPlacementModeHidden = 6,
+};
+typedef unsigned WUXIKeyTipPlacementMode;
+
 // Windows.UI.Xaml.Input.ManipulationModes
 enum _WUXIManipulationModes {
     WUXIManipulationModesNone = 0,
@@ -115,12 +138,39 @@ enum _WUXIManipulationModes {
 };
 typedef unsigned WUXIManipulationModes;
 
+// Windows.UI.Xaml.Input.XYFocusKeyboardNavigationMode
+enum _WUXIXYFocusKeyboardNavigationMode {
+    WUXIXYFocusKeyboardNavigationModeAuto = 0,
+    WUXIXYFocusKeyboardNavigationModeEnabled = 1,
+    WUXIXYFocusKeyboardNavigationModeDisabled = 2,
+};
+typedef unsigned WUXIXYFocusKeyboardNavigationMode;
+
+// Windows.UI.Xaml.Input.XYFocusNavigationStrategy
+enum _WUXIXYFocusNavigationStrategy {
+    WUXIXYFocusNavigationStrategyAuto = 0,
+    WUXIXYFocusNavigationStrategyProjection = 1,
+    WUXIXYFocusNavigationStrategyNavigationDirectionDistance = 2,
+    WUXIXYFocusNavigationStrategyRectilinearDistance = 3,
+};
+typedef unsigned WUXIXYFocusNavigationStrategy;
+
+// Windows.UI.Xaml.Input.XYFocusNavigationStrategyOverride
+enum _WUXIXYFocusNavigationStrategyOverride {
+    WUXIXYFocusNavigationStrategyOverrideNone = 0,
+    WUXIXYFocusNavigationStrategyOverrideAuto = 1,
+    WUXIXYFocusNavigationStrategyOverrideProjection = 2,
+    WUXIXYFocusNavigationStrategyOverrideNavigationDirectionDistance = 3,
+    WUXIXYFocusNavigationStrategyOverrideRectilinearDistance = 4,
+};
+typedef unsigned WUXIXYFocusNavigationStrategyOverride;
+
 #include "WindowsUIXaml.h"
 #include "WindowsDevicesInput.h"
 #include "WindowsFoundation.h"
-#include "WindowsUIInput.h"
 #include "WindowsSystem.h"
 #include "WindowsUICore.h"
+#include "WindowsUIInput.h"
 // Windows.UI.Xaml.DependencyPropertyChangedCallback
 #ifndef __WXDependencyPropertyChangedCallback__DEFINED
 #define __WXDependencyPropertyChangedCallback__DEFINED
@@ -274,6 +324,22 @@ OBJCUWPWINDOWSUIXAMLEXPORT
 
 #endif // __WUXIAccessKeyInvokedEventArgs_DEFINED__
 
+// Windows.UI.Xaml.Input.ProcessKeyboardAcceleratorEventArgs
+#ifndef __WUXIProcessKeyboardAcceleratorEventArgs_DEFINED__
+#define __WUXIProcessKeyboardAcceleratorEventArgs_DEFINED__
+
+OBJCUWPWINDOWSUIXAMLEXPORT
+@interface WUXIProcessKeyboardAcceleratorEventArgs : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property BOOL handled;
+@property (readonly) WSVirtualKey key;
+@property (readonly) WSVirtualKeyModifiers modifiers;
+@end
+
+#endif // __WUXIProcessKeyboardAcceleratorEventArgs_DEFINED__
+
 // Windows.UI.Xaml.Input.AccessKeyManager
 #ifndef __WUXIAccessKeyManager_DEFINED__
 #define __WUXIAccessKeyManager_DEFINED__
@@ -285,28 +351,13 @@ OBJCUWPWINDOWSUIXAMLEXPORT
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 + (BOOL)isDisplayModeEnabled;
++ (BOOL)areKeyTipsEnabled;
++ (void)setAreKeyTipsEnabled:(BOOL)value;
 + (EventRegistrationToken)addIsDisplayModeEnabledChangedEvent:(void(^)(RTObject*, RTObject*))del;
 + (void)removeIsDisplayModeEnabledChangedEvent:(EventRegistrationToken)tok;
 @end
 
 #endif // __WUXIAccessKeyManager_DEFINED__
-
-// Windows.UI.Xaml.Input.FocusManager
-#ifndef __WUXIFocusManager_DEFINED__
-#define __WUXIFocusManager_DEFINED__
-
-OBJCUWPWINDOWSUIXAMLEXPORT
-@interface WUXIFocusManager : RTObject
-+ (RTObject*)getFocusedElement;
-+ (BOOL)tryMoveFocus:(WUXIFocusNavigationDirection)focusNavigationDirection;
-+ (WXUIElement*)findNextFocusableElement:(WUXIFocusNavigationDirection)focusNavigationDirection;
-+ (WXUIElement*)findNextFocusableElementWithHint:(WUXIFocusNavigationDirection)focusNavigationDirection hintRect:(WFRect*)hintRect;
-#if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
-#endif
-@end
-
-#endif // __WUXIFocusManager_DEFINED__
 
 // Windows.UI.Xaml.Input.InertiaExpansionBehavior
 #ifndef __WUXIInertiaExpansionBehavior_DEFINED__
@@ -353,14 +404,29 @@ OBJCUWPWINDOWSUIXAMLEXPORT
 
 #endif // __WUXIInertiaTranslationBehavior_DEFINED__
 
+// Windows.UI.Xaml.Input.KeyboardAcceleratorInvokedEventArgs
+#ifndef __WUXIKeyboardAcceleratorInvokedEventArgs_DEFINED__
+#define __WUXIKeyboardAcceleratorInvokedEventArgs_DEFINED__
+
+OBJCUWPWINDOWSUIXAMLEXPORT
+@interface WUXIKeyboardAcceleratorInvokedEventArgs : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property BOOL handled;
+@property (readonly) WXDependencyObject* element;
+@end
+
+#endif // __WUXIKeyboardAcceleratorInvokedEventArgs_DEFINED__
+
 // Windows.UI.Xaml.Input.ManipulationPivot
 #ifndef __WUXIManipulationPivot_DEFINED__
 #define __WUXIManipulationPivot_DEFINED__
 
 OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXIManipulationPivot : RTObject
-+ (instancetype)make __attribute__ ((ns_returns_retained));
 + (WUXIManipulationPivot*)makeInstanceWithCenterAndRadius:(WFPoint*)center radius:(double)radius ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
@@ -384,6 +450,22 @@ OBJCUWPWINDOWSUIXAMLEXPORT
 @end
 
 #endif // __WXRoutedEventArgs_DEFINED__
+
+// Windows.UI.Xaml.Input.CharacterReceivedRoutedEventArgs
+#ifndef __WUXICharacterReceivedRoutedEventArgs_DEFINED__
+#define __WUXICharacterReceivedRoutedEventArgs_DEFINED__
+
+OBJCUWPWINDOWSUIXAMLEXPORT
+@interface WUXICharacterReceivedRoutedEventArgs : WXRoutedEventArgs
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property BOOL handled;
+@property (readonly) wchar_t character;
+@property (readonly) WUCCorePhysicalKeyStatus* keyStatus;
+@end
+
+#endif // __WUXICharacterReceivedRoutedEventArgs_DEFINED__
 
 // Windows.UI.Xaml.Input.ContextRequestedEventArgs
 #ifndef __WUXIContextRequestedEventArgs_DEFINED__
@@ -417,6 +499,26 @@ OBJCUWPWINDOWSUIXAMLEXPORT
 @end
 
 #endif // __WUXIDoubleTappedRoutedEventArgs_DEFINED__
+
+// Windows.UI.Xaml.Input.GettingFocusEventArgs
+#ifndef __WUXIGettingFocusEventArgs_DEFINED__
+#define __WUXIGettingFocusEventArgs_DEFINED__
+
+OBJCUWPWINDOWSUIXAMLEXPORT
+@interface WUXIGettingFocusEventArgs : WXRoutedEventArgs
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (retain) WXDependencyObject* newFocusedElement __attribute__ ((ns_returns_not_retained));
+@property BOOL handled;
+@property BOOL cancel;
+@property (readonly) WUXIFocusNavigationDirection direction;
+@property (readonly) WXFocusState focusState;
+@property (readonly) WUXIFocusInputDeviceKind inputDevice;
+@property (readonly) WXDependencyObject* oldFocusedElement;
+@end
+
+#endif // __WUXIGettingFocusEventArgs_DEFINED__
 
 // Windows.UI.Xaml.Input.HoldingRoutedEventArgs
 #ifndef __WUXIHoldingRoutedEventArgs_DEFINED__
@@ -478,8 +580,8 @@ OBJCUWPWINDOWSUIXAMLEXPORT
 
 OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXIInputScopeName : WXDependencyObject
-+ (instancetype)make __attribute__ ((ns_returns_retained));
 + (WUXIInputScopeName*)makeInstance:(WUXIInputScopeNameValue)nameValue ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
@@ -487,6 +589,30 @@ OBJCUWPWINDOWSUIXAMLEXPORT
 @end
 
 #endif // __WUXIInputScopeName_DEFINED__
+
+// Windows.UI.Xaml.Input.KeyboardAccelerator
+#ifndef __WUXIKeyboardAccelerator_DEFINED__
+#define __WUXIKeyboardAccelerator_DEFINED__
+
+OBJCUWPWINDOWSUIXAMLEXPORT
+@interface WUXIKeyboardAccelerator : WXDependencyObject
++ (instancetype)make __attribute__ ((ns_returns_retained));
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (retain) WXDependencyObject* scopeOwner;
+@property WSVirtualKeyModifiers modifiers;
+@property WSVirtualKey key;
+@property BOOL isEnabled;
++ (WXDependencyProperty*)isEnabledProperty;
++ (WXDependencyProperty*)keyProperty;
++ (WXDependencyProperty*)modifiersProperty;
++ (WXDependencyProperty*)scopeOwnerProperty;
+- (EventRegistrationToken)addInvokedEvent:(void(^)(WUXIKeyboardAccelerator*, WUXIKeyboardAcceleratorInvokedEventArgs*))del;
+- (void)removeInvokedEvent:(EventRegistrationToken)tok;
+@end
+
+#endif // __WUXIKeyboardAccelerator_DEFINED__
 
 // Windows.UI.Xaml.Input.KeyRoutedEventArgs
 #ifndef __WUXIKeyRoutedEventArgs_DEFINED__
@@ -505,6 +631,26 @@ OBJCUWPWINDOWSUIXAMLEXPORT
 @end
 
 #endif // __WUXIKeyRoutedEventArgs_DEFINED__
+
+// Windows.UI.Xaml.Input.LosingFocusEventArgs
+#ifndef __WUXILosingFocusEventArgs_DEFINED__
+#define __WUXILosingFocusEventArgs_DEFINED__
+
+OBJCUWPWINDOWSUIXAMLEXPORT
+@interface WUXILosingFocusEventArgs : WXRoutedEventArgs
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (retain) WXDependencyObject* newFocusedElement __attribute__ ((ns_returns_not_retained));
+@property BOOL handled;
+@property BOOL cancel;
+@property (readonly) WUXIFocusNavigationDirection direction;
+@property (readonly) WXFocusState focusState;
+@property (readonly) WUXIFocusInputDeviceKind inputDevice;
+@property (readonly) WXDependencyObject* oldFocusedElement;
+@end
+
+#endif // __WUXILosingFocusEventArgs_DEFINED__
 
 // Windows.UI.Xaml.Input.ManipulationCompletedRoutedEventArgs
 #ifndef __WUXIManipulationCompletedRoutedEventArgs_DEFINED__
@@ -611,6 +757,22 @@ OBJCUWPWINDOWSUIXAMLEXPORT
 
 #endif // __WUXIManipulationStartingRoutedEventArgs_DEFINED__
 
+// Windows.UI.Xaml.Input.NoFocusCandidateFoundEventArgs
+#ifndef __WUXINoFocusCandidateFoundEventArgs_DEFINED__
+#define __WUXINoFocusCandidateFoundEventArgs_DEFINED__
+
+OBJCUWPWINDOWSUIXAMLEXPORT
+@interface WUXINoFocusCandidateFoundEventArgs : WXRoutedEventArgs
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property BOOL handled;
+@property (readonly) WUXIFocusNavigationDirection direction;
+@property (readonly) WUXIFocusInputDeviceKind inputDevice;
+@end
+
+#endif // __WUXINoFocusCandidateFoundEventArgs_DEFINED__
+
 // Windows.UI.Xaml.Input.PointerRoutedEventArgs
 #ifndef __WUXIPointerRoutedEventArgs_DEFINED__
 #define __WUXIPointerRoutedEventArgs_DEFINED__
@@ -623,6 +785,7 @@ OBJCUWPWINDOWSUIXAMLEXPORT
 @property BOOL handled;
 @property (readonly) WSVirtualKeyModifiers keyModifiers;
 @property (readonly) WUXIPointer* pointer;
+@property (readonly) BOOL isGenerated;
 - (WUIPointerPoint*)getCurrentPoint:(WXUIElement*)relativeTo;
 - (NSMutableArray* /* WUIPointerPoint* */)getIntermediatePoints:(WXUIElement*)relativeTo;
 @end
@@ -662,4 +825,44 @@ OBJCUWPWINDOWSUIXAMLEXPORT
 @end
 
 #endif // __WUXITappedRoutedEventArgs_DEFINED__
+
+// Windows.UI.Xaml.Input.FindNextElementOptions
+#ifndef __WUXIFindNextElementOptions_DEFINED__
+#define __WUXIFindNextElementOptions_DEFINED__
+
+OBJCUWPWINDOWSUIXAMLEXPORT
+@interface WUXIFindNextElementOptions : RTObject
++ (instancetype)make __attribute__ ((ns_returns_retained));
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property WUXIXYFocusNavigationStrategyOverride xYFocusNavigationStrategyOverride;
+@property (retain) WXDependencyObject* searchRoot;
+@property (retain) WFRect* hintRect;
+@property (retain) WFRect* exclusionRect;
+@end
+
+#endif // __WUXIFindNextElementOptions_DEFINED__
+
+// Windows.UI.Xaml.Input.FocusManager
+#ifndef __WUXIFocusManager_DEFINED__
+#define __WUXIFocusManager_DEFINED__
+
+OBJCUWPWINDOWSUIXAMLEXPORT
+@interface WUXIFocusManager : RTObject
++ (WXUIElement*)findNextFocusableElement:(WUXIFocusNavigationDirection)focusNavigationDirection;
++ (WXUIElement*)findNextFocusableElementWithHint:(WUXIFocusNavigationDirection)focusNavigationDirection hintRect:(WFRect*)hintRect;
++ (BOOL)tryMoveFocus:(WUXIFocusNavigationDirection)focusNavigationDirection;
++ (RTObject*)getFocusedElement;
++ (BOOL)tryMoveFocusWithOptions:(WUXIFocusNavigationDirection)focusNavigationDirection focusNavigationOptions:(WUXIFindNextElementOptions*)focusNavigationOptions;
++ (WXDependencyObject*)findNextElement:(WUXIFocusNavigationDirection)focusNavigationDirection;
++ (WXDependencyObject*)findFirstFocusableElement:(WXDependencyObject*)searchScope;
++ (WXDependencyObject*)findLastFocusableElement:(WXDependencyObject*)searchScope;
++ (WXDependencyObject*)findNextElementWithOptions:(WUXIFocusNavigationDirection)focusNavigationDirection focusNavigationOptions:(WUXIFindNextElementOptions*)focusNavigationOptions;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@end
+
+#endif // __WUXIFocusManager_DEFINED__
 

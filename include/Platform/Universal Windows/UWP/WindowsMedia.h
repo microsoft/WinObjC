@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -27,8 +27,9 @@
 #endif
 #include <UWP/interopBase.h>
 
-@class WMMediaProcessingTriggerDetails, WMVideoFrame, WMAudioBuffer, WMAudioFrame, WMMediaMarkerTypes, WMSystemMediaTransportControlsTimelineProperties, WMMusicDisplayProperties, WMVideoDisplayProperties, WMImageDisplayProperties, WMSystemMediaTransportControlsDisplayUpdater, WMSystemMediaTransportControlsButtonPressedEventArgs, WMSystemMediaTransportControlsPropertyChangedEventArgs, WMPlaybackPositionChangeRequestedEventArgs, WMPlaybackRateChangeRequestedEventArgs, WMShuffleEnabledChangeRequestedEventArgs, WMAutoRepeatModeChangeRequestedEventArgs, WMSystemMediaTransportControls, WMMediaExtensionManager, WMVideoEffects, WMMediaTimelineController, WMMediaControl;
-@protocol WMIMediaProcessingTriggerDetails, WMIVideoFrameFactory, WMIAudioFrameFactory, WMIMediaFrame, WMIVideoFrame, WMIAudioFrame, WMIAudioBuffer, WMIMediaMarker, WMIMediaMarkers, WMIMediaMarkerTypesStatics, WMISystemMediaTransportControlsTimelineProperties, WMIMusicDisplayProperties, WMIMusicDisplayProperties2, WMIMusicDisplayProperties3, WMIVideoDisplayProperties, WMIVideoDisplayProperties2, WMIImageDisplayProperties, WMISystemMediaTransportControlsDisplayUpdater, WMISystemMediaTransportControlsButtonPressedEventArgs, WMISystemMediaTransportControlsPropertyChangedEventArgs, WMIPlaybackPositionChangeRequestedEventArgs, WMIPlaybackRateChangeRequestedEventArgs, WMIShuffleEnabledChangeRequestedEventArgs, WMIAutoRepeatModeChangeRequestedEventArgs, WMISystemMediaTransportControls, WMISystemMediaTransportControls2, WMISystemMediaTransportControlsStatics, WMIMediaExtension, WMIMediaExtensionManager, WMIVideoEffectsStatics, WMIMediaTimelineController, WMIMediaControl;
+@class WMMediaProcessingTriggerDetails, WMVideoFrame, WMAudioBuffer, WMAudioFrame, WMMediaMarkerTypes, WMSystemMediaTransportControlsTimelineProperties, WMMusicDisplayProperties, WMVideoDisplayProperties, WMImageDisplayProperties, WMSystemMediaTransportControlsDisplayUpdater, WMSystemMediaTransportControlsButtonPressedEventArgs, WMSystemMediaTransportControlsPropertyChangedEventArgs, WMPlaybackPositionChangeRequestedEventArgs, WMPlaybackRateChangeRequestedEventArgs, WMShuffleEnabledChangeRequestedEventArgs, WMAutoRepeatModeChangeRequestedEventArgs, WMSystemMediaTransportControls, WMMediaTimelineController, WMMediaTimelineControllerFailedEventArgs, WMMediaExtensionManager, WMVideoEffects, WMMediaControl;
+@class WMMediaTimeRange;
+@protocol WMIMediaProcessingTriggerDetails, WMIMediaFrame, WMIVideoFrame, WMIVideoFrameFactory, WMIAudioFrame, WMIAudioFrameFactory, WMIAudioBuffer, WMIMediaMarker, WMIMediaMarkers, WMIMediaMarkerTypesStatics, WMISystemMediaTransportControlsTimelineProperties, WMIMusicDisplayProperties, WMIMusicDisplayProperties2, WMIMusicDisplayProperties3, WMIVideoDisplayProperties, WMIVideoDisplayProperties2, WMIImageDisplayProperties, WMISystemMediaTransportControlsDisplayUpdater, WMISystemMediaTransportControlsButtonPressedEventArgs, WMISystemMediaTransportControlsPropertyChangedEventArgs, WMIPlaybackPositionChangeRequestedEventArgs, WMIPlaybackRateChangeRequestedEventArgs, WMIShuffleEnabledChangeRequestedEventArgs, WMIAutoRepeatModeChangeRequestedEventArgs, WMISystemMediaTransportControls, WMISystemMediaTransportControls2, WMISystemMediaTransportControlsStatics, WMIMediaTimelineController, WMIMediaTimelineController2, WMIMediaTimelineControllerFailedEventArgs, WMIMediaExtension, WMIMediaExtensionManager, WMIMediaExtensionManager2, WMIVideoEffectsStatics, WMIMediaControl;
 
 // Windows.Media.AudioBufferAccessMode
 enum _WMAudioBufferAccessMode {
@@ -94,6 +95,15 @@ enum _WMSystemMediaTransportControlsProperty {
 };
 typedef unsigned WMSystemMediaTransportControlsProperty;
 
+// Windows.Media.MediaTimelineControllerState
+enum _WMMediaTimelineControllerState {
+    WMMediaTimelineControllerStatePaused = 0,
+    WMMediaTimelineControllerStateRunning = 1,
+    WMMediaTimelineControllerStateStalled = 2,
+    WMMediaTimelineControllerStateError = 3,
+};
+typedef unsigned WMMediaTimelineControllerState;
+
 // Windows.Media.AudioProcessing
 enum _WMAudioProcessing {
     WMAudioProcessingDefault = 0,
@@ -101,21 +111,23 @@ enum _WMAudioProcessing {
 };
 typedef unsigned WMAudioProcessing;
 
-// Windows.Media.MediaTimelineControllerState
-enum _WMMediaTimelineControllerState {
-    WMMediaTimelineControllerStatePaused = 0,
-    WMMediaTimelineControllerStateRunning = 1,
-};
-typedef unsigned WMMediaTimelineControllerState;
-
 #include "WindowsStorageStreams.h"
 #include "WindowsFoundationCollections.h"
+#include "WindowsFoundation.h"
 #include "WindowsStorage.h"
 #include "WindowsGraphicsImaging.h"
-#include "WindowsFoundation.h"
 #include "WindowsGraphicsDirectXDirect3D11.h"
+#include "WindowsApplicationModelAppService.h"
 
 #import <Foundation/Foundation.h>
+
+// [struct] Windows.Media.MediaTimeRange
+OBJCUWPWINDOWSMEDIAEXPORT
+@interface WMMediaTimeRange : NSObject
++ (instancetype)new;
+@property (retain) WFTimeSpan* start;
+@property (retain) WFTimeSpan* end;
+@end
 
 // Windows.Foundation.IClosable
 #ifndef __WFIClosable_DEFINED__
@@ -522,6 +534,50 @@ OBJCUWPWINDOWSMEDIAEXPORT
 
 #endif // __WMSystemMediaTransportControls_DEFINED__
 
+// Windows.Media.MediaTimelineController
+#ifndef __WMMediaTimelineController_DEFINED__
+#define __WMMediaTimelineController_DEFINED__
+
+OBJCUWPWINDOWSMEDIAEXPORT
+@interface WMMediaTimelineController : RTObject
++ (instancetype)make __attribute__ ((ns_returns_retained));
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (retain) WFTimeSpan* position;
+@property double clockRate;
+@property (readonly) WMMediaTimelineControllerState state;
+@property BOOL isLoopingEnabled;
+@property (retain) id /* WFTimeSpan* */ duration;
+- (EventRegistrationToken)addPositionChangedEvent:(void(^)(WMMediaTimelineController*, RTObject*))del;
+- (void)removePositionChangedEvent:(EventRegistrationToken)tok;
+- (EventRegistrationToken)addStateChangedEvent:(void(^)(WMMediaTimelineController*, RTObject*))del;
+- (void)removeStateChangedEvent:(EventRegistrationToken)tok;
+- (EventRegistrationToken)addEndedEvent:(void(^)(WMMediaTimelineController*, RTObject*))del;
+- (void)removeEndedEvent:(EventRegistrationToken)tok;
+- (EventRegistrationToken)addFailedEvent:(void(^)(WMMediaTimelineController*, WMMediaTimelineControllerFailedEventArgs*))del;
+- (void)removeFailedEvent:(EventRegistrationToken)tok;
+- (void)start;
+- (void)resume;
+- (void)pause;
+@end
+
+#endif // __WMMediaTimelineController_DEFINED__
+
+// Windows.Media.MediaTimelineControllerFailedEventArgs
+#ifndef __WMMediaTimelineControllerFailedEventArgs_DEFINED__
+#define __WMMediaTimelineControllerFailedEventArgs_DEFINED__
+
+OBJCUWPWINDOWSMEDIAEXPORT
+@interface WMMediaTimelineControllerFailedEventArgs : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (readonly) HRESULT extendedError;
+@end
+
+#endif // __WMMediaTimelineControllerFailedEventArgs_DEFINED__
+
 // Windows.Media.MediaExtensionManager
 #ifndef __WMMediaExtensionManager_DEFINED__
 #define __WMMediaExtensionManager_DEFINED__
@@ -544,6 +600,7 @@ OBJCUWPWINDOWSMEDIAEXPORT
 - (void)registerVideoDecoderWithSettings:(NSString *)activatableClassId inputSubtype:(WFGUID*)inputSubtype outputSubtype:(WFGUID*)outputSubtype configuration:(RTObject<WFCIPropertySet>*)configuration;
 - (void)registerVideoEncoder:(NSString *)activatableClassId inputSubtype:(WFGUID*)inputSubtype outputSubtype:(WFGUID*)outputSubtype;
 - (void)registerVideoEncoderWithSettings:(NSString *)activatableClassId inputSubtype:(WFGUID*)inputSubtype outputSubtype:(WFGUID*)outputSubtype configuration:(RTObject<WFCIPropertySet>*)configuration;
+- (void)registerMediaExtensionForAppService:(RTObject<WMIMediaExtension>*)extension connection:(WAAAppServiceConnection*)connection;
 @end
 
 #endif // __WMMediaExtensionManager_DEFINED__
@@ -558,30 +615,6 @@ OBJCUWPWINDOWSMEDIAEXPORT
 @end
 
 #endif // __WMVideoEffects_DEFINED__
-
-// Windows.Media.MediaTimelineController
-#ifndef __WMMediaTimelineController_DEFINED__
-#define __WMMediaTimelineController_DEFINED__
-
-OBJCUWPWINDOWSMEDIAEXPORT
-@interface WMMediaTimelineController : RTObject
-+ (instancetype)make __attribute__ ((ns_returns_retained));
-#if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
-#endif
-@property (retain) WFTimeSpan* position;
-@property double clockRate;
-@property (readonly) WMMediaTimelineControllerState state;
-- (EventRegistrationToken)addPositionChangedEvent:(void(^)(WMMediaTimelineController*, RTObject*))del;
-- (void)removePositionChangedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addStateChangedEvent:(void(^)(WMMediaTimelineController*, RTObject*))del;
-- (void)removeStateChangedEvent:(EventRegistrationToken)tok;
-- (void)start;
-- (void)resume;
-- (void)pause;
-@end
-
-#endif // __WMMediaTimelineController_DEFINED__
 
 // Windows.Media.MediaControl
 #ifndef __WMMediaControl_DEFINED__

@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -27,8 +27,8 @@
 #endif
 #include <UWP/interopBase.h>
 
-@class WAAPrintTaskSettingsActivatedEventArgs, WAAPrint3DWorkflowActivatedEventArgs, WAALockScreenCallActivatedEventArgs, WAACameraSettingsActivatedEventArgs, WAAContactPickerActivatedEventArgs, WAAContactCallActivatedEventArgs, WAAContactMessageActivatedEventArgs, WAAContactMapActivatedEventArgs, WAAContactPostActivatedEventArgs, WAAContactVideoCallActivatedEventArgs, WAAWalletActionActivatedEventArgs, WAAAppointmentsProviderAddAppointmentActivatedEventArgs, WAAAppointmentsProviderReplaceAppointmentActivatedEventArgs, WAAAppointmentsProviderRemoveAppointmentActivatedEventArgs, WAAAppointmentsProviderShowAppointmentDetailsActivatedEventArgs, WAAAppointmentsProviderShowTimeFrameActivatedEventArgs, WAAUserDataAccountProviderActivatedEventArgs, WAASplashScreen, WAATileActivatedInfo, WAALaunchActivatedEventArgs, WAASearchActivatedEventArgs, WAAShareTargetActivatedEventArgs, WAAFileActivatedEventArgs, WAAProtocolActivatedEventArgs, WAAProtocolForResultsActivatedEventArgs, WAAFileOpenPickerActivatedEventArgs, WAAFileSavePickerActivatedEventArgs, WAACachedFileUpdaterActivatedEventArgs, WAADeviceActivatedEventArgs, WAAPickerReturnedActivatedEventArgs, WAARestrictedLaunchActivatedEventArgs, WAALockScreenActivatedEventArgs, WAAFileOpenPickerContinuationEventArgs, WAAFileSavePickerContinuationEventArgs, WAAFolderPickerContinuationEventArgs, WAAWebAuthenticationBrokerContinuationEventArgs, WAAWebAccountProviderActivatedEventArgs, WAAToastNotificationActivatedEventArgs, WAADialReceiverActivatedEventArgs, WAABackgroundActivatedEventArgs, WAADevicePairingActivatedEventArgs, WAAVoiceCommandActivatedEventArgs;
-@protocol WAAISplashScreen, WAAIActivatedEventArgs, WAAIPrintTaskSettingsActivatedEventArgs, WAAIPrint3DWorkflowActivatedEventArgs, WAAICameraSettingsActivatedEventArgs, WAAIContactPickerActivatedEventArgs, WAAIContactActivatedEventArgs, WAAIContactCallActivatedEventArgs, WAAIContactMessageActivatedEventArgs, WAAIContactMapActivatedEventArgs, WAAIContactPostActivatedEventArgs, WAAIContactVideoCallActivatedEventArgs, WAAIContactsProviderActivatedEventArgs, WAAIWalletActionActivatedEventArgs, WAAIAppointmentsProviderActivatedEventArgs, WAAIAppointmentsProviderAddAppointmentActivatedEventArgs, WAAIAppointmentsProviderReplaceAppointmentActivatedEventArgs, WAAIAppointmentsProviderRemoveAppointmentActivatedEventArgs, WAAIAppointmentsProviderShowAppointmentDetailsActivatedEventArgs, WAAIAppointmentsProviderShowTimeFrameActivatedEventArgs, WAAIUserDataAccountProviderActivatedEventArgs, WAAIActivatedEventArgsWithUser, WAAIApplicationViewActivatedEventArgs, WAAIViewSwitcherProvider, WAAIPrelaunchActivatedEventArgs, WAAILaunchActivatedEventArgs, WAAILockScreenCallActivatedEventArgs, WAAILaunchActivatedEventArgs2, WAAISearchActivatedEventArgs, WAAISearchActivatedEventArgsWithLinguisticDetails, WAAIShareTargetActivatedEventArgs, WAAIFileActivatedEventArgs, WAAIFileActivatedEventArgsWithNeighboringFiles, WAAIFileActivatedEventArgsWithCallerPackageFamilyName, WAAIProtocolActivatedEventArgs, WAAIProtocolActivatedEventArgsWithCallerPackageFamilyNameAndData, WAAIProtocolForResultsActivatedEventArgs, WAAIFileOpenPickerActivatedEventArgs, WAAIFileOpenPickerActivatedEventArgs2, WAAIFileSavePickerActivatedEventArgs, WAAIFileSavePickerActivatedEventArgs2, WAAICachedFileUpdaterActivatedEventArgs, WAAIDeviceActivatedEventArgs, WAAIPickerReturnedActivatedEventArgs, WAAIRestrictedLaunchActivatedEventArgs, WAAILockScreenActivatedEventArgs, WAAIContinuationActivatedEventArgs, WAAIFileOpenPickerContinuationEventArgs, WAAIFileSavePickerContinuationEventArgs, WAAIFolderPickerContinuationEventArgs, WAAIWebAuthenticationBrokerContinuationEventArgs, WAAIWebAccountProviderActivatedEventArgs, WAAIToastNotificationActivatedEventArgs, WAAIDialReceiverActivatedEventArgs, WAAITileActivatedInfo, WAAIBackgroundActivatedEventArgs, WAAIDevicePairingActivatedEventArgs, WAAIVoiceCommandActivatedEventArgs;
+@class WAACameraSettingsActivatedEventArgs, WAAContactPickerActivatedEventArgs, WAAContactCallActivatedEventArgs, WAAContactMessageActivatedEventArgs, WAAContactMapActivatedEventArgs, WAAContactPostActivatedEventArgs, WAAContactVideoCallActivatedEventArgs, WAAWalletActionActivatedEventArgs, WAAAppointmentsProviderAddAppointmentActivatedEventArgs, WAAAppointmentsProviderReplaceAppointmentActivatedEventArgs, WAAAppointmentsProviderRemoveAppointmentActivatedEventArgs, WAAAppointmentsProviderShowAppointmentDetailsActivatedEventArgs, WAAAppointmentsProviderShowTimeFrameActivatedEventArgs, WAABackgroundActivatedEventArgs, WAAContactPanelActivatedEventArgs, WAAUserDataAccountProviderActivatedEventArgs, WAASplashScreen, WAATileActivatedInfo, WAALaunchActivatedEventArgs, WAASearchActivatedEventArgs, WAAShareTargetActivatedEventArgs, WAAFileActivatedEventArgs, WAAProtocolActivatedEventArgs, WAAProtocolForResultsActivatedEventArgs, WAAFileOpenPickerActivatedEventArgs, WAAFileSavePickerActivatedEventArgs, WAACachedFileUpdaterActivatedEventArgs, WAADeviceActivatedEventArgs, WAAPickerReturnedActivatedEventArgs, WAARestrictedLaunchActivatedEventArgs, WAALockScreenActivatedEventArgs, WAAFileOpenPickerContinuationEventArgs, WAAFileSavePickerContinuationEventArgs, WAAFolderPickerContinuationEventArgs, WAAWebAuthenticationBrokerContinuationEventArgs, WAAWebAccountProviderActivatedEventArgs, WAAToastNotificationActivatedEventArgs, WAADialReceiverActivatedEventArgs, WAALockScreenComponentActivatedEventArgs, WAACommandLineActivationOperation, WAACommandLineActivatedEventArgs, WAAStartupTaskActivatedEventArgs, WAADevicePairingActivatedEventArgs, WAAVoiceCommandActivatedEventArgs;
+@protocol WAAIBackgroundActivatedEventArgs, WAAIContactPanelActivatedEventArgs, WAAISplashScreen, WAAIActivatedEventArgs, WAAICameraSettingsActivatedEventArgs, WAAIContactPickerActivatedEventArgs, WAAIContactActivatedEventArgs, WAAIContactCallActivatedEventArgs, WAAIContactMessageActivatedEventArgs, WAAIContactMapActivatedEventArgs, WAAIContactPostActivatedEventArgs, WAAIContactVideoCallActivatedEventArgs, WAAIContactsProviderActivatedEventArgs, WAAIWalletActionActivatedEventArgs, WAAIAppointmentsProviderActivatedEventArgs, WAAIAppointmentsProviderAddAppointmentActivatedEventArgs, WAAIAppointmentsProviderReplaceAppointmentActivatedEventArgs, WAAIAppointmentsProviderRemoveAppointmentActivatedEventArgs, WAAIAppointmentsProviderShowAppointmentDetailsActivatedEventArgs, WAAIAppointmentsProviderShowTimeFrameActivatedEventArgs, WAAIUserDataAccountProviderActivatedEventArgs, WAAIActivatedEventArgsWithUser, WAAIApplicationViewActivatedEventArgs, WAAIViewSwitcherProvider, WAAIPrelaunchActivatedEventArgs, WAAILaunchActivatedEventArgs, WAAILaunchActivatedEventArgs2, WAAISearchActivatedEventArgs, WAAISearchActivatedEventArgsWithLinguisticDetails, WAAIShareTargetActivatedEventArgs, WAAIFileActivatedEventArgs, WAAIFileActivatedEventArgsWithNeighboringFiles, WAAIFileActivatedEventArgsWithCallerPackageFamilyName, WAAIProtocolActivatedEventArgs, WAAIProtocolActivatedEventArgsWithCallerPackageFamilyNameAndData, WAAIProtocolForResultsActivatedEventArgs, WAAIFileOpenPickerActivatedEventArgs, WAAIFileOpenPickerActivatedEventArgs2, WAAIFileSavePickerActivatedEventArgs, WAAIFileSavePickerActivatedEventArgs2, WAAICachedFileUpdaterActivatedEventArgs, WAAIDeviceActivatedEventArgs, WAAIPickerReturnedActivatedEventArgs, WAAIRestrictedLaunchActivatedEventArgs, WAAILockScreenActivatedEventArgs, WAAIContinuationActivatedEventArgs, WAAIFileOpenPickerContinuationEventArgs, WAAIFileSavePickerContinuationEventArgs, WAAIFolderPickerContinuationEventArgs, WAAIWebAuthenticationBrokerContinuationEventArgs, WAAIWebAccountProviderActivatedEventArgs, WAAIToastNotificationActivatedEventArgs, WAAIDialReceiverActivatedEventArgs, WAAITileActivatedInfo, WAAICommandLineActivationOperation, WAAICommandLineActivatedEventArgs, WAAIStartupTaskActivatedEventArgs, WAAIDevicePairingActivatedEventArgs, WAAIVoiceCommandActivatedEventArgs;
 
 // Windows.ApplicationModel.Activation.ApplicationExecutionState
 enum _WAAApplicationExecutionState {
@@ -75,22 +75,27 @@ enum _WAAActivationKind {
     WAAActivationKindDevicePairing = 1013,
     WAAActivationKindUserDataAccountsProvider = 1014,
     WAAActivationKindFilePickerExperience = 1015,
+    WAAActivationKindLockScreenComponent = 1016,
+    WAAActivationKindContactPanel = 1017,
+    WAAActivationKindPrintWorkflowForegroundTask = 1018,
+    WAAActivationKindGameUIProvider = 1019,
+    WAAActivationKindStartupTask = 1020,
+    WAAActivationKindCommandLineLaunch = 1021,
 };
 typedef unsigned WAAActivationKind;
 
 #include "WindowsApplicationModelUserDataAccountsProvider.h"
 #include "WindowsApplicationModelContactsProvider.h"
+#include "WindowsStoragePickersProvider.h"
+#include "WindowsSystem.h"
+#include "WindowsApplicationModelBackground.h"
+#include "WindowsApplicationModelContacts.h"
 #include "WindowsFoundation.h"
 #include "WindowsUINotifications.h"
 #include "WindowsApplicationModelAppointmentsAppointmentsProvider.h"
 #include "WindowsApplicationModelWallet.h"
-#include "WindowsDevicesPrintersExtensions.h"
-#include "WindowsApplicationModelContacts.h"
-#include "WindowsStoragePickersProvider.h"
-#include "WindowsSystem.h"
 #include "WindowsDevicesEnumeration.h"
 #include "WindowsUIViewManagement.h"
-#include "WindowsApplicationModelCalls.h"
 #include "WindowsMediaSpeechRecognition.h"
 #include "WindowsApplicationModelSearch.h"
 #include "WindowsApplicationModelDataTransferShareTarget.h"
@@ -100,9 +105,37 @@ typedef unsigned WAAActivationKind;
 #include "WindowsStorageProvider.h"
 #include "WindowsSecurityAuthenticationWeb.h"
 #include "WindowsSecurityAuthenticationWebProvider.h"
-#include "WindowsApplicationModelBackground.h"
 
 #import <Foundation/Foundation.h>
+
+// Windows.ApplicationModel.Activation.IBackgroundActivatedEventArgs
+#ifndef __WAAIBackgroundActivatedEventArgs_DEFINED__
+#define __WAAIBackgroundActivatedEventArgs_DEFINED__
+
+@protocol WAAIBackgroundActivatedEventArgs
+@property (readonly) RTObject<WABIBackgroundTaskInstance>* taskInstance;
+@end
+
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
+@interface WAAIBackgroundActivatedEventArgs : RTObject <WAAIBackgroundActivatedEventArgs>
+@end
+
+#endif // __WAAIBackgroundActivatedEventArgs_DEFINED__
+
+// Windows.ApplicationModel.Activation.IContactPanelActivatedEventArgs
+#ifndef __WAAIContactPanelActivatedEventArgs_DEFINED__
+#define __WAAIContactPanelActivatedEventArgs_DEFINED__
+
+@protocol WAAIContactPanelActivatedEventArgs
+@property (readonly) WACContact* contact;
+@property (readonly) WACContactPanel* contactPanel;
+@end
+
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
+@interface WAAIContactPanelActivatedEventArgs : RTObject <WAAIContactPanelActivatedEventArgs>
+@end
+
+#endif // __WAAIContactPanelActivatedEventArgs_DEFINED__
 
 // Windows.ApplicationModel.Activation.IActivatedEventArgs
 #ifndef __WAAIActivatedEventArgs_DEFINED__
@@ -119,34 +152,6 @@ OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @end
 
 #endif // __WAAIActivatedEventArgs_DEFINED__
-
-// Windows.ApplicationModel.Activation.IPrintTaskSettingsActivatedEventArgs
-#ifndef __WAAIPrintTaskSettingsActivatedEventArgs_DEFINED__
-#define __WAAIPrintTaskSettingsActivatedEventArgs_DEFINED__
-
-@protocol WAAIPrintTaskSettingsActivatedEventArgs <WAAIActivatedEventArgs>
-@property (readonly) WDPEPrintTaskConfiguration* configuration;
-@end
-
-OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
-@interface WAAIPrintTaskSettingsActivatedEventArgs : RTObject <WAAIPrintTaskSettingsActivatedEventArgs>
-@end
-
-#endif // __WAAIPrintTaskSettingsActivatedEventArgs_DEFINED__
-
-// Windows.ApplicationModel.Activation.IPrint3DWorkflowActivatedEventArgs
-#ifndef __WAAIPrint3DWorkflowActivatedEventArgs_DEFINED__
-#define __WAAIPrint3DWorkflowActivatedEventArgs_DEFINED__
-
-@protocol WAAIPrint3DWorkflowActivatedEventArgs <WAAIActivatedEventArgs>
-@property (readonly) WDPEPrint3DWorkflow* workflow;
-@end
-
-OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
-@interface WAAIPrint3DWorkflowActivatedEventArgs : RTObject <WAAIPrint3DWorkflowActivatedEventArgs>
-@end
-
-#endif // __WAAIPrint3DWorkflowActivatedEventArgs_DEFINED__
 
 // Windows.ApplicationModel.Activation.ICameraSettingsActivatedEventArgs
 #ifndef __WAAICameraSettingsActivatedEventArgs_DEFINED__
@@ -471,20 +476,6 @@ OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @end
 
 #endif // __WAAILaunchActivatedEventArgs_DEFINED__
-
-// Windows.ApplicationModel.Activation.ILockScreenCallActivatedEventArgs
-#ifndef __WAAILockScreenCallActivatedEventArgs_DEFINED__
-#define __WAAILockScreenCallActivatedEventArgs_DEFINED__
-
-@protocol WAAILockScreenCallActivatedEventArgs <WAAILaunchActivatedEventArgs, WAAIActivatedEventArgs>
-@property (readonly) WACLockScreenCallUI* callUI;
-@end
-
-OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
-@interface WAAILockScreenCallActivatedEventArgs : RTObject <WAAILockScreenCallActivatedEventArgs>
-@end
-
-#endif // __WAAILockScreenCallActivatedEventArgs_DEFINED__
 
 // Windows.ApplicationModel.Activation.ILaunchActivatedEventArgs2
 #ifndef __WAAILaunchActivatedEventArgs2_DEFINED__
@@ -870,19 +861,33 @@ OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 
 #endif // __WAAIDialReceiverActivatedEventArgs_DEFINED__
 
-// Windows.ApplicationModel.Activation.IBackgroundActivatedEventArgs
-#ifndef __WAAIBackgroundActivatedEventArgs_DEFINED__
-#define __WAAIBackgroundActivatedEventArgs_DEFINED__
+// Windows.ApplicationModel.Activation.ICommandLineActivatedEventArgs
+#ifndef __WAAICommandLineActivatedEventArgs_DEFINED__
+#define __WAAICommandLineActivatedEventArgs_DEFINED__
 
-@protocol WAAIBackgroundActivatedEventArgs
-@property (readonly) RTObject<WABIBackgroundTaskInstance>* taskInstance;
+@protocol WAAICommandLineActivatedEventArgs <WAAIActivatedEventArgs>
+@property (readonly) WAACommandLineActivationOperation* operation;
 @end
 
 OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
-@interface WAAIBackgroundActivatedEventArgs : RTObject <WAAIBackgroundActivatedEventArgs>
+@interface WAAICommandLineActivatedEventArgs : RTObject <WAAICommandLineActivatedEventArgs>
 @end
 
-#endif // __WAAIBackgroundActivatedEventArgs_DEFINED__
+#endif // __WAAICommandLineActivatedEventArgs_DEFINED__
+
+// Windows.ApplicationModel.Activation.IStartupTaskActivatedEventArgs
+#ifndef __WAAIStartupTaskActivatedEventArgs_DEFINED__
+#define __WAAIStartupTaskActivatedEventArgs_DEFINED__
+
+@protocol WAAIStartupTaskActivatedEventArgs <WAAIActivatedEventArgs>
+@property (readonly) NSString * taskId;
+@end
+
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
+@interface WAAIStartupTaskActivatedEventArgs : RTObject <WAAIStartupTaskActivatedEventArgs>
+@end
+
+#endif // __WAAIStartupTaskActivatedEventArgs_DEFINED__
 
 // Windows.ApplicationModel.Activation.IDevicePairingActivatedEventArgs
 #ifndef __WAAIDevicePairingActivatedEventArgs_DEFINED__
@@ -911,61 +916,6 @@ OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @end
 
 #endif // __WAAIVoiceCommandActivatedEventArgs_DEFINED__
-
-// Windows.ApplicationModel.Activation.PrintTaskSettingsActivatedEventArgs
-#ifndef __WAAPrintTaskSettingsActivatedEventArgs_DEFINED__
-#define __WAAPrintTaskSettingsActivatedEventArgs_DEFINED__
-
-OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
-@interface WAAPrintTaskSettingsActivatedEventArgs : RTObject <WAAIPrintTaskSettingsActivatedEventArgs, WAAIActivatedEventArgs>
-#if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
-#endif
-@property (readonly) WAAActivationKind kind;
-@property (readonly) WAAApplicationExecutionState previousExecutionState;
-@property (readonly) WAASplashScreen* splashScreen;
-@property (readonly) WDPEPrintTaskConfiguration* configuration;
-@end
-
-#endif // __WAAPrintTaskSettingsActivatedEventArgs_DEFINED__
-
-// Windows.ApplicationModel.Activation.Print3DWorkflowActivatedEventArgs
-#ifndef __WAAPrint3DWorkflowActivatedEventArgs_DEFINED__
-#define __WAAPrint3DWorkflowActivatedEventArgs_DEFINED__
-
-OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
-@interface WAAPrint3DWorkflowActivatedEventArgs : RTObject <WAAIPrint3DWorkflowActivatedEventArgs, WAAIActivatedEventArgs>
-#if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
-#endif
-@property (readonly) WAAActivationKind kind;
-@property (readonly) WAAApplicationExecutionState previousExecutionState;
-@property (readonly) WAASplashScreen* splashScreen;
-@property (readonly) WDPEPrint3DWorkflow* workflow;
-@end
-
-#endif // __WAAPrint3DWorkflowActivatedEventArgs_DEFINED__
-
-// Windows.ApplicationModel.Activation.LockScreenCallActivatedEventArgs
-#ifndef __WAALockScreenCallActivatedEventArgs_DEFINED__
-#define __WAALockScreenCallActivatedEventArgs_DEFINED__
-
-OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
-@interface WAALockScreenCallActivatedEventArgs : RTObject <WAAILockScreenCallActivatedEventArgs, WAAILaunchActivatedEventArgs, WAAIActivatedEventArgs, WAAIApplicationViewActivatedEventArgs, WAAIViewSwitcherProvider>
-#if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
-#endif
-@property (readonly) WAAActivationKind kind;
-@property (readonly) WAAApplicationExecutionState previousExecutionState;
-@property (readonly) WAASplashScreen* splashScreen;
-@property (readonly) int currentlyShownApplicationViewId;
-@property (readonly) NSString * arguments;
-@property (readonly) NSString * tileId;
-@property (readonly) WACLockScreenCallUI* callUI;
-@property (readonly) WUVActivationViewSwitcher* viewSwitcher;
-@end
-
-#endif // __WAALockScreenCallActivatedEventArgs_DEFINED__
 
 // Windows.ApplicationModel.Activation.CameraSettingsActivatedEventArgs
 #ifndef __WAACameraSettingsActivatedEventArgs_DEFINED__
@@ -1217,6 +1167,39 @@ OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @end
 
 #endif // __WAAAppointmentsProviderShowTimeFrameActivatedEventArgs_DEFINED__
+
+// Windows.ApplicationModel.Activation.BackgroundActivatedEventArgs
+#ifndef __WAABackgroundActivatedEventArgs_DEFINED__
+#define __WAABackgroundActivatedEventArgs_DEFINED__
+
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
+@interface WAABackgroundActivatedEventArgs : RTObject <WAAIBackgroundActivatedEventArgs>
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (readonly) RTObject<WABIBackgroundTaskInstance>* taskInstance;
+@end
+
+#endif // __WAABackgroundActivatedEventArgs_DEFINED__
+
+// Windows.ApplicationModel.Activation.ContactPanelActivatedEventArgs
+#ifndef __WAAContactPanelActivatedEventArgs_DEFINED__
+#define __WAAContactPanelActivatedEventArgs_DEFINED__
+
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
+@interface WAAContactPanelActivatedEventArgs : RTObject <WAAIContactPanelActivatedEventArgs, WAAIActivatedEventArgs, WAAIActivatedEventArgsWithUser>
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (readonly) WAAActivationKind kind;
+@property (readonly) WAAApplicationExecutionState previousExecutionState;
+@property (readonly) WAASplashScreen* splashScreen;
+@property (readonly) WSUser* user;
+@property (readonly) WACContact* contact;
+@property (readonly) WACContactPanel* contactPanel;
+@end
+
+#endif // __WAAContactPanelActivatedEventArgs_DEFINED__
 
 // Windows.ApplicationModel.Activation.UserDataAccountProviderActivatedEventArgs
 #ifndef __WAAUserDataAccountProviderActivatedEventArgs_DEFINED__
@@ -1625,7 +1608,7 @@ OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 #define __WAAToastNotificationActivatedEventArgs_DEFINED__
 
 OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
-@interface WAAToastNotificationActivatedEventArgs : RTObject <WAAIToastNotificationActivatedEventArgs, WAAIActivatedEventArgs, WAAIActivatedEventArgsWithUser>
+@interface WAAToastNotificationActivatedEventArgs : RTObject <WAAIToastNotificationActivatedEventArgs, WAAIActivatedEventArgs, WAAIActivatedEventArgsWithUser, WAAIApplicationViewActivatedEventArgs>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
@@ -1633,6 +1616,7 @@ OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @property (readonly) WAAApplicationExecutionState previousExecutionState;
 @property (readonly) WAASplashScreen* splashScreen;
 @property (readonly) WSUser* user;
+@property (readonly) int currentlyShownApplicationViewId;
 @property (readonly) NSString * argument;
 @property (readonly) WFCValueSet* userInput;
 @end
@@ -1661,19 +1645,74 @@ OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 
 #endif // __WAADialReceiverActivatedEventArgs_DEFINED__
 
-// Windows.ApplicationModel.Activation.BackgroundActivatedEventArgs
-#ifndef __WAABackgroundActivatedEventArgs_DEFINED__
-#define __WAABackgroundActivatedEventArgs_DEFINED__
+// Windows.ApplicationModel.Activation.LockScreenComponentActivatedEventArgs
+#ifndef __WAALockScreenComponentActivatedEventArgs_DEFINED__
+#define __WAALockScreenComponentActivatedEventArgs_DEFINED__
 
 OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
-@interface WAABackgroundActivatedEventArgs : RTObject <WAAIBackgroundActivatedEventArgs>
+@interface WAALockScreenComponentActivatedEventArgs : RTObject <WAAIActivatedEventArgs>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
-@property (readonly) RTObject<WABIBackgroundTaskInstance>* taskInstance;
+@property (readonly) WAAActivationKind kind;
+@property (readonly) WAAApplicationExecutionState previousExecutionState;
+@property (readonly) WAASplashScreen* splashScreen;
 @end
 
-#endif // __WAABackgroundActivatedEventArgs_DEFINED__
+#endif // __WAALockScreenComponentActivatedEventArgs_DEFINED__
+
+// Windows.ApplicationModel.Activation.CommandLineActivationOperation
+#ifndef __WAACommandLineActivationOperation_DEFINED__
+#define __WAACommandLineActivationOperation_DEFINED__
+
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
+@interface WAACommandLineActivationOperation : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property int exitCode;
+@property (readonly) NSString * arguments;
+@property (readonly) NSString * currentDirectoryPath;
+- (WFDeferral*)getDeferral;
+@end
+
+#endif // __WAACommandLineActivationOperation_DEFINED__
+
+// Windows.ApplicationModel.Activation.CommandLineActivatedEventArgs
+#ifndef __WAACommandLineActivatedEventArgs_DEFINED__
+#define __WAACommandLineActivatedEventArgs_DEFINED__
+
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
+@interface WAACommandLineActivatedEventArgs : RTObject <WAAICommandLineActivatedEventArgs, WAAIActivatedEventArgs, WAAIActivatedEventArgsWithUser>
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (readonly) WAAActivationKind kind;
+@property (readonly) WAAApplicationExecutionState previousExecutionState;
+@property (readonly) WAASplashScreen* splashScreen;
+@property (readonly) WSUser* user;
+@property (readonly) WAACommandLineActivationOperation* operation;
+@end
+
+#endif // __WAACommandLineActivatedEventArgs_DEFINED__
+
+// Windows.ApplicationModel.Activation.StartupTaskActivatedEventArgs
+#ifndef __WAAStartupTaskActivatedEventArgs_DEFINED__
+#define __WAAStartupTaskActivatedEventArgs_DEFINED__
+
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
+@interface WAAStartupTaskActivatedEventArgs : RTObject <WAAIStartupTaskActivatedEventArgs, WAAIActivatedEventArgs, WAAIActivatedEventArgsWithUser>
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (readonly) WAAActivationKind kind;
+@property (readonly) WAAApplicationExecutionState previousExecutionState;
+@property (readonly) WAASplashScreen* splashScreen;
+@property (readonly) WSUser* user;
+@property (readonly) NSString * taskId;
+@end
+
+#endif // __WAAStartupTaskActivatedEventArgs_DEFINED__
 
 // Windows.ApplicationModel.Activation.DevicePairingActivatedEventArgs
 #ifndef __WAADevicePairingActivatedEventArgs_DEFINED__

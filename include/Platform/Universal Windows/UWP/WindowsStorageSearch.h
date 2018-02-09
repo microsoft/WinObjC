@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -44,6 +44,7 @@ enum _WSSIndexerOption {
     WSSIndexerOptionUseIndexerWhenAvailable = 0,
     WSSIndexerOptionOnlyUseIndexer = 1,
     WSSIndexerOptionDoNotUseIndexer = 2,
+    WSSIndexerOptionOnlyUseIndexerAndOptimizeForIndexedProperties = 3,
 };
 typedef unsigned WSSIndexerOption;
 
@@ -261,9 +262,9 @@ OBJCUWPWINDOWSSTORAGEEXPORT
 
 OBJCUWPWINDOWSSTORAGEEXPORT
 @interface WSSQueryOptions : RTObject
++ (instancetype)make __attribute__ ((ns_returns_retained));
 + (WSSQueryOptions*)makeCommonFileQuery:(WSSCommonFileQuery)query fileTypeFilter:(id<NSFastEnumeration> /* NSString * */)fileTypeFilter ACTIVATOR;
 + (WSSQueryOptions*)makeCommonFolderQuery:(WSSCommonFolderQuery)query ACTIVATOR;
-+ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif

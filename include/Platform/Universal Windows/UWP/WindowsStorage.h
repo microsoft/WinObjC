@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -27,8 +27,8 @@
 #endif
 #include <UWP/interopBase.h>
 
-@class WSStorageLibrary, WSStorageFolder, WSStorageLibraryChangeTracker, WSKnownFolders, WSStorageFile, WSDownloadsFolder, WSStorageLibraryChange, WSStorageLibraryChangeReader, WSStreamedFileDataRequest, WSStorageStreamTransaction, WSStorageProvider, WSFileIO, WSPathIO, WSCachedFileManager, WSSystemAudioProperties, WSSystemGPSProperties, WSSystemImageProperties, WSSystemMediaProperties, WSSystemMusicProperties, WSSystemPhotoProperties, WSSystemVideoProperties, WSSystemProperties, WSApplicationData, WSSetVersionRequest, WSApplicationDataContainer, WSSetVersionDeferral, WSApplicationDataContainerSettings, WSApplicationDataCompositeValue;
-@protocol WSIStorageLibraryStatics, WSIStorageLibraryStatics2, WSIStorageLibrary, WSIStorageLibrary2, WSIKnownFoldersStatics, WSIKnownFoldersStatics2, WSIKnownFoldersStatics3, WSIKnownFoldersPlaylistsStatics, WSIKnownFoldersCameraRollStatics, WSIKnownFoldersSavedPicturesStatics, WSIDownloadsFolderStatics, WSIDownloadsFolderStatics2, WSIStorageLibraryChange, WSIStorageItem, WSIStorageLibraryChangeReader, WSIStorageLibraryChangeTracker, WSIStreamedFileDataRequest, WSIStorageFileStatics, WSIStorageFolder, WSIStorageFile, WSIStorageFolderStatics, WSIStorageItem2, WSIStorageItemProperties, WSIStorageItemProperties2, WSIStorageItemPropertiesWithProvider, WSIStorageFilePropertiesWithAvailability, WSIStorageProvider, WSIStorageFolder2, WSIStorageFile2, WSIFileIOStatics, WSIPathIOStatics, WSICachedFileManagerStatics, WSISystemAudioProperties, WSISystemGPSProperties, WSISystemImageProperties, WSISystemMediaProperties, WSISystemMusicProperties, WSISystemPhotoProperties, WSISystemVideoProperties, WSISystemProperties, WSIStorageStreamTransaction, WSIApplicationDataStatics, WSIApplicationDataStatics2, WSIApplicationData, WSIApplicationData2, WSIApplicationData3, WSISetVersionRequest, WSISetVersionDeferral, WSIApplicationDataContainer;
+@class WSStorageLibrary, WSStorageFolder, WSStorageLibraryChangeTracker, WSKnownFolders, WSUserDataPaths, WSAppDataPaths, WSSystemDataPaths, WSStorageFile, WSDownloadsFolder, WSStorageLibraryChange, WSStorageLibraryChangeReader, WSStreamedFileDataRequest, WSStorageStreamTransaction, WSStorageProvider, WSFileIO, WSPathIO, WSCachedFileManager, WSSystemAudioProperties, WSSystemGPSProperties, WSSystemImageProperties, WSSystemMediaProperties, WSSystemMusicProperties, WSSystemPhotoProperties, WSSystemVideoProperties, WSSystemProperties, WSApplicationData, WSSetVersionRequest, WSApplicationDataContainer, WSSetVersionDeferral, WSApplicationDataContainerSettings, WSApplicationDataCompositeValue;
+@protocol WSIStorageLibraryStatics, WSIStorageLibraryStatics2, WSIStorageLibrary, WSIStorageLibrary2, WSIStorageLibrary3, WSIKnownFoldersStatics, WSIKnownFoldersStatics2, WSIKnownFoldersStatics3, WSIKnownFoldersPlaylistsStatics, WSIKnownFoldersCameraRollStatics, WSIKnownFoldersSavedPicturesStatics, WSIUserDataPathsStatics, WSIUserDataPaths, WSIAppDataPathsStatics, WSIAppDataPaths, WSISystemDataPathsStatics, WSISystemDataPaths, WSIDownloadsFolderStatics, WSIDownloadsFolderStatics2, WSIStorageLibraryChange, WSIStorageItem, WSIStorageLibraryChangeReader, WSIStorageLibraryChangeTracker, WSIStreamedFileDataRequest, WSIStorageFileStatics, WSIStorageFolder, WSIStorageFile, WSIStorageFolderStatics, WSIStorageItem2, WSIStorageItemProperties, WSIStorageItemProperties2, WSIStorageItemPropertiesWithProvider, WSIStorageFilePropertiesWithAvailability, WSIStorageProvider, WSIStorageProvider2, WSIStorageFolder2, WSIStorageStreamTransaction, WSIStorageFile2, WSIFileIOStatics, WSIPathIOStatics, WSICachedFileManagerStatics, WSISystemAudioProperties, WSISystemGPSProperties, WSISystemImageProperties, WSISystemMediaProperties, WSISystemMusicProperties, WSISystemPhotoProperties, WSISystemVideoProperties, WSISystemProperties, WSIApplicationDataStatics, WSIApplicationDataStatics2, WSIApplicationData, WSIApplicationData2, WSIApplicationData3, WSISetVersionRequest, WSISetVersionDeferral, WSIApplicationDataContainer;
 
 // Windows.Storage.KnownLibraryId
 enum _WSKnownLibraryId {
@@ -55,6 +55,8 @@ enum _WSKnownFolderId {
     WSKnownFolderIdSavedPictures = 11,
     WSKnownFolderIdScreenshots = 12,
     WSKnownFolderIdVideosLibrary = 13,
+    WSKnownFolderIdAllAppMods = 14,
+    WSKnownFolderIdCurrentAppMods = 15,
 };
 typedef unsigned WSKnownFolderId;
 
@@ -135,6 +137,7 @@ typedef unsigned WSStreamedFileFailureMode;
 enum _WSStorageOpenOptions {
     WSStorageOpenOptionsNone = 0,
     WSStorageOpenOptionsAllowOnlyReaders = 1,
+    WSStorageOpenOptionsAllowReadersAndWriters = 2,
 };
 typedef unsigned WSStorageOpenOptions;
 
@@ -453,6 +456,7 @@ OBJCUWPWINDOWSSTORAGEEXPORT
 - (void)removeDefinitionChangedEvent:(EventRegistrationToken)tok;
 - (void)requestAddFolderAsyncWithSuccess:(void (^)(WSStorageFolder*))success failure:(void (^)(NSError*))failure;
 - (void)requestRemoveFolderAsync:(WSStorageFolder*)folder success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
+- (void)areFolderSuggestionsAvailableAsyncWithSuccess:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WSStorageLibrary_DEFINED__
@@ -591,6 +595,94 @@ OBJCUWPWINDOWSSTORAGEEXPORT
 @end
 
 #endif // __WSKnownFolders_DEFINED__
+
+// Windows.Storage.UserDataPaths
+#ifndef __WSUserDataPaths_DEFINED__
+#define __WSUserDataPaths_DEFINED__
+
+OBJCUWPWINDOWSSTORAGEEXPORT
+@interface WSUserDataPaths : RTObject
++ (WSUserDataPaths*)getForUser:(WSUser*)user;
++ (WSUserDataPaths*)getDefault;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (readonly) NSString * cameraRoll;
+@property (readonly) NSString * cookies;
+@property (readonly) NSString * desktop;
+@property (readonly) NSString * documents;
+@property (readonly) NSString * downloads;
+@property (readonly) NSString * favorites;
+@property (readonly) NSString * history;
+@property (readonly) NSString * internetCache;
+@property (readonly) NSString * localAppData;
+@property (readonly) NSString * localAppDataLow;
+@property (readonly) NSString * music;
+@property (readonly) NSString * pictures;
+@property (readonly) NSString * profile;
+@property (readonly) NSString * recent;
+@property (readonly) NSString * roamingAppData;
+@property (readonly) NSString * savedPictures;
+@property (readonly) NSString * screenshots;
+@property (readonly) NSString * templates;
+@property (readonly) NSString * videos;
+@end
+
+#endif // __WSUserDataPaths_DEFINED__
+
+// Windows.Storage.AppDataPaths
+#ifndef __WSAppDataPaths_DEFINED__
+#define __WSAppDataPaths_DEFINED__
+
+OBJCUWPWINDOWSSTORAGEEXPORT
+@interface WSAppDataPaths : RTObject
++ (WSAppDataPaths*)getForUser:(WSUser*)user;
++ (WSAppDataPaths*)getDefault;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (readonly) NSString * cookies;
+@property (readonly) NSString * desktop;
+@property (readonly) NSString * documents;
+@property (readonly) NSString * favorites;
+@property (readonly) NSString * history;
+@property (readonly) NSString * internetCache;
+@property (readonly) NSString * localAppData;
+@property (readonly) NSString * programData;
+@property (readonly) NSString * roamingAppData;
+@end
+
+#endif // __WSAppDataPaths_DEFINED__
+
+// Windows.Storage.SystemDataPaths
+#ifndef __WSSystemDataPaths_DEFINED__
+#define __WSSystemDataPaths_DEFINED__
+
+OBJCUWPWINDOWSSTORAGEEXPORT
+@interface WSSystemDataPaths : RTObject
++ (WSSystemDataPaths*)getDefault;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (readonly) NSString * fonts;
+@property (readonly) NSString * programData;
+@property (readonly) NSString * Public;
+@property (readonly) NSString * publicDesktop;
+@property (readonly) NSString * publicDocuments;
+@property (readonly) NSString * publicDownloads;
+@property (readonly) NSString * publicMusic;
+@property (readonly) NSString * publicPictures;
+@property (readonly) NSString * publicVideos;
+@property (readonly) NSString * system;
+@property (readonly) NSString * systemArm;
+@property (readonly) NSString * systemHost;
+@property (readonly) NSString * systemX64;
+@property (readonly) NSString * systemX86;
+@property (readonly) NSString * userProfiles;
+@property (readonly) NSString * windows;
+@end
+
+#endif // __WSSystemDataPaths_DEFINED__
 
 // Windows.Storage.StorageFile
 #ifndef __WSStorageFile_DEFINED__
@@ -776,6 +868,7 @@ OBJCUWPWINDOWSSTORAGEEXPORT
 #endif
 @property (readonly) NSString * displayName;
 @property (readonly) NSString * id;
+- (void)isPropertySupportedForPartialFileAsync:(NSString *)propertyCanonicalName success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WSStorageProvider_DEFINED__

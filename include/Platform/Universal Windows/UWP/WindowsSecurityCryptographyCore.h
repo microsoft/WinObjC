@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -157,11 +157,6 @@ OBJCUWPWINDOWSSECURITYCRYPTOGRAPHYCOREEXPORT
 
 OBJCUWPWINDOWSSECURITYCRYPTOGRAPHYCOREEXPORT
 @interface WSCCCryptographicEngine : RTObject
-+ (RTObject<WSSIBuffer>*)signHashedData:(WSCCCryptographicKey*)key data:(RTObject<WSSIBuffer>*)data;
-+ (BOOL)verifySignatureWithHashInput:(WSCCCryptographicKey*)key data:(RTObject<WSSIBuffer>*)data signature:(RTObject<WSSIBuffer>*)signature;
-+ (void)decryptAsync:(WSCCCryptographicKey*)key data:(RTObject<WSSIBuffer>*)data iv:(RTObject<WSSIBuffer>*)iv success:(void (^)(RTObject<WSSIBuffer>*))success failure:(void (^)(NSError*))failure;
-+ (void)signAsync:(WSCCCryptographicKey*)key data:(RTObject<WSSIBuffer>*)data success:(void (^)(RTObject<WSSIBuffer>*))success failure:(void (^)(NSError*))failure;
-+ (void)signHashedDataAsync:(WSCCCryptographicKey*)key data:(RTObject<WSSIBuffer>*)data success:(void (^)(RTObject<WSSIBuffer>*))success failure:(void (^)(NSError*))failure;
 + (RTObject<WSSIBuffer>*)encrypt:(WSCCCryptographicKey*)key data:(RTObject<WSSIBuffer>*)data iv:(RTObject<WSSIBuffer>*)iv;
 + (RTObject<WSSIBuffer>*)decrypt:(WSCCCryptographicKey*)key data:(RTObject<WSSIBuffer>*)data iv:(RTObject<WSSIBuffer>*)iv;
 + (WSCCEncryptedAndAuthenticatedData*)encryptAndAuthenticate:(WSCCCryptographicKey*)key data:(RTObject<WSSIBuffer>*)data nonce:(RTObject<WSSIBuffer>*)nonce authenticatedData:(RTObject<WSSIBuffer>*)authenticatedData;
@@ -169,6 +164,11 @@ OBJCUWPWINDOWSSECURITYCRYPTOGRAPHYCOREEXPORT
 + (RTObject<WSSIBuffer>*)sign:(WSCCCryptographicKey*)key data:(RTObject<WSSIBuffer>*)data;
 + (BOOL)verifySignature:(WSCCCryptographicKey*)key data:(RTObject<WSSIBuffer>*)data signature:(RTObject<WSSIBuffer>*)signature;
 + (RTObject<WSSIBuffer>*)deriveKeyMaterial:(WSCCCryptographicKey*)key parameters:(WSCCKeyDerivationParameters*)parameters desiredKeySize:(unsigned int)desiredKeySize;
++ (RTObject<WSSIBuffer>*)signHashedData:(WSCCCryptographicKey*)key data:(RTObject<WSSIBuffer>*)data;
++ (BOOL)verifySignatureWithHashInput:(WSCCCryptographicKey*)key data:(RTObject<WSSIBuffer>*)data signature:(RTObject<WSSIBuffer>*)signature;
++ (void)decryptAsync:(WSCCCryptographicKey*)key data:(RTObject<WSSIBuffer>*)data iv:(RTObject<WSSIBuffer>*)iv success:(void (^)(RTObject<WSSIBuffer>*))success failure:(void (^)(NSError*))failure;
++ (void)signAsync:(WSCCCryptographicKey*)key data:(RTObject<WSSIBuffer>*)data success:(void (^)(RTObject<WSSIBuffer>*))success failure:(void (^)(NSError*))failure;
++ (void)signHashedDataAsync:(WSCCCryptographicKey*)key data:(RTObject<WSSIBuffer>*)data success:(void (^)(RTObject<WSSIBuffer>*))success failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WSCCCryptographicEngine_DEFINED__

@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -28,7 +28,7 @@
 #include <UWP/interopBase.h>
 
 @class WAAAppServiceRequest, WAAAppServiceDeferral, WAAAppServiceResponse, WAAAppServiceConnection, WAAAppServiceRequestReceivedEventArgs, WAAAppServiceClosedEventArgs, WAAAppServiceTriggerDetails, WAAAppServiceCatalog;
-@protocol WAAIAppServiceDeferral, WAAIAppServiceClosedEventArgs, WAAIAppServiceRequestReceivedEventArgs, WAAIAppServiceConnection2, WAAIAppServiceTriggerDetails, WAAIAppServiceTriggerDetails2, WAAIAppServiceRequest, WAAIAppServiceResponse, WAAIAppServiceCatalogStatics, WAAIAppServiceConnection;
+@protocol WAAIAppServiceDeferral, WAAIAppServiceClosedEventArgs, WAAIAppServiceRequestReceivedEventArgs, WAAIAppServiceConnection, WAAIAppServiceConnection2, WAAIAppServiceTriggerDetails, WAAIAppServiceTriggerDetails2, WAAIAppServiceTriggerDetails3, WAAIAppServiceRequest, WAAIAppServiceResponse, WAAIAppServiceCatalogStatics;
 
 // Windows.ApplicationModel.AppService.AppServiceClosedStatus
 enum _WAAAppServiceClosedStatus {
@@ -63,11 +63,11 @@ enum _WAAAppServiceResponseStatus {
 };
 typedef unsigned WAAAppServiceResponseStatus;
 
+#include "WindowsFoundation.h"
+#include "WindowsFoundationCollections.h"
 #include "WindowsSystemRemoteSystems.h"
 #include "WindowsApplicationModel.h"
 #include "WindowsSystem.h"
-#include "WindowsFoundationCollections.h"
-#include "WindowsFoundation.h"
 
 #import <Foundation/Foundation.h>
 
@@ -196,6 +196,7 @@ OBJCUWPWINDOWSAPPLICATIONMODELAPPSERVICEEXPORT
 @property (readonly) NSString * callerPackageFamilyName;
 @property (readonly) NSString * name;
 @property (readonly) BOOL isRemoteSystemConnection;
+- (void)checkCallerForCapabilityAsync:(NSString *)capabilityName success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WAAAppServiceTriggerDetails_DEFINED__

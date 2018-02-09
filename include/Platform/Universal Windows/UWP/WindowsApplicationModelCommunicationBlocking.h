@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -38,8 +38,8 @@
 
 OBJCUWPWINDOWSAPPLICATIONMODELCOMMUNICATIONBLOCKINGEXPORT
 @interface WACCommunicationBlockingAppManager : RTObject
-+ (void)requestSetAsActiveBlockingAppAsyncWithSuccess:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 + (void)showCommunicationBlockingSettingsUI;
++ (void)requestSetAsActiveBlockingAppAsyncWithSuccess:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 + (void)showCommunicationBlockingSettingsUI;
 + (BOOL)isCurrentAppActiveBlockingApp;
 @end

@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -29,7 +29,7 @@
 
 @class WUColorHelper, WUColors;
 @class WUColor;
-@protocol WUIColorHelper, WUIColorHelperStatics, WUIColors, WUIColorsStatics;
+@protocol WUIColorHelper, WUIColorHelperStatics, WUIColorHelperStatics2, WUIColors, WUIColorsStatics;
 
 #import <Foundation/Foundation.h>
 
@@ -49,6 +49,7 @@ OBJCUWPWINDOWSUIEXPORT
 
 OBJCUWPWINDOWSUIEXPORT
 @interface WUColorHelper : RTObject
++ (NSString *)toDisplayName:(WUColor*)color;
 + (WUColor*)fromArgb:(uint8_t)a r:(uint8_t)r g:(uint8_t)g b:(uint8_t)b;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));

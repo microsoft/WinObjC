@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -27,8 +27,8 @@
 #endif
 #include <UWP/interopBase.h>
 
-@class WUNShownTileNotification, WUNNotification, WUNNotificationBinding, WUNAdaptiveNotificationText, WUNTileUpdater, WUNTileUpdateManagerForUser, WUNTileNotification, WUNScheduledTileNotification, WUNTileFlyoutUpdater, WUNTileFlyoutNotification, WUNBadgeUpdater, WUNBadgeUpdateManagerForUser, WUNBadgeNotification, WUNToastNotifier, WUNToastNotification, WUNScheduledToastNotification, WUNToastDismissedEventArgs, WUNToastFailedEventArgs, WUNNotificationVisual, WUNToastNotificationHistory, WUNToastNotificationManagerForUser, WUNUserNotificationChangedEventArgs, WUNUserNotification, WUNKnownAdaptiveNotificationHints, WUNKnownNotificationBindings, WUNKnownAdaptiveNotificationTextStyles, WUNTileUpdateManager, WUNBadgeUpdateManager, WUNTileFlyoutUpdateManager, WUNToastNotificationManager, WUNToastActivatedEventArgs, WUNToastNotificationHistoryChangedTriggerDetail, WUNToastNotificationActionTriggerDetail;
-@protocol WUNIShownTileNotification, WUNIUserNotificationChangedEventArgs, WUNIUserNotification, WUNINotificationVisual, WUNIAdaptiveNotificationContent, WUNINotificationBinding, WUNIKnownNotificationBindingsStatics, WUNIKnownAdaptiveNotificationHintsStatics, WUNIKnownAdaptiveNotificationTextStylesStatics, WUNIAdaptiveNotificationText, WUNIToastDismissedEventArgs, WUNIToastFailedEventArgs, WUNIToastActivatedEventArgs, WUNITileUpdateManagerStatics, WUNITileUpdateManagerStatics2, WUNITileUpdateManagerForUser, WUNITileUpdater, WUNITileUpdater2, WUNITileFlyoutUpdateManagerStatics, WUNITileFlyoutUpdater, WUNIBadgeUpdateManagerStatics, WUNIBadgeUpdateManagerStatics2, WUNIBadgeUpdateManagerForUser, WUNIBadgeUpdater, WUNIToastNotificationManagerStatics, WUNIToastNotifier, WUNITileNotificationFactory, WUNITileNotification, WUNITileFlyoutNotificationFactory, WUNITileFlyoutNotification, WUNIBadgeNotificationFactory, WUNIBadgeNotification, WUNIToastNotificationFactory, WUNIToastNotification, WUNIToastNotification2, WUNINotification, WUNIToastNotification3, WUNIScheduledToastNotificationFactory, WUNIScheduledToastNotification, WUNIScheduledToastNotification2, WUNIScheduledToastNotification3, WUNIScheduledTileNotificationFactory, WUNIScheduledTileNotification, WUNIToastNotificationManagerStatics2, WUNIToastNotificationManagerStatics4, WUNIToastNotificationManagerForUser, WUNIToastNotificationHistory, WUNIToastNotificationHistory2, WUNIToastNotificationHistoryChangedTriggerDetail, WUNIToastNotificationActionTriggerDetail;
+@class WUNShownTileNotification, WUNNotification, WUNNotificationBinding, WUNAdaptiveNotificationText, WUNTileUpdater, WUNTileUpdateManagerForUser, WUNTileNotification, WUNScheduledTileNotification, WUNTileFlyoutUpdater, WUNTileFlyoutNotification, WUNBadgeUpdater, WUNBadgeUpdateManagerForUser, WUNBadgeNotification, WUNToastNotifier, WUNToastNotification, WUNScheduledToastNotification, WUNNotificationData, WUNToastCollection, WUNToastDismissedEventArgs, WUNToastFailedEventArgs, WUNNotificationVisual, WUNToastNotificationHistory, WUNToastNotificationManagerForUser, WUNToastCollectionManager, WUNUserNotificationChangedEventArgs, WUNUserNotification, WUNKnownAdaptiveNotificationHints, WUNKnownNotificationBindings, WUNKnownAdaptiveNotificationTextStyles, WUNTileUpdateManager, WUNBadgeUpdateManager, WUNTileFlyoutUpdateManager, WUNToastNotificationManager, WUNToastActivatedEventArgs, WUNToastNotificationHistoryChangedTriggerDetail, WUNToastNotificationActionTriggerDetail;
+@protocol WUNIShownTileNotification, WUNIUserNotificationChangedEventArgs, WUNIUserNotification, WUNINotificationVisual, WUNIAdaptiveNotificationContent, WUNINotificationBinding, WUNIKnownNotificationBindingsStatics, WUNIKnownAdaptiveNotificationHintsStatics, WUNIKnownAdaptiveNotificationTextStylesStatics, WUNIAdaptiveNotificationText, WUNIToastDismissedEventArgs, WUNIToastFailedEventArgs, WUNIToastActivatedEventArgs, WUNITileUpdateManagerStatics, WUNITileUpdateManagerStatics2, WUNITileUpdateManagerForUser, WUNITileUpdater, WUNITileUpdater2, WUNITileFlyoutUpdateManagerStatics, WUNITileFlyoutUpdater, WUNIBadgeUpdateManagerStatics, WUNIBadgeUpdateManagerStatics2, WUNIBadgeUpdateManagerForUser, WUNIBadgeUpdater, WUNIToastNotificationManagerStatics, WUNIToastNotifier, WUNIToastNotifier2, WUNIToastCollectionManager, WUNITileNotificationFactory, WUNITileNotification, WUNITileFlyoutNotificationFactory, WUNITileFlyoutNotification, WUNIBadgeNotificationFactory, WUNIBadgeNotification, WUNIToastNotificationFactory, WUNIToastNotification, WUNIToastNotification2, WUNINotification, WUNIToastNotification3, WUNIToastNotification4, WUNIToastCollectionFactory, WUNINotificationDataFactory, WUNINotificationData, WUNIToastCollection, WUNIScheduledToastNotificationFactory, WUNIScheduledToastNotification, WUNIScheduledToastNotification2, WUNIScheduledToastNotification3, WUNIScheduledTileNotificationFactory, WUNIScheduledTileNotification, WUNIToastNotificationManagerStatics2, WUNIToastNotificationManagerStatics4, WUNIToastNotificationManagerStatics5, WUNIToastNotificationManagerForUser, WUNIToastNotificationManagerForUser2, WUNIToastNotificationHistory, WUNIToastNotificationHistory2, WUNIToastNotificationHistoryChangedTriggerDetail, WUNIToastNotificationHistoryChangedTriggerDetail2, WUNIToastNotificationActionTriggerDetail;
 
 // Windows.UI.Notifications.NotificationSetting
 enum _WUNNotificationSetting {
@@ -250,6 +250,21 @@ enum _WUNUserNotificationChangedKind {
     WUNUserNotificationChangedKindRemoved = 1,
 };
 typedef unsigned WUNUserNotificationChangedKind;
+
+// Windows.UI.Notifications.NotificationUpdateResult
+enum _WUNNotificationUpdateResult {
+    WUNNotificationUpdateResultSucceeded = 0,
+    WUNNotificationUpdateResultFailed = 1,
+    WUNNotificationUpdateResultNotificationNotFound = 2,
+};
+typedef unsigned WUNNotificationUpdateResult;
+
+// Windows.UI.Notifications.ToastNotificationPriority
+enum _WUNToastNotificationPriority {
+    WUNToastNotificationPriorityDefault = 0,
+    WUNToastNotificationPriorityHigh = 1,
+};
+typedef unsigned WUNToastNotificationPriority;
 
 #include "WindowsSystem.h"
 #include "WindowsApplicationModel.h"
@@ -521,6 +536,8 @@ OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 - (void)addToSchedule:(WUNScheduledToastNotification*)scheduledToast;
 - (void)removeFromSchedule:(WUNScheduledToastNotification*)scheduledToast;
 - (NSArray* /* WUNScheduledToastNotification* */)getScheduledToastNotifications;
+- (WUNNotificationUpdateResult)updateWithTagAndGroup:(WUNNotificationData*)data tag:(NSString *)tag group:(NSString *)group;
+- (WUNNotificationUpdateResult)updateWithTag:(WUNNotificationData*)data tag:(NSString *)tag;
 @end
 
 #endif // __WUNToastNotifier_DEFINED__
@@ -542,6 +559,8 @@ OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @property (retain) NSString * group;
 @property (retain) NSString * remoteId;
 @property WUNNotificationMirroring notificationMirroring;
+@property WUNToastNotificationPriority priority;
+@property (retain) WUNNotificationData* data;
 - (EventRegistrationToken)addActivatedEvent:(void(^)(WUNToastNotification*, RTObject*))del;
 - (void)removeActivatedEvent:(EventRegistrationToken)tok;
 - (EventRegistrationToken)addDismissedEvent:(void(^)(WUNToastNotification*, WUNToastDismissedEventArgs*))del;
@@ -576,6 +595,42 @@ OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @end
 
 #endif // __WUNScheduledToastNotification_DEFINED__
+
+// Windows.UI.Notifications.NotificationData
+#ifndef __WUNNotificationData_DEFINED__
+#define __WUNNotificationData_DEFINED__
+
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
+@interface WUNNotificationData : RTObject
++ (WUNNotificationData*)makeNotificationDataWithValuesAndSequenceNumber:(id<NSFastEnumeration> /* RTKeyValuePair* < NSString *, NSString * > */)initialValues sequenceNumber:(unsigned int)sequenceNumber ACTIVATOR;
++ (WUNNotificationData*)makeNotificationDataWithValues:(id<NSFastEnumeration> /* RTKeyValuePair* < NSString *, NSString * > */)initialValues ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property unsigned int sequenceNumber;
+@property (readonly) NSMutableDictionary* /* NSString *, NSString * */ values;
+@end
+
+#endif // __WUNNotificationData_DEFINED__
+
+// Windows.UI.Notifications.ToastCollection
+#ifndef __WUNToastCollection_DEFINED__
+#define __WUNToastCollection_DEFINED__
+
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
+@interface WUNToastCollection : RTObject
++ (WUNToastCollection*)makeInstance:(NSString *)collectionId displayName:(NSString *)displayName launchArgs:(NSString *)launchArgs iconUri:(WFUri*)iconUri ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (retain) NSString * launchArgs;
+@property (retain) WFUri* icon;
+@property (retain) NSString * displayName;
+@property (readonly) NSString * id;
+@end
+
+#endif // __WUNToastCollection_DEFINED__
 
 // Windows.UI.Notifications.ToastDismissedEventArgs
 #ifndef __WUNToastDismissedEventArgs_DEFINED__
@@ -656,9 +711,33 @@ OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @property (readonly) WSUser* user;
 - (WUNToastNotifier*)createToastNotifier;
 - (WUNToastNotifier*)createToastNotifierWithId:(NSString *)applicationId;
+- (void)getToastNotifierForToastCollectionIdAsync:(NSString *)collectionId success:(void (^)(WUNToastNotifier*))success failure:(void (^)(NSError*))failure;
+- (void)getHistoryForToastCollectionIdAsync:(NSString *)collectionId success:(void (^)(WUNToastNotificationHistory*))success failure:(void (^)(NSError*))failure;
+- (WUNToastCollectionManager*)getToastCollectionManager;
+- (WUNToastCollectionManager*)getToastCollectionManagerWithAppId:(NSString *)appId;
 @end
 
 #endif // __WUNToastNotificationManagerForUser_DEFINED__
+
+// Windows.UI.Notifications.ToastCollectionManager
+#ifndef __WUNToastCollectionManager_DEFINED__
+#define __WUNToastCollectionManager_DEFINED__
+
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
+@interface WUNToastCollectionManager : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (readonly) NSString * appId;
+@property (readonly) WSUser* user;
+- (RTObject<WFIAsyncAction>*)saveToastCollectionAsync:(WUNToastCollection*)collection;
+- (void)findAllToastCollectionsAsyncWithSuccess:(void (^)(NSArray* /* WUNToastCollection* */))success failure:(void (^)(NSError*))failure;
+- (void)getToastCollectionAsync:(NSString *)collectionId success:(void (^)(WUNToastCollection*))success failure:(void (^)(NSError*))failure;
+- (RTObject<WFIAsyncAction>*)removeToastCollectionAsync:(NSString *)collectionId;
+- (RTObject<WFIAsyncAction>*)removeAllToastCollectionsAsync;
+@end
+
+#endif // __WUNToastCollectionManager_DEFINED__
 
 // Windows.UI.Notifications.UserNotificationChangedEventArgs
 #ifndef __WUNUserNotificationChangedEventArgs_DEFINED__
@@ -754,11 +833,11 @@ OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 
 OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WUNTileUpdateManager : RTObject
-+ (WUNTileUpdateManagerForUser*)getForUser:(WSUser*)user;
 + (WUNTileUpdater*)createTileUpdaterForApplication;
 + (WUNTileUpdater*)createTileUpdaterForApplicationWithId:(NSString *)applicationId;
 + (WUNTileUpdater*)createTileUpdaterForSecondaryTile:(NSString *)tileId;
 + (WDXDXmlDocument*)getTemplateContent:(WUNTileTemplateType)type;
++ (WUNTileUpdateManagerForUser*)getForUser:(WSUser*)user;
 @end
 
 #endif // __WUNTileUpdateManager_DEFINED__
@@ -798,11 +877,12 @@ OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 
 OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WUNToastNotificationManager : RTObject
++ (WUNToastNotificationManagerForUser*)getForUser:(WSUser*)user;
++ (void)configureNotificationMirroring:(WUNNotificationMirroring)value;
 + (WUNToastNotifier*)createToastNotifier;
 + (WUNToastNotifier*)createToastNotifierWithId:(NSString *)applicationId;
 + (WDXDXmlDocument*)getTemplateContent:(WUNToastTemplateType)type;
-+ (WUNToastNotificationManagerForUser*)getForUser:(WSUser*)user;
-+ (void)configureNotificationMirroring:(WUNNotificationMirroring)value;
++ (WUNToastNotificationManagerForUser*)getDefault;
 + (WUNToastNotificationHistory*)history;
 @end
 
@@ -832,6 +912,7 @@ OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WUNToastHistoryChangedType changeType;
+@property (readonly) NSString * collectionId;
 @end
 
 #endif // __WUNToastNotificationHistoryChangedTriggerDetail_DEFINED__

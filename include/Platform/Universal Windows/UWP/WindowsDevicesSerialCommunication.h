@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -28,7 +28,7 @@
 #include <UWP/interopBase.h>
 
 @class WDSSerialDevice, WDSErrorReceivedEventArgs, WDSPinChangedEventArgs;
-@protocol WDSISerialDeviceStatics, WDSIErrorReceivedEventArgs, WDSIPinChangedEventArgs, WDSISerialDevice;
+@protocol WDSISerialDeviceStatics, WDSISerialDevice, WDSIErrorReceivedEventArgs, WDSIPinChangedEventArgs;
 
 // Windows.Devices.SerialCommunication.SerialParity
 enum _WDSSerialParity {

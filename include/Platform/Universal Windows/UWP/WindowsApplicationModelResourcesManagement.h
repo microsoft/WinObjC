@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -67,8 +67,8 @@ OBJCUWPWINDOWSAPPLICATIONMODELRESOURCESMANAGEMENTEXPORT
 
 OBJCUWPWINDOWSAPPLICATIONMODELRESOURCESMANAGEMENTEXPORT
 @interface WARMResourceIndexer : RTObject
-+ (WARMResourceIndexer*)makeResourceIndexer:(WFUri*)projectRoot ACTIVATOR;
 + (WARMResourceIndexer*)makeResourceIndexerWithExtension:(WFUri*)projectRoot extensionDllPath:(WFUri*)extensionDllPath ACTIVATOR;
++ (WARMResourceIndexer*)makeResourceIndexer:(WFUri*)projectRoot ACTIVATOR;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif

@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -27,9 +27,9 @@
 #endif
 #include <UWP/interopBase.h>
 
-@class WMDDeploymentResult, WMDPackageUserInformation, WMDPackageVolume, WMDPackageManager;
+@class WMDDeploymentResult, WMDPackageUserInformation, WMDPackageVolume, WMDPackageManagerDebugSettings, WMDPackageManager;
 @class WMDDeploymentProgress;
-@protocol WMDIDeploymentResult, WMDIPackageUserInformation, WMDIPackageManager, WMDIPackageManager2, WMDIPackageManager3, WMDIPackageManager4, WMDIPackageVolume, WMDIPackageVolume2;
+@protocol WMDIDeploymentResult, WMDIDeploymentResult2, WMDIPackageUserInformation, WMDIPackageManager, WMDIPackageManager2, WMDIPackageManager3, WMDIPackageManager4, WMDIPackageManager5, WMDIPackageManager6, WMDIPackageVolume, WMDIPackageVolume2, WMDIPackageManagerDebugSettings;
 
 // Windows.Management.Deployment.DeploymentProgressState
 enum _WMDDeploymentProgressState {
@@ -45,6 +45,7 @@ enum _WMDDeploymentOptions {
     WMDDeploymentOptionsDevelopmentMode = 2,
     WMDDeploymentOptionsInstallAllResources = 32,
     WMDDeploymentOptionsForceTargetApplicationShutdown = 64,
+    WMDDeploymentOptionsRequiredContentGroupOnly = 256,
 };
 typedef unsigned WMDDeploymentOptions;
 
@@ -54,6 +55,15 @@ enum _WMDRemovalOptions {
     WMDRemovalOptionsPreserveApplicationData = 4096,
 };
 typedef unsigned WMDRemovalOptions;
+
+// Windows.Management.Deployment.AddPackageByAppInstallerOptions
+enum _WMDAddPackageByAppInstallerOptions {
+    WMDAddPackageByAppInstallerOptionsNone = 0,
+    WMDAddPackageByAppInstallerOptionsInstallAllResources = 32,
+    WMDAddPackageByAppInstallerOptionsForceTargetAppShutdown = 64,
+    WMDAddPackageByAppInstallerOptionsRequiredContentGroupOnly = 256,
+};
+typedef unsigned WMDAddPackageByAppInstallerOptions;
 
 // Windows.Management.Deployment.PackageTypes
 enum _WMDPackageTypes {
@@ -120,6 +130,7 @@ OBJCUWPWINDOWSMANAGEMENTDEPLOYMENTEXPORT
 @property (readonly) WFGUID* activityId;
 @property (readonly) NSString * errorText;
 @property (readonly) HRESULT extendedErrorCode;
+@property (readonly) BOOL isRegistered;
 @end
 
 #endif // __WMDDeploymentResult_DEFINED__
@@ -175,6 +186,21 @@ OBJCUWPWINDOWSMANAGEMENTDEPLOYMENTEXPORT
 
 #endif // __WMDPackageVolume_DEFINED__
 
+// Windows.Management.Deployment.PackageManagerDebugSettings
+#ifndef __WMDPackageManagerDebugSettings_DEFINED__
+#define __WMDPackageManagerDebugSettings_DEFINED__
+
+OBJCUWPWINDOWSMANAGEMENTDEPLOYMENTEXPORT
+@interface WMDPackageManagerDebugSettings : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+- (RTObject<WFIAsyncAction>*)setContentGroupStateAsync:(WAPackage*)package contentGroupName:(NSString *)contentGroupName state:(WAPackageContentGroupState)state;
+- (RTObject<WFIAsyncAction>*)setContentGroupStateWithPercentageAsync:(WAPackage*)package contentGroupName:(NSString *)contentGroupName state:(WAPackageContentGroupState)state completionPercentage:(double)completionPercentage;
+@end
+
+#endif // __WMDPackageManagerDebugSettings_DEFINED__
+
 // Windows.Management.Deployment.PackageManager
 #ifndef __WMDPackageManager_DEFINED__
 #define __WMDPackageManager_DEFINED__
@@ -185,6 +211,7 @@ OBJCUWPWINDOWSMANAGEMENTDEPLOYMENTEXPORT
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
+@property (readonly) WMDPackageManagerDebugSettings* debugSettings;
 - (void)addPackageAsync:(WFUri*)packageUri dependencyPackageUris:(id<NSFastEnumeration> /* WFUri* */)dependencyPackageUris deploymentOptions:(WMDDeploymentOptions)deploymentOptions success:(void (^)(WMDDeploymentResult*))success progress:(void (^)(WMDDeploymentProgress*))progress failure:(void (^)(NSError*))failure;
 - (void)updatePackageAsync:(WFUri*)packageUri dependencyPackageUris:(id<NSFastEnumeration> /* WFUri* */)dependencyPackageUris deploymentOptions:(WMDDeploymentOptions)deploymentOptions success:(void (^)(WMDDeploymentResult*))success progress:(void (^)(WMDDeploymentProgress*))progress failure:(void (^)(NSError*))failure;
 - (void)removePackageAsync:(NSString *)packageFullName success:(void (^)(WMDDeploymentResult*))success progress:(void (^)(WMDDeploymentProgress*))progress failure:(void (^)(NSError*))failure;
@@ -227,6 +254,15 @@ OBJCUWPWINDOWSMANAGEMENTDEPLOYMENTEXPORT
 - (void)stagePackageToVolumeAsync:(WFUri*)packageUri dependencyPackageUris:(id<NSFastEnumeration> /* WFUri* */)dependencyPackageUris deploymentOptions:(WMDDeploymentOptions)deploymentOptions targetVolume:(WMDPackageVolume*)targetVolume success:(void (^)(WMDDeploymentResult*))success progress:(void (^)(WMDDeploymentProgress*))progress failure:(void (^)(NSError*))failure;
 - (void)stageUserDataWithOptionsAsync:(NSString *)packageFullName deploymentOptions:(WMDDeploymentOptions)deploymentOptions success:(void (^)(WMDDeploymentResult*))success progress:(void (^)(WMDDeploymentProgress*))progress failure:(void (^)(NSError*))failure;
 - (void)getPackageVolumesAsyncWithSuccess:(void (^)(NSArray* /* WMDPackageVolume* */))success failure:(void (^)(NSError*))failure;
+- (void)addPackageToVolumeAndOptionalPackagesAsync:(WFUri*)packageUri dependencyPackageUris:(id<NSFastEnumeration> /* WFUri* */)dependencyPackageUris deploymentOptions:(WMDDeploymentOptions)deploymentOptions targetVolume:(WMDPackageVolume*)targetVolume optionalPackageFamilyNames:(id<NSFastEnumeration> /* NSString * */)optionalPackageFamilyNames externalPackageUris:(id<NSFastEnumeration> /* WFUri* */)externalPackageUris success:(void (^)(WMDDeploymentResult*))success progress:(void (^)(WMDDeploymentProgress*))progress failure:(void (^)(NSError*))failure;
+- (void)stagePackageToVolumeAndOptionalPackagesAsync:(WFUri*)packageUri dependencyPackageUris:(id<NSFastEnumeration> /* WFUri* */)dependencyPackageUris deploymentOptions:(WMDDeploymentOptions)deploymentOptions targetVolume:(WMDPackageVolume*)targetVolume optionalPackageFamilyNames:(id<NSFastEnumeration> /* NSString * */)optionalPackageFamilyNames externalPackageUris:(id<NSFastEnumeration> /* WFUri* */)externalPackageUris success:(void (^)(WMDDeploymentResult*))success progress:(void (^)(WMDDeploymentProgress*))progress failure:(void (^)(NSError*))failure;
+- (void)registerPackageByFamilyNameAndOptionalPackagesAsync:(NSString *)mainPackageFamilyName dependencyPackageFamilyNames:(id<NSFastEnumeration> /* NSString * */)dependencyPackageFamilyNames deploymentOptions:(WMDDeploymentOptions)deploymentOptions appDataVolume:(WMDPackageVolume*)appDataVolume optionalPackageFamilyNames:(id<NSFastEnumeration> /* NSString * */)optionalPackageFamilyNames success:(void (^)(WMDDeploymentResult*))success progress:(void (^)(WMDDeploymentProgress*))progress failure:(void (^)(NSError*))failure;
+- (void)provisionPackageForAllUsersAsync:(NSString *)packageFamilyName success:(void (^)(WMDDeploymentResult*))success progress:(void (^)(WMDDeploymentProgress*))progress failure:(void (^)(NSError*))failure;
+- (void)addPackageByAppInstallerFileAsync:(WFUri*)appInstallerFileUri options:(WMDAddPackageByAppInstallerOptions)options targetVolume:(WMDPackageVolume*)targetVolume success:(void (^)(WMDDeploymentResult*))success progress:(void (^)(WMDDeploymentProgress*))progress failure:(void (^)(NSError*))failure;
+- (void)requestAddPackageByAppInstallerFileAsync:(WFUri*)appInstallerFileUri options:(WMDAddPackageByAppInstallerOptions)options targetVolume:(WMDPackageVolume*)targetVolume success:(void (^)(WMDDeploymentResult*))success progress:(void (^)(WMDDeploymentProgress*))progress failure:(void (^)(NSError*))failure;
+- (void)addPackageToVolumeAndRelatedSetAsync:(WFUri*)packageUri dependencyPackageUris:(id<NSFastEnumeration> /* WFUri* */)dependencyPackageUris options:(WMDDeploymentOptions)options targetVolume:(WMDPackageVolume*)targetVolume optionalPackageFamilyNames:(id<NSFastEnumeration> /* NSString * */)optionalPackageFamilyNames packageUrisToInstall:(id<NSFastEnumeration> /* WFUri* */)packageUrisToInstall relatedPackageUris:(id<NSFastEnumeration> /* WFUri* */)relatedPackageUris success:(void (^)(WMDDeploymentResult*))success progress:(void (^)(WMDDeploymentProgress*))progress failure:(void (^)(NSError*))failure;
+- (void)stagePackageToVolumeAndRelatedSetAsync:(WFUri*)packageUri dependencyPackageUris:(id<NSFastEnumeration> /* WFUri* */)dependencyPackageUris options:(WMDDeploymentOptions)options targetVolume:(WMDPackageVolume*)targetVolume optionalPackageFamilyNames:(id<NSFastEnumeration> /* NSString * */)optionalPackageFamilyNames packageUrisToInstall:(id<NSFastEnumeration> /* WFUri* */)packageUrisToInstall relatedPackageUris:(id<NSFastEnumeration> /* WFUri* */)relatedPackageUris success:(void (^)(WMDDeploymentResult*))success progress:(void (^)(WMDDeploymentProgress*))progress failure:(void (^)(NSError*))failure;
+- (void)requestAddPackageAsync:(WFUri*)packageUri dependencyPackageUris:(id<NSFastEnumeration> /* WFUri* */)dependencyPackageUris deploymentOptions:(WMDDeploymentOptions)deploymentOptions targetVolume:(WMDPackageVolume*)targetVolume optionalPackageFamilyNames:(id<NSFastEnumeration> /* NSString * */)optionalPackageFamilyNames relatedPackageUris:(id<NSFastEnumeration> /* WFUri* */)relatedPackageUris success:(void (^)(WMDDeploymentResult*))success progress:(void (^)(WMDDeploymentProgress*))progress failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WMDPackageManager_DEFINED__

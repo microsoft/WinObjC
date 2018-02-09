@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -29,7 +29,7 @@
 
 @class WNSSocketActivityContext, WNSDatagramSocket, WNSStreamSocket, WNSStreamSocketListener, WNSSocketActivityInformation, WNSDatagramSocketControl, WNSDatagramSocketInformation, WNSDatagramSocketMessageReceivedEventArgs, WNSStreamSocketControl, WNSStreamSocketInformation, WNSStreamSocketListenerControl, WNSStreamSocketListenerInformation, WNSStreamSocketListenerConnectionReceivedEventArgs, WNSWebSocketClosedEventArgs, WNSMessageWebSocketControl, WNSMessageWebSocketInformation, WNSMessageWebSocket, WNSMessageWebSocketMessageReceivedEventArgs, WNSWebSocketServerCustomValidationRequestedEventArgs, WNSStreamWebSocketControl, WNSStreamWebSocketInformation, WNSStreamWebSocket, WNSWebSocketKeepAlive, WNSSocketError, WNSWebSocketError, WNSSocketActivityTriggerDetails, WNSControlChannelTrigger;
 @class WNSRoundTripTimeStatistics, WNSBandwidthStatistics;
-@protocol WNSISocketActivityInformation, WNSISocketActivityTriggerDetails, WNSISocketActivityInformationStatics, WNSISocketActivityContext, WNSISocketActivityContextFactory, WNSIDatagramSocketMessageReceivedEventArgs, WNSIMessageWebSocketMessageReceivedEventArgs, WNSIWebSocketClosedEventArgs, WNSIDatagramSocketInformation, WNSIDatagramSocketControl, WNSIDatagramSocketControl2, WNSIDatagramSocketControl3, WNSIDatagramSocketStatics, WNSIDatagramSocket, WNSIDatagramSocket2, WNSIDatagramSocket3, WNSIStreamSocketInformation, WNSIStreamSocketInformation2, WNSIStreamSocketControl, WNSIStreamSocketControl2, WNSIStreamSocketControl3, WNSIStreamSocket, WNSIStreamSocket2, WNSIStreamSocket3, WNSIStreamSocketStatics, WNSIStreamSocketListenerControl, WNSIStreamSocketListenerControl2, WNSIStreamSocketListenerInformation, WNSIStreamSocketListenerConnectionReceivedEventArgs, WNSIStreamSocketListener, WNSIStreamSocketListener2, WNSIStreamSocketListener3, WNSIWebSocketServerCustomValidationRequestedEventArgs, WNSIWebSocketControl, WNSIWebSocketControl2, WNSIWebSocketInformation, WNSIWebSocketInformation2, WNSIWebSocket, WNSIMessageWebSocketControl, WNSIMessageWebSocket, WNSIMessageWebSocket2, WNSIStreamWebSocketControl, WNSIStreamWebSocket, WNSIStreamWebSocket2, WNSISocketErrorStatics, WNSIWebSocketErrorStatics, WNSIControlChannelTrigger, WNSIControlChannelTriggerFactory, WNSIControlChannelTriggerEventDetails, WNSIControlChannelTriggerResetEventDetails, WNSIControlChannelTrigger2;
+@protocol WNSISocketActivityInformation, WNSISocketActivityTriggerDetails, WNSISocketActivityInformationStatics, WNSISocketActivityContext, WNSISocketActivityContextFactory, WNSIDatagramSocketMessageReceivedEventArgs, WNSIMessageWebSocketMessageReceivedEventArgs, WNSIMessageWebSocketMessageReceivedEventArgs2, WNSIWebSocketClosedEventArgs, WNSIDatagramSocketInformation, WNSIDatagramSocketControl, WNSIDatagramSocketControl2, WNSIDatagramSocketControl3, WNSIDatagramSocketStatics, WNSIDatagramSocket, WNSIDatagramSocket2, WNSIDatagramSocket3, WNSIStreamSocketInformation, WNSIStreamSocketInformation2, WNSIStreamSocketControl, WNSIStreamSocketControl2, WNSIStreamSocketControl3, WNSIStreamSocketControl4, WNSIStreamSocket, WNSIStreamSocket2, WNSIStreamSocket3, WNSIStreamSocketStatics, WNSIStreamSocketListenerControl, WNSIStreamSocketListenerControl2, WNSIStreamSocketListenerInformation, WNSIStreamSocketListenerConnectionReceivedEventArgs, WNSIStreamSocketListener, WNSIStreamSocketListener2, WNSIStreamSocketListener3, WNSIWebSocketServerCustomValidationRequestedEventArgs, WNSIWebSocketControl, WNSIWebSocketControl2, WNSIWebSocketInformation, WNSIWebSocketInformation2, WNSIWebSocket, WNSIMessageWebSocketControl, WNSIMessageWebSocketControl2, WNSIMessageWebSocket, WNSIMessageWebSocket2, WNSIStreamWebSocketControl, WNSIStreamWebSocketControl2, WNSIStreamWebSocket, WNSIStreamWebSocket2, WNSISocketErrorStatics, WNSIWebSocketErrorStatics, WNSIControlChannelTrigger, WNSIControlChannelTriggerFactory, WNSIControlChannelTriggerEventDetails, WNSIControlChannelTriggerResetEventDetails, WNSIControlChannelTrigger2;
 
 // Windows.Networking.Sockets.SocketMessageType
 enum _WNSSocketMessageType {
@@ -49,6 +49,7 @@ enum _WNSSocketProtectionLevel {
     WNSSocketProtectionLevelTls10 = 6,
     WNSSocketProtectionLevelTls11 = 7,
     WNSSocketProtectionLevelTls12 = 8,
+    WNSSocketProtectionLevelUnspecified = 9,
 };
 typedef unsigned WNSSocketProtectionLevel;
 
@@ -128,6 +129,13 @@ enum _WNSSocketActivityConnectedStandbyAction {
     WNSSocketActivityConnectedStandbyActionWake = 1,
 };
 typedef unsigned WNSSocketActivityConnectedStandbyAction;
+
+// Windows.Networking.Sockets.MessageWebSocketReceiveMode
+enum _WNSMessageWebSocketReceiveMode {
+    WNSMessageWebSocketReceiveModeFullMessage = 0,
+    WNSMessageWebSocketReceiveModePartialMessage = 1,
+};
+typedef unsigned WNSMessageWebSocketReceiveMode;
 
 // Windows.Networking.Sockets.ControlChannelTriggerStatus
 enum _WNSControlChannelTriggerStatus {
@@ -521,6 +529,7 @@ OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @property (readonly) NSMutableArray* /* WSCCChainValidationResult */ ignorableServerCertificateErrors;
 @property BOOL serializeConnectionAttempts;
 @property (retain) WSCCCertificate* clientCertificate;
+@property WNSSocketProtectionLevel minProtectionLevel;
 @end
 
 #endif // __WNSStreamSocketControl_DEFINED__
@@ -624,6 +633,10 @@ OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 #endif
 @property WNSSocketMessageType messageType;
 @property unsigned int maxMessageSize;
+@property WNSMessageWebSocketReceiveMode receiveMode;
+@property (retain) WFTimeSpan* desiredUnsolicitedPongInterval;
+@property (retain) WSCCCertificate* clientCertificate;
+@property (readonly) WFTimeSpan* actualUnsolicitedPongInterval;
 @property (retain) WSCPasswordCredential* serverCredential;
 @property (retain) WSCPasswordCredential* proxyCredential;
 @property unsigned int outboundBufferSizeInBytes;
@@ -690,6 +703,7 @@ OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WNSSocketMessageType messageType;
+@property (readonly) BOOL isMessageComplete;
 - (WSSDataReader*)getDataReader;
 - (RTObject<WSSIInputStream>*)getDataStream;
 @end
@@ -725,6 +739,9 @@ OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property BOOL noDelay;
+@property (retain) WFTimeSpan* desiredUnsolicitedPongInterval;
+@property (retain) WSCCCertificate* clientCertificate;
+@property (readonly) WFTimeSpan* actualUnsolicitedPongInterval;
 @property (retain) WSCPasswordCredential* serverCredential;
 @property (retain) WSCPasswordCredential* proxyCredential;
 @property unsigned int outboundBufferSizeInBytes;

@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -19,16 +19,16 @@
 
 #pragma once
 
-#ifndef OBJCUWPWINDOWSSTORAGESTREAMSEXPORT
-#define OBJCUWPWINDOWSSTORAGESTREAMSEXPORT __declspec(dllimport)
+#ifndef OBJCUWPWINDOWSSTORAGEEXPORT
+#define OBJCUWPWINDOWSSTORAGEEXPORT __declspec(dllimport)
 #ifndef IN_WinObjC_Frameworks_UWP_BUILD
-#pragma comment(lib, "ObjCUWPWindowsStorageStreams.lib")
+#pragma comment(lib, "ObjCUWPWindowsStorage.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
 
-@class WSSDataReaderLoadOperation, WSSDataReader, WSSDataWriterStoreOperation, WSSDataWriter, WSSRandomAccessStream, WSSBuffer, WSSRandomAccessStreamReference, WSSFileRandomAccessStream, WSSFileInputStream, WSSFileOutputStream, WSSRandomAccessStreamOverStream, WSSInputStreamOverStream, WSSOutputStreamOverStream, WSSInMemoryRandomAccessStream;
-@protocol WSSIDataReader, WSSIDataReaderFactory, WSSIDataReaderStatics, WSSIDataWriter, WSSIDataWriterFactory, WSSIRandomAccessStreamReference, WSSIRandomAccessStreamStatics, WSSIBufferFactory, WSSIBuffer, WSSIBufferStatics, WSSIContentTypeProvider, WSSIInputStreamReference, WSSIRandomAccessStreamReferenceStatics, WSSIInputStream, WSSIOutputStream, WSSIRandomAccessStream, WSSIRandomAccessStreamWithContentType;
+@class WSSDataReaderLoadOperation, WSSDataReader, WSSDataWriterStoreOperation, WSSDataWriter, WSSBuffer, WSSRandomAccessStream, WSSRandomAccessStreamReference, WSSFileRandomAccessStream, WSSFileInputStream, WSSFileOutputStream, WSSRandomAccessStreamOverStream, WSSInputStreamOverStream, WSSOutputStreamOverStream, WSSInMemoryRandomAccessStream;
+@protocol WSSIDataReader, WSSIDataReaderFactory, WSSIDataReaderStatics, WSSIDataWriter, WSSIDataWriterFactory, WSSIBufferFactory, WSSIBuffer, WSSIBufferStatics, WSSIContentTypeProvider, WSSIInputStream, WSSIOutputStream, WSSIRandomAccessStream, WSSIRandomAccessStreamWithContentType, WSSIRandomAccessStreamReference, WSSIRandomAccessStreamStatics, WSSIInputStreamReference, WSSIRandomAccessStreamReferenceStatics, WSSIFileRandomAccessStreamStatics;
 
 // Windows.Storage.Streams.ByteOrder
 enum _WSSByteOrder {
@@ -53,8 +53,19 @@ enum _WSSInputStreamOptions {
 };
 typedef unsigned WSSInputStreamOptions;
 
+// Windows.Storage.Streams.FileOpenDisposition
+enum _WSSFileOpenDisposition {
+    WSSFileOpenDispositionOpenExisting = 0,
+    WSSFileOpenDispositionOpenAlways = 1,
+    WSSFileOpenDispositionCreateNew = 2,
+    WSSFileOpenDispositionCreateAlways = 3,
+    WSSFileOpenDispositionTruncateExisting = 4,
+};
+typedef unsigned WSSFileOpenDisposition;
+
 #include "WindowsFoundation.h"
 #include "WindowsStorage.h"
+#include "WindowsSystem.h"
 
 #import <Foundation/Foundation.h>
 
@@ -88,7 +99,7 @@ typedef unsigned WSSInputStreamOptions;
 - (RTObject<WSSIInputStream>*)detachStream;
 @end
 
-OBJCUWPWINDOWSSTORAGESTREAMSEXPORT
+OBJCUWPWINDOWSSTORAGEEXPORT
 @interface WSSIDataReader : RTObject <WSSIDataReader>
 @end
 
@@ -126,25 +137,11 @@ OBJCUWPWINDOWSSTORAGESTREAMSEXPORT
 - (RTObject<WSSIOutputStream>*)detachStream;
 @end
 
-OBJCUWPWINDOWSSTORAGESTREAMSEXPORT
+OBJCUWPWINDOWSSTORAGEEXPORT
 @interface WSSIDataWriter : RTObject <WSSIDataWriter>
 @end
 
 #endif // __WSSIDataWriter_DEFINED__
-
-// Windows.Storage.Streams.IRandomAccessStreamReference
-#ifndef __WSSIRandomAccessStreamReference_DEFINED__
-#define __WSSIRandomAccessStreamReference_DEFINED__
-
-@protocol WSSIRandomAccessStreamReference
-- (void)openReadAsyncWithSuccess:(void (^)(RTObject<WSSIRandomAccessStreamWithContentType>*))success failure:(void (^)(NSError*))failure;
-@end
-
-OBJCUWPWINDOWSSTORAGESTREAMSEXPORT
-@interface WSSIRandomAccessStreamReference : RTObject <WSSIRandomAccessStreamReference>
-@end
-
-#endif // __WSSIRandomAccessStreamReference_DEFINED__
 
 // Windows.Storage.Streams.IBuffer
 #ifndef __WSSIBuffer_DEFINED__
@@ -155,7 +152,7 @@ OBJCUWPWINDOWSSTORAGESTREAMSEXPORT
 @property unsigned int length;
 @end
 
-OBJCUWPWINDOWSSTORAGESTREAMSEXPORT
+OBJCUWPWINDOWSSTORAGEEXPORT
 @interface WSSIBuffer : RTObject <WSSIBuffer>
 @end
 
@@ -169,25 +166,11 @@ OBJCUWPWINDOWSSTORAGESTREAMSEXPORT
 @property (readonly) NSString * contentType;
 @end
 
-OBJCUWPWINDOWSSTORAGESTREAMSEXPORT
+OBJCUWPWINDOWSSTORAGEEXPORT
 @interface WSSIContentTypeProvider : RTObject <WSSIContentTypeProvider>
 @end
 
 #endif // __WSSIContentTypeProvider_DEFINED__
-
-// Windows.Storage.Streams.IInputStreamReference
-#ifndef __WSSIInputStreamReference_DEFINED__
-#define __WSSIInputStreamReference_DEFINED__
-
-@protocol WSSIInputStreamReference
-- (void)openSequentialReadAsyncWithSuccess:(void (^)(RTObject<WSSIInputStream>*))success failure:(void (^)(NSError*))failure;
-@end
-
-OBJCUWPWINDOWSSTORAGESTREAMSEXPORT
-@interface WSSIInputStreamReference : RTObject <WSSIInputStreamReference>
-@end
-
-#endif // __WSSIInputStreamReference_DEFINED__
 
 // Windows.Foundation.IClosable
 #ifndef __WFIClosable_DEFINED__
@@ -197,7 +180,7 @@ OBJCUWPWINDOWSSTORAGESTREAMSEXPORT
 - (void)close;
 @end
 
-OBJCUWPWINDOWSSTORAGESTREAMSEXPORT
+OBJCUWPWINDOWSSTORAGEEXPORT
 @interface WFIClosable : RTObject <WFIClosable>
 @end
 
@@ -212,7 +195,7 @@ OBJCUWPWINDOWSSTORAGESTREAMSEXPORT
 - (void)close;
 @end
 
-OBJCUWPWINDOWSSTORAGESTREAMSEXPORT
+OBJCUWPWINDOWSSTORAGEEXPORT
 @interface WSSIInputStream : RTObject <WSSIInputStream>
 @end
 
@@ -228,7 +211,7 @@ OBJCUWPWINDOWSSTORAGESTREAMSEXPORT
 - (void)close;
 @end
 
-OBJCUWPWINDOWSSTORAGESTREAMSEXPORT
+OBJCUWPWINDOWSSTORAGEEXPORT
 @interface WSSIOutputStream : RTObject <WSSIOutputStream>
 @end
 
@@ -253,7 +236,7 @@ OBJCUWPWINDOWSSTORAGESTREAMSEXPORT
 - (void)flushAsyncWithSuccess:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 @end
 
-OBJCUWPWINDOWSSTORAGESTREAMSEXPORT
+OBJCUWPWINDOWSSTORAGEEXPORT
 @interface WSSIRandomAccessStream : RTObject <WSSIRandomAccessStream>
 @end
 
@@ -274,11 +257,39 @@ OBJCUWPWINDOWSSTORAGESTREAMSEXPORT
 - (void)flushAsyncWithSuccess:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 @end
 
-OBJCUWPWINDOWSSTORAGESTREAMSEXPORT
+OBJCUWPWINDOWSSTORAGEEXPORT
 @interface WSSIRandomAccessStreamWithContentType : RTObject <WSSIRandomAccessStreamWithContentType>
 @end
 
 #endif // __WSSIRandomAccessStreamWithContentType_DEFINED__
+
+// Windows.Storage.Streams.IRandomAccessStreamReference
+#ifndef __WSSIRandomAccessStreamReference_DEFINED__
+#define __WSSIRandomAccessStreamReference_DEFINED__
+
+@protocol WSSIRandomAccessStreamReference
+- (void)openReadAsyncWithSuccess:(void (^)(RTObject<WSSIRandomAccessStreamWithContentType>*))success failure:(void (^)(NSError*))failure;
+@end
+
+OBJCUWPWINDOWSSTORAGEEXPORT
+@interface WSSIRandomAccessStreamReference : RTObject <WSSIRandomAccessStreamReference>
+@end
+
+#endif // __WSSIRandomAccessStreamReference_DEFINED__
+
+// Windows.Storage.Streams.IInputStreamReference
+#ifndef __WSSIInputStreamReference_DEFINED__
+#define __WSSIInputStreamReference_DEFINED__
+
+@protocol WSSIInputStreamReference
+- (void)openSequentialReadAsyncWithSuccess:(void (^)(RTObject<WSSIInputStream>*))success failure:(void (^)(NSError*))failure;
+@end
+
+OBJCUWPWINDOWSSTORAGEEXPORT
+@interface WSSIInputStreamReference : RTObject <WSSIInputStreamReference>
+@end
+
+#endif // __WSSIInputStreamReference_DEFINED__
 
 // Windows.Foundation.IAsyncInfo
 #ifndef __WFIAsyncInfo_DEFINED__
@@ -292,7 +303,7 @@ OBJCUWPWINDOWSSTORAGESTREAMSEXPORT
 - (void)close;
 @end
 
-OBJCUWPWINDOWSSTORAGESTREAMSEXPORT
+OBJCUWPWINDOWSSTORAGEEXPORT
 @interface WFIAsyncInfo : RTObject <WFIAsyncInfo>
 @end
 
@@ -302,7 +313,7 @@ OBJCUWPWINDOWSSTORAGESTREAMSEXPORT
 #ifndef __WSSDataReaderLoadOperation_DEFINED__
 #define __WSSDataReaderLoadOperation_DEFINED__
 
-OBJCUWPWINDOWSSTORAGESTREAMSEXPORT
+OBJCUWPWINDOWSSTORAGEEXPORT
 @interface WSSDataReaderLoadOperation : RTObject <WFIAsyncInfo>
  // Failed to get type for default interface: Can't marshal Windows.Foundation.IAsyncOperation`1<UInt32>
 @property (readonly) HRESULT errorCode;
@@ -320,7 +331,7 @@ OBJCUWPWINDOWSSTORAGESTREAMSEXPORT
 #ifndef __WSSDataReader_DEFINED__
 #define __WSSDataReader_DEFINED__
 
-OBJCUWPWINDOWSSTORAGESTREAMSEXPORT
+OBJCUWPWINDOWSSTORAGEEXPORT
 @interface WSSDataReader : RTObject <WSSIDataReader, WFIClosable>
 + (WSSDataReader*)fromBuffer:(RTObject<WSSIBuffer>*)buffer;
 + (WSSDataReader*)makeDataReader:(RTObject<WSSIInputStream>*)inputStream ACTIVATOR;
@@ -359,7 +370,7 @@ OBJCUWPWINDOWSSTORAGESTREAMSEXPORT
 #ifndef __WSSDataWriterStoreOperation_DEFINED__
 #define __WSSDataWriterStoreOperation_DEFINED__
 
-OBJCUWPWINDOWSSTORAGESTREAMSEXPORT
+OBJCUWPWINDOWSSTORAGEEXPORT
 @interface WSSDataWriterStoreOperation : RTObject <WFIAsyncInfo>
  // Failed to get type for default interface: Can't marshal Windows.Foundation.IAsyncOperation`1<UInt32>
 @property (readonly) HRESULT errorCode;
@@ -377,7 +388,7 @@ OBJCUWPWINDOWSSTORAGESTREAMSEXPORT
 #ifndef __WSSDataWriter_DEFINED__
 #define __WSSDataWriter_DEFINED__
 
-OBJCUWPWINDOWSSTORAGESTREAMSEXPORT
+OBJCUWPWINDOWSSTORAGEEXPORT
 @interface WSSDataWriter : RTObject <WSSIDataWriter, WFIClosable>
 + (instancetype)make __attribute__ ((ns_returns_retained));
 + (WSSDataWriter*)makeDataWriter:(RTObject<WSSIOutputStream>*)outputStream ACTIVATOR;
@@ -414,24 +425,11 @@ OBJCUWPWINDOWSSTORAGESTREAMSEXPORT
 
 #endif // __WSSDataWriter_DEFINED__
 
-// Windows.Storage.Streams.RandomAccessStream
-#ifndef __WSSRandomAccessStream_DEFINED__
-#define __WSSRandomAccessStream_DEFINED__
-
-OBJCUWPWINDOWSSTORAGESTREAMSEXPORT
-@interface WSSRandomAccessStream : RTObject
-+ (void)copyAsync:(RTObject<WSSIInputStream>*)source destination:(RTObject<WSSIOutputStream>*)destination success:(void (^)(uint64_t))success progress:(void (^)(uint64_t))progress failure:(void (^)(NSError*))failure;
-+ (void)copySizeAsync:(RTObject<WSSIInputStream>*)source destination:(RTObject<WSSIOutputStream>*)destination bytesToCopy:(uint64_t)bytesToCopy success:(void (^)(uint64_t))success progress:(void (^)(uint64_t))progress failure:(void (^)(NSError*))failure;
-+ (void)copyAndCloseAsync:(RTObject<WSSIInputStream>*)source destination:(RTObject<WSSIOutputStream>*)destination success:(void (^)(uint64_t))success progress:(void (^)(uint64_t))progress failure:(void (^)(NSError*))failure;
-@end
-
-#endif // __WSSRandomAccessStream_DEFINED__
-
 // Windows.Storage.Streams.Buffer
 #ifndef __WSSBuffer_DEFINED__
 #define __WSSBuffer_DEFINED__
 
-OBJCUWPWINDOWSSTORAGESTREAMSEXPORT
+OBJCUWPWINDOWSSTORAGEEXPORT
 @interface WSSBuffer : RTObject <WSSIBuffer>
 + (WSSBuffer*)createCopyFromMemoryBuffer:(RTObject<WFIMemoryBuffer>*)input;
 + (WFMemoryBuffer*)createMemoryBufferOverIBuffer:(RTObject<WSSIBuffer>*)input;
@@ -445,11 +443,24 @@ OBJCUWPWINDOWSSTORAGESTREAMSEXPORT
 
 #endif // __WSSBuffer_DEFINED__
 
+// Windows.Storage.Streams.RandomAccessStream
+#ifndef __WSSRandomAccessStream_DEFINED__
+#define __WSSRandomAccessStream_DEFINED__
+
+OBJCUWPWINDOWSSTORAGEEXPORT
+@interface WSSRandomAccessStream : RTObject
++ (void)copyAsync:(RTObject<WSSIInputStream>*)source destination:(RTObject<WSSIOutputStream>*)destination success:(void (^)(uint64_t))success progress:(void (^)(uint64_t))progress failure:(void (^)(NSError*))failure;
++ (void)copySizeAsync:(RTObject<WSSIInputStream>*)source destination:(RTObject<WSSIOutputStream>*)destination bytesToCopy:(uint64_t)bytesToCopy success:(void (^)(uint64_t))success progress:(void (^)(uint64_t))progress failure:(void (^)(NSError*))failure;
++ (void)copyAndCloseAsync:(RTObject<WSSIInputStream>*)source destination:(RTObject<WSSIOutputStream>*)destination success:(void (^)(uint64_t))success progress:(void (^)(uint64_t))progress failure:(void (^)(NSError*))failure;
+@end
+
+#endif // __WSSRandomAccessStream_DEFINED__
+
 // Windows.Storage.Streams.RandomAccessStreamReference
 #ifndef __WSSRandomAccessStreamReference_DEFINED__
 #define __WSSRandomAccessStreamReference_DEFINED__
 
-OBJCUWPWINDOWSSTORAGESTREAMSEXPORT
+OBJCUWPWINDOWSSTORAGEEXPORT
 @interface WSSRandomAccessStreamReference : RTObject <WSSIRandomAccessStreamReference>
 + (WSSRandomAccessStreamReference*)createFromFile:(RTObject<WSIStorageFile>*)file;
 + (WSSRandomAccessStreamReference*)createFromUri:(WFUri*)uri;
@@ -466,8 +477,16 @@ OBJCUWPWINDOWSSTORAGESTREAMSEXPORT
 #ifndef __WSSFileRandomAccessStream_DEFINED__
 #define __WSSFileRandomAccessStream_DEFINED__
 
-OBJCUWPWINDOWSSTORAGESTREAMSEXPORT
+OBJCUWPWINDOWSSTORAGEEXPORT
 @interface WSSFileRandomAccessStream : RTObject <WSSIRandomAccessStream, WSSIOutputStream, WFIClosable, WSSIInputStream>
++ (void)openAsync:(NSString *)filePath accessMode:(WSFileAccessMode)accessMode success:(void (^)(RTObject<WSSIRandomAccessStream>*))success failure:(void (^)(NSError*))failure;
++ (void)openWithOptionsAsync:(NSString *)filePath accessMode:(WSFileAccessMode)accessMode sharingOptions:(WSStorageOpenOptions)sharingOptions openDisposition:(WSSFileOpenDisposition)openDisposition success:(void (^)(RTObject<WSSIRandomAccessStream>*))success failure:(void (^)(NSError*))failure;
++ (void)openTransactedWriteAsync:(NSString *)filePath success:(void (^)(WSStorageStreamTransaction*))success failure:(void (^)(NSError*))failure;
++ (void)openTransactedWriteWithOptionsAsync:(NSString *)filePath openOptions:(WSStorageOpenOptions)openOptions openDisposition:(WSSFileOpenDisposition)openDisposition success:(void (^)(WSStorageStreamTransaction*))success failure:(void (^)(NSError*))failure;
++ (void)openForUserAsync:(WSUser*)user filePath:(NSString *)filePath accessMode:(WSFileAccessMode)accessMode success:(void (^)(RTObject<WSSIRandomAccessStream>*))success failure:(void (^)(NSError*))failure;
++ (void)openForUserWithOptionsAsync:(WSUser*)user filePath:(NSString *)filePath accessMode:(WSFileAccessMode)accessMode sharingOptions:(WSStorageOpenOptions)sharingOptions openDisposition:(WSSFileOpenDisposition)openDisposition success:(void (^)(RTObject<WSSIRandomAccessStream>*))success failure:(void (^)(NSError*))failure;
++ (void)openTransactedWriteForUserAsync:(WSUser*)user filePath:(NSString *)filePath success:(void (^)(WSStorageStreamTransaction*))success failure:(void (^)(NSError*))failure;
++ (void)openTransactedWriteForUserWithOptionsAsync:(WSUser*)user filePath:(NSString *)filePath openOptions:(WSStorageOpenOptions)openOptions openDisposition:(WSSFileOpenDisposition)openDisposition success:(void (^)(WSStorageStreamTransaction*))success failure:(void (^)(NSError*))failure;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
@@ -491,7 +510,7 @@ OBJCUWPWINDOWSSTORAGESTREAMSEXPORT
 #ifndef __WSSFileInputStream_DEFINED__
 #define __WSSFileInputStream_DEFINED__
 
-OBJCUWPWINDOWSSTORAGESTREAMSEXPORT
+OBJCUWPWINDOWSSTORAGEEXPORT
 @interface WSSFileInputStream : RTObject <WSSIInputStream, WFIClosable>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -506,7 +525,7 @@ OBJCUWPWINDOWSSTORAGESTREAMSEXPORT
 #ifndef __WSSFileOutputStream_DEFINED__
 #define __WSSFileOutputStream_DEFINED__
 
-OBJCUWPWINDOWSSTORAGESTREAMSEXPORT
+OBJCUWPWINDOWSSTORAGEEXPORT
 @interface WSSFileOutputStream : RTObject <WSSIOutputStream, WFIClosable>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -522,7 +541,7 @@ OBJCUWPWINDOWSSTORAGESTREAMSEXPORT
 #ifndef __WSSRandomAccessStreamOverStream_DEFINED__
 #define __WSSRandomAccessStreamOverStream_DEFINED__
 
-OBJCUWPWINDOWSSTORAGESTREAMSEXPORT
+OBJCUWPWINDOWSSTORAGEEXPORT
 @interface WSSRandomAccessStreamOverStream : RTObject <WSSIRandomAccessStream, WSSIOutputStream, WFIClosable, WSSIInputStream>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -547,7 +566,7 @@ OBJCUWPWINDOWSSTORAGESTREAMSEXPORT
 #ifndef __WSSInputStreamOverStream_DEFINED__
 #define __WSSInputStreamOverStream_DEFINED__
 
-OBJCUWPWINDOWSSTORAGESTREAMSEXPORT
+OBJCUWPWINDOWSSTORAGEEXPORT
 @interface WSSInputStreamOverStream : RTObject <WSSIInputStream, WFIClosable>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -562,7 +581,7 @@ OBJCUWPWINDOWSSTORAGESTREAMSEXPORT
 #ifndef __WSSOutputStreamOverStream_DEFINED__
 #define __WSSOutputStreamOverStream_DEFINED__
 
-OBJCUWPWINDOWSSTORAGESTREAMSEXPORT
+OBJCUWPWINDOWSSTORAGEEXPORT
 @interface WSSOutputStreamOverStream : RTObject <WSSIOutputStream, WFIClosable>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -578,7 +597,7 @@ OBJCUWPWINDOWSSTORAGESTREAMSEXPORT
 #ifndef __WSSInMemoryRandomAccessStream_DEFINED__
 #define __WSSInMemoryRandomAccessStream_DEFINED__
 
-OBJCUWPWINDOWSSTORAGESTREAMSEXPORT
+OBJCUWPWINDOWSSTORAGEEXPORT
 @interface WSSInMemoryRandomAccessStream : RTObject <WSSIRandomAccessStream, WSSIOutputStream, WFIClosable, WSSIInputStream>
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)

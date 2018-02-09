@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -29,7 +29,7 @@
 
 @class WGPPrint3DTaskCompletedEventArgs, WGPPrint3DTaskSourceChangedEventArgs, WGPPrint3DTask, WGPPrint3DTaskSourceRequestedArgs, WGPPrint3DTaskRequest, WGPPrint3DTaskRequestedEventArgs, WGPPrint3DManager, WGPPrinting3DMeshVerificationResult, WGPPrinting3DTextureResource, WGPPrinting3DComponent, WGPPrinting3DMesh, WGPPrinting3DComponentWithMatrix, WGPPrinting3DColorMaterial, WGPPrinting3DModelTexture, WGPPrinting3DBaseMaterialGroup, WGPPrinting3DBaseMaterial, WGPPrinting3DColorMaterialGroup, WGPPrinting3DTexture2CoordMaterialGroup, WGPPrinting3DTexture2CoordMaterial, WGPPrinting3DCompositeMaterialGroup, WGPPrinting3DCompositeMaterial, WGPPrinting3DMultiplePropertyMaterialGroup, WGPPrinting3DMultiplePropertyMaterial, WGPPrinting3DMaterial, WGPPrinting3DModel, WGPPrinting3DFaceReductionOptions, WGPPrinting3D3MFPackage;
 @class WGPPrinting3DBufferDescription;
-@protocol WGPIPrint3DTaskCompletedEventArgs, WGPIPrint3DTaskSourceChangedEventArgs, WGPIPrint3DTask, WGPIPrint3DTaskSourceRequestedArgs, WGPIPrint3DTaskRequest, WGPIPrint3DTaskRequestedEventArgs, WGPIPrint3DManagerStatics, WGPIPrint3DManager, WGPIPrinting3DMesh, WGPIPrinting3DModelTexture, WGPIPrinting3DTextureResource, WGPIPrinting3DComponentWithMatrix, WGPIPrinting3DComponent, WGPIPrinting3DBaseMaterialStatics, WGPIPrinting3DBaseMaterial, WGPIPrinting3DColorMaterial, WGPIPrinting3DColorMaterial2, WGPIPrinting3DTexture2CoordMaterial, WGPIPrinting3DCompositeMaterial, WGPIPrinting3DMultiplePropertyMaterial, WGPIPrinting3DBaseMaterialGroupFactory, WGPIPrinting3DBaseMaterialGroup, WGPIPrinting3DColorMaterialGroupFactory, WGPIPrinting3DColorMaterialGroup, WGPIPrinting3DTexture2CoordMaterialGroupFactory, WGPIPrinting3DTexture2CoordMaterialGroup, WGPIPrinting3DTexture2CoordMaterialGroup2, WGPIPrinting3DCompositeMaterialGroupFactory, WGPIPrinting3DCompositeMaterialGroup2, WGPIPrinting3DCompositeMaterialGroup, WGPIPrinting3DMultiplePropertyMaterialGroupFactory, WGPIPrinting3DMultiplePropertyMaterialGroup, WGPIPrinting3DMaterial, WGPIPrinting3DMeshVerificationResult, WGPIPrinting3DModel, WGPIPrinting3DFaceReductionOptions, WGPIPrinting3DModel2, WGPIPrinting3D3MFPackageStatics, WGPIPrinting3D3MFPackage;
+@protocol WGPIPrint3DTaskCompletedEventArgs, WGPIPrint3DTaskSourceChangedEventArgs, WGPIPrint3DTask, WGPIPrint3DTaskSourceRequestedArgs, WGPIPrint3DTaskRequest, WGPIPrint3DTaskRequestedEventArgs, WGPIPrint3DManagerStatics, WGPIPrint3DManager, WGPIPrinting3DMesh, WGPIPrinting3DModelTexture, WGPIPrinting3DTextureResource, WGPIPrinting3DComponentWithMatrix, WGPIPrinting3DComponent, WGPIPrinting3DBaseMaterialStatics, WGPIPrinting3DBaseMaterial, WGPIPrinting3DColorMaterial, WGPIPrinting3DColorMaterial2, WGPIPrinting3DTexture2CoordMaterial, WGPIPrinting3DCompositeMaterial, WGPIPrinting3DMultiplePropertyMaterial, WGPIPrinting3DBaseMaterialGroupFactory, WGPIPrinting3DBaseMaterialGroup, WGPIPrinting3DColorMaterialGroupFactory, WGPIPrinting3DColorMaterialGroup, WGPIPrinting3DTexture2CoordMaterialGroupFactory, WGPIPrinting3DTexture2CoordMaterialGroup, WGPIPrinting3DTexture2CoordMaterialGroup2, WGPIPrinting3DCompositeMaterialGroupFactory, WGPIPrinting3DCompositeMaterialGroup2, WGPIPrinting3DCompositeMaterialGroup, WGPIPrinting3DMultiplePropertyMaterialGroupFactory, WGPIPrinting3DMultiplePropertyMaterialGroup, WGPIPrinting3DMaterial, WGPIPrinting3DMeshVerificationResult, WGPIPrinting3DModel, WGPIPrinting3DFaceReductionOptions, WGPIPrinting3DModel2, WGPIPrinting3D3MFPackageStatics, WGPIPrinting3D3MFPackage, WGPIPrinting3D3MFPackage2;
 
 // Windows.Graphics.Printing3D.Print3DTaskDetail
 enum _WGPPrint3DTaskDetail {
@@ -99,6 +99,14 @@ enum _WGPPrinting3DObjectType {
     WGPPrinting3DObjectTypeOthers = 2,
 };
 typedef unsigned WGPPrinting3DObjectType;
+
+// Windows.Graphics.Printing3D.Printing3DPackageCompression
+enum _WGPPrinting3DPackageCompression {
+    WGPPrinting3DPackageCompressionLow = 0,
+    WGPPrinting3DPackageCompressionMedium = 1,
+    WGPPrinting3DPackageCompressionHigh = 2,
+};
+typedef unsigned WGPPrinting3DPackageCompression;
 
 #include "WindowsFoundationNumerics.h"
 #include "WindowsFoundation.h"
@@ -599,6 +607,7 @@ OBJCUWPWINDOWSGRAPHICSPRINTING3DEXPORT
 @property (retain) RTObject<WSSIRandomAccessStream>* printTicket;
 @property (retain) RTObject<WSSIRandomAccessStream>* modelPart;
 @property (readonly) NSMutableArray* /* WGPPrinting3DTextureResource* */ textures;
+@property WGPPrinting3DPackageCompression compression;
 - (void)saveAsyncWithSuccess:(void (^)(RTObject<WSSIRandomAccessStream>*))success failure:(void (^)(NSError*))failure;
 - (void)loadModelFromPackageAsync:(RTObject<WSSIRandomAccessStream>*)value success:(void (^)(WGPPrinting3DModel*))success failure:(void (^)(NSError*))failure;
 - (RTObject<WFIAsyncAction>*)saveModelToPackageAsync:(WGPPrinting3DModel*)value;

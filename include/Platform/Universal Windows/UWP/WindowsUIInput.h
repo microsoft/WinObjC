@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -27,9 +27,9 @@
 #endif
 #include <UWP/interopBase.h>
 
-@class WUIEdgeGestureEventArgs, WUIEdgeGesture, WUIKeyboardDeliveryInterceptor, WUIMouseWheelParameters, WUIGestureRecognizer, WUITappedEventArgs, WUIRightTappedEventArgs, WUIHoldingEventArgs, WUIDraggingEventArgs, WUIManipulationStartedEventArgs, WUIManipulationUpdatedEventArgs, WUIManipulationInertiaStartingEventArgs, WUIManipulationCompletedEventArgs, WUICrossSlidingEventArgs, WUIPointerPoint, WUIPointerPointProperties, WUIPointerVisualizationSettings, WUIRadialControllerScreenContact, WUIRadialControllerMenu, WUIRadialController, WUIRadialControllerScreenContactStartedEventArgs, WUIRadialControllerScreenContactContinuedEventArgs, WUIRadialControllerRotationChangedEventArgs, WUIRadialControllerButtonClickedEventArgs, WUIRadialControllerControlAcquiredEventArgs, WUIRadialControllerMenuItem, WUIRadialControllerConfiguration;
+@class WUIEdgeGestureEventArgs, WUIEdgeGesture, WUIKeyboardDeliveryInterceptor, WUIMouseWheelParameters, WUIGestureRecognizer, WUITappedEventArgs, WUIRightTappedEventArgs, WUIHoldingEventArgs, WUIDraggingEventArgs, WUIManipulationStartedEventArgs, WUIManipulationUpdatedEventArgs, WUIManipulationInertiaStartingEventArgs, WUIManipulationCompletedEventArgs, WUICrossSlidingEventArgs, WUIPointerPoint, WUIPointerPointProperties, WUIPointerVisualizationSettings, WUIRadialControllerScreenContact, WUIRadialControllerMenu, WUIRadialController, WUIRadialControllerScreenContactStartedEventArgs, WUIRadialControllerScreenContactContinuedEventArgs, WUIRadialControllerRotationChangedEventArgs, WUIRadialControllerButtonClickedEventArgs, WUIRadialControllerControlAcquiredEventArgs, WUIRadialControllerButtonPressedEventArgs, WUIRadialControllerButtonHoldingEventArgs, WUIRadialControllerButtonReleasedEventArgs, WUIRadialControllerMenuItem, WUIRadialControllerConfiguration, WUIRadialControllerScreenContactEndedEventArgs;
 @class WUIManipulationDelta, WUIManipulationVelocities, WUICrossSlideThresholds;
-@protocol WUIIEdgeGestureEventArgs, WUIIEdgeGestureStatics, WUIIEdgeGesture, WUIIKeyboardDeliveryInterceptor, WUIIKeyboardDeliveryInterceptorStatics, WUIITappedEventArgs, WUIIRightTappedEventArgs, WUIIHoldingEventArgs, WUIIDraggingEventArgs, WUIIManipulationStartedEventArgs, WUIIManipulationUpdatedEventArgs, WUIIManipulationInertiaStartingEventArgs, WUIIManipulationCompletedEventArgs, WUIICrossSlidingEventArgs, WUIIMouseWheelParameters, WUIIGestureRecognizer, WUIIPointerPointStatics, WUIIPointerPointTransform, WUIIPointerPoint, WUIIPointerPointProperties, WUIIPointerPointProperties2, WUIIPointerVisualizationSettings, WUIIPointerVisualizationSettingsStatics, WUIIRadialControllerScreenContact, WUIIRadialControllerRotationChangedEventArgs, WUIIRadialControllerScreenContactStartedEventArgs, WUIIRadialControllerScreenContactContinuedEventArgs, WUIIRadialControllerButtonClickedEventArgs, WUIIRadialControllerControlAcquiredEventArgs, WUIIRadialController, WUIIRadialControllerStatics, WUIIRadialControllerMenu, WUIIRadialControllerMenuItemStatics, WUIIRadialControllerMenuItem, WUIIRadialControllerConfiguration, WUIIRadialControllerConfigurationStatics;
+@protocol WUIIEdgeGestureEventArgs, WUIIEdgeGestureStatics, WUIIEdgeGesture, WUIIKeyboardDeliveryInterceptor, WUIIKeyboardDeliveryInterceptorStatics, WUIITappedEventArgs, WUIIRightTappedEventArgs, WUIIHoldingEventArgs, WUIIDraggingEventArgs, WUIIManipulationStartedEventArgs, WUIIManipulationUpdatedEventArgs, WUIIManipulationInertiaStartingEventArgs, WUIIManipulationCompletedEventArgs, WUIICrossSlidingEventArgs, WUIIMouseWheelParameters, WUIIGestureRecognizer, WUIIPointerPointStatics, WUIIPointerPointTransform, WUIIPointerPoint, WUIIPointerPointProperties, WUIIPointerPointProperties2, WUIIPointerVisualizationSettings, WUIIPointerVisualizationSettingsStatics, WUIIRadialControllerScreenContact, WUIIRadialControllerRotationChangedEventArgs, WUIIRadialControllerRotationChangedEventArgs2, WUIIRadialControllerButtonPressedEventArgs, WUIIRadialControllerButtonHoldingEventArgs, WUIIRadialControllerButtonReleasedEventArgs, WUIIRadialControllerScreenContactStartedEventArgs, WUIIRadialControllerScreenContactStartedEventArgs2, WUIIRadialControllerScreenContactContinuedEventArgs, WUIIRadialControllerScreenContactContinuedEventArgs2, WUIIRadialControllerScreenContactEndedEventArgs, WUIIRadialControllerButtonClickedEventArgs, WUIIRadialControllerButtonClickedEventArgs2, WUIIRadialControllerControlAcquiredEventArgs, WUIIRadialControllerControlAcquiredEventArgs2, WUIIRadialController, WUIIRadialController2, WUIIRadialControllerStatics, WUIIRadialControllerMenu, WUIIRadialControllerMenuItemStatics, WUIIRadialControllerMenuItemStatics2, WUIIRadialControllerMenuItem, WUIIRadialControllerConfiguration, WUIIRadialControllerConfigurationStatics, WUIIRadialControllerConfiguration2, WUIIRadialControllerConfigurationStatics2;
 
 // Windows.UI.Input.EdgeGestureKind
 enum _WUIEdgeGestureKind {
@@ -132,6 +132,7 @@ typedef unsigned WUIRadialControllerMenuKnownIcon;
 
 #include "WindowsDevicesInput.h"
 #include "WindowsFoundation.h"
+#include "WindowsDevicesHaptics.h"
 #include "WindowsUICore.h"
 #include "WindowsStorageStreams.h"
 
@@ -597,6 +598,12 @@ OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 - (void)removeScreenContactEndedEvent:(EventRegistrationToken)tok;
 - (EventRegistrationToken)addScreenContactStartedEvent:(void(^)(WUIRadialController*, WUIRadialControllerScreenContactStartedEventArgs*))del;
 - (void)removeScreenContactStartedEvent:(EventRegistrationToken)tok;
+- (EventRegistrationToken)addButtonHoldingEvent:(void(^)(WUIRadialController*, WUIRadialControllerButtonHoldingEventArgs*))del;
+- (void)removeButtonHoldingEvent:(EventRegistrationToken)tok;
+- (EventRegistrationToken)addButtonPressedEvent:(void(^)(WUIRadialController*, WUIRadialControllerButtonPressedEventArgs*))del;
+- (void)removeButtonPressedEvent:(EventRegistrationToken)tok;
+- (EventRegistrationToken)addButtonReleasedEvent:(void(^)(WUIRadialController*, WUIRadialControllerButtonReleasedEventArgs*))del;
+- (void)removeButtonReleasedEvent:(EventRegistrationToken)tok;
 @end
 
 #endif // __WUIRadialController_DEFINED__
@@ -611,6 +618,8 @@ OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WUIRadialControllerScreenContact* contact;
+@property (readonly) BOOL isButtonPressed;
+@property (readonly) WDHSimpleHapticsController* simpleHapticsController;
 @end
 
 #endif // __WUIRadialControllerScreenContactStartedEventArgs_DEFINED__
@@ -625,6 +634,8 @@ OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WUIRadialControllerScreenContact* contact;
+@property (readonly) BOOL isButtonPressed;
+@property (readonly) WDHSimpleHapticsController* simpleHapticsController;
 @end
 
 #endif // __WUIRadialControllerScreenContactContinuedEventArgs_DEFINED__
@@ -640,6 +651,8 @@ OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 #endif
 @property (readonly) WUIRadialControllerScreenContact* contact;
 @property (readonly) double rotationDeltaInDegrees;
+@property (readonly) BOOL isButtonPressed;
+@property (readonly) WDHSimpleHapticsController* simpleHapticsController;
 @end
 
 #endif // __WUIRadialControllerRotationChangedEventArgs_DEFINED__
@@ -654,6 +667,7 @@ OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WUIRadialControllerScreenContact* contact;
+@property (readonly) WDHSimpleHapticsController* simpleHapticsController;
 @end
 
 #endif // __WUIRadialControllerButtonClickedEventArgs_DEFINED__
@@ -668,9 +682,56 @@ OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WUIRadialControllerScreenContact* contact;
+@property (readonly) BOOL isButtonPressed;
+@property (readonly) WDHSimpleHapticsController* simpleHapticsController;
 @end
 
 #endif // __WUIRadialControllerControlAcquiredEventArgs_DEFINED__
+
+// Windows.UI.Input.RadialControllerButtonPressedEventArgs
+#ifndef __WUIRadialControllerButtonPressedEventArgs_DEFINED__
+#define __WUIRadialControllerButtonPressedEventArgs_DEFINED__
+
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
+@interface WUIRadialControllerButtonPressedEventArgs : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (readonly) WUIRadialControllerScreenContact* contact;
+@property (readonly) WDHSimpleHapticsController* simpleHapticsController;
+@end
+
+#endif // __WUIRadialControllerButtonPressedEventArgs_DEFINED__
+
+// Windows.UI.Input.RadialControllerButtonHoldingEventArgs
+#ifndef __WUIRadialControllerButtonHoldingEventArgs_DEFINED__
+#define __WUIRadialControllerButtonHoldingEventArgs_DEFINED__
+
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
+@interface WUIRadialControllerButtonHoldingEventArgs : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (readonly) WUIRadialControllerScreenContact* contact;
+@property (readonly) WDHSimpleHapticsController* simpleHapticsController;
+@end
+
+#endif // __WUIRadialControllerButtonHoldingEventArgs_DEFINED__
+
+// Windows.UI.Input.RadialControllerButtonReleasedEventArgs
+#ifndef __WUIRadialControllerButtonReleasedEventArgs_DEFINED__
+#define __WUIRadialControllerButtonReleasedEventArgs_DEFINED__
+
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
+@interface WUIRadialControllerButtonReleasedEventArgs : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (readonly) WUIRadialControllerScreenContact* contact;
+@property (readonly) WDHSimpleHapticsController* simpleHapticsController;
+@end
+
+#endif // __WUIRadialControllerButtonReleasedEventArgs_DEFINED__
 
 // Windows.UI.Input.RadialControllerMenuItem
 #ifndef __WUIRadialControllerMenuItem_DEFINED__
@@ -678,6 +739,8 @@ OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 
 OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WUIRadialControllerMenuItem : RTObject
++ (WUIRadialControllerMenuItem*)createFromFontGlyph:(NSString *)displayText glyph:(NSString *)glyph fontFamily:(NSString *)fontFamily;
++ (WUIRadialControllerMenuItem*)createFromFontGlyphWithUri:(NSString *)displayText glyph:(NSString *)glyph fontFamily:(NSString *)fontFamily fontUri:(WFUri*)fontUri;
 + (WUIRadialControllerMenuItem*)createFromIcon:(NSString *)displayText icon:(WSSRandomAccessStreamReference*)icon;
 + (WUIRadialControllerMenuItem*)createFromKnownIcon:(NSString *)displayText value:(WUIRadialControllerMenuKnownIcon)value;
 #if defined(__cplusplus)
@@ -701,10 +764,31 @@ OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
+@property BOOL isMenuSuppressed;
+@property (retain) WUIRadialController* activeControllerWhenMenuIsSuppressed;
++ (BOOL)isAppControllerEnabled;
++ (void)setIsAppControllerEnabled:(BOOL)value;
++ (WUIRadialController*)appController;
++ (void)setAppController:(WUIRadialController*)value;
 - (void)setDefaultMenuItems:(id<NSFastEnumeration> /* WUIRadialControllerSystemMenuItemKind */)buttons;
 - (void)resetToDefaultMenuItems;
 - (BOOL)trySelectDefaultMenuItem:(WUIRadialControllerSystemMenuItemKind)type;
 @end
 
 #endif // __WUIRadialControllerConfiguration_DEFINED__
+
+// Windows.UI.Input.RadialControllerScreenContactEndedEventArgs
+#ifndef __WUIRadialControllerScreenContactEndedEventArgs_DEFINED__
+#define __WUIRadialControllerScreenContactEndedEventArgs_DEFINED__
+
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
+@interface WUIRadialControllerScreenContactEndedEventArgs : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (readonly) BOOL isButtonPressed;
+@property (readonly) WDHSimpleHapticsController* simpleHapticsController;
+@end
+
+#endif // __WUIRadialControllerScreenContactEndedEventArgs_DEFINED__
 

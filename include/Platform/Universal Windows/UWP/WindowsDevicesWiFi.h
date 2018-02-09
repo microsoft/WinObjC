@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -27,8 +27,8 @@
 #endif
 #include <UWP/interopBase.h>
 
-@class WDWWiFiAdapter, WDWWiFiNetworkReport, WDWWiFiAvailableNetwork, WDWWiFiConnectionResult;
-@protocol WDWIWiFiAdapterStatics, WDWIWiFiAdapter, WDWIWiFiNetworkReport, WDWIWiFiAvailableNetwork, WDWIWiFiConnectionResult;
+@class WDWWiFiAdapter, WDWWiFiNetworkReport, WDWWiFiAvailableNetwork, WDWWiFiConnectionResult, WDWWiFiWpsConfigurationResult;
+@protocol WDWIWiFiAdapterStatics, WDWIWiFiAdapter, WDWIWiFiAdapter2, WDWIWiFiNetworkReport, WDWIWiFiAvailableNetwork, WDWIWiFiWpsConfigurationResult, WDWIWiFiConnectionResult;
 
 // Windows.Devices.WiFi.WiFiNetworkKind
 enum _WDWWiFiNetworkKind {
@@ -81,6 +81,33 @@ enum _WDWWiFiConnectionStatus {
 };
 typedef unsigned WDWWiFiConnectionStatus;
 
+// Windows.Devices.WiFi.WiFiConnectionMethod
+enum _WDWWiFiConnectionMethod {
+    WDWWiFiConnectionMethodDefault = 0,
+    WDWWiFiConnectionMethodWpsPin = 1,
+    WDWWiFiConnectionMethodWpsPushButton = 2,
+};
+typedef unsigned WDWWiFiConnectionMethod;
+
+// Windows.Devices.WiFi.WiFiWpsKind
+enum _WDWWiFiWpsKind {
+    WDWWiFiWpsKindUnknown = 0,
+    WDWWiFiWpsKindPin = 1,
+    WDWWiFiWpsKindPushButton = 2,
+    WDWWiFiWpsKindNfc = 3,
+    WDWWiFiWpsKindEthernet = 4,
+    WDWWiFiWpsKindUsb = 5,
+};
+typedef unsigned WDWWiFiWpsKind;
+
+// Windows.Devices.WiFi.WiFiWpsConfigurationStatus
+enum _WDWWiFiWpsConfigurationStatus {
+    WDWWiFiWpsConfigurationStatusUnspecifiedFailure = 0,
+    WDWWiFiWpsConfigurationStatusSuccess = 1,
+    WDWWiFiWpsConfigurationStatusTimeout = 2,
+};
+typedef unsigned WDWWiFiWpsConfigurationStatus;
+
 #include "WindowsNetworkingConnectivity.h"
 #include "WindowsFoundation.h"
 #include "WindowsSecurityCredentials.h"
@@ -109,6 +136,8 @@ OBJCUWPWINDOWSDEVICESWIFIEXPORT
 - (void)connectWithPasswordCredentialAsync:(WDWWiFiAvailableNetwork*)availableNetwork reconnectionKind:(WDWWiFiReconnectionKind)reconnectionKind passwordCredential:(WSCPasswordCredential*)passwordCredential success:(void (^)(WDWWiFiConnectionResult*))success failure:(void (^)(NSError*))failure;
 - (void)connectWithPasswordCredentialAndSsidAsync:(WDWWiFiAvailableNetwork*)availableNetwork reconnectionKind:(WDWWiFiReconnectionKind)reconnectionKind passwordCredential:(WSCPasswordCredential*)passwordCredential ssid:(NSString *)ssid success:(void (^)(WDWWiFiConnectionResult*))success failure:(void (^)(NSError*))failure;
 - (void)disconnect;
+- (void)getWpsConfigurationAsync:(WDWWiFiAvailableNetwork*)availableNetwork success:(void (^)(WDWWiFiWpsConfigurationResult*))success failure:(void (^)(NSError*))failure;
+- (void)connectWithPasswordCredentialAndSsidAndConnectionMethodAsync:(WDWWiFiAvailableNetwork*)availableNetwork reconnectionKind:(WDWWiFiReconnectionKind)reconnectionKind passwordCredential:(WSCPasswordCredential*)passwordCredential ssid:(NSString *)ssid connectionMethod:(WDWWiFiConnectionMethod)connectionMethod success:(void (^)(WDWWiFiConnectionResult*))success failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WDWWiFiAdapter_DEFINED__
@@ -165,4 +194,19 @@ OBJCUWPWINDOWSDEVICESWIFIEXPORT
 @end
 
 #endif // __WDWWiFiConnectionResult_DEFINED__
+
+// Windows.Devices.WiFi.WiFiWpsConfigurationResult
+#ifndef __WDWWiFiWpsConfigurationResult_DEFINED__
+#define __WDWWiFiWpsConfigurationResult_DEFINED__
+
+OBJCUWPWINDOWSDEVICESWIFIEXPORT
+@interface WDWWiFiWpsConfigurationResult : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (readonly) WDWWiFiWpsConfigurationStatus status;
+@property (readonly) NSArray* /* WDWWiFiWpsKind */ supportedWpsKinds;
+@end
+
+#endif // __WDWWiFiWpsConfigurationResult_DEFINED__
 

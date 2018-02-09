@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -169,8 +169,8 @@ OBJCUWPWINDOWSDEVICESALLJOYNEXPORT
 @interface WDAAllJoynBusAttachment : RTObject
 + (WDAAllJoynBusAttachment*)getDefault;
 + (WDEDeviceWatcher*)getWatcher:(id<NSFastEnumeration> /* NSString * */)requiredInterfaces;
-+ (WDAAllJoynBusAttachment*)make:(NSString *)connectionSpecification ACTIVATOR;
 + (instancetype)make __attribute__ ((ns_returns_retained));
++ (WDAAllJoynBusAttachment*)make:(NSString *)connectionSpecification ACTIVATOR;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
@@ -446,9 +446,9 @@ OBJCUWPWINDOWSDEVICESALLJOYNEXPORT
 
 OBJCUWPWINDOWSDEVICESALLJOYNEXPORT
 @interface WDAAllJoynBusObject : RTObject
++ (instancetype)make __attribute__ ((ns_returns_retained));
 + (WDAAllJoynBusObject*)make:(NSString *)objectPath ACTIVATOR;
 + (WDAAllJoynBusObject*)makeWithBusAttachment:(NSString *)objectPath busAttachment:(WDAAllJoynBusAttachment*)busAttachment ACTIVATOR;
-+ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif

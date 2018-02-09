@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -27,14 +27,15 @@
 #endif
 #include <UWP/interopBase.h>
 
-@class WSPAnalyticsVersionInfo, WSPAnalyticsInfo, WSPSystemIdentificationInfo, WSPSystemIdentification, WSPPlatformDiagnosticsAndUsageDataSettings, WSPHardwareToken, WSPHardwareIdentification, WSPRetailInfo, WSPKnownRetailInfoProperties, WSPSharedModeSettings;
-@protocol WSPIAnalyticsInfoStatics, WSPIAnalyticsVersionInfo, WSPISystemIdentificationInfo, WSPISystemIdentificationStatics, WSPIPlatformDiagnosticsAndUsageDataSettingsStatics, WSPIHardwareToken, WSPIHardwareIdentificationStatics, WSPIRetailInfoStatics, WSPIKnownRetailInfoPropertiesStatics, WSPISharedModeSettingsStatics;
+@class WSPSystemIdentificationInfo, WSPSystemIdentification, WSPAnalyticsVersionInfo, WSPAnalyticsInfo, WSPEducationSettings, WSPPlatformDiagnosticsAndUsageDataSettings, WSPHardwareToken, WSPHardwareIdentification, WSPRetailInfo, WSPKnownRetailInfoProperties, WSPSharedModeSettings;
+@protocol WSPISystemIdentificationInfo, WSPISystemIdentificationStatics, WSPIAnalyticsInfoStatics, WSPIAnalyticsVersionInfo, WSPIEducationSettingsStatics, WSPIPlatformDiagnosticsAndUsageDataSettingsStatics, WSPIHardwareToken, WSPIHardwareIdentificationStatics, WSPIRetailInfoStatics, WSPIKnownRetailInfoPropertiesStatics, WSPISharedModeSettingsStatics, WSPISharedModeSettingsStatics2;
 
 // Windows.System.Profile.SystemIdentificationSource
 enum _WSPSystemIdentificationSource {
     WSPSystemIdentificationSourceNone = 0,
     WSPSystemIdentificationSourceTpm = 1,
     WSPSystemIdentificationSourceUefi = 2,
+    WSPSystemIdentificationSourceRegistry = 3,
 };
 typedef unsigned WSPSystemIdentificationSource;
 
@@ -52,6 +53,33 @@ typedef unsigned WSPPlatformDataCollectionLevel;
 #include "WindowsFoundation.h"
 
 #import <Foundation/Foundation.h>
+
+// Windows.System.Profile.SystemIdentificationInfo
+#ifndef __WSPSystemIdentificationInfo_DEFINED__
+#define __WSPSystemIdentificationInfo_DEFINED__
+
+OBJCUWPWINDOWSSYSTEMPROFILEEXPORT
+@interface WSPSystemIdentificationInfo : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (readonly) RTObject<WSSIBuffer>* id;
+@property (readonly) WSPSystemIdentificationSource source;
+@end
+
+#endif // __WSPSystemIdentificationInfo_DEFINED__
+
+// Windows.System.Profile.SystemIdentification
+#ifndef __WSPSystemIdentification_DEFINED__
+#define __WSPSystemIdentification_DEFINED__
+
+OBJCUWPWINDOWSSYSTEMPROFILEEXPORT
+@interface WSPSystemIdentification : RTObject
++ (WSPSystemIdentificationInfo*)getSystemIdForPublisher;
++ (WSPSystemIdentificationInfo*)getSystemIdForUser:(WSUser*)user;
+@end
+
+#endif // __WSPSystemIdentification_DEFINED__
 
 // Windows.System.Profile.AnalyticsVersionInfo
 #ifndef __WSPAnalyticsVersionInfo_DEFINED__
@@ -80,32 +108,16 @@ OBJCUWPWINDOWSSYSTEMPROFILEEXPORT
 
 #endif // __WSPAnalyticsInfo_DEFINED__
 
-// Windows.System.Profile.SystemIdentificationInfo
-#ifndef __WSPSystemIdentificationInfo_DEFINED__
-#define __WSPSystemIdentificationInfo_DEFINED__
+// Windows.System.Profile.EducationSettings
+#ifndef __WSPEducationSettings_DEFINED__
+#define __WSPEducationSettings_DEFINED__
 
 OBJCUWPWINDOWSSYSTEMPROFILEEXPORT
-@interface WSPSystemIdentificationInfo : RTObject
-#if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
-#endif
-@property (readonly) RTObject<WSSIBuffer>* id;
-@property (readonly) WSPSystemIdentificationSource source;
+@interface WSPEducationSettings : RTObject
++ (BOOL)isEducationEnvironment;
 @end
 
-#endif // __WSPSystemIdentificationInfo_DEFINED__
-
-// Windows.System.Profile.SystemIdentification
-#ifndef __WSPSystemIdentification_DEFINED__
-#define __WSPSystemIdentification_DEFINED__
-
-OBJCUWPWINDOWSSYSTEMPROFILEEXPORT
-@interface WSPSystemIdentification : RTObject
-+ (WSPSystemIdentificationInfo*)getSystemIdForPublisher;
-+ (WSPSystemIdentificationInfo*)getSystemIdForUser:(WSUser*)user;
-@end
-
-#endif // __WSPSystemIdentification_DEFINED__
+#endif // __WSPEducationSettings_DEFINED__
 
 // Windows.System.Profile.PlatformDiagnosticsAndUsageDataSettings
 #ifndef __WSPPlatformDiagnosticsAndUsageDataSettings_DEFINED__
@@ -199,6 +211,7 @@ OBJCUWPWINDOWSSYSTEMPROFILEEXPORT
 OBJCUWPWINDOWSSYSTEMPROFILEEXPORT
 @interface WSPSharedModeSettings : RTObject
 + (BOOL)isEnabled;
++ (BOOL)shouldAvoidLocalStorage;
 @end
 
 #endif // __WSPSharedModeSettings_DEFINED__

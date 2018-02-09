@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -28,7 +28,7 @@
 #include <UWP/interopBase.h>
 
 @class WDPPwmPin, WDPPwmController;
-@protocol WDPIPwmController, WDPIPwmControllerStatics, WDPIPwmControllerStatics2, WDPIPwmPin;
+@protocol WDPIPwmController, WDPIPwmControllerStatics, WDPIPwmControllerStatics2, WDPIPwmControllerStatics3, WDPIPwmPin;
 
 // Windows.Devices.Pwm.PwmPulsePolarity
 enum _WDPPwmPulsePolarity {
@@ -83,8 +83,11 @@ OBJCUWPWINDOWSDEVICESPWMEXPORT
 
 OBJCUWPWINDOWSDEVICESPWMEXPORT
 @interface WDPPwmController : RTObject
-+ (void)getDefaultAsyncWithSuccess:(void (^)(WDPPwmController*))success failure:(void (^)(NSError*))failure;
 + (void)getControllersAsync:(RTObject<WDPPIPwmProvider>*)provider success:(void (^)(NSArray* /* WDPPwmController* */))success failure:(void (^)(NSError*))failure;
++ (NSString *)getDeviceSelector;
++ (NSString *)getDeviceSelectorFromFriendlyName:(NSString *)friendlyName;
++ (void)fromIdAsync:(NSString *)deviceId success:(void (^)(WDPPwmController*))success failure:(void (^)(NSError*))failure;
++ (void)getDefaultAsyncWithSuccess:(void (^)(WDPPwmController*))success failure:(void (^)(NSError*))failure;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
