@@ -227,6 +227,7 @@ void UIView::InitFromStory(XIBObject* obj) {
     }
 
     PopulateRectFromStoryboard("frame", _bounds);
+    PopulateRectFromStoryboard("contentStretch", _contentStretch);
     if (_bounds.IsValid()) {
         _center.x = _bounds.x + _bounds.width / 2.0f;
         _center.y = _bounds.y + _bounds.height / 2.0f;
