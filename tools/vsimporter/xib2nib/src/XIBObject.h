@@ -75,7 +75,19 @@ typedef struct UIRect {
     }
 } UIRect;
 
-typedef struct { double x, y; } UIPoint;
+typedef struct UIPoint{
+    double x, y;
+
+    UIPoint() : x(INFINITY), y(INFINITY) {
+    }
+    
+    UIPoint(double x, double y) : x(x), y(y) {
+    }
+
+    bool IsValid() {
+        return x != INFINITY && y != INFINITY;
+    }
+} UIPoint;
 
 typedef struct { long long location, length; } NSRange;
 
@@ -163,6 +175,7 @@ public:
     bool GetBool(char* pPropName, bool defaultValue);
     
     void PopulateInsetsFromStoryboard(const char* insetType, UIEdgeInsets& insets);
+    void PopulateRectFromStoryboard(const char* rectType, UIRect& rect);
     void PopulateSizeFromStoryboard(const char* sizeType, CGSize& size);
 
     template <typename TData>

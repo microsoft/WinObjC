@@ -62,7 +62,7 @@ void UINibKeyValuePair::InitFromStory(XIBObject* obj) {
     } else if (strcmp(type , "point") == 0) {
         XIBObject *obj= FindMemberAndHandle("value");
         if (obj) {
-            UIPoint pt = {0};
+            UIPoint pt;
             pt.x = static_cast<float>(strtod(obj->getAttrAndHandle("x"), NULL));
             pt.y = static_cast<float>(strtod(obj->getAttrAndHandle("y"), NULL));
             _value = new XIBObjectValue<UIPoint>(pt);

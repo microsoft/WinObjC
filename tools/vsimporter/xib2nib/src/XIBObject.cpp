@@ -497,6 +497,16 @@ void XIBObject::PopulateInsetsFromStoryboard(const char* insetType, UIEdgeInsets
     }
 }
 
+void XIBObject::PopulateRectFromStoryboard(const char* rectType, UIRect& rect) {
+    XIBObject* rectNode = FindMemberAndHandle(const_cast<char*>(rectType));
+    if (rectNode) {
+        rect.x = strtof(rectNode->getAttrAndHandle("x"), NULL);
+        rect.y = strtof(rectNode->getAttrAndHandle("y"), NULL);
+        rect.width = strtof(rectNode->getAttrAndHandle("width"), NULL);
+        rect.height = strtof(rectNode->getAttrAndHandle("height"), NULL);
+    }
+}
+
 void XIBObject::PopulateSizeFromStoryboard(const char* sizeType, CGSize& size) {
     XIBObject* sizeNode = FindMemberAndHandle(const_cast<char*>(sizeType));
     if (sizeNode) {

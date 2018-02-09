@@ -45,9 +45,6 @@ enum {
 };
 
 UIView::UIView() {
-    memset(&_bounds, 0, sizeof(_bounds));
-    memset(&_center, 0, sizeof(_center));
-    memset(&_contentStretch, 0, sizeof(_contentStretch));
     _subviews = new XIBArray();
     _constraints = new XIBArray();
     _layoutGuides = new XIBArray();
@@ -228,19 +225,14 @@ void UIView::InitFromStory(XIBObject* obj) {
             _hidden = true;
         }
     }
-    XIBObject* frameRect = FindMemberAndHandle("frame");
 
-    if (frameRect) {
+    PopulateRectFromStoryboard("frame", _bounds);
+    if (_bounds.IsValid()) {
+        _center.x = _bounds.x + _bounds.width / 2.0f;
+        _center.y = _bounds.y + _bounds.height / 2.0f;
+
         _bounds.x = 0;
         _bounds.y = 0;
-        _bounds.width = static_cast<float>(strtod(frameRect->getAttrAndHandle("width"), NULL));
-        _bounds.height = static_cast<float>(strtod(frameRect->getAttrAndHandle("height"), NULL));
-
-        _center.x = static_cast<float>(strtod(frameRect->getAttrAndHandle("x"), NULL));
-        _center.y = static_cast<float>(strtod(frameRect->getAttrAndHandle("y"), NULL));
-
-        _center.x += _bounds.width / 2.0f;
-        _center.y += _bounds.height / 2.0f;
     }
 
     XIBObject* resizeMask = FindMemberAndHandle("autoresizingMask");
@@ -311,9 +303,11 @@ void UIView::ConvertStaticMappings(NIBWriter* writer, XIBObject* obj) {
         }
     }
 
-    AddRect(writer, "UIBounds", _bounds);
-    AddPoint(writer, "UICenter", _center);
-    if (_contentStretch.x != 0.0f || _contentStretch.y != 0.0f || _contentStretch.width != 0.0f || _contentStretch.height != 0.0f) {
+    if (_bounds.IsValid())
+        AddRect(writer, "UIBounds", _bounds);
+    if (_center.IsValid())
+        AddPoint(writer, "UICenter", _center);
+    if (_contentStretch.IsValid()) {
         AddRect(writer, "UIContentStretch", _contentStretch);
     }
 
