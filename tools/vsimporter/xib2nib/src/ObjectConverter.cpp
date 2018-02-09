@@ -54,6 +54,7 @@
 #include "UIPageControl.h"
 #include "UISwitch.h"
 #include "UISegmentedControl.h"
+#include "UISegment.h"
 #include "UIDatePicker.h"
 #include "MKMapView.h"
 #include "UISlider.h"
@@ -153,6 +154,7 @@ XIBObject* ObjectConverter::ConverterForStoryObject(const char* className, pugi:
     IS_CONVERTER(ret, className, "variation", XIBVariation)
     IS_CONVERTER(ret, className, "items", XIBArray)
     IS_CONVERTER(ret, className, "connections", XIBArray)
+    IS_CONVERTER(ret, className, "segments", XIBArray)
     IS_CONVERTER(ret, className, "string", XIBObjectString)
     IS_CONVERTER(ret, className, "viewController", UIViewController)
     IS_CONVERTER(ret, className, "splitViewController", UIViewController)
@@ -201,6 +203,7 @@ XIBObject* ObjectConverter::ConverterForStoryObject(const char* className, pugi:
     IS_CONVERTER(ret, className, "collectionViewController", UICollectionViewController)
     IS_CONVERTER(ret, className, "pickerView", UIPickerView)
     IS_CONVERTER(ret, className, "segmentedControl", UISegmentedControl)
+    IS_CONVERTER(ret, className, "segment", UISegment);
     IS_CONVERTER(ret, className, "stepper", UIStepper)
     IS_CONVERTER(ret, className, "panGestureRecognizer", UIPanGestureRecognizer)
     IS_CONVERTER(ret, className, "swipeGestureRecognizer", UISwipeGestureRecognizer)
