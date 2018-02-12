@@ -88,9 +88,6 @@ When using the bridge, the first thing you'll want to do is generate a Visual St
 
 For more detailed step by step instructions on how to import a project, see the [Quick Start Tutorial](https://github.com/Microsoft/WinObjC/wiki/Quick-Start-Tutorial) page of the wiki. For vsimporter options and known issues, check the [Using vsimporter](https://github.com/Microsoft/WinObjC/wiki/Using-vsimporter) wiki page.
 
-### Analyzing your App
-After importing your project, we strongly suggest using the [App Analysis Tool](https://developer.microsoft.com/en-us/windows/bridges/ios/app-analyzer-tool) to have a better understanding of the compatibility of your app with the bridge.
-
 ### Building & Running the Samples
 A great way to learn more about the bridge and its features is building and running the samples of the SDK, which contain many code examples. We recommend starting with the **WOCCatalog** sample app, which demonstrates an assortment of iOS and XAML UI controls:
 
@@ -108,11 +105,10 @@ The following resources will help you get started. For more information, check o
 
 1. [Wiki](https://github.com/Microsoft/WinObjC/wiki), for documentation and tutorials
 2. [Development Roadmap](https://github.com/Microsoft/WinObjC/wiki/Roadmap), detailing our highest priorities
-3. [App Analysis Tool](https://developer.microsoft.com/en-us/windows/bridges/ios/app-analyzer-tool), to evaluate the compatibility of your app with the bridge
-4. [Website on Windows Dev Center](https://dev.windows.com/bridges/ios), for evaluation virtual machines
-5. [Quick Start Challenge](https://github.com/Microsoft/WinObjC/wiki/Quick-Start-Tutorial), for a quick hands-on introduction to the bridge
-7. [FAQ](https://github.com/Microsoft/WinObjC/wiki/FAQ), with common questions and issues
-8. [The iOS Bridge Samples Repo](https://github.com/Microsoft/WinObjC-Samples), for sample apps and code using the bridge
+3. [Website on Windows Dev Center](https://dev.windows.com/bridges/ios), for evaluation virtual machines
+4. [Quick Start Challenge](https://github.com/Microsoft/WinObjC/wiki/Quick-Start-Tutorial), for a quick hands-on introduction to the bridge
+5. [FAQ](https://github.com/Microsoft/WinObjC/wiki/FAQ), with common questions and issues
+6. [The iOS Bridge Samples Repo](https://github.com/Microsoft/WinObjC-Samples), for sample apps and code using the bridge
 
 ## Contributing
 There are many ways to contribute to the Windows Bridge for iOS:
