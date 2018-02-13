@@ -33,5 +33,16 @@ void UISwitch::InitFromStory(XIBObject* obj) {
 }
 
 void UISwitch::ConvertStaticMappings(NIBWriter* writer, XIBObject* obj) {
+    if (_enabled)
+        AddBool(writer, "UISwitchEnabled", true);
+    else
+        AddBool(writer, "UIDisabled", true);
+    
+    if (_selected)
+        AddBool(writer, "UISelected", true);
+
+    if (_highlighted)
+        AddBool(writer, "UIHighlighted", true);
+
     UIControl::ConvertStaticMappings(writer, obj);
 }
