@@ -23,7 +23,6 @@
     <ClangCompileBeforeTargets>ClCompile;Link;Lib;ImpLib</ClangCompileBeforeTargets>
     <ClangCompileAfterTargets></ClangCompileAfterTargets>
     <BeforeClCompileTargets>_ClangCompile;$(BeforeClCompileTargets)</BeforeClCompileTargets>
-    <ComputeCompileInputsTargets>AddObjCTwoStageInitFile;$(ComputeCompileInputsTargets)</ComputeCompileInputsTargets>
     <BuildCompileTargets>_ClangCompile;$(BuildCompileTargets)</BuildCompileTargets>
   </PropertyGroup>
 
@@ -434,21 +433,6 @@
   </Target>
 
   <Target
-    Name="AddObjCTwoStageInitFile"
-    DependsOnTargets="ComputeStarboardCRT;ComputeStarboardHasObjCSources">
-
-    <ItemGroup Condition="'$(StarboardHasObjCSources)' == 'true'">
-      <ClCompile Include="$(MSBuildThisFileDirectory)\objcrt\objc_2stage_init.cpp">
-        <PrecompiledHeader>NotUsing</PrecompiledHeader>
-        <RuntimeLibrary>$(StarboardCRT)</RuntimeLibrary>
-        <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
-        <CallingConvention>Cdecl</CallingConvention>
-      </ClCompile>
-    </ItemGroup>
-
-  </Target>
-
-  <Target
     Name="_ClangCompile"
     BeforeTargets="$(ClangCompileBeforeTargets)"
     AfterTargets="$(ClangCompileAfterTargets)"
@@ -646,18 +630,6 @@
         <InternalForceIncludes Condition="'%(ClangCompile.WOCStdlib)' == 'true'">WOCStdlib.h;%(InternalForceIncludes)</InternalForceIncludes>
       </ClangCompile>
     </ItemGroup>
-
-    <!-- Figure out whether Objective-C should be pinned -->
-    <ItemGroup>
-      <ClangCompile>
-        <InternalSystemIncludePaths Condition=
-             "'%(ClangCompile.CompileAs)' == 'CompileAsObjC' or 
-             '%(ClangCompile.CompileAs)' == 'CompileAsObjCpp'">$(MSBuildThisFileDirectory)\objcrt\;%(InternalSystemIncludePaths)</InternalSystemIncludePaths>
-        <InternalForceIncludes Condition="'%(ClangCompile.CompileAs)' == 'CompileAsObjC' or
-                                          '%(ClangCompile.CompileAs)' == 'CompileAsObjCpp'">objc_2stage_init.h;%(InternalForceIncludes)</InternalForceIncludes>
-      </ClangCompile>
-    </ItemGroup>
-
   </Target>
 
   <!-- Ensure Link/Lib/ImpLib pick up the object files -->
@@ -677,7 +649,7 @@
 
 
   <PropertyGroup>
-    <ComputeLinkInputsTargets>$(ComputeLinkInputsTargets);AddCRTLinkInputs;</ComputeLinkInputsTargets>
+    <ComputeLinkInputsTargets>$(ComputeLinkInputsTargets);AddObjCLinkInputs;AddCRTLinkInputs;</ComputeLinkInputsTargets>
   </PropertyGroup>
 
   <Target
@@ -711,6 +683,15 @@
       <ClCompile Remove="@(ClCompile)" Condition="'%(ClCompile.DeleteSoon)'=='true'" />
     </ItemGroup>
 
+  </Target>
+
+  <Target
+    Name="AddObjCLinkInputs"
+    DependsOnTargets="ComputeStarboardHasObjCSources">
+
+    <ItemGroup Condition="'$(StarboardHasObjCSources)' == 'true'">
+      <Link Include="libobjc2.lib" />
+    </ItemGroup>
   </Target>
 
   <!-- Sets StarboardHasObjCSources based on whether any files in this project are being built as Objective-C -->

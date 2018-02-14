@@ -9,13 +9,7 @@
     <ClangPlatformArgs Condition="'$(ApplicationType)' == 'Windows Phone'">-DWINAPI_FAMILY=WINAPI_FAMILY_PHONE_APP</ClangPlatformArgs>
     <ClangTargetTriple Condition="'$(Platform)' != 'ARM'">i686-pc-windows-msvc</ClangTargetTriple>
     <ClangTargetTriple Condition="'$(Platform)' == 'ARM'">thumbv7-pc-windows-msvc</ClangTargetTriple>
-    <ClangArgs>-target $(ClangTargetTriple) -isystem "[LLVMResourceDir]\include" -fblocks -fno-strict-aliasing -fdiagnostics-format=msvc -fno-caret-diagnostics -fobjc-runtime=objfw -Xclang -fobjc-dispatch-method=non-legacy -Xclang -fconst-strings -fconstant-string-class=NSConstantString -D_HAS_EXCEPTIONS=0 -DWINOBJC -D__WRL_NO_DEFAULT_LIB__ -Wno-incomplete-umbrella $(ClangPlatformArgs)</ClangArgs>
-    <VSUpdateVersion>$(registry:HKEY_LOCAL_MACHINE\Software\Microsoft\DevDiv\vc\Servicing\14.0\IDE.x64@Version)</VSUpdateVersion>
-    <VSUpdateVersion Condition="'$(VSUpdateVersion)' == ''">$(registry:HKEY_LOCAL_MACHINE\Software\Microsoft\DevDiv\vc\Servicing\14.0\IDE.Base@Version)</VSUpdateVersion>
-    <VSUpdateVersion Condition="'$(VSUpdateVersion)' == ''">$(registry:HKEY_LOCAL_MACHINE\Software\Wow6432Node\Microsoft\DevDiv\vc\Servicing\14.0\IDE.x64@Version)</VSUpdateVersion>
-    <VSUpdateVersion Condition="'$(VSUpdateVersion)' == ''">$(registry:HKEY_LOCAL_MACHINE\Software\Wow6432Node\Microsoft\DevDiv\vc\Servicing\14.0\IDE.Base@Version)</VSUpdateVersion>
-    <!-- Use the old code view records if VS is VS2015 VSU2 RC or older -->
-    <ClangArgs Condition="'$(VSUpdateVersion)' != '' and '$(VSUpdateVersion)'  &lt;= '14.0.25029'">$(ClangArgs) -Xclang -fno-new-code-view-record</ClangArgs>
+    <ClangArgs>-target $(ClangTargetTriple) -isystem "[LLVMResourceDir]\include" -fblocks -fno-strict-aliasing -fdiagnostics-format=msvc -fno-caret-diagnostics -fobjc-runtime=microsoft -Xclang -fconst-strings -fconstant-string-class=NSConstantString -D_HAS_EXCEPTIONS=0 -DWINOBJC -D__WRL_NO_DEFAULT_LIB__ -Wno-incomplete-umbrella $(ClangPlatformArgs)</ClangArgs>
   </PropertyGroup>
 
   <ItemDefinitionGroup Label="Defaults">
