@@ -45,25 +45,25 @@
     <ClInclude Include="CommonCodeGenerator.h">
       <Filter>Helpers</Filter>
     </ClInclude>
-    <ClInclude Include="\msvc\LLVM-3.6.0\include\clang-c\BuildSystem.h">
+    <ClInclude Include="\msvc\LLVM\include\clang-c\BuildSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="\msvc\LLVM-3.6.0\include\clang-c\CXCompilationDatabase.h">
+    <ClInclude Include="\msvc\LLVM\include\clang-c\CXCompilationDatabase.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="\msvc\LLVM-3.6.0\include\clang-c\CXErrorCode.h">
+    <ClInclude Include="\msvc\LLVM\include\clang-c\CXErrorCode.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="\msvc\LLVM-3.6.0\include\clang-c\CXString.h">
+    <ClInclude Include="\msvc\LLVM\include\clang-c\CXString.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="\msvc\LLVM-3.6.0\include\clang-c\Documentation.h">
+    <ClInclude Include="\msvc\LLVM\include\clang-c\Documentation.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="\msvc\LLVM-3.6.0\include\clang-c\Index.h">
+    <ClInclude Include="\msvc\LLVM\include\clang-c\Index.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="\msvc\LLVM-3.6.0\include\clang-c\Platform.h">
+    <ClInclude Include="\msvc\LLVM\include\clang-c\Platform.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
