@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -28,7 +28,7 @@
 #include <UWP/interopBase.h>
 
 @class WAEEmailMessage, WAEEmailStore, WAEEmailManagerForUser, WAEEmailMailbox, WAEEmailConversationReader, WAEEmailQueryOptions, WAEEmailMessageReader, WAEEmailConversation, WAEEmailFolder, WAEEmailRecipient, WAEEmailIrmTemplate, WAEEmailIrmInfo, WAEEmailAttachment, WAEEmailMeetingInfo, WAEEmailMailboxChangedDeferral, WAEEmailMailboxCapabilities, WAEEmailMailboxChangeTracker, WAEEmailMailboxPolicies, WAEEmailMailboxSyncManager, WAEEmailMailboxChangedEventArgs, WAEEmailMailboxAutoReplySettings, WAEEmailRecipientResolutionResult, WAEEmailMailboxCreateFolderResult, WAEEmailMailboxAutoReply, WAEEmailItemCounts, WAEEmailQueryTextSearch, WAEEmailConversationBatch, WAEEmailMessageBatch, WAEEmailMailboxAction, WAEEmailMailboxChange, WAEEmailMailboxChangeReader, WAEEmailManager, WAEEmailStoreNotificationTriggerDetails;
-@protocol WAEIEmailManagerStatics, WAEIEmailManagerStatics2, WAEIEmailManagerStatics3, WAEIEmailManagerForUser, WAEIEmailStore, WAEIEmailRecipient, WAEIEmailRecipientFactory, WAEIEmailIrmTemplate, WAEIEmailIrmTemplateFactory, WAEIEmailIrmInfo, WAEIEmailIrmInfoFactory, WAEIEmailMessage, WAEIEmailMessage2, WAEIEmailMessage3, WAEIEmailAttachment, WAEIEmailAttachment2, WAEIEmailAttachmentFactory, WAEIEmailAttachmentFactory2, WAEIEmailMailboxChangedEventArgs, WAEIEmailMailboxChangedDeferral, WAEIEmailStoreNotificationTriggerDetails, WAEIEmailMailboxPolicies, WAEIEmailMailboxPolicies2, WAEIEmailMailboxPolicies3, WAEIEmailMailboxCapabilities, WAEIEmailMailboxCapabilities2, WAEIEmailMailboxCapabilities3, WAEIEmailMailbox, WAEIEmailMailbox2, WAEIEmailMailbox3, WAEIEmailMailbox4, WAEIEmailRecipientResolutionResult, WAEIEmailRecipientResolutionResult2, WAEIEmailMailboxCreateFolderResult, WAEIEmailMailboxAutoReplySettings, WAEIEmailMailboxAutoReply, WAEIEmailMailboxSyncManager, WAEIEmailMailboxSyncManager2, WAEIEmailFolder, WAEIEmailConversation, WAEIEmailMailboxAction, WAEIEmailQueryTextSearch, WAEIEmailQueryOptionsFactory, WAEIEmailQueryOptions, WAEIEmailConversationBatch, WAEIEmailConversationReader, WAEIEmailMessageBatch, WAEIEmailMessageReader, WAEIEmailMailboxChange, WAEIEmailMailboxChangeReader, WAEIEmailMailboxChangeTracker, WAEIEmailMeetingInfo, WAEIEmailMeetingInfo2, WAEIEmailItemCounts;
+@protocol WAEIEmailManagerStatics, WAEIEmailManagerStatics2, WAEIEmailManagerStatics3, WAEIEmailManagerForUser, WAEIEmailStore, WAEIEmailRecipient, WAEIEmailRecipientFactory, WAEIEmailIrmTemplate, WAEIEmailIrmTemplateFactory, WAEIEmailIrmInfo, WAEIEmailIrmInfoFactory, WAEIEmailMessage, WAEIEmailMessage2, WAEIEmailMessage3, WAEIEmailMessage4, WAEIEmailAttachment, WAEIEmailAttachment2, WAEIEmailAttachmentFactory, WAEIEmailAttachmentFactory2, WAEIEmailMailboxChangedEventArgs, WAEIEmailMailboxChangedDeferral, WAEIEmailStoreNotificationTriggerDetails, WAEIEmailMailboxPolicies, WAEIEmailMailboxPolicies2, WAEIEmailMailboxPolicies3, WAEIEmailMailboxCapabilities, WAEIEmailMailboxCapabilities2, WAEIEmailMailboxCapabilities3, WAEIEmailMailbox, WAEIEmailMailbox2, WAEIEmailMailbox3, WAEIEmailMailbox4, WAEIEmailMailbox5, WAEIEmailRecipientResolutionResult, WAEIEmailRecipientResolutionResult2, WAEIEmailMailboxCreateFolderResult, WAEIEmailMailboxAutoReplySettings, WAEIEmailMailboxAutoReply, WAEIEmailMailboxSyncManager, WAEIEmailMailboxSyncManager2, WAEIEmailFolder, WAEIEmailConversation, WAEIEmailMailboxAction, WAEIEmailQueryTextSearch, WAEIEmailQueryOptionsFactory, WAEIEmailQueryOptions, WAEIEmailConversationBatch, WAEIEmailConversationReader, WAEIEmailMessageBatch, WAEIEmailMessageReader, WAEIEmailMailboxChange, WAEIEmailMailboxChangeReader, WAEIEmailMailboxChangeTracker, WAEIEmailMeetingInfo, WAEIEmailMeetingInfo2, WAEIEmailItemCounts;
 
 // Windows.ApplicationModel.Email.EmailCertificateValidationStatus
 enum _WAEEmailCertificateValidationStatus {
@@ -343,35 +343,37 @@ OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @property (readonly) NSMutableArray* /* WAEEmailRecipient* */ cC;
 @property (readonly) NSMutableArray* /* WAEEmailAttachment* */ attachments;
 @property (readonly) NSMutableArray* /* WAEEmailRecipient* */ to;
+@property BOOL allowInternetImages;
 @property WAEEmailFlagState flagState;
 @property unsigned int estimatedDownloadSizeInBytes;
 @property WAEEmailMessageDownloadState downloadState;
-@property (retain) WAEEmailIrmInfo* irmInfo;
 @property WAEEmailImportance importance;
-@property BOOL allowInternetImages;
+@property (retain) WAEEmailIrmInfo* irmInfo;
+@property int originalCodePage;
+@property (retain) id /* WFDateTime* */ sentTime;
+@property (retain) WAEEmailRecipient* sender;
+@property (retain) NSString * remoteId;
+@property (retain) NSString * preview;
 @property (retain) NSString * messageClass;
+@property (retain) WAEEmailMeetingInfo* meetingInfo;
+@property WAEEmailMessageResponseKind lastResponseKind;
 @property BOOL isSeen;
 @property BOOL isRead;
-@property WAEEmailMessageResponseKind lastResponseKind;
-@property (retain) WAEEmailRecipient* sender;
-@property (retain) id /* WFDateTime* */ sentTime;
-@property (retain) NSString * preview;
-@property int originalCodePage;
-@property (retain) WAEEmailMeetingInfo* meetingInfo;
-@property (retain) NSString * remoteId;
 @property (readonly) BOOL isServerSearchMessage;
+@property (readonly) BOOL isSmartSendable;
 @property (readonly) NSString * mailboxId;
 @property (readonly) uint64_t changeNumber;
 @property (readonly) NSString * conversationId;
 @property (readonly) NSString * normalizedSubject;
 @property (readonly) NSString * folderId;
-@property (readonly) NSString * id;
 @property (readonly) BOOL hasPartialBodies;
+@property (readonly) NSString * id;
 @property (readonly) NSString * inResponseToMessageId;
 @property (readonly) BOOL isDraftMessage;
-@property (readonly) BOOL isSmartSendable;
 @property WAEEmailMessageSmimeKind smimeKind;
 @property (retain) RTObject<WSSIRandomAccessStreamReference>* smimeData;
+@property (retain) WAEEmailRecipient* sentRepresenting;
+@property (readonly) NSMutableArray* /* WAEEmailRecipient* */ replyTo;
 - (RTObject<WSSIRandomAccessStreamReference>*)getBodyStream:(WAEEmailMessageBodyKind)type;
 - (void)setBodyStream:(WAEEmailMessageBodyKind)type stream:(RTObject<WSSIRandomAccessStreamReference>*)stream;
 @end
@@ -482,6 +484,7 @@ OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 - (void)tryCreateFolderAsync:(NSString *)parentFolderId name:(NSString *)name success:(void (^)(WAEEmailMailboxCreateFolderResult*))success failure:(void (^)(NSError*))failure;
 - (void)tryDeleteFolderAsync:(NSString *)folderId success:(void (^)(WAEEmailMailboxDeleteFolderStatus))success failure:(void (^)(NSError*))failure;
 - (RTObject<WFIAsyncAction>*)registerSyncManagerAsync;
+- (WAEEmailMailboxChangeTracker*)getChangeTracker:(NSString *)identity;
 @end
 
 #endif // __WAEEmailMailbox_DEFINED__
@@ -506,9 +509,9 @@ OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 
 OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WAEEmailQueryOptions : RTObject
++ (instancetype)make __attribute__ ((ns_returns_retained));
 + (WAEEmailQueryOptions*)makeWithText:(NSString *)text ACTIVATOR;
 + (WAEEmailQueryOptions*)makeWithTextAndFields:(NSString *)text fields:(WAEEmailQuerySearchFields)fields ACTIVATOR;
-+ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
@@ -603,9 +606,9 @@ OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 
 OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WAEEmailRecipient : RTObject
++ (instancetype)make __attribute__ ((ns_returns_retained));
 + (WAEEmailRecipient*)make:(NSString *)address ACTIVATOR;
 + (WAEEmailRecipient*)makeWithName:(NSString *)address name:(NSString *)name ACTIVATOR;
-+ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
@@ -621,8 +624,8 @@ OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 
 OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WAEEmailIrmTemplate : RTObject
-+ (WAEEmailIrmTemplate*)make:(NSString *)id name:(NSString *)name description:(NSString *)description ACTIVATOR;
 + (instancetype)make __attribute__ ((ns_returns_retained));
++ (WAEEmailIrmTemplate*)make:(NSString *)id name:(NSString *)name description:(NSString *)description ACTIVATOR;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
@@ -666,9 +669,9 @@ OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 
 OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WAEEmailAttachment : RTObject
-+ (instancetype)make __attribute__ ((ns_returns_retained));
-+ (WAEEmailAttachment*)make:(NSString *)fileName data:(RTObject<WSSIRandomAccessStreamReference>*)data mimeType:(NSString *)mimeType ACTIVATOR;
 + (WAEEmailAttachment*)make:(NSString *)fileName data:(RTObject<WSSIRandomAccessStreamReference>*)data ACTIVATOR;
++ (WAEEmailAttachment*)make:(NSString *)fileName data:(RTObject<WSSIRandomAccessStreamReference>*)data mimeType:(NSString *)mimeType ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
@@ -1010,8 +1013,8 @@ OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WAEEmailManager : RTObject
 + (WAEEmailManagerForUser*)getForUser:(WSUser*)user;
-+ (RTObject<WFIAsyncAction>*)showComposeNewEmailAsync:(WAEEmailMessage*)message;
 + (void)requestStoreAsync:(WAEEmailStoreAccessType)accessType success:(void (^)(WAEEmailStore*))success failure:(void (^)(NSError*))failure;
++ (RTObject<WFIAsyncAction>*)showComposeNewEmailAsync:(WAEEmailMessage*)message;
 @end
 
 #endif // __WAEEmailManager_DEFINED__

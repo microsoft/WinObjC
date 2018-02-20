@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -28,7 +28,7 @@
 #include <UWP/interopBase.h>
 
 @class WSMGGuidanceRoadSignpost, WSMGGuidanceManeuver, WSMGGuidanceRoute, WSMGGuidanceMapMatchedCoordinate, WSMGGuidanceLaneInfo, WSMGGuidanceUpdatedEventArgs, WSMGGuidanceReroutedEventArgs, WSMGGuidanceAudioNotificationRequestedEventArgs, WSMGGuidanceNavigator, WSMGGuidanceRoadSegment, WSMGGuidanceTelemetryCollector;
-@protocol WSMGIGuidanceRoadSignpost, WSMGIGuidanceManeuver, WSMGIGuidanceUpdatedEventArgs, WSMGIGuidanceReroutedEventArgs, WSMGIGuidanceAudioNotificationRequestedEventArgs, WSMGIGuidanceNavigator, WSMGIGuidanceNavigator2, WSMGIGuidanceNavigatorStatics, WSMGIGuidanceNavigatorStatics2, WSMGIGuidanceRoadSegment, WSMGIGuidanceMapMatchedCoordinate, WSMGIGuidanceTelemetryCollectorStatics, WSMGIGuidanceTelemetryCollector, WSMGIGuidanceRouteStatics, WSMGIGuidanceRoute, WSMGIGuidanceLaneInfo;
+@protocol WSMGIGuidanceRoadSignpost, WSMGIGuidanceManeuver, WSMGIGuidanceUpdatedEventArgs, WSMGIGuidanceReroutedEventArgs, WSMGIGuidanceAudioNotificationRequestedEventArgs, WSMGIGuidanceNavigator, WSMGIGuidanceNavigator2, WSMGIGuidanceNavigatorStatics, WSMGIGuidanceNavigatorStatics2, WSMGIGuidanceRoadSegment, WSMGIGuidanceRoadSegment2, WSMGIGuidanceMapMatchedCoordinate, WSMGIGuidanceTelemetryCollectorStatics, WSMGIGuidanceTelemetryCollector, WSMGIGuidanceRouteStatics, WSMGIGuidanceRoute, WSMGIGuidanceLaneInfo;
 
 // Windows.Services.Maps.Guidance.GuidanceManeuverKind
 enum _WSMGGuidanceManeuverKind {
@@ -363,6 +363,7 @@ OBJCUWPWINDOWSSERVICESMAPSGUIDANCEEXPORT
 @property (readonly) NSString * shortRoadName;
 @property (readonly) double speedLimit;
 @property (readonly) WFTimeSpan* travelTime;
+@property (readonly) BOOL isScenic;
 @end
 
 #endif // __WSMGGuidanceRoadSegment_DEFINED__

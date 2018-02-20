@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -27,14 +27,15 @@
 #endif
 #include <UWP/interopBase.h>
 
-@class WSMMapAddress, WSMMapLocation, WSMMapRouteManeuver, WSMMapRouteLeg, WSMMapRoute, WSMMapLocationFinderResult, WSMMapRouteFinderResult, WSMMapRouteDrivingOptions, WSMMapLocationFinder, WSMMapRouteFinder, WSMMapService, WSMMapManager;
-@protocol WSMIMapRouteDrivingOptions, WSMIMapAddress, WSMIMapAddress2, WSMIMapLocation, WSMIMapLocationFinderResult, WSMIMapRouteManeuver, WSMIMapRouteManeuver2, WSMIMapRouteLeg, WSMIMapRoute, WSMIMapRoute2, WSMIMapRouteFinderResult, WSMIMapRouteFinderResult2, WSMIMapLocationFinderStatics, WSMIMapLocationFinderStatics2, WSMIMapRouteFinderStatics, WSMIMapRouteFinderStatics2, WSMIMapServiceStatics, WSMIMapManagerStatics, WSMIMapServiceStatics2, WSMIMapServiceStatics3;
+@class WSMMapAddress, WSMMapLocation, WSMManeuverWarning, WSMMapRouteManeuver, WSMMapRouteLeg, WSMMapRoute, WSMEnhancedWaypoint, WSMMapLocationFinderResult, WSMMapRouteFinderResult, WSMMapRouteDrivingOptions, WSMPlaceInfo, WSMPlaceInfoCreateOptions, WSMMapLocationFinder, WSMMapRouteFinder, WSMMapService, WSMMapManager;
+@protocol WSMIMapRouteDrivingOptions, WSMIMapAddress, WSMIMapAddress2, WSMIMapLocation, WSMIMapLocationFinderResult, WSMIMapRouteManeuver, WSMIMapRouteManeuver2, WSMIMapRouteManeuver3, WSMIManeuverWarning, WSMIMapRouteLeg, WSMIMapRouteLeg2, WSMIMapRoute, WSMIMapRoute2, WSMIMapRoute3, WSMIMapRoute4, WSMIMapRouteFinderResult, WSMIMapRouteFinderResult2, WSMIEnhancedWaypoint, WSMIEnhancedWaypointFactory, WSMIMapLocationFinderStatics, WSMIMapLocationFinderStatics2, WSMIMapRouteFinderStatics, WSMIMapRouteFinderStatics2, WSMIMapRouteFinderStatics3, WSMIMapServiceStatics, WSMIMapManagerStatics, WSMIMapServiceStatics2, WSMIMapServiceStatics3, WSMIMapServiceStatics4, WSMIPlaceInfoCreateOptions, WSMIPlaceInfoStatics, WSMIPlaceInfo;
 
 // Windows.Services.Maps.MapRouteOptimization
 enum _WSMMapRouteOptimization {
     WSMMapRouteOptimizationTime = 0,
     WSMMapRouteOptimizationDistance = 1,
     WSMMapRouteOptimizationTimeWithTraffic = 2,
+    WSMMapRouteOptimizationScenic = 3,
 };
 typedef unsigned WSMMapRouteOptimization;
 
@@ -122,7 +123,83 @@ enum _WSMMapLocationDesiredAccuracy {
 };
 typedef unsigned WSMMapLocationDesiredAccuracy;
 
+// Windows.Services.Maps.WaypointKind
+enum _WSMWaypointKind {
+    WSMWaypointKindStop = 0,
+    WSMWaypointKindVia = 1,
+};
+typedef unsigned WSMWaypointKind;
+
+// Windows.Services.Maps.MapServiceDataUsagePreference
+enum _WSMMapServiceDataUsagePreference {
+    WSMMapServiceDataUsagePreferenceDefault = 0,
+    WSMMapServiceDataUsagePreferenceOfflineMapDataOnly = 1,
+};
+typedef unsigned WSMMapServiceDataUsagePreference;
+
+// Windows.Services.Maps.TrafficCongestion
+enum _WSMTrafficCongestion {
+    WSMTrafficCongestionUnknown = 0,
+    WSMTrafficCongestionLight = 1,
+    WSMTrafficCongestionMild = 2,
+    WSMTrafficCongestionMedium = 3,
+    WSMTrafficCongestionHeavy = 4,
+};
+typedef unsigned WSMTrafficCongestion;
+
+// Windows.Services.Maps.ManeuverWarningKind
+enum _WSMManeuverWarningKind {
+    WSMManeuverWarningKindNone = 0,
+    WSMManeuverWarningKindAccident = 1,
+    WSMManeuverWarningKindAdministrativeDivisionChange = 2,
+    WSMManeuverWarningKindAlert = 3,
+    WSMManeuverWarningKindBlockedRoad = 4,
+    WSMManeuverWarningKindCheckTimetable = 5,
+    WSMManeuverWarningKindCongestion = 6,
+    WSMManeuverWarningKindConstruction = 7,
+    WSMManeuverWarningKindCountryChange = 8,
+    WSMManeuverWarningKindDisabledVehicle = 9,
+    WSMManeuverWarningKindGateAccess = 10,
+    WSMManeuverWarningKindGetOffTransit = 11,
+    WSMManeuverWarningKindGetOnTransit = 12,
+    WSMManeuverWarningKindIllegalUTurn = 13,
+    WSMManeuverWarningKindMassTransit = 14,
+    WSMManeuverWarningKindMiscellaneous = 15,
+    WSMManeuverWarningKindNoIncident = 16,
+    WSMManeuverWarningKindOther = 17,
+    WSMManeuverWarningKindOtherNews = 18,
+    WSMManeuverWarningKindOtherTrafficIncidents = 19,
+    WSMManeuverWarningKindPlannedEvent = 20,
+    WSMManeuverWarningKindPrivateRoad = 21,
+    WSMManeuverWarningKindRestrictedTurn = 22,
+    WSMManeuverWarningKindRoadClosures = 23,
+    WSMManeuverWarningKindRoadHazard = 24,
+    WSMManeuverWarningKindScheduledConstruction = 25,
+    WSMManeuverWarningKindSeasonalClosures = 26,
+    WSMManeuverWarningKindTollbooth = 27,
+    WSMManeuverWarningKindTollRoad = 28,
+    WSMManeuverWarningKindTollZoneEnter = 29,
+    WSMManeuverWarningKindTollZoneExit = 30,
+    WSMManeuverWarningKindTrafficFlow = 31,
+    WSMManeuverWarningKindTransitLineChange = 32,
+    WSMManeuverWarningKindUnpavedRoad = 33,
+    WSMManeuverWarningKindUnscheduledConstruction = 34,
+    WSMManeuverWarningKindWeather = 35,
+};
+typedef unsigned WSMManeuverWarningKind;
+
+// Windows.Services.Maps.ManeuverWarningSeverity
+enum _WSMManeuverWarningSeverity {
+    WSMManeuverWarningSeverityNone = 0,
+    WSMManeuverWarningSeverityLowImpact = 1,
+    WSMManeuverWarningSeverityMinor = 2,
+    WSMManeuverWarningSeverityModerate = 3,
+    WSMManeuverWarningSeveritySerious = 4,
+};
+typedef unsigned WSMManeuverWarningSeverity;
+
 #include "WindowsDevicesGeolocation.h"
+#include "WindowsUIPopups.h"
 #include "WindowsFoundation.h"
 
 #import <Foundation/Foundation.h>
@@ -173,6 +250,21 @@ OBJCUWPWINDOWSSERVICESMAPSEXPORT
 
 #endif // __WSMMapLocation_DEFINED__
 
+// Windows.Services.Maps.ManeuverWarning
+#ifndef __WSMManeuverWarning_DEFINED__
+#define __WSMManeuverWarning_DEFINED__
+
+OBJCUWPWINDOWSSERVICESMAPSEXPORT
+@interface WSMManeuverWarning : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (readonly) WSMManeuverWarningKind kind;
+@property (readonly) WSMManeuverWarningSeverity severity;
+@end
+
+#endif // __WSMManeuverWarning_DEFINED__
+
 // Windows.Services.Maps.MapRouteManeuver
 #ifndef __WSMMapRouteManeuver_DEFINED__
 #define __WSMMapRouteManeuver_DEFINED__
@@ -191,6 +283,7 @@ OBJCUWPWINDOWSSERVICESMAPSEXPORT
 @property (readonly) double endHeading;
 @property (readonly) double startHeading;
 @property (readonly) NSString * streetName;
+@property (readonly) NSArray* /* WSMManeuverWarning* */ warnings;
 @end
 
 #endif // __WSMMapRouteManeuver_DEFINED__
@@ -209,6 +302,8 @@ OBJCUWPWINDOWSSERVICESMAPSEXPORT
 @property (readonly) double lengthInMeters;
 @property (readonly) NSArray* /* WSMMapRouteManeuver* */ maneuvers;
 @property (readonly) WDGGeopath* path;
+@property (readonly) WFTimeSpan* durationWithoutTraffic;
+@property (readonly) WSMTrafficCongestion trafficCongestion;
 @end
 
 #endif // __WSMMapRouteLeg_DEFINED__
@@ -230,9 +325,28 @@ OBJCUWPWINDOWSSERVICESMAPSEXPORT
 @property (readonly) WDGGeopath* path;
 @property (readonly) BOOL hasBlockedRoads;
 @property (readonly) WSMMapRouteRestrictions violatedRestrictions;
+@property (readonly) WFTimeSpan* durationWithoutTraffic;
+@property (readonly) WSMTrafficCongestion trafficCongestion;
+@property (readonly) BOOL isScenic;
 @end
 
 #endif // __WSMMapRoute_DEFINED__
+
+// Windows.Services.Maps.EnhancedWaypoint
+#ifndef __WSMEnhancedWaypoint_DEFINED__
+#define __WSMEnhancedWaypoint_DEFINED__
+
+OBJCUWPWINDOWSSERVICESMAPSEXPORT
+@interface WSMEnhancedWaypoint : RTObject
++ (WSMEnhancedWaypoint*)make:(WDGGeopoint*)point kind:(WSMWaypointKind)kind ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (readonly) WSMWaypointKind kind;
+@property (readonly) WDGGeopoint* point;
+@end
+
+#endif // __WSMEnhancedWaypoint_DEFINED__
 
 // Windows.Services.Maps.MapLocationFinderResult
 #ifndef __WSMMapLocationFinderResult_DEFINED__
@@ -283,6 +397,47 @@ OBJCUWPWINDOWSSERVICESMAPSEXPORT
 
 #endif // __WSMMapRouteDrivingOptions_DEFINED__
 
+// Windows.Services.Maps.PlaceInfo
+#ifndef __WSMPlaceInfo_DEFINED__
+#define __WSMPlaceInfo_DEFINED__
+
+OBJCUWPWINDOWSSERVICESMAPSEXPORT
+@interface WSMPlaceInfo : RTObject
++ (WSMPlaceInfo*)create:(WDGGeopoint*)referencePoint;
++ (WSMPlaceInfo*)createWithGeopointAndOptions:(WDGGeopoint*)referencePoint options:(WSMPlaceInfoCreateOptions*)options;
++ (WSMPlaceInfo*)createFromIdentifier:(NSString *)identifier;
++ (WSMPlaceInfo*)createFromIdentifierWithOptions:(NSString *)identifier defaultPoint:(WDGGeopoint*)defaultPoint options:(WSMPlaceInfoCreateOptions*)options;
++ (WSMPlaceInfo*)createFromMapLocation:(WSMMapLocation*)location;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (readonly) NSString * displayAddress;
+@property (readonly) NSString * displayName;
+@property (readonly) RTObject<WDGIGeoshape>* geoshape;
+@property (readonly) NSString * identifier;
++ (BOOL)isShowSupported;
+- (void)show:(WFRect*)selection;
+- (void)showWithPreferredPlacement:(WFRect*)selection preferredPlacement:(WUPPlacement)preferredPlacement;
+@end
+
+#endif // __WSMPlaceInfo_DEFINED__
+
+// Windows.Services.Maps.PlaceInfoCreateOptions
+#ifndef __WSMPlaceInfoCreateOptions_DEFINED__
+#define __WSMPlaceInfoCreateOptions_DEFINED__
+
+OBJCUWPWINDOWSSERVICESMAPSEXPORT
+@interface WSMPlaceInfoCreateOptions : RTObject
++ (instancetype)make __attribute__ ((ns_returns_retained));
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (retain) NSString * displayName;
+@property (retain) NSString * displayAddress;
+@end
+
+#endif // __WSMPlaceInfoCreateOptions_DEFINED__
+
 // Windows.Services.Maps.MapLocationFinder
 #ifndef __WSMMapLocationFinder_DEFINED__
 #define __WSMMapLocationFinder_DEFINED__
@@ -304,6 +459,8 @@ OBJCUWPWINDOWSSERVICESMAPSEXPORT
 OBJCUWPWINDOWSSERVICESMAPSEXPORT
 @interface WSMMapRouteFinder : RTObject
 + (void)getDrivingRouteWithOptionsAsync:(WDGGeopoint*)startPoint endPoint:(WDGGeopoint*)endPoint options:(WSMMapRouteDrivingOptions*)options success:(void (^)(WSMMapRouteFinderResult*))success failure:(void (^)(NSError*))failure;
++ (void)getDrivingRouteFromEnhancedWaypointsAsync:(id<NSFastEnumeration> /* WSMEnhancedWaypoint* */)waypoints success:(void (^)(WSMMapRouteFinderResult*))success failure:(void (^)(NSError*))failure;
++ (void)getDrivingRouteFromEnhancedWaypointsWithOptionsAsync:(id<NSFastEnumeration> /* WSMEnhancedWaypoint* */)waypoints options:(WSMMapRouteDrivingOptions*)options success:(void (^)(WSMMapRouteFinderResult*))success failure:(void (^)(NSError*))failure;
 + (void)getDrivingRouteAsync:(WDGGeopoint*)startPoint endPoint:(WDGGeopoint*)endPoint success:(void (^)(WSMMapRouteFinderResult*))success failure:(void (^)(NSError*))failure;
 + (void)getDrivingRouteWithOptimizationAsync:(WDGGeopoint*)startPoint endPoint:(WDGGeopoint*)endPoint optimization:(WSMMapRouteOptimization)optimization success:(void (^)(WSMMapRouteFinderResult*))success failure:(void (^)(NSError*))failure;
 + (void)getDrivingRouteWithOptimizationAndRestrictionsAsync:(WDGGeopoint*)startPoint endPoint:(WDGGeopoint*)endPoint optimization:(WSMMapRouteOptimization)optimization restrictions:(WSMMapRouteRestrictions)restrictions success:(void (^)(WSMMapRouteFinderResult*))success failure:(void (^)(NSError*))failure;
@@ -328,6 +485,8 @@ OBJCUWPWINDOWSSERVICESMAPSEXPORT
 + (void)setServiceToken:(NSString *)value;
 + (NSString *)worldViewRegionCode;
 + (NSString *)dataAttributions;
++ (WSMMapServiceDataUsagePreference)dataUsagePreference;
++ (void)setDataUsagePreference:(WSMMapServiceDataUsagePreference)value;
 @end
 
 #endif // __WSMMapService_DEFINED__

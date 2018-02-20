@@ -97,13 +97,13 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(SolutionDir)\msvc\LLVM-3.6.0\include\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\msvc\LLVM\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>libclang.lib;rpcrt4.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)\msvc\LLVM-3.6.0\lib\</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)\msvc\LLVM\lib\</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
       <Command>copy "$(SolutionDir)\bin\libclang.dll"  "$(TargetDir)"</Command>
@@ -116,13 +116,13 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(SolutionDir)\msvc\LLVM-3.6.0\include\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\msvc\LLVM\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>libclang.lib;rpcrt4.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)\msvc\LLVM-3.6.0\lib\</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)\msvc\LLVM\lib\</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
       <Command>copy "$(SolutionDir)\bin\libclang.dll"  "$(TargetDir)"</Command>
@@ -137,7 +137,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(SolutionDir)\msvc\LLVM-3.6.0\include\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\msvc\LLVM\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -145,7 +145,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>libclang.lib;rpcrt4.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)\msvc\LLVM-3.6.0\lib\</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)\msvc\LLVM\lib\</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
       <Command>copy "$(SolutionDir)\bin\libclang.dll"  "$(TargetDir)"</Command>
@@ -160,7 +160,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(SolutionDir)\msvc\LLVM-3.6.0\include\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\msvc\LLVM\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -168,7 +168,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>libclang.lib;rpcrt4.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)\msvc\LLVM-3.6.0\lib\</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)\msvc\LLVM\lib\</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
       <Command>copy "$(SolutionDir)\bin\libclang.dll"  "$(TargetDir)"</Command>
@@ -180,13 +180,13 @@
     <ClInclude Include="Helpers.h" />
     <ClInclude Include="ClangObjectModel.h" />
     <ClInclude Include="ContainerTemplates.h" />
-    <ClInclude Include="$(SolutionDir)\msvc\LLVM-3.6.0\include\clang-c\BuildSystem.h" />
-    <ClInclude Include="$(SolutionDir)\msvc\LLVM-3.6.0\include\clang-c\CXCompilationDatabase.h" />
-    <ClInclude Include="$(SolutionDir)\msvc\LLVM-3.6.0\include\clang-c\CXErrorCode.h" />
-    <ClInclude Include="$(SolutionDir)\msvc\LLVM-3.6.0\include\clang-c\CXString.h" />
-    <ClInclude Include="$(SolutionDir)\msvc\LLVM-3.6.0\include\clang-c\Documentation.h" />
-    <ClInclude Include="$(SolutionDir)\msvc\LLVM-3.6.0\include\clang-c\Index.h" />
-    <ClInclude Include="$(SolutionDir)\msvc\LLVM-3.6.0\include\clang-c\Platform.h" />
+    <ClInclude Include="$(SolutionDir)\msvc\LLVM\include\clang-c\BuildSystem.h" />
+    <ClInclude Include="$(SolutionDir)\msvc\LLVM\include\clang-c\CXCompilationDatabase.h" />
+    <ClInclude Include="$(SolutionDir)\msvc\LLVM\include\clang-c\CXErrorCode.h" />
+    <ClInclude Include="$(SolutionDir)\msvc\LLVM\include\clang-c\CXString.h" />
+    <ClInclude Include="$(SolutionDir)\msvc\LLVM\include\clang-c\Documentation.h" />
+    <ClInclude Include="$(SolutionDir)\msvc\LLVM\include\clang-c\Index.h" />
+    <ClInclude Include="$(SolutionDir)\msvc\LLVM\include\clang-c\Platform.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="TypeConvertor.h" />

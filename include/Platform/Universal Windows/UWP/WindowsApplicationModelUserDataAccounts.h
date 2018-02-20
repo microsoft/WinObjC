@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -28,7 +28,7 @@
 #include <UWP/interopBase.h>
 
 @class WAUUserDataAccount, WAUUserDataAccountStore, WAUUserDataAccountStoreChangedEventArgs, WAUUserDataAccountManagerForUser, WAUUserDataAccountManager;
-@protocol WAUIUserDataAccount, WAUIUserDataAccount2, WAUIUserDataAccount3, WAUIUserDataAccountStore, WAUIUserDataAccountStore2, WAUIUserDataAccountManagerStatics, WAUIUserDataAccountManagerStatics2, WAUIUserDataAccountManagerForUser, WAUIUserDataAccountStoreChangedEventArgs;
+@protocol WAUIUserDataAccount, WAUIUserDataAccount2, WAUIUserDataAccount3, WAUIUserDataAccount4, WAUIUserDataAccountStore, WAUIUserDataAccountStore2, WAUIUserDataAccountStore3, WAUIUserDataAccountManagerStatics, WAUIUserDataAccountManagerStatics2, WAUIUserDataAccountManagerForUser, WAUIUserDataAccountStoreChangedEventArgs;
 
 // Windows.ApplicationModel.UserDataAccounts.UserDataAccountOtherAppReadAccess
 enum _WAUUserDataAccountOtherAppReadAccess {
@@ -53,11 +53,13 @@ enum _WAUUserDataAccountContentKinds {
 };
 typedef unsigned WAUUserDataAccountContentKinds;
 
+#include "WindowsFoundationCollections.h"
 #include "WindowsApplicationModelContacts.h"
 #include "WindowsStorageStreams.h"
 #include "WindowsFoundation.h"
 #include "WindowsApplicationModelEmail.h"
 #include "WindowsApplicationModelAppointments.h"
+#include "WindowsApplicationModelUserDataTasks.h"
 #include "WindowsSystem.h"
 
 #import <Foundation/Foundation.h>
@@ -73,20 +75,25 @@ OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 #endif
 @property (retain) NSString * userDisplayName;
 @property WAUUserDataAccountOtherAppReadAccess otherAppReadAccess;
+@property (retain) RTObject<WSSIRandomAccessStreamReference>* icon;
 @property (readonly) NSString * deviceAccountTypeId;
-@property (readonly) RTObject<WSSIRandomAccessStreamReference>* icon;
 @property (readonly) NSString * id;
 @property (readonly) NSString * packageFamilyName;
+@property BOOL isProtectedUnderLock;
 @property (readonly) NSString * enterpriseId;
-@property (readonly) BOOL isProtectedUnderLock;
 @property (retain) NSString * displayName;
 @property (readonly) NSMutableArray* /* NSString * */ explictReadAccessPackageFamilyNames;
+@property BOOL canShowCreateContactGroup;
+@property (readonly) RTObject<WFCIPropertySet>* providerProperties;
 - (RTObject<WFIAsyncAction>*)saveAsync;
 - (RTObject<WFIAsyncAction>*)deleteAsync;
 - (void)findAppointmentCalendarsAsyncWithSuccess:(void (^)(NSArray* /* WAAAppointmentCalendar* */))success failure:(void (^)(NSError*))failure;
 - (void)findEmailMailboxesAsyncWithSuccess:(void (^)(NSArray* /* WAEEmailMailbox* */))success failure:(void (^)(NSError*))failure;
 - (void)findContactListsAsyncWithSuccess:(void (^)(NSArray* /* WACContactList* */))success failure:(void (^)(NSError*))failure;
 - (void)findContactAnnotationListsAsyncWithSuccess:(void (^)(NSArray* /* WACContactAnnotationList* */))success failure:(void (^)(NSError*))failure;
+- (void)findUserDataTaskListsAsyncWithSuccess:(void (^)(NSArray* /* WAUUserDataTaskList* */))success failure:(void (^)(NSError*))failure;
+- (void)findContactGroupsAsyncWithSuccess:(void (^)(NSArray* /* WACContactGroup* */))success failure:(void (^)(NSError*))failure;
+- (void)tryShowCreateContactGroupAsyncWithSuccess:(void (^)(NSString *))success failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WAUUserDataAccount_DEFINED__
@@ -106,6 +113,7 @@ OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 - (void)getAccountAsync:(NSString *)id success:(void (^)(WAUUserDataAccount*))success failure:(void (^)(NSError*))failure;
 - (void)createAccountAsync:(NSString *)userDisplayName success:(void (^)(WAUUserDataAccount*))success failure:(void (^)(NSError*))failure;
 - (void)createAccountWithPackageRelativeAppIdAsync:(NSString *)userDisplayName packageRelativeAppId:(NSString *)packageRelativeAppId success:(void (^)(WAUUserDataAccount*))success failure:(void (^)(NSError*))failure;
+- (void)createAccountWithPackageRelativeAppIdAndEnterpriseIdAsync:(NSString *)userDisplayName packageRelativeAppId:(NSString *)packageRelativeAppId enterpriseId:(NSString *)enterpriseId success:(void (^)(WAUUserDataAccount*))success failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WAUUserDataAccountStore_DEFINED__
@@ -145,11 +153,11 @@ OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 
 OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WAUUserDataAccountManager : RTObject
-+ (WAUUserDataAccountManagerForUser*)getForUser:(WSUser*)user;
 + (void)requestStoreAsync:(WAUUserDataAccountStoreAccessType)storeAccessType success:(void (^)(WAUUserDataAccountStore*))success failure:(void (^)(NSError*))failure;
 + (void)showAddAccountAsync:(WAUUserDataAccountContentKinds)contentKinds success:(void (^)(NSString *))success failure:(void (^)(NSError*))failure;
 + (RTObject<WFIAsyncAction>*)showAccountSettingsAsync:(NSString *)id;
 + (RTObject<WFIAsyncAction>*)showAccountErrorResolverAsync:(NSString *)id;
++ (WAUUserDataAccountManagerForUser*)getForUser:(WSUser*)user;
 @end
 
 #endif // __WAUUserDataAccountManager_DEFINED__

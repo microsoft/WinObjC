@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -27,9 +27,16 @@
 #endif
 #include <UWP/interopBase.h>
 
-@class WUCCoreDispatcher, WUCCoreCursor, WUCCoreWindow, WUCWindowActivatedEventArgs, WUCAutomationProviderRequestedEventArgs, WUCCharacterReceivedEventArgs, WUCCoreWindowEventArgs, WUCInputEnabledEventArgs, WUCKeyEventArgs, WUCPointerEventArgs, WUCTouchHitTestingEventArgs, WUCWindowSizeChangedEventArgs, WUCVisibilityChangedEventArgs, WUCClosestInteractiveBoundsRequestedEventArgs, WUCIdleDispatchedHandlerArgs, WUCAcceleratorKeyEventArgs, WUCCoreAcceleratorKeys, WUCCoreWindowResizeManager, WUCCoreComponentInputSource, WUCCoreIndependentInputSource, WUCBackRequestedEventArgs, WUCSystemNavigationManager, WUCCoreWindowPopupShowingEventArgs, WUCCoreWindowDialog, WUCCoreWindowFlyout;
+@class WUCBackRequestedEventArgs, WUCSystemNavigationManager, WUCCoreDispatcher, WUCCoreCursor, WUCCoreWindow, WUCWindowActivatedEventArgs, WUCAutomationProviderRequestedEventArgs, WUCCharacterReceivedEventArgs, WUCCoreWindowEventArgs, WUCInputEnabledEventArgs, WUCKeyEventArgs, WUCPointerEventArgs, WUCTouchHitTestingEventArgs, WUCWindowSizeChangedEventArgs, WUCVisibilityChangedEventArgs, WUCClosestInteractiveBoundsRequestedEventArgs, WUCIdleDispatchedHandlerArgs, WUCAcceleratorKeyEventArgs, WUCCoreAcceleratorKeys, WUCCoreWindowResizeManager, WUCCoreComponentInputSource, WUCCoreIndependentInputSource, WUCCoreWindowPopupShowingEventArgs, WUCCoreWindowDialog, WUCCoreWindowFlyout;
 @class WUCCorePhysicalKeyStatus, WUCCoreProximityEvaluation;
-@protocol WUCICoreWindowEventArgs, WUCIAutomationProviderRequestedEventArgs, WUCICharacterReceivedEventArgs, WUCIInputEnabledEventArgs, WUCIKeyEventArgs, WUCIKeyEventArgs2, WUCIPointerEventArgs, WUCITouchHitTestingEventArgs, WUCIClosestInteractiveBoundsRequestedEventArgs, WUCIWindowActivatedEventArgs, WUCIWindowSizeChangedEventArgs, WUCIVisibilityChangedEventArgs, WUCICoreWindow, WUCICoreWindow2, WUCICoreWindow3, WUCICoreWindowStatic, WUCIAcceleratorKeyEventArgs, WUCIAcceleratorKeyEventArgs2, WUCICoreAcceleratorKeys, WUCICoreDispatcher, WUCICoreDispatcher2, WUCICoreDispatcherWithTaskPriority, WUCIIdleDispatchedHandlerArgs, WUCICoreCursor, WUCICoreCursorFactory, WUCIInitializeWithCoreWindow, WUCICoreWindowResizeManager, WUCICoreWindowResizeManagerLayoutCapability, WUCICoreWindowResizeManagerStatics, WUCICoreInputSourceBase, WUCICorePointerInputSource, WUCICoreKeyboardInputSource, WUCICoreKeyboardInputSource2, WUCICoreComponentFocusable, WUCICoreTouchHitTesting, WUCICoreClosestInteractiveBoundsRequested, WUCICorePointerRedirector, WUCISystemNavigationManager, WUCISystemNavigationManager2, WUCISystemNavigationManagerStatics, WUCIBackRequestedEventArgs, WUCICoreWindowPopupShowingEventArgs, WUCICoreWindowDialog, WUCICoreWindowDialogFactory, WUCICoreWindowFlyout, WUCICoreWindowFlyoutFactory;
+@protocol WUCISystemNavigationManager, WUCISystemNavigationManager2, WUCISystemNavigationManagerStatics, WUCIBackRequestedEventArgs, WUCICoreWindowEventArgs, WUCIAutomationProviderRequestedEventArgs, WUCICharacterReceivedEventArgs, WUCIInputEnabledEventArgs, WUCIKeyEventArgs, WUCIKeyEventArgs2, WUCIPointerEventArgs, WUCITouchHitTestingEventArgs, WUCIClosestInteractiveBoundsRequestedEventArgs, WUCIWindowActivatedEventArgs, WUCIWindowSizeChangedEventArgs, WUCIVisibilityChangedEventArgs, WUCICoreWindow, WUCICoreWindow2, WUCICoreWindow3, WUCICoreWindow4, WUCICoreWindow5, WUCICoreWindowStatic, WUCIAcceleratorKeyEventArgs, WUCIAcceleratorKeyEventArgs2, WUCICoreAcceleratorKeys, WUCICoreDispatcher, WUCICoreDispatcher2, WUCICoreDispatcherWithTaskPriority, WUCIIdleDispatchedHandlerArgs, WUCICoreCursor, WUCICoreCursorFactory, WUCIInitializeWithCoreWindow, WUCICoreWindowResizeManager, WUCICoreWindowResizeManagerLayoutCapability, WUCICoreWindowResizeManagerStatics, WUCICoreInputSourceBase, WUCICorePointerInputSource, WUCICoreKeyboardInputSource, WUCICoreKeyboardInputSource2, WUCICoreComponentFocusable, WUCICoreTouchHitTesting, WUCICoreClosestInteractiveBoundsRequested, WUCICorePointerRedirector, WUCICoreWindowPopupShowingEventArgs, WUCICoreWindowDialog, WUCICoreWindowDialogFactory, WUCICoreWindowFlyout, WUCICoreWindowFlyoutFactory;
+
+// Windows.UI.Core.AppViewBackButtonVisibility
+enum _WUCAppViewBackButtonVisibility {
+    WUCAppViewBackButtonVisibilityVisible = 0,
+    WUCAppViewBackButtonVisibilityCollapsed = 1,
+};
+typedef unsigned WUCAppViewBackButtonVisibility;
 
 // Windows.UI.Core.CoreWindowActivationState
 enum _WUCCoreWindowActivationState {
@@ -38,6 +45,15 @@ enum _WUCCoreWindowActivationState {
     WUCCoreWindowActivationStatePointerActivated = 2,
 };
 typedef unsigned WUCCoreWindowActivationState;
+
+// Windows.UI.Core.CoreWindowActivationMode
+enum _WUCCoreWindowActivationMode {
+    WUCCoreWindowActivationModeNone = 0,
+    WUCCoreWindowActivationModeDeactivated = 1,
+    WUCCoreWindowActivationModeActivatedNotForeground = 2,
+    WUCCoreWindowActivationModeActivatedInForeground = 3,
+};
+typedef unsigned WUCCoreWindowActivationMode;
 
 // Windows.UI.Core.CoreCursorType
 enum _WUCCoreCursorType {
@@ -55,6 +71,8 @@ enum _WUCCoreCursorType {
     WUCCoreCursorTypeUniversalNo = 11,
     WUCCoreCursorTypeUpArrow = 12,
     WUCCoreCursorTypeWait = 13,
+    WUCCoreCursorTypePin = 14,
+    WUCCoreCursorTypePerson = 15,
 };
 typedef unsigned WUCCoreCursorType;
 
@@ -121,17 +139,10 @@ enum _WUCCoreInputDeviceTypes {
 };
 typedef unsigned WUCCoreInputDeviceTypes;
 
-// Windows.UI.Core.AppViewBackButtonVisibility
-enum _WUCAppViewBackButtonVisibility {
-    WUCAppViewBackButtonVisibilityVisible = 0,
-    WUCAppViewBackButtonVisibilityCollapsed = 1,
-};
-typedef unsigned WUCAppViewBackButtonVisibility;
-
-#include "WindowsSystem.h"
-#include "WindowsUIInput.h"
 #include "WindowsUIPopups.h"
 #include "WindowsFoundation.h"
+#include "WindowsSystem.h"
+#include "WindowsUIInput.h"
 #include "WindowsFoundationCollections.h"
 // Windows.UI.Core.DispatchedHandler
 #ifndef __WUCDispatchedHandler__DEFINED
@@ -359,6 +370,37 @@ OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 
 #endif // __WUCICorePointerRedirector_DEFINED__
 
+// Windows.UI.Core.BackRequestedEventArgs
+#ifndef __WUCBackRequestedEventArgs_DEFINED__
+#define __WUCBackRequestedEventArgs_DEFINED__
+
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
+@interface WUCBackRequestedEventArgs : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property BOOL handled;
+@end
+
+#endif // __WUCBackRequestedEventArgs_DEFINED__
+
+// Windows.UI.Core.SystemNavigationManager
+#ifndef __WUCSystemNavigationManager_DEFINED__
+#define __WUCSystemNavigationManager_DEFINED__
+
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
+@interface WUCSystemNavigationManager : RTObject
++ (WUCSystemNavigationManager*)getForCurrentView;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property WUCAppViewBackButtonVisibility appViewBackButtonVisibility;
+- (EventRegistrationToken)addBackRequestedEvent:(void(^)(RTObject*, WUCBackRequestedEventArgs*))del;
+- (void)removeBackRequestedEvent:(EventRegistrationToken)tok;
+@end
+
+#endif // __WUCSystemNavigationManager_DEFINED__
+
 // Windows.UI.Core.CoreDispatcher
 #ifndef __WUCCoreDispatcher_DEFINED__
 #define __WUCCoreDispatcher_DEFINED__
@@ -419,6 +461,8 @@ OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @property (readonly) RTObject<WFCIPropertySet>* customProperties;
 @property (readonly) WUCCoreDispatcher* dispatcher;
 @property (readonly) BOOL visible;
+@property (readonly) WUCCoreWindowActivationMode activationMode;
+@property (readonly) WSDispatcherQueue* dispatcherQueue;
 - (EventRegistrationToken)addActivatedEvent:(void(^)(WUCCoreWindow*, WUCWindowActivatedEventArgs*))del;
 - (void)removeActivatedEvent:(EventRegistrationToken)tok;
 - (EventRegistrationToken)addAutomationProviderRequestedEvent:(void(^)(WUCCoreWindow*, WUCAutomationProviderRequestedEventArgs*))del;
@@ -461,6 +505,10 @@ OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 - (void)removePointerRoutedToEvent:(EventRegistrationToken)tok;
 - (EventRegistrationToken)addClosestInteractiveBoundsRequestedEvent:(void(^)(WUCCoreWindow*, WUCClosestInteractiveBoundsRequestedEventArgs*))del;
 - (void)removeClosestInteractiveBoundsRequestedEvent:(EventRegistrationToken)tok;
+- (EventRegistrationToken)addResizeCompletedEvent:(void(^)(WUCCoreWindow*, RTObject*))del;
+- (void)removeResizeCompletedEvent:(EventRegistrationToken)tok;
+- (EventRegistrationToken)addResizeStartedEvent:(void(^)(WUCCoreWindow*, RTObject*))del;
+- (void)removeResizeStartedEvent:(EventRegistrationToken)tok;
 - (void)activate;
 - (void)close;
 - (WUCCoreVirtualKeyStates)getAsyncKeyState:(WSVirtualKey)virtualKey;
@@ -797,37 +845,6 @@ OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @end
 
 #endif // __WUCCoreIndependentInputSource_DEFINED__
-
-// Windows.UI.Core.BackRequestedEventArgs
-#ifndef __WUCBackRequestedEventArgs_DEFINED__
-#define __WUCBackRequestedEventArgs_DEFINED__
-
-OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
-@interface WUCBackRequestedEventArgs : RTObject
-#if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
-#endif
-@property BOOL handled;
-@end
-
-#endif // __WUCBackRequestedEventArgs_DEFINED__
-
-// Windows.UI.Core.SystemNavigationManager
-#ifndef __WUCSystemNavigationManager_DEFINED__
-#define __WUCSystemNavigationManager_DEFINED__
-
-OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
-@interface WUCSystemNavigationManager : RTObject
-+ (WUCSystemNavigationManager*)getForCurrentView;
-#if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
-#endif
-@property WUCAppViewBackButtonVisibility appViewBackButtonVisibility;
-- (EventRegistrationToken)addBackRequestedEvent:(void(^)(RTObject*, WUCBackRequestedEventArgs*))del;
-- (void)removeBackRequestedEvent:(EventRegistrationToken)tok;
-@end
-
-#endif // __WUCSystemNavigationManager_DEFINED__
 
 // Windows.UI.Core.CoreWindowPopupShowingEventArgs
 #ifndef __WUCCoreWindowPopupShowingEventArgs_DEFINED__

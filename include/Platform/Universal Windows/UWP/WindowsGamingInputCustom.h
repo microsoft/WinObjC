@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -27,9 +27,9 @@
 #endif
 #include <UWP/interopBase.h>
 
-@class WGICGipFirmwareUpdateResult, WGICGipGameControllerProvider, WGICXusbGameControllerProvider, WGICGameControllerFactoryManager;
+@class WGICGipFirmwareUpdateResult, WGICGipGameControllerProvider, WGICHidGameControllerProvider, WGICXusbGameControllerProvider, WGICGameControllerFactoryManager;
 @class WGICGameControllerVersionInfo, WGICGipFirmwareUpdateProgress;
-@protocol WGICIGameControllerInputSink, WGICIGipGameControllerInputSink, WGICIXusbGameControllerInputSink, WGICIGipFirmwareUpdateResult, WGICIGameControllerProvider, WGICIGipGameControllerProvider, WGICIXusbGameControllerProvider, WGICICustomGameControllerFactory, WGICIGameControllerFactoryManagerStatics;
+@protocol WGICIGameControllerInputSink, WGICIGipGameControllerInputSink, WGICIHidGameControllerInputSink, WGICIXusbGameControllerInputSink, WGICIGipFirmwareUpdateResult, WGICIGameControllerProvider, WGICIGipGameControllerProvider, WGICIHidGameControllerProvider, WGICIXusbGameControllerProvider, WGICICustomGameControllerFactory, WGICIGameControllerFactoryManagerStatics, WGICIGameControllerFactoryManagerStatics2;
 
 // Windows.Gaming.Input.Custom.GipFirmwareUpdateStatus
 enum _WGICGipFirmwareUpdateStatus {
@@ -125,6 +125,22 @@ OBJCUWPWINDOWSGAMINGINPUTCUSTOMEXPORT
 
 #endif // __WGICIGipGameControllerInputSink_DEFINED__
 
+// Windows.Gaming.Input.Custom.IHidGameControllerInputSink
+#ifndef __WGICIHidGameControllerInputSink_DEFINED__
+#define __WGICIHidGameControllerInputSink_DEFINED__
+
+@protocol WGICIHidGameControllerInputSink <WGICIGameControllerInputSink>
+- (void)onInputReportReceived:(uint64_t)timestamp reportId:(uint8_t)reportId reportBuffer:(NSArray* /* uint8_t */)reportBuffer;
+- (void)onInputResumed:(uint64_t)timestamp;
+- (void)onInputSuspended:(uint64_t)timestamp;
+@end
+
+OBJCUWPWINDOWSGAMINGINPUTCUSTOMEXPORT
+@interface WGICIHidGameControllerInputSink : RTObject <WGICIHidGameControllerInputSink>
+@end
+
+#endif // __WGICIHidGameControllerInputSink_DEFINED__
+
 // Windows.Gaming.Input.Custom.IXusbGameControllerInputSink
 #ifndef __WGICIXusbGameControllerInputSink_DEFINED__
 #define __WGICIXusbGameControllerInputSink_DEFINED__
@@ -212,6 +228,29 @@ OBJCUWPWINDOWSGAMINGINPUTCUSTOMEXPORT
 
 #endif // __WGICGipGameControllerProvider_DEFINED__
 
+// Windows.Gaming.Input.Custom.HidGameControllerProvider
+#ifndef __WGICHidGameControllerProvider_DEFINED__
+#define __WGICHidGameControllerProvider_DEFINED__
+
+OBJCUWPWINDOWSGAMINGINPUTCUSTOMEXPORT
+@interface WGICHidGameControllerProvider : RTObject <WGICIGameControllerProvider>
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (readonly) WGICGameControllerVersionInfo* firmwareVersionInfo;
+@property (readonly) unsigned short hardwareProductId;
+@property (readonly) unsigned short hardwareVendorId;
+@property (readonly) WGICGameControllerVersionInfo* hardwareVersionInfo;
+@property (readonly) BOOL isConnected;
+@property (readonly) unsigned short usageId;
+@property (readonly) unsigned short usagePage;
+- (void)getFeatureReport:(uint8_t)reportId reportBuffer:(NSArray* /* uint8_t */*)reportBuffer;
+- (void)sendFeatureReport:(uint8_t)reportId reportBuffer:(NSArray* /* uint8_t */)reportBuffer;
+- (void)sendOutputReport:(uint8_t)reportId reportBuffer:(NSArray* /* uint8_t */)reportBuffer;
+@end
+
+#endif // __WGICHidGameControllerProvider_DEFINED__
+
 // Windows.Gaming.Input.Custom.XusbGameControllerProvider
 #ifndef __WGICXusbGameControllerProvider_DEFINED__
 #define __WGICXusbGameControllerProvider_DEFINED__
@@ -237,6 +276,10 @@ OBJCUWPWINDOWSGAMINGINPUTCUSTOMEXPORT
 
 OBJCUWPWINDOWSGAMINGINPUTCUSTOMEXPORT
 @interface WGICGameControllerFactoryManager : RTObject
++ (void)registerCustomFactoryForGipInterface:(RTObject<WGICICustomGameControllerFactory>*)factory interfaceId:(WFGUID*)interfaceId;
++ (void)registerCustomFactoryForHardwareId:(RTObject<WGICICustomGameControllerFactory>*)factory hardwareVendorId:(unsigned short)hardwareVendorId hardwareProductId:(unsigned short)hardwareProductId;
++ (void)registerCustomFactoryForXusbType:(RTObject<WGICICustomGameControllerFactory>*)factory xusbType:(WGICXusbDeviceType)xusbType xusbSubtype:(WGICXusbDeviceSubtype)xusbSubtype;
++ (RTObject<WGIIGameController>*)tryGetFactoryControllerFromGameController:(RTObject<WGICICustomGameControllerFactory>*)factory gameController:(RTObject<WGIIGameController>*)gameController;
 + (void)registerCustomFactoryForGipInterface:(RTObject<WGICICustomGameControllerFactory>*)factory interfaceId:(WFGUID*)interfaceId;
 + (void)registerCustomFactoryForHardwareId:(RTObject<WGICICustomGameControllerFactory>*)factory hardwareVendorId:(unsigned short)hardwareVendorId hardwareProductId:(unsigned short)hardwareProductId;
 + (void)registerCustomFactoryForXusbType:(RTObject<WGICICustomGameControllerFactory>*)factory xusbType:(WGICXusbDeviceType)xusbType xusbSubtype:(WGICXusbDeviceSubtype)xusbSubtype;

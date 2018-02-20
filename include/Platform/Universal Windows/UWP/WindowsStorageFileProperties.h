@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWPWINDOWSSTORAGEFILEPROPERTIESEXPORT
-#define OBJCUWPWINDOWSSTORAGEFILEPROPERTIESEXPORT __declspec(dllimport)
+#ifndef OBJCUWPWINDOWSSTORAGEEXPORT
+#define OBJCUWPWINDOWSSTORAGEEXPORT __declspec(dllimport)
 #ifndef IN_WinObjC_Frameworks_UWP_BUILD
-#pragma comment(lib, "ObjCUWPWindowsStorageFileProperties.lib")
+#pragma comment(lib, "ObjCUWPWindowsStorage.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -108,7 +108,7 @@ typedef unsigned WSFVideoOrientation;
 - (RTObject<WFIAsyncAction>*)savePropertiesAsyncOverloadDefault;
 @end
 
-OBJCUWPWINDOWSSTORAGEFILEPROPERTIESEXPORT
+OBJCUWPWINDOWSSTORAGEEXPORT
 @interface WSFIStorageItemExtraProperties : RTObject <WSFIStorageItemExtraProperties>
 @end
 
@@ -118,7 +118,7 @@ OBJCUWPWINDOWSSTORAGEFILEPROPERTIESEXPORT
 #ifndef __WSFGeotagHelper_DEFINED__
 #define __WSFGeotagHelper_DEFINED__
 
-OBJCUWPWINDOWSSTORAGEFILEPROPERTIESEXPORT
+OBJCUWPWINDOWSSTORAGEEXPORT
 @interface WSFGeotagHelper : RTObject
 + (void)getGeotagAsync:(RTObject<WSIStorageFile>*)file success:(void (^)(WDGGeopoint*))success failure:(void (^)(NSError*))failure;
 + (RTObject<WFIAsyncAction>*)setGeotagFromGeolocatorAsync:(RTObject<WSIStorageFile>*)file geolocator:(WDGGeolocator*)geolocator;
@@ -135,7 +135,7 @@ OBJCUWPWINDOWSSTORAGEFILEPROPERTIESEXPORT
 - (void)close;
 @end
 
-OBJCUWPWINDOWSSTORAGEFILEPROPERTIESEXPORT
+OBJCUWPWINDOWSSTORAGEEXPORT
 @interface WFIClosable : RTObject <WFIClosable>
 @end
 
@@ -150,7 +150,7 @@ OBJCUWPWINDOWSSTORAGEFILEPROPERTIESEXPORT
 - (void)close;
 @end
 
-OBJCUWPWINDOWSSTORAGEFILEPROPERTIESEXPORT
+OBJCUWPWINDOWSSTORAGEEXPORT
 @interface WSSIInputStream : RTObject <WSSIInputStream>
 @end
 
@@ -166,7 +166,7 @@ OBJCUWPWINDOWSSTORAGEFILEPROPERTIESEXPORT
 - (void)close;
 @end
 
-OBJCUWPWINDOWSSTORAGEFILEPROPERTIESEXPORT
+OBJCUWPWINDOWSSTORAGEEXPORT
 @interface WSSIOutputStream : RTObject <WSSIOutputStream>
 @end
 
@@ -191,7 +191,7 @@ OBJCUWPWINDOWSSTORAGEFILEPROPERTIESEXPORT
 - (void)flushAsyncWithSuccess:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 @end
 
-OBJCUWPWINDOWSSTORAGEFILEPROPERTIESEXPORT
+OBJCUWPWINDOWSSTORAGEEXPORT
 @interface WSSIRandomAccessStream : RTObject <WSSIRandomAccessStream>
 @end
 
@@ -205,7 +205,7 @@ OBJCUWPWINDOWSSTORAGEFILEPROPERTIESEXPORT
 @property (readonly) NSString * contentType;
 @end
 
-OBJCUWPWINDOWSSTORAGEFILEPROPERTIESEXPORT
+OBJCUWPWINDOWSSTORAGEEXPORT
 @interface WSSIContentTypeProvider : RTObject <WSSIContentTypeProvider>
 @end
 
@@ -226,7 +226,7 @@ OBJCUWPWINDOWSSTORAGEFILEPROPERTIESEXPORT
 - (void)flushAsyncWithSuccess:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 @end
 
-OBJCUWPWINDOWSSTORAGEFILEPROPERTIESEXPORT
+OBJCUWPWINDOWSSTORAGEEXPORT
 @interface WSSIRandomAccessStreamWithContentType : RTObject <WSSIRandomAccessStreamWithContentType>
 @end
 
@@ -236,7 +236,7 @@ OBJCUWPWINDOWSSTORAGEFILEPROPERTIESEXPORT
 #ifndef __WSFStorageItemThumbnail_DEFINED__
 #define __WSFStorageItemThumbnail_DEFINED__
 
-OBJCUWPWINDOWSSTORAGEFILEPROPERTIESEXPORT
+OBJCUWPWINDOWSSTORAGEEXPORT
 @interface WSFStorageItemThumbnail : RTObject <WSSIRandomAccessStreamWithContentType, WSSIContentTypeProvider, WSSIRandomAccessStream, WSSIOutputStream, WFIClosable, WSSIInputStream>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -266,7 +266,7 @@ OBJCUWPWINDOWSSTORAGEFILEPROPERTIESEXPORT
 #ifndef __WSFMusicProperties_DEFINED__
 #define __WSFMusicProperties_DEFINED__
 
-OBJCUWPWINDOWSSTORAGEFILEPROPERTIESEXPORT
+OBJCUWPWINDOWSSTORAGEEXPORT
 @interface WSFMusicProperties : RTObject <WSFIStorageItemExtraProperties>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -298,7 +298,7 @@ OBJCUWPWINDOWSSTORAGEFILEPROPERTIESEXPORT
 #ifndef __WSFVideoProperties_DEFINED__
 #define __WSFVideoProperties_DEFINED__
 
-OBJCUWPWINDOWSSTORAGEFILEPROPERTIESEXPORT
+OBJCUWPWINDOWSSTORAGEEXPORT
 @interface WSFVideoProperties : RTObject <WSFIStorageItemExtraProperties>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -330,7 +330,7 @@ OBJCUWPWINDOWSSTORAGEFILEPROPERTIESEXPORT
 #ifndef __WSFImageProperties_DEFINED__
 #define __WSFImageProperties_DEFINED__
 
-OBJCUWPWINDOWSSTORAGEFILEPROPERTIESEXPORT
+OBJCUWPWINDOWSSTORAGEEXPORT
 @interface WSFImageProperties : RTObject <WSFIStorageItemExtraProperties>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -358,7 +358,7 @@ OBJCUWPWINDOWSSTORAGEFILEPROPERTIESEXPORT
 #ifndef __WSFDocumentProperties_DEFINED__
 #define __WSFDocumentProperties_DEFINED__
 
-OBJCUWPWINDOWSSTORAGEFILEPROPERTIESEXPORT
+OBJCUWPWINDOWSSTORAGEEXPORT
 @interface WSFDocumentProperties : RTObject <WSFIStorageItemExtraProperties>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -378,7 +378,7 @@ OBJCUWPWINDOWSSTORAGEFILEPROPERTIESEXPORT
 #ifndef __WSFStorageItemContentProperties_DEFINED__
 #define __WSFStorageItemContentProperties_DEFINED__
 
-OBJCUWPWINDOWSSTORAGEFILEPROPERTIESEXPORT
+OBJCUWPWINDOWSSTORAGEEXPORT
 @interface WSFStorageItemContentProperties : RTObject <WSFIStorageItemExtraProperties>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -398,7 +398,7 @@ OBJCUWPWINDOWSSTORAGEFILEPROPERTIESEXPORT
 #ifndef __WSFBasicProperties_DEFINED__
 #define __WSFBasicProperties_DEFINED__
 
-OBJCUWPWINDOWSSTORAGEFILEPROPERTIESEXPORT
+OBJCUWPWINDOWSSTORAGEEXPORT
 @interface WSFBasicProperties : RTObject <WSFIStorageItemExtraProperties>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));

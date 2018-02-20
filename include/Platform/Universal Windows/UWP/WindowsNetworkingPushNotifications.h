@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -28,7 +28,7 @@
 #include <UWP/interopBase.h>
 
 @class WNPPushNotificationChannel, WNPPushNotificationChannelManagerForUser, WNPPushNotificationReceivedEventArgs, WNPRawNotification, WNPPushNotificationChannelManager;
-@protocol WNPIPushNotificationChannelManagerStatics, WNPIPushNotificationChannelManagerStatics2, WNPIPushNotificationChannelManagerForUser, WNPIPushNotificationChannel, WNPIPushNotificationReceivedEventArgs, WNPIRawNotification;
+@protocol WNPIPushNotificationChannelManagerStatics, WNPIPushNotificationChannelManagerStatics2, WNPIPushNotificationChannelManagerStatics3, WNPIPushNotificationChannelManagerForUser, WNPIPushNotificationChannelManagerForUser2, WNPIPushNotificationChannel, WNPIPushNotificationReceivedEventArgs, WNPIRawNotification, WNPIRawNotification2;
 
 // Windows.Networking.PushNotifications.PushNotificationType
 enum _WNPPushNotificationType {
@@ -40,6 +40,7 @@ enum _WNPPushNotificationType {
 };
 typedef unsigned WNPPushNotificationType;
 
+#include "WindowsStorageStreams.h"
 #include "WindowsSystem.h"
 #include "WindowsFoundation.h"
 #include "WindowsUINotifications.h"
@@ -77,6 +78,8 @@ OBJCUWPWINDOWSNETWORKINGPUSHNOTIFICATIONSEXPORT
 - (void)createPushNotificationChannelForApplicationAsyncWithSuccess:(void (^)(WNPPushNotificationChannel*))success failure:(void (^)(NSError*))failure;
 - (void)createPushNotificationChannelForApplicationAsyncWithId:(NSString *)applicationId success:(void (^)(WNPPushNotificationChannel*))success failure:(void (^)(NSError*))failure;
 - (void)createPushNotificationChannelForSecondaryTileAsync:(NSString *)tileId success:(void (^)(WNPPushNotificationChannel*))success failure:(void (^)(NSError*))failure;
+- (void)createRawPushNotificationChannelWithAlternateKeyForApplicationAsync:(RTObject<WSSIBuffer>*)appServerKey channelId:(NSString *)channelId success:(void (^)(WNPPushNotificationChannel*))success failure:(void (^)(NSError*))failure;
+- (void)createRawPushNotificationChannelWithAlternateKeyForApplicationAsyncWithId:(RTObject<WSSIBuffer>*)appServerKey channelId:(NSString *)channelId appId:(NSString *)appId success:(void (^)(WNPPushNotificationChannel*))success failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WNPPushNotificationChannelManagerForUser_DEFINED__
@@ -110,6 +113,8 @@ OBJCUWPWINDOWSNETWORKINGPUSHNOTIFICATIONSEXPORT
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSString * content;
+@property (readonly) NSString * channelId;
+@property (readonly) NSDictionary* /* NSString *, NSString * */ headers;
 @end
 
 #endif // __WNPRawNotification_DEFINED__
@@ -120,10 +125,11 @@ OBJCUWPWINDOWSNETWORKINGPUSHNOTIFICATIONSEXPORT
 
 OBJCUWPWINDOWSNETWORKINGPUSHNOTIFICATIONSEXPORT
 @interface WNPPushNotificationChannelManager : RTObject
-+ (WNPPushNotificationChannelManagerForUser*)getForUser:(WSUser*)user;
 + (void)createPushNotificationChannelForApplicationAsyncWithSuccess:(void (^)(WNPPushNotificationChannel*))success failure:(void (^)(NSError*))failure;
 + (void)createPushNotificationChannelForApplicationAsyncWithId:(NSString *)applicationId success:(void (^)(WNPPushNotificationChannel*))success failure:(void (^)(NSError*))failure;
 + (void)createPushNotificationChannelForSecondaryTileAsync:(NSString *)tileId success:(void (^)(WNPPushNotificationChannel*))success failure:(void (^)(NSError*))failure;
++ (WNPPushNotificationChannelManagerForUser*)getForUser:(WSUser*)user;
++ (WNPPushNotificationChannelManagerForUser*)getDefault;
 @end
 
 #endif // __WNPPushNotificationChannelManager_DEFINED__

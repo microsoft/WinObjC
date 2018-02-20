@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -28,7 +28,7 @@
 #include <UWP/interopBase.h>
 
 @class WAAAppointment, WAAAppointmentStore, WAAAppointmentManagerForUser, WAAAppointmentOrganizer, WAAAppointmentInvitee, WAAAppointmentRecurrence, WAAAppointmentManager, WAAFindAppointmentsOptions, WAAAppointmentException, WAAAppointmentCalendarSyncManager, WAAAppointmentCalendar, WAAAppointmentStoreChange, WAAAppointmentStoreChangeReader, WAAAppointmentStoreChangedDeferral, WAAAppointmentStoreChangeTracker, WAAAppointmentConflictResult, WAAAppointmentStoreChangedEventArgs, WAAAppointmentProperties, WAAAppointmentStoreNotificationTriggerDetails;
-@protocol WAAIAppointmentManagerStatics, WAAIAppointmentManagerStatics2, WAAIAppointmentManagerStatics3, WAAIAppointmentManagerForUser, WAAIAppointmentParticipant, WAAIAppointmentInvitee, WAAIAppointmentRecurrence, WAAIAppointmentRecurrence2, WAAIAppointmentRecurrence3, WAAIAppointment, WAAIAppointment2, WAAIAppointment3, WAAIFindAppointmentsOptions, WAAIAppointmentCalendar, WAAIAppointmentCalendar2, WAAIAppointmentCalendar3, WAAIAppointmentCalendarSyncManager, WAAIAppointmentCalendarSyncManager2, WAAIAppointmentPropertiesStatics, WAAIAppointmentPropertiesStatics2, WAAIAppointmentConflictResult, WAAIAppointmentStoreChange, WAAIAppointmentStoreChange2, WAAIAppointmentStoreChangeReader, WAAIAppointmentStoreChangeTracker, WAAIAppointmentStoreChangedEventArgs, WAAIAppointmentStoreChangedDeferral, WAAIAppointmentStoreNotificationTriggerDetails, WAAIAppointmentStore, WAAIAppointmentStore2, WAAIAppointmentException;
+@protocol WAAIAppointmentManagerStatics, WAAIAppointmentManagerStatics2, WAAIAppointmentManagerStatics3, WAAIAppointmentManagerForUser, WAAIAppointmentParticipant, WAAIAppointmentInvitee, WAAIAppointmentRecurrence, WAAIAppointmentRecurrence2, WAAIAppointmentRecurrence3, WAAIAppointment, WAAIAppointment2, WAAIAppointment3, WAAIFindAppointmentsOptions, WAAIAppointmentCalendar, WAAIAppointmentCalendar2, WAAIAppointmentCalendar3, WAAIAppointmentCalendarSyncManager, WAAIAppointmentCalendarSyncManager2, WAAIAppointmentPropertiesStatics, WAAIAppointmentPropertiesStatics2, WAAIAppointmentConflictResult, WAAIAppointmentStoreChange, WAAIAppointmentStoreChange2, WAAIAppointmentStoreChangeReader, WAAIAppointmentStoreChangeTracker, WAAIAppointmentStoreChangeTracker2, WAAIAppointmentStoreChangedEventArgs, WAAIAppointmentStoreChangedDeferral, WAAIAppointmentStoreNotificationTriggerDetails, WAAIAppointmentStore, WAAIAppointmentStore2, WAAIAppointmentStore3, WAAIAppointmentException;
 
 // Windows.ApplicationModel.Appointments.AppointmentStoreAccessType
 enum _WAAAppointmentStoreAccessType {
@@ -282,6 +282,7 @@ OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 - (void)showEditNewAppointmentAsync:(WAAAppointment*)appointment success:(void (^)(NSString *))success failure:(void (^)(NSError*))failure;
 - (void)findLocalIdsFromRoamingIdAsync:(NSString *)roamingId success:(void (^)(NSArray* /* NSString * */))success failure:(void (^)(NSError*))failure;
 - (void)createAppointmentCalendarInAccountAsync:(NSString *)name userDataAccountId:(NSString *)userDataAccountId success:(void (^)(WAAAppointmentCalendar*))success failure:(void (^)(NSError*))failure;
+- (WAAAppointmentStoreChangeTracker*)getChangeTracker:(NSString *)identity;
 @end
 
 #endif // __WAAAppointmentStore_DEFINED__
@@ -378,6 +379,11 @@ OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 
 OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WAAAppointmentManager : RTObject
++ (RTObject<WFIAsyncAction>*)showAppointmentDetailsAsync:(NSString *)appointmentId;
++ (RTObject<WFIAsyncAction>*)showAppointmentDetailsWithDateAsync:(NSString *)appointmentId instanceStartDate:(WFDateTime*)instanceStartDate;
++ (void)showEditNewAppointmentAsync:(WAAAppointment*)appointment success:(void (^)(NSString *))success failure:(void (^)(NSError*))failure;
++ (void)requestStoreAsync:(WAAAppointmentStoreAccessType)options success:(void (^)(WAAAppointmentStore*))success failure:(void (^)(NSError*))failure;
++ (WAAAppointmentManagerForUser*)getForUser:(WSUser*)user;
 + (void)showAddAppointmentAsync:(WAAAppointment*)appointment selection:(WFRect*)selection success:(void (^)(NSString *))success failure:(void (^)(NSError*))failure;
 + (void)showAddAppointmentWithPlacementAsync:(WAAAppointment*)appointment selection:(WFRect*)selection preferredPlacement:(WUPPlacement)preferredPlacement success:(void (^)(NSString *))success failure:(void (^)(NSError*))failure;
 + (void)showReplaceAppointmentAsync:(NSString *)appointmentId appointment:(WAAAppointment*)appointment selection:(WFRect*)selection success:(void (^)(NSString *))success failure:(void (^)(NSError*))failure;
@@ -387,11 +393,6 @@ OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 + (void)showRemoveAppointmentWithPlacementAsync:(NSString *)appointmentId selection:(WFRect*)selection preferredPlacement:(WUPPlacement)preferredPlacement success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 + (void)showRemoveAppointmentWithPlacementAndDateAsync:(NSString *)appointmentId selection:(WFRect*)selection preferredPlacement:(WUPPlacement)preferredPlacement instanceStartDate:(WFDateTime*)instanceStartDate success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 + (RTObject<WFIAsyncAction>*)showTimeFrameAsync:(WFDateTime*)timeToShow duration:(WFTimeSpan*)duration;
-+ (RTObject<WFIAsyncAction>*)showAppointmentDetailsAsync:(NSString *)appointmentId;
-+ (RTObject<WFIAsyncAction>*)showAppointmentDetailsWithDateAsync:(NSString *)appointmentId instanceStartDate:(WFDateTime*)instanceStartDate;
-+ (void)showEditNewAppointmentAsync:(WAAAppointment*)appointment success:(void (^)(NSString *))success failure:(void (^)(NSError*))failure;
-+ (void)requestStoreAsync:(WAAAppointmentStoreAccessType)options success:(void (^)(WAAAppointmentStore*))success failure:(void (^)(NSError*))failure;
-+ (WAAAppointmentManagerForUser*)getForUser:(WSUser*)user;
 @end
 
 #endif // __WAAAppointmentManager_DEFINED__
@@ -555,6 +556,7 @@ OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
+@property (readonly) BOOL isTracking;
 - (WAAAppointmentStoreChangeReader*)getChangeReader;
 - (void)enable;
 - (void)reset;

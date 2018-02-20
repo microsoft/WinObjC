@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -97,6 +97,9 @@ enum _WUTCCoreTextInputScope {
     WUTCCoreTextInputScopePasswordNumeric = 63,
     WUTCCoreTextInputScopeFormulaNumber = 67,
     WUTCCoreTextInputScopeChatWithoutEmoji = 68,
+    WUTCCoreTextInputScopeDigits = 28,
+    WUTCCoreTextInputScopePinNumeric = 64,
+    WUTCCoreTextInputScopePinAlphanumeric = 65,
 };
 typedef unsigned WUTCCoreTextInputScope;
 

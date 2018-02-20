@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -27,8 +27,8 @@
 #endif
 #include <UWP/interopBase.h>
 
-@class WSAOOnlineIdServiceTicketRequest, WSAOOnlineIdServiceTicket, WSAOUserAuthenticationOperation, WSAOSignOutUserOperation, WSAOUserIdentity, WSAOOnlineIdAuthenticator;
-@protocol WSAOIOnlineIdServiceTicketRequest, WSAOIOnlineIdServiceTicketRequestFactory, WSAOIOnlineIdServiceTicket, WSAOIUserIdentity, WSAOIOnlineIdAuthenticator;
+@class WSAOOnlineIdServiceTicketRequest, WSAOOnlineIdServiceTicket, WSAOUserAuthenticationOperation, WSAOSignOutUserOperation, WSAOUserIdentity, WSAOOnlineIdAuthenticator, WSAOOnlineIdSystemIdentity, WSAOOnlineIdSystemTicketResult, WSAOOnlineIdSystemAuthenticatorForUser, WSAOOnlineIdSystemAuthenticator;
+@protocol WSAOIOnlineIdServiceTicketRequest, WSAOIOnlineIdServiceTicketRequestFactory, WSAOIOnlineIdServiceTicket, WSAOIUserIdentity, WSAOIOnlineIdAuthenticator, WSAOIOnlineIdSystemIdentity, WSAOIOnlineIdSystemTicketResult, WSAOIOnlineIdSystemAuthenticatorForUser, WSAOIOnlineIdSystemAuthenticatorStatics;
 
 // Windows.Security.Authentication.OnlineId.CredentialPromptType
 enum _WSAOCredentialPromptType {
@@ -38,7 +38,16 @@ enum _WSAOCredentialPromptType {
 };
 typedef unsigned WSAOCredentialPromptType;
 
+// Windows.Security.Authentication.OnlineId.OnlineIdSystemTicketStatus
+enum _WSAOOnlineIdSystemTicketStatus {
+    WSAOOnlineIdSystemTicketStatusSuccess = 0,
+    WSAOOnlineIdSystemTicketStatusError = 1,
+    WSAOOnlineIdSystemTicketStatusServiceConnectionError = 2,
+};
+typedef unsigned WSAOOnlineIdSystemTicketStatus;
+
 #include "WindowsFoundation.h"
+#include "WindowsSystem.h"
 // Windows.Foundation.AsyncActionCompletedHandler
 #ifndef __WFAsyncActionCompletedHandler__DEFINED
 #define __WFAsyncActionCompletedHandler__DEFINED
@@ -194,4 +203,63 @@ OBJCUWPWINDOWSSECURITYAUTHENTICATIONONLINEIDEXPORT
 @end
 
 #endif // __WSAOOnlineIdAuthenticator_DEFINED__
+
+// Windows.Security.Authentication.OnlineId.OnlineIdSystemIdentity
+#ifndef __WSAOOnlineIdSystemIdentity_DEFINED__
+#define __WSAOOnlineIdSystemIdentity_DEFINED__
+
+OBJCUWPWINDOWSSECURITYAUTHENTICATIONONLINEIDEXPORT
+@interface WSAOOnlineIdSystemIdentity : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (readonly) NSString * id;
+@property (readonly) WSAOOnlineIdServiceTicket* ticket;
+@end
+
+#endif // __WSAOOnlineIdSystemIdentity_DEFINED__
+
+// Windows.Security.Authentication.OnlineId.OnlineIdSystemTicketResult
+#ifndef __WSAOOnlineIdSystemTicketResult_DEFINED__
+#define __WSAOOnlineIdSystemTicketResult_DEFINED__
+
+OBJCUWPWINDOWSSECURITYAUTHENTICATIONONLINEIDEXPORT
+@interface WSAOOnlineIdSystemTicketResult : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (readonly) HRESULT extendedError;
+@property (readonly) WSAOOnlineIdSystemIdentity* identity;
+@property (readonly) WSAOOnlineIdSystemTicketStatus status;
+@end
+
+#endif // __WSAOOnlineIdSystemTicketResult_DEFINED__
+
+// Windows.Security.Authentication.OnlineId.OnlineIdSystemAuthenticatorForUser
+#ifndef __WSAOOnlineIdSystemAuthenticatorForUser_DEFINED__
+#define __WSAOOnlineIdSystemAuthenticatorForUser_DEFINED__
+
+OBJCUWPWINDOWSSECURITYAUTHENTICATIONONLINEIDEXPORT
+@interface WSAOOnlineIdSystemAuthenticatorForUser : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property WFGUID* applicationId;
+@property (readonly) WSUser* user;
+- (void)getTicketAsync:(WSAOOnlineIdServiceTicketRequest*)request success:(void (^)(WSAOOnlineIdSystemTicketResult*))success failure:(void (^)(NSError*))failure;
+@end
+
+#endif // __WSAOOnlineIdSystemAuthenticatorForUser_DEFINED__
+
+// Windows.Security.Authentication.OnlineId.OnlineIdSystemAuthenticator
+#ifndef __WSAOOnlineIdSystemAuthenticator_DEFINED__
+#define __WSAOOnlineIdSystemAuthenticator_DEFINED__
+
+OBJCUWPWINDOWSSECURITYAUTHENTICATIONONLINEIDEXPORT
+@interface WSAOOnlineIdSystemAuthenticator : RTObject
++ (WSAOOnlineIdSystemAuthenticatorForUser*)getForUser:(WSUser*)user;
++ (WSAOOnlineIdSystemAuthenticatorForUser*)Default;
+@end
+
+#endif // __WSAOOnlineIdSystemAuthenticator_DEFINED__
 

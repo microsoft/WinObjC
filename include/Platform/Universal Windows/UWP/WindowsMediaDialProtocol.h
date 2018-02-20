@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -27,8 +27,8 @@
 #endif
 #include <UWP/interopBase.h>
 
-@class WMDDialAppStateDetails, WMDDialApp, WMDDialDevice, WMDDialDeviceSelectedEventArgs, WMDDialDisconnectButtonClickedEventArgs, WMDDialDevicePickerFilter, WMDDialDevicePicker;
-@protocol WMDIDialAppStateDetails, WMDIDialApp, WMDIDialDevice, WMDIDialDevice2, WMDIDialDeviceStatics, WMDIDialDeviceSelectedEventArgs, WMDIDialDisconnectButtonClickedEventArgs, WMDIDialDevicePickerFilter, WMDIDialDevicePicker;
+@class WMDDialAppStateDetails, WMDDialApp, WMDDialDevice, WMDDialDeviceSelectedEventArgs, WMDDialDisconnectButtonClickedEventArgs, WMDDialDevicePickerFilter, WMDDialDevicePicker, WMDDialReceiverApp;
+@protocol WMDIDialAppStateDetails, WMDIDialApp, WMDIDialDevice, WMDIDialDevice2, WMDIDialDeviceStatics, WMDIDialDeviceSelectedEventArgs, WMDIDialDisconnectButtonClickedEventArgs, WMDIDialDevicePickerFilter, WMDIDialDevicePicker, WMDIDialReceiverAppStatics, WMDIDialReceiverApp;
 
 // Windows.Media.DialProtocol.DialAppState
 enum _WMDDialAppState {
@@ -196,4 +196,20 @@ OBJCUWPWINDOWSMEDIADIALPROTOCOLEXPORT
 @end
 
 #endif // __WMDDialDevicePicker_DEFINED__
+
+// Windows.Media.DialProtocol.DialReceiverApp
+#ifndef __WMDDialReceiverApp_DEFINED__
+#define __WMDDialReceiverApp_DEFINED__
+
+OBJCUWPWINDOWSMEDIADIALPROTOCOLEXPORT
+@interface WMDDialReceiverApp : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
++ (WMDDialReceiverApp*)current;
+- (void)getAdditionalDataAsyncWithSuccess:(void (^)(NSMutableDictionary* /* NSString *, NSString * */))success failure:(void (^)(NSError*))failure;
+- (RTObject<WFIAsyncAction>*)setAdditionalDataAsync:(id<NSFastEnumeration> /* RTKeyValuePair* < NSString *, NSString * > */)additionalData;
+@end
+
+#endif // __WMDDialReceiverApp_DEFINED__
 

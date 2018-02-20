@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -19,17 +19,18 @@
 
 #pragma once
 
-#ifndef OBJCUWPWINDOWSAPPLICATIONMODELDATATRANSFERSHARETARGETEXPORT
-#define OBJCUWPWINDOWSAPPLICATIONMODELDATATRANSFERSHARETARGETEXPORT __declspec(dllimport)
+#ifndef OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
+#define OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT __declspec(dllimport)
 #ifndef IN_WinObjC_Frameworks_UWP_BUILD
-#pragma comment(lib, "ObjCUWPWindowsApplicationModelDataTransferShareTarget.lib")
+#pragma comment(lib, "ObjCUWPWindowsConsolidatedNamespace.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
 
 @class WADSQuickLink, WADSShareOperation;
-@protocol WADSIQuickLink, WADSIShareOperation, WADSIShareOperation2;
+@protocol WADSIQuickLink, WADSIShareOperation, WADSIShareOperation2, WADSIShareOperation3;
 
+#include "WindowsApplicationModelContacts.h"
 #include "WindowsApplicationModelDataTransfer.h"
 #include "WindowsStorageStreams.h"
 
@@ -39,7 +40,7 @@
 #ifndef __WADSQuickLink_DEFINED__
 #define __WADSQuickLink_DEFINED__
 
-OBJCUWPWINDOWSAPPLICATIONMODELDATATRANSFERSHARETARGETEXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WADSQuickLink : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -58,13 +59,14 @@ OBJCUWPWINDOWSAPPLICATIONMODELDATATRANSFERSHARETARGETEXPORT
 #ifndef __WADSShareOperation_DEFINED__
 #define __WADSShareOperation_DEFINED__
 
-OBJCUWPWINDOWSAPPLICATIONMODELDATATRANSFERSHARETARGETEXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WADSShareOperation : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WADDataPackageView* data;
 @property (readonly) NSString * quickLinkId;
+@property (readonly) NSArray* /* WACContact* */ contacts;
 - (void)removeThisQuickLink;
 - (void)reportStarted;
 - (void)reportDataRetrieved;

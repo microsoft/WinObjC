@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -28,12 +28,12 @@
 #include <UWP/interopBase.h>
 
 @class WDPPPerceptionFrameProviderInfo, WDPPPerceptionPropertyChangeRequest, WDPPPerceptionFaceAuthenticationGroup, WDPPPerceptionControlGroup, WDPPPerceptionCorrelationGroup, WDPPPerceptionFrame, WDPPPerceptionCorrelation, WDPPPerceptionVideoFrameAllocator, WDPPPerceptionFrameProviderManagerService, WDPPKnownPerceptionFrameKind;
-@protocol WDPPIKnownPerceptionFrameKindStatics, WDPPIPerceptionFrameProviderManagerServiceStatics, WDPPIPerceptionFrameProviderInfo, WDPPIPerceptionControlGroupFactory, WDPPIPerceptionControlGroup, WDPPIPerceptionFaceAuthenticationGroupFactory, WDPPIPerceptionFaceAuthenticationGroup, WDPPIPerceptionCorrelationFactory, WDPPIPerceptionCorrelation, WDPPIPerceptionCorrelationGroupFactory, WDPPIPerceptionCorrelationGroup, WDPPIPerceptionFrame, WDPPIPerceptionVideoFrameAllocatorFactory, WDPPIPerceptionPropertyChangeRequest, WDPPIPerceptionFrameProviderManager, WDPPIPerceptionFrameProvider, WDPPIPerceptionVideoFrameAllocator;
+@protocol WDPPIKnownPerceptionFrameKindStatics, WDPPIPerceptionFrameProviderManagerServiceStatics, WDPPIPerceptionFrameProviderManager, WDPPIPerceptionFrameProvider, WDPPIPerceptionFrameProviderInfo, WDPPIPerceptionControlGroupFactory, WDPPIPerceptionControlGroup, WDPPIPerceptionFaceAuthenticationGroupFactory, WDPPIPerceptionFaceAuthenticationGroup, WDPPIPerceptionCorrelationFactory, WDPPIPerceptionCorrelation, WDPPIPerceptionCorrelationGroupFactory, WDPPIPerceptionCorrelationGroup, WDPPIPerceptionFrame, WDPPIPerceptionVideoFrameAllocatorFactory, WDPPIPerceptionVideoFrameAllocator, WDPPIPerceptionPropertyChangeRequest;
 
-#include "WindowsFoundationNumerics.h"
 #include "WindowsFoundation.h"
 #include "WindowsDevicesPerception.h"
 #include "WindowsFoundationCollections.h"
+#include "WindowsFoundationNumerics.h"
 #include "WindowsGraphicsImaging.h"
 #include "WindowsMedia.h"
 // Windows.Devices.Perception.Provider.PerceptionStartFaceAuthenticationHandler

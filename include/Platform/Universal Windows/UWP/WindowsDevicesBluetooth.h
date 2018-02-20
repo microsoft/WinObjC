@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -27,8 +27,8 @@
 #endif
 #include <UWP/interopBase.h>
 
-@class WDBBluetoothDevice, WDBBluetoothClassOfDevice, WDBBluetoothLEAppearanceCategories, WDBBluetoothLEAppearanceSubcategories, WDBBluetoothLEAppearance, WDBBluetoothLEDevice, WDBBluetoothSignalStrengthFilter;
-@protocol WDBIBluetoothDeviceStatics, WDBIBluetoothDeviceStatics2, WDBIBluetoothDevice, WDBIBluetoothDevice2, WDBIBluetoothDevice3, WDBIBluetoothLEAppearanceCategoriesStatics, WDBIBluetoothLEAppearanceSubcategoriesStatics, WDBIBluetoothLEAppearance, WDBIBluetoothLEAppearanceStatics, WDBIBluetoothLEDevice, WDBIBluetoothLEDevice2, WDBIBluetoothLEDeviceStatics, WDBIBluetoothLEDeviceStatics2, WDBIBluetoothClassOfDevice, WDBIBluetoothClassOfDeviceStatics, WDBIBluetoothSignalStrengthFilter;
+@class WDBBluetoothAdapter, WDBBluetoothDeviceId, WDBBluetoothUuidHelper, WDBBluetoothDevice, WDBBluetoothClassOfDevice, WDBBluetoothLEAppearanceCategories, WDBBluetoothLEAppearanceSubcategories, WDBBluetoothLEAppearance, WDBBluetoothLEDevice, WDBBluetoothSignalStrengthFilter;
+@protocol WDBIBluetoothAdapterStatics, WDBIBluetoothAdapter, WDBIBluetoothDeviceIdStatics, WDBIBluetoothDeviceId, WDBIBluetoothUuidHelperStatics, WDBIBluetoothDeviceStatics, WDBIBluetoothDeviceStatics2, WDBIBluetoothDevice, WDBIBluetoothDevice2, WDBIBluetoothDevice3, WDBIBluetoothDevice4, WDBIBluetoothLEAppearanceCategoriesStatics, WDBIBluetoothLEAppearanceSubcategoriesStatics, WDBIBluetoothLEAppearance, WDBIBluetoothLEAppearanceStatics, WDBIBluetoothLEDeviceStatics, WDBIBluetoothLEDeviceStatics2, WDBIBluetoothLEDevice, WDBIBluetoothLEDevice2, WDBIBluetoothLEDevice3, WDBIBluetoothLEDevice4, WDBIBluetoothClassOfDevice, WDBIBluetoothClassOfDeviceStatics, WDBIBluetoothSignalStrengthFilter;
 
 // Windows.Devices.Bluetooth.BluetoothCacheMode
 enum _WDBBluetoothCacheMode {
@@ -161,6 +161,7 @@ enum _WDBBluetoothError {
     WDBBluetoothErrorNotSupported = 6,
     WDBBluetoothErrorDisabledByUser = 7,
     WDBBluetoothErrorConsentRequired = 8,
+    WDBBluetoothErrorTransportNotSupported = 9,
 };
 typedef unsigned WDBBluetoothError;
 
@@ -168,17 +169,72 @@ typedef unsigned WDBBluetoothError;
 enum _WDBBluetoothAddressType {
     WDBBluetoothAddressTypePublic = 0,
     WDBBluetoothAddressTypeRandom = 1,
+    WDBBluetoothAddressTypeUnspecified = 2,
 };
 typedef unsigned WDBBluetoothAddressType;
 
 #include "WindowsDevicesBluetoothGenericAttributeProfile.h"
 #include "WindowsFoundation.h"
+#include "WindowsDevicesRadios.h"
 #include "WindowsNetworking.h"
 #include "WindowsStorageStreams.h"
 #include "WindowsDevicesBluetoothRfcomm.h"
 #include "WindowsDevicesEnumeration.h"
 
 #import <Foundation/Foundation.h>
+
+// Windows.Devices.Bluetooth.BluetoothAdapter
+#ifndef __WDBBluetoothAdapter_DEFINED__
+#define __WDBBluetoothAdapter_DEFINED__
+
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
+@interface WDBBluetoothAdapter : RTObject
++ (NSString *)getDeviceSelector;
++ (void)fromIdAsync:(NSString *)deviceId success:(void (^)(WDBBluetoothAdapter*))success failure:(void (^)(NSError*))failure;
++ (void)getDefaultAsyncWithSuccess:(void (^)(WDBBluetoothAdapter*))success failure:(void (^)(NSError*))failure;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (readonly) uint64_t bluetoothAddress;
+@property (readonly) NSString * deviceId;
+@property (readonly) BOOL isAdvertisementOffloadSupported;
+@property (readonly) BOOL isCentralRoleSupported;
+@property (readonly) BOOL isClassicSupported;
+@property (readonly) BOOL isLowEnergySupported;
+@property (readonly) BOOL isPeripheralRoleSupported;
+- (void)getRadioAsyncWithSuccess:(void (^)(WDRRadio*))success failure:(void (^)(NSError*))failure;
+@end
+
+#endif // __WDBBluetoothAdapter_DEFINED__
+
+// Windows.Devices.Bluetooth.BluetoothDeviceId
+#ifndef __WDBBluetoothDeviceId_DEFINED__
+#define __WDBBluetoothDeviceId_DEFINED__
+
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
+@interface WDBBluetoothDeviceId : RTObject
++ (WDBBluetoothDeviceId*)fromId:(NSString *)deviceId;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (readonly) NSString * id;
+@property (readonly) BOOL isClassicDevice;
+@property (readonly) BOOL isLowEnergyDevice;
+@end
+
+#endif // __WDBBluetoothDeviceId_DEFINED__
+
+// Windows.Devices.Bluetooth.BluetoothUuidHelper
+#ifndef __WDBBluetoothUuidHelper_DEFINED__
+#define __WDBBluetoothUuidHelper_DEFINED__
+
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
+@interface WDBBluetoothUuidHelper : RTObject
++ (WFGUID*)fromShortId:(unsigned int)shortId;
++ (id /* unsigned int */)tryGetShortId:(WFGUID*)uuid;
+@end
+
+#endif // __WDBBluetoothUuidHelper_DEFINED__
 
 // Windows.Foundation.IClosable
 #ifndef __WFIClosable_DEFINED__
@@ -226,6 +282,7 @@ OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @property (readonly) NSArray* /* RTObject<WSSIBuffer>* */ sdpRecords;
 @property (readonly) WDEDeviceInformation* deviceInformation;
 @property (readonly) WDEDeviceAccessInformation* deviceAccessInformation;
+@property (readonly) WDBBluetoothDeviceId* bluetoothDeviceId;
 - (EventRegistrationToken)addConnectionStatusChangedEvent:(void(^)(WDBBluetoothDevice*, RTObject*))del;
 - (void)removeConnectionStatusChangedEvent:(EventRegistrationToken)tok;
 - (EventRegistrationToken)addNameChangedEvent:(void(^)(WDBBluetoothDevice*, RTObject*))del;
@@ -376,6 +433,8 @@ OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @property (readonly) WDBBluetoothLEAppearance* appearance;
 @property (readonly) WDBBluetoothAddressType bluetoothAddressType;
 @property (readonly) WDEDeviceInformation* deviceInformation;
+@property (readonly) WDEDeviceAccessInformation* deviceAccessInformation;
+@property (readonly) WDBBluetoothDeviceId* bluetoothDeviceId;
 - (EventRegistrationToken)addConnectionStatusChangedEvent:(void(^)(WDBBluetoothLEDevice*, RTObject*))del;
 - (void)removeConnectionStatusChangedEvent:(EventRegistrationToken)tok;
 - (EventRegistrationToken)addGattServicesChangedEvent:(void(^)(WDBBluetoothLEDevice*, RTObject*))del;
@@ -384,6 +443,11 @@ OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 - (void)removeNameChangedEvent:(EventRegistrationToken)tok;
 - (WDBGGattDeviceService*)getGattService:(WFGUID*)serviceUuid;
 - (void)close;
+- (void)requestAccessAsyncWithSuccess:(void (^)(WDEDeviceAccessStatus))success failure:(void (^)(NSError*))failure;
+- (void)getGattServicesAsyncWithSuccess:(void (^)(WDBGGattDeviceServicesResult*))success failure:(void (^)(NSError*))failure;
+- (void)getGattServicesWithCacheModeAsync:(WDBBluetoothCacheMode)cacheMode success:(void (^)(WDBGGattDeviceServicesResult*))success failure:(void (^)(NSError*))failure;
+- (void)getGattServicesForUuidAsync:(WFGUID*)serviceUuid success:(void (^)(WDBGGattDeviceServicesResult*))success failure:(void (^)(NSError*))failure;
+- (void)getGattServicesForUuidWithCacheModeAsync:(WFGUID*)serviceUuid cacheMode:(WDBBluetoothCacheMode)cacheMode success:(void (^)(WDBGGattDeviceServicesResult*))success failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WDBBluetoothLEDevice_DEFINED__

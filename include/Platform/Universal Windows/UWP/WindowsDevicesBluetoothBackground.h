@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -27,8 +27,16 @@
 #endif
 #include <UWP/interopBase.h>
 
-@class WDBBRfcommInboundConnectionInformation, WDBBRfcommOutboundConnectionInformation, WDBBRfcommConnectionTriggerDetails, WDBBGattCharacteristicNotificationTriggerDetails, WDBBBluetoothLEAdvertisementWatcherTriggerDetails, WDBBBluetoothLEAdvertisementPublisherTriggerDetails;
-@protocol WDBBIRfcommInboundConnectionInformation, WDBBIRfcommOutboundConnectionInformation, WDBBIRfcommConnectionTriggerDetails, WDBBIGattCharacteristicNotificationTriggerDetails, WDBBIBluetoothLEAdvertisementWatcherTriggerDetails, WDBBIBluetoothLEAdvertisementPublisherTriggerDetails;
+@class WDBBRfcommInboundConnectionInformation, WDBBRfcommOutboundConnectionInformation, WDBBRfcommConnectionTriggerDetails, WDBBGattCharacteristicNotificationTriggerDetails, WDBBGattServiceProviderConnection, WDBBGattServiceProviderTriggerDetails, WDBBBluetoothLEAdvertisementWatcherTriggerDetails, WDBBBluetoothLEAdvertisementPublisherTriggerDetails;
+@protocol WDBBIRfcommInboundConnectionInformation, WDBBIRfcommOutboundConnectionInformation, WDBBIRfcommConnectionTriggerDetails, WDBBIGattCharacteristicNotificationTriggerDetails, WDBBIGattCharacteristicNotificationTriggerDetails2, WDBBIGattServiceProviderConnectionStatics, WDBBIGattServiceProviderConnection, WDBBIGattServiceProviderTriggerDetails, WDBBIBluetoothLEAdvertisementWatcherTriggerDetails, WDBBIBluetoothLEAdvertisementPublisherTriggerDetails;
+
+// Windows.Devices.Bluetooth.Background.BluetoothEventTriggeringMode
+enum _WDBBBluetoothEventTriggeringMode {
+    WDBBBluetoothEventTriggeringModeSerial = 0,
+    WDBBBluetoothEventTriggeringModeBatch = 1,
+    WDBBBluetoothEventTriggeringModeKeepLatest = 2,
+};
+typedef unsigned WDBBBluetoothEventTriggeringMode;
 
 #include "WindowsDevicesBluetoothGenericAttributeProfile.h"
 #include "WindowsDevicesBluetooth.h"
@@ -96,9 +104,43 @@ OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 #endif
 @property (readonly) WDBGGattCharacteristic* characteristic;
 @property (readonly) RTObject<WSSIBuffer>* value;
+@property (readonly) WDBBluetoothError error;
+@property (readonly) WDBBBluetoothEventTriggeringMode eventTriggeringMode;
+@property (readonly) NSArray* /* WDBGGattValueChangedEventArgs* */ valueChangedEvents;
 @end
 
 #endif // __WDBBGattCharacteristicNotificationTriggerDetails_DEFINED__
+
+// Windows.Devices.Bluetooth.Background.GattServiceProviderConnection
+#ifndef __WDBBGattServiceProviderConnection_DEFINED__
+#define __WDBBGattServiceProviderConnection_DEFINED__
+
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
+@interface WDBBGattServiceProviderConnection : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (readonly) WDBGGattLocalService* service;
+@property (readonly) NSString * triggerId;
++ (NSDictionary* /* NSString *, WDBBGattServiceProviderConnection* */)allServices;
+- (void)start;
+@end
+
+#endif // __WDBBGattServiceProviderConnection_DEFINED__
+
+// Windows.Devices.Bluetooth.Background.GattServiceProviderTriggerDetails
+#ifndef __WDBBGattServiceProviderTriggerDetails_DEFINED__
+#define __WDBBGattServiceProviderTriggerDetails_DEFINED__
+
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
+@interface WDBBGattServiceProviderTriggerDetails : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (readonly) WDBBGattServiceProviderConnection* connection;
+@end
+
+#endif // __WDBBGattServiceProviderTriggerDetails_DEFINED__
 
 // Windows.Devices.Bluetooth.Background.BluetoothLEAdvertisementWatcherTriggerDetails
 #ifndef __WDBBBluetoothLEAdvertisementWatcherTriggerDetails_DEFINED__

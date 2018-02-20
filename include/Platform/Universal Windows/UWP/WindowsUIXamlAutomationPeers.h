@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -27,9 +27,9 @@
 #endif
 #include <UWP/interopBase.h>
 
-@class WUXAPAutomationPeer, WUXAPAutomationPeerAnnotation, WUXAPFrameworkElementAutomationPeer, WUXAPButtonBaseAutomationPeer, WUXAPCaptureElementAutomationPeer, WUXAPComboBoxItemAutomationPeer, WUXAPFlipViewItemAutomationPeer, WUXAPGroupItemAutomationPeer, WUXAPImageAutomationPeer, WUXAPListBoxItemAutomationPeer, WUXAPMediaTransportControlsAutomationPeer, WUXAPPasswordBoxAutomationPeer, WUXAPProgressRingAutomationPeer, WUXAPRichEditBoxAutomationPeer, WUXAPRichTextBlockAutomationPeer, WUXAPRichTextBlockOverflowAutomationPeer, WUXAPSettingsFlyoutAutomationPeer, WUXAPTextBlockAutomationPeer, WUXAPTextBoxAutomationPeer, WUXAPThumbAutomationPeer, WUXAPAutoSuggestBoxAutomationPeer, WUXAPDatePickerAutomationPeer, WUXAPFlyoutPresenterAutomationPeer, WUXAPGridViewItemAutomationPeer, WUXAPHubAutomationPeer, WUXAPListViewBaseHeaderItemAutomationPeer, WUXAPListViewItemAutomationPeer, WUXAPMediaElementAutomationPeer, WUXAPMediaPlayerElementAutomationPeer, WUXAPSearchBoxAutomationPeer, WUXAPTimePickerAutomationPeer, WUXAPGridViewHeaderItemAutomationPeer, WUXAPListViewHeaderItemAutomationPeer, WUXAPButtonAutomationPeer, WUXAPHyperlinkButtonAutomationPeer, WUXAPRepeatButtonAutomationPeer, WUXAPMenuFlyoutItemAutomationPeer, WUXAPAppBarButtonAutomationPeer, WUXAPItemsControlAutomationPeer, WUXAPMenuFlyoutPresenterAutomationPeer, WUXAPRangeBaseAutomationPeer, WUXAPProgressBarAutomationPeer, WUXAPScrollBarAutomationPeer, WUXAPSliderAutomationPeer, WUXAPHubSectionAutomationPeer, WUXAPScrollViewerAutomationPeer, WUXAPSelectorAutomationPeer, WUXAPFlipViewAutomationPeer, WUXAPListBoxAutomationPeer, WUXAPListViewBaseAutomationPeer, WUXAPGridViewAutomationPeer, WUXAPListViewAutomationPeer, WUXAPSemanticZoomAutomationPeer, WUXAPToggleSwitchAutomationPeer, WUXAPToggleButtonAutomationPeer, WUXAPCheckBoxAutomationPeer, WUXAPRadioButtonAutomationPeer, WUXAPToggleMenuFlyoutItemAutomationPeer, WUXAPAppBarToggleButtonAutomationPeer, WUXAPItemAutomationPeer, WUXAPSelectorItemAutomationPeer, WUXAPComboBoxItemDataAutomationPeer, WUXAPFlipViewItemDataAutomationPeer, WUXAPListBoxItemDataAutomationPeer, WUXAPGridViewItemDataAutomationPeer, WUXAPListViewItemDataAutomationPeer, WUXAPComboBoxAutomationPeer, WUXAPAppBarAutomationPeer, WUXAPInkToolbarAutomationPeer, WUXAPMapControlAutomationPeer, WUXAPLoopingSelectorItemDataAutomationPeer, WUXAPDatePickerFlyoutPresenterAutomationPeer, WUXAPListPickerFlyoutPresenterAutomationPeer, WUXAPLoopingSelectorAutomationPeer, WUXAPLoopingSelectorItemAutomationPeer, WUXAPPickerFlyoutPresenterAutomationPeer, WUXAPPivotItemAutomationPeer, WUXAPPivotItemDataAutomationPeer, WUXAPTimePickerFlyoutPresenterAutomationPeer, WUXAPPivotAutomationPeer;
+@class WUXAPAutomationPeer, WUXAPAutomationPeerAnnotation, WUXAPFrameworkElementAutomationPeer, WUXAPColorSpectrumAutomationPeer, WUXAPPersonPictureAutomationPeer, WUXAPRatingControlAutomationPeer, WUXAPButtonBaseAutomationPeer, WUXAPCaptureElementAutomationPeer, WUXAPComboBoxItemAutomationPeer, WUXAPFlipViewItemAutomationPeer, WUXAPGroupItemAutomationPeer, WUXAPImageAutomationPeer, WUXAPListBoxItemAutomationPeer, WUXAPMediaTransportControlsAutomationPeer, WUXAPPasswordBoxAutomationPeer, WUXAPProgressRingAutomationPeer, WUXAPRichTextBlockAutomationPeer, WUXAPRichTextBlockOverflowAutomationPeer, WUXAPSettingsFlyoutAutomationPeer, WUXAPTextBlockAutomationPeer, WUXAPTextBoxAutomationPeer, WUXAPThumbAutomationPeer, WUXAPAutoSuggestBoxAutomationPeer, WUXAPDatePickerAutomationPeer, WUXAPFlyoutPresenterAutomationPeer, WUXAPGridViewItemAutomationPeer, WUXAPHubAutomationPeer, WUXAPListViewBaseHeaderItemAutomationPeer, WUXAPListViewItemAutomationPeer, WUXAPNavigationViewItemAutomationPeer, WUXAPMediaElementAutomationPeer, WUXAPMediaPlayerElementAutomationPeer, WUXAPRichEditBoxAutomationPeer, WUXAPSearchBoxAutomationPeer, WUXAPTimePickerAutomationPeer, WUXAPGridViewHeaderItemAutomationPeer, WUXAPListViewHeaderItemAutomationPeer, WUXAPButtonAutomationPeer, WUXAPHyperlinkButtonAutomationPeer, WUXAPRepeatButtonAutomationPeer, WUXAPMenuFlyoutItemAutomationPeer, WUXAPAppBarButtonAutomationPeer, WUXAPItemsControlAutomationPeer, WUXAPMenuFlyoutPresenterAutomationPeer, WUXAPRangeBaseAutomationPeer, WUXAPProgressBarAutomationPeer, WUXAPScrollBarAutomationPeer, WUXAPSliderAutomationPeer, WUXAPColorPickerSliderAutomationPeer, WUXAPHubSectionAutomationPeer, WUXAPScrollViewerAutomationPeer, WUXAPSelectorAutomationPeer, WUXAPFlipViewAutomationPeer, WUXAPListBoxAutomationPeer, WUXAPListViewBaseAutomationPeer, WUXAPGridViewAutomationPeer, WUXAPListViewAutomationPeer, WUXAPSemanticZoomAutomationPeer, WUXAPToggleSwitchAutomationPeer, WUXAPToggleButtonAutomationPeer, WUXAPCheckBoxAutomationPeer, WUXAPRadioButtonAutomationPeer, WUXAPToggleMenuFlyoutItemAutomationPeer, WUXAPAppBarToggleButtonAutomationPeer, WUXAPItemAutomationPeer, WUXAPSelectorItemAutomationPeer, WUXAPComboBoxItemDataAutomationPeer, WUXAPFlipViewItemDataAutomationPeer, WUXAPListBoxItemDataAutomationPeer, WUXAPGridViewItemDataAutomationPeer, WUXAPListViewItemDataAutomationPeer, WUXAPComboBoxAutomationPeer, WUXAPAppBarAutomationPeer, WUXAPInkToolbarAutomationPeer, WUXAPMapControlAutomationPeer, WUXAPLoopingSelectorItemDataAutomationPeer, WUXAPDatePickerFlyoutPresenterAutomationPeer, WUXAPListPickerFlyoutPresenterAutomationPeer, WUXAPLoopingSelectorAutomationPeer, WUXAPLoopingSelectorItemAutomationPeer, WUXAPPickerFlyoutPresenterAutomationPeer, WUXAPPivotItemAutomationPeer, WUXAPPivotItemDataAutomationPeer, WUXAPTimePickerFlyoutPresenterAutomationPeer, WUXAPPivotAutomationPeer;
 @class WUXAPRawElementProviderRuntimeId;
-@protocol WUXAPIItemAutomationPeer, WUXAPIItemAutomationPeerFactory, WUXAPIButtonBaseAutomationPeer, WUXAPIButtonBaseAutomationPeerFactory, WUXAPICaptureElementAutomationPeer, WUXAPICaptureElementAutomationPeerFactory, WUXAPIComboBoxItemAutomationPeer, WUXAPIComboBoxItemAutomationPeerFactory, WUXAPIFlipViewItemAutomationPeer, WUXAPIFlipViewItemAutomationPeerFactory, WUXAPIGroupItemAutomationPeer, WUXAPIGroupItemAutomationPeerFactory, WUXAPIImageAutomationPeer, WUXAPIImageAutomationPeerFactory, WUXAPIItemsControlAutomationPeer, WUXAPIItemsControlAutomationPeerFactory, WUXAPIItemsControlAutomationPeer2, WUXAPIItemsControlAutomationPeerOverrides2, WUXAPIListBoxItemAutomationPeer, WUXAPIListBoxItemAutomationPeerFactory, WUXAPIMediaTransportControlsAutomationPeer, WUXAPIMediaTransportControlsAutomationPeerFactory, WUXAPIPasswordBoxAutomationPeer, WUXAPIPasswordBoxAutomationPeerFactory, WUXAPIProgressRingAutomationPeer, WUXAPIProgressRingAutomationPeerFactory, WUXAPIRangeBaseAutomationPeer, WUXAPIRangeBaseAutomationPeerFactory, WUXAPIRichEditBoxAutomationPeer, WUXAPIRichEditBoxAutomationPeerFactory, WUXAPIRichTextBlockAutomationPeer, WUXAPIRichTextBlockAutomationPeerFactory, WUXAPIRichTextBlockOverflowAutomationPeer, WUXAPIRichTextBlockOverflowAutomationPeerFactory, WUXAPISelectorItemAutomationPeer, WUXAPISelectorItemAutomationPeerFactory, WUXAPISemanticZoomAutomationPeer, WUXAPISemanticZoomAutomationPeerFactory, WUXAPISettingsFlyoutAutomationPeer, WUXAPISettingsFlyoutAutomationPeerFactory, WUXAPITextBlockAutomationPeer, WUXAPITextBlockAutomationPeerFactory, WUXAPITextBoxAutomationPeer, WUXAPITextBoxAutomationPeerFactory, WUXAPIThumbAutomationPeer, WUXAPIThumbAutomationPeerFactory, WUXAPIToggleSwitchAutomationPeer, WUXAPIToggleSwitchAutomationPeerFactory, WUXAPIButtonAutomationPeer, WUXAPIButtonAutomationPeerFactory, WUXAPIComboBoxItemDataAutomationPeer, WUXAPIComboBoxItemDataAutomationPeerFactory, WUXAPIFlipViewItemDataAutomationPeer, WUXAPIFlipViewItemDataAutomationPeerFactory, WUXAPIHyperlinkButtonAutomationPeer, WUXAPIHyperlinkButtonAutomationPeerFactory, WUXAPIListBoxItemDataAutomationPeer, WUXAPIListBoxItemDataAutomationPeerFactory, WUXAPIProgressBarAutomationPeer, WUXAPIProgressBarAutomationPeerFactory, WUXAPIRepeatButtonAutomationPeer, WUXAPIRepeatButtonAutomationPeerFactory, WUXAPIScrollBarAutomationPeer, WUXAPIScrollBarAutomationPeerFactory, WUXAPISelectorAutomationPeer, WUXAPISelectorAutomationPeerFactory, WUXAPISliderAutomationPeer, WUXAPISliderAutomationPeerFactory, WUXAPIToggleButtonAutomationPeer, WUXAPIToggleButtonAutomationPeerFactory, WUXAPICheckBoxAutomationPeer, WUXAPICheckBoxAutomationPeerFactory, WUXAPIComboBoxAutomationPeer, WUXAPIComboBoxAutomationPeerFactory, WUXAPIFlipViewAutomationPeer, WUXAPIFlipViewAutomationPeerFactory, WUXAPIListBoxAutomationPeer, WUXAPIListBoxAutomationPeerFactory, WUXAPIRadioButtonAutomationPeer, WUXAPIRadioButtonAutomationPeerFactory, WUXAPIAppBarAutomationPeer, WUXAPIAppBarAutomationPeerFactory, WUXAPIAutoSuggestBoxAutomationPeer, WUXAPIAutoSuggestBoxAutomationPeerFactory, WUXAPIDatePickerAutomationPeer, WUXAPIDatePickerAutomationPeerFactory, WUXAPIFlyoutPresenterAutomationPeer, WUXAPIFlyoutPresenterAutomationPeerFactory, WUXAPIGridViewItemAutomationPeer, WUXAPIGridViewItemAutomationPeerFactory, WUXAPIHubAutomationPeer, WUXAPIHubAutomationPeerFactory, WUXAPIHubSectionAutomationPeer, WUXAPIHubSectionAutomationPeerFactory, WUXAPIListViewBaseHeaderItemAutomationPeer, WUXAPIListViewBaseHeaderItemAutomationPeerFactory, WUXAPIListViewItemAutomationPeer, WUXAPIListViewItemAutomationPeerFactory, WUXAPIMediaElementAutomationPeer, WUXAPIMediaElementAutomationPeerFactory, WUXAPIMediaPlayerElementAutomationPeer, WUXAPIMediaPlayerElementAutomationPeerFactory, WUXAPIMenuFlyoutItemAutomationPeer, WUXAPIMenuFlyoutItemAutomationPeerFactory, WUXAPIScrollViewerAutomationPeer, WUXAPIScrollViewerAutomationPeerFactory, WUXAPISearchBoxAutomationPeer, WUXAPISearchBoxAutomationPeerFactory, WUXAPITimePickerAutomationPeer, WUXAPITimePickerAutomationPeerFactory, WUXAPIToggleMenuFlyoutItemAutomationPeer, WUXAPIToggleMenuFlyoutItemAutomationPeerFactory, WUXAPIGridViewHeaderItemAutomationPeer, WUXAPIGridViewHeaderItemAutomationPeerFactory, WUXAPIGridViewItemDataAutomationPeer, WUXAPIGridViewItemDataAutomationPeerFactory, WUXAPIListViewHeaderItemAutomationPeer, WUXAPIListViewHeaderItemAutomationPeerFactory, WUXAPIListViewItemDataAutomationPeer, WUXAPIListViewItemDataAutomationPeerFactory, WUXAPIMenuFlyoutPresenterAutomationPeer, WUXAPIMenuFlyoutPresenterAutomationPeerFactory, WUXAPIAppBarButtonAutomationPeer, WUXAPIAppBarButtonAutomationPeerFactory, WUXAPIAppBarToggleButtonAutomationPeer, WUXAPIAppBarToggleButtonAutomationPeerFactory, WUXAPIListViewBaseAutomationPeer, WUXAPIListViewBaseAutomationPeerFactory, WUXAPIGridViewAutomationPeer, WUXAPIGridViewAutomationPeerFactory, WUXAPIListViewAutomationPeer, WUXAPIListViewAutomationPeerFactory, WUXAPIAutomationPeer, WUXAPIAutomationPeerOverrides, WUXAPIAutomationPeerProtected, WUXAPIAutomationPeerStatics, WUXAPIAutomationPeerFactory, WUXAPIAutomationPeer2, WUXAPIAutomationPeerOverrides2, WUXAPIAutomationPeer3, WUXAPIAutomationPeerOverrides3, WUXAPIAutomationPeerStatics3, WUXAPIAutomationPeer4, WUXAPIAutomationPeerOverrides4, WUXAPIAutomationPeer5, WUXAPIAutomationPeerOverrides5, WUXAPIAutomationPeerAnnotation, WUXAPIAutomationPeerAnnotationStatics, WUXAPIAutomationPeerAnnotationFactory, WUXAPIFrameworkElementAutomationPeer, WUXAPIFrameworkElementAutomationPeerStatics, WUXAPIFrameworkElementAutomationPeerFactory, WUXAPIInkToolbarAutomationPeer, WUXAPIMapControlAutomationPeer, WUXAPILoopingSelectorItemDataAutomationPeer, WUXAPIDatePickerFlyoutPresenterAutomationPeer, WUXAPIListPickerFlyoutPresenterAutomationPeer, WUXAPILoopingSelectorAutomationPeer, WUXAPILoopingSelectorItemAutomationPeer, WUXAPIPickerFlyoutPresenterAutomationPeer, WUXAPIPivotItemAutomationPeer, WUXAPIPivotItemAutomationPeerFactory, WUXAPIPivotItemDataAutomationPeer, WUXAPIPivotItemDataAutomationPeerFactory, WUXAPITimePickerFlyoutPresenterAutomationPeer, WUXAPIPivotAutomationPeer, WUXAPIPivotAutomationPeerFactory;
+@protocol WUXAPIColorSpectrumAutomationPeer, WUXAPIColorSpectrumAutomationPeerFactory, WUXAPIColorPickerSliderAutomationPeer, WUXAPIColorPickerSliderAutomationPeerFactory, WUXAPINavigationViewItemAutomationPeer, WUXAPINavigationViewItemAutomationPeerFactory, WUXAPIPersonPictureAutomationPeer, WUXAPIPersonPictureAutomationPeerFactory, WUXAPIRatingControlAutomationPeer, WUXAPIRatingControlAutomationPeerFactory, WUXAPIItemAutomationPeer, WUXAPIItemAutomationPeerFactory, WUXAPIButtonBaseAutomationPeer, WUXAPIButtonBaseAutomationPeerFactory, WUXAPICaptureElementAutomationPeer, WUXAPICaptureElementAutomationPeerFactory, WUXAPIComboBoxItemAutomationPeer, WUXAPIComboBoxItemAutomationPeerFactory, WUXAPIFlipViewItemAutomationPeer, WUXAPIFlipViewItemAutomationPeerFactory, WUXAPIGroupItemAutomationPeer, WUXAPIGroupItemAutomationPeerFactory, WUXAPIImageAutomationPeer, WUXAPIImageAutomationPeerFactory, WUXAPIItemsControlAutomationPeer, WUXAPIItemsControlAutomationPeerFactory, WUXAPIItemsControlAutomationPeer2, WUXAPIItemsControlAutomationPeerOverrides2, WUXAPIListBoxItemAutomationPeer, WUXAPIListBoxItemAutomationPeerFactory, WUXAPIMediaTransportControlsAutomationPeer, WUXAPIMediaTransportControlsAutomationPeerFactory, WUXAPIPasswordBoxAutomationPeer, WUXAPIPasswordBoxAutomationPeerFactory, WUXAPIProgressRingAutomationPeer, WUXAPIProgressRingAutomationPeerFactory, WUXAPIRangeBaseAutomationPeer, WUXAPIRangeBaseAutomationPeerFactory, WUXAPIRichTextBlockAutomationPeer, WUXAPIRichTextBlockAutomationPeerFactory, WUXAPIRichTextBlockOverflowAutomationPeer, WUXAPIRichTextBlockOverflowAutomationPeerFactory, WUXAPISelectorItemAutomationPeer, WUXAPISelectorItemAutomationPeerFactory, WUXAPISemanticZoomAutomationPeer, WUXAPISemanticZoomAutomationPeerFactory, WUXAPISettingsFlyoutAutomationPeer, WUXAPISettingsFlyoutAutomationPeerFactory, WUXAPITextBlockAutomationPeer, WUXAPITextBlockAutomationPeerFactory, WUXAPITextBoxAutomationPeer, WUXAPITextBoxAutomationPeerFactory, WUXAPIThumbAutomationPeer, WUXAPIThumbAutomationPeerFactory, WUXAPIToggleSwitchAutomationPeer, WUXAPIToggleSwitchAutomationPeerFactory, WUXAPIButtonAutomationPeer, WUXAPIButtonAutomationPeerFactory, WUXAPIComboBoxItemDataAutomationPeer, WUXAPIComboBoxItemDataAutomationPeerFactory, WUXAPIFlipViewItemDataAutomationPeer, WUXAPIFlipViewItemDataAutomationPeerFactory, WUXAPIHyperlinkButtonAutomationPeer, WUXAPIHyperlinkButtonAutomationPeerFactory, WUXAPIListBoxItemDataAutomationPeer, WUXAPIListBoxItemDataAutomationPeerFactory, WUXAPIProgressBarAutomationPeer, WUXAPIProgressBarAutomationPeerFactory, WUXAPIRepeatButtonAutomationPeer, WUXAPIRepeatButtonAutomationPeerFactory, WUXAPIScrollBarAutomationPeer, WUXAPIScrollBarAutomationPeerFactory, WUXAPISelectorAutomationPeer, WUXAPISelectorAutomationPeerFactory, WUXAPISliderAutomationPeer, WUXAPISliderAutomationPeerFactory, WUXAPIToggleButtonAutomationPeer, WUXAPIToggleButtonAutomationPeerFactory, WUXAPICheckBoxAutomationPeer, WUXAPICheckBoxAutomationPeerFactory, WUXAPIComboBoxAutomationPeer, WUXAPIComboBoxAutomationPeerFactory, WUXAPIFlipViewAutomationPeer, WUXAPIFlipViewAutomationPeerFactory, WUXAPIListBoxAutomationPeer, WUXAPIListBoxAutomationPeerFactory, WUXAPIRadioButtonAutomationPeer, WUXAPIRadioButtonAutomationPeerFactory, WUXAPIAppBarAutomationPeer, WUXAPIAppBarAutomationPeerFactory, WUXAPIAutoSuggestBoxAutomationPeer, WUXAPIAutoSuggestBoxAutomationPeerFactory, WUXAPIDatePickerAutomationPeer, WUXAPIDatePickerAutomationPeerFactory, WUXAPIFlyoutPresenterAutomationPeer, WUXAPIFlyoutPresenterAutomationPeerFactory, WUXAPIGridViewItemAutomationPeer, WUXAPIGridViewItemAutomationPeerFactory, WUXAPIHubAutomationPeer, WUXAPIHubAutomationPeerFactory, WUXAPIHubSectionAutomationPeer, WUXAPIHubSectionAutomationPeerFactory, WUXAPIListViewBaseHeaderItemAutomationPeer, WUXAPIListViewBaseHeaderItemAutomationPeerFactory, WUXAPIListViewItemAutomationPeer, WUXAPIListViewItemAutomationPeerFactory, WUXAPIMediaElementAutomationPeer, WUXAPIMediaElementAutomationPeerFactory, WUXAPIMediaPlayerElementAutomationPeer, WUXAPIMediaPlayerElementAutomationPeerFactory, WUXAPIMenuFlyoutItemAutomationPeer, WUXAPIMenuFlyoutItemAutomationPeerFactory, WUXAPIRichEditBoxAutomationPeer, WUXAPIRichEditBoxAutomationPeerFactory, WUXAPIScrollViewerAutomationPeer, WUXAPIScrollViewerAutomationPeerFactory, WUXAPISearchBoxAutomationPeer, WUXAPISearchBoxAutomationPeerFactory, WUXAPITimePickerAutomationPeer, WUXAPITimePickerAutomationPeerFactory, WUXAPIToggleMenuFlyoutItemAutomationPeer, WUXAPIToggleMenuFlyoutItemAutomationPeerFactory, WUXAPIGridViewHeaderItemAutomationPeer, WUXAPIGridViewHeaderItemAutomationPeerFactory, WUXAPIGridViewItemDataAutomationPeer, WUXAPIGridViewItemDataAutomationPeerFactory, WUXAPIListViewHeaderItemAutomationPeer, WUXAPIListViewHeaderItemAutomationPeerFactory, WUXAPIListViewItemDataAutomationPeer, WUXAPIListViewItemDataAutomationPeerFactory, WUXAPIMenuFlyoutPresenterAutomationPeer, WUXAPIMenuFlyoutPresenterAutomationPeerFactory, WUXAPIAppBarButtonAutomationPeer, WUXAPIAppBarButtonAutomationPeerFactory, WUXAPIAppBarToggleButtonAutomationPeer, WUXAPIAppBarToggleButtonAutomationPeerFactory, WUXAPIListViewBaseAutomationPeer, WUXAPIListViewBaseAutomationPeerFactory, WUXAPIGridViewAutomationPeer, WUXAPIGridViewAutomationPeerFactory, WUXAPIListViewAutomationPeer, WUXAPIListViewAutomationPeerFactory, WUXAPIAutomationPeer, WUXAPIAutomationPeerOverrides, WUXAPIAutomationPeerProtected, WUXAPIAutomationPeerStatics, WUXAPIAutomationPeerFactory, WUXAPIAutomationPeer2, WUXAPIAutomationPeerOverrides2, WUXAPIAutomationPeer3, WUXAPIAutomationPeerOverrides3, WUXAPIAutomationPeerStatics3, WUXAPIAutomationPeer4, WUXAPIAutomationPeerOverrides4, WUXAPIAutomationPeer5, WUXAPIAutomationPeerOverrides5, WUXAPIAutomationPeer6, WUXAPIAutomationPeerOverrides6, WUXAPIAutomationPeer7, WUXAPIAutomationPeerAnnotation, WUXAPIAutomationPeerAnnotationStatics, WUXAPIAutomationPeerAnnotationFactory, WUXAPIFrameworkElementAutomationPeer, WUXAPIFrameworkElementAutomationPeerStatics, WUXAPIFrameworkElementAutomationPeerFactory, WUXAPIInkToolbarAutomationPeer, WUXAPIMapControlAutomationPeer, WUXAPILoopingSelectorItemDataAutomationPeer, WUXAPIDatePickerFlyoutPresenterAutomationPeer, WUXAPIListPickerFlyoutPresenterAutomationPeer, WUXAPILoopingSelectorAutomationPeer, WUXAPILoopingSelectorItemAutomationPeer, WUXAPIPickerFlyoutPresenterAutomationPeer, WUXAPIPivotItemAutomationPeer, WUXAPIPivotItemAutomationPeerFactory, WUXAPIPivotItemDataAutomationPeer, WUXAPIPivotItemDataAutomationPeerFactory, WUXAPITimePickerFlyoutPresenterAutomationPeer, WUXAPIPivotAutomationPeer, WUXAPIPivotAutomationPeerFactory;
 
 // Windows.UI.Xaml.Automation.Peers.AccessibilityView
 enum _WUXAPAccessibilityView {
@@ -148,6 +148,26 @@ enum _WUXAPAutomationNavigationDirection {
     WUXAPAutomationNavigationDirectionLastChild = 4,
 };
 typedef unsigned WUXAPAutomationNavigationDirection;
+
+// Windows.UI.Xaml.Automation.Peers.AutomationNotificationKind
+enum _WUXAPAutomationNotificationKind {
+    WUXAPAutomationNotificationKindItemAdded = 0,
+    WUXAPAutomationNotificationKindItemRemoved = 1,
+    WUXAPAutomationNotificationKindActionCompleted = 2,
+    WUXAPAutomationNotificationKindActionAborted = 3,
+    WUXAPAutomationNotificationKindOther = 4,
+};
+typedef unsigned WUXAPAutomationNotificationKind;
+
+// Windows.UI.Xaml.Automation.Peers.AutomationNotificationProcessing
+enum _WUXAPAutomationNotificationProcessing {
+    WUXAPAutomationNotificationProcessingImportantAll = 0,
+    WUXAPAutomationNotificationProcessingImportantMostRecent = 1,
+    WUXAPAutomationNotificationProcessingAll = 2,
+    WUXAPAutomationNotificationProcessingMostRecent = 3,
+    WUXAPAutomationNotificationProcessingCurrentThenMostRecent = 4,
+};
+typedef unsigned WUXAPAutomationNotificationProcessing;
 
 // Windows.UI.Xaml.Automation.Peers.AutomationOrientation
 enum _WUXAPAutomationOrientation {
@@ -354,6 +374,20 @@ OBJCUWPWINDOWSUIXAMLEXPORT
 
 #endif // __WUXAPIAutomationPeerOverrides5_DEFINED__
 
+// Windows.UI.Xaml.Automation.Peers.IAutomationPeerOverrides6
+#ifndef __WUXAPIAutomationPeerOverrides6_DEFINED__
+#define __WUXAPIAutomationPeerOverrides6_DEFINED__
+
+@protocol WUXAPIAutomationPeerOverrides6
+- (int)getCultureCore;
+@end
+
+OBJCUWPWINDOWSUIXAMLEXPORT
+@interface WUXAPIAutomationPeerOverrides6 : RTObject <WUXAPIAutomationPeerOverrides6>
+@end
+
+#endif // __WUXAPIAutomationPeerOverrides6_DEFINED__
+
 // Windows.UI.Xaml.DependencyObject
 #ifndef __WXDependencyObject_DEFINED__
 #define __WXDependencyObject_DEFINED__
@@ -381,8 +415,8 @@ OBJCUWPWINDOWSUIXAMLEXPORT
 
 OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAPAutomationPeer : WXDependencyObject
-+ (WUXAPRawElementProviderRuntimeId*)generateRawElementProviderRuntimeId;
 + (BOOL)listenerExists:(WUXAPAutomationEvents)eventId;
++ (WUXAPRawElementProviderRuntimeId*)generateRawElementProviderRuntimeId;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
@@ -418,6 +452,37 @@ OBJCUWPWINDOWSUIXAMLEXPORT
 - (void)invalidatePeer;
 - (WUXAPAutomationPeer*)getPeerFromPoint:(WFPoint*)point;
 - (WUXAPAutomationLiveSetting)getLiveSetting;
+- (RTObject*)getPatternCore:(WUXAPPatternInterface)patternInterface;
+- (NSString *)getAcceleratorKeyCore;
+- (NSString *)getAccessKeyCore;
+- (WUXAPAutomationControlType)getAutomationControlTypeCore;
+- (NSString *)getAutomationIdCore;
+- (WFRect*)getBoundingRectangleCore;
+- (NSMutableArray* /* WUXAPAutomationPeer* */)getChildrenCore;
+- (NSString *)getClassNameCore;
+- (WFPoint*)getClickablePointCore;
+- (NSString *)getHelpTextCore;
+- (NSString *)getItemStatusCore;
+- (NSString *)getItemTypeCore;
+- (WUXAPAutomationPeer*)getLabeledByCore;
+- (NSString *)getLocalizedControlTypeCore;
+- (NSString *)getNameCore;
+- (WUXAPAutomationOrientation)getOrientationCore;
+- (BOOL)hasKeyboardFocusCore;
+- (BOOL)isContentElementCore;
+- (BOOL)isControlElementCore;
+- (BOOL)isEnabledCore;
+- (BOOL)isKeyboardFocusableCore;
+- (BOOL)isOffscreenCore;
+- (BOOL)isPasswordCore;
+- (BOOL)isRequiredForFormCore;
+- (void)setFocusCore;
+- (WUXAPAutomationPeer*)getPeerFromPointCore:(WFPoint*)point;
+- (WUXAPAutomationLiveSetting)getLiveSettingCore;
+- (WUXAPAutomationPeer*)peerFromProvider:(WUXAPIRawElementProviderSimple*)provider;
+- (WUXAPIRawElementProviderSimple*)providerFromPeer:(WUXAPAutomationPeer*)peer;
+- (void)showContextMenuCore;
+- (NSArray* /* WUXAPAutomationPeer* */)getControlledPeersCore;
 - (RTObject*)navigate:(WUXAPAutomationNavigationDirection)direction;
 - (RTObject*)getElementFromPoint:(WFPoint*)pointInWindowCoordinates;
 - (RTObject*)getFocusedElement;
@@ -430,11 +495,29 @@ OBJCUWPWINDOWSUIXAMLEXPORT
 - (int)getSizeOfSet;
 - (int)getLevel;
 - (void)raiseStructureChangedEvent:(WUXAPAutomationStructureChangeType)structureChangeType child:(WUXAPAutomationPeer*)child;
+- (RTObject*)navigateCore:(WUXAPAutomationNavigationDirection)direction;
+- (RTObject*)getElementFromPointCore:(WFPoint*)pointInWindowCoordinates;
+- (RTObject*)getFocusedElementCore;
+- (NSMutableArray* /* WUXAPAutomationPeerAnnotation* */)getAnnotationsCore;
+- (int)getPositionInSetCore;
+- (int)getSizeOfSetCore;
+- (int)getLevelCore;
 - (WUXAPAutomationLandmarkType)getLandmarkType;
 - (NSString *)getLocalizedLandmarkType;
+- (WUXAPAutomationLandmarkType)getLandmarkTypeCore;
+- (NSString *)getLocalizedLandmarkTypeCore;
 - (BOOL)isPeripheral;
 - (BOOL)isDataValidForForm;
 - (NSString *)getFullDescription;
+- (BOOL)isPeripheralCore;
+- (BOOL)isDataValidForFormCore;
+- (NSString *)getFullDescriptionCore;
+- (id<NSFastEnumeration> /* WUXAPAutomationPeer* */)getDescribedByCore;
+- (id<NSFastEnumeration> /* WUXAPAutomationPeer* */)getFlowsToCore;
+- (id<NSFastEnumeration> /* WUXAPAutomationPeer* */)getFlowsFromCore;
+- (int)getCulture;
+- (int)getCultureCore;
+- (void)raiseNotificationEvent:(WUXAPAutomationNotificationKind)notificationKind notificationProcessing:(WUXAPAutomationNotificationProcessing)notificationProcessing displayString:(NSString *)displayString activityId:(NSString *)activityId;
 @end
 
 #endif // __WUXAPAutomationPeer_DEFINED__
@@ -475,6 +558,48 @@ OBJCUWPWINDOWSUIXAMLEXPORT
 @end
 
 #endif // __WUXAPFrameworkElementAutomationPeer_DEFINED__
+
+// Windows.UI.Xaml.Automation.Peers.ColorSpectrumAutomationPeer
+#ifndef __WUXAPColorSpectrumAutomationPeer_DEFINED__
+#define __WUXAPColorSpectrumAutomationPeer_DEFINED__
+
+OBJCUWPWINDOWSUIXAMLEXPORT
+@interface WUXAPColorSpectrumAutomationPeer : WUXAPFrameworkElementAutomationPeer
++ (WUXAPColorSpectrumAutomationPeer*)makeInstanceWithOwner:(WUXCPColorSpectrum*)owner ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@end
+
+#endif // __WUXAPColorSpectrumAutomationPeer_DEFINED__
+
+// Windows.UI.Xaml.Automation.Peers.PersonPictureAutomationPeer
+#ifndef __WUXAPPersonPictureAutomationPeer_DEFINED__
+#define __WUXAPPersonPictureAutomationPeer_DEFINED__
+
+OBJCUWPWINDOWSUIXAMLEXPORT
+@interface WUXAPPersonPictureAutomationPeer : WUXAPFrameworkElementAutomationPeer
++ (WUXAPPersonPictureAutomationPeer*)makeInstanceWithOwner:(WXCPersonPicture*)owner ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@end
+
+#endif // __WUXAPPersonPictureAutomationPeer_DEFINED__
+
+// Windows.UI.Xaml.Automation.Peers.RatingControlAutomationPeer
+#ifndef __WUXAPRatingControlAutomationPeer_DEFINED__
+#define __WUXAPRatingControlAutomationPeer_DEFINED__
+
+OBJCUWPWINDOWSUIXAMLEXPORT
+@interface WUXAPRatingControlAutomationPeer : WUXAPFrameworkElementAutomationPeer
++ (WUXAPRatingControlAutomationPeer*)makeInstanceWithOwner:(WXCRatingControl*)owner ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@end
+
+#endif // __WUXAPRatingControlAutomationPeer_DEFINED__
 
 // Windows.UI.Xaml.Automation.Peers.ButtonBaseAutomationPeer
 #ifndef __WUXAPButtonBaseAutomationPeer_DEFINED__
@@ -614,20 +739,6 @@ OBJCUWPWINDOWSUIXAMLEXPORT
 @end
 
 #endif // __WUXAPProgressRingAutomationPeer_DEFINED__
-
-// Windows.UI.Xaml.Automation.Peers.RichEditBoxAutomationPeer
-#ifndef __WUXAPRichEditBoxAutomationPeer_DEFINED__
-#define __WUXAPRichEditBoxAutomationPeer_DEFINED__
-
-OBJCUWPWINDOWSUIXAMLEXPORT
-@interface WUXAPRichEditBoxAutomationPeer : WUXAPFrameworkElementAutomationPeer
-+ (WUXAPRichEditBoxAutomationPeer*)makeInstanceWithOwner:(WXCRichEditBox*)owner ACTIVATOR;
-#if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
-#endif
-@end
-
-#endif // __WUXAPRichEditBoxAutomationPeer_DEFINED__
 
 // Windows.UI.Xaml.Automation.Peers.RichTextBlockAutomationPeer
 #ifndef __WUXAPRichTextBlockAutomationPeer_DEFINED__
@@ -810,6 +921,20 @@ OBJCUWPWINDOWSUIXAMLEXPORT
 
 #endif // __WUXAPListViewItemAutomationPeer_DEFINED__
 
+// Windows.UI.Xaml.Automation.Peers.NavigationViewItemAutomationPeer
+#ifndef __WUXAPNavigationViewItemAutomationPeer_DEFINED__
+#define __WUXAPNavigationViewItemAutomationPeer_DEFINED__
+
+OBJCUWPWINDOWSUIXAMLEXPORT
+@interface WUXAPNavigationViewItemAutomationPeer : WUXAPListViewItemAutomationPeer
++ (WUXAPNavigationViewItemAutomationPeer*)makeInstanceWithOwner:(WXCNavigationViewItem*)owner ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@end
+
+#endif // __WUXAPNavigationViewItemAutomationPeer_DEFINED__
+
 // Windows.UI.Xaml.Automation.Peers.MediaElementAutomationPeer
 #ifndef __WUXAPMediaElementAutomationPeer_DEFINED__
 #define __WUXAPMediaElementAutomationPeer_DEFINED__
@@ -837,6 +962,20 @@ OBJCUWPWINDOWSUIXAMLEXPORT
 @end
 
 #endif // __WUXAPMediaPlayerElementAutomationPeer_DEFINED__
+
+// Windows.UI.Xaml.Automation.Peers.RichEditBoxAutomationPeer
+#ifndef __WUXAPRichEditBoxAutomationPeer_DEFINED__
+#define __WUXAPRichEditBoxAutomationPeer_DEFINED__
+
+OBJCUWPWINDOWSUIXAMLEXPORT
+@interface WUXAPRichEditBoxAutomationPeer : WUXAPFrameworkElementAutomationPeer
++ (WUXAPRichEditBoxAutomationPeer*)makeInstanceWithOwner:(WXCRichEditBox*)owner ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@end
+
+#endif // __WUXAPRichEditBoxAutomationPeer_DEFINED__
 
 // Windows.UI.Xaml.Automation.Peers.SearchBoxAutomationPeer
 #ifndef __WUXAPSearchBoxAutomationPeer_DEFINED__
@@ -1008,6 +1147,7 @@ OBJCUWPWINDOWSUIXAMLEXPORT
 #endif
 - (WUXAPIRawElementProviderSimple*)findItemByProperty:(WUXAPIRawElementProviderSimple*)startAfter automationProperty:(WUXAAutomationProperty*)automationProperty value:(RTObject*)value;
 - (WUXAPItemAutomationPeer*)createItemAutomationPeer:(RTObject*)item;
+- (WUXAPItemAutomationPeer*)onCreateItemAutomationPeer:(RTObject*)item;
 @end
 
 #endif // __WUXAPItemsControlAutomationPeer_DEFINED__
@@ -1108,6 +1248,20 @@ OBJCUWPWINDOWSUIXAMLEXPORT
 @end
 
 #endif // __WUXAPSliderAutomationPeer_DEFINED__
+
+// Windows.UI.Xaml.Automation.Peers.ColorPickerSliderAutomationPeer
+#ifndef __WUXAPColorPickerSliderAutomationPeer_DEFINED__
+#define __WUXAPColorPickerSliderAutomationPeer_DEFINED__
+
+OBJCUWPWINDOWSUIXAMLEXPORT
+@interface WUXAPColorPickerSliderAutomationPeer : WUXAPSliderAutomationPeer
++ (WUXAPColorPickerSliderAutomationPeer*)makeInstanceWithOwner:(WUXCPColorPickerSlider*)owner ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@end
+
+#endif // __WUXAPColorPickerSliderAutomationPeer_DEFINED__
 
 // Windows.UI.Xaml.Automation.Provider.IScrollItemProvider
 #ifndef __WUXAPIScrollItemProvider_DEFINED__
@@ -1694,12 +1848,53 @@ OBJCUWPWINDOWSUIXAMLEXPORT
 
 #endif // __WUXAPInkToolbarAutomationPeer_DEFINED__
 
+// Windows.UI.Xaml.Automation.Provider.ITransformProvider
+#ifndef __WUXAPITransformProvider_DEFINED__
+#define __WUXAPITransformProvider_DEFINED__
+
+@protocol WUXAPITransformProvider
+@property (readonly) BOOL canMove;
+@property (readonly) BOOL canResize;
+@property (readonly) BOOL canRotate;
+- (void)move:(double)x y:(double)y;
+- (void)resize:(double)width height:(double)height;
+- (void)rotate:(double)degrees;
+@end
+
+OBJCUWPWINDOWSUIXAMLEXPORT
+@interface WUXAPITransformProvider : RTObject <WUXAPITransformProvider>
+@end
+
+#endif // __WUXAPITransformProvider_DEFINED__
+
+// Windows.UI.Xaml.Automation.Provider.ITransformProvider2
+#ifndef __WUXAPITransformProvider2_DEFINED__
+#define __WUXAPITransformProvider2_DEFINED__
+
+@protocol WUXAPITransformProvider2 <WUXAPITransformProvider>
+@property (readonly) BOOL canZoom;
+@property (readonly) double maxZoom;
+@property (readonly) double minZoom;
+@property (readonly) double zoomLevel;
+- (void)zoom:(double)zoom;
+- (void)zoomByUnit:(WUXAZoomUnit)zoomUnit;
+- (void)move:(double)x y:(double)y;
+- (void)resize:(double)width height:(double)height;
+- (void)rotate:(double)degrees;
+@end
+
+OBJCUWPWINDOWSUIXAMLEXPORT
+@interface WUXAPITransformProvider2 : RTObject <WUXAPITransformProvider2>
+@end
+
+#endif // __WUXAPITransformProvider2_DEFINED__
+
 // Windows.UI.Xaml.Automation.Peers.MapControlAutomationPeer
 #ifndef __WUXAPMapControlAutomationPeer_DEFINED__
 #define __WUXAPMapControlAutomationPeer_DEFINED__
 
 OBJCUWPWINDOWSUIXAMLEXPORT
-@interface WUXAPMapControlAutomationPeer : WUXAPFrameworkElementAutomationPeer <WUXAPIScrollProvider>
+@interface WUXAPMapControlAutomationPeer : WUXAPFrameworkElementAutomationPeer <WUXAPIScrollProvider, WUXAPITransformProvider2, WUXAPITransformProvider>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
@@ -1709,8 +1904,20 @@ OBJCUWPWINDOWSUIXAMLEXPORT
 @property (readonly) double verticalScrollPercent;
 @property (readonly) double verticalViewSize;
 @property (readonly) BOOL verticallyScrollable;
+@property (readonly) BOOL canRotate;
+@property (readonly) BOOL canMove;
+@property (readonly) BOOL canResize;
+@property (readonly) double zoomLevel;
+@property (readonly) BOOL canZoom;
+@property (readonly) double maxZoom;
+@property (readonly) double minZoom;
 - (void)scroll:(WUXAScrollAmount)horizontalAmount verticalAmount:(WUXAScrollAmount)verticalAmount;
 - (void)setScrollPercent:(double)horizontalPercent verticalPercent:(double)verticalPercent;
+- (void)zoom:(double)zoom;
+- (void)zoomByUnit:(WUXAZoomUnit)zoomUnit;
+- (void)move:(double)x y:(double)y;
+- (void)resize:(double)width height:(double)height;
+- (void)rotate:(double)degrees;
 @end
 
 #endif // __WUXAPMapControlAutomationPeer_DEFINED__

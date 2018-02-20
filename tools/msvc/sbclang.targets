@@ -22,7 +22,8 @@
     <ClangCompileDependsOn>_SelectedFiles;MakeDirsForClang;GenerateHeaderMaps;ComputeClangOptions</ClangCompileDependsOn>
     <ClangCompileBeforeTargets>ClCompile;Link;Lib;ImpLib</ClangCompileBeforeTargets>
     <ClangCompileAfterTargets></ClangCompileAfterTargets>
-    <BeforeClCompileTargets>_ClangCompile;AddObjCTwoStageInitFile;$(BeforeClCompileTargets)</BeforeClCompileTargets>
+    <BeforeClCompileTargets>_ClangCompile;$(BeforeClCompileTargets)</BeforeClCompileTargets>
+    <ComputeCompileInputsTargets>AddObjCTwoStageInitFile;$(ComputeCompileInputsTargets)</ComputeCompileInputsTargets>
     <BuildCompileTargets>_ClangCompile;$(BuildCompileTargets)</BuildCompileTargets>
   </PropertyGroup>
 

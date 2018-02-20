@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -27,8 +27,8 @@
 #endif
 #include <UWP/interopBase.h>
 
-@class WSPCachedFileUpdaterUI, WSPFileUpdateRequestedEventArgs, WSPFileUpdateRequest, WSPFileUpdateRequestDeferral, WSPCachedFileUpdater;
-@protocol WSPICachedFileUpdaterUI, WSPIFileUpdateRequestedEventArgs, WSPIFileUpdateRequest, WSPIFileUpdateRequestDeferral, WSPICachedFileUpdaterUI2, WSPIFileUpdateRequest2, WSPICachedFileUpdaterStatics;
+@class WSPCachedFileUpdaterUI, WSPFileUpdateRequestedEventArgs, WSPFileUpdateRequest, WSPFileUpdateRequestDeferral, WSPCachedFileUpdater, WSPStorageProviderItemProperty, WSPStorageProviderItemProperties, WSPStorageProviderItemPropertyDefinition, WSPStorageProviderSyncRootInfo, WSPStorageProviderSyncRootManager;
+@protocol WSPICachedFileUpdaterUI, WSPIFileUpdateRequestedEventArgs, WSPIFileUpdateRequest, WSPIFileUpdateRequestDeferral, WSPICachedFileUpdaterUI2, WSPIFileUpdateRequest2, WSPICachedFileUpdaterStatics, WSPIStorageProviderPropertyCapabilities, WSPIStorageProviderItemProperty, WSPIStorageProviderItemPropertiesStatics, WSPIStorageProviderItemPropertySource, WSPIStorageProviderItemPropertyDefinition, WSPIStorageProviderSyncRootInfo, WSPIStorageProviderSyncRootManagerStatics;
 
 // Windows.Storage.Provider.CachedFileTarget
 enum _WSPCachedFileTarget {
@@ -81,10 +81,94 @@ enum _WSPWriteActivationMode {
 };
 typedef unsigned WSPWriteActivationMode;
 
+// Windows.Storage.Provider.StorageProviderHydrationPolicy
+enum _WSPStorageProviderHydrationPolicy {
+    WSPStorageProviderHydrationPolicyPartial = 0,
+    WSPStorageProviderHydrationPolicyProgressive = 1,
+    WSPStorageProviderHydrationPolicyFull = 2,
+    WSPStorageProviderHydrationPolicyAlwaysFull = 3,
+};
+typedef unsigned WSPStorageProviderHydrationPolicy;
+
+// Windows.Storage.Provider.StorageProviderPopulationPolicy
+enum _WSPStorageProviderPopulationPolicy {
+    WSPStorageProviderPopulationPolicyFull = 1,
+    WSPStorageProviderPopulationPolicyAlwaysFull = 2,
+};
+typedef unsigned WSPStorageProviderPopulationPolicy;
+
+// Windows.Storage.Provider.StorageProviderHydrationPolicyModifier
+enum _WSPStorageProviderHydrationPolicyModifier {
+    WSPStorageProviderHydrationPolicyModifierNone = 0,
+    WSPStorageProviderHydrationPolicyModifierValidationRequired = 1,
+    WSPStorageProviderHydrationPolicyModifierStreamingAllowed = 2,
+};
+typedef unsigned WSPStorageProviderHydrationPolicyModifier;
+
+// Windows.Storage.Provider.StorageProviderInSyncPolicy
+enum _WSPStorageProviderInSyncPolicy {
+    WSPStorageProviderInSyncPolicyDefault = 0,
+    WSPStorageProviderInSyncPolicyFileCreationTime = 1,
+    WSPStorageProviderInSyncPolicyFileReadOnlyAttribute = 2,
+    WSPStorageProviderInSyncPolicyFileHiddenAttribute = 4,
+    WSPStorageProviderInSyncPolicyFileSystemAttribute = 8,
+    WSPStorageProviderInSyncPolicyDirectoryCreationTime = 16,
+    WSPStorageProviderInSyncPolicyDirectoryReadOnlyAttribute = 32,
+    WSPStorageProviderInSyncPolicyDirectoryHiddenAttribute = 64,
+    WSPStorageProviderInSyncPolicyDirectorySystemAttribute = 128,
+    WSPStorageProviderInSyncPolicyFileLastWriteTime = 256,
+    WSPStorageProviderInSyncPolicyDirectoryLastWriteTime = 512,
+    WSPStorageProviderInSyncPolicyPreserveInsyncForSyncEngine = -2147483648,
+};
+typedef unsigned WSPStorageProviderInSyncPolicy;
+
+// Windows.Storage.Provider.StorageProviderHardlinkPolicy
+enum _WSPStorageProviderHardlinkPolicy {
+    WSPStorageProviderHardlinkPolicyNone = 0,
+    WSPStorageProviderHardlinkPolicyAllowed = 1,
+};
+typedef unsigned WSPStorageProviderHardlinkPolicy;
+
+// Windows.Storage.Provider.StorageProviderProtectionMode
+enum _WSPStorageProviderProtectionMode {
+    WSPStorageProviderProtectionModeUnknown = 0,
+    WSPStorageProviderProtectionModePersonal = 1,
+};
+typedef unsigned WSPStorageProviderProtectionMode;
+
 #include "WindowsFoundation.h"
 #include "WindowsStorage.h"
+#include "WindowsStorageStreams.h"
 
 #import <Foundation/Foundation.h>
+
+// Windows.Storage.Provider.IStorageProviderPropertyCapabilities
+#ifndef __WSPIStorageProviderPropertyCapabilities_DEFINED__
+#define __WSPIStorageProviderPropertyCapabilities_DEFINED__
+
+@protocol WSPIStorageProviderPropertyCapabilities
+- (BOOL)isPropertySupported:(NSString *)propertyCanonicalName;
+@end
+
+OBJCUWPWINDOWSSTORAGEEXPORT
+@interface WSPIStorageProviderPropertyCapabilities : RTObject <WSPIStorageProviderPropertyCapabilities>
+@end
+
+#endif // __WSPIStorageProviderPropertyCapabilities_DEFINED__
+
+// Windows.Storage.Provider.IStorageProviderItemPropertySource
+#ifndef __WSPIStorageProviderItemPropertySource_DEFINED__
+#define __WSPIStorageProviderItemPropertySource_DEFINED__
+
+@protocol WSPIStorageProviderItemPropertySource
+- (id<NSFastEnumeration> /* WSPStorageProviderItemProperty* */)getItemProperties:(NSString *)itemPath;
+@end
+
+OBJCUWPWINDOWSSTORAGEEXPORT
+@interface WSPIStorageProviderItemPropertySource : RTObject <WSPIStorageProviderItemPropertySource>
+@end
+
+#endif // __WSPIStorageProviderItemPropertySource_DEFINED__
 
 // Windows.Storage.Provider.CachedFileUpdaterUI
 #ifndef __WSPCachedFileUpdaterUI_DEFINED__
@@ -165,4 +249,93 @@ OBJCUWPWINDOWSSTORAGEEXPORT
 @end
 
 #endif // __WSPCachedFileUpdater_DEFINED__
+
+// Windows.Storage.Provider.StorageProviderItemProperty
+#ifndef __WSPStorageProviderItemProperty_DEFINED__
+#define __WSPStorageProviderItemProperty_DEFINED__
+
+OBJCUWPWINDOWSSTORAGEEXPORT
+@interface WSPStorageProviderItemProperty : RTObject
++ (instancetype)make __attribute__ ((ns_returns_retained));
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (retain) NSString * value;
+@property int id;
+@property (retain) NSString * iconResource;
+@end
+
+#endif // __WSPStorageProviderItemProperty_DEFINED__
+
+// Windows.Storage.Provider.StorageProviderItemProperties
+#ifndef __WSPStorageProviderItemProperties_DEFINED__
+#define __WSPStorageProviderItemProperties_DEFINED__
+
+OBJCUWPWINDOWSSTORAGEEXPORT
+@interface WSPStorageProviderItemProperties : RTObject
++ (RTObject<WFIAsyncAction>*)setAsync:(RTObject<WSIStorageItem>*)item itemProperties:(id<NSFastEnumeration> /* WSPStorageProviderItemProperty* */)itemProperties;
+@end
+
+#endif // __WSPStorageProviderItemProperties_DEFINED__
+
+// Windows.Storage.Provider.StorageProviderItemPropertyDefinition
+#ifndef __WSPStorageProviderItemPropertyDefinition_DEFINED__
+#define __WSPStorageProviderItemPropertyDefinition_DEFINED__
+
+OBJCUWPWINDOWSSTORAGEEXPORT
+@interface WSPStorageProviderItemPropertyDefinition : RTObject
++ (instancetype)make __attribute__ ((ns_returns_retained));
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property int id;
+@property (retain) NSString * displayNameResource;
+@end
+
+#endif // __WSPStorageProviderItemPropertyDefinition_DEFINED__
+
+// Windows.Storage.Provider.StorageProviderSyncRootInfo
+#ifndef __WSPStorageProviderSyncRootInfo_DEFINED__
+#define __WSPStorageProviderSyncRootInfo_DEFINED__
+
+OBJCUWPWINDOWSSTORAGEEXPORT
+@interface WSPStorageProviderSyncRootInfo : RTObject
++ (instancetype)make __attribute__ ((ns_returns_retained));
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (retain) NSString * Version;
+@property BOOL showSiblingsAsGroup;
+@property (retain) WFUri* recycleBinUri;
+@property WSPStorageProviderProtectionMode protectionMode;
+@property WSPStorageProviderPopulationPolicy populationPolicy;
+@property (retain) RTObject<WSIStorageFolder>* path;
+@property WSPStorageProviderInSyncPolicy inSyncPolicy;
+@property (retain) NSString * id;
+@property (retain) NSString * iconResource;
+@property WSPStorageProviderHydrationPolicyModifier hydrationPolicyModifier;
+@property WSPStorageProviderHydrationPolicy hydrationPolicy;
+@property WSPStorageProviderHardlinkPolicy hardlinkPolicy;
+@property (retain) NSString * displayNameResource;
+@property (retain) RTObject<WSSIBuffer>* context;
+@property BOOL allowPinning;
+@property (readonly) NSMutableArray* /* WSPStorageProviderItemPropertyDefinition* */ storageProviderItemPropertyDefinitions;
+@end
+
+#endif // __WSPStorageProviderSyncRootInfo_DEFINED__
+
+// Windows.Storage.Provider.StorageProviderSyncRootManager
+#ifndef __WSPStorageProviderSyncRootManager_DEFINED__
+#define __WSPStorageProviderSyncRootManager_DEFINED__
+
+OBJCUWPWINDOWSSTORAGEEXPORT
+@interface WSPStorageProviderSyncRootManager : RTObject
++ (void)Register:(WSPStorageProviderSyncRootInfo*)syncRootInformation;
++ (void)unregister:(NSString *)id;
++ (WSPStorageProviderSyncRootInfo*)getSyncRootInformationForFolder:(RTObject<WSIStorageFolder>*)folder;
++ (WSPStorageProviderSyncRootInfo*)getSyncRootInformationForId:(NSString *)id;
++ (NSArray* /* WSPStorageProviderSyncRootInfo* */)getCurrentSyncRoots;
+@end
+
+#endif // __WSPStorageProviderSyncRootManager_DEFINED__
 

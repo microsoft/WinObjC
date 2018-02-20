@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -27,9 +27,9 @@
 #endif
 #include <UWP/interopBase.h>
 
-@class WUIPIInjectedInputKeyboardInfo, WUIPIInjectedInputMouseInfo, WUIPIInjectedInputTouchInfo, WUIPIInjectedInputPenInfo, WUIPIInputInjector;
+@class WUIPIInjectedInputGamepadInfo, WUIPIInjectedInputKeyboardInfo, WUIPIInjectedInputMouseInfo, WUIPIInjectedInputTouchInfo, WUIPIInjectedInputPenInfo, WUIPIInputInjector;
 @class WUIPIInjectedInputRectangle, WUIPIInjectedInputPoint, WUIPIInjectedInputPointerInfo;
-@protocol WUIPIIInjectedInputTouchInfo, WUIPIIInjectedInputPenInfo, WUIPIIInjectedInputMouseInfo, WUIPIIInjectedInputKeyboardInfo, WUIPIIInputInjector, WUIPIIInputInjectorStatics;
+@protocol WUIPIIInjectedInputTouchInfo, WUIPIIInjectedInputPenInfo, WUIPIIInjectedInputMouseInfo, WUIPIIInjectedInputKeyboardInfo, WUIPIIInjectedInputGamepadInfo, WUIPIIInjectedInputGamepadInfoFactory, WUIPIIInputInjector, WUIPIIInputInjector2, WUIPIIInputInjectorStatics, WUIPIIInputInjectorStatics2;
 
 // Windows.UI.Input.Preview.Injection.InjectedInputTouchParameters
 enum _WUIPIInjectedInputTouchParameters {
@@ -139,6 +139,8 @@ enum _WUIPIInjectedInputVisualizationMode {
 };
 typedef unsigned WUIPIInjectedInputVisualizationMode;
 
+#include "WindowsGamingInput.h"
+
 #import <Foundation/Foundation.h>
 
 // [struct] Windows.UI.Input.Preview.Injection.InjectedInputRectangle
@@ -169,6 +171,28 @@ OBJCUWPWINDOWSUIINPUTPREVIEWINJECTIONEXPORT
 @property unsigned int timeOffsetInMilliseconds;
 @property uint64_t performanceCount;
 @end
+
+// Windows.UI.Input.Preview.Injection.InjectedInputGamepadInfo
+#ifndef __WUIPIInjectedInputGamepadInfo_DEFINED__
+#define __WUIPIInjectedInputGamepadInfo_DEFINED__
+
+OBJCUWPWINDOWSUIINPUTPREVIEWINJECTIONEXPORT
+@interface WUIPIInjectedInputGamepadInfo : RTObject
++ (instancetype)make __attribute__ ((ns_returns_retained));
++ (WUIPIInjectedInputGamepadInfo*)makeInstanceFromGamepadReading:(WGIGamepadReading*)reading ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property double rightTrigger;
+@property double rightThumbstickY;
+@property double rightThumbstickX;
+@property double leftTrigger;
+@property double leftThumbstickY;
+@property double leftThumbstickX;
+@property WGIGamepadButtons buttons;
+@end
+
+#endif // __WUIPIInjectedInputGamepadInfo_DEFINED__
 
 // Windows.UI.Input.Preview.Injection.InjectedInputKeyboardInfo
 #ifndef __WUIPIInjectedInputKeyboardInfo_DEFINED__
@@ -252,6 +276,8 @@ OBJCUWPWINDOWSUIINPUTPREVIEWINJECTIONEXPORT
 
 OBJCUWPWINDOWSUIINPUTPREVIEWINJECTIONEXPORT
 @interface WUIPIInputInjector : RTObject
++ (WUIPIInputInjector*)tryCreateForAppBroadcastOnly;
++ (WUIPIInputInjector*)tryCreate;
 + (WUIPIInputInjector*)tryCreate;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -265,6 +291,9 @@ OBJCUWPWINDOWSUIINPUTPREVIEWINJECTIONEXPORT
 - (void)injectPenInput:(WUIPIInjectedInputPenInfo*)input;
 - (void)uninitializePenInjection;
 - (void)injectShortcut:(WUIPIInjectedInputShortcut)shortcut;
+- (void)initializeGamepadInjection;
+- (void)injectGamepadInput:(WUIPIInjectedInputGamepadInfo*)input;
+- (void)uninitializeGamepadInjection;
 @end
 
 #endif // __WUIPIInputInjector_DEFINED__

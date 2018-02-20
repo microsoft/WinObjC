@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -28,7 +28,14 @@
 #include <UWP/interopBase.h>
 
 @class WUCESceneLightingEffect;
-@protocol WUCEISceneLightingEffect;
+@protocol WUCEISceneLightingEffect, WUCEISceneLightingEffect2;
+
+// Windows.UI.Composition.Effects.SceneLightingEffectReflectanceModel
+enum _WUCESceneLightingEffectReflectanceModel {
+    WUCESceneLightingEffectReflectanceModelBlinnPhong = 0,
+    WUCESceneLightingEffectReflectanceModelPhysicallyBasedBlinnPhong = 1,
+};
+typedef unsigned WUCESceneLightingEffectReflectanceModel;
 
 #include "WindowsGraphicsEffects.h"
 
@@ -77,6 +84,7 @@ OBJCUWPWINDOWSUICOMPOSITIONEFFECTSEXPORT
 @property (retain) RTObject<WGEIGraphicsEffectSource>* normalMapSource;
 @property float diffuseAmount;
 @property float ambientAmount;
+@property WUCESceneLightingEffectReflectanceModel reflectanceModel;
 @end
 
 #endif // __WUCESceneLightingEffect_DEFINED__

@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -27,8 +27,8 @@
 #endif
 #include <UWP/interopBase.h>
 
-@class WUSJumpListItem, WUSJumpList, WUSSecondaryTileVisualElements, WUSSecondaryTile, WUSVisualElementsRequestedEventArgs, WUSVisualElementsRequest, WUSVisualElementsRequestDeferral;
-@protocol WUSIJumpListItem, WUSIJumpListItemStatics, WUSIJumpList, WUSIJumpListStatics, WUSISecondaryTile, WUSISecondaryTile2, WUSISecondaryTileVisualElements, WUSISecondaryTileVisualElements2, WUSISecondaryTileVisualElements3, WUSISecondaryTileFactory, WUSISecondaryTileFactory2, WUSISecondaryTileStatics, WUSIVisualElementsRequestedEventArgs, WUSIVisualElementsRequest, WUSIVisualElementsRequestDeferral;
+@class WUSJumpListItem, WUSJumpList, WUSSecondaryTileVisualElements, WUSSecondaryTile, WUSVisualElementsRequestedEventArgs, WUSTileMixedRealityModel, WUSVisualElementsRequest, WUSVisualElementsRequestDeferral, WUSStartScreenManager;
+@protocol WUSIJumpListItem, WUSIJumpListItemStatics, WUSIJumpList, WUSIJumpListStatics, WUSISecondaryTile, WUSISecondaryTile2, WUSISecondaryTileVisualElements, WUSISecondaryTileVisualElements2, WUSISecondaryTileVisualElements3, WUSITileMixedRealityModel, WUSISecondaryTileVisualElements4, WUSISecondaryTileFactory, WUSISecondaryTileFactory2, WUSISecondaryTileStatics, WUSIVisualElementsRequestedEventArgs, WUSIVisualElementsRequest, WUSIVisualElementsRequestDeferral, WUSIStartScreenManager, WUSIStartScreenManagerStatics;
 
 // Windows.UI.StartScreen.JumpListSystemGroupKind
 enum _WUSJumpListSystemGroupKind {
@@ -77,6 +77,9 @@ typedef unsigned WUSForegroundText;
 #include "WindowsUIPopups.h"
 #include "WindowsFoundation.h"
 #include "WindowsUI.h"
+#include "WindowsPerceptionSpatial.h"
+#include "WindowsSystem.h"
+#include "WindowsApplicationModelCore.h"
 
 #import <Foundation/Foundation.h>
 
@@ -141,6 +144,7 @@ OBJCUWPWINDOWSUISTARTSCREENEXPORT
 @property (retain) WFUri* square30x30Logo;
 @property (retain) WFUri* square71x71Logo;
 @property (retain) WFUri* square44x44Logo;
+@property (readonly) WUSTileMixedRealityModel* mixedRealityModel;
 @end
 
 #endif // __WUSSecondaryTileVisualElements_DEFINED__
@@ -207,6 +211,21 @@ OBJCUWPWINDOWSUISTARTSCREENEXPORT
 
 #endif // __WUSVisualElementsRequestedEventArgs_DEFINED__
 
+// Windows.UI.StartScreen.TileMixedRealityModel
+#ifndef __WUSTileMixedRealityModel_DEFINED__
+#define __WUSTileMixedRealityModel_DEFINED__
+
+OBJCUWPWINDOWSUISTARTSCREENEXPORT
+@interface WUSTileMixedRealityModel : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (retain) WFUri* uri;
+@property (retain) id /* WPSSpatialBoundingBox* */ boundingBox;
+@end
+
+#endif // __WUSTileMixedRealityModel_DEFINED__
+
 // Windows.UI.StartScreen.VisualElementsRequest
 #ifndef __WUSVisualElementsRequest_DEFINED__
 #define __WUSVisualElementsRequest_DEFINED__
@@ -237,4 +256,23 @@ OBJCUWPWINDOWSUISTARTSCREENEXPORT
 @end
 
 #endif // __WUSVisualElementsRequestDeferral_DEFINED__
+
+// Windows.UI.StartScreen.StartScreenManager
+#ifndef __WUSStartScreenManager_DEFINED__
+#define __WUSStartScreenManager_DEFINED__
+
+OBJCUWPWINDOWSUISTARTSCREENEXPORT
+@interface WUSStartScreenManager : RTObject
++ (WUSStartScreenManager*)getDefault;
++ (WUSStartScreenManager*)getForUser:(WSUser*)user;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (readonly) WSUser* user;
+- (BOOL)supportsAppListEntry:(WACAppListEntry*)appListEntry;
+- (void)containsAppListEntryAsync:(WACAppListEntry*)appListEntry success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
+- (void)requestAddAppListEntryAsync:(WACAppListEntry*)appListEntry success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
+@end
+
+#endif // __WUSStartScreenManager_DEFINED__
 

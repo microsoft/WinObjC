@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -28,7 +28,7 @@
 #include <UWP/interopBase.h>
 
 @class WDHHidDevice, WDHHidInputReport, WDHHidFeatureReport, WDHHidOutputReport, WDHHidBooleanControlDescription, WDHHidNumericControlDescription, WDHHidInputReportReceivedEventArgs, WDHHidCollection, WDHHidBooleanControl, WDHHidNumericControl;
-@protocol WDHIHidDeviceStatics, WDHIHidBooleanControlDescription, WDHIHidBooleanControlDescription2, WDHIHidNumericControlDescription, WDHIHidCollection, WDHIHidInputReport, WDHIHidOutputReport, WDHIHidFeatureReport, WDHIHidInputReportReceivedEventArgs, WDHIHidBooleanControl, WDHIHidNumericControl, WDHIHidDevice;
+@protocol WDHIHidDeviceStatics, WDHIHidDevice, WDHIHidBooleanControlDescription, WDHIHidBooleanControlDescription2, WDHIHidNumericControlDescription, WDHIHidCollection, WDHIHidInputReport, WDHIHidOutputReport, WDHIHidFeatureReport, WDHIHidInputReportReceivedEventArgs, WDHIHidBooleanControl, WDHIHidNumericControl;
 
 // Windows.Devices.HumanInterfaceDevice.HidReportType
 enum _WDHHidReportType {
@@ -52,8 +52,8 @@ enum _WDHHidCollectionType {
 typedef unsigned WDHHidCollectionType;
 
 #include "WindowsStorage.h"
-#include "WindowsStorageStreams.h"
 #include "WindowsFoundation.h"
+#include "WindowsStorageStreams.h"
 
 #import <Foundation/Foundation.h>
 

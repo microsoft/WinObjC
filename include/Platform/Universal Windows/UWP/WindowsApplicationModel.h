@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -27,15 +27,16 @@
 #endif
 #include <UWP/interopBase.h>
 
-@class WAFullTrustProcessLauncher, WAStartupTask, WAAppDisplayInfo, WAAppInfo, WASuspendingEventArgs, WALeavingBackgroundEventArgs, WAEnteredBackgroundEventArgs, WASuspendingDeferral, WASuspendingOperation, WAPackageStatus, WAPackageId, WAPackage, WAPackageStagingEventArgs, WAPackageInstallingEventArgs, WAPackageUpdatingEventArgs, WAPackageUninstallingEventArgs, WAPackageStatusChangedEventArgs, WAPackageCatalog, WADesignMode, WACameraApplicationManager;
+@class WAFullTrustProcessLauncher, WAStartupTask, WAAppDisplayInfo, WAAppInfo, WAPackageStatus, WAPackageId, WAPackage, WAPackageContentGroup, WAPackageStagingEventArgs, WAPackageInstallingEventArgs, WAPackageUpdatingEventArgs, WAPackageUninstallingEventArgs, WAPackageStatusChangedEventArgs, WAPackageContentGroupStagingEventArgs, WAPackageCatalog, WAPackageCatalogAddOptionalPackageResult, WAPackageCatalogRemoveOptionalPackagesResult, WADesignMode, WASuspendingEventArgs, WALeavingBackgroundEventArgs, WAEnteredBackgroundEventArgs, WASuspendingDeferral, WASuspendingOperation;
 @class WAPackageVersion;
-@protocol WAIFullTrustProcessLauncherStatics, WAIStartupTask, WAIStartupTaskStatics, WAIAppDisplayInfo, WAIAppInfo, WAISuspendingDeferral, WAISuspendingOperation, WAISuspendingEventArgs, WAILeavingBackgroundEventArgs, WAIEnteredBackgroundEventArgs, WAIPackageIdWithMetadata, WAIPackageWithMetadata, WAIPackageStatus, WAIPackageId, WAIPackage, WAIPackage2, WAIPackage3, WAIPackage4, WAIPackageStatics, WAIPackageStagingEventArgs, WAIPackageInstallingEventArgs, WAIPackageUpdatingEventArgs, WAIPackageUninstallingEventArgs, WAIPackageStatusChangedEventArgs, WAIPackageCatalog, WAIPackageCatalogStatics, WAIDesignModeStatics, WAICameraApplicationManagerStatics;
+@protocol WAIFullTrustProcessLauncherStatics, WAIStartupTask, WAIStartupTaskStatics, WAIAppDisplayInfo, WAIAppInfo, WAIPackageIdWithMetadata, WAIPackageWithMetadata, WAIPackageStatus, WAIPackageStatus2, WAIPackageId, WAIPackage, WAIPackage2, WAIPackage3, WAIPackage4, WAIPackage5, WAIPackageStatics, WAIPackageStagingEventArgs, WAIPackageInstallingEventArgs, WAIPackageUpdatingEventArgs, WAIPackageUninstallingEventArgs, WAIPackageStatusChangedEventArgs, WAIPackageContentGroupStagingEventArgs, WAIPackageCatalog, WAIPackageCatalogAddOptionalPackageResult, WAIPackageCatalog2, WAIPackageCatalogRemoveOptionalPackagesResult, WAIPackageCatalog3, WAIPackageCatalogStatics, WAIPackageContentGroup, WAIPackageContentGroupStatics, WAIDesignModeStatics, WAIDesignModeStatics2, WAISuspendingDeferral, WAISuspendingOperation, WAISuspendingEventArgs, WAILeavingBackgroundEventArgs, WAIEnteredBackgroundEventArgs;
 
 // Windows.ApplicationModel.StartupTaskState
 enum _WAStartupTaskState {
     WAStartupTaskStateDisabled = 0,
     WAStartupTaskStateDisabledByUser = 1,
     WAStartupTaskStateEnabled = 2,
+    WAStartupTaskStateDisabledByPolicy = 3,
 };
 typedef unsigned WAStartupTaskState;
 
@@ -48,6 +49,15 @@ enum _WAPackageSignatureKind {
     WAPackageSignatureKindSystem = 4,
 };
 typedef unsigned WAPackageSignatureKind;
+
+// Windows.ApplicationModel.PackageContentGroupState
+enum _WAPackageContentGroupState {
+    WAPackageContentGroupStateNotStaged = 0,
+    WAPackageContentGroupStateQueued = 1,
+    WAPackageContentGroupStateStaging = 2,
+    WAPackageContentGroupStateStaged = 3,
+};
+typedef unsigned WAPackageContentGroupState;
 
 #include "WindowsSystem.h"
 #include "WindowsFoundation.h"
@@ -204,77 +214,6 @@ OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 
 #endif // __WAAppInfo_DEFINED__
 
-// Windows.ApplicationModel.SuspendingEventArgs
-#ifndef __WASuspendingEventArgs_DEFINED__
-#define __WASuspendingEventArgs_DEFINED__
-
-OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
-@interface WASuspendingEventArgs : RTObject <WAISuspendingEventArgs>
-#if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
-#endif
-@property (readonly) WASuspendingOperation* suspendingOperation;
-@end
-
-#endif // __WASuspendingEventArgs_DEFINED__
-
-// Windows.ApplicationModel.LeavingBackgroundEventArgs
-#ifndef __WALeavingBackgroundEventArgs_DEFINED__
-#define __WALeavingBackgroundEventArgs_DEFINED__
-
-OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
-@interface WALeavingBackgroundEventArgs : RTObject <WAILeavingBackgroundEventArgs>
-#if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
-#endif
-- (WFDeferral*)getDeferral;
-@end
-
-#endif // __WALeavingBackgroundEventArgs_DEFINED__
-
-// Windows.ApplicationModel.EnteredBackgroundEventArgs
-#ifndef __WAEnteredBackgroundEventArgs_DEFINED__
-#define __WAEnteredBackgroundEventArgs_DEFINED__
-
-OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
-@interface WAEnteredBackgroundEventArgs : RTObject <WAIEnteredBackgroundEventArgs>
-#if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
-#endif
-- (WFDeferral*)getDeferral;
-@end
-
-#endif // __WAEnteredBackgroundEventArgs_DEFINED__
-
-// Windows.ApplicationModel.SuspendingDeferral
-#ifndef __WASuspendingDeferral_DEFINED__
-#define __WASuspendingDeferral_DEFINED__
-
-OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
-@interface WASuspendingDeferral : RTObject <WAISuspendingDeferral>
-#if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
-#endif
-- (void)complete;
-@end
-
-#endif // __WASuspendingDeferral_DEFINED__
-
-// Windows.ApplicationModel.SuspendingOperation
-#ifndef __WASuspendingOperation_DEFINED__
-#define __WASuspendingOperation_DEFINED__
-
-OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
-@interface WASuspendingOperation : RTObject <WAISuspendingOperation>
-#if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
-#endif
-@property (readonly) WFDateTime* deadline;
-- (WASuspendingDeferral*)getDeferral;
-@end
-
-#endif // __WASuspendingOperation_DEFINED__
-
 // Windows.ApplicationModel.PackageStatus
 #ifndef __WAPackageStatus_DEFINED__
 #define __WAPackageStatus_DEFINED__
@@ -295,6 +234,7 @@ OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @property (readonly) BOOL packageOffline;
 @property (readonly) BOOL servicing;
 @property (readonly) BOOL tampered;
+@property (readonly) BOOL isPartiallyStaged;
 - (BOOL)verifyIsOK;
 @end
 
@@ -353,9 +293,32 @@ OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 - (NSString *)getThumbnailToken;
 - (void)launch:(NSString *)parameters;
 - (void)verifyContentIntegrityAsyncWithSuccess:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
+- (void)getContentGroupsAsyncWithSuccess:(void (^)(NSMutableArray* /* WAPackageContentGroup* */))success failure:(void (^)(NSError*))failure;
+- (void)getContentGroupAsync:(NSString *)name success:(void (^)(WAPackageContentGroup*))success failure:(void (^)(NSError*))failure;
+- (void)stageContentGroupsAsync:(id<NSFastEnumeration> /* NSString * */)names success:(void (^)(NSMutableArray* /* WAPackageContentGroup* */))success failure:(void (^)(NSError*))failure;
+- (void)stageContentGroupsWithPriorityAsync:(id<NSFastEnumeration> /* NSString * */)names moveToHeadOfQueue:(BOOL)moveToHeadOfQueue success:(void (^)(NSMutableArray* /* WAPackageContentGroup* */))success failure:(void (^)(NSError*))failure;
+- (void)setInUseAsync:(BOOL)inUse success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WAPackage_DEFINED__
+
+// Windows.ApplicationModel.PackageContentGroup
+#ifndef __WAPackageContentGroup_DEFINED__
+#define __WAPackageContentGroup_DEFINED__
+
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
+@interface WAPackageContentGroup : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (readonly) BOOL isRequired;
+@property (readonly) NSString * name;
+@property (readonly) WAPackage* package;
+@property (readonly) WAPackageContentGroupState state;
++ (NSString *)requiredGroupName;
+@end
+
+#endif // __WAPackageContentGroup_DEFINED__
 
 // Windows.ApplicationModel.PackageStagingEventArgs
 #ifndef __WAPackageStagingEventArgs_DEFINED__
@@ -444,6 +407,26 @@ OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 
 #endif // __WAPackageStatusChangedEventArgs_DEFINED__
 
+// Windows.ApplicationModel.PackageContentGroupStagingEventArgs
+#ifndef __WAPackageContentGroupStagingEventArgs_DEFINED__
+#define __WAPackageContentGroupStagingEventArgs_DEFINED__
+
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
+@interface WAPackageContentGroupStagingEventArgs : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (readonly) WFGUID* activityId;
+@property (readonly) NSString * contentGroupName;
+@property (readonly) HRESULT errorCode;
+@property (readonly) BOOL isComplete;
+@property (readonly) BOOL isContentGroupRequired;
+@property (readonly) WAPackage* package;
+@property (readonly) double progress;
+@end
+
+#endif // __WAPackageContentGroupStagingEventArgs_DEFINED__
+
 // Windows.ApplicationModel.PackageCatalog
 #ifndef __WAPackageCatalog_DEFINED__
 #define __WAPackageCatalog_DEFINED__
@@ -465,9 +448,43 @@ OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 - (void)removePackageUninstallingEvent:(EventRegistrationToken)tok;
 - (EventRegistrationToken)addPackageUpdatingEvent:(void(^)(WAPackageCatalog*, WAPackageUpdatingEventArgs*))del;
 - (void)removePackageUpdatingEvent:(EventRegistrationToken)tok;
+- (EventRegistrationToken)addPackageContentGroupStagingEvent:(void(^)(WAPackageCatalog*, WAPackageContentGroupStagingEventArgs*))del;
+- (void)removePackageContentGroupStagingEvent:(EventRegistrationToken)tok;
+- (void)addOptionalPackageAsync:(NSString *)optionalPackageFamilyName success:(void (^)(WAPackageCatalogAddOptionalPackageResult*))success failure:(void (^)(NSError*))failure;
+- (void)removeOptionalPackagesAsync:(id<NSFastEnumeration> /* NSString * */)optionalPackageFamilyNames success:(void (^)(WAPackageCatalogRemoveOptionalPackagesResult*))success failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WAPackageCatalog_DEFINED__
+
+// Windows.ApplicationModel.PackageCatalogAddOptionalPackageResult
+#ifndef __WAPackageCatalogAddOptionalPackageResult_DEFINED__
+#define __WAPackageCatalogAddOptionalPackageResult_DEFINED__
+
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
+@interface WAPackageCatalogAddOptionalPackageResult : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (readonly) HRESULT extendedError;
+@property (readonly) WAPackage* package;
+@end
+
+#endif // __WAPackageCatalogAddOptionalPackageResult_DEFINED__
+
+// Windows.ApplicationModel.PackageCatalogRemoveOptionalPackagesResult
+#ifndef __WAPackageCatalogRemoveOptionalPackagesResult_DEFINED__
+#define __WAPackageCatalogRemoveOptionalPackagesResult_DEFINED__
+
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
+@interface WAPackageCatalogRemoveOptionalPackagesResult : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (readonly) HRESULT extendedError;
+@property (readonly) NSArray* /* WAPackage* */ packagesRemoved;
+@end
+
+#endif // __WAPackageCatalogRemoveOptionalPackagesResult_DEFINED__
 
 // Windows.ApplicationModel.DesignMode
 #ifndef __WADesignMode_DEFINED__
@@ -476,18 +493,79 @@ OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WADesignMode : RTObject
 + (BOOL)designModeEnabled;
++ (BOOL)designMode2Enabled;
 @end
 
 #endif // __WADesignMode_DEFINED__
 
-// Windows.ApplicationModel.CameraApplicationManager
-#ifndef __WACameraApplicationManager_DEFINED__
-#define __WACameraApplicationManager_DEFINED__
+// Windows.ApplicationModel.SuspendingEventArgs
+#ifndef __WASuspendingEventArgs_DEFINED__
+#define __WASuspendingEventArgs_DEFINED__
 
 OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
-@interface WACameraApplicationManager : RTObject
-+ (void)showInstalledApplicationsUI;
+@interface WASuspendingEventArgs : RTObject <WAISuspendingEventArgs>
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (readonly) WASuspendingOperation* suspendingOperation;
 @end
 
-#endif // __WACameraApplicationManager_DEFINED__
+#endif // __WASuspendingEventArgs_DEFINED__
+
+// Windows.ApplicationModel.LeavingBackgroundEventArgs
+#ifndef __WALeavingBackgroundEventArgs_DEFINED__
+#define __WALeavingBackgroundEventArgs_DEFINED__
+
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
+@interface WALeavingBackgroundEventArgs : RTObject <WAILeavingBackgroundEventArgs>
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+- (WFDeferral*)getDeferral;
+@end
+
+#endif // __WALeavingBackgroundEventArgs_DEFINED__
+
+// Windows.ApplicationModel.EnteredBackgroundEventArgs
+#ifndef __WAEnteredBackgroundEventArgs_DEFINED__
+#define __WAEnteredBackgroundEventArgs_DEFINED__
+
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
+@interface WAEnteredBackgroundEventArgs : RTObject <WAIEnteredBackgroundEventArgs>
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+- (WFDeferral*)getDeferral;
+@end
+
+#endif // __WAEnteredBackgroundEventArgs_DEFINED__
+
+// Windows.ApplicationModel.SuspendingDeferral
+#ifndef __WASuspendingDeferral_DEFINED__
+#define __WASuspendingDeferral_DEFINED__
+
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
+@interface WASuspendingDeferral : RTObject <WAISuspendingDeferral>
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+- (void)complete;
+@end
+
+#endif // __WASuspendingDeferral_DEFINED__
+
+// Windows.ApplicationModel.SuspendingOperation
+#ifndef __WASuspendingOperation_DEFINED__
+#define __WASuspendingOperation_DEFINED__
+
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
+@interface WASuspendingOperation : RTObject <WAISuspendingOperation>
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (readonly) WFDateTime* deadline;
+- (WASuspendingDeferral*)getDeferral;
+@end
+
+#endif // __WASuspendingOperation_DEFINED__
 

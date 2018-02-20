@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -29,7 +29,7 @@
 
 @class WGIBitmapTransform, WGIBitmapTypedValue, WGIBitmapPropertySet, WGIBitmapPropertiesView, WGIBitmapProperties, WGIPixelDataProvider, WGIImageStream, WGIBitmapFrame, WGIBitmapCodecInformation, WGIBitmapDecoder, WGIBitmapEncoder, WGIBitmapBuffer, WGISoftwareBitmap;
 @class WGIBitmapBounds, WGIBitmapSize, WGIBitmapPlaneDescription;
-@protocol WGIIBitmapTransform, WGIIBitmapTypedValue, WGIIBitmapTypedValueFactory, WGIIBitmapPropertiesView, WGIIBitmapProperties, WGIIPixelDataProvider, WGIIBitmapFrame, WGIIBitmapFrameWithSoftwareBitmap, WGIIBitmapCodecInformation, WGIIBitmapDecoderStatics, WGIIBitmapDecoder, WGIIBitmapEncoderStatics, WGIIBitmapEncoder, WGIIBitmapEncoderWithSoftwareBitmap, WGIISoftwareBitmapFactory, WGIISoftwareBitmapStatics, WGIISoftwareBitmap, WGIIBitmapBuffer;
+@protocol WGIIBitmapTransform, WGIIBitmapTypedValue, WGIIBitmapTypedValueFactory, WGIIBitmapPropertiesView, WGIIBitmapProperties, WGIIPixelDataProvider, WGIIBitmapFrame, WGIIBitmapFrameWithSoftwareBitmap, WGIIBitmapCodecInformation, WGIIBitmapDecoderStatics, WGIIBitmapDecoder, WGIIBitmapEncoderStatics, WGIIBitmapEncoder, WGIIBitmapEncoderWithSoftwareBitmap, WGIISoftwareBitmap, WGIISoftwareBitmapFactory, WGIISoftwareBitmapStatics, WGIIBitmapBuffer;
 
 // Windows.Graphics.Imaging.BitmapInterpolationMode
 enum _WGIBitmapInterpolationMode {

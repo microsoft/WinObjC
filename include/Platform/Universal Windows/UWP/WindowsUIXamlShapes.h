@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -182,6 +182,21 @@ OBJCUWPWINDOWSUIXAMLSHAPESEXPORT
 
 #endif // __WXIUIElementOverrides_DEFINED__
 
+// Windows.UI.Xaml.IUIElementOverrides7
+#ifndef __WXIUIElementOverrides7_DEFINED__
+#define __WXIUIElementOverrides7_DEFINED__
+
+@protocol WXIUIElementOverrides7
+- (id<NSFastEnumeration> /* WXDependencyObject* */)getChildrenInTabFocusOrder;
+- (void)onProcessKeyboardAccelerators:(WUXIProcessKeyboardAcceleratorEventArgs*)args;
+@end
+
+OBJCUWPWINDOWSUIXAMLSHAPESEXPORT
+@interface WXIUIElementOverrides7 : RTObject <WXIUIElementOverrides7>
+@end
+
+#endif // __WXIUIElementOverrides7_DEFINED__
+
 // Windows.UI.Xaml.DependencyObject
 #ifndef __WXDependencyObject_DEFINED__
 #define __WXDependencyObject_DEFINED__
@@ -213,24 +228,24 @@ OBJCUWPWINDOWSUIXAMLSHAPESEXPORT
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
-@property BOOL isHitTestVisible;
-@property BOOL isDoubleTapEnabled;
-@property double opacity;
-@property (retain) WUXMProjection* projection;
-@property (retain) WUXMRectangleGeometry* clip;
-@property (retain) WUXMCacheMode* cacheMode;
-@property WUXIManipulationModes manipulationMode;
 @property BOOL isTapEnabled;
+@property (retain) WUXMProjection* projection;
 @property BOOL isRightTapEnabled;
 @property BOOL isHoldingEnabled;
+@property BOOL isHitTestVisible;
+@property BOOL isDoubleTapEnabled;
 @property BOOL allowDrop;
+@property WUXIManipulationModes manipulationMode;
+@property (retain) WUXMRectangleGeometry* clip;
+@property (retain) WUXMCacheMode* cacheMode;
 @property WXVisibility visibility;
 @property BOOL useLayoutRounding;
 @property (retain) WUXMATransitionCollection* transitions;
 @property (retain) WFPoint* renderTransformOrigin;
 @property (retain) WUXMTransform* renderTransform;
-@property (readonly) NSArray* /* WUXIPointer* */ pointerCaptures;
+@property double opacity;
 @property (readonly) WFSize* desiredSize;
+@property (readonly) NSArray* /* WUXIPointer* */ pointerCaptures;
 @property (readonly) WFSize* renderSize;
 @property WUXMElementCompositeMode compositeMode;
 @property (retain) WUXMMTransform3D* transform3D;
@@ -240,7 +255,19 @@ OBJCUWPWINDOWSUIXAMLSHAPESEXPORT
 @property (retain) WUXCPFlyoutBase* contextFlyout;
 @property (retain) WXDependencyObject* accessKeyScopeOwner;
 @property (retain) NSString * accessKey;
-+ (WXDependencyProperty*)isRightTapEnabledProperty;
+@property double keyTipHorizontalOffset;
+@property WXElementHighContrastAdjustment highContrastAdjustment;
+@property WUXIXYFocusNavigationStrategy xYFocusUpNavigationStrategy;
+@property WUXIXYFocusNavigationStrategy xYFocusRightNavigationStrategy;
+@property WUXIXYFocusNavigationStrategy xYFocusLeftNavigationStrategy;
+@property WUXIXYFocusKeyboardNavigationMode xYFocusKeyboardNavigation;
+@property WUXIXYFocusNavigationStrategy xYFocusDownNavigationStrategy;
+@property WUXIKeyboardNavigationMode tabFocusNavigation;
+@property double keyTipVerticalOffset;
+@property WUXIKeyTipPlacementMode keyTipPlacementMode;
+@property (readonly) NSMutableArray* /* WUXMXamlLight* */ lights;
+@property (readonly) NSMutableArray* /* WUXIKeyboardAccelerator* */ keyboardAccelerators;
++ (WXDependencyProperty*)opacityProperty;
 + (WXDependencyProperty*)allowDropProperty;
 + (WXDependencyProperty*)cacheModeProperty;
 + (WXDependencyProperty*)clipProperty;
@@ -253,6 +280,7 @@ OBJCUWPWINDOWSUIXAMLSHAPESEXPORT
 + (WXDependencyProperty*)isDoubleTapEnabledProperty;
 + (WXDependencyProperty*)isHitTestVisibleProperty;
 + (WXDependencyProperty*)isHoldingEnabledProperty;
++ (WXDependencyProperty*)isRightTapEnabledProperty;
 + (WXDependencyProperty*)isTapEnabledProperty;
 + (WXRoutedEvent*)keyDownEvent;
 + (WXRoutedEvent*)keyUpEvent;
@@ -262,7 +290,6 @@ OBJCUWPWINDOWSUIXAMLSHAPESEXPORT
 + (WXDependencyProperty*)manipulationModeProperty;
 + (WXRoutedEvent*)manipulationStartedEvent;
 + (WXRoutedEvent*)manipulationStartingEvent;
-+ (WXDependencyProperty*)opacityProperty;
 + (WXRoutedEvent*)pointerCanceledEvent;
 + (WXRoutedEvent*)pointerCaptureLostEvent;
 + (WXDependencyProperty*)pointerCapturesProperty;
@@ -281,13 +308,30 @@ OBJCUWPWINDOWSUIXAMLSHAPESEXPORT
 + (WXDependencyProperty*)useLayoutRoundingProperty;
 + (WXDependencyProperty*)visibilityProperty;
 + (WXDependencyProperty*)compositeModeProperty;
-+ (WXDependencyProperty*)canDragProperty;
 + (WXDependencyProperty*)transform3DProperty;
-+ (WXDependencyProperty*)accessKeyScopeOwnerProperty;
-+ (WXDependencyProperty*)contextFlyoutProperty;
-+ (WXDependencyProperty*)exitDisplayModeOnAccessKeyInvokedProperty;
-+ (WXDependencyProperty*)isAccessKeyScopeProperty;
++ (WXDependencyProperty*)canDragProperty;
 + (WXDependencyProperty*)accessKeyProperty;
++ (WXDependencyProperty*)isAccessKeyScopeProperty;
++ (WXDependencyProperty*)exitDisplayModeOnAccessKeyInvokedProperty;
++ (WXDependencyProperty*)contextFlyoutProperty;
++ (WXDependencyProperty*)accessKeyScopeOwnerProperty;
++ (WXDependencyProperty*)xYFocusKeyboardNavigationProperty;
++ (WXDependencyProperty*)xYFocusLeftNavigationStrategyProperty;
++ (WXDependencyProperty*)xYFocusRightNavigationStrategyProperty;
++ (WXDependencyProperty*)xYFocusUpNavigationStrategyProperty;
++ (WXDependencyProperty*)highContrastAdjustmentProperty;
++ (WXDependencyProperty*)xYFocusDownNavigationStrategyProperty;
++ (WXDependencyProperty*)keyTipHorizontalOffsetProperty;
++ (WXDependencyProperty*)keyTipPlacementModeProperty;
++ (WXDependencyProperty*)keyTipVerticalOffsetProperty;
++ (WXDependencyProperty*)lightsProperty;
++ (WXDependencyProperty*)tabFocusNavigationProperty;
++ (WXRoutedEvent*)noFocusCandidateFoundEvent;
++ (WXRoutedEvent*)losingFocusEvent;
++ (WXRoutedEvent*)gettingFocusEvent;
++ (WXRoutedEvent*)characterReceivedEvent;
++ (WXRoutedEvent*)previewKeyUpEvent;
++ (WXRoutedEvent*)previewKeyDownEvent;
 - (EventRegistrationToken)addDoubleTappedEvent:(WUXIDoubleTappedEventHandler)del;
 - (void)removeDoubleTappedEvent:(EventRegistrationToken)tok;
 - (EventRegistrationToken)addDragEnterEvent:(WXDragEventHandler)del;
@@ -352,6 +396,20 @@ OBJCUWPWINDOWSUIXAMLSHAPESEXPORT
 - (void)removeContextCanceledEvent:(EventRegistrationToken)tok;
 - (EventRegistrationToken)addContextRequestedEvent:(void(^)(WXUIElement*, WUXIContextRequestedEventArgs*))del;
 - (void)removeContextRequestedEvent:(EventRegistrationToken)tok;
+- (EventRegistrationToken)addGettingFocusEvent:(void(^)(WXUIElement*, WUXIGettingFocusEventArgs*))del;
+- (void)removeGettingFocusEvent:(EventRegistrationToken)tok;
+- (EventRegistrationToken)addLosingFocusEvent:(void(^)(WXUIElement*, WUXILosingFocusEventArgs*))del;
+- (void)removeLosingFocusEvent:(EventRegistrationToken)tok;
+- (EventRegistrationToken)addNoFocusCandidateFoundEvent:(void(^)(WXUIElement*, WUXINoFocusCandidateFoundEventArgs*))del;
+- (void)removeNoFocusCandidateFoundEvent:(EventRegistrationToken)tok;
+- (EventRegistrationToken)addCharacterReceivedEvent:(void(^)(WXUIElement*, WUXICharacterReceivedRoutedEventArgs*))del;
+- (void)removeCharacterReceivedEvent:(EventRegistrationToken)tok;
+- (EventRegistrationToken)addPreviewKeyDownEvent:(WUXIKeyEventHandler)del;
+- (void)removePreviewKeyDownEvent:(EventRegistrationToken)tok;
+- (EventRegistrationToken)addPreviewKeyUpEvent:(WUXIKeyEventHandler)del;
+- (void)removePreviewKeyUpEvent:(EventRegistrationToken)tok;
+- (EventRegistrationToken)addProcessKeyboardAcceleratorsEvent:(void(^)(WXUIElement*, WUXIProcessKeyboardAcceleratorEventArgs*))del;
+- (void)removeProcessKeyboardAcceleratorsEvent:(EventRegistrationToken)tok;
 - (void)measure:(WFSize*)availableSize;
 - (void)arrange:(WFRect*)finalRect;
 - (BOOL)capturePointer:(WUXIPointer*)value;
@@ -363,8 +421,16 @@ OBJCUWPWINDOWSUIXAMLSHAPESEXPORT
 - (void)invalidateMeasure;
 - (void)invalidateArrange;
 - (void)updateLayout;
+- (WUXAPAutomationPeer*)onCreateAutomationPeer;
+- (void)onDisconnectVisualChildren;
+- (id<NSFastEnumeration> /* id<NSFastEnumeration> < WFPoint* > */)findSubElementsForTouchTargeting:(WFPoint*)point boundingRect:(WFRect*)boundingRect;
 - (BOOL)cancelDirectManipulations;
 - (void)startDragAsync:(WUIPointerPoint*)pointerPoint success:(void (^)(WADDataPackageOperation))success failure:(void (^)(NSError*))failure;
+- (void)startBringIntoView;
+- (void)startBringIntoViewWithOptions:(WXBringIntoViewOptions*)options;
+- (void)tryInvokeKeyboardAccelerator:(WUXIProcessKeyboardAcceleratorEventArgs*)args;
+- (id<NSFastEnumeration> /* WXDependencyObject* */)getChildrenInTabFocusOrder;
+- (void)onProcessKeyboardAccelerators:(WUXIProcessKeyboardAcceleratorEventArgs*)args;
 @end
 
 #endif // __WXUIElement_DEFINED__
@@ -375,39 +441,41 @@ OBJCUWPWINDOWSUIXAMLSHAPESEXPORT
 
 OBJCUWPWINDOWSUIXAMLSHAPESEXPORT
 @interface WXFrameworkElement : WXUIElement
++ (void)deferTree:(WXDependencyObject*)element;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property double height;
 @property WXFlowDirection flowDirection;
-@property double minHeight;
 @property (retain) RTObject* dataContext;
 @property (retain) NSString * name;
 @property double minWidth;
+@property (retain) WXResourceDictionary* resources;
+@property double minHeight;
 @property double maxWidth;
 @property double maxHeight;
 @property (retain) WXThickness* margin;
 @property (retain) NSString * language;
 @property WXHorizontalAlignment horizontalAlignment;
-@property (retain) WXResourceDictionary* resources;
-@property double width;
 @property WXVerticalAlignment verticalAlignment;
+@property double width;
 @property (retain) RTObject* tag;
 @property (retain) WXStyle* style;
+@property (readonly) double actualWidth;
 @property (readonly) WFUri* baseUri;
 @property (readonly) double actualHeight;
 @property (readonly) WXDependencyObject* parent;
 @property (readonly) WXTriggerCollection* triggers;
-@property (readonly) double actualWidth;
 @property WXElementTheme requestedTheme;
-@property (retain) WXThickness* focusVisualMargin;
+@property (retain) WXThickness* focusVisualSecondaryThickness;
 @property (retain) WUXMBrush* focusVisualSecondaryBrush;
 @property (retain) WXThickness* focusVisualPrimaryThickness;
 @property (retain) WUXMBrush* focusVisualPrimaryBrush;
+@property (retain) WXThickness* focusVisualMargin;
 @property BOOL allowFocusWhenDisabled;
 @property BOOL allowFocusOnInteraction;
-@property (retain) WXThickness* focusVisualSecondaryThickness;
-+ (WXDependencyProperty*)styleProperty;
+@property (readonly) WXElementTheme actualTheme;
++ (WXDependencyProperty*)nameProperty;
 + (WXDependencyProperty*)actualHeightProperty;
 + (WXDependencyProperty*)actualWidthProperty;
 + (WXDependencyProperty*)dataContextProperty;
@@ -420,18 +488,19 @@ OBJCUWPWINDOWSUIXAMLSHAPESEXPORT
 + (WXDependencyProperty*)maxWidthProperty;
 + (WXDependencyProperty*)minHeightProperty;
 + (WXDependencyProperty*)minWidthProperty;
-+ (WXDependencyProperty*)nameProperty;
++ (WXDependencyProperty*)styleProperty;
 + (WXDependencyProperty*)tagProperty;
 + (WXDependencyProperty*)verticalAlignmentProperty;
 + (WXDependencyProperty*)widthProperty;
 + (WXDependencyProperty*)requestedThemeProperty;
++ (WXDependencyProperty*)focusVisualSecondaryThicknessProperty;
 + (WXDependencyProperty*)allowFocusOnInteractionProperty;
 + (WXDependencyProperty*)allowFocusWhenDisabledProperty;
 + (WXDependencyProperty*)focusVisualMarginProperty;
 + (WXDependencyProperty*)focusVisualPrimaryBrushProperty;
 + (WXDependencyProperty*)focusVisualPrimaryThicknessProperty;
 + (WXDependencyProperty*)focusVisualSecondaryBrushProperty;
-+ (WXDependencyProperty*)focusVisualSecondaryThicknessProperty;
++ (WXDependencyProperty*)actualThemeProperty;
 - (EventRegistrationToken)addLayoutUpdatedEvent:(void(^)(RTObject*, RTObject*))del;
 - (void)removeLayoutUpdatedEvent:(EventRegistrationToken)tok;
 - (EventRegistrationToken)addLoadedEvent:(WXRoutedEventHandler)del;
@@ -444,9 +513,15 @@ OBJCUWPWINDOWSUIXAMLSHAPESEXPORT
 - (void)removeDataContextChangedEvent:(EventRegistrationToken)tok;
 - (EventRegistrationToken)addLoadingEvent:(void(^)(WXFrameworkElement*, RTObject*))del;
 - (void)removeLoadingEvent:(EventRegistrationToken)tok;
+- (EventRegistrationToken)addActualThemeChangedEvent:(void(^)(WXFrameworkElement*, RTObject*))del;
+- (void)removeActualThemeChangedEvent:(EventRegistrationToken)tok;
 - (RTObject*)findName:(NSString *)name;
 - (void)setBinding:(WXDependencyProperty*)dp binding:(WUXDBindingBase*)binding;
+- (WFSize*)measureOverride:(WFSize*)availableSize;
+- (WFSize*)arrangeOverride:(WFSize*)finalSize;
+- (void)onApplyTemplate;
 - (WUXDBindingExpression*)getBindingExpression:(WXDependencyProperty*)dp;
+- (BOOL)goToElementStateCore:(NSString *)stateName useTransitions:(BOOL)useTransitions;
 @end
 
 #endif // __WXFrameworkElement_DEFINED__

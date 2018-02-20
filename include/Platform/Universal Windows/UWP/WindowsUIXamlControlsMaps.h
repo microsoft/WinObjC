@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -27,9 +27,9 @@
 #endif
 #include <UWP/interopBase.h>
 
-@class WUXCMMapActualCameraChangedEventArgs, WUXCMMapActualCameraChangingEventArgs, WUXCMMapCustomExperienceChangedEventArgs, WUXCMMapElementClickEventArgs, WUXCMMapElementPointerEnteredEventArgs, WUXCMMapElementPointerExitedEventArgs, WUXCMMapRightTappedEventArgs, WUXCMMapTargetCameraChangedEventArgs, WUXCMMapTileBitmapRequestDeferral, WUXCMMapTileBitmapRequest, WUXCMMapTileBitmapRequestedEventArgs, WUXCMMapTileUriRequestDeferral, WUXCMMapTileUriRequest, WUXCMMapTileUriRequestedEventArgs, WUXCMMapCamera, WUXCMMapCustomExperience, WUXCMMapElement, WUXCMMapInputEventArgs, WUXCMMapItemsControl, WUXCMMapRouteView, WUXCMMapScene, WUXCMMapTileDataSource, WUXCMMapTileSource, WUXCMStreetsidePanorama, WUXCMCustomMapTileDataSource, WUXCMHttpMapTileDataSource, WUXCMLocalMapTileDataSource, WUXCMMapIcon, WUXCMMapPolygon, WUXCMMapPolyline, WUXCMStreetsideExperience, WUXCMMapControl, WUXCMMapControlBusinessLandmarkClickEventArgs, WUXCMMapControlTransitFeatureClickEventArgs, WUXCMMapControlBusinessLandmarkRightTappedEventArgs, WUXCMMapControlTransitFeatureRightTappedEventArgs, WUXCMMapControlBusinessLandmarkPointerEnteredEventArgs, WUXCMMapControlTransitFeaturePointerEnteredEventArgs, WUXCMMapControlBusinessLandmarkPointerExitedEventArgs, WUXCMMapControlTransitFeaturePointerExitedEventArgs, WUXCMMapControlDataHelper;
+@class WUXCMMapStyleSheetEntries, WUXCMMapStyleSheetEntryStates, WUXCMMapActualCameraChangedEventArgs, WUXCMMapActualCameraChangingEventArgs, WUXCMMapContextRequestedEventArgs, WUXCMMapCustomExperienceChangedEventArgs, WUXCMMapElementClickEventArgs, WUXCMMapElementPointerEnteredEventArgs, WUXCMMapElementPointerExitedEventArgs, WUXCMMapElementsLayerClickEventArgs, WUXCMMapElementsLayerContextRequestedEventArgs, WUXCMMapElementsLayerPointerEnteredEventArgs, WUXCMMapElementsLayerPointerExitedEventArgs, WUXCMMapRightTappedEventArgs, WUXCMMapTargetCameraChangedEventArgs, WUXCMMapTileBitmapRequestDeferral, WUXCMMapTileBitmapRequest, WUXCMMapTileBitmapRequestedEventArgs, WUXCMMapTileUriRequestDeferral, WUXCMMapTileUriRequest, WUXCMMapTileUriRequestedEventArgs, WUXCMMapCamera, WUXCMMapCustomExperience, WUXCMMapElement, WUXCMMapInputEventArgs, WUXCMMapItemsControl, WUXCMMapLayer, WUXCMMapModel3D, WUXCMMapRouteView, WUXCMMapScene, WUXCMMapStyleSheet, WUXCMMapTileDataSource, WUXCMMapTileSource, WUXCMStreetsidePanorama, WUXCMCustomMapTileDataSource, WUXCMHttpMapTileDataSource, WUXCMLocalMapTileDataSource, WUXCMMapBillboard, WUXCMMapElement3D, WUXCMMapElementsLayer, WUXCMMapIcon, WUXCMMapPolygon, WUXCMMapPolyline, WUXCMStreetsideExperience, WUXCMMapControl, WUXCMMapControlBusinessLandmarkClickEventArgs, WUXCMMapControlTransitFeatureClickEventArgs, WUXCMMapControlBusinessLandmarkRightTappedEventArgs, WUXCMMapControlTransitFeatureRightTappedEventArgs, WUXCMMapControlBusinessLandmarkPointerEnteredEventArgs, WUXCMMapControlTransitFeaturePointerEnteredEventArgs, WUXCMMapControlBusinessLandmarkPointerExitedEventArgs, WUXCMMapControlTransitFeaturePointerExitedEventArgs, WUXCMMapControlDataHelper;
 @class WUXCMMapZoomLevelRange;
-@protocol WUXCMIMapActualCameraChangedEventArgs, WUXCMIMapActualCameraChangedEventArgs2, WUXCMIMapActualCameraChangingEventArgs, WUXCMIMapActualCameraChangingEventArgs2, WUXCMIMapCustomExperienceChangedEventArgs, WUXCMIMapElementClickEventArgs, WUXCMIMapElementPointerEnteredEventArgs, WUXCMIMapElementPointerExitedEventArgs, WUXCMIMapRightTappedEventArgs, WUXCMIMapTargetCameraChangedEventArgs, WUXCMIMapTargetCameraChangedEventArgs2, WUXCMIMapTileBitmapRequest, WUXCMIMapTileBitmapRequestDeferral, WUXCMIMapTileBitmapRequestedEventArgs, WUXCMIMapTileUriRequest, WUXCMIMapTileUriRequestDeferral, WUXCMIMapTileUriRequestedEventArgs, WUXCMIMapCamera, WUXCMIMapCameraFactory, WUXCMIMapCustomExperience, WUXCMIMapCustomExperienceFactory, WUXCMIMapElement, WUXCMIMapElementStatics, WUXCMIMapElementFactory, WUXCMIMapElement2, WUXCMIMapElementStatics2, WUXCMIMapInputEventArgs, WUXCMIMapItemsControl, WUXCMIMapItemsControlStatics, WUXCMIMapRouteView, WUXCMIMapRouteViewFactory, WUXCMIMapScene, WUXCMIMapSceneStatics, WUXCMIMapTileDataSource, WUXCMIMapTileDataSourceFactory, WUXCMIMapTileSource, WUXCMIMapTileSourceStatics, WUXCMIMapTileSourceFactory, WUXCMIStreetsidePanorama, WUXCMIStreetsidePanoramaStatics, WUXCMICustomMapTileDataSource, WUXCMICustomMapTileDataSourceFactory, WUXCMIHttpMapTileDataSource, WUXCMIHttpMapTileDataSourceFactory, WUXCMILocalMapTileDataSource, WUXCMILocalMapTileDataSourceFactory, WUXCMIMapIcon, WUXCMIMapIconStatics, WUXCMIMapIcon2, WUXCMIMapIconStatics2, WUXCMIMapPolygon, WUXCMIMapPolygonStatics, WUXCMIMapPolygon2, WUXCMIMapPolyline, WUXCMIMapPolylineStatics, WUXCMIStreetsideExperience, WUXCMIStreetsideExperienceFactory, WUXCMIMapControl, WUXCMIMapControlStatics, WUXCMIMapControl2, WUXCMIMapControlStatics2, WUXCMIMapControl3, WUXCMIMapControl4, WUXCMIMapControlStatics4, WUXCMIMapControlDataHelper, WUXCMIMapControlDataHelper2, WUXCMIMapControlDataHelperFactory, WUXCMIMapControlBusinessLandmarkClickEventArgs, WUXCMIMapControlTransitFeatureClickEventArgs, WUXCMIMapControlBusinessLandmarkRightTappedEventArgs, WUXCMIMapControlTransitFeatureRightTappedEventArgs, WUXCMIMapControlBusinessLandmarkPointerEnteredEventArgs, WUXCMIMapControlTransitFeaturePointerEnteredEventArgs, WUXCMIMapControlBusinessLandmarkPointerExitedEventArgs, WUXCMIMapControlTransitFeaturePointerExitedEventArgs;
+@protocol WUXCMIMapStyleSheetEntriesStatics, WUXCMIMapStyleSheetEntryStatesStatics, WUXCMIMapActualCameraChangedEventArgs, WUXCMIMapActualCameraChangedEventArgs2, WUXCMIMapActualCameraChangingEventArgs, WUXCMIMapActualCameraChangingEventArgs2, WUXCMIMapContextRequestedEventArgs, WUXCMIMapCustomExperienceChangedEventArgs, WUXCMIMapElementClickEventArgs, WUXCMIMapElementPointerEnteredEventArgs, WUXCMIMapElementPointerExitedEventArgs, WUXCMIMapElementsLayerClickEventArgs, WUXCMIMapElementsLayerContextRequestedEventArgs, WUXCMIMapElementsLayerPointerEnteredEventArgs, WUXCMIMapElementsLayerPointerExitedEventArgs, WUXCMIMapRightTappedEventArgs, WUXCMIMapTargetCameraChangedEventArgs, WUXCMIMapTargetCameraChangedEventArgs2, WUXCMIMapTileBitmapRequest, WUXCMIMapTileBitmapRequestDeferral, WUXCMIMapTileBitmapRequestedEventArgs, WUXCMIMapTileUriRequest, WUXCMIMapTileUriRequestDeferral, WUXCMIMapTileUriRequestedEventArgs, WUXCMIMapCamera, WUXCMIMapCameraFactory, WUXCMIMapCustomExperience, WUXCMIMapCustomExperienceFactory, WUXCMIMapElement, WUXCMIMapElementStatics, WUXCMIMapElementFactory, WUXCMIMapElement2, WUXCMIMapElementStatics2, WUXCMIMapElement3, WUXCMIMapElementStatics3, WUXCMIMapInputEventArgs, WUXCMIMapItemsControl, WUXCMIMapItemsControlStatics, WUXCMIMapLayer, WUXCMIMapLayerStatics, WUXCMIMapLayerFactory, WUXCMIMapModel3D, WUXCMIMapModel3DStatics, WUXCMIMapModel3DFactory, WUXCMIMapRouteView, WUXCMIMapRouteViewFactory, WUXCMIMapScene, WUXCMIMapSceneStatics, WUXCMIMapStyleSheet, WUXCMIMapStyleSheetStatics, WUXCMIMapTileDataSource, WUXCMIMapTileDataSourceFactory, WUXCMIMapTileSource, WUXCMIMapTileSourceStatics, WUXCMIMapTileSourceFactory, WUXCMIStreetsidePanorama, WUXCMIStreetsidePanoramaStatics, WUXCMICustomMapTileDataSource, WUXCMICustomMapTileDataSourceFactory, WUXCMIHttpMapTileDataSource, WUXCMIHttpMapTileDataSourceFactory, WUXCMILocalMapTileDataSource, WUXCMILocalMapTileDataSourceFactory, WUXCMIMapBillboard, WUXCMIMapBillboardStatics, WUXCMIMapBillboardFactory, WUXCMIMapElement3D, WUXCMIMapElement3DStatics, WUXCMIMapElementsLayer, WUXCMIMapElementsLayerStatics, WUXCMIMapIcon, WUXCMIMapIconStatics, WUXCMIMapIcon2, WUXCMIMapIconStatics2, WUXCMIMapPolygon, WUXCMIMapPolygonStatics, WUXCMIMapPolygon2, WUXCMIMapPolyline, WUXCMIMapPolylineStatics, WUXCMIStreetsideExperience, WUXCMIStreetsideExperienceFactory, WUXCMIMapControl, WUXCMIMapControlStatics, WUXCMIMapControl2, WUXCMIMapControlStatics2, WUXCMIMapControl3, WUXCMIMapControl4, WUXCMIMapControlStatics4, WUXCMIMapControl5, WUXCMIMapControlStatics5, WUXCMIMapControl6, WUXCMIMapControlStatics6, WUXCMIMapControlDataHelper, WUXCMIMapControlDataHelper2, WUXCMIMapControlDataHelperStatics, WUXCMIMapControlDataHelperFactory, WUXCMIMapControlBusinessLandmarkClickEventArgs, WUXCMIMapControlTransitFeatureClickEventArgs, WUXCMIMapControlBusinessLandmarkRightTappedEventArgs, WUXCMIMapControlTransitFeatureRightTappedEventArgs, WUXCMIMapControlBusinessLandmarkPointerEnteredEventArgs, WUXCMIMapControlTransitFeaturePointerEnteredEventArgs, WUXCMIMapControlBusinessLandmarkPointerExitedEventArgs, WUXCMIMapControlTransitFeaturePointerExitedEventArgs;
 
 // Windows.UI.Xaml.Controls.Maps.MapAnimationKind
 enum _WUXCMMapAnimationKind {
@@ -83,12 +83,27 @@ enum _WUXCMMapLoadingStatus {
 };
 typedef unsigned WUXCMMapLoadingStatus;
 
+// Windows.UI.Xaml.Controls.Maps.MapModel3DShadingOption
+enum _WUXCMMapModel3DShadingOption {
+    WUXCMMapModel3DShadingOptionDefault = 0,
+    WUXCMMapModel3DShadingOptionFlat = 1,
+    WUXCMMapModel3DShadingOptionSmooth = 2,
+};
+typedef unsigned WUXCMMapModel3DShadingOption;
+
 // Windows.UI.Xaml.Controls.Maps.MapPanInteractionMode
 enum _WUXCMMapPanInteractionMode {
     WUXCMMapPanInteractionModeAuto = 0,
     WUXCMMapPanInteractionModeDisabled = 1,
 };
 typedef unsigned WUXCMMapPanInteractionMode;
+
+// Windows.UI.Xaml.Controls.Maps.MapProjection
+enum _WUXCMMapProjection {
+    WUXCMMapProjectionWebMercator = 0,
+    WUXCMMapProjectionGlobe = 1,
+};
+typedef unsigned WUXCMMapProjection;
 
 // Windows.UI.Xaml.Controls.Maps.MapStyle
 enum _WUXCMMapStyle {
@@ -99,6 +114,7 @@ enum _WUXCMMapStyle {
     WUXCMMapStyleTerrain = 4,
     WUXCMMapStyleAerial3D = 5,
     WUXCMMapStyleAerial3DWithRoads = 6,
+    WUXCMMapStyleCustom = 7,
 };
 typedef unsigned WUXCMMapStyle;
 
@@ -126,8 +142,8 @@ enum _WUXCMMapWatermarkMode {
 };
 typedef unsigned WUXCMMapWatermarkMode;
 
-#include "WindowsUICore.h"
 #include "WindowsFoundation.h"
+#include "WindowsFoundationNumerics.h"
 #include "WindowsUIXamlMediaMedia3D.h"
 #include "WindowsDevicesGeolocation.h"
 #include "WindowsStorageStreams.h"
@@ -137,6 +153,7 @@ typedef unsigned WUXCMMapWatermarkMode;
 #include "WindowsUIXamlData.h"
 #include "WindowsUI.h"
 #include "WindowsServicesMaps.h"
+#include "WindowsUICore.h"
 #include "WindowsUIXamlMediaAnimation.h"
 #include "WindowsUIXamlControls.h"
 #include "WindowsApplicationModelDataTransfer.h"
@@ -252,6 +269,93 @@ OBJCUWPWINDOWSUIXAMLCONTROLSMAPSEXPORT
 @property double max;
 @end
 
+// Windows.UI.Xaml.Controls.Maps.MapStyleSheetEntries
+#ifndef __WUXCMMapStyleSheetEntries_DEFINED__
+#define __WUXCMMapStyleSheetEntries_DEFINED__
+
+OBJCUWPWINDOWSUIXAMLCONTROLSMAPSEXPORT
+@interface WUXCMMapStyleSheetEntries : RTObject
++ (NSString *)adminDistrict;
++ (NSString *)adminDistrictCapital;
++ (NSString *)airport;
++ (NSString *)area;
++ (NSString *)arterialRoad;
++ (NSString *)building;
++ (NSString *)business;
++ (NSString *)capital;
++ (NSString *)cemetery;
++ (NSString *)continent;
++ (NSString *)controlledAccessHighway;
++ (NSString *)countryRegion;
++ (NSString *)countryRegionCapital;
++ (NSString *)district;
++ (NSString *)drivingRoute;
++ (NSString *)education;
++ (NSString *)educationBuilding;
++ (NSString *)foodPoint;
++ (NSString *)forest;
++ (NSString *)golfCourse;
++ (NSString *)highSpeedRamp;
++ (NSString *)highway;
++ (NSString *)indigenousPeoplesReserve;
++ (NSString *)island;
++ (NSString *)majorRoad;
++ (NSString *)medical;
++ (NSString *)medicalBuilding;
++ (NSString *)military;
++ (NSString *)naturalPoint;
++ (NSString *)nautical;
++ (NSString *)neighborhood;
++ (NSString *)park;
++ (NSString *)peak;
++ (NSString *)playingField;
++ (NSString *)point;
++ (NSString *)pointOfInterest;
++ (NSString *)political;
++ (NSString *)populatedPlace;
++ (NSString *)railway;
++ (NSString *)ramp;
++ (NSString *)reserve;
++ (NSString *)river;
++ (NSString *)road;
++ (NSString *)roadExit;
++ (NSString *)roadShield;
++ (NSString *)routeLine;
++ (NSString *)runway;
++ (NSString *)sand;
++ (NSString *)shoppingCenter;
++ (NSString *)stadium;
++ (NSString *)street;
++ (NSString *)structure;
++ (NSString *)tollRoad;
++ (NSString *)trail;
++ (NSString *)transit;
++ (NSString *)transitBuilding;
++ (NSString *)transportation;
++ (NSString *)unpavedStreet;
++ (NSString *)vegetation;
++ (NSString *)volcanicPeak;
++ (NSString *)walkingRoute;
++ (NSString *)water;
++ (NSString *)waterPoint;
++ (NSString *)waterRoute;
+@end
+
+#endif // __WUXCMMapStyleSheetEntries_DEFINED__
+
+// Windows.UI.Xaml.Controls.Maps.MapStyleSheetEntryStates
+#ifndef __WUXCMMapStyleSheetEntryStates_DEFINED__
+#define __WUXCMMapStyleSheetEntryStates_DEFINED__
+
+OBJCUWPWINDOWSUIXAMLCONTROLSMAPSEXPORT
+@interface WUXCMMapStyleSheetEntryStates : RTObject
++ (NSString *)disabled;
++ (NSString *)hover;
++ (NSString *)selected;
+@end
+
+#endif // __WUXCMMapStyleSheetEntryStates_DEFINED__
+
 // Windows.UI.Xaml.Controls.Maps.MapActualCameraChangedEventArgs
 #ifndef __WUXCMMapActualCameraChangedEventArgs_DEFINED__
 #define __WUXCMMapActualCameraChangedEventArgs_DEFINED__
@@ -283,6 +387,23 @@ OBJCUWPWINDOWSUIXAMLCONTROLSMAPSEXPORT
 @end
 
 #endif // __WUXCMMapActualCameraChangingEventArgs_DEFINED__
+
+// Windows.UI.Xaml.Controls.Maps.MapContextRequestedEventArgs
+#ifndef __WUXCMMapContextRequestedEventArgs_DEFINED__
+#define __WUXCMMapContextRequestedEventArgs_DEFINED__
+
+OBJCUWPWINDOWSUIXAMLCONTROLSMAPSEXPORT
+@interface WUXCMMapContextRequestedEventArgs : RTObject
++ (instancetype)make __attribute__ ((ns_returns_retained));
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (readonly) WDGGeopoint* location;
+@property (readonly) NSArray* /* WUXCMMapElement* */ mapElements;
+@property (readonly) WFPoint* position;
+@end
+
+#endif // __WUXCMMapContextRequestedEventArgs_DEFINED__
 
 // Windows.UI.Xaml.Controls.Maps.MapCustomExperienceChangedEventArgs
 #ifndef __WUXCMMapCustomExperienceChangedEventArgs_DEFINED__
@@ -348,6 +469,74 @@ OBJCUWPWINDOWSUIXAMLCONTROLSMAPSEXPORT
 @end
 
 #endif // __WUXCMMapElementPointerExitedEventArgs_DEFINED__
+
+// Windows.UI.Xaml.Controls.Maps.MapElementsLayerClickEventArgs
+#ifndef __WUXCMMapElementsLayerClickEventArgs_DEFINED__
+#define __WUXCMMapElementsLayerClickEventArgs_DEFINED__
+
+OBJCUWPWINDOWSUIXAMLCONTROLSMAPSEXPORT
+@interface WUXCMMapElementsLayerClickEventArgs : RTObject
++ (instancetype)make __attribute__ ((ns_returns_retained));
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (readonly) WDGGeopoint* location;
+@property (readonly) NSMutableArray* /* WUXCMMapElement* */ mapElements;
+@property (readonly) WFPoint* position;
+@end
+
+#endif // __WUXCMMapElementsLayerClickEventArgs_DEFINED__
+
+// Windows.UI.Xaml.Controls.Maps.MapElementsLayerContextRequestedEventArgs
+#ifndef __WUXCMMapElementsLayerContextRequestedEventArgs_DEFINED__
+#define __WUXCMMapElementsLayerContextRequestedEventArgs_DEFINED__
+
+OBJCUWPWINDOWSUIXAMLCONTROLSMAPSEXPORT
+@interface WUXCMMapElementsLayerContextRequestedEventArgs : RTObject
++ (instancetype)make __attribute__ ((ns_returns_retained));
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (readonly) WDGGeopoint* location;
+@property (readonly) NSArray* /* WUXCMMapElement* */ mapElements;
+@property (readonly) WFPoint* position;
+@end
+
+#endif // __WUXCMMapElementsLayerContextRequestedEventArgs_DEFINED__
+
+// Windows.UI.Xaml.Controls.Maps.MapElementsLayerPointerEnteredEventArgs
+#ifndef __WUXCMMapElementsLayerPointerEnteredEventArgs_DEFINED__
+#define __WUXCMMapElementsLayerPointerEnteredEventArgs_DEFINED__
+
+OBJCUWPWINDOWSUIXAMLCONTROLSMAPSEXPORT
+@interface WUXCMMapElementsLayerPointerEnteredEventArgs : RTObject
++ (instancetype)make __attribute__ ((ns_returns_retained));
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (readonly) WDGGeopoint* location;
+@property (readonly) WUXCMMapElement* mapElement;
+@property (readonly) WFPoint* position;
+@end
+
+#endif // __WUXCMMapElementsLayerPointerEnteredEventArgs_DEFINED__
+
+// Windows.UI.Xaml.Controls.Maps.MapElementsLayerPointerExitedEventArgs
+#ifndef __WUXCMMapElementsLayerPointerExitedEventArgs_DEFINED__
+#define __WUXCMMapElementsLayerPointerExitedEventArgs_DEFINED__
+
+OBJCUWPWINDOWSUIXAMLCONTROLSMAPSEXPORT
+@interface WUXCMMapElementsLayerPointerExitedEventArgs : RTObject
++ (instancetype)make __attribute__ ((ns_returns_retained));
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (readonly) WDGGeopoint* location;
+@property (readonly) WUXCMMapElement* mapElement;
+@property (readonly) WFPoint* position;
+@end
+
+#endif // __WUXCMMapElementsLayerPointerExitedEventArgs_DEFINED__
 
 // Windows.UI.Xaml.Controls.Maps.MapRightTappedEventArgs
 #ifndef __WUXCMMapRightTappedEventArgs_DEFINED__
@@ -549,9 +738,15 @@ OBJCUWPWINDOWSUIXAMLCONTROLSMAPSEXPORT
 @property int zIndex;
 @property BOOL visible;
 @property int mapTabIndex;
+@property (retain) RTObject* tag;
+@property (retain) NSString * mapStyleSheetEntryState;
+@property (retain) NSString * mapStyleSheetEntry;
 + (WXDependencyProperty*)visibleProperty;
 + (WXDependencyProperty*)zIndexProperty;
 + (WXDependencyProperty*)mapTabIndexProperty;
++ (WXDependencyProperty*)mapStyleSheetEntryProperty;
++ (WXDependencyProperty*)mapStyleSheetEntryStateProperty;
++ (WXDependencyProperty*)tagProperty;
 @end
 
 #endif // __WUXCMMapElement_DEFINED__
@@ -591,6 +786,42 @@ OBJCUWPWINDOWSUIXAMLCONTROLSMAPSEXPORT
 @end
 
 #endif // __WUXCMMapItemsControl_DEFINED__
+
+// Windows.UI.Xaml.Controls.Maps.MapLayer
+#ifndef __WUXCMMapLayer_DEFINED__
+#define __WUXCMMapLayer_DEFINED__
+
+OBJCUWPWINDOWSUIXAMLCONTROLSMAPSEXPORT
+@interface WUXCMMapLayer : WXDependencyObject
++ (instancetype)make __attribute__ ((ns_returns_retained));
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property int zIndex;
+@property BOOL visible;
+@property int mapTabIndex;
++ (WXDependencyProperty*)mapTabIndexProperty;
++ (WXDependencyProperty*)visibleProperty;
++ (WXDependencyProperty*)zIndexProperty;
+@end
+
+#endif // __WUXCMMapLayer_DEFINED__
+
+// Windows.UI.Xaml.Controls.Maps.MapModel3D
+#ifndef __WUXCMMapModel3D_DEFINED__
+#define __WUXCMMapModel3D_DEFINED__
+
+OBJCUWPWINDOWSUIXAMLCONTROLSMAPSEXPORT
+@interface WUXCMMapModel3D : WXDependencyObject
++ (void)createFrom3MFAsync:(RTObject<WSSIRandomAccessStreamReference>*)source success:(void (^)(WUXCMMapModel3D*))success failure:(void (^)(NSError*))failure;
++ (void)createFrom3MFWithShadingOptionAsync:(RTObject<WSSIRandomAccessStreamReference>*)source shadingOption:(WUXCMMapModel3DShadingOption)shadingOption success:(void (^)(WUXCMMapModel3D*))success failure:(void (^)(NSError*))failure;
++ (instancetype)make __attribute__ ((ns_returns_retained));
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@end
+
+#endif // __WUXCMMapModel3D_DEFINED__
 
 // Windows.UI.Xaml.Controls.Maps.MapRouteView
 #ifndef __WUXCMMapRouteView_DEFINED__
@@ -633,6 +864,28 @@ OBJCUWPWINDOWSUIXAMLCONTROLSMAPSEXPORT
 @end
 
 #endif // __WUXCMMapScene_DEFINED__
+
+// Windows.UI.Xaml.Controls.Maps.MapStyleSheet
+#ifndef __WUXCMMapStyleSheet_DEFINED__
+#define __WUXCMMapStyleSheet_DEFINED__
+
+OBJCUWPWINDOWSUIXAMLCONTROLSMAPSEXPORT
+@interface WUXCMMapStyleSheet : WXDependencyObject
++ (WUXCMMapStyleSheet*)aerial;
++ (WUXCMMapStyleSheet*)aerialWithOverlay;
++ (WUXCMMapStyleSheet*)roadLight;
++ (WUXCMMapStyleSheet*)roadDark;
++ (WUXCMMapStyleSheet*)roadHighContrastLight;
++ (WUXCMMapStyleSheet*)roadHighContrastDark;
++ (WUXCMMapStyleSheet*)combine:(id<NSFastEnumeration> /* WUXCMMapStyleSheet* */)styleSheets;
++ (WUXCMMapStyleSheet*)parseFromJson:(NSString *)styleAsJson;
++ (BOOL)tryParseFromJson:(NSString *)styleAsJson styleSheet:(WUXCMMapStyleSheet**)styleSheet;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@end
+
+#endif // __WUXCMMapStyleSheet_DEFINED__
 
 // Windows.UI.Xaml.Controls.Maps.MapTileDataSource
 #ifndef __WUXCMMapTileDataSource_DEFINED__
@@ -751,6 +1004,77 @@ OBJCUWPWINDOWSUIXAMLCONTROLSMAPSEXPORT
 @end
 
 #endif // __WUXCMLocalMapTileDataSource_DEFINED__
+
+// Windows.UI.Xaml.Controls.Maps.MapBillboard
+#ifndef __WUXCMMapBillboard_DEFINED__
+#define __WUXCMMapBillboard_DEFINED__
+
+OBJCUWPWINDOWSUIXAMLCONTROLSMAPSEXPORT
+@interface WUXCMMapBillboard : WUXCMMapElement
++ (WUXCMMapBillboard*)makeInstanceFromCamera:(WUXCMMapCamera*)camera ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (retain) WFPoint* normalizedAnchorPoint;
+@property (retain) WDGGeopoint* location;
+@property (retain) RTObject<WSSIRandomAccessStreamReference>* image;
+@property WUXCMMapElementCollisionBehavior collisionBehaviorDesired;
+@property (readonly) WUXCMMapCamera* referenceCamera;
++ (WXDependencyProperty*)collisionBehaviorDesiredProperty;
++ (WXDependencyProperty*)locationProperty;
++ (WXDependencyProperty*)normalizedAnchorPointProperty;
+@end
+
+#endif // __WUXCMMapBillboard_DEFINED__
+
+// Windows.UI.Xaml.Controls.Maps.MapElement3D
+#ifndef __WUXCMMapElement3D_DEFINED__
+#define __WUXCMMapElement3D_DEFINED__
+
+OBJCUWPWINDOWSUIXAMLCONTROLSMAPSEXPORT
+@interface WUXCMMapElement3D : WUXCMMapElement
++ (instancetype)make __attribute__ ((ns_returns_retained));
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (retain) WFNVector3* scale;
+@property double roll;
+@property double pitch;
+@property (retain) WUXCMMapModel3D* model;
+@property (retain) WDGGeopoint* location;
+@property double heading;
++ (WXDependencyProperty*)headingProperty;
++ (WXDependencyProperty*)locationProperty;
++ (WXDependencyProperty*)pitchProperty;
++ (WXDependencyProperty*)rollProperty;
++ (WXDependencyProperty*)scaleProperty;
+@end
+
+#endif // __WUXCMMapElement3D_DEFINED__
+
+// Windows.UI.Xaml.Controls.Maps.MapElementsLayer
+#ifndef __WUXCMMapElementsLayer_DEFINED__
+#define __WUXCMMapElementsLayer_DEFINED__
+
+OBJCUWPWINDOWSUIXAMLCONTROLSMAPSEXPORT
+@interface WUXCMMapElementsLayer : WUXCMMapLayer
++ (instancetype)make __attribute__ ((ns_returns_retained));
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (retain) NSMutableArray* /* WUXCMMapElement* */ mapElements;
++ (WXDependencyProperty*)mapElementsProperty;
+- (EventRegistrationToken)addMapContextRequestedEvent:(void(^)(WUXCMMapElementsLayer*, WUXCMMapElementsLayerContextRequestedEventArgs*))del;
+- (void)removeMapContextRequestedEvent:(EventRegistrationToken)tok;
+- (EventRegistrationToken)addMapElementClickEvent:(void(^)(WUXCMMapElementsLayer*, WUXCMMapElementsLayerClickEventArgs*))del;
+- (void)removeMapElementClickEvent:(EventRegistrationToken)tok;
+- (EventRegistrationToken)addMapElementPointerEnteredEvent:(void(^)(WUXCMMapElementsLayer*, WUXCMMapElementsLayerPointerEnteredEventArgs*))del;
+- (void)removeMapElementPointerEnteredEvent:(EventRegistrationToken)tok;
+- (EventRegistrationToken)addMapElementPointerExitedEvent:(void(^)(WUXCMMapElementsLayer*, WUXCMMapElementsLayerPointerExitedEventArgs*))del;
+- (void)removeMapElementPointerExitedEvent:(EventRegistrationToken)tok;
+@end
+
+#endif // __WUXCMMapElementsLayer_DEFINED__
 
 // Windows.UI.Xaml.Controls.Maps.MapIcon
 #ifndef __WUXCMMapIcon_DEFINED__
@@ -877,6 +1201,22 @@ OBJCUWPWINDOWSUIXAMLCONTROLSMAPSEXPORT
 
 #endif // __WXCIControlOverrides_DEFINED__
 
+// Windows.UI.Xaml.Controls.IControlOverrides6
+#ifndef __WXCIControlOverrides6_DEFINED__
+#define __WXCIControlOverrides6_DEFINED__
+
+@protocol WXCIControlOverrides6
+- (void)onPreviewKeyDown:(WUXIKeyRoutedEventArgs*)e;
+- (void)onPreviewKeyUp:(WUXIKeyRoutedEventArgs*)e;
+- (void)onCharacterReceived:(WUXICharacterReceivedRoutedEventArgs*)e;
+@end
+
+OBJCUWPWINDOWSUIXAMLCONTROLSMAPSEXPORT
+@interface WXCIControlOverrides6 : RTObject <WXCIControlOverrides6>
+@end
+
+#endif // __WXCIControlOverrides6_DEFINED__
+
 // Windows.UI.Xaml.IFrameworkElementOverrides
 #ifndef __WXIFrameworkElementOverrides_DEFINED__
 #define __WXIFrameworkElementOverrides_DEFINED__
@@ -923,6 +1263,21 @@ OBJCUWPWINDOWSUIXAMLCONTROLSMAPSEXPORT
 
 #endif // __WXIUIElementOverrides_DEFINED__
 
+// Windows.UI.Xaml.IUIElementOverrides7
+#ifndef __WXIUIElementOverrides7_DEFINED__
+#define __WXIUIElementOverrides7_DEFINED__
+
+@protocol WXIUIElementOverrides7
+- (id<NSFastEnumeration> /* WXDependencyObject* */)getChildrenInTabFocusOrder;
+- (void)onProcessKeyboardAccelerators:(WUXIProcessKeyboardAcceleratorEventArgs*)args;
+@end
+
+OBJCUWPWINDOWSUIXAMLCONTROLSMAPSEXPORT
+@interface WXIUIElementOverrides7 : RTObject <WXIUIElementOverrides7>
+@end
+
+#endif // __WXIUIElementOverrides7_DEFINED__
+
 // Windows.UI.Xaml.UIElement
 #ifndef __WXUIElement_DEFINED__
 #define __WXUIElement_DEFINED__
@@ -933,24 +1288,24 @@ OBJCUWPWINDOWSUIXAMLCONTROLSMAPSEXPORT
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
-@property BOOL isHitTestVisible;
-@property BOOL isDoubleTapEnabled;
-@property double opacity;
-@property (retain) WUXMProjection* projection;
-@property (retain) WUXMRectangleGeometry* clip;
-@property (retain) WUXMCacheMode* cacheMode;
-@property WUXIManipulationModes manipulationMode;
 @property BOOL isTapEnabled;
+@property (retain) WUXMProjection* projection;
 @property BOOL isRightTapEnabled;
 @property BOOL isHoldingEnabled;
+@property BOOL isHitTestVisible;
+@property BOOL isDoubleTapEnabled;
 @property BOOL allowDrop;
+@property WUXIManipulationModes manipulationMode;
+@property (retain) WUXMRectangleGeometry* clip;
+@property (retain) WUXMCacheMode* cacheMode;
 @property WXVisibility visibility;
 @property BOOL useLayoutRounding;
 @property (retain) WUXMATransitionCollection* transitions;
 @property (retain) WFPoint* renderTransformOrigin;
 @property (retain) WUXMTransform* renderTransform;
-@property (readonly) NSArray* /* WUXIPointer* */ pointerCaptures;
+@property double opacity;
 @property (readonly) WFSize* desiredSize;
+@property (readonly) NSArray* /* WUXIPointer* */ pointerCaptures;
 @property (readonly) WFSize* renderSize;
 @property WUXMElementCompositeMode compositeMode;
 @property (retain) WUXMMTransform3D* transform3D;
@@ -960,7 +1315,19 @@ OBJCUWPWINDOWSUIXAMLCONTROLSMAPSEXPORT
 @property (retain) WUXCPFlyoutBase* contextFlyout;
 @property (retain) WXDependencyObject* accessKeyScopeOwner;
 @property (retain) NSString * accessKey;
-+ (WXDependencyProperty*)isRightTapEnabledProperty;
+@property double keyTipHorizontalOffset;
+@property WXElementHighContrastAdjustment highContrastAdjustment;
+@property WUXIXYFocusNavigationStrategy xYFocusUpNavigationStrategy;
+@property WUXIXYFocusNavigationStrategy xYFocusRightNavigationStrategy;
+@property WUXIXYFocusNavigationStrategy xYFocusLeftNavigationStrategy;
+@property WUXIXYFocusKeyboardNavigationMode xYFocusKeyboardNavigation;
+@property WUXIXYFocusNavigationStrategy xYFocusDownNavigationStrategy;
+@property WUXIKeyboardNavigationMode tabFocusNavigation;
+@property double keyTipVerticalOffset;
+@property WUXIKeyTipPlacementMode keyTipPlacementMode;
+@property (readonly) NSMutableArray* /* WUXMXamlLight* */ lights;
+@property (readonly) NSMutableArray* /* WUXIKeyboardAccelerator* */ keyboardAccelerators;
++ (WXDependencyProperty*)opacityProperty;
 + (WXDependencyProperty*)allowDropProperty;
 + (WXDependencyProperty*)cacheModeProperty;
 + (WXDependencyProperty*)clipProperty;
@@ -973,6 +1340,7 @@ OBJCUWPWINDOWSUIXAMLCONTROLSMAPSEXPORT
 + (WXDependencyProperty*)isDoubleTapEnabledProperty;
 + (WXDependencyProperty*)isHitTestVisibleProperty;
 + (WXDependencyProperty*)isHoldingEnabledProperty;
++ (WXDependencyProperty*)isRightTapEnabledProperty;
 + (WXDependencyProperty*)isTapEnabledProperty;
 + (WXRoutedEvent*)keyDownEvent;
 + (WXRoutedEvent*)keyUpEvent;
@@ -982,7 +1350,6 @@ OBJCUWPWINDOWSUIXAMLCONTROLSMAPSEXPORT
 + (WXDependencyProperty*)manipulationModeProperty;
 + (WXRoutedEvent*)manipulationStartedEvent;
 + (WXRoutedEvent*)manipulationStartingEvent;
-+ (WXDependencyProperty*)opacityProperty;
 + (WXRoutedEvent*)pointerCanceledEvent;
 + (WXRoutedEvent*)pointerCaptureLostEvent;
 + (WXDependencyProperty*)pointerCapturesProperty;
@@ -1001,13 +1368,30 @@ OBJCUWPWINDOWSUIXAMLCONTROLSMAPSEXPORT
 + (WXDependencyProperty*)useLayoutRoundingProperty;
 + (WXDependencyProperty*)visibilityProperty;
 + (WXDependencyProperty*)compositeModeProperty;
-+ (WXDependencyProperty*)canDragProperty;
 + (WXDependencyProperty*)transform3DProperty;
-+ (WXDependencyProperty*)accessKeyScopeOwnerProperty;
-+ (WXDependencyProperty*)contextFlyoutProperty;
-+ (WXDependencyProperty*)exitDisplayModeOnAccessKeyInvokedProperty;
-+ (WXDependencyProperty*)isAccessKeyScopeProperty;
++ (WXDependencyProperty*)canDragProperty;
 + (WXDependencyProperty*)accessKeyProperty;
++ (WXDependencyProperty*)isAccessKeyScopeProperty;
++ (WXDependencyProperty*)exitDisplayModeOnAccessKeyInvokedProperty;
++ (WXDependencyProperty*)contextFlyoutProperty;
++ (WXDependencyProperty*)accessKeyScopeOwnerProperty;
++ (WXDependencyProperty*)xYFocusKeyboardNavigationProperty;
++ (WXDependencyProperty*)xYFocusLeftNavigationStrategyProperty;
++ (WXDependencyProperty*)xYFocusRightNavigationStrategyProperty;
++ (WXDependencyProperty*)xYFocusUpNavigationStrategyProperty;
++ (WXDependencyProperty*)highContrastAdjustmentProperty;
++ (WXDependencyProperty*)xYFocusDownNavigationStrategyProperty;
++ (WXDependencyProperty*)keyTipHorizontalOffsetProperty;
++ (WXDependencyProperty*)keyTipPlacementModeProperty;
++ (WXDependencyProperty*)keyTipVerticalOffsetProperty;
++ (WXDependencyProperty*)lightsProperty;
++ (WXDependencyProperty*)tabFocusNavigationProperty;
++ (WXRoutedEvent*)noFocusCandidateFoundEvent;
++ (WXRoutedEvent*)losingFocusEvent;
++ (WXRoutedEvent*)gettingFocusEvent;
++ (WXRoutedEvent*)characterReceivedEvent;
++ (WXRoutedEvent*)previewKeyUpEvent;
++ (WXRoutedEvent*)previewKeyDownEvent;
 - (EventRegistrationToken)addDoubleTappedEvent:(WUXIDoubleTappedEventHandler)del;
 - (void)removeDoubleTappedEvent:(EventRegistrationToken)tok;
 - (EventRegistrationToken)addDragEnterEvent:(WXDragEventHandler)del;
@@ -1072,6 +1456,20 @@ OBJCUWPWINDOWSUIXAMLCONTROLSMAPSEXPORT
 - (void)removeContextCanceledEvent:(EventRegistrationToken)tok;
 - (EventRegistrationToken)addContextRequestedEvent:(void(^)(WXUIElement*, WUXIContextRequestedEventArgs*))del;
 - (void)removeContextRequestedEvent:(EventRegistrationToken)tok;
+- (EventRegistrationToken)addGettingFocusEvent:(void(^)(WXUIElement*, WUXIGettingFocusEventArgs*))del;
+- (void)removeGettingFocusEvent:(EventRegistrationToken)tok;
+- (EventRegistrationToken)addLosingFocusEvent:(void(^)(WXUIElement*, WUXILosingFocusEventArgs*))del;
+- (void)removeLosingFocusEvent:(EventRegistrationToken)tok;
+- (EventRegistrationToken)addNoFocusCandidateFoundEvent:(void(^)(WXUIElement*, WUXINoFocusCandidateFoundEventArgs*))del;
+- (void)removeNoFocusCandidateFoundEvent:(EventRegistrationToken)tok;
+- (EventRegistrationToken)addCharacterReceivedEvent:(void(^)(WXUIElement*, WUXICharacterReceivedRoutedEventArgs*))del;
+- (void)removeCharacterReceivedEvent:(EventRegistrationToken)tok;
+- (EventRegistrationToken)addPreviewKeyDownEvent:(WUXIKeyEventHandler)del;
+- (void)removePreviewKeyDownEvent:(EventRegistrationToken)tok;
+- (EventRegistrationToken)addPreviewKeyUpEvent:(WUXIKeyEventHandler)del;
+- (void)removePreviewKeyUpEvent:(EventRegistrationToken)tok;
+- (EventRegistrationToken)addProcessKeyboardAcceleratorsEvent:(void(^)(WXUIElement*, WUXIProcessKeyboardAcceleratorEventArgs*))del;
+- (void)removeProcessKeyboardAcceleratorsEvent:(EventRegistrationToken)tok;
 - (void)measure:(WFSize*)availableSize;
 - (void)arrange:(WFRect*)finalRect;
 - (BOOL)capturePointer:(WUXIPointer*)value;
@@ -1083,8 +1481,16 @@ OBJCUWPWINDOWSUIXAMLCONTROLSMAPSEXPORT
 - (void)invalidateMeasure;
 - (void)invalidateArrange;
 - (void)updateLayout;
+- (WUXAPAutomationPeer*)onCreateAutomationPeer;
+- (void)onDisconnectVisualChildren;
+- (id<NSFastEnumeration> /* id<NSFastEnumeration> < WFPoint* > */)findSubElementsForTouchTargeting:(WFPoint*)point boundingRect:(WFRect*)boundingRect;
 - (BOOL)cancelDirectManipulations;
 - (void)startDragAsync:(WUIPointerPoint*)pointerPoint success:(void (^)(WADDataPackageOperation))success failure:(void (^)(NSError*))failure;
+- (void)startBringIntoView;
+- (void)startBringIntoViewWithOptions:(WXBringIntoViewOptions*)options;
+- (void)tryInvokeKeyboardAccelerator:(WUXIProcessKeyboardAcceleratorEventArgs*)args;
+- (id<NSFastEnumeration> /* WXDependencyObject* */)getChildrenInTabFocusOrder;
+- (void)onProcessKeyboardAccelerators:(WUXIProcessKeyboardAcceleratorEventArgs*)args;
 @end
 
 #endif // __WXUIElement_DEFINED__
@@ -1095,39 +1501,41 @@ OBJCUWPWINDOWSUIXAMLCONTROLSMAPSEXPORT
 
 OBJCUWPWINDOWSUIXAMLCONTROLSMAPSEXPORT
 @interface WXFrameworkElement : WXUIElement
++ (void)deferTree:(WXDependencyObject*)element;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property double height;
 @property WXFlowDirection flowDirection;
-@property double minHeight;
 @property (retain) RTObject* dataContext;
 @property (retain) NSString * name;
 @property double minWidth;
+@property (retain) WXResourceDictionary* resources;
+@property double minHeight;
 @property double maxWidth;
 @property double maxHeight;
 @property (retain) WXThickness* margin;
 @property (retain) NSString * language;
 @property WXHorizontalAlignment horizontalAlignment;
-@property (retain) WXResourceDictionary* resources;
-@property double width;
 @property WXVerticalAlignment verticalAlignment;
+@property double width;
 @property (retain) RTObject* tag;
 @property (retain) WXStyle* style;
+@property (readonly) double actualWidth;
 @property (readonly) WFUri* baseUri;
 @property (readonly) double actualHeight;
 @property (readonly) WXDependencyObject* parent;
 @property (readonly) WXTriggerCollection* triggers;
-@property (readonly) double actualWidth;
 @property WXElementTheme requestedTheme;
-@property (retain) WXThickness* focusVisualMargin;
+@property (retain) WXThickness* focusVisualSecondaryThickness;
 @property (retain) WUXMBrush* focusVisualSecondaryBrush;
 @property (retain) WXThickness* focusVisualPrimaryThickness;
 @property (retain) WUXMBrush* focusVisualPrimaryBrush;
+@property (retain) WXThickness* focusVisualMargin;
 @property BOOL allowFocusWhenDisabled;
 @property BOOL allowFocusOnInteraction;
-@property (retain) WXThickness* focusVisualSecondaryThickness;
-+ (WXDependencyProperty*)styleProperty;
+@property (readonly) WXElementTheme actualTheme;
++ (WXDependencyProperty*)nameProperty;
 + (WXDependencyProperty*)actualHeightProperty;
 + (WXDependencyProperty*)actualWidthProperty;
 + (WXDependencyProperty*)dataContextProperty;
@@ -1140,18 +1548,19 @@ OBJCUWPWINDOWSUIXAMLCONTROLSMAPSEXPORT
 + (WXDependencyProperty*)maxWidthProperty;
 + (WXDependencyProperty*)minHeightProperty;
 + (WXDependencyProperty*)minWidthProperty;
-+ (WXDependencyProperty*)nameProperty;
++ (WXDependencyProperty*)styleProperty;
 + (WXDependencyProperty*)tagProperty;
 + (WXDependencyProperty*)verticalAlignmentProperty;
 + (WXDependencyProperty*)widthProperty;
 + (WXDependencyProperty*)requestedThemeProperty;
++ (WXDependencyProperty*)focusVisualSecondaryThicknessProperty;
 + (WXDependencyProperty*)allowFocusOnInteractionProperty;
 + (WXDependencyProperty*)allowFocusWhenDisabledProperty;
 + (WXDependencyProperty*)focusVisualMarginProperty;
 + (WXDependencyProperty*)focusVisualPrimaryBrushProperty;
 + (WXDependencyProperty*)focusVisualPrimaryThicknessProperty;
 + (WXDependencyProperty*)focusVisualSecondaryBrushProperty;
-+ (WXDependencyProperty*)focusVisualSecondaryThicknessProperty;
++ (WXDependencyProperty*)actualThemeProperty;
 - (EventRegistrationToken)addLayoutUpdatedEvent:(void(^)(RTObject*, RTObject*))del;
 - (void)removeLayoutUpdatedEvent:(EventRegistrationToken)tok;
 - (EventRegistrationToken)addLoadedEvent:(WXRoutedEventHandler)del;
@@ -1164,9 +1573,15 @@ OBJCUWPWINDOWSUIXAMLCONTROLSMAPSEXPORT
 - (void)removeDataContextChangedEvent:(EventRegistrationToken)tok;
 - (EventRegistrationToken)addLoadingEvent:(void(^)(WXFrameworkElement*, RTObject*))del;
 - (void)removeLoadingEvent:(EventRegistrationToken)tok;
+- (EventRegistrationToken)addActualThemeChangedEvent:(void(^)(WXFrameworkElement*, RTObject*))del;
+- (void)removeActualThemeChangedEvent:(EventRegistrationToken)tok;
 - (RTObject*)findName:(NSString *)name;
 - (void)setBinding:(WXDependencyProperty*)dp binding:(WUXDBindingBase*)binding;
+- (WFSize*)measureOverride:(WFSize*)availableSize;
+- (WFSize*)arrangeOverride:(WFSize*)finalSize;
+- (void)onApplyTemplate;
 - (WUXDBindingExpression*)getBindingExpression:(WXDependencyProperty*)dp;
+- (BOOL)goToElementStateCore:(NSString *)stateName useTransitions:(BOOL)useTransitions;
 @end
 
 #endif // __WXFrameworkElement_DEFINED__
@@ -1179,20 +1594,22 @@ OBJCUWPWINDOWSUIXAMLCONTROLSMAPSEXPORT
 @interface WXCControl : WXFrameworkElement
 + (BOOL)getIsTemplateFocusTarget:(WXFrameworkElement*)element;
 + (void)setIsTemplateFocusTarget:(WXFrameworkElement*)element value:(BOOL)value;
++ (BOOL)getIsTemplateKeyTipTarget:(WXDependencyObject*)element;
++ (void)setIsTemplateKeyTipTarget:(WXDependencyObject*)element value:(BOOL)value;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property double fontSize;
 @property (retain) WUXMFontFamily* fontFamily;
-@property (retain) WXThickness* padding;
 @property int tabIndex;
 @property int characterSpacing;
 @property (retain) WXThickness* borderThickness;
-@property BOOL isEnabled;
 @property (retain) WUXMBrush* borderBrush;
 @property WUTFontStretch fontStretch;
 @property BOOL isTabStop;
+@property BOOL isEnabled;
 @property WXHorizontalAlignment horizontalContentAlignment;
+@property (retain) WXThickness* padding;
 @property (retain) WUXMBrush* foreground;
 @property (retain) WUTFontWeight* fontWeight;
 @property WUTFontStyle fontStyle;
@@ -1203,15 +1620,16 @@ OBJCUWPWINDOWSUIXAMLCONTROLSMAPSEXPORT
 @property (readonly) WXFocusState focusState;
 @property BOOL isTextScaleFactorEnabled;
 @property BOOL useSystemFocusVisuals;
-@property (retain) WXDependencyObject* xYFocusRight;
-@property BOOL isFocusEngaged;
-@property (retain) WXDependencyObject* xYFocusLeft;
 @property (retain) WXDependencyObject* xYFocusDown;
-@property WXCRequiresPointer requiresPointer;
-@property BOOL isFocusEngagementEnabled;
-@property WXElementSoundMode elementSoundMode;
 @property (retain) WXDependencyObject* xYFocusUp;
-+ (WXDependencyProperty*)isEnabledProperty;
+@property BOOL isFocusEngagementEnabled;
+@property (retain) WXDependencyObject* xYFocusLeft;
+@property (retain) WXDependencyObject* xYFocusRight;
+@property WXCRequiresPointer requiresPointer;
+@property WXElementSoundMode elementSoundMode;
+@property BOOL isFocusEngaged;
+@property (retain) WFUri* defaultStyleResourceUri;
++ (WXDependencyProperty*)fontWeightProperty;
 + (WXDependencyProperty*)backgroundProperty;
 + (WXDependencyProperty*)borderBrushProperty;
 + (WXDependencyProperty*)borderThicknessProperty;
@@ -1222,9 +1640,9 @@ OBJCUWPWINDOWSUIXAMLCONTROLSMAPSEXPORT
 + (WXDependencyProperty*)fontSizeProperty;
 + (WXDependencyProperty*)fontStretchProperty;
 + (WXDependencyProperty*)fontStyleProperty;
-+ (WXDependencyProperty*)fontWeightProperty;
 + (WXDependencyProperty*)foregroundProperty;
 + (WXDependencyProperty*)horizontalContentAlignmentProperty;
++ (WXDependencyProperty*)isEnabledProperty;
 + (WXDependencyProperty*)isTabStopProperty;
 + (WXDependencyProperty*)paddingProperty;
 + (WXDependencyProperty*)tabIndexProperty;
@@ -1234,14 +1652,16 @@ OBJCUWPWINDOWSUIXAMLCONTROLSMAPSEXPORT
 + (WXDependencyProperty*)isTextScaleFactorEnabledProperty;
 + (WXDependencyProperty*)isTemplateFocusTargetProperty;
 + (WXDependencyProperty*)useSystemFocusVisualsProperty;
-+ (WXDependencyProperty*)elementSoundModeProperty;
-+ (WXDependencyProperty*)isFocusEngagedProperty;
-+ (WXDependencyProperty*)isFocusEngagementEnabledProperty;
 + (WXDependencyProperty*)requiresPointerProperty;
 + (WXDependencyProperty*)xYFocusDownProperty;
 + (WXDependencyProperty*)xYFocusLeftProperty;
-+ (WXDependencyProperty*)xYFocusRightProperty;
 + (WXDependencyProperty*)xYFocusUpProperty;
++ (WXDependencyProperty*)xYFocusRightProperty;
++ (WXDependencyProperty*)elementSoundModeProperty;
++ (WXDependencyProperty*)isFocusEngagedProperty;
++ (WXDependencyProperty*)isFocusEngagementEnabledProperty;
++ (WXDependencyProperty*)isTemplateKeyTipTargetProperty;
++ (WXDependencyProperty*)defaultStyleResourceUriProperty;
 - (EventRegistrationToken)addIsEnabledChangedEvent:(WXDependencyPropertyChangedEventHandler)del;
 - (void)removeIsEnabledChangedEvent:(EventRegistrationToken)tok;
 - (EventRegistrationToken)addFocusDisengagedEvent:(void(^)(WXCControl*, WXCFocusDisengagedEventArgs*))del;
@@ -1250,7 +1670,36 @@ OBJCUWPWINDOWSUIXAMLCONTROLSMAPSEXPORT
 - (void)removeFocusEngagedEvent:(EventRegistrationToken)tok;
 - (BOOL)applyTemplate;
 - (BOOL)focus:(WXFocusState)value;
+- (void)onPointerEntered:(WUXIPointerRoutedEventArgs*)e;
+- (void)onPointerPressed:(WUXIPointerRoutedEventArgs*)e;
+- (void)onPointerMoved:(WUXIPointerRoutedEventArgs*)e;
+- (void)onPointerReleased:(WUXIPointerRoutedEventArgs*)e;
+- (void)onPointerExited:(WUXIPointerRoutedEventArgs*)e;
+- (void)onPointerCaptureLost:(WUXIPointerRoutedEventArgs*)e;
+- (void)onPointerCanceled:(WUXIPointerRoutedEventArgs*)e;
+- (void)onPointerWheelChanged:(WUXIPointerRoutedEventArgs*)e;
+- (void)onTapped:(WUXITappedRoutedEventArgs*)e;
+- (void)onDoubleTapped:(WUXIDoubleTappedRoutedEventArgs*)e;
+- (void)onHolding:(WUXIHoldingRoutedEventArgs*)e;
+- (void)onRightTapped:(WUXIRightTappedRoutedEventArgs*)e;
+- (void)onManipulationStarting:(WUXIManipulationStartingRoutedEventArgs*)e;
+- (void)onManipulationInertiaStarting:(WUXIManipulationInertiaStartingRoutedEventArgs*)e;
+- (void)onManipulationStarted:(WUXIManipulationStartedRoutedEventArgs*)e;
+- (void)onManipulationDelta:(WUXIManipulationDeltaRoutedEventArgs*)e;
+- (void)onManipulationCompleted:(WUXIManipulationCompletedRoutedEventArgs*)e;
+- (void)onKeyUp:(WUXIKeyRoutedEventArgs*)e;
+- (void)onKeyDown:(WUXIKeyRoutedEventArgs*)e;
+- (void)onGotFocus:(WXRoutedEventArgs*)e;
+- (void)onLostFocus:(WXRoutedEventArgs*)e;
+- (void)onDragEnter:(WXDragEventArgs*)e;
+- (void)onDragLeave:(WXDragEventArgs*)e;
+- (void)onDragOver:(WXDragEventArgs*)e;
+- (void)onDrop:(WXDragEventArgs*)e;
+- (WXDependencyObject*)getTemplateChild:(NSString *)childName;
 - (void)removeFocusEngagement;
+- (void)onPreviewKeyDown:(WUXIKeyRoutedEventArgs*)e;
+- (void)onPreviewKeyUp:(WUXIKeyRoutedEventArgs*)e;
+- (void)onCharacterReceived:(WUXICharacterReceivedRoutedEventArgs*)e;
 @end
 
 #endif // __WXCControl_DEFINED__
@@ -1273,37 +1722,46 @@ OBJCUWPWINDOWSUIXAMLCONTROLSMAPSEXPORT
 @property double heading;
 @property double desiredPitch;
 @property WUXCMMapColorScheme colorScheme;
+@property BOOL pedestrianFeaturesVisible;
+@property WUXCMMapWatermarkMode watermarkMode;
+@property double zoomLevel;
+@property WUXCMMapStyle style;
+@property (retain) NSString * mapServiceToken;
 @property (retain) WFPoint* transformOrigin;
 @property BOOL trafficFlowVisible;
-@property (retain) NSString * mapServiceToken;
-@property double zoomLevel;
-@property WUXCMMapWatermarkMode watermarkMode;
 @property (retain) WDGGeopoint* center;
-@property BOOL pedestrianFeaturesVisible;
-@property WUXCMMapStyle style;
-@property (readonly) double maxZoomLevel;
-@property (readonly) double minZoomLevel;
-@property (readonly) double pitch;
-@property (readonly) NSMutableArray* /* WUXCMMapTileSource* */ tileSources;
-@property (readonly) NSMutableArray* /* WUXCMMapRouteView* */ routes;
 @property (readonly) NSMutableArray* /* WXDependencyObject* */ children;
 @property (readonly) WUXCMMapLoadingStatus loadingStatus;
 @property (readonly) NSMutableArray* /* WUXCMMapElement* */ mapElements;
-@property WUXCMMapInteractionMode zoomInteractionMode;
-@property BOOL transitFeaturesVisible;
-@property WUXCMMapPanInteractionMode panInteractionMode;
-@property (retain) WUXCMMapScene* scene;
-@property WUXCMMapInteractionMode tiltInteractionMode;
-@property (retain) WUXCMMapCustomExperience* customExperience;
+@property (readonly) double maxZoomLevel;
+@property (readonly) double minZoomLevel;
+@property (readonly) double pitch;
+@property (readonly) NSMutableArray* /* WUXCMMapRouteView* */ routes;
+@property (readonly) NSMutableArray* /* WUXCMMapTileSource* */ tileSources;
 @property WUXCMMapInteractionMode rotateInteractionMode;
+@property BOOL transitFeaturesVisible;
+@property WUXCMMapInteractionMode tiltInteractionMode;
+@property (retain) WUXCMMapScene* scene;
+@property WUXCMMapInteractionMode zoomInteractionMode;
+@property WUXCMMapPanInteractionMode panInteractionMode;
 @property BOOL businessLandmarksVisible;
+@property (retain) WUXCMMapCustomExperience* customExperience;
 @property (readonly) WUXCMMapCamera* targetCamera;
+@property (readonly) WUXCMMapCamera* actualCamera;
 @property (readonly) BOOL is3DSupported;
 @property (readonly) BOOL isStreetsideSupported;
-@property (readonly) WUXCMMapCamera* actualCamera;
-@property BOOL businessLandmarksEnabled;
 @property BOOL transitFeaturesEnabled;
-+ (WXDependencyProperty*)routesProperty;
+@property BOOL businessLandmarksEnabled;
+@property (retain) WXThickness* viewPadding;
+@property (retain) WUXCMMapStyleSheet* styleSheet;
+@property WUXCMMapProjection mapProjection;
+@property (retain) NSMutableArray* /* WUXCMMapLayer* */ layers;
++ (WXDependencyProperty*)tileSourcesProperty;
++ (WXDependencyProperty*)trafficFlowVisibleProperty;
++ (WXDependencyProperty*)transformOriginProperty;
++ (WXDependencyProperty*)watermarkModeProperty;
++ (WXDependencyProperty*)zoomLevelProperty;
++ (WXDependencyProperty*)locationProperty;
 + (WXDependencyProperty*)centerProperty;
 + (WXDependencyProperty*)childrenProperty;
 + (WXDependencyProperty*)colorSchemeProperty;
@@ -1311,18 +1769,14 @@ OBJCUWPWINDOWSUIXAMLCONTROLSMAPSEXPORT
 + (WXDependencyProperty*)headingProperty;
 + (WXDependencyProperty*)landmarksVisibleProperty;
 + (WXDependencyProperty*)loadingStatusProperty;
-+ (WXDependencyProperty*)locationProperty;
 + (WXDependencyProperty*)mapElementsProperty;
 + (WXDependencyProperty*)mapServiceTokenProperty;
 + (WXDependencyProperty*)normalizedAnchorPointProperty;
 + (WXDependencyProperty*)pedestrianFeaturesVisibleProperty;
 + (WXDependencyProperty*)pitchProperty;
++ (WXDependencyProperty*)routesProperty;
 + (WXDependencyProperty*)styleProperty;
-+ (WXDependencyProperty*)tileSourcesProperty;
-+ (WXDependencyProperty*)trafficFlowVisibleProperty;
-+ (WXDependencyProperty*)transformOriginProperty;
-+ (WXDependencyProperty*)watermarkModeProperty;
-+ (WXDependencyProperty*)zoomLevelProperty;
++ (WXDependencyProperty*)zoomInteractionModeProperty;
 + (WXDependencyProperty*)sceneProperty;
 + (WXDependencyProperty*)businessLandmarksVisibleProperty;
 + (WXDependencyProperty*)is3DSupportedProperty;
@@ -1331,9 +1785,12 @@ OBJCUWPWINDOWSUIXAMLCONTROLSMAPSEXPORT
 + (WXDependencyProperty*)rotateInteractionModeProperty;
 + (WXDependencyProperty*)tiltInteractionModeProperty;
 + (WXDependencyProperty*)transitFeaturesVisibleProperty;
-+ (WXDependencyProperty*)zoomInteractionModeProperty;
-+ (WXDependencyProperty*)transitFeaturesEnabledProperty;
 + (WXDependencyProperty*)businessLandmarksEnabledProperty;
++ (WXDependencyProperty*)transitFeaturesEnabledProperty;
++ (WXDependencyProperty*)mapProjectionProperty;
++ (WXDependencyProperty*)styleSheetProperty;
++ (WXDependencyProperty*)viewPaddingProperty;
++ (WXDependencyProperty*)layersProperty;
 - (EventRegistrationToken)addCenterChangedEvent:(void(^)(WUXCMMapControl*, RTObject*))del;
 - (void)removeCenterChangedEvent:(EventRegistrationToken)tok;
 - (EventRegistrationToken)addHeadingChangedEvent:(void(^)(WUXCMMapControl*, RTObject*))del;
@@ -1368,6 +1825,8 @@ OBJCUWPWINDOWSUIXAMLCONTROLSMAPSEXPORT
 - (void)removeTargetCameraChangedEvent:(EventRegistrationToken)tok;
 - (EventRegistrationToken)addMapRightTappedEvent:(void(^)(WUXCMMapControl*, WUXCMMapRightTappedEventArgs*))del;
 - (void)removeMapRightTappedEvent:(EventRegistrationToken)tok;
+- (EventRegistrationToken)addMapContextRequestedEvent:(void(^)(WUXCMMapControl*, WUXCMMapContextRequestedEventArgs*))del;
+- (void)removeMapContextRequestedEvent:(EventRegistrationToken)tok;
 - (NSArray* /* WUXCMMapElement* */)findMapElementsAtOffset:(WFPoint*)offset;
 - (void)getLocationFromOffset:(WFPoint*)offset location:(WDGGeopoint**)location;
 - (void)getOffsetFromLocation:(WDGGeopoint*)location offset:(WFPoint**)offset;
@@ -1393,6 +1852,14 @@ OBJCUWPWINDOWSUIXAMLCONTROLSMAPSEXPORT
 - (void)trySetSceneAsync:(WUXCMMapScene*)scene success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 - (void)trySetSceneWithAnimationAsync:(WUXCMMapScene*)scene animationKind:(WUXCMMapAnimationKind)animationKind success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 - (WDGGeopath*)getVisibleRegion:(WUXCMMapVisibleRegionKind)region;
+- (NSArray* /* WUXCMMapElement* */)findMapElementsAtOffsetWithRadius:(WFPoint*)offset radius:(double)radius;
+- (void)getLocationFromOffsetWithReferenceSystem:(WFPoint*)offset desiredReferenceSystem:(WDGAltitudeReferenceSystem)desiredReferenceSystem location:(WDGGeopoint**)location;
+- (void)startContinuousPan:(double)horizontalPixelsPerSecond verticalPixelsPerSecond:(double)verticalPixelsPerSecond;
+- (void)stopContinuousPan;
+- (void)tryPanAsync:(double)horizontalPixels verticalPixels:(double)verticalPixels success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
+- (void)tryPanToAsync:(WDGGeopoint*)location success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
+- (BOOL)tryGetLocationFromOffset:(WFPoint*)offset location:(WDGGeopoint**)location;
+- (BOOL)tryGetLocationFromOffsetWithReferenceSystem:(WFPoint*)offset desiredReferenceSystem:(WDGAltitudeReferenceSystem)desiredReferenceSystem location:(WDGGeopoint**)location;
 @end
 
 #endif // __WUXCMMapControl_DEFINED__
@@ -1531,6 +1998,7 @@ OBJCUWPWINDOWSUIXAMLCONTROLSMAPSEXPORT
 
 OBJCUWPWINDOWSUIXAMLCONTROLSMAPSEXPORT
 @interface WUXCMMapControlDataHelper : WXDependencyObject
++ (WUXCMMapControl*)createMapControl:(BOOL)rasterRenderMode;
 + (WUXCMMapControlDataHelper*)makeInstance:(WUXCMMapControl*)map ACTIVATOR;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));

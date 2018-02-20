@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -27,8 +27,8 @@
 #endif
 #include <UWP/interopBase.h>
 
-@class WGDDisplayInformation, WGDDisplayProperties;
-@protocol WGDIDisplayInformationStatics, WGDIDisplayInformation, WGDIDisplayInformation2, WGDIDisplayInformation3, WGDIDisplayInformation4, WGDIDisplayPropertiesStatics;
+@class WGDDisplayInformation, WGDDisplayProperties, WGDBrightnessOverride;
+@protocol WGDIDisplayInformationStatics, WGDIDisplayInformation, WGDIDisplayInformation2, WGDIDisplayInformation3, WGDIDisplayInformation4, WGDIDisplayPropertiesStatics, WGDIBrightnessOverrideStatics, WGDIBrightnessOverride;
 
 // Windows.Graphics.Display.DisplayOrientations
 enum _WGDDisplayOrientations {
@@ -61,6 +61,22 @@ enum _WGDResolutionScale {
     WGDResolutionScaleScale500Percent = 500,
 };
 typedef unsigned WGDResolutionScale;
+
+// Windows.Graphics.Display.DisplayBrightnessScenario
+enum _WGDDisplayBrightnessScenario {
+    WGDDisplayBrightnessScenarioDefaultBrightness = 0,
+    WGDDisplayBrightnessScenarioIdleBrightness = 1,
+    WGDDisplayBrightnessScenarioBarcodeReadingBrightness = 2,
+    WGDDisplayBrightnessScenarioFullBrightness = 3,
+};
+typedef unsigned WGDDisplayBrightnessScenario;
+
+// Windows.Graphics.Display.DisplayBrightnessOverrideOptions
+enum _WGDDisplayBrightnessOverrideOptions {
+    WGDDisplayBrightnessOverrideOptionsNone = 0,
+    WGDDisplayBrightnessOverrideOptionsUseDimmedPolicyWhenBatteryIsLow = 1,
+};
+typedef unsigned WGDDisplayBrightnessOverrideOptions;
 
 #include "WindowsFoundation.h"
 #include "WindowsStorageStreams.h"
@@ -144,4 +160,34 @@ OBJCUWPWINDOWSGRAPHICSDISPLAYEXPORT
 @end
 
 #endif // __WGDDisplayProperties_DEFINED__
+
+// Windows.Graphics.Display.BrightnessOverride
+#ifndef __WGDBrightnessOverride_DEFINED__
+#define __WGDBrightnessOverride_DEFINED__
+
+OBJCUWPWINDOWSGRAPHICSDISPLAYEXPORT
+@interface WGDBrightnessOverride : RTObject
++ (WGDBrightnessOverride*)getDefaultForSystem;
++ (WGDBrightnessOverride*)getForCurrentView;
++ (void)saveForSystemAsync:(WGDBrightnessOverride*)value success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (readonly) double brightnessLevel;
+@property (readonly) BOOL isOverrideActive;
+@property (readonly) BOOL isSupported;
+- (EventRegistrationToken)addBrightnessLevelChangedEvent:(void(^)(WGDBrightnessOverride*, RTObject*))del;
+- (void)removeBrightnessLevelChangedEvent:(EventRegistrationToken)tok;
+- (EventRegistrationToken)addIsOverrideActiveChangedEvent:(void(^)(WGDBrightnessOverride*, RTObject*))del;
+- (void)removeIsOverrideActiveChangedEvent:(EventRegistrationToken)tok;
+- (EventRegistrationToken)addIsSupportedChangedEvent:(void(^)(WGDBrightnessOverride*, RTObject*))del;
+- (void)removeIsSupportedChangedEvent:(EventRegistrationToken)tok;
+- (void)setBrightnessLevel:(double)brightnessLevel options:(WGDDisplayBrightnessOverrideOptions)options;
+- (void)setBrightnessScenario:(WGDDisplayBrightnessScenario)scenario options:(WGDDisplayBrightnessOverrideOptions)options;
+- (double)getLevelForScenario:(WGDDisplayBrightnessScenario)scenario;
+- (void)startOverride;
+- (void)stopOverride;
+@end
+
+#endif // __WGDBrightnessOverride_DEFINED__
 

@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -52,6 +52,7 @@ enum _WUXDUpdateSourceTrigger {
     WUXDUpdateSourceTriggerDefault = 0,
     WUXDUpdateSourceTriggerPropertyChanged = 1,
     WUXDUpdateSourceTriggerExplicit = 2,
+    WUXDUpdateSourceTriggerLostFocus = 3,
 };
 typedef unsigned WUXDUpdateSourceTrigger;
 

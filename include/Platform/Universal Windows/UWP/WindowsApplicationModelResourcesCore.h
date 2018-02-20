@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -87,12 +87,12 @@ OBJCUWPWINDOWSAPPLICATIONMODELRESOURCESCOREEXPORT
 OBJCUWPWINDOWSAPPLICATIONMODELRESOURCESCOREEXPORT
 @interface WARCResourceContext : RTObject
 + (void)setGlobalQualifierValueWithPersistence:(NSString *)key value:(NSString *)value persistence:(WARCResourceQualifierPersistence)persistence;
-+ (WARCResourceContext*)createMatchingContext:(id<NSFastEnumeration> /* WARCResourceQualifier* */)result;
 + (WARCResourceContext*)getForCurrentView;
 + (void)setGlobalQualifierValue:(NSString *)key value:(NSString *)value;
 + (void)resetGlobalQualifierValues;
 + (void)resetGlobalQualifierValuesForSpecifiedQualifiers:(id<NSFastEnumeration> /* NSString * */)qualifierNames;
 + (WARCResourceContext*)getForViewIndependentUse;
++ (WARCResourceContext*)createMatchingContext:(id<NSFastEnumeration> /* WARCResourceQualifier* */)result;
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));

@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -19,16 +19,16 @@
 
 #pragma once
 
-#ifndef OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
-#define OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT __declspec(dllimport)
+#ifndef OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREMEDIAPROPERTIESDEVICESCOREPLAYBACKPROTECTIONEXPORT
+#define OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREMEDIAPROPERTIESDEVICESCOREPLAYBACKPROTECTIONEXPORT __declspec(dllimport)
 #ifndef IN_WinObjC_Frameworks_UWP_BUILD
-#pragma comment(lib, "ObjCUWPWindowsMediaCaptureDevicesCorePlaybackProtection.lib")
+#pragma comment(lib, "ObjCUWPWindowsMediaCaptureDevicesCoreMediaPropertiesDevicesCorePlaybackProtection.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
 
-@class WMPPlaybackMediaMarker, WMPPlaybackMediaMarkerSequence, WMPMediaPlayerFailedEventArgs, WMPMediaPlayerRateChangedEventArgs, WMPPlaybackMediaMarkerReachedEventArgs, WMPMediaPlayerDataReceivedEventArgs, WMPMediaPlayer, WMPMediaBreakManager, WMPMediaPlaybackCommandManager, WMPMediaPlaybackSession, WMPMediaPlayerSurface, WMPMediaBreakSeekedOverEventArgs, WMPMediaBreakStartedEventArgs, WMPMediaBreakEndedEventArgs, WMPMediaBreakSkippedEventArgs, WMPBackgroundMediaPlayer, WMPMediaPlaybackCommandManagerPlayReceivedEventArgs, WMPMediaPlaybackCommandManagerPauseReceivedEventArgs, WMPMediaPlaybackCommandManagerNextReceivedEventArgs, WMPMediaPlaybackCommandManagerPreviousReceivedEventArgs, WMPMediaPlaybackCommandManagerFastForwardReceivedEventArgs, WMPMediaPlaybackCommandManagerRewindReceivedEventArgs, WMPMediaPlaybackCommandManagerShuffleReceivedEventArgs, WMPMediaPlaybackCommandManagerAutoRepeatModeReceivedEventArgs, WMPMediaPlaybackCommandManagerPositionReceivedEventArgs, WMPMediaPlaybackCommandManagerRateReceivedEventArgs, WMPMediaPlaybackCommandManagerCommandBehavior, WMPMediaPlaybackItem, WMPMediaPlaybackAudioTrackList, WMPMediaPlaybackVideoTrackList, WMPMediaPlaybackTimedMetadataTrackList, WMPMediaBreakSchedule, WMPMediaItemDisplayProperties, WMPMediaBreak, WMPMediaPlaybackList, WMPMediaPlaybackItemError, WMPMediaPlaybackItemFailedEventArgs, WMPCurrentMediaPlaybackItemChangedEventArgs, WMPMediaPlaybackItemOpenedEventArgs, WMPTimedMetadataPresentationModeChangedEventArgs;
-@protocol WMPIPlaybackMediaMarker, WMPIPlaybackMediaMarkerFactory, WMPIPlaybackMediaMarkerSequence, WMPIMediaPlayerFailedEventArgs, WMPIMediaPlayerRateChangedEventArgs, WMPIPlaybackMediaMarkerReachedEventArgs, WMPIMediaPlayerDataReceivedEventArgs, WMPIMediaPlayer, WMPIMediaPlayer2, WMPIMediaPlayer3, WMPIMediaPlayer4, WMPIMediaPlaybackSession, WMPIMediaPlayerSource, WMPIMediaPlayerSource2, WMPIMediaPlayerEffects, WMPIMediaPlayerEffects2, WMPIMediaBreakStartedEventArgs, WMPIMediaBreakEndedEventArgs, WMPIMediaBreakSkippedEventArgs, WMPIMediaBreakSeekedOverEventArgs, WMPIMediaBreakManager, WMPIMediaPlayerSurface, WMPIBackgroundMediaPlayerStatics, WMPIMediaPlaybackCommandManagerPlayReceivedEventArgs, WMPIMediaPlaybackCommandManagerPauseReceivedEventArgs, WMPIMediaPlaybackCommandManagerNextReceivedEventArgs, WMPIMediaPlaybackCommandManagerPreviousReceivedEventArgs, WMPIMediaPlaybackCommandManagerFastForwardReceivedEventArgs, WMPIMediaPlaybackCommandManagerRewindReceivedEventArgs, WMPIMediaPlaybackCommandManagerShuffleReceivedEventArgs, WMPIMediaPlaybackCommandManagerAutoRepeatModeReceivedEventArgs, WMPIMediaPlaybackCommandManagerPositionReceivedEventArgs, WMPIMediaPlaybackCommandManagerRateReceivedEventArgs, WMPIMediaPlaybackCommandManagerCommandBehavior, WMPIMediaPlaybackCommandManager, WMPIMediaPlaybackSource, WMPIMediaPlaybackItemFactory, WMPIMediaPlaybackItemFactory2, WMPIMediaPlaybackItemStatics, WMPIMediaPlaybackItem, WMPIMediaItemDisplayProperties, WMPIMediaPlaybackItem2, WMPIMediaBreakFactory, WMPIMediaBreak, WMPIMediaBreakSchedule, WMPIMediaPlaybackItemError, WMPIMediaEnginePlaybackSource, WMPIMediaPlaybackItemOpenedEventArgs, WMPIMediaPlaybackItemFailedEventArgs, WMPICurrentMediaPlaybackItemChangedEventArgs, WMPIMediaPlaybackList, WMPIMediaPlaybackList2, WMPIMediaPlaybackTimedMetadataTrackList, WMPITimedMetadataPresentationModeChangedEventArgs;
+@class WMPPlaybackMediaMarker, WMPPlaybackMediaMarkerSequence, WMPMediaPlayerFailedEventArgs, WMPMediaPlayerRateChangedEventArgs, WMPPlaybackMediaMarkerReachedEventArgs, WMPMediaPlayerDataReceivedEventArgs, WMPMediaPlayer, WMPMediaBreakManager, WMPMediaPlaybackCommandManager, WMPMediaPlaybackSession, WMPMediaPlayerSurface, WMPMediaPlaybackSphericalVideoProjection, WMPMediaPlaybackSessionBufferingStartedEventArgs, WMPMediaBreakSeekedOverEventArgs, WMPMediaBreakStartedEventArgs, WMPMediaBreakEndedEventArgs, WMPMediaBreakSkippedEventArgs, WMPBackgroundMediaPlayer, WMPMediaPlaybackCommandManagerPlayReceivedEventArgs, WMPMediaPlaybackCommandManagerPauseReceivedEventArgs, WMPMediaPlaybackCommandManagerNextReceivedEventArgs, WMPMediaPlaybackCommandManagerPreviousReceivedEventArgs, WMPMediaPlaybackCommandManagerFastForwardReceivedEventArgs, WMPMediaPlaybackCommandManagerRewindReceivedEventArgs, WMPMediaPlaybackCommandManagerShuffleReceivedEventArgs, WMPMediaPlaybackCommandManagerAutoRepeatModeReceivedEventArgs, WMPMediaPlaybackCommandManagerPositionReceivedEventArgs, WMPMediaPlaybackCommandManagerRateReceivedEventArgs, WMPMediaPlaybackCommandManagerCommandBehavior, WMPMediaPlaybackItem, WMPMediaPlaybackAudioTrackList, WMPMediaPlaybackVideoTrackList, WMPMediaPlaybackTimedMetadataTrackList, WMPMediaBreakSchedule, WMPMediaItemDisplayProperties, WMPMediaBreak, WMPMediaPlaybackList, WMPMediaPlaybackItemError, WMPMediaPlaybackItemFailedEventArgs, WMPCurrentMediaPlaybackItemChangedEventArgs, WMPMediaPlaybackItemOpenedEventArgs, WMPTimedMetadataPresentationModeChangedEventArgs;
+@protocol WMPIPlaybackMediaMarker, WMPIPlaybackMediaMarkerFactory, WMPIPlaybackMediaMarkerSequence, WMPIMediaPlayerFailedEventArgs, WMPIMediaPlayerRateChangedEventArgs, WMPIPlaybackMediaMarkerReachedEventArgs, WMPIMediaPlayerDataReceivedEventArgs, WMPIMediaPlayer, WMPIMediaPlayer2, WMPIMediaPlayer3, WMPIMediaPlayer4, WMPIMediaPlayer5, WMPIMediaPlayer6, WMPIMediaPlaybackSession, WMPIMediaPlaybackSphericalVideoProjection, WMPIMediaPlaybackSession2, WMPIMediaPlaybackSessionBufferingStartedEventArgs, WMPIMediaPlayerSource, WMPIMediaPlayerSource2, WMPIMediaPlayerEffects, WMPIMediaPlayerEffects2, WMPIMediaBreakStartedEventArgs, WMPIMediaBreakEndedEventArgs, WMPIMediaBreakSkippedEventArgs, WMPIMediaBreakSeekedOverEventArgs, WMPIMediaBreakManager, WMPIMediaPlayerSurface, WMPIBackgroundMediaPlayerStatics, WMPIMediaPlaybackCommandManagerPlayReceivedEventArgs, WMPIMediaPlaybackCommandManagerPauseReceivedEventArgs, WMPIMediaPlaybackCommandManagerNextReceivedEventArgs, WMPIMediaPlaybackCommandManagerPreviousReceivedEventArgs, WMPIMediaPlaybackCommandManagerFastForwardReceivedEventArgs, WMPIMediaPlaybackCommandManagerRewindReceivedEventArgs, WMPIMediaPlaybackCommandManagerShuffleReceivedEventArgs, WMPIMediaPlaybackCommandManagerAutoRepeatModeReceivedEventArgs, WMPIMediaPlaybackCommandManagerPositionReceivedEventArgs, WMPIMediaPlaybackCommandManagerRateReceivedEventArgs, WMPIMediaPlaybackCommandManagerCommandBehavior, WMPIMediaPlaybackCommandManager, WMPIMediaPlaybackSource, WMPIMediaPlaybackItemFactory, WMPIMediaPlaybackItemFactory2, WMPIMediaPlaybackItemStatics, WMPIMediaPlaybackItem, WMPIMediaItemDisplayProperties, WMPIMediaPlaybackItem2, WMPIMediaPlaybackItem3, WMPIMediaBreakFactory, WMPIMediaBreak, WMPIMediaBreakSchedule, WMPIMediaPlaybackItemError, WMPIMediaEnginePlaybackSource, WMPIMediaPlaybackItemOpenedEventArgs, WMPIMediaPlaybackItemFailedEventArgs, WMPICurrentMediaPlaybackItemChangedEventArgs, WMPICurrentMediaPlaybackItemChangedEventArgs2, WMPIMediaPlaybackList, WMPIMediaPlaybackList2, WMPIMediaPlaybackList3, WMPIMediaPlaybackTimedMetadataTrackList, WMPITimedMetadataPresentationModeChangedEventArgs;
 
 // Windows.Media.Playback.MediaPlayerState
 enum _WMPMediaPlayerState {
@@ -91,6 +91,13 @@ enum _WMPStereoscopicVideoRenderMode {
 };
 typedef unsigned WMPStereoscopicVideoRenderMode;
 
+// Windows.Media.Playback.SphericalVideoProjectionMode
+enum _WMPSphericalVideoProjectionMode {
+    WMPSphericalVideoProjectionModeSpherical = 0,
+    WMPSphericalVideoProjectionModeFlat = 1,
+};
+typedef unsigned WMPSphericalVideoProjectionMode;
+
 // Windows.Media.Playback.MediaCommandEnablingRule
 enum _WMPMediaCommandEnablingRule {
     WMPMediaCommandEnablingRuleAuto = 0,
@@ -134,13 +141,33 @@ enum _WMPMediaBreakInsertionMethod {
 };
 typedef unsigned WMPMediaBreakInsertionMethod;
 
+// Windows.Media.Playback.MediaPlaybackItemChangedReason
+enum _WMPMediaPlaybackItemChangedReason {
+    WMPMediaPlaybackItemChangedReasonInitialItem = 0,
+    WMPMediaPlaybackItemChangedReasonEndOfStream = 1,
+    WMPMediaPlaybackItemChangedReasonError = 2,
+    WMPMediaPlaybackItemChangedReasonAppRequested = 3,
+};
+typedef unsigned WMPMediaPlaybackItemChangedReason;
+
+// Windows.Media.Playback.AutoLoadedDisplayPropertyKind
+enum _WMPAutoLoadedDisplayPropertyKind {
+    WMPAutoLoadedDisplayPropertyKindNone = 0,
+    WMPAutoLoadedDisplayPropertyKindMusicOrVideo = 1,
+    WMPAutoLoadedDisplayPropertyKindMusic = 2,
+    WMPAutoLoadedDisplayPropertyKindVideo = 3,
+};
+typedef unsigned WMPAutoLoadedDisplayPropertyKind;
+
 #include "WindowsFoundation.h"
 #include "WindowsFoundationCollections.h"
 #include "WindowsDevicesEnumeration.h"
 #include "WindowsMedia.h"
 #include "WindowsMediaMediaProperties.h"
 #include "WindowsMediaCasting.h"
+#include "WindowsGraphicsDirectXDirect3D11.h"
 #include "WindowsUIComposition.h"
+#include "WindowsFoundationNumerics.h"
 #include "WindowsMediaProtection.h"
 #include "WindowsStorage.h"
 #include "WindowsStorageStreams.h"
@@ -155,7 +182,7 @@ typedef unsigned WMPMediaBreakInsertionMethod;
 @protocol WMPIMediaPlaybackSource
 @end
 
-OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREMEDIAPROPERTIESDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMPIMediaPlaybackSource : RTObject <WMPIMediaPlaybackSource>
 @end
 
@@ -170,7 +197,7 @@ OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 - (void)setPlaybackSource:(RTObject<WMPIMediaPlaybackSource>*)source;
 @end
 
-OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREMEDIAPROPERTIESDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMPIMediaEnginePlaybackSource : RTObject <WMPIMediaEnginePlaybackSource>
 @end
 
@@ -180,7 +207,7 @@ OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 #ifndef __WMPPlaybackMediaMarker_DEFINED__
 #define __WMPPlaybackMediaMarker_DEFINED__
 
-OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREMEDIAPROPERTIESDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMPPlaybackMediaMarker : RTObject
 + (WMPPlaybackMediaMarker*)makeFromTime:(WFTimeSpan*)value ACTIVATOR;
 + (WMPPlaybackMediaMarker*)make:(WFTimeSpan*)value mediaMarketType:(NSString *)mediaMarketType text:(NSString *)text ACTIVATOR;
@@ -198,7 +225,7 @@ OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 #ifndef __WMPPlaybackMediaMarkerSequence_DEFINED__
 #define __WMPPlaybackMediaMarkerSequence_DEFINED__
 
-OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREMEDIAPROPERTIESDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMPPlaybackMediaMarkerSequence : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -214,7 +241,7 @@ OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 #ifndef __WMPMediaPlayerFailedEventArgs_DEFINED__
 #define __WMPMediaPlayerFailedEventArgs_DEFINED__
 
-OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREMEDIAPROPERTIESDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMPMediaPlayerFailedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -230,7 +257,7 @@ OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 #ifndef __WMPMediaPlayerRateChangedEventArgs_DEFINED__
 #define __WMPMediaPlayerRateChangedEventArgs_DEFINED__
 
-OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREMEDIAPROPERTIESDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMPMediaPlayerRateChangedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -244,7 +271,7 @@ OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 #ifndef __WMPPlaybackMediaMarkerReachedEventArgs_DEFINED__
 #define __WMPPlaybackMediaMarkerReachedEventArgs_DEFINED__
 
-OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREMEDIAPROPERTIESDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMPPlaybackMediaMarkerReachedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -258,7 +285,7 @@ OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 #ifndef __WMPMediaPlayerDataReceivedEventArgs_DEFINED__
 #define __WMPMediaPlayerDataReceivedEventArgs_DEFINED__
 
-OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREMEDIAPROPERTIESDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMPMediaPlayerDataReceivedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -276,7 +303,7 @@ OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 - (void)close;
 @end
 
-OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREMEDIAPROPERTIESDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WFIClosable : RTObject <WFIClosable>
 @end
 
@@ -286,37 +313,38 @@ OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 #ifndef __WMPMediaPlayer_DEFINED__
 #define __WMPMediaPlayer_DEFINED__
 
-OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREMEDIAPROPERTIESDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMPMediaPlayer : RTObject <WFIClosable>
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
-@property BOOL isLoopingEnabled;
 @property double volume;
 @property (retain) WFTimeSpan* position;
-@property BOOL autoPlay;
 @property double playbackRate;
+@property BOOL autoPlay;
+@property BOOL isLoopingEnabled;
 @property BOOL isMuted;
-@property (readonly) double bufferingProgress;
-@property (readonly) BOOL canPause;
-@property (readonly) WMPMediaPlayerState currentState;
 @property (readonly) BOOL canSeek;
-@property (readonly) BOOL isProtected;
 @property (readonly) WFTimeSpan* naturalDuration;
 @property (readonly) WMPPlaybackMediaMarkerSequence* playbackMediaMarkers;
+@property (readonly) double bufferingProgress;
+@property (readonly) BOOL canPause;
+@property (readonly) BOOL isProtected;
+@property (readonly) WMPMediaPlayerState currentState;
 @property WMPMediaPlayerAudioDeviceType audioDeviceType;
 @property WMPMediaPlayerAudioCategory audioCategory;
 @property (readonly) WMSystemMediaTransportControls* systemMediaTransportControls;
+@property (retain) WFTimeSpan* timelineControllerPositionOffset;
 @property (retain) WMMediaTimelineController* timelineController;
 @property WMPStereoscopicVideoRenderMode stereoscopicVideoRenderMode;
+@property BOOL realTimePlayback;
 @property (retain) WDEDeviceInformation* audioDevice;
 @property double audioBalance;
-@property BOOL realTimePlayback;
-@property (retain) WFTimeSpan* timelineControllerPositionOffset;
+@property (readonly) WMPMediaPlaybackCommandManager* commandManager;
 @property (readonly) WMPMediaPlaybackSession* playbackSession;
 @property (readonly) WMPMediaBreakManager* breakManager;
-@property (readonly) WMPMediaPlaybackCommandManager* commandManager;
+@property BOOL isVideoFrameServerEnabled;
 @property (retain) WMPMediaProtectionManager* protectionManager;
 @property (retain) RTObject<WMPIMediaPlaybackSource>* source;
 - (EventRegistrationToken)addBufferingEndedEvent:(void(^)(WMPMediaPlayer*, RTObject*))del;
@@ -343,6 +371,10 @@ OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 - (void)removeIsMutedChangedEvent:(EventRegistrationToken)tok;
 - (EventRegistrationToken)addSourceChangedEvent:(void(^)(WMPMediaPlayer*, RTObject*))del;
 - (void)removeSourceChangedEvent:(EventRegistrationToken)tok;
+- (EventRegistrationToken)addVideoFrameAvailableEvent:(void(^)(WMPMediaPlayer*, RTObject*))del;
+- (void)removeVideoFrameAvailableEvent:(EventRegistrationToken)tok;
+- (EventRegistrationToken)addSubtitleFrameChangedEvent:(void(^)(WMPMediaPlayer*, RTObject*))del;
+- (void)removeSubtitleFrameChangedEvent:(EventRegistrationToken)tok;
 - (void)play;
 - (void)pause;
 - (void)setUriSource:(WFUri*)value;
@@ -358,6 +390,11 @@ OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 - (void)setSurfaceSize:(WFSize*)size;
 - (WMPMediaPlayerSurface*)getSurface:(WUCCompositor*)compositor;
 - (void)addVideoEffect:(NSString *)activatableClassId effectOptional:(BOOL)effectOptional effectConfiguration:(RTObject<WFCIPropertySet>*)effectConfiguration;
+- (void)copyFrameToVideoSurface:(RTObject<WGDDIDirect3DSurface>*)destination;
+- (void)copyFrameToVideoSurfaceWithTargetRectangle:(RTObject<WGDDIDirect3DSurface>*)destination targetRectangle:(WFRect*)targetRectangle;
+- (void)copyFrameToStereoscopicVideoSurfaces:(RTObject<WGDDIDirect3DSurface>*)destinationLeftEye destinationRightEye:(RTObject<WGDDIDirect3DSurface>*)destinationRightEye;
+- (BOOL)renderSubtitlesToSurface:(RTObject<WGDDIDirect3DSurface>*)destination;
+- (BOOL)renderSubtitlesToSurfaceWithTargetRectangle:(RTObject<WGDDIDirect3DSurface>*)destination targetRectangle:(WFRect*)targetRectangle;
 @end
 
 #endif // __WMPMediaPlayer_DEFINED__
@@ -366,7 +403,7 @@ OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 #ifndef __WMPMediaBreakManager_DEFINED__
 #define __WMPMediaBreakManager_DEFINED__
 
-OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREMEDIAPROPERTIESDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMPMediaBreakManager : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -391,7 +428,7 @@ OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 #ifndef __WMPMediaPlaybackCommandManager_DEFINED__
 #define __WMPMediaPlaybackCommandManager_DEFINED__
 
-OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREMEDIAPROPERTIESDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMPMediaPlaybackCommandManager : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -436,25 +473,27 @@ OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 #ifndef __WMPMediaPlaybackSession_DEFINED__
 #define __WMPMediaPlaybackSession_DEFINED__
 
-OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREMEDIAPROPERTIESDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMPMediaPlaybackSession : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property WMMStereoscopicVideoPackingMode stereoscopicVideoPackingMode;
-@property double playbackRate;
-@property (retain) WFRect* normalizedSourceRect;
 @property (retain) WFTimeSpan* position;
+@property (retain) WFRect* normalizedSourceRect;
+@property double playbackRate;
 @property (readonly) BOOL isProtected;
 @property (readonly) WMPMediaPlayer* mediaPlayer;
-@property (readonly) WFTimeSpan* naturalDuration;
-@property (readonly) unsigned int naturalVideoWidth;
-@property (readonly) double bufferingProgress;
-@property (readonly) BOOL canPause;
-@property (readonly) BOOL canSeek;
-@property (readonly) WMPMediaPlaybackState playbackState;
 @property (readonly) unsigned int naturalVideoHeight;
+@property (readonly) WFTimeSpan* naturalDuration;
+@property (readonly) double bufferingProgress;
+@property (readonly) unsigned int naturalVideoWidth;
+@property (readonly) BOOL canPause;
+@property (readonly) WMPMediaPlaybackState playbackState;
+@property (readonly) BOOL canSeek;
 @property (readonly) double downloadProgress;
+@property BOOL isMirroring;
+@property (readonly) WMPMediaPlaybackSphericalVideoProjection* sphericalVideoProjection;
 - (EventRegistrationToken)addBufferingEndedEvent:(void(^)(WMPMediaPlaybackSession*, RTObject*))del;
 - (void)removeBufferingEndedEvent:(EventRegistrationToken)tok;
 - (EventRegistrationToken)addBufferingProgressChangedEvent:(void(^)(WMPMediaPlaybackSession*, RTObject*))del;
@@ -475,6 +514,18 @@ OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 - (void)removePositionChangedEvent:(EventRegistrationToken)tok;
 - (EventRegistrationToken)addSeekCompletedEvent:(void(^)(WMPMediaPlaybackSession*, RTObject*))del;
 - (void)removeSeekCompletedEvent:(EventRegistrationToken)tok;
+- (EventRegistrationToken)addBufferedRangesChangedEvent:(void(^)(WMPMediaPlaybackSession*, RTObject*))del;
+- (void)removeBufferedRangesChangedEvent:(EventRegistrationToken)tok;
+- (EventRegistrationToken)addPlayedRangesChangedEvent:(void(^)(WMPMediaPlaybackSession*, RTObject*))del;
+- (void)removePlayedRangesChangedEvent:(EventRegistrationToken)tok;
+- (EventRegistrationToken)addSeekableRangesChangedEvent:(void(^)(WMPMediaPlaybackSession*, RTObject*))del;
+- (void)removeSeekableRangesChangedEvent:(EventRegistrationToken)tok;
+- (EventRegistrationToken)addSupportedPlaybackRatesChangedEvent:(void(^)(WMPMediaPlaybackSession*, RTObject*))del;
+- (void)removeSupportedPlaybackRatesChangedEvent:(EventRegistrationToken)tok;
+- (NSArray* /* WMMediaTimeRange* */)getBufferedRanges;
+- (NSArray* /* WMMediaTimeRange* */)getPlayedRanges;
+- (NSArray* /* WMMediaTimeRange* */)getSeekableRanges;
+- (BOOL)isSupportedPlaybackRateRange:(double)rate1 rate2:(double)rate2;
 @end
 
 #endif // __WMPMediaPlaybackSession_DEFINED__
@@ -483,7 +534,7 @@ OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 #ifndef __WMPMediaPlayerSurface_DEFINED__
 #define __WMPMediaPlayerSurface_DEFINED__
 
-OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREMEDIAPROPERTIESDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMPMediaPlayerSurface : RTObject <WFIClosable>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -496,11 +547,43 @@ OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 
 #endif // __WMPMediaPlayerSurface_DEFINED__
 
+// Windows.Media.Playback.MediaPlaybackSphericalVideoProjection
+#ifndef __WMPMediaPlaybackSphericalVideoProjection_DEFINED__
+#define __WMPMediaPlaybackSphericalVideoProjection_DEFINED__
+
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREMEDIAPROPERTIESDEVICESCOREPLAYBACKPROTECTIONEXPORT
+@interface WMPMediaPlaybackSphericalVideoProjection : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (retain) WFNQuaternion* viewOrientation;
+@property WMPSphericalVideoProjectionMode projectionMode;
+@property BOOL isEnabled;
+@property double horizontalFieldOfViewInDegrees;
+@property WMMSphericalVideoFrameFormat frameFormat;
+@end
+
+#endif // __WMPMediaPlaybackSphericalVideoProjection_DEFINED__
+
+// Windows.Media.Playback.MediaPlaybackSessionBufferingStartedEventArgs
+#ifndef __WMPMediaPlaybackSessionBufferingStartedEventArgs_DEFINED__
+#define __WMPMediaPlaybackSessionBufferingStartedEventArgs_DEFINED__
+
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREMEDIAPROPERTIESDEVICESCOREPLAYBACKPROTECTIONEXPORT
+@interface WMPMediaPlaybackSessionBufferingStartedEventArgs : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (readonly) BOOL isPlaybackInterruption;
+@end
+
+#endif // __WMPMediaPlaybackSessionBufferingStartedEventArgs_DEFINED__
+
 // Windows.Media.Playback.MediaBreakSeekedOverEventArgs
 #ifndef __WMPMediaBreakSeekedOverEventArgs_DEFINED__
 #define __WMPMediaBreakSeekedOverEventArgs_DEFINED__
 
-OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREMEDIAPROPERTIESDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMPMediaBreakSeekedOverEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -516,7 +599,7 @@ OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 #ifndef __WMPMediaBreakStartedEventArgs_DEFINED__
 #define __WMPMediaBreakStartedEventArgs_DEFINED__
 
-OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREMEDIAPROPERTIESDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMPMediaBreakStartedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -530,7 +613,7 @@ OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 #ifndef __WMPMediaBreakEndedEventArgs_DEFINED__
 #define __WMPMediaBreakEndedEventArgs_DEFINED__
 
-OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREMEDIAPROPERTIESDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMPMediaBreakEndedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -544,7 +627,7 @@ OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 #ifndef __WMPMediaBreakSkippedEventArgs_DEFINED__
 #define __WMPMediaBreakSkippedEventArgs_DEFINED__
 
-OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREMEDIAPROPERTIESDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMPMediaBreakSkippedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -558,7 +641,7 @@ OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 #ifndef __WMPBackgroundMediaPlayer_DEFINED__
 #define __WMPBackgroundMediaPlayer_DEFINED__
 
-OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREMEDIAPROPERTIESDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMPBackgroundMediaPlayer : RTObject
 + (void)sendMessageToBackground:(WFCValueSet*)value;
 + (void)sendMessageToForeground:(WFCValueSet*)value;
@@ -577,7 +660,7 @@ OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 #ifndef __WMPMediaPlaybackCommandManagerPlayReceivedEventArgs_DEFINED__
 #define __WMPMediaPlaybackCommandManagerPlayReceivedEventArgs_DEFINED__
 
-OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREMEDIAPROPERTIESDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMPMediaPlaybackCommandManagerPlayReceivedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -592,7 +675,7 @@ OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 #ifndef __WMPMediaPlaybackCommandManagerPauseReceivedEventArgs_DEFINED__
 #define __WMPMediaPlaybackCommandManagerPauseReceivedEventArgs_DEFINED__
 
-OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREMEDIAPROPERTIESDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMPMediaPlaybackCommandManagerPauseReceivedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -607,7 +690,7 @@ OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 #ifndef __WMPMediaPlaybackCommandManagerNextReceivedEventArgs_DEFINED__
 #define __WMPMediaPlaybackCommandManagerNextReceivedEventArgs_DEFINED__
 
-OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREMEDIAPROPERTIESDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMPMediaPlaybackCommandManagerNextReceivedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -622,7 +705,7 @@ OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 #ifndef __WMPMediaPlaybackCommandManagerPreviousReceivedEventArgs_DEFINED__
 #define __WMPMediaPlaybackCommandManagerPreviousReceivedEventArgs_DEFINED__
 
-OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREMEDIAPROPERTIESDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMPMediaPlaybackCommandManagerPreviousReceivedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -637,7 +720,7 @@ OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 #ifndef __WMPMediaPlaybackCommandManagerFastForwardReceivedEventArgs_DEFINED__
 #define __WMPMediaPlaybackCommandManagerFastForwardReceivedEventArgs_DEFINED__
 
-OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREMEDIAPROPERTIESDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMPMediaPlaybackCommandManagerFastForwardReceivedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -652,7 +735,7 @@ OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 #ifndef __WMPMediaPlaybackCommandManagerRewindReceivedEventArgs_DEFINED__
 #define __WMPMediaPlaybackCommandManagerRewindReceivedEventArgs_DEFINED__
 
-OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREMEDIAPROPERTIESDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMPMediaPlaybackCommandManagerRewindReceivedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -667,7 +750,7 @@ OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 #ifndef __WMPMediaPlaybackCommandManagerShuffleReceivedEventArgs_DEFINED__
 #define __WMPMediaPlaybackCommandManagerShuffleReceivedEventArgs_DEFINED__
 
-OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREMEDIAPROPERTIESDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMPMediaPlaybackCommandManagerShuffleReceivedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -683,7 +766,7 @@ OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 #ifndef __WMPMediaPlaybackCommandManagerAutoRepeatModeReceivedEventArgs_DEFINED__
 #define __WMPMediaPlaybackCommandManagerAutoRepeatModeReceivedEventArgs_DEFINED__
 
-OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREMEDIAPROPERTIESDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMPMediaPlaybackCommandManagerAutoRepeatModeReceivedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -699,7 +782,7 @@ OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 #ifndef __WMPMediaPlaybackCommandManagerPositionReceivedEventArgs_DEFINED__
 #define __WMPMediaPlaybackCommandManagerPositionReceivedEventArgs_DEFINED__
 
-OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREMEDIAPROPERTIESDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMPMediaPlaybackCommandManagerPositionReceivedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -715,7 +798,7 @@ OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 #ifndef __WMPMediaPlaybackCommandManagerRateReceivedEventArgs_DEFINED__
 #define __WMPMediaPlaybackCommandManagerRateReceivedEventArgs_DEFINED__
 
-OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREMEDIAPROPERTIESDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMPMediaPlaybackCommandManagerRateReceivedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -731,7 +814,7 @@ OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 #ifndef __WMPMediaPlaybackCommandManagerCommandBehavior_DEFINED__
 #define __WMPMediaPlaybackCommandManagerCommandBehavior_DEFINED__
 
-OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREMEDIAPROPERTIESDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMPMediaPlaybackCommandManagerCommandBehavior : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -749,12 +832,12 @@ OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 #ifndef __WMPMediaPlaybackItem_DEFINED__
 #define __WMPMediaPlaybackItem_DEFINED__
 
-OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREMEDIAPROPERTIESDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMPMediaPlaybackItem : RTObject <WMPIMediaPlaybackSource>
 + (WMPMediaPlaybackItem*)findFromMediaSource:(WMCMediaSource*)source;
++ (WMPMediaPlaybackItem*)make:(WMCMediaSource*)source ACTIVATOR;
 + (WMPMediaPlaybackItem*)makeWithStartTime:(WMCMediaSource*)source startTime:(WFTimeSpan*)startTime ACTIVATOR;
 + (WMPMediaPlaybackItem*)makeWithStartTimeAndDurationLimit:(WMCMediaSource*)source startTime:(WFTimeSpan*)startTime durationLimit:(WFTimeSpan*)durationLimit ACTIVATOR;
-+ (WMPMediaPlaybackItem*)make:(WMCMediaSource*)source ACTIVATOR;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
@@ -766,6 +849,9 @@ OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @property (readonly) WMPMediaBreakSchedule* breakSchedule;
 @property (readonly) id /* WFTimeSpan* */ durationLimit;
 @property (readonly) WFTimeSpan* startTime;
+@property BOOL isDisabledInPlaybackList;
+@property WMPAutoLoadedDisplayPropertyKind autoLoadedDisplayProperties;
+@property (readonly) double totalDownloadProgress;
 - (EventRegistrationToken)addAudioTracksChangedEvent:(void(^)(WMPMediaPlaybackItem*, RTObject<WFCIVectorChangedEventArgs>*))del;
 - (void)removeAudioTracksChangedEvent:(EventRegistrationToken)tok;
 - (EventRegistrationToken)addTimedMetadataTracksChangedEvent:(void(^)(WMPMediaPlaybackItem*, RTObject<WFCIVectorChangedEventArgs>*))del;
@@ -788,7 +874,7 @@ OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 - (void)removeSelectedIndexChangedEvent:(EventRegistrationToken)tok;
 @end
 
-OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREMEDIAPROPERTIESDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMCISingleSelectMediaTrackList : RTObject <WMCISingleSelectMediaTrackList>
 @end
 
@@ -798,7 +884,7 @@ OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 #ifndef __WMPMediaPlaybackAudioTrackList_DEFINED__
 #define __WMPMediaPlaybackAudioTrackList_DEFINED__
 
-OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREMEDIAPROPERTIESDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMPMediaPlaybackAudioTrackList : RTObject <WMCISingleSelectMediaTrackList>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -821,7 +907,7 @@ OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 #ifndef __WMPMediaPlaybackVideoTrackList_DEFINED__
 #define __WMPMediaPlaybackVideoTrackList_DEFINED__
 
-OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREMEDIAPROPERTIESDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMPMediaPlaybackVideoTrackList : RTObject <WMCISingleSelectMediaTrackList>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -844,7 +930,7 @@ OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 #ifndef __WMPMediaPlaybackTimedMetadataTrackList_DEFINED__
 #define __WMPMediaPlaybackTimedMetadataTrackList_DEFINED__
 
-OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREMEDIAPROPERTIESDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMPMediaPlaybackTimedMetadataTrackList : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -868,7 +954,7 @@ OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 #ifndef __WMPMediaBreakSchedule_DEFINED__
 #define __WMPMediaBreakSchedule_DEFINED__
 
-OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREMEDIAPROPERTIESDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMPMediaBreakSchedule : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -889,7 +975,7 @@ OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 #ifndef __WMPMediaItemDisplayProperties_DEFINED__
 #define __WMPMediaItemDisplayProperties_DEFINED__
 
-OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREMEDIAPROPERTIESDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMPMediaItemDisplayProperties : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -907,7 +993,7 @@ OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 #ifndef __WMPMediaBreak_DEFINED__
 #define __WMPMediaBreak_DEFINED__
 
-OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREMEDIAPROPERTIESDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMPMediaBreak : RTObject
 + (WMPMediaBreak*)make:(WMPMediaBreakInsertionMethod)insertionMethod ACTIVATOR;
 + (WMPMediaBreak*)makeWithPresentationPosition:(WMPMediaBreakInsertionMethod)insertionMethod presentationPosition:(WFTimeSpan*)presentationPosition ACTIVATOR;
@@ -927,7 +1013,7 @@ OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 #ifndef __WMPMediaPlaybackList_DEFINED__
 #define __WMPMediaPlaybackList_DEFINED__
 
-OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREMEDIAPROPERTIESDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMPMediaPlaybackList : RTObject <WMPIMediaPlaybackSource>
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -941,6 +1027,7 @@ OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @property (retain) WMPMediaPlaybackItem* startingItem;
 @property (retain) id /* WFTimeSpan* */ maxPrefetchTime;
 @property (readonly) NSArray* /* WMPMediaPlaybackItem* */ shuffledItems;
+@property (retain) id /* unsigned int */ maxPlayedItemsToKeepOpen;
 - (EventRegistrationToken)addCurrentItemChangedEvent:(void(^)(WMPMediaPlaybackList*, WMPCurrentMediaPlaybackItemChangedEventArgs*))del;
 - (void)removeCurrentItemChangedEvent:(EventRegistrationToken)tok;
 - (EventRegistrationToken)addItemFailedEvent:(void(^)(WMPMediaPlaybackList*, WMPMediaPlaybackItemFailedEventArgs*))del;
@@ -959,7 +1046,7 @@ OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 #ifndef __WMPMediaPlaybackItemError_DEFINED__
 #define __WMPMediaPlaybackItemError_DEFINED__
 
-OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREMEDIAPROPERTIESDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMPMediaPlaybackItemError : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -974,7 +1061,7 @@ OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 #ifndef __WMPMediaPlaybackItemFailedEventArgs_DEFINED__
 #define __WMPMediaPlaybackItemFailedEventArgs_DEFINED__
 
-OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREMEDIAPROPERTIESDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMPMediaPlaybackItemFailedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -989,13 +1076,14 @@ OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 #ifndef __WMPCurrentMediaPlaybackItemChangedEventArgs_DEFINED__
 #define __WMPCurrentMediaPlaybackItemChangedEventArgs_DEFINED__
 
-OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREMEDIAPROPERTIESDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMPCurrentMediaPlaybackItemChangedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WMPMediaPlaybackItem* newItem __attribute__ ((ns_returns_not_retained));
 @property (readonly) WMPMediaPlaybackItem* oldItem;
+@property (readonly) WMPMediaPlaybackItemChangedReason reason;
 @end
 
 #endif // __WMPCurrentMediaPlaybackItemChangedEventArgs_DEFINED__
@@ -1004,7 +1092,7 @@ OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 #ifndef __WMPMediaPlaybackItemOpenedEventArgs_DEFINED__
 #define __WMPMediaPlaybackItemOpenedEventArgs_DEFINED__
 
-OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREMEDIAPROPERTIESDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMPMediaPlaybackItemOpenedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -1018,7 +1106,7 @@ OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 #ifndef __WMPTimedMetadataPresentationModeChangedEventArgs_DEFINED__
 #define __WMPTimedMetadataPresentationModeChangedEventArgs_DEFINED__
 
-OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREMEDIAPROPERTIESDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMPTimedMetadataPresentationModeChangedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));

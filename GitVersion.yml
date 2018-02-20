@@ -34,4 +34,5 @@ branches:
     is-release-branch: false
     prevent-increment-of-merged-branch-version: true
 ignore:
-  sha: []
+  sha:
+    - db05d76b7c9e9371f3edd8bb0085e260d1ad4957

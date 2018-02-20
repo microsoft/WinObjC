@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -27,8 +27,17 @@
 #endif
 #include <UWP/interopBase.h>
 
-@class WASPIAppInstallStatus, WASPIAppInstallItem, WASPIAppInstallManagerItemEventArgs, WASPIAppInstallManager;
-@protocol WASPIIAppInstallStatus, WASPIIAppInstallStatus2, WASPIIAppInstallItem, WASPIIAppInstallItem2, WASPIIAppInstallManagerItemEventArgs, WASPIIAppInstallManager, WASPIIAppInstallManager2, WASPIIAppInstallManager3;
+@class WASPIAppInstallStatus, WASPIAppInstallItem, WASPIGetEntitlementResult, WASPIAppInstallManagerItemEventArgs, WASPIAppInstallManager;
+@protocol WASPIIAppInstallStatus, WASPIIAppInstallStatus2, WASPIIAppInstallItem, WASPIIAppInstallItem2, WASPIIAppInstallItem3, WASPIIGetEntitlementResult, WASPIIAppInstallManagerItemEventArgs, WASPIIAppInstallManager, WASPIIAppInstallManager2, WASPIIAppInstallManager3, WASPIIAppInstallManager4, WASPIIAppInstallManager5;
+
+// Windows.ApplicationModel.Store.Preview.InstallControl.GetEntitlementStatus
+enum _WASPIGetEntitlementStatus {
+    WASPIGetEntitlementStatusSucceeded = 0,
+    WASPIGetEntitlementStatusNoStoreAccount = 1,
+    WASPIGetEntitlementStatusNetworkError = 2,
+    WASPIGetEntitlementStatusServerError = 3,
+};
+typedef unsigned WASPIGetEntitlementStatus;
 
 // Windows.ApplicationModel.Store.Preview.InstallControl.AppInstallState
 enum _WASPIAppInstallState {
@@ -105,6 +114,8 @@ OBJCUWPWINDOWSAPPLICATIONMODELSTOREPREVIEWINSTALLCONTROLEXPORT
 @property (readonly) BOOL isUserInitiated;
 @property (readonly) NSString * packageFamilyName;
 @property (readonly) NSString * productId;
+@property (readonly) NSArray* /* WASPIAppInstallItem* */ children;
+@property (readonly) BOOL itemOperationsMightAffectOtherItems;
 - (EventRegistrationToken)addCompletedEvent:(void(^)(WASPIAppInstallItem*, RTObject*))del;
 - (void)removeCompletedEvent:(EventRegistrationToken)tok;
 - (EventRegistrationToken)addStatusChangedEvent:(void(^)(WASPIAppInstallItem*, RTObject*))del;
@@ -119,6 +130,20 @@ OBJCUWPWINDOWSAPPLICATIONMODELSTOREPREVIEWINSTALLCONTROLEXPORT
 @end
 
 #endif // __WASPIAppInstallItem_DEFINED__
+
+// Windows.ApplicationModel.Store.Preview.InstallControl.GetEntitlementResult
+#ifndef __WASPIGetEntitlementResult_DEFINED__
+#define __WASPIGetEntitlementResult_DEFINED__
+
+OBJCUWPWINDOWSAPPLICATIONMODELSTOREPREVIEWINSTALLCONTROLEXPORT
+@interface WASPIGetEntitlementResult : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
+#endif
+@property (readonly) WASPIGetEntitlementStatus status;
+@end
+
+#endif // __WASPIGetEntitlementResult_DEFINED__
 
 // Windows.ApplicationModel.Store.Preview.InstallControl.AppInstallManagerItemEventArgs
 #ifndef __WASPIAppInstallManagerItemEventArgs_DEFINED__
@@ -147,6 +172,7 @@ OBJCUWPWINDOWSAPPLICATIONMODELSTOREPREVIEWINSTALLCONTROLEXPORT
 @property WASPIAutoUpdateSetting autoUpdateSetting;
 @property (retain) NSString * acquisitionIdentity;
 @property (readonly) NSArray* /* WASPIAppInstallItem* */ appInstallItems;
+@property (readonly) NSArray* /* WASPIAppInstallItem* */ appInstallItemsWithGroupSupport;
 - (EventRegistrationToken)addItemCompletedEvent:(void(^)(WASPIAppInstallManager*, WASPIAppInstallManagerItemEventArgs*))del;
 - (void)removeItemCompletedEvent:(EventRegistrationToken)tok;
 - (EventRegistrationToken)addItemStatusChangedEvent:(void(^)(WASPIAppInstallManager*, WASPIAppInstallManagerItemEventArgs*))del;
@@ -177,6 +203,9 @@ OBJCUWPWINDOWSAPPLICATIONMODELSTOREPREVIEWINSTALLCONTROLEXPORT
 - (void)getIsAppAllowedToInstallForUserAsync:(WSUser*)user productId:(NSString *)productId skuId:(NSString *)skuId catalogId:(NSString *)catalogId correlationVector:(NSString *)correlationVector success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 - (void)getIsApplicableForUserAsync:(WSUser*)user productId:(NSString *)productId skuId:(NSString *)skuId success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 - (void)moveToFrontOfDownloadQueue:(NSString *)productId correlationVector:(NSString *)correlationVector;
+- (void)getFreeUserEntitlementAsync:(NSString *)storeId campaignId:(NSString *)campaignId correlationVector:(NSString *)correlationVector success:(void (^)(WASPIGetEntitlementResult*))success failure:(void (^)(NSError*))failure;
+- (void)getFreeUserEntitlementForUserAsync:(WSUser*)user storeId:(NSString *)storeId campaignId:(NSString *)campaignId correlationVector:(NSString *)correlationVector success:(void (^)(WASPIGetEntitlementResult*))success failure:(void (^)(NSError*))failure;
+- (void)getFreeDeviceEntitlementAsync:(NSString *)storeId campaignId:(NSString *)campaignId correlationVector:(NSString *)correlationVector success:(void (^)(WASPIGetEntitlementResult*))success failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WASPIAppInstallManager_DEFINED__
