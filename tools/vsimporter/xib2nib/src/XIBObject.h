@@ -21,6 +21,7 @@
 #include <pugixml.hpp>
 #include <string.h>
 #include <unordered_set>
+#include <math.h>
 
 class XIBObject;
 
