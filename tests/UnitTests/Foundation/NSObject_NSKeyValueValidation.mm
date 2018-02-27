@@ -162,7 +162,7 @@ TEST(NSObject, ValidateValueForKey) {
     NSData* data = nil;
     NSError* error = nil;
 
-    EXPECT_EQ(NO, [test validateValue:nil forKey:@"obj" error:&error]);
+    EXPECT_EQ(NO, [test validateValue:nullptr forKey:@"obj" error:&error]);
     EXPECT_EQ(YES, [test validateValue:&data forKey:@"obj" error:&error]);
     EXPECT_OBJCEQ([NSData data], data);
 }
@@ -230,7 +230,7 @@ TEST(NSObject, ValidateValueForKeyPath) {
     NSData* data = nil;
     NSError* error = nil;
 
-    EXPECT_EQ(NO, [test validateValue:nil forKeyPath:@"obj.obj" error:&error]);
+    EXPECT_EQ(NO, [test validateValue:nullptr forKeyPath:@"obj.obj" error:&error]);
     EXPECT_EQ(YES, [test validateValue:&data forKeyPath:@"obj.obj" error:&error]);
     EXPECT_OBJCEQ([NSData data], data);
 }
