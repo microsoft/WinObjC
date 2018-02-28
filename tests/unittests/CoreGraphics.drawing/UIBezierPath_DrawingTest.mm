@@ -343,7 +343,7 @@ DRAW_TEST_F(UIBezierPath, LineDash, UIKitMimicTest<>) {
     [path3 setLineDash:pattern3 count:12 phase:0];
     [path4 setLineDash:pattern4 count:2 phase:0];
     [path5 setLineDash:pattern4 count:2 phase:1];
-    [path6 setLineDash:nil count:0 phase:0];
+    [path6 setLineDash:nullptr count:0 phase:0];
 
     [path1 stroke];
     [path2 stroke];
