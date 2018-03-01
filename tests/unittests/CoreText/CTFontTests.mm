@@ -207,7 +207,7 @@ TEST(CTFont, CreateWithPostScriptName) {
     EXPECT_NE(nullptr, font1);
     EXPECT_NE(nullptr, font2);
 
-    EXPECT_EQ(font1, font2);
+    EXPECT_TRUE(CFEqual(font1, font2));
 }
 
 static const CFStringRef c_arialBoldItalicName = CFSTR("Arial-BoldItalicMT");
@@ -276,14 +276,14 @@ TEST(CTFont, CreateWithFontDescriptor) {
     CTFontDescriptorRef descriptor = static_cast<CTFontDescriptorRef>(CFAutorelease(CTFontDescriptorCreateWithAttributes(attributes)));
     CTFontRef font = static_cast<CTFontRef>(CFAutorelease(CTFontCreateWithFontDescriptor(descriptor, size, nullptr)));
     ASSERT_NE(nullptr, font);
-    ASSERT_EQ(CFAutorelease(CTFontCreateWithName(fontFamilyName, size, nullptr)), font);
+    ASSERT_TRUE(CFEqual(font, CFAutorelease(CTFontCreateWithName(fontFamilyName, size, nullptr))));
 
     // Adding size to attributes, but size parameter in create function should take priority
     CFDictionaryAddValue(attributes, kCTFontSizeAttribute, (__bridge CFNumberRef)[NSNumber numberWithFloat:1000.0f]);
     descriptor = static_cast<CTFontDescriptorRef>(CFAutorelease(CTFontDescriptorCreateWithAttributes(attributes)));
     font = static_cast<CTFontRef>(CFAutorelease(CTFontCreateWithFontDescriptor(descriptor, size, nullptr)));
     ASSERT_NE(nullptr, font);
-    ASSERT_EQ(CFAutorelease(CTFontCreateWithName(fontFamilyName, size, nullptr)), font);
+    ASSERT_TRUE(CFEqual(font, CFAutorelease(CTFontCreateWithName(fontFamilyName, size, nullptr))));
 
     // Adding something to traits...
     CFMutableDictionaryRef traits =
@@ -294,14 +294,14 @@ TEST(CTFont, CreateWithFontDescriptor) {
     descriptor = static_cast<CTFontDescriptorRef>(CFAutorelease(CTFontDescriptorCreateWithAttributes(attributes)));
     font = static_cast<CTFontRef>(CFAutorelease(CTFontCreateWithFontDescriptor(descriptor, size, nullptr)));
     ASSERT_NE(nullptr, font);
-    ASSERT_EQ(CFAutorelease(CTFontCreateWithName(c_courierNewBoldName, size, nullptr)), font);
+    ASSERT_TRUE(CFEqual(font, CFAutorelease(CTFontCreateWithName(c_courierNewBoldName, size, nullptr))));
 
     // Set the weight trait to 'narrow' (no matching font in Courier) - should then return the default font in the family
     CFDictionarySetValue(traits, kCTFontWeightTrait, (__bridge CFNumberRef) @-0.4f);
     descriptor = static_cast<CTFontDescriptorRef>(CFAutorelease(CTFontDescriptorCreateWithAttributes(attributes)));
     font = static_cast<CTFontRef>(CFAutorelease(CTFontCreateWithFontDescriptor(descriptor, size, nullptr)));
     ASSERT_NE(nullptr, font);
-    ASSERT_EQ(CFAutorelease(CTFontCreateWithName(fontFamilyName, size, nullptr)), font);
+    ASSERT_TRUE(CFEqual(font, CFAutorelease(CTFontCreateWithName(fontFamilyName, size, nullptr))));
 
     // Set the weight trait to 'heavy' (no exact matching font in Courier)
     CFDictionarySetValue(traits, kCTFontWeightTrait, (__bridge CFNumberRef) @0.56f);
@@ -311,9 +311,9 @@ TEST(CTFont, CreateWithFontDescriptor) {
 // DWrite diverges from iOS here - DWrite tries to do a 'best match' and returns the bold font
 // iOS is more stringent and just returns nullptr
 #if TARGET_OS_WIN32
-    ASSERT_EQ(CFAutorelease(CTFontCreateWithName(c_courierNewBoldName, size, nullptr)), font);
+    ASSERT_TRUE(CFEqual(font, CFAutorelease(CTFontCreateWithName(c_courierNewBoldName, size, nullptr))));
 #else
-    ASSERT_EQ(CFAutorelease(CTFontCreateWithName(fontFamilyName, size, nullptr)), font);
+    ASSERT_TRUE(CFEqual(font, CFAutorelease(CTFontCreateWithName(fontFamilyName, size, nullptr))));
 #endif
 
     // Set the weight back to 'normal'
@@ -324,14 +324,14 @@ TEST(CTFont, CreateWithFontDescriptor) {
     font = static_cast<CTFontRef>(CFAutorelease(CTFontCreateWithFontDescriptor(descriptor, size, nullptr)));
     // Seems that the explicit weight overrides the symbolic trait
     ASSERT_NE(nullptr, font);
-    ASSERT_EQ(CFAutorelease(CTFontCreateWithName(fontFamilyName, size, nullptr)), font);
+    ASSERT_TRUE(CFEqual(font, CFAutorelease(CTFontCreateWithName(fontFamilyName, size, nullptr))));
 
     // Remove the weight trait - should now return the bold font
     CFDictionaryRemoveValue(traits, kCTFontWeightTrait);
     descriptor = static_cast<CTFontDescriptorRef>(CFAutorelease(CTFontDescriptorCreateWithAttributes(attributes)));
     font = static_cast<CTFontRef>(CFAutorelease(CTFontCreateWithFontDescriptor(descriptor, size, nullptr)));
     ASSERT_NE(nullptr, font);
-    ASSERT_EQ(CFAutorelease(CTFontCreateWithName(c_courierNewBoldName, size, nullptr)), font);
+    ASSERT_TRUE(CFEqual(font, CFAutorelease(CTFontCreateWithName(c_courierNewBoldName, size, nullptr))));
 
     // Add the italic flag to symbolic traits
     CFDictionarySetValue(traits,
@@ -340,7 +340,7 @@ TEST(CTFont, CreateWithFontDescriptor) {
     descriptor = static_cast<CTFontDescriptorRef>(CFAutorelease(CTFontDescriptorCreateWithAttributes(attributes)));
     font = static_cast<CTFontRef>(CFAutorelease(CTFontCreateWithFontDescriptor(descriptor, size, nullptr)));
     ASSERT_NE(nullptr, font);
-    ASSERT_EQ(CFAutorelease(CTFontCreateWithName(c_courierNewBoldItalicName, size, nullptr)), font);
+    ASSERT_TRUE(CFEqual(font, CFAutorelease(CTFontCreateWithName(c_courierNewBoldItalicName, size, nullptr))));
 }
 
 TEST(CTFont, CreateCopyWith) {
@@ -353,14 +353,14 @@ TEST(CTFont, CreateCopyWith) {
     CFAutorelease(italicFont);
 
     ASSERT_NE(nullptr, italicFont);
-    ASSERT_EQ(CFAutorelease(CTFontCreateWithName(c_arialItalicName, newSize, nullptr)), italicFont);
+    ASSERT_TRUE(CFEqual(italicFont, CFAutorelease(CTFontCreateWithName(c_arialItalicName, newSize, nullptr))));
 
     // Create a new font with the same traits but in the 'Trebuchet MS' family
     CGFloat newSize2 = 105.4f;
     CTFontRef italicFont2 = CTFontCreateCopyWithFamily(italicFont, newSize2, nullptr, CFSTR("Trebuchet MS"));
     CFAutorelease(italicFont2);
     ASSERT_NE(nullptr, italicFont2);
-    ASSERT_EQ(CFAutorelease(CTFontCreateWithName(c_trebuchetMSItalicName, newSize2, nullptr)), italicFont2);
+    ASSERT_TRUE(CFEqual(italicFont2, CFAutorelease(CTFontCreateWithName(c_trebuchetMSItalicName, newSize2, nullptr))));
 
     // Create a new font in a nonexistent family
     CTFontRef doesNotExistFont = CTFontCreateCopyWithFamily(italicFont, newSize, nullptr, CFSTR("DoesNotExistFamily"));
