@@ -1975,11 +1975,11 @@ static WYPopoverTheme *defaultTheme_ = nil;
             
             if ([strongSelf->viewController respondsToSelector:@selector(preferredContentSize)])
             {
-                [strongSelf->viewController addObserver:self forKeyPath:NSStringFromSelector(@selector(preferredContentSize)) options:0 context:nil];
+                [strongSelf->viewController addObserver:self forKeyPath:NSStringFromSelector(@selector(preferredContentSize)) options:0 context:nullptr];
             }
             else
             {
-                [strongSelf->viewController addObserver:self forKeyPath:NSStringFromSelector(@selector(contentSizeForViewInPopover)) options:0 context:nil];
+                [strongSelf->viewController addObserver:self forKeyPath:NSStringFromSelector(@selector(contentSizeForViewInPopover)) options:0 context:nullptr];
             }
             
             strongSelf->backgroundView.appearing = NO;

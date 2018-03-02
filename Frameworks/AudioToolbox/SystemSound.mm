@@ -106,8 +106,8 @@ void _handleMediaEndedEvent();
 
 - (void)removeCallbackFunction {
     self.callbackRegistered = false;
-    _callbackFunction = nil;
-    _clientData = nil;
+    _callbackFunction = nullptr;
+    _clientData = nullptr;
 }
 
 - (WF::Uri)mediaUri {
