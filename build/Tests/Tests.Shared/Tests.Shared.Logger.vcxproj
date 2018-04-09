@@ -96,7 +96,7 @@
       <CompileAsWinRT>false</CompileAsWinRT>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>INLINE_TEST_METHOD_MARKUP;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_SILENCE_TR1_NAMESPACE_DEPRECATION_WARNING;INLINE_TEST_METHOD_MARKUP;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(StarboardBasePath)\include;$(MSBuildThisFileDirectory)..\..\..\tests\frameworks\gtest;$(MSBuildThisFileDirectory)..\..\..\Frameworks\include;$(MSBuildThisFileDirectory)..\..\..\include\xplat;$(MSBuildThisFileDirectory)..\..\..\tests\frameworks\gtest\include;$(MSBuildThisFileDirectory)..\..\..\tests\Tests.Shared\Framework;$(MSBuildThisFileDirectory);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
@@ -115,7 +115,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>INLINE_TEST_METHOD_MARKUP;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_SILENCE_TR1_NAMESPACE_DEPRECATION_WARNING;INLINE_TEST_METHOD_MARKUP;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(StarboardBasePath)\include;$(MSBuildThisFileDirectory)..\..\..\tests\frameworks\gtest;$(MSBuildThisFileDirectory)..\..\..\Frameworks\include;$(MSBuildThisFileDirectory)..\..\..\include\xplat;$(MSBuildThisFileDirectory)..\..\..\tests\frameworks\gtest\include;$(MSBuildThisFileDirectory)..\..\..\tests\Tests.Shared\Framework;$(MSBuildThisFileDirectory);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
@@ -134,7 +134,7 @@
       <CompileAsWinRT>false</CompileAsWinRT>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>INLINE_TEST_METHOD_MARKUP;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_SILENCE_TR1_NAMESPACE_DEPRECATION_WARNING;INLINE_TEST_METHOD_MARKUP;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(StarboardBasePath)\include;$(MSBuildThisFileDirectory)..\..\..\tests\frameworks\gtest;$(MSBuildThisFileDirectory)..\..\..\Frameworks\include;$(MSBuildThisFileDirectory)..\..\..\include\xplat;$(MSBuildThisFileDirectory)..\..\..\tests\frameworks\gtest\include;$(MSBuildThisFileDirectory)..\..\..\tests\Tests.Shared\Framework;$(MSBuildThisFileDirectory);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
@@ -153,7 +153,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>INLINE_TEST_METHOD_MARKUP;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_SILENCE_TR1_NAMESPACE_DEPRECATION_WARNING;INLINE_TEST_METHOD_MARKUP;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(StarboardBasePath)\include;$(MSBuildThisFileDirectory)..\..\..\tests\frameworks\gtest;$(MSBuildThisFileDirectory)..\..\..\Frameworks\include;$(MSBuildThisFileDirectory)..\..\..\include\xplat;$(MSBuildThisFileDirectory)..\..\..\tests\frameworks\gtest\include;$(MSBuildThisFileDirectory)..\..\..\tests\Tests.Shared\Framework;$(MSBuildThisFileDirectory);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
