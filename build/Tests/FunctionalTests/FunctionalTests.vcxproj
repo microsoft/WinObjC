@@ -177,7 +177,7 @@
     <ClangCompile>
       <IncludePaths>..\..\..\Frameworks\include;..\..\..\Frameworks\UIKit.Xaml;..\..\..\include\xplat;..\..\..\tests\frameworks\include;..\..\..\tests\functionaltests;..\..\..\tests\frameworks\gtest;..\..\..\tests\frameworks\gtest\include;..\..\..\samples\XAMLCatalog\XAMLCatalog;..\..\..\tests\Tests.Shared\;%(IncludePaths)</IncludePaths>
       <CompileAs>CompileAsObjCpp</CompileAs>
-      <OtherCPlusPlusFlags>-fmsvc-real-char -Wdeprecated-declarations</OtherCPlusPlusFlags>
+      <OtherCPlusPlusFlags>-Wdeprecated-declarations</OtherCPlusPlusFlags>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;DEBUG=1;INLINE_TEST_METHOD_MARKUP;FUNCTIONAL_TEST_FRAMEWORK;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClangCompile>
@@ -208,7 +208,7 @@
     <ClangCompile>
       <IncludePaths>..\..\..\Frameworks\include;..\..\..\Frameworks\UIKit.Xaml;..\..\..\include\xplat;..\..\..\tests\frameworks\include;..\..\..\tests\functionaltests;..\..\..\tests\frameworks\gtest;..\..\..\tests\frameworks\gtest\include;..\..\..\samples\XAMLCatalog\XAMLCatalog;..\..\..\tests\Tests.Shared\;%(IncludePaths)</IncludePaths>
       <CompileAs>CompileAsObjCpp</CompileAs>
-      <OtherCPlusPlusFlags>-fmsvc-real-char -Wdeprecated-declarations</OtherCPlusPlusFlags>
+      <OtherCPlusPlusFlags>-Wdeprecated-declarations</OtherCPlusPlusFlags>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;DEBUG=1;INLINE_TEST_METHOD_MARKUP;FUNCTIONAL_TEST_FRAMEWORK;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
     </ClangCompile>
@@ -235,7 +235,7 @@
     <ClangCompile>
       <IncludePaths>..\..\..\Frameworks\include;..\..\..\Frameworks\UIKit.Xaml;..\..\..\include\xplat;..\..\..\tests\frameworks\include;..\..\..\tests\functionaltests;..\..\..\tests\frameworks\gtest;..\..\..\tests\frameworks\gtest\include;..\..\..\samples\XAMLCatalog\XAMLCatalog;..\..\..\tests\Tests.Shared\;%(IncludePaths)</IncludePaths>
       <CompileAs>CompileAsObjCpp</CompileAs>
-      <OtherCPlusPlusFlags>-fmsvc-real-char -Wdeprecated-declarations</OtherCPlusPlusFlags>
+      <OtherCPlusPlusFlags>-Wdeprecated-declarations</OtherCPlusPlusFlags>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;DEBUG=1;INLINE_TEST_METHOD_MARKUP;FUNCTIONAL_TEST_FRAMEWORK;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClangCompile>
@@ -266,7 +266,7 @@
     <ClangCompile>
       <IncludePaths>..\..\..\Frameworks\include;..\..\..\Frameworks\UIKit.Xaml;..\..\..\include\xplat;..\..\..\tests\frameworks\include;..\..\..\tests\functionaltests;..\..\..\tests\frameworks\gtest;..\..\..\tests\frameworks\gtest\include;..\..\..\samples\XAMLCatalog\XAMLCatalog;..\..\..\tests\Tests.Shared\;%(IncludePaths)</IncludePaths>
       <CompileAs>CompileAsObjCpp</CompileAs>
-      <OtherCPlusPlusFlags>-fmsvc-real-char -Wdeprecated-declarations</OtherCPlusPlusFlags>
+      <OtherCPlusPlusFlags>-Wdeprecated-declarations</OtherCPlusPlusFlags>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;DEBUG=1;INLINE_TEST_METHOD_MARKUP;FUNCTIONAL_TEST_FRAMEWORK;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
     </ClangCompile>
