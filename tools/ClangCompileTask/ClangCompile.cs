@@ -695,7 +695,7 @@ namespace ClangCompile
             DisplayName = "Debug Information",
             Description = "Specifies whether to keep debug information.",
             Category = "General",
-            Switch = "-g")]
+            Switch = "-g -gcodeview")]
         public bool DebugInformation { get; set; }
 
         [PropertyPage(
