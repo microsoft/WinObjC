@@ -8,6 +8,9 @@ LIBRARY CoreFoundation
         __objc_class_name__NSCFNumber CONSTANT
         _OBJC_CLASS__NSCFBoolean DATA
         __objc_class_name__NSCFBoolean CONSTANT
+        ; Exposed for other CoreFoundation bridging implementors
+        _OBJC_CLASS__NSCFType DATA
+        __objc_class_name__NSCFType CONSTANT
 
         ; WINOBJC: Additional items added to CF
         OSHostByteOrder
