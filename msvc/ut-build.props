@@ -7,6 +7,7 @@
     </ClCompile>
     <ClangCompile>
       <PreprocessorDefinitions>_SILENCE_TR1_NAMESPACE_DEPRECATION_WARNING;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalOptions>-Wno-c++17-extensions -Wno-nullability-completeness -Wno-unused-command-line-argument -Wno-c++17-compat-mangling %(AdditionalOptions)</AdditionalOptions>
     </ClangCompile>
     <ClangCompile Condition="'$(AllowNSLog)' != 'true'">
       <PreprocessorDefinitions>_WINOBJC_DO_NOT_USE_NSLOG=;%(PreprocessorDefinitions)</PreprocessorDefinitions>

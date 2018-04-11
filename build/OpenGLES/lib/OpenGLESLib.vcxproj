@@ -89,7 +89,7 @@
     </ClCompile>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\..\common\include;$(StarboardBasePath)\build\include;$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat;$(angle-BinPath)\..\..\..\include</IncludePaths>
-      <AdditionalOptions>-DSTARBOARD_PORT=1 "-DEAGL_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>-Wno-nonportable-include-path -DSTARBOARD_PORT=1 "-DEAGL_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
       <PreprocessorDefinitions>GL_GLEXT_PROTOTYPES</PreprocessorDefinitions>
     </ClangCompile>
   </ItemDefinitionGroup>
@@ -100,7 +100,7 @@
     </ClCompile>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\..\common\include;$(StarboardBasePath)\build\include;$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat;$(angle-BinPath)\..\..\..\include</IncludePaths>
-      <AdditionalOptions>-DSTARBOARD_PORT=1 "-DEAGL_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>-Wno-nonportable-include-path -DSTARBOARD_PORT=1 "-DEAGL_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
       <PreprocessorDefinitions>GL_GLEXT_PROTOTYPES</PreprocessorDefinitions>
       <OptimizationLevel>Full</OptimizationLevel>
     </ClangCompile>
@@ -112,7 +112,7 @@
     </ClCompile>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\..\common\include;$(StarboardBasePath)\build\include;$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat;$(angle-BinPath)\..\..\..\include</IncludePaths>
-      <AdditionalOptions>-DSTARBOARD_PORT=1 "-DEAGL_IMPEXP= " %(AdditionalOptions) -Wno-ignored-attributes</AdditionalOptions>
+      <AdditionalOptions>-Wno-nonportable-include-path -DSTARBOARD_PORT=1 "-DEAGL_IMPEXP= " %(AdditionalOptions) -Wno-ignored-attributes</AdditionalOptions>
       <PreprocessorDefinitions>GL_GLEXT_PROTOTYPES;GL_APIENTRY=</PreprocessorDefinitions>
     </ClangCompile>
   </ItemDefinitionGroup>
@@ -123,7 +123,7 @@
     </ClCompile>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\..\common\include;$(StarboardBasePath)\build\include;$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat;$(angle-BinPath)\..\..\..\include</IncludePaths>
-      <AdditionalOptions>-DSTARBOARD_PORT=1 "-DEAGL_IMPEXP= " %(AdditionalOptions) -Wno-ignored-attributes</AdditionalOptions>
+      <AdditionalOptions>-Wno-nonportable-include-path -DSTARBOARD_PORT=1 "-DEAGL_IMPEXP= " %(AdditionalOptions) -Wno-ignored-attributes</AdditionalOptions>
       <OptimizationLevel>Full</OptimizationLevel>
       <PreprocessorDefinitions>GL_GLEXT_PROTOTYPES;GL_APIENTRY=</PreprocessorDefinitions>
     </ClangCompile>
@@ -135,7 +135,7 @@
     </ClCompile>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\..\common\include;$(StarboardBasePath)\build\include;$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat;$(angle-BinPath)\..\..\..\include</IncludePaths>
-      <AdditionalOptions>-DSTARBOARD_PORT=1 "-DEAGL_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>-Wno-nonportable-include-path -DSTARBOARD_PORT=1 "-DEAGL_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
       <PreprocessorDefinitions>GL_GLEXT_PROTOTYPES</PreprocessorDefinitions>
     </ClangCompile>
   </ItemDefinitionGroup>
@@ -146,7 +146,7 @@
     </ClCompile>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\..\common\include;$(StarboardBasePath)\build\include;$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat;$(angle-BinPath)\..\..\..\include</IncludePaths>
-      <AdditionalOptions>-DSTARBOARD_PORT=1 "-DEAGL_IMPEXP= " %(AdditionalOptions) -Wno-error</AdditionalOptions>
+      <AdditionalOptions>-Wno-nonportable-include-path -DSTARBOARD_PORT=1 "-DEAGL_IMPEXP= " %(AdditionalOptions) -Wno-error</AdditionalOptions>
       <OptimizationLevel>Full</OptimizationLevel>
       <PreprocessorDefinitions>GL_GLEXT_PROTOTYPES</PreprocessorDefinitions>
     </ClangCompile>
