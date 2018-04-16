@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tga;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(WINOBJC_SDK_ROOT)\include\Platform\$(TargetOsAndVersion)\UWP\InteropBase.h" />
+    <ClInclude Include="$(WINOBJC_SDK_ROOT)\include\Platform\$(TargetOsAndVersion)\UWP\RTHelpers.h" />
+    <ClInclude Include="$(WINOBJC_SDK_ROOT)\include\Platform\$(TargetOsAndVersion)\UWP\ObjCHelpers.h" />
+    <ClInclude Include="$(WINOBJC_SDK_ROOT)\include\Platform\$(TargetOsAndVersion)\UWP\ObjCHelperCommonConvertors.h" />
+    <ClInclude Include="$(WINOBJC_SDK_ROOT)\include\Platform\$(TargetOsAndVersion)\UWP\ObjCHelperAsyncImplementation.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClangCompile Include="dllmain.cpp" />
+    <ClangCompile Include="src/*.mm" />
+    <ClangCompile Include="src/*.mm" />
+    <ClangCompile Include="src/*.mm" />
+    <ClangCompile Include="src/*.mm" />
+    <ClangCompile Include="src/*.mm" />
+    <ClangCompile Include="src/*.mm" />
+    <ClangCompile Include="src/*.mm" />
+    <ClangCompile Include="src/*.mm" />
+    <ClangCompile Include="src/*.mm" />
+    <ClangCompile Include="src/*.mm" />
+    <ClangCompile Include="src/*.mm" />
+    <ClangCompile Include="src/*.mm" />
+    <ClangCompile Include="src/*.mm" />
+    <ClangCompile Include="src/*.mm" />
+    <ClangCompile Include="src/*.mm" />
+    <ClangCompile Include="src/*.mm" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="export.def" />
+  </ItemGroup>
+</Project>
