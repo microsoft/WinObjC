@@ -83,7 +83,9 @@
 
   <!-- NuProj Project References. Ensure that these only get evaluated once by checking that this isn't the second time through this project -->
   <ItemGroup Condition="'$(SkipGetPackageContentsForOtherPlatforms)' != 'true'">
-    <ProjectReference Include="..\WinObjC.Logging\WinObjC.Logging.nuproj" />
+    <ProjectReference Include="..\WinObjC.Logging\WinObjC.Logging.nuproj">
+      <SkipGetTargetFrameworkProperties>true</SkipGetTargetFrameworkProperties>
+    </ProjectReference>
   </ItemGroup>
 
   <Import Project="$(MSBuildToolsPath)\Microsoft.Common.targets" />
