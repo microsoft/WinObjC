@@ -915,6 +915,78 @@ namespace ClangCompile
 
         CompileAsEnum CompileAsValue;
 
+        public enum CLanguageStandardEnum
+        {
+            // The names in this enum are lowercase to match the ClCompile names for the same thing.
+            Unspecified,
+            [Field(DisplayName = "C89", Description = "C89 Language Standard.", Switch = "-std=c89")]
+            stdc89,
+            [Field(DisplayName = "C99", Description = "C99 Language Standard.", Switch = "-std=c99")]
+            stdc99,
+            [Field(DisplayName = "C11", Description = "C11 Language Standard.", Switch = "-std=c11")]
+            stdc11,
+            [Field(DisplayName = "C99 (GNU Dialect)", Description = "C99 (GNU Dialect) Language Standard.", Switch = "-std=gnu99")]
+            stdgnu99,
+            [Field(DisplayName = "C11 (GNU Dialect)", Description = "C11 (GNU Dialect) Language Standard.", Switch = "-std=gnu11")]
+            stdgnu11,
+        }
+
+        [PropertyPage(
+            Category = "Language",
+            DisplayName = "C Language Standard",
+            Description = "Determines the C language standard.")]
+        [EnumeratedValue(Enumeration = typeof(CLanguageStandardEnum))]
+        public string CLanguageStandard
+        {
+            get { return CLanguageStandardValue.ToString(); }
+            set {
+                CLanguageStandardValue = string.IsNullOrEmpty(value)
+                    ? CLanguageStandardEnum.Unspecified
+                    : (CLanguageStandardEnum)Enum.Parse(typeof(CLanguageStandardEnum), value, true);
+            }
+        }
+
+        CLanguageStandardEnum CLanguageStandardValue;
+
+        public enum CppLanguageStandardEnum
+        {
+            // The names in this enum are lowercase to match the ClCompile names for the same thing.
+            Unspecified,
+            [Field(DisplayName = "C++03", Description = "C++03 Language Standard.", Switch = "-std=c++98")]
+            stdcpp98,
+            [Field(DisplayName = "C++11", Description = "C++11 Language Standard.", Switch = "-std=c++11")]
+            stdcpp11,
+            [Field(DisplayName = "C++14", Description = "C++14 Language Standard.", Switch = "-std=c++14")]
+            stdcpp14,
+            [Field(DisplayName = "C++17", Description = "C++17 Language Standard.", Switch = "-std=c++17")]
+            stdcpp17,
+            [Field(DisplayName = "C++03 (GNU Dialect)", Description = "C++03 (GNU Dialect) Language Standard.", Switch = "-std=gnu++98")]
+            stdgnupp98,
+            [Field(DisplayName = "C++11 (GNU Dialect)", Description = "C++11 (GNU Dialect) Language Standard.", Switch = "-std=gnu++11")]
+            stdgnupp11,
+            [Field(DisplayName = "C++14 (GNU Dialect)", Description = "C++14 (GNU Dialect) Language Standard.", Switch = "-std=gnu++14")]
+            stdgnupp14,
+            [Field(DisplayName = "C++17 (GNU Dialect)", Description = "C++17 (GNU Dialect) Language Standard.", Switch = "-std=gnu++17")]
+            stdgnupp17,
+        }
+
+        [PropertyPage(
+            Category = "Language",
+            DisplayName = "C++ Language Standard",
+            Description = "Determines the C++ language standard.")]
+        [EnumeratedValue(Enumeration = typeof(CppLanguageStandardEnum))]
+        public string CppLanguageStandard
+        {
+            get { return CppLanguageStandardValue.ToString(); }
+            set {
+                CppLanguageStandardValue = string.IsNullOrEmpty(value)
+                    ? CppLanguageStandardEnum.Unspecified
+                    : (CppLanguageStandardEnum)Enum.Parse(typeof(CppLanguageStandardEnum), value, true);
+            }
+        }
+
+        CppLanguageStandardEnum CppLanguageStandardValue;
+
         [PropertyPage(
             Category = "Language",
             DisplayName = "LLVM Directory",
@@ -1121,7 +1193,7 @@ namespace ClangCompile
                         FieldInfo fInfo = enumAttr.Enumeration.GetField((string)pInfo.GetValue(this));
                         FieldAttribute fAttr = (FieldAttribute)Attribute.GetCustomAttribute(fInfo, typeof(FieldAttribute));
 
-                        if (fAttr.Switch == null || fAttr.Switch == "")
+                        if (fAttr == null || string.IsNullOrEmpty(fAttr.Switch))
                         {
                             continue;
                         }

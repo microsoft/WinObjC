@@ -152,7 +152,7 @@
       Category="General"
       DisplayName="Debug Information"
       Description="Specifies whether to keep debug information."
-      Switch="-g"
+      Switch="-g -gcodeview"
       Name="DebugInformation" />
     <BoolProperty
       Category="General"
@@ -267,6 +267,83 @@
         Description="Compile as Objective C++ Code"
         Switch="-x objective-c++"
         Name="CompileAsObjCpp" />
+    </EnumProperty>
+    <EnumProperty
+      Category="Language"
+      DisplayName="C Language Standard"
+      Description="Determines the C language standard."
+      Name="CLanguageStandard">
+      <EnumValue
+        DisplayName="C89"
+        Description="C89 Language Standard."
+        Switch="-std=c89"
+        Name="stdc89" />
+      <EnumValue
+        DisplayName="C99"
+        Description="C99 Language Standard."
+        Switch="-std=c99"
+        Name="stdc99" />
+      <EnumValue
+        DisplayName="C11"
+        Description="C11 Language Standard."
+        Switch="-std=c11"
+        Name="stdc11" />
+      <EnumValue
+        DisplayName="C99 (GNU Dialect)"
+        Description="C99 (GNU Dialect) Language Standard."
+        Switch="-std=gnu99"
+        Name="stdgnu99" />
+      <EnumValue
+        DisplayName="C11 (GNU Dialect)"
+        Description="C11 (GNU Dialect) Language Standard."
+        Switch="-std=gnu11"
+        Name="stdgnu11" />
+    </EnumProperty>
+    <EnumProperty
+      Category="Language"
+      DisplayName="C++ Language Standard"
+      Description="Determines the C++ language standard."
+      Name="CppLanguageStandard">
+      <EnumValue
+        DisplayName="C++03"
+        Description="C++03 Language Standard."
+        Switch="-std=c++98"
+        Name="stdcpp98" />
+      <EnumValue
+        DisplayName="C++11"
+        Description="C++11 Language Standard."
+        Switch="-std=c++11"
+        Name="stdcpp11" />
+      <EnumValue
+        DisplayName="C++14"
+        Description="C++14 Language Standard."
+        Switch="-std=c++14"
+        Name="stdcpp14" />
+      <EnumValue
+        DisplayName="C++17"
+        Description="C++17 Language Standard."
+        Switch="-std=c++17"
+        Name="stdcpp17" />
+      <EnumValue
+        DisplayName="C++03 (GNU Dialect)"
+        Description="C++03 (GNU Dialect) Language Standard."
+        Switch="-std=gnu++98"
+        Name="stdgnupp98" />
+      <EnumValue
+        DisplayName="C++11 (GNU Dialect)"
+        Description="C++11 (GNU Dialect) Language Standard."
+        Switch="-std=gnu++11"
+        Name="stdgnupp11" />
+      <EnumValue
+        DisplayName="C++14 (GNU Dialect)"
+        Description="C++14 (GNU Dialect) Language Standard."
+        Switch="-std=gnu++14"
+        Name="stdgnupp14" />
+      <EnumValue
+        DisplayName="C++17 (GNU Dialect)"
+        Description="C++17 (GNU Dialect) Language Standard."
+        Switch="-std=gnu++17"
+        Name="stdgnupp17" />
     </EnumProperty>
     <StringProperty
       IncludeInCommandLine="False"
