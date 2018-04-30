@@ -30,12 +30,12 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Configuration">
-    <PackageId>WinObjC.Language</PackageId>
-    <Title>WinObjC.Language</Title>
+    <PackageId>WinObjC.Compiler</PackageId>
+    <Title>WinObjC.Compiler</Title>
     <Authors>Microsoft</Authors>
     <Owners>Microsoft</Owners>
-    <Summary>WinObjC.Language</Summary>
-    <Description>WinObjC.Language</Description>
+    <Summary>WinObjC.Compiler</Summary>
+    <Description>WinObjC.Compiler</Description>
     <PackageReleaseNotes>
     </PackageReleaseNotes>
     <PackageProjectUrl>
@@ -43,13 +43,13 @@
     <PackageLicenseUrl>
     </PackageLicenseUrl>
     <Copyright>Copyright © Microsoft</Copyright>
-    <PackageTags>WinObjC.Language</PackageTags>
+    <PackageTags>WinObjC.Compiler</PackageTags>
     <PackageIconUrl>https://avatars2.githubusercontent.com/u/6154722?v=3&amp;s=200</PackageIconUrl>
     <IsDevelopmentDependency>true</IsDevelopmentDependency>
     <IncludeContentInPackage>false</IncludeContentInPackage>
   </PropertyGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>acc82389-f9eb-49e2-8f8a-c3a8d9360569</ProjectGuid>
+    <ProjectGuid>a7fe013a-bcd5-46de-a9dc-cd6fdfd4f330</ProjectGuid>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x86'" />
@@ -59,9 +59,9 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'" />
   <ItemGroup>
     <None Include="project.json" />
-    <None Include="WinObjC.Language.Packaging.targets" />
-    <None Include="WinObjC.Language.props" />
-    <None Include="WinObjC.Language.targets" />
+    <None Include="WinObjC.Compiler.Packaging.targets" />
+    <None Include="WinObjC.Compiler.props" />
+    <None Include="WinObjC.Compiler.targets" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Readme.txt">
@@ -70,24 +70,12 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\AssetCatalogBuilder\AssetCatalogBuilder.csproj" />
-    <ProjectReference Include="..\vsimporter\sb-expandvars\sb-expandvars.vcxproj" />
-    <ProjectReference Include="..\vsimporter\xib2nib\xib2nib.vcxproj" />
-    <ProjectReference Include="..\WOCStdLib\dll\WOCStdLib.vcxproj" />
-    <ProjectReference Include="..\xib2xaml\xamltools\xamltools.csproj" />
-    <ProjectReference Include="..\xib2xaml\xib2xaml\xib2xaml.csproj" />
-  </ItemGroup>
-  <!-- NuProj Project References. Ensure that these only get evaluated once by checking that this isn't the second time through this project -->
-  <ItemGroup Condition="'$(SkipGetPackageContentsForOtherPlatforms)' != 'true'">
-    <ProjectReference Include="..\WinObjC.Logging\WinObjC.Logging.nuproj">
-      <SkipGetTargetFrameworkProperties>true</SkipGetTargetFrameworkProperties>
-    </ProjectReference>
-    <ProjectReference Include="..\WinObjC.Compiler\WinObjC.Compiler.nuproj">
-      <SkipGetTargetFrameworkProperties>true</SkipGetTargetFrameworkProperties>
-    </ProjectReference>
+    <ProjectReference Include="..\ClangCompileTask\ClangCompile.csproj" />
+    <ProjectReference Include="..\vsimporter\hmapmaker\hmapmaker.vcxproj" />
+    <ProjectReference Include="..\WinObjCRT\dll\WinObjCRT.vcxproj" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.Common.targets" />
   <Import Project="$(NuGetAuthoringPath)\NuGet.Packaging.Authoring.targets" Condition="Exists('$(NuGetAuthoringPath)\NuGet.Packaging.Authoring.targets')" />
-  <Import Project="WinObjC.Language.Packaging.targets" />
+  <Import Project="WinObjC.Compiler.Packaging.targets" />
   <Import Project="$(SolutionDir)\..\common\winobjc.nuproj.common.targets" Condition="Exists('$(SolutionDir)\..\common\winobjc.nuproj.common.targets')" />
 </Project>

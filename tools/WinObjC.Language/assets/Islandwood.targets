@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <ItemGroup>
+    <PropertyPageSchema
+      Include="$(MSBuildThisFileDirectory)$(MSBuildThisFileName).xml" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <ResolveSDKReferencesDependsOn>ComputeStarboardCRT;AddRuntimeComponentFile;$(ResolveSDKReferencesDependsOn)</ResolveSDKReferencesDependsOn>
+    <ClangCompileDependsOn>$(ClangCompileDependsOn);AddWOCStdLib</ClangCompileDependsOn>
+  </PropertyGroup>
+
+  <Target
+    Name="AddWOCStdLib"
+    DependsOnTargets="ComputeClangOptions">
+    <!-- Figure out WOCStdlib options to use -->
+    <ItemGroup>
+      <ClangCompile>
+        <InternalSystemIncludePaths Condition="'%(ClangCompile.WOCStdlib)' == 'true'">$(StarboardSdkRoot)\include\WOCStdLib;%(InternalSystemIncludePaths)</InternalSystemIncludePaths>
+        <InternalForceIncludes Condition="'%(ClangCompile.WOCStdlib)' == 'true'">WOCStdlib.h;%(InternalForceIncludes)</InternalForceIncludes>
+      </ClangCompile>
+    </ItemGroup>
+  </Target>
+
+  <!-- In cases when the project doesn't contain any explicit ClCompile items, adding this file
+       ensures that the SDK references are resolved correctly. Otherwise, the APPX will be missing
+       the runtime libraries, such as vccorlib140d_app.DLL. -->
+  <!-- ComputeStarboardCRT comes from WinObjC.Compiler/ClangCompile.targets -->
+  <Target
+    Name="AddRuntimeComponentFile"
+    DependsOnTargets="ComputeStarboardCRT">
+
+    <ItemGroup Condition="'$(AppContainerApplication)' == 'true'">
+      <ClCompile Include="$(MSBuildThisFileDirectory)ConsumeRuntimeComponent.cpp">
+        <PrecompiledHeader>NotUsing</PrecompiledHeader>
+        <RuntimeLibrary>$(StarboardCRT)</RuntimeLibrary>
+        <AdditionalOptions Condition="'$(ConfigurationType)' == 'Application'">$(AdditionalOptions) -D_WOC_APP</AdditionalOptions>
+        <CompileAsWinRT Condition="'$(ConfigurationType)' == 'Application'">true</CompileAsWinRT>
+      </ClCompile>
+    </ItemGroup>
+
+  </Target>
+
+</Project>

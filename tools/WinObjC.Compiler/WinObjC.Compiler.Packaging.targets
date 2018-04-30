@@ -5,21 +5,14 @@
       <ItemGroup>
           <_AssetFiles Include="$(MSBuildThisFileDirectory)assets\**\*.*"/>
 
-          <!-- Inlcude *all* of /include/  and /include_next/ folder.  -->
-          <_IncludeFiles Include="$(MSBuildThisFileDirectory)..\include\**\*.*"/>
-          <_IncludeFiles Include="$(MSBuildThisFileDirectory)..\include_next\**\*.*"/>
-
-          <!-- Include /deps/ folder. -->
-          <_DepsFiles Include="$(MSBuildThisFileDirectory)..\deps\**\*.*"/>
+          <!-- Include vcclang -->
+          <_DepsFiles Include="$(MSBuildThisFileDirectory)..\deps\**\vcclang.lib"/>
 
           <!-- Include /bin/ folder. -->
-          <_BinFiles Include="$(MSBuildThisFileDirectory)..\bin\**\*.*"/>
+          <_BinFiles Include="$(MSBuildThisFileDirectory)..\bin\depends.*"/>
 
           <PackageFile Include="@(_AssetFiles)">
               <PackagePath>build\assets\%(RecursiveDir)%(Filename)%(Extension)</PackagePath>
-          </PackageFile>
-          <PackageFile Include="@(_IncludeFiles)">
-              <PackagePath>build\include\%(RecursiveDir)%(Filename)%(Extension)</PackagePath>
           </PackageFile>
           <PackageFile Include="@(_DepsFiles)">
               <PackagePath>build\deps\%(RecursiveDir)%(Filename)%(Extension)</PackagePath>

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <StarboardSdkRoot>$([System.IO.Path]::Combine('$(MSBuildThisFileDirectory)', '..'))</StarboardSdkRoot>
     <StarboardLLVMDirectory Condition="'$(StarboardLLVMDirectory)' == ''">$(MSBuildThisFileDirectory)LLVM\</StarboardLLVMDirectory>
   </PropertyGroup>
   <PropertyGroup Label="Clang Args">
@@ -35,15 +34,6 @@
       <MaxClangProcesses Condition="'%(ClangCompile.MaxClangProcesses)' == ''">-1</MaxClangProcesses>
     </ClangCompile>
   </ItemDefinitionGroup>
-
-  <PropertyGroup Label="SBAdditionalLibraries">
-    <StarboardLinkWholeArchive Condition="'$(StarboardLinkWholeArchive)' == ''">false</StarboardLinkWholeArchive>
-  </PropertyGroup>
-  
-  <!-- This need to be an absolute path, so we can successfully filter duplicates -->
-  <PropertyGroup>
-    <Objc2WinmdGeneratedFilesDir>$(MSBuildProjectDirectory)\Generated</Objc2WinmdGeneratedFilesDir>
-  </PropertyGroup>
 
   <ItemDefinitionGroup>
     <ClangCompile>

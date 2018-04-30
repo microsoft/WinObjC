@@ -71,7 +71,7 @@
   <Target Name="AddBuiltOutput" BeforeTargets="GetPackageContents">
     <ItemGroup>
       <PackageFile Include="@(BuiltProjectOutputGroupOutput -> '%(FinalOutputPath)')">
-        <PackagePath>build\msvc\%(TargetPath)</PackagePath>
+        <PackagePath>build\assets\%(TargetPath)</PackagePath>
       </PackageFile>
     </ItemGroup>
   </Target>
