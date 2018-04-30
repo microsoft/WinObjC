@@ -3,29 +3,16 @@
 
   <Target Name="AddBuiltOutput" BeforeTargets="GetPackageContents" Condition="'$(SkipGetPackageContentsForOtherPlatforms)' != 'true'">
       <ItemGroup>
-          <_AssetFiles Include="$(MSBuildThisFileDirectory)assets\**\*.*"/>
+          <_AssetFiles Include="$(MSBuildThisFileDirectory)LLVM\**\*.*"/>
 
-          <!-- Inlcude *all* of /include/  and /include_next/ folder.  -->
-          <_IncludeFiles Include="$(MSBuildThisFileDirectory)..\include\**\*.*"/>
-          <_IncludeFiles Include="$(MSBuildThisFileDirectory)..\include_next\**\*.*"/>
-
-          <!-- Include /deps/ folder. -->
-          <_DepsFiles Include="$(MSBuildThisFileDirectory)..\deps\**\*.*"/>
-
-          <!-- Include /bin/ folder. -->
-          <_BinFiles Include="$(MSBuildThisFileDirectory)..\bin\**\*.*"/>
+          <!-- Include vcclang -->
+          <_PrebuiltFiles Include="$(MSBuildThisFileDirectory)prebuilt\**\*.*"/>
 
           <PackageFile Include="@(_AssetFiles)">
-              <PackagePath>build\assets\%(RecursiveDir)%(Filename)%(Extension)</PackagePath>
+              <PackagePath>build\LLVM\%(RecursiveDir)%(Filename)%(Extension)</PackagePath>
           </PackageFile>
-          <PackageFile Include="@(_IncludeFiles)">
-              <PackagePath>build\include\%(RecursiveDir)%(Filename)%(Extension)</PackagePath>
-          </PackageFile>
-          <PackageFile Include="@(_DepsFiles)">
-              <PackagePath>build\deps\%(RecursiveDir)%(Filename)%(Extension)</PackagePath>
-          </PackageFile>
-          <PackageFile Include="@(_BinFiles)">
-              <PackagePath>build\bin\%(RecursiveDir)%(Filename)%(Extension)</PackagePath>
+          <PackageFile Include="@(_PrebuiltFiles)">
+              <PackagePath>build\prebuilt\%(RecursiveDir)%(Filename)%(Extension)</PackagePath>
           </PackageFile>
       </ItemGroup>
 

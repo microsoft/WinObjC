@@ -382,11 +382,11 @@
       DisplayName="Language-specific flags"
       Description="Language-specific flags"
       Name="OtherFlags" />
-    <BoolProperty
-      Category="Language"
-      DisplayName="Use WinObjC standard library"
-      Description="Uses the WinObjC standard C/C++ library definitions when compiling. This can create some compatibility issues with COM interfaces and Windows-specific source code."
-      Name="WOCStdLib" />
+    <StringProperty
+      Visible="False"
+      IncludeInCommandLine="False"
+      DisplayName="Internal Compiler Flags"
+      Name="InternalCompilerFlags" />
     <StringProperty
       Visible="False"
       IncludeInCommandLine="False"
