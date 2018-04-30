@@ -20,12 +20,6 @@
     </Rule.Categories>
 
     <BoolProperty
-      Category="Libraries"
-      DisplayName="Link with Islandwood default libraries"
-      Description="Specifies if the project should be linked with the default Islandwood libraries."
-      Name="IslandwoodDRT" />
-
-    <BoolProperty
       Category="Linking"
       DisplayName="Use /WHOLEARCHIVE for Objective-C libraries"
       Description="Specifies if the project should consume every object from a static library containing Objective-C."
@@ -37,5 +31,28 @@
       Description="Export public headers"
       Name="ExportPublicHeaders" />
 
+  </Rule>
+
+  <Rule
+    Name="Clang (WinObjC)"
+    PageTemplate="tool"
+    DisplayName="Clang (WinObjC)"
+    Order="201">
+
+    <Rule.DataSource>
+      <DataSource
+        Persistence="ProjectFile"
+        ItemType="ClangCompile" />
+    </Rule.DataSource>
+    <Rule.Categories>
+      <Category
+        Name="Language"
+        DisplayName="Language" />
+    </Rule.Categories>
+    <BoolProperty
+      Category="Language"
+      DisplayName="Use WinObjC standard library"
+      Description="Uses the WinObjC standard C/C++ library definitions when compiling. This can create some compatibility issues with COM interfaces and Windows-specific source code."
+      Name="WOCStdLib" />
   </Rule>
  </ProjectSchemaDefinitions>

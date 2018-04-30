@@ -1032,10 +1032,10 @@ namespace ClangCompile
         public string OtherFlags { get; set; }
 
         [PropertyPage(
-            Category = "Language",
-            DisplayName = "Use WinObjC standard library",
-            Description = "Uses the WinObjC standard C/C++ library definitions when compiling. This can create some compatibility issues with COM interfaces and Windows-specific source code.")]
-        public Boolean WOCStdLib { get; set; }
+            DisplayName = "Internal Compiler Flags",
+            Visible = false,
+            IncludeInCommandLine = false)]
+        public string InternalCompilerFlags { get; set; }
 
         [PropertyPage(
             DisplayName = "Command Line",
