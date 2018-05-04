@@ -138,6 +138,8 @@
       UserIncludePaths="%(ClangCompile.UserIncludePaths)"
       ReadTLogFile="%(ClangCompile.ReadTLogFile)"
       MaxClangProcesses="%(ClangCompile.MaxClangProcesses)"
+      CLanguageStandard="%(ClangCompile.CLanguageStandard)"
+      CppLanguageStandard="%(ClangCompile.CppLanguageStandard)"
       AdditionalOptions="%(ClangCompile.OtherFlags) %(ClangCompile.AdditionalOptions)">
       <Output TaskParameter="Outputs" ItemName="DummyClangOutput" />
     </Clang>
@@ -489,6 +491,8 @@
       UserIncludePaths="%(ClangCompile.UserIncludePaths)"
       ReadTLogFile="%(ClangCompile.ReadTLogFile)"
       MaxClangProcesses="%(ClangCompile.MaxClangProcesses)"
+      CLanguageStandard="%(ClangCompile.CLanguageStandard)"
+      CppLanguageStandard="%(ClangCompile.CppLanguageStandard)"
       AdditionalOptions="%(ClangCompile.OtherFlags) %(ClangCompile.AdditionalOptions)">
       <Output TaskParameter="Outputs" ItemName="ClangOutputs" />
     </Clang>
@@ -600,6 +604,12 @@
                                '%(ClangCompile.CompileAs)' == 'CompileAsObjC'">%(ClangCompile.OtherCFlags)</OtherFlags>
         <OtherFlags Condition="'%(ClangCompile.CompileAs)' == 'CompileAsCpp' or
                                '%(ClangCompile.CompileAs)' == 'CompileAsObjCpp'">%(ClangCompile.OtherCPlusPlusFlags)</OtherFlags>
+
+        <!-- Clear the language standard for the language we're _not_ compiling -->
+        <CLanguageStandard Condition="'%(ClangCompile.CompileAs)' != 'CompileAsC' and
+                                      '%(ClangCompile.CompileAs)' != 'CompileAsObjC'"></CLanguageStandard>
+        <CppLanguageStandard Condition="'%(ClangCompile.CompileAs)' != 'CompileAsCpp' and
+                                        '%(ClangCompile.CompileAs)' != 'CompileAsObjCpp'"></CppLanguageStandard>
       </ClangCompile>
     </ItemGroup>
 
