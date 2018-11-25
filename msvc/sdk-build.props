@@ -34,6 +34,7 @@
     <WindowsTargetPlatformVersion Condition="'$(WindowsTargetPlatformVersion)'==''">10.0.14393.0</WindowsTargetPlatformVersion>
     <WindowsTargetPlatformMinVersion Condition="'$(WindowsTargetPlatformMinVersion)'==''">10.0.10586.0</WindowsTargetPlatformMinVersion>
     <EnableDotNetNativeCompatibleProfile Condition="'$(EnableDotNetNativeCompatibleProfile)'==''">true</EnableDotNetNativeCompatibleProfile>
+    <IncludeProjectReferencesInPackage>true</IncludeProjectReferencesInPackage>
     <IncludeOutputsInPackage>false</IncludeOutputsInPackage>
     <IncludeFrameworkReferencesInPackage>false</IncludeFrameworkReferencesInPackage>
     <TargetOsAndVersion Condition="'$(TargetOsAndVersion)' == ''">Universal Windows</TargetOsAndVersion>
@@ -42,7 +43,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="NuGet.Build.Packaging" Version="0.1.186" />
+    <PackageReference Include="NuGet.Build.Packaging" Version="0.2.3" />
     <PackageReference Include="WinObjC.Language" Version="*" />
     <PackageReference Include="cppwinrt" Version="2017.4.6.1">
         <PrivateAssets>all</PrivateAssets>

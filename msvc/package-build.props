@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="NuGet.Build.Packaging" Version="0.1.186">
+    <PackageReference Include="NuGet.Build.Packaging" Version="0.2.3">
       <PrivateAssets>All</PrivateAssets>
     </PackageReference>
   </ItemGroup>
