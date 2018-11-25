@@ -90,7 +90,7 @@
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\..\common\include;$(StarboardBasePath)\build\include;$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat;$(angle-BinPath)\..\..\..\include</IncludePaths>
       <AdditionalOptions>-Wno-nonportable-include-path -DSTARBOARD_PORT=1 "-DEAGL_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
-      <PreprocessorDefinitions>GL_GLEXT_PROTOTYPES</PreprocessorDefinitions>
+      <PreprocessorDefinitions>GL_GLEXT_PROTOTYPES;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClangCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -101,7 +101,7 @@
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\..\common\include;$(StarboardBasePath)\build\include;$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat;$(angle-BinPath)\..\..\..\include</IncludePaths>
       <AdditionalOptions>-Wno-nonportable-include-path -DSTARBOARD_PORT=1 "-DEAGL_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
-      <PreprocessorDefinitions>GL_GLEXT_PROTOTYPES</PreprocessorDefinitions>
+      <PreprocessorDefinitions>GL_GLEXT_PROTOTYPES;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <OptimizationLevel>Full</OptimizationLevel>
     </ClangCompile>
   </ItemDefinitionGroup>
@@ -136,7 +136,7 @@
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\..\common\include;$(StarboardBasePath)\build\include;$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat;$(angle-BinPath)\..\..\..\include</IncludePaths>
       <AdditionalOptions>-Wno-nonportable-include-path -DSTARBOARD_PORT=1 "-DEAGL_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
-      <PreprocessorDefinitions>GL_GLEXT_PROTOTYPES</PreprocessorDefinitions>
+      <PreprocessorDefinitions>GL_GLEXT_PROTOTYPES;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClangCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -148,7 +148,7 @@
       <IncludePaths>$(StarboardBasePath)\..\common\include;$(StarboardBasePath)\build\include;$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat;$(angle-BinPath)\..\..\..\include</IncludePaths>
       <AdditionalOptions>-Wno-nonportable-include-path -DSTARBOARD_PORT=1 "-DEAGL_IMPEXP= " %(AdditionalOptions) -Wno-error</AdditionalOptions>
       <OptimizationLevel>Full</OptimizationLevel>
-      <PreprocessorDefinitions>GL_GLEXT_PROTOTYPES</PreprocessorDefinitions>
+      <PreprocessorDefinitions>GL_GLEXT_PROTOTYPES;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClangCompile>
   </ItemDefinitionGroup>
   <ImportGroup Label="ExtensionTargets">
