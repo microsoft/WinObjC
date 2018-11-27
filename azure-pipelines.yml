@@ -1,0 +1,144 @@
+variables:
+  BuildPlatform: x86
+  BuildPlatformTranslated: '$(BuildPlatform)'
+  PackageVersionOverride: ''
+  WINOBJC_SDK_ROOT: '$(Build.SourcesDirectory)'
+
+jobs:
+  - job: Build
+
+    strategy:
+      matrix:
+        Debug:
+          BuildConfiguration: Debug
+        #Release:
+          #BuildConfiguration: Release
+
+    steps:
+      - checkout: self
+        clean: true
+        lfs: true
+        submodules: recursive
+
+      - powershell: |-
+          echo "##vso[task.setvariable variable=BuildPlatformTranslated]Win32"
+        condition: eq(variables['BuildPlatform'], 'x86')
+        displayName: Overcome BuildPlatform=x86 stupidity
+
+      - task: PowerShell@2
+        displayName: Report Build Start
+        continueOnError: true
+        condition: always()
+        inputs:
+          targetType: inline
+          script: |-
+            .\scripts\build\Submit-GithubBuildStatus.ps1 `
+              -pullrequest "$(PullRequest)" `
+              -Repository "Microsoft/WinObjC" `
+              -BuildDefinition "$(Build.DefinitionName) $(BuildConfiguration)" `
+              -Status "pending" `
+              -AuthUserName $(GithubUser) `
+              -AuthToken $(GithubToken)
+
+      - task: NuGetToolInstaller@0
+        displayName: Ensure NuGet 4.8.1
+        inputs:
+          versionSpec: 4.8.1
+
+      - task: NuGetCommand@2
+        displayName: Restore Packages for tools.sln
+        inputs:
+          command: restore
+          feedsToUse: config
+          configPath: nuget.config
+          restoreSolution: tools\tools.sln
+          restoreDirectory: '$(Build.SourcesDirectory)\packages'
+
+      - task: VSBuild@1
+        displayName: Build tools.sln
+        inputs:
+          solution: tools\tools.sln
+          platform: '$(BuildPlatform)'
+          configuration: '$(BuildConfiguration)'
+          msbuildArgs: >-
+            /p:DeployExtension=false
+            /p:PackageVersionOverride=$(PackageVersionOverride)
+
+      - task: VSBuild@1
+        displayName: Restore Packages for build.sln
+        inputs:
+          solution: build\build.sln
+          platform: '$(BuildPlatform)'
+          configuration: '$(BuildConfiguration)'
+          msbuildArgs: >-
+            /t:Restore
+            /p:BuildProjectReferences=false
+
+      - task: VSBuild@1
+        displayName: Build build.sln
+        inputs:
+          solution: build\build.sln
+          platform: '$(BuildPlatform)'
+          configuration: '$(BuildConfiguration)'
+          msbuildArgs: >-
+            /p:PackageVersionOverride=$(PackageVersionOverride)
+
+      # /m
+
+      - task: PublishPipelineArtifact@0
+        displayName: Publish Tool Packages
+        inputs:
+          artifactName: 'toolPackages-$(BuildConfiguration)'
+          targetPath: 'tools\OutputPackages\$(BuildConfiguration)'
+
+      - task: PublishPipelineArtifact@0
+        displayName: Publish Framework Packages
+        inputs:
+          artifactName: 'packages-$(BuildConfiguration)'
+          targetPath: 'build\OutputPackages\$(BuildConfiguration)'
+
+      - powershell: |-
+          Get-ChildItem build\$Env:BuildPlatformTranslated\ -Recurse -Include *.ilk,*.pdb,*.pri,*Lib.lib,*.res | Remove-Item -Force
+
+      - task: PublishPipelineArtifact@0
+        displayName: Publish WinObjC Test Assets
+        inputs:
+          artifactName: 'tests-$(BuildConfiguration)'
+          targetPath: 'build\$(BuildPlatformTranslated)\$(BuildConfiguration)\Universal Windows'
+
+  - job: Test
+    dependsOn: Build
+    pool: Unprivileged Test Runners
+
+    strategy:
+      matrix:
+        Debug:
+          BuildConfiguration: Debug
+        #Release:
+          #BuildConfiguration: Release
+
+    steps:
+      - checkout: self # The test scripts live in the repository, but we don't need LFS or anything.
+        fetchDepth: 1
+        clean: false
+        lfs: false
+
+      - powershell: |-
+          echo "##vso[task.setvariable variable=BuildPlatformTranslated]Win32"
+        condition: eq(variables['BuildPlatform'], 'x86')
+        displayName: Overcome BuildPlatform=x86 stupidity
+
+      - task: DownloadPipelineArtifact@0
+        inputs:
+          artifactName: 'tests-$(BuildConfiguration)'
+          targetPath: 'build\$(BuildPlatformTranslated)\$(BuildConfiguration)\Universal Windows'
+
+      - task: PowerShell@2
+        displayName: Run Tests for $(BuildPlatform) $(BuildConfiguration)
+        inputs:
+          targetType: filePath
+          filePath: 'tests\Run-Tests.ps1'
+          arguments: >-
+            -ModuleFilter *Tests.dll
+            -Platform $(BuildPlatformTranslated)
+            -Config $(BuildConfiguration)
