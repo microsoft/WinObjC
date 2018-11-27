@@ -1,0 +1,87 @@
+pool:
+
+resources:
+  - repo: self
+    clean: false
+    lfs: true
+    fetchDepth: 5
+    submodules: true
+
+variables:
+
+jobs:
+  - job: Build Frameworks
+    pool: Default
+    variables:
+      x: y
+      a: b
+    steps:
+      - checkout: self
+        clean: false
+        lfs: true
+        submodules: true
+      - powershell: |-
+          .\scripts\build\Submit-GithubBuildStatus.ps1 `
+            -pullrequest "$(PullRequest)" `
+            -Repository "Microsoft/WinObjC" `
+            -BuildDefinition "$(Build.DefinitionName) $(BuildConfiguration)" `
+            -Status "pending" `
+            -AuthUserName $(GithubUser) `
+            -AuthToken $(GithubToken)
+        displayName: Report Build Start
+        name: reportBuildStart
+        continueOnError: true
+        condition: always()
+
+      - task: NuGetCommand@2
+        inputs:
+          command: restore
+          restoreSolution: tools\tools.sln
+
+      - task: VSBuild@1
+        displayName: Build tools.sln
+        inputs:
+          solution: tools\tools.sln
+          platform: '$(BuildPlatform)'
+          configuration: '$(BuildConfiguration)'
+          msbuildArgs: >-
+            /p:DeployExtension=false
+            /p:PackageVersionOverride=$(PackageVersionOverride)
+
+      - task: PublishPipelineArtifact@0
+        inputs:
+          artifactName: 'toolsPackages$(BuildConfiguration)'
+          targetPath: 'tools\OutputPackages\$(BuildConfiguration)'
+
+      - task: VSBuild@1
+        displayName: Restore Packages for build.sln
+        inputs:
+          solution: build\build.sln
+          platform: '$(BuildPlatform)'
+          configuration: '$(BuildConfiguration)'
+          msbuildArgs: >-
+            /t:Restore
+            /p:BuildProjectReferences=false
+
+      - task: VSBuild@1
+        displayName: Build build.sln
+        inputs:
+          solution: build\build.sln
+          platform: '$(BuildPlatform)'
+          configuration: '$(BuildConfiguration)'
+          msbuildArgs: >-
+            /m
+            /p:PackageVersionOverride=$(PackageVersionOverride)
+
+      - task: PublishPipelineArtifact@0
+        displayName: Publish WinObjC Packages
+        inputs:
+          artifactName: 'buildPackages$(BuildConfiguration)'
+          targetPath: 'build\OutputPackages\$(BuildConfiguration)'
+
+      - task: PublishPipelineArtifact@0
+        displayName: Publish WinObjC Test Assets
+        inputs:
+          artifactName: 'buildPackages$(BuildConfiguration)'
+          targetPath: 'build\$(BuildPlatform)\$(BuildConfiguration)\Universal Windows'
+
