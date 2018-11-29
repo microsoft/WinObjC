@@ -1254,7 +1254,17 @@ struct GeneratorVisitor : public Visitor {
                     parameters += (typeInfo.isIInspectableType() ? param.Name + L"OutUnmarshaled.GetAddressOf()" :
                                                                    L"&" + param.Name + L"OutUnmarshaled");
                 } else {
-                    parameters += typeInfo.convertFnWrl(param.Name, false);
+                    if (typeInfo.isValueType && param.Type->PointerKind == ElementPointerKind::ByRef) {
+                        // Specifically, Windows::Foundation::IGuidHelperStatics::Equals(GUID*, GUID*)
+                        // takes these "value types" as pointers.
+
+                        // Allocate a local to pass them by reference.
+                        temps += L"    " + typeInfo.wrlFullName() + L" __" + param.Name + L"_temp = " +
+                                 typeInfo.convertFnWrl(param.Name, false) + L";\n";
+                        parameters += L"&__" + param.Name + L"_temp";
+                    } else {
+                        parameters += typeInfo.convertFnWrl(param.Name, false);
+                    }
                 }
             }
         }
