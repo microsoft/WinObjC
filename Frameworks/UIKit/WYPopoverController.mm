@@ -27,6 +27,7 @@
 #import "WYPopoverController.h"
 #import <objc/runtime.h>
 #import "UIViewControllerInternal.h"
+#import "NSLogging.h" // For NSTraceError (NSAssert)
 
 #if !__has_feature(objc_arc)
     #error ARC must be enabled
