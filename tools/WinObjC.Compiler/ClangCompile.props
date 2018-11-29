@@ -4,10 +4,12 @@
     <StarboardLLVMDirectory Condition="'$(StarboardLLVMDirectory)' == ''">$(MSBuildThisFileDirectory)LLVM\</StarboardLLVMDirectory>
   </PropertyGroup>
   <PropertyGroup Label="Clang Args">
+    <!-- These triples are used in ClangCompile.InternalCompilerFlags below -->
     <ClangTargetTriple Condition="'$(Platform)' != 'ARM' and '$(Platform)' != 'X64'">i686-pc-windows-msvc</ClangTargetTriple>
     <ClangTargetTriple Condition="'$(Platform)' == 'ARM'">thumbv7-pc-windows-msvc</ClangTargetTriple>
     <ClangTargetTriple Condition="'$(Platform)' == 'X64'">x86_64-pc-windows-msvc</ClangTargetTriple>
-    <!-- These triples are used in ClangCompile.InternalCompilerFlags below -->
+    <!-- For now (VS 15.9), we have to allow the compiler and STL to differ in version -->
+    <ClangSTLVersionWorkaround>-D_ALLOW_COMPILER_AND_STL_VERSION_MISMATCH=</ClangSTLVersionWorkaround>
   </PropertyGroup>
 
   <ItemDefinitionGroup Label="Defaults">
@@ -35,7 +37,7 @@
 
   <ItemDefinitionGroup>
     <ClangCompile>
-      <InternalCompilerFlags>-target $(ClangTargetTriple) -fdiagnostics-format=msvc -fno-caret-diagnostics</InternalCompilerFlags>
+      <InternalCompilerFlags>-target $(ClangTargetTriple) -fdiagnostics-format=msvc -fno-caret-diagnostics $(ClangSTLVersionWorkaround)</InternalCompilerFlags>
       <CommandLineTemplate>-isystem "[LLVMResourceDir]\include" [InternalCompilerFlags] [AllOptions] [AdditionalOptions] [DependencyFile] [ObjectFileName] [Input]</CommandLineTemplate>
       <AutocompleteCommandLineTemplate>-isystem "[LLVMResourceDir]\include" [InternalCompilerFlags] [AdditionalOptions]</AutocompleteCommandLineTemplate>
       <ShowOnlyRuleProperties>false</ShowOnlyRuleProperties>
