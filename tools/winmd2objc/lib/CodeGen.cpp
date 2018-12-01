@@ -2037,7 +2037,7 @@ struct GeneratorVisitor : public Visitor {
         fwprintf(outHeader, L"#pragma comment(lib, \"%s\")\n", libFileName.c_str());
         fwprintf(outHeader, L"#endif\n");
         fwprintf(outHeader, L"#endif\n");
-        fwprintf(outHeader, L"#include <UWP/interopBase.h>\n\n");
+        fwprintf(outHeader, L"#include <UWP/InteropBase.h>\n\n");
         fwprintf(outImpl, L"// %s\n// Generated from winmd2objc\n\n", implFileName.c_str());
         fwprintf(outImpl, L"#include <COMIncludes.h>\n");
         // Unfortunately Windows.h has a macro for GetCurrentTime and WinRT has a function in WindowsUIXamlMediaAnimation called that..
