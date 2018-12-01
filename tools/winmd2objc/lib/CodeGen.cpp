@@ -2649,7 +2649,7 @@ void generateVCXProj(const pair<wstring, pair<wstring, vector<shared_ptr<NameSpa
 
     FILE* vcxproj = nullptr;
     if (_wfopen_s(&vcxproj, (projectDirectoryPath + L"\\" + module.first + L".vcxproj").c_str(), L"w")) {
-        wprintf(L"Failed to open vcxproj file\n");
+        wprintf(L"Failed to open vcxproj file: %s\\%s.vcxproj\n", projectDirectoryPath.c_str(), module.first.c_str());
         exit(1);
     }
 
