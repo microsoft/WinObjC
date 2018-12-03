@@ -1,5 +1,6 @@
 variables:
   BuildPlatform: x86
+  BuildPlatformTranslated: '$(BuildPlatform)'
   PackageVersionOverride: ''
   WINOBJC_SDK_ROOT: '$(Build.SourcesDirectory)'
 
@@ -18,6 +19,11 @@ jobs:
         clean: true
         lfs: true
         submodules: recursive
+
+      - powershell: |-
+          echo "##vso[task.setvariable variable=BuildPlatformTranslated]Win32"
+        condition: eq(variables['BuildPlatform'], 'x86')
+        displayName: Overcome BuildPlatform=x86 stupidity
 
       - task: PowerShell@2
         displayName: Report Build Start
@@ -94,10 +100,10 @@ jobs:
         displayName: Publish WinObjC Test Assets
         inputs:
           artifactName: 'tests-$(BuildConfiguration)'
-          targetPath: 'build\$(BuildPlatform)\$(BuildConfiguration)\Universal Windows'
+          targetPath: 'build\$(BuildPlatformTranslated)\$(BuildConfiguration)\Universal Windows'
 
       - task: PublishPipelineArtifact@0
-        displayName: Publish WinObjC Test Assets II
+        displayName: Publish WinObjC Test Scripts
         inputs:
           artifactName: 'testScripts-$(BuildConfiguration)'
           targetPath: 'tests\*.ps1'
