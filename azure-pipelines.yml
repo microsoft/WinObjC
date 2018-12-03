@@ -81,7 +81,7 @@ jobs:
       - task: PublishPipelineArtifact@0
         displayName: Publish Tool Packages
         inputs:
-          artifactName: 'packages-$(BuildConfiguration)'
+          artifactName: 'toolPackages-$(BuildConfiguration)'
           targetPath: 'tools\OutputPackages\$(BuildConfiguration)'
 
       - task: PublishPipelineArtifact@0
@@ -99,7 +99,7 @@ jobs:
       - task: PublishPipelineArtifact@0
         displayName: Publish WinObjC Test Assets II
         inputs:
-          artifactName: 'tests-$(BuildConfiguration)'
+          artifactName: 'testScripts-$(BuildConfiguration)'
           targetPath: 'tests\*.ps1'
 
   - job: Test
@@ -117,6 +117,10 @@ jobs:
       - task: DownloadPipelineArtifact@0
         inputs:
           artifactName: 'tests-$(BuildConfiguration)'
+
+      - task: DownloadPipelineArtifact@0
+        inputs:
+          artifactName: 'testScripts-$(BuildConfiguration)'
 
       - task: PowerShell@2
         displayName: Run Unit Tests for $(BuildPlatform) $(BuildConfiguration)
