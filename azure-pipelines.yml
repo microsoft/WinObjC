@@ -10,7 +10,7 @@ jobs:
 
     strategy:
       matrix:
-        x86 Debug: { BuildPlatform: x86, BuildConfiguration: Debug }
+        #x86 Debug: { BuildPlatform: x86, BuildConfiguration: Debug }
         x86 Release: { BuildPlatform: x86, BuildConfiguration: Release }
 
     steps:
@@ -97,7 +97,7 @@ jobs:
 
     strategy:
       matrix:
-        x86 Debug: { BuildPlatform: x86, BuildConfiguration: Debug }
+        #x86 Debug: { BuildPlatform: x86, BuildConfiguration: Debug }
         x86 Release: { BuildPlatform: x86, BuildConfiguration: Release }
 
     steps:
@@ -132,7 +132,7 @@ jobs:
 
     strategy:
       matrix:
-        x86 Debug: { BuildPlatform: x86, BuildConfiguration: Debug }
+        #x86 Debug: { BuildPlatform: x86, BuildConfiguration: Debug }
         x86 Release: { BuildPlatform: x86, BuildConfiguration: Release }
 
     steps:
@@ -144,13 +144,24 @@ jobs:
         parameters:
           rootDirectory: tests\testapps
 
+      - powershell: |-
+          New-Item -Type Directory _appx -EA:Ignore
+          Get-ChildItem tests\testapps -r -include *.appx,*.appxbundle,*.appxsym | Copy-Item -Destination _appx
+
+      - task: PublishPipelineArtifact@0
+        displayName: Publish test apps
+        inputs:
+          artifactName: 'testApps-$(BuildPlatform)-$(BuildConfiguration)'
+          targetPath: '_appx'
+
+
   - job: build_sample_apps
     displayName: Build Sample Apps
     dependsOn: test
 
     strategy:
       matrix:
-        x86 Debug: { BuildPlatform: x86, BuildConfiguration: Debug }
+        #x86 Debug: { BuildPlatform: x86, BuildConfiguration: Debug }
         x86 Release: { BuildPlatform: x86, BuildConfiguration: Release }
 
     steps:
@@ -161,3 +172,14 @@ jobs:
       - template: .ci/build-apps.yml
         parameters:
           rootDirectory: samples
+
+      - powershell: |-
+          New-Item -Type Directory _appx -EA:Ignore
+          Get-ChildItem samples -r -include *.appx,*.appxbundle,*.appxsym | Copy-Item -Destination _appx
+
+      - task: PublishPipelineArtifact@0
+        displayName: Publish sample apps
+        inputs:
+          artifactName: 'sampleApps-$(BuildPlatform)-$(BuildConfiguration)'
+          targetPath: '_appx'
+
