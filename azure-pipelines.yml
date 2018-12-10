@@ -11,8 +11,8 @@ jobs:
       matrix:
         Debug:
           BuildConfiguration: Debug
-        #Release:
-          #BuildConfiguration: Release
+        Release:
+          BuildConfiguration: Release
 
     steps:
       - checkout: self
@@ -115,8 +115,8 @@ jobs:
       matrix:
         Debug:
           BuildConfiguration: Debug
-        #Release:
-          #BuildConfiguration: Release
+        Release:
+          BuildConfiguration: Release
 
     steps:
       - checkout: self # The test scripts live in the repository, but we don't need LFS or anything.
