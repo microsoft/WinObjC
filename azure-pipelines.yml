@@ -5,14 +5,13 @@ variables:
   WINOBJC_SDK_ROOT: '$(Build.SourcesDirectory)'
 
 jobs:
-  - job: Build
+  - job: build
+    displayName: Build SDK ($(BuildPlatform) $(BuildConfiguration))
 
     strategy:
       matrix:
-        Debug:
-          BuildConfiguration: Debug
-        Release:
-          BuildConfiguration: Release
+        Debug: { BuildConfiguration: Debug }
+        Release: { BuildConfiguration: Release }
 
     steps:
       - checkout: self
@@ -23,22 +22,7 @@ jobs:
       - powershell: |-
           echo "##vso[task.setvariable variable=BuildPlatformTranslated]Win32"
         condition: eq(variables['BuildPlatform'], 'x86')
-        displayName: Overcome BuildPlatform=x86 stupidity
-
-      - task: PowerShell@2
-        displayName: Report Build Start
-        continueOnError: true
-        condition: always()
-        inputs:
-          targetType: inline
-          script: |-
-            .\scripts\build\Submit-GithubBuildStatus.ps1 `
-              -pullrequest "$(PullRequest)" `
-              -Repository "Microsoft/WinObjC" `
-              -BuildDefinition "$(Build.DefinitionName) $(BuildConfiguration)" `
-              -Status "pending" `
-              -AuthUserName $(GithubUser) `
-              -AuthToken $(GithubToken)
+        displayName: Overcome BuildPlatform=x86 incongruity
 
       - task: NuGetToolInstaller@0
         displayName: Ensure NuGet 4.8.1
@@ -46,7 +30,7 @@ jobs:
           versionSpec: 4.8.1
 
       - task: NuGetCommand@2
-        displayName: Restore Packages for tools.sln
+        displayName: Restore packages for tools.sln
         inputs:
           command: restore
           feedsToUse: config
@@ -65,7 +49,7 @@ jobs:
             /p:PackageVersionOverride=$(PackageVersionOverride)
 
       - task: VSBuild@1
-        displayName: Restore Packages for build.sln
+        displayName: Restore packages for build.sln
         inputs:
           solution: build\build.sln
           platform: '$(BuildPlatform)'
@@ -84,54 +68,52 @@ jobs:
             /m
             /p:PackageVersionOverride=$(PackageVersionOverride)
 
-      # /m
-
       - task: PublishPipelineArtifact@0
-        displayName: Publish Tool Packages
+        displayName: Publish tool packages
         inputs:
-          artifactName: 'toolPackages-$(BuildConfiguration)'
+          artifactName: 'toolPackages-$(BuildPlatform)-$(BuildConfiguration)'
           targetPath: 'tools\OutputPackages\$(BuildConfiguration)'
 
       - task: PublishPipelineArtifact@0
-        displayName: Publish Framework Packages
+        displayName: Publish framework packages
         inputs:
-          artifactName: 'packages-$(BuildConfiguration)'
+          artifactName: 'packages-$(BuildPlatform)-$(BuildConfiguration)'
           targetPath: 'build\OutputPackages\$(BuildConfiguration)'
 
       - powershell: |-
-          Get-ChildItem build\$Env:BuildPlatformTranslated\ -Recurse -Include *.ilk,*.pdb,*.pri,*Lib.lib,*.res | Remove-Item -Force
+          Get-ChildItem build\$Env:BuildPlatformTranslated\ -Recurse -Include *.ilk,*.pdb,*.pri,*Lib.lib,*.res,*.iobj | Remove-Item -Force
+        displayName: Clean outputs before test publication
 
       - task: PublishPipelineArtifact@0
-        displayName: Publish WinObjC Test Assets
+        displayName: Publish WinObjC test assets
         inputs:
-          artifactName: 'tests-$(BuildConfiguration)'
+          artifactName: 'tests-$(BuildPlatform)-$(BuildConfiguration)'
           targetPath: 'build\$(BuildPlatformTranslated)\$(BuildConfiguration)\Universal Windows'
 
-  - job: Test
-    dependsOn: Build
+  - job: test
+    displayName: Run SDK Tests ($(BuildPlatform) $(BuildConfiguration))
+    dependsOn: build
     pool: Unprivileged Test Runners
 
     strategy:
       matrix:
-        Debug:
-          BuildConfiguration: Debug
-        Release:
-          BuildConfiguration: Release
+        Debug: { BuildConfiguration: Debug }
+        Release: { BuildConfiguration: Release }
 
     steps:
       - checkout: self # The test scripts live in the repository, but we don't need LFS or anything.
         fetchDepth: 1
-        clean: false
+        clean: true
         lfs: false
 
       - powershell: |-
           echo "##vso[task.setvariable variable=BuildPlatformTranslated]Win32"
         condition: eq(variables['BuildPlatform'], 'x86')
-        displayName: Overcome BuildPlatform=x86 stupidity
+        displayName: Overcome BuildPlatform=x86 incongruity
 
       - task: DownloadPipelineArtifact@0
         inputs:
-          artifactName: 'tests-$(BuildConfiguration)'
+          artifactName: 'tests-$(BuildPlatform)-$(BuildConfiguration)'
           targetPath: 'build\$(BuildPlatformTranslated)\$(BuildConfiguration)\Universal Windows'
 
       - task: PowerShell@2
@@ -143,3 +125,39 @@ jobs:
             -ModuleFilter *Tests.dll
             -Platform $(BuildPlatformTranslated)
             -Config $(BuildConfiguration)
+
+  - job: build_test_apps
+    displayName: Build Test Apps ($(BuildPlatform) $(BuildConfiguration))
+    dependsOn: test
+
+    strategy:
+      matrix:
+        Debug: { BuildConfiguration: Debug }
+        Release: { BuildConfiguration: Release }
+
+    steps:
+      - checkout: self
+        clean: true
+        lfs: true
+
+      - template: .ci/build-apps.yml
+        parameters:
+          rootDirectory: tests\testapps
+
+  - job: build_sample_apps
+    displayName: Build Sample Apps ($(BuildPlatform) $(BuildConfiguration))
+    dependsOn: test
+
+    strategy:
+      matrix:
+        Debug: { BuildConfiguration: Debug }
+        Release: { BuildConfiguration: Release }
+
+    steps:
+      - checkout: self
+        clean: true
+        lfs: true
+
+      - template: .ci/build-apps.yml
+        parameters:
+          rootDirectory: samples

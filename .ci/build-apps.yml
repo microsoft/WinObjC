@@ -1,0 +1,43 @@
+parameters:
+  rootDirectory: ''
+
+steps:
+  - powershell: |-
+      echo "##vso[task.setvariable variable=BuildPlatformTranslated]Win32"
+    condition: eq(variables['BuildPlatform'], 'x86')
+    displayName: Overcome BuildPlatform=x86 incongruity
+
+  - task: DownloadPipelineArtifact@0
+    displayName: Download tool packages
+    inputs:
+      artifactName: 'toolPackages-$(BuildPlatform)-$(BuildConfiguration)'
+      targetPath: 'tools\OutputPackages\$(BuildConfiguration)'
+
+  - task: DownloadPipelineArtifact@0
+    displayName: Download framework packages
+    inputs:
+      artifactName: 'packages-$(BuildPlatform)-$(BuildConfiguration)'
+      targetPath: 'build\OutputPackages\$(BuildConfiguration)'
+
+  - task: NuGetToolInstaller@0
+    displayName: Ensure NuGet 4.8.1
+    inputs:
+      versionSpec: 4.8.1
+
+  - task: NuGetCommand@2
+    displayName: Restore packages in ${{ parameters.rootDirectory }}
+    inputs:
+      command: restore
+      feedsToUse: config
+      configPath: ${{ parameters.rootDirectory }}\nuget.config
+      restoreSolution: ${{ parameters.rootDirectory }}\**\*.sln
+      restoreDirectory: '$(Build.SourcesDirectory)\packages'
+
+  - task: VSBuild@1
+    displayName: Build apps in ${{ parameters.rootDirectory }}
+    inputs:
+      solution: ${{ parameters.rootDirectory }}\**\*.sln
+      platform: '$(BuildPlatformTranslated)'
+      configuration: '$(BuildConfiguration)'
+      msbuildArgs: >-
+        /m
