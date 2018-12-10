@@ -75,7 +75,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
     <PackageCertificateKeyFile>XAMLCatalog_TemporaryKey.pfx</PackageCertificateKeyFile>
-    <PackageCertificateThumbprint>3EE1CCE17B6705FF49C5E764CE83A9017E9CEF57</PackageCertificateThumbprint>
+    <PackageCertificateThumbprint>309337A11EF8A30792E709C1DBDC5FA9CDD2C97B</PackageCertificateThumbprint>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
