@@ -6,12 +6,12 @@ variables:
 
 jobs:
   - job: build
-    displayName: Build SDK ($(BuildPlatform) $(BuildConfiguration))
+    displayName: Build SDK
 
     strategy:
       matrix:
-        Debug: { BuildConfiguration: Debug }
-        Release: { BuildConfiguration: Release }
+        x86 Debug: { BuildPlatform: x86, BuildConfiguration: Debug }
+        x86 Release: { BuildPlatform: x86, BuildConfiguration: Release }
 
     steps:
       - checkout: self
@@ -91,14 +91,14 @@ jobs:
           targetPath: 'build\$(BuildPlatformTranslated)\$(BuildConfiguration)\Universal Windows'
 
   - job: test
-    displayName: Run SDK Tests ($(BuildPlatform) $(BuildConfiguration))
+    displayName: Run SDK Tests
     dependsOn: build
     pool: Unprivileged Test Runners
 
     strategy:
       matrix:
-        Debug: { BuildConfiguration: Debug }
-        Release: { BuildConfiguration: Release }
+        x86 Debug: { BuildPlatform: x86, BuildConfiguration: Debug }
+        x86 Release: { BuildPlatform: x86, BuildConfiguration: Release }
 
     steps:
       - checkout: self # The test scripts live in the repository, but we don't need LFS or anything.
@@ -127,13 +127,13 @@ jobs:
             -Config $(BuildConfiguration)
 
   - job: build_test_apps
-    displayName: Build Test Apps ($(BuildPlatform) $(BuildConfiguration))
+    displayName: Build Test Apps
     dependsOn: test
 
     strategy:
       matrix:
-        Debug: { BuildConfiguration: Debug }
-        Release: { BuildConfiguration: Release }
+        x86 Debug: { BuildPlatform: x86, BuildConfiguration: Debug }
+        x86 Release: { BuildPlatform: x86, BuildConfiguration: Release }
 
     steps:
       - checkout: self
@@ -145,13 +145,13 @@ jobs:
           rootDirectory: tests\testapps
 
   - job: build_sample_apps
-    displayName: Build Sample Apps ($(BuildPlatform) $(BuildConfiguration))
+    displayName: Build Sample Apps
     dependsOn: test
 
     strategy:
       matrix:
-        Debug: { BuildConfiguration: Debug }
-        Release: { BuildConfiguration: Release }
+        x86 Debug: { BuildPlatform: x86, BuildConfiguration: Debug }
+        x86 Release: { BuildPlatform: x86, BuildConfiguration: Release }
 
     steps:
       - checkout: self
