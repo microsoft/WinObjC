@@ -20,8 +20,10 @@
 #import <GLKit/GLKit.h>
 
 #include <math.h>
-#include "Frameworks/GLKit/ShaderGen.h"
-#include "Frameworks/GLKit/ShaderInfo.h"
+
+// (GKLit internal)
+#include "ShaderGen.h"
+#include "ShaderInfo.h"
 
 #include <windows.h>
 

@@ -1296,9 +1296,6 @@ namespace ClangCompile
                 return false;
             }
 
-            // We need to wait until all the mod dates have been set before moving on, or we may get a race condition.
-            object modDateSync = new object();
-            int nModDate = 0;
             bool skip = true;
 
             // Instantiate the writer.
@@ -1332,28 +1329,6 @@ namespace ClangCompile
                 string objFileName = Path.GetFullPath(GetSpecial("objectfilename", ObjectFileName, item));
                 string depFileName = Path.GetFullPath(GetSpecial("dependencyfile", DependencyFile, item));
 
-                WaitCallback waitCallback = new WaitCallback(f =>
-                {
-                    try
-                    {
-                        File.SetLastWriteTime(objFileName, DateTime.Now);
-                        if (File.Exists(depFileName))
-                        {
-                            File.SetLastWriteTime(depFileName, DateTime.Now);
-                        }
-                    }
-                    catch (Exception e)
-                    {
-                        LogWarning("Caught exception trying to set last modification: {0}", e.ToString());
-                    }
-
-                    lock (modDateSync) {
-                        if (--nModDate == 0) {
-                            Monitor.Pulse(modDateSync);
-                        }
-                    }
-                });
-
                 if (tracker.OutOfDate(objFileName))
                 {
                     skip = false;
@@ -1367,48 +1342,26 @@ namespace ClangCompile
                     continue;
                 }
 
-                if (File.GetLastWriteTime(ProjectFile) < File.GetLastWriteTime(objFileName))
-                {
-                    // Touch the file so MSBuild is happy.
-                    lock (modDateSync) {
-                        nModDate++;
-                    }
+                Dictionary<string, List<string>> cmdMap = ReadTLog(Path.GetFullPath(CommandTLogFile));
+                List<string> cmdLine;
 
-                    ThreadPool.QueueUserWorkItem(waitCallback);
-                    continue;
-                }
-                else
+                if (cmdMap.TryGetValue(inputFileName, out cmdLine))
                 {
-                    Dictionary<string, List<string>> cmdMap = ReadTLog(Path.GetFullPath(CommandTLogFile));
-                    List<string> cmdLine;
-
-                    // If the commandlines are different, rebuild.
-                    if (cmdMap.TryGetValue(inputFileName, out cmdLine))
+                    if (cmdLine.First().Substring(1) == ReplaceOptions(GenerateCommandLineCommands(), item))
                     {
-                        if (cmdLine.First().Substring(1) == ReplaceOptions(GenerateCommandLineCommands(), item))
-                        {
-                            // Touch the file so MSBuild is happy.
-                            lock (modDateSync) {
-                                nModDate++;
-                            }
-
-                            ThreadPool.QueueUserWorkItem(waitCallback);
-                            continue;
-                        }
-                        else
-                        {
-                            tracker.SetUpToDate(objFileName, false);
-                        }
+                        // If the command lines match, move on to the next file.
+                        continue;
+                    }
+                    else
+                    {
+                        // If the commandlines are different, rebuild.
+                        tracker.SetUpToDate(objFileName, false);
+                        // fallthrough
                     }
                 }
 
+                // If we got here, our equivalence checks failed.
                 skip = false;
-            }
-
-            lock (modDateSync) {
-                if (nModDate > 0) {
-                    Monitor.Wait(modDateSync);
-                }
             }
 
             return skip;
