@@ -25,8 +25,7 @@
 
 @implementation RTObject
 + (instancetype)alloc {
-    NSLog(@"Cannot allocate WinRT components through alloc/new! Use static instantiators.", NSStringFromClass(self));
-    assert(0);
+    [NSException raise:NSInvalidArgumentException format:@"Cannot allocate WinRT components through alloc/new! Use static instantiators."];
     return nil;
 }
 
