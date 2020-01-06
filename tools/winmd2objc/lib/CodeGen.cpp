@@ -2810,8 +2810,8 @@ void generateDefExports(const vector<shared_ptr<NameSpace>>& namespaces, const w
         }
 
         auto mappedName = mapNamespacedType(e);
-        fwprintf(defs, L"     _OBJC_CLASS_%s    DATA\n", mappedName.c_str());
-        fwprintf(defs, L"     __objc_class_name_%s    CONSTANT\n", mappedName.c_str());
+        fwprintf(defs, L"     $_OBJC_CLASS_%s     DATA\n", mappedName.c_str());
+        fwprintf(defs, L"     $_OBJC_REF_CLASS_%s DATA\n", mappedName.c_str());
     }
     fclose(defs);
 }
