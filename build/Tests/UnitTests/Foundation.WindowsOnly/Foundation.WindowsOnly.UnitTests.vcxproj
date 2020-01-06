@@ -108,6 +108,13 @@
       <AdditionalOptions>-DSTARBOARD_PORT=1 "-DFOUNDATION_IMPEXP= " "-DCOREFOUNDATION_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
     </ClangCompile>
   </ItemDefinitionGroup>
+  <ItemDefinitionGroup>
+    <Link>
+      <!-- Since we're statically linking Foundation, and the Objective-C runtime always imports the constant
+           string symbol, we need to export it so we can re-import it. It's somewhat of a pain. -->
+      <AdditionalOptions>/EXPORT:$_OBJC_CLASS_NSConstantString %(AdditionalOptions)</AdditionalOptions>
+    </Link>
+  </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="$(StarboardBasePath)\tests\unittests\EntryPoint.cpp" />
   </ItemGroup>
