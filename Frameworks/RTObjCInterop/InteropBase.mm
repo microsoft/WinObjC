@@ -22,37 +22,37 @@
     GUID _guid;
 }
 
--(unsigned long) Data1 {
+- (unsigned long)Data1 {
     return _guid.Data1;
 }
 
--(unsigned short) Data2 {
+- (unsigned short)Data2 {
     return _guid.Data2;
 }
 
--(unsigned short) Data3 {
+- (unsigned short)Data3 {
     return _guid.Data3;
 }
 
--(unsigned char*) Data4 {
+- (unsigned char*)Data4 {
     return _guid.Data4;
 }
 
--(void)setData1:(unsigned long)val {
+- (void)setData1:(unsigned long)val {
     _guid.Data1 = val;
 }
 
--(void)setData2:(unsigned short)val {
+- (void)setData2:(unsigned short)val {
     _guid.Data2 = val;
 }
 
--(void)setData3:(unsigned short)val {
+- (void)setData3:(unsigned short)val {
     _guid.Data3 = val;
 }
 
 + (instancetype)guidWithGUID:(const GUID)guid {
     WFGUID* ret = [WFGUID alloc];
-    [[ret initWithGUID: guid] autorelease];
+    [[ret initWithGUID:guid] autorelease];
     return ret;
 }
 
@@ -67,15 +67,15 @@
 
 @end
 
-@implementation RTKeyValuePair {}
+@implementation RTKeyValuePair {
+}
 
--(id)key {
+- (id)key {
     return nil;
 }
 
--(id)value {
+- (id)value {
     return nil;
 }
 
 @end
-

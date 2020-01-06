@@ -53,4 +53,3 @@ id rt_dynamic_cast(Class classType, RTObject* rtObject) {
 
     return [classType createWith:[rtObject comObj].Get()];
 }
-

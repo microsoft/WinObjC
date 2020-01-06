@@ -33,7 +33,7 @@ id _convertPropertyValueToObjC(Microsoft::WRL::ComPtr<IPropertyValue> obj);
 ComPtr<ABI::Windows::Foundation::IPropertyValueStatics> propertyValueCreator() {
     ComPtr<ABI::Windows::Foundation::IPropertyValueStatics> propValueCreator;
     THROW_NS_IF_FAILED(ABI::Windows::Foundation::GetActivationFactory(HString::MakeReference(L"Windows.Foundation.PropertyValue").Get(),
-        &propValueCreator));
+                                                                      &propValueCreator));
     return propValueCreator;
 }
 
@@ -43,24 +43,28 @@ ComPtr<IInspectable> _convertToPropertyValueType(id item) {
     }
     ComPtr<ABI::Windows::Foundation::IPropertyValueStatics> propValueCreator = propertyValueCreator();
     ComPtr<IInspectable> propValue;
-    if ([item isKindOfClass : [NSString class]]) {
+    if ([item isKindOfClass:[NSString class]]) {
         HSTRING hstr = ToWRLConvertor<HSTRING, dummyWRLCreator>::convert(item);
         THROW_NS_IF_FAILED(propValueCreator->CreateString(hstr, propValue.GetAddressOf()));
         WindowsDeleteString(hstr);
-    } else if ([item isKindOfClass : [NSArray class]]) {
+    } else if ([item isKindOfClass:[NSArray class]]) {
         propValue = _convertNSArrayToPropertyValue(item);
-    } else if ([item isKindOfClass : [NSDictionary class]]) {
+    } else if ([item isKindOfClass:[NSDictionary class]]) {
         propValue = convertNSDictionaryToPropertySet(item);
-    } else if ([item isKindOfClass : [NSNumber class]]) {
+    } else if ([item isKindOfClass:[NSNumber class]]) {
         const char* type = [item objCType];
         if (strstr("cilsq", type) != NULL) {
-            THROW_NS_IF_FAILED(propValueCreator->CreateInt64(ToWRLConvertor<int64_t, dummyWRLCreator>::convert(item), propValue.GetAddressOf()));
+            THROW_NS_IF_FAILED(
+                propValueCreator->CreateInt64(ToWRLConvertor<int64_t, dummyWRLCreator>::convert(item), propValue.GetAddressOf()));
         } else if (strstr("CILSQ", type) != NULL) {
-            THROW_NS_IF_FAILED(propValueCreator->CreateUInt64(ToWRLConvertor<uint64_t, dummyWRLCreator>::convert(item), propValue.GetAddressOf()));
+            THROW_NS_IF_FAILED(
+                propValueCreator->CreateUInt64(ToWRLConvertor<uint64_t, dummyWRLCreator>::convert(item), propValue.GetAddressOf()));
         } else if (strcmp("f", type) == 0) {
-            THROW_NS_IF_FAILED(propValueCreator->CreateSingle(ToWRLConvertor<float, dummyWRLCreator>::convert(item), propValue.GetAddressOf()));
+            THROW_NS_IF_FAILED(
+                propValueCreator->CreateSingle(ToWRLConvertor<float, dummyWRLCreator>::convert(item), propValue.GetAddressOf()));
         } else if (strcmp("d", type) == 0) {
-            THROW_NS_IF_FAILED(propValueCreator->CreateDouble(ToWRLConvertor<double, dummyWRLCreator>::convert(item), propValue.GetAddressOf()));
+            THROW_NS_IF_FAILED(
+                propValueCreator->CreateDouble(ToWRLConvertor<double, dummyWRLCreator>::convert(item), propValue.GetAddressOf()));
         }
     }
     return propValue;
@@ -81,7 +85,8 @@ ComPtr<IInspectable> _convertNSArrayToPropertyValue(id obj) {
     }
     ComPtr<IInspectable> returnObj;
     if (arrIInspectable.size()) {
-        THROW_NS_IF_FAILED(propValueCreator->CreateInspectableArray(arrIInspectable.size(), arrIInspectable.data(), returnObj.GetAddressOf()));
+        THROW_NS_IF_FAILED(
+            propValueCreator->CreateInspectableArray(arrIInspectable.size(), arrIInspectable.data(), returnObj.GetAddressOf()));
     }
     return returnObj;
 }
@@ -158,80 +163,81 @@ id _convertPropertyValueToObjC(ComPtr<IPropertyValue> obj) {
     THROW_NS_IF_FAILED(obj->get_Type(&type));
     id value;
     switch (type) {
-    case PropertyType_Inspectable: {
-        value = _convertMapToNSDictionary(obj);
-        break;
-    }
-    case PropertyType_InspectableArray: {
-        value = _convertInspectableArrayToNSArray(obj);
-        break;
-    }
-    case PropertyType_Int64Array:
-    case PropertyType_Int32Array:
-    case PropertyType_Int16Array:
-    case PropertyType_Char16Array:
-    case PropertyType_BooleanArray: {
-        value = _convertIntArrayToNSArray(obj);
-        break;
-    }
-    case PropertyType_UInt64Array:
-    case PropertyType_UInt32Array:
-    case PropertyType_UInt16Array:
-    case PropertyType_UInt8Array: {
-        value = _convertUIntArrayToNSArray(obj);
-        break;
-    }
-    case PropertyType_SingleArray: {
-        value = _convertSingleArrayToNSArray(obj);;
-        break;
-    }
-    case PropertyType_DoubleArray: {
-        value = _convertDoubleArrayToNSArray(obj);
-        break;
-    }
-    case PropertyType_StringArray: {
-        value = _convertStringArrayToNSArray(obj);
-        break;
-    }
-    case PropertyType_String: {
-        HSTRING val;
-        THROW_NS_IF_FAILED(obj->GetString(&val));
-        value = hstrToNSStr(val, true);
-        break;
-    }
-    case PropertyType_Single: {
-        FLOAT val;
-        THROW_NS_IF_FAILED(obj->GetSingle(&val));
-        value = ToObjcConvertor<float, FLOAT, dummyObjCCreator>::convert(val);
-        break;
-    }
-    case PropertyType_Double: {
-        double val;
-        THROW_NS_IF_FAILED(obj->GetDouble(&val));
-        value = ToObjcConvertor<double, DOUBLE, dummyObjCCreator>::convert(val);
-        break;
-    }
-    case PropertyType_Int64:
-    case PropertyType_Int32:
-    case PropertyType_Int16:
-    case PropertyType_Char16:
-    case PropertyType_Boolean: {
-        INT64 val;
-        THROW_NS_IF_FAILED(obj->GetInt64(&val));
-        value = ToObjcConvertor<int64_t, INT64, dummyObjCCreator>::convert(val);
-        break;
-    }
-    case PropertyType_UInt64:
-    case PropertyType_UInt32:
-    case PropertyType_UInt16:
-    case PropertyType_UInt8: {
-        UINT64 val;
-        THROW_NS_IF_FAILED(obj->GetUInt64(&val));
-        value = ToObjcConvertor<int64_t, INT64, dummyObjCCreator>::convert(val);
-        break;
-    }
-    default:
-        return nil;
+        case PropertyType_Inspectable: {
+            value = _convertMapToNSDictionary(obj);
+            break;
+        }
+        case PropertyType_InspectableArray: {
+            value = _convertInspectableArrayToNSArray(obj);
+            break;
+        }
+        case PropertyType_Int64Array:
+        case PropertyType_Int32Array:
+        case PropertyType_Int16Array:
+        case PropertyType_Char16Array:
+        case PropertyType_BooleanArray: {
+            value = _convertIntArrayToNSArray(obj);
+            break;
+        }
+        case PropertyType_UInt64Array:
+        case PropertyType_UInt32Array:
+        case PropertyType_UInt16Array:
+        case PropertyType_UInt8Array: {
+            value = _convertUIntArrayToNSArray(obj);
+            break;
+        }
+        case PropertyType_SingleArray: {
+            value = _convertSingleArrayToNSArray(obj);
+            ;
+            break;
+        }
+        case PropertyType_DoubleArray: {
+            value = _convertDoubleArrayToNSArray(obj);
+            break;
+        }
+        case PropertyType_StringArray: {
+            value = _convertStringArrayToNSArray(obj);
+            break;
+        }
+        case PropertyType_String: {
+            HSTRING val;
+            THROW_NS_IF_FAILED(obj->GetString(&val));
+            value = hstrToNSStr(val, true);
+            break;
+        }
+        case PropertyType_Single: {
+            FLOAT val;
+            THROW_NS_IF_FAILED(obj->GetSingle(&val));
+            value = ToObjcConvertor<float, FLOAT, dummyObjCCreator>::convert(val);
+            break;
+        }
+        case PropertyType_Double: {
+            double val;
+            THROW_NS_IF_FAILED(obj->GetDouble(&val));
+            value = ToObjcConvertor<double, DOUBLE, dummyObjCCreator>::convert(val);
+            break;
+        }
+        case PropertyType_Int64:
+        case PropertyType_Int32:
+        case PropertyType_Int16:
+        case PropertyType_Char16:
+        case PropertyType_Boolean: {
+            INT64 val;
+            THROW_NS_IF_FAILED(obj->GetInt64(&val));
+            value = ToObjcConvertor<int64_t, INT64, dummyObjCCreator>::convert(val);
+            break;
+        }
+        case PropertyType_UInt64:
+        case PropertyType_UInt32:
+        case PropertyType_UInt16:
+        case PropertyType_UInt8: {
+            UINT64 val;
+            THROW_NS_IF_FAILED(obj->GetUInt64(&val));
+            value = ToObjcConvertor<int64_t, INT64, dummyObjCCreator>::convert(val);
+            break;
+        }
+        default:
+            return nil;
     }
     return value;
 }
@@ -245,7 +251,7 @@ id _convertStringArrayToNSArray(ComPtr<IPropertyValue> ip) {
     NSMutableArray* values = [[[NSMutableArray alloc] init] autorelease];
     THROW_NS_IF_FAILED(ip->GetStringArray(&length, &arr));
     for (UINT32 i = 0; i < length; i++) {
-        [values addObject : hstrToNSStr(arr[i], true)];
+        [values addObject:hstrToNSStr(arr[i], true)];
     }
     NSArray* value = [NSArray arrayWithArray:values];
     CoTaskMemFree(arr);
@@ -261,9 +267,9 @@ id _convertDoubleArrayToNSArray(ComPtr<IPropertyValue> ip) {
     NSMutableArray* values = [[[NSMutableArray alloc] init] autorelease];
     THROW_NS_IF_FAILED(ip->GetDoubleArray(&length, &arr));
     for (UINT32 i = 0; i < length; i++) {
-        [values addObject : [NSNumber numberWithDouble : arr[i]]];
+        [values addObject:[NSNumber numberWithDouble:arr[i]]];
     }
-    NSArray* value = [NSArray arrayWithArray : values];
+    NSArray* value = [NSArray arrayWithArray:values];
     CoTaskMemFree(arr);
     return value;
 }
@@ -277,9 +283,9 @@ id _convertSingleArrayToNSArray(ComPtr<IPropertyValue> ip) {
     NSMutableArray* values = [[[NSMutableArray alloc] init] autorelease];
     THROW_NS_IF_FAILED(ip->GetSingleArray(&length, &arr));
     for (UINT32 i = 0; i < length; i++) {
-        [values addObject : [NSNumber numberWithFloat : arr[i]]];
+        [values addObject:[NSNumber numberWithFloat:arr[i]]];
     }
-    NSArray* value = [NSArray arrayWithArray : values];
+    NSArray* value = [NSArray arrayWithArray:values];
     CoTaskMemFree(arr);
     return value;
 }
@@ -293,9 +299,9 @@ id _convertUIntArrayToNSArray(ComPtr<IPropertyValue> ip) {
     NSMutableArray* values = [[[NSMutableArray alloc] init] autorelease];
     THROW_NS_IF_FAILED(ip->GetUInt64Array(&length, &arr));
     for (UINT32 i = 0; i < length; i++) {
-        [values addObject : [NSNumber numberWithUnsignedLongLong : arr[i]]];
+        [values addObject:[NSNumber numberWithUnsignedLongLong:arr[i]]];
     }
-    NSArray* value = [NSArray arrayWithArray : values];
+    NSArray* value = [NSArray arrayWithArray:values];
     CoTaskMemFree(arr);
     return value;
 }
@@ -309,9 +315,9 @@ id _convertIntArrayToNSArray(ComPtr<IPropertyValue> ip) {
     NSMutableArray* values = [[[NSMutableArray alloc] init] autorelease];
     THROW_NS_IF_FAILED(ip->GetInt64Array(&length, &arr));
     for (UINT32 i = 0; i < length; i++) {
-        [values addObject : [NSNumber numberWithLongLong : arr[i]]];
+        [values addObject:[NSNumber numberWithLongLong:arr[i]]];
     }
-    NSArray* value = [NSArray arrayWithArray : values];
+    NSArray* value = [NSArray arrayWithArray:values];
     CoTaskMemFree(arr);
     return value;
 }
@@ -328,9 +334,9 @@ id _convertInspectableArrayToNSArray(ComPtr<IPropertyValue> ip) {
         ComPtr<IInspectable> com = arr[i];
         ComPtr<IPropertyValue> propValue;
         THROW_NS_IF_FAILED(com.As(&propValue));
-        [values addObject : _convertPropertyValueToObjC(propValue)];
+        [values addObject:_convertPropertyValueToObjC(propValue)];
     }
-    NSArray* value = [NSArray arrayWithArray : values];
+    NSArray* value = [NSArray arrayWithArray:values];
     CoTaskMemFree(arr);
     return value;
 }
@@ -360,23 +366,22 @@ id convertPropertySetToNSDictionary(ComPtr<IMapView<HSTRING, IInspectable*>> ip)
         ComPtr<IMapView<HSTRING, IInspectable*>> obj3;
         if (SUCCEEDED(obj.As(&obj1))) {
             value = _convertPropertyValueToObjC(obj1);
-        } else if (SUCCEEDED(obj.As(&obj2)) ||
-            SUCCEEDED(obj.As(&obj3))) {
+        } else if (SUCCEEDED(obj.As(&obj2)) || SUCCEEDED(obj.As(&obj3))) {
             value = _convertMapToNSDictionary(obj);
         } else {
             THROW_NS_HR(E_NOINTERFACE);
         }
-        [_dictionary setObject : value forKey : key];
+        [_dictionary setObject:value forKey:key];
         THROW_NS_IF_FAILED(iterator->MoveNext(&hasCurrent));
     }
-    NSDictionary* _ret = [NSDictionary dictionaryWithDictionary : _dictionary];
+    NSDictionary* _ret = [NSDictionary dictionaryWithDictionary:_dictionary];
     return _ret;
 }
 
 ABI::Windows::Foundation::DateTime convertNSDateToWinRT(NSDate* obj) {
     const int64_t hundredNanoSecondsFactor = 10000000;
-    // This constant is the summation of two 100 nanosecond ticks constants, first one (116444736000000000) is for 
-    // converting Windows epoch (Jan 1 1601 00:00:00) to Unix epoch (Jan 1 1970 00:00:00) and 
+    // This constant is the summation of two 100 nanosecond ticks constants, first one (116444736000000000) is for
+    // converting Windows epoch (Jan 1 1601 00:00:00) to Unix epoch (Jan 1 1970 00:00:00) and
     // the other (9783072000000000) is for converting from Unix epoch to NSDate's reference date (Jan 1 2001 00:00:00).
     const int64_t hundredNanoSecondTicksFromWindowsEpochToNSDateReferenceDate = 126227808000000000;
     // The time interval we get from NSDate is in seconds. We convert it to 100 nanoseconds ticks.
@@ -406,7 +411,8 @@ ComPtr<ABI::Windows::Storage::IStorageFile> convertNSURLToWinRTStorageFile(NSURL
 ComPtr<ABI::Windows::Foundation::IUriRuntimeClass> convertNSURLToWinRTUri(NSURL* obj) {
     ComPtr<ABI::Windows::Foundation::IUriRuntimeClassFactory> uriFactory;
     ComPtr<ABI::Windows::Foundation::IUriRuntimeClass> comObj;
-    THROW_NS_IF_FAILED(ABI::Windows::Foundation::GetActivationFactory(HString::MakeReference(L"Windows.Foundation.Uri").Get(), &uriFactory));
+    THROW_NS_IF_FAILED(
+        ABI::Windows::Foundation::GetActivationFactory(HString::MakeReference(L"Windows.Foundation.Uri").Get(), &uriFactory));
     THROW_NS_IF_FAILED(uriFactory->CreateUri(nsStrToHstr([obj absoluteString]).Get(), comObj.GetAddressOf()));
     return comObj;
 }
@@ -424,7 +430,8 @@ NSURL* convertWinRTUriToNSURL(const ComPtr<ABI::Windows::Foundation::IUriRuntime
 
 ComPtr<IInspectable> convertNSNumberToPropertyValue(NSNumber* obj) {
     ComPtr<ABI::Windows::Foundation::IPropertyValueStatics> inst;
-    THROW_NS_IF_FAILED(ABI::Windows::Foundation::GetActivationFactory(HString::MakeReference(L"Windows.Foundation.PropertyValue").Get(), &inst));
+    THROW_NS_IF_FAILED(
+        ABI::Windows::Foundation::GetActivationFactory(HString::MakeReference(L"Windows.Foundation.PropertyValue").Get(), &inst));
     ComPtr<IInspectable> ret;
     const char* type = [obj objCType];
     if (strstr("cC", type) != NULL) {
@@ -477,7 +484,8 @@ ComPtr<IInspectable> convertNSNumberToPropertyValue(NSNumber* obj) {
 
 ComPtr<IInspectable> convertNSStringToPropertyValue(NSString* obj) {
     ComPtr<ABI::Windows::Foundation::IPropertyValueStatics> inst;
-    THROW_NS_IF_FAILED(ABI::Windows::Foundation::GetActivationFactory(HString::MakeReference(L"Windows.Foundation.PropertyValue").Get(), &inst));
+    THROW_NS_IF_FAILED(
+        ABI::Windows::Foundation::GetActivationFactory(HString::MakeReference(L"Windows.Foundation.PropertyValue").Get(), &inst));
     ComPtr<IInspectable> ret;
     Microsoft::WRL::Wrappers::HString hstr;
     hstr.Attach(ToWRLConvertor<HSTRING, dummyWRLCreator>::convert(obj));
@@ -485,4 +493,3 @@ ComPtr<IInspectable> convertNSStringToPropertyValue(NSString* obj) {
     return ret;
 }
 } // namespace CommonConvertors
-
