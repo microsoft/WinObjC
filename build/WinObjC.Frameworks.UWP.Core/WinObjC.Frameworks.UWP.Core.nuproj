@@ -54,6 +54,11 @@
       <Pack>true</Pack>
     </None>
   </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\RTObjCInterop\dll\RTObjCInterop.vcxproj" />
+  </ItemGroup>
+
   <!-- NuProj Project References. Ensure that these only get evaluated once by checking that this isn't the second time through this project -->
   <ItemGroup Condition="'$(SkipGetPackageContentsForOtherPlatforms)' != 'true'">
     <ProjectReference Include="$(MSBuildThisFileDirectory)..\WinObjC.Frameworks.Core\WinObjC.Frameworks.Core.nuproj">
