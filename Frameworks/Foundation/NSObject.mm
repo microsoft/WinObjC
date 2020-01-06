@@ -624,7 +624,11 @@ static IMP _NSIMPForward(id object, SEL selector) {
  @Status Interoperable
 */
 + (void)load {
-    class_setSuperclass(objc_getClass("_NSCFType"), self);
+    // These superclass anchors are required because in the GNUstep 2.0 ABI,
+    // superclass references are hardcoded at the sites of [super ...] dispatches.
+    // Replacing the superclass of _NSCFType (or friends) directly would be
+    // disastrous.
+    class_setSuperclass(objc_getClass("_NSCFTypeSuperclassAnchor"), self);
 
     objc_proxy_lookup = _NSForwardingDestination;
     __objc_msg_forward2 = _NSIMPForward;
