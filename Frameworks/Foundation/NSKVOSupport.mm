@@ -301,7 +301,7 @@ static void _addNestedObserversAndOptionallyDependents(_NSKVOKeyObserver* keyObs
     }
 
     // If restOfKeypath is non-nil, we have to chain on further observers.
-    if (keyObserver.restOfKeypath) {
+    if (keyObserver.restOfKeypath && !keyObserver.restOfKeypathObserver) {
         keyObserver.restOfKeypathObserver =
             _addKeypathObserver([object valueForKey:key], keyObserver.restOfKeypath, keypathObserver, keyObserver.affectedObservers);
     }
