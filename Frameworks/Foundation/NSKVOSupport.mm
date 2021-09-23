@@ -552,9 +552,8 @@ template <typename TFunc>
 inline static void _dispatchWillChange(id notifyingObject, NSString* key, TFunc&& func) {
     _NSKVOObservationInfo* observationInfo = (__bridge _NSKVOObservationInfo*)[notifyingObject observationInfo];
     for (_NSKVOKeyObserver* keyObserver in [observationInfo observersForKey:key]) {
-        _NSKVOKeypathObserver* keypathObserver = keyObserver.keypathObserver;
-
         // Skip any keypaths that are in the process of changing.
+        _NSKVOKeypathObserver* keypathObserver = keyObserver.keypathObserver;
         if ([keypathObserver pushWillChange]) {
             // Call into the lambda function, which will do the actual set-up for pendingChanges
             func(keyObserver);
@@ -569,10 +568,10 @@ inline static void _dispatchWillChange(id notifyingObject, NSString* key, TFunc&
                                                          context:keypathObserver.context];
                 [change removeObjectForKey:NSKeyValueChangeNotificationIsPriorKey];
             }
-
-            // This must happen regardless of whether we are currently notifying.
-            _removeNestedObserversAndOptionallyDependents(keyObserver, false);
         }
+
+        // This must happen regardless of whether we are currently notifying.
+        _removeNestedObserversAndOptionallyDependents(keyObserver, false);
     }
 }
 
